@@ -1,17 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using UnityEngine;
 
 public enum Stat
 {
-    LVL,
     HP,
     ATK,
-    DEFENSE,
+    ATK_COEFF,
     FIRE_RATE,
-    XP,
     SPEED,
     CATCH_RADIUS
 }
