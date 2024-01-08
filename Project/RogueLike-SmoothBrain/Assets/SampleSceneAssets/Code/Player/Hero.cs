@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Hero : EntityUnit, IDamageable
+public class Hero : EntityUnit, IDamageable
 {
     public void GetDamage(int _value)
     {
