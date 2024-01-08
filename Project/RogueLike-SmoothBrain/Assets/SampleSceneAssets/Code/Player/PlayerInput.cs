@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerAnimation))]
 public class PlayerInput : MonoBehaviour
 {
     PlayerInputMap playerInputMap;
@@ -20,7 +21,6 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Movement.Movement.canceled += controller.ReadDirection;
         playerInputMap.Attack.Attack.performed += m_animation.Attack;
         playerInputMap.Dash.Dash.performed += m_animation.Dash;
-        playerInputMap.Dash.Dash.performed += controller.Dash;
     }
 
     private void OnDisable()
@@ -30,6 +30,5 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Movement.Movement.canceled -= controller.ReadDirection;
         playerInputMap.Attack.Attack.performed -= m_animation.Attack;
         playerInputMap.Dash.Dash.performed -= m_animation.Dash;
-        playerInputMap.Dash.Dash.performed -= controller.Dash;
     }
 }
