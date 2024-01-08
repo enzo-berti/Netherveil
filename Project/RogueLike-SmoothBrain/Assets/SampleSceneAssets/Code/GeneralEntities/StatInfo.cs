@@ -9,9 +9,10 @@ public enum Stat
     SPEED,
     CATCH_RADIUS
 }
+
 [Serializable]
 public class StatInfo
 {
-    public Stat Stat;
-    public float Value;
+    public Stat stat;
+    public float value;
 }
