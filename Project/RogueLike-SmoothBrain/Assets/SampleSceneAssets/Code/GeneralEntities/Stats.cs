@@ -1,25 +1,28 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [Serializable]
 public class Stats
-{
-    [SerializeField] string name = "DefaultStats ( change name )";
+{ 
     [SerializeField] List<StatInfo> stats = new();
+    [SerializeField] private string name = "Default";
 
     public int Size
     {
         get { return stats.Count; }
     }
-    public List<Stat> GetStatsName
+    public List<Stat> StatsName
     {
         get
         {
             List<Stat> list = new();
-            foreach(StatInfo info in stats)
+            foreach (StatInfo info in stats)
             {
-                list.Add(info.Stat);
+                list.Add(info.stat);
             }
             return list;
         }
@@ -28,9 +31,9 @@ public class Stats
     {
         foreach (StatInfo stat in stats)
         {
-            if (stat.Stat == info)
+            if (stat.stat == info)
             {
-                return stat.Value;
+                return stat.value;
             }
         }
         Debug.LogWarning($"Can't find {info} in {name}");
@@ -39,10 +42,10 @@ public class Stats
 
     public void IncreaseValue(Stat info, float increasingValue)
     {
-        int index = stats.FindIndex(x => x.Stat == info);
+        int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
         {
-            stats[index].Value += increasingValue;
+            stats[index].value += increasingValue;
         }
         else
             Debug.LogWarning($"Can't find {info} in {name}");
@@ -50,15 +53,32 @@ public class Stats
 
     public bool HasStat(Stat info)
     {
-        foreach(StatInfo stat in stats)
+        foreach (StatInfo stat in stats)
         {
-            if (stat.Stat == info) return true;
+            if (stat.stat == info) return true;
         }
         return false;
     }
+}
 
-    //public StatInfo GetRandomStat()
-    //{
+///// Affichage carré dans l'éditeur /////
 
-    //}
+[CustomPropertyDrawer(typeof(Stats))]
+public class StatsDrawerUIE : PropertyDrawer
+{
+    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    {
+        // Create property container element.
+        var container = new VisualElement();
+
+        // Create property fields.
+        var nameField = new PropertyField(property.FindPropertyRelative("name"), "Name");
+        var statsField = new PropertyField(property.FindPropertyRelative("stats"));
+
+        // Add fields to the container.
+        container.Add(nameField);
+        container.Add(statsField);
+
+        return container;
+    }
 }
