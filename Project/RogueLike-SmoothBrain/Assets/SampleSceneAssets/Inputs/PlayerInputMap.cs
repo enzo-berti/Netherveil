@@ -188,6 +188,45 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Dash"",
+            ""id"": ""b9b76b5d-21e2-48a5-aea3-4824700eddd5"",
+            ""actions"": [
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""53b31927-7dcf-457a-a933-e6ebdfbc7896"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""6932f85d-3ee2-480f-b920-608556838f57"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""95d4f1d3-fcd3-47fa-864d-c1743c19a7b4"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -198,6 +237,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         // Attack
         m_Attack = asset.FindActionMap("Attack", throwIfNotFound: true);
         m_Attack_Attack = m_Attack.FindAction("Attack", throwIfNotFound: true);
+        // Dash
+        m_Dash = asset.FindActionMap("Dash", throwIfNotFound: true);
+        m_Dash_Dash = m_Dash.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -347,6 +389,52 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         }
     }
     public AttackActions @Attack => new AttackActions(this);
+
+    // Dash
+    private readonly InputActionMap m_Dash;
+    private List<IDashActions> m_DashActionsCallbackInterfaces = new List<IDashActions>();
+    private readonly InputAction m_Dash_Dash;
+    public struct DashActions
+    {
+        private @PlayerInputMap m_Wrapper;
+        public DashActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Dash => m_Wrapper.m_Dash_Dash;
+        public InputActionMap Get() { return m_Wrapper.m_Dash; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DashActions set) { return set.Get(); }
+        public void AddCallbacks(IDashActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DashActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DashActionsCallbackInterfaces.Add(instance);
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
+        }
+
+        private void UnregisterCallbacks(IDashActions instance)
+        {
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
+        }
+
+        public void RemoveCallbacks(IDashActions instance)
+        {
+            if (m_Wrapper.m_DashActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IDashActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DashActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DashActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public DashActions @Dash => new DashActions(this);
     public interface IMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -354,5 +442,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     public interface IAttackActions
     {
         void OnAttack(InputAction.CallbackContext context);
+    }
+    public interface IDashActions
+    {
+        void OnDash(InputAction.CallbackContext context);
     }
 }
