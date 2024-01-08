@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerAnimation))]
 public class PlayerInput : MonoBehaviour
 {
     PlayerInputMap playerInputMap;

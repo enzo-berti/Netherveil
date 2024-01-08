@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     Transform cameraTransform;
     Vector2 direction = Vector2.zero;
     CharacterController characterController;
-    readonly float speed = 6f;
+    Hero hero;
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     float currentTargetAngle = 0f;
@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        hero = GetComponent<Hero>();
         cameraTransform = Camera.main.transform;
     }
 
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour
                 Vector3 camRight = cameraTransform.right;
                 camForward.y = 0f;
                 camRight.y = 0f;
-                characterController.Move(speed * Time.deltaTime * (camForward * direction.y + camRight * direction.x).normalized);
+                characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * direction.y + camRight * direction.x).normalized);
             }
         }
     }

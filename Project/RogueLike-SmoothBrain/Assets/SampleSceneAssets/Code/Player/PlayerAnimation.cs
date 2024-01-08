@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerAnimation : MonoBehaviour
 {
     PlayerController controller;
-    Animator animator;
+    public Animator animator;
     // Start is called before the first frame update
     void Start()
     {
