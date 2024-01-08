@@ -55,8 +55,6 @@ public class PlayerController : MonoBehaviour
                 characterController.Move(speed * Time.deltaTime * (camForward * direction.y + camRight * direction.x).normalized);
             }
         }
-
-
     }
 
     public void ReadDirection(InputAction.CallbackContext ctx)
