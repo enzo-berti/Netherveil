@@ -17,7 +17,7 @@ public class PlayerAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(controller.Direction.magnitude);
+        //Debug.Log(controller.Direction.magnitude);
         animator.SetFloat("Speed", controller.Direction.magnitude, 0.1f, Time.deltaTime);
     }
 }
