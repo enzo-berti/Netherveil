@@ -22,7 +22,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(direction);
+        if(agent.hasPath)
+        {
+
+        }
         agent.SetDestination(this.transform.position + new Vector3(direction.x, 0, direction.y));
     }
 
