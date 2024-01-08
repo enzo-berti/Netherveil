@@ -18,6 +18,6 @@ public class PlayerAnimation : MonoBehaviour
     void Update()
     {
         Debug.Log(controller.Direction.magnitude);
-        animator.SetFloat("Speed", controller.Direction.magnitude);
+        animator.SetFloat("Speed", controller.Direction.magnitude, 0.1f, Time.deltaTime);
     }
 }
