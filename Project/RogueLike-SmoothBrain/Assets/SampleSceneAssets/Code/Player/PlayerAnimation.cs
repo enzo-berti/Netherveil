@@ -25,4 +25,9 @@ public class PlayerAnimation : MonoBehaviour
     {
         animator.SetTrigger("BasicAttack");
     }
+
+    public void Dash(InputAction.CallbackContext ctx)
+    {
+        animator.SetTrigger("Dash");
+    }
 }

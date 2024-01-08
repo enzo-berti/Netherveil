@@ -43,6 +43,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Dash(InputAction.CallbackContext ctx)
+    {
+        
+    }
+
     public void ReadDirection(InputAction.CallbackContext ctx)
     {
         direction = ctx.ReadValue<Vector2>();
