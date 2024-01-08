@@ -47,5 +47,5 @@ public class PlayerController : MonoBehaviour
     {
         direction = ctx.ReadValue<Vector2>();
     }
-    
+  
 }

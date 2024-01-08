@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerAnimation : MonoBehaviour
@@ -17,7 +18,11 @@ public class PlayerAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(controller.Direction.magnitude);
         animator.SetFloat("Speed", controller.Direction.magnitude, 0.1f, Time.deltaTime);
+    }
+
+    public void Attack(InputAction.CallbackContext ctx)
+    {
+        animator.SetTrigger("BasicAttack");
     }
 }

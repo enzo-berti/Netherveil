@@ -4,11 +4,13 @@ public class PlayerInput : MonoBehaviour
 {
     PlayerInputMap playerInputMap;
     PlayerController controller;
+    PlayerAnimation m_animation;
     // Start is called before the first frame update
     void Awake()
     {
         playerInputMap = new PlayerInputMap();
         controller = GetComponent<PlayerController>();
+        m_animation = GetComponent<PlayerAnimation>();
     }
 
     private void OnEnable()
@@ -16,6 +18,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Enable();
         playerInputMap.Movement.Movement.performed += controller.ReadDirection;
         playerInputMap.Movement.Movement.canceled += controller.ReadDirection;
+        playerInputMap.Attack.Attack.performed += m_animation.Attack;
     }
 
     private void OnDisable()
@@ -23,5 +26,6 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Disable();
         playerInputMap.Movement.Movement.performed -= controller.ReadDirection;
         playerInputMap.Movement.Movement.canceled -= controller.ReadDirection;
+        playerInputMap.Attack.Attack.performed -= m_animation.Attack;
     }
 }
