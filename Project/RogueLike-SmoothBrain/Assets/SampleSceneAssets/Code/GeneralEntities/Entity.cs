@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    [SerializeField] Stats stats;
+    [Header("Properties")]
+    [SerializeField] protected Stats stats;
     public Stats Stats
     {
         get
