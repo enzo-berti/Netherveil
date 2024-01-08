@@ -1,5 +1,53 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &887956423540875550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3289892930233125817}
+  - component: {fileID: 5352885116134021390}
+  m_Layer: 3
+  m_Name: DamageDealer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3289892930233125817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887956423540875550}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2157517199933740201}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5352885116134021390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887956423540875550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f68f7ae31edeef4cb14af47acf8c028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponLenght: 0
+  dealerWhoGetStats:
+    stats: []
+    name: Default
 --- !u!1001 &120204520702772359
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21,17 +69,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.0554116
+      value: 4.43
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.37
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.340315
+      value: -6.24
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
@@ -220,6 +268,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1283408554089789195, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
+      propertyPath: m_Name
+      value: Paladin_J_Nordstrom
+      objectReference: {fileID: 0}
+    - target: {fileID: -1283408554089789195, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
+        type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
@@ -281,6 +334,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1051571768989249988, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
+        type: 3}
+      propertyPath: m_Name
+      value: Paladin_J_Nordstrom_Sword
       objectReference: {fileID: 0}
     - target: {fileID: 1051571768989249988, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
@@ -450,7 +508,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -7764487651825262745, guid: 5eb1f3307d5a25c4988a14535c8bd5bd, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2042953256698253358, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3289892930233125817}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
@@ -468,6 +530,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4442208228028191441}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8688002045578851570}
   m_SourcePrefab: {fileID: 100100000, guid: 5eb1f3307d5a25c4988a14535c8bd5bd, type: 3}
 --- !u!1 &966695631222454742 stripped
 GameObject:
@@ -538,3 +604,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17527f519d432d4ab53ebece0026715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8688002045578851570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966695631222454742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 144b6e3df1e33da48b21c13ea28cb518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    stats:
+    - stat: 0
+      value: 10
+    - stat: 1
+      value: 5
+    - stat: 2
+      value: 1
+    - stat: 3
+      value: 1
+    - stat: 4
+      value: 1
+    - stat: 5
+      value: 1
+    name: Default
+--- !u!4 &2157517199933740201 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2042953256698253358, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
+    type: 3}
+  m_PrefabInstance: {fileID: 120204520702772359}
+  m_PrefabAsset: {fileID: 0}
