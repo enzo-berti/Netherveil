@@ -42,25 +42,22 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, currentTargetAngle, ref currentVelocity, smoothTime);
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
         Move();
     }
 
     void Move()
     {
-        if (CurrentState == PlayerState.MOVE)
+        if (CurrentState == PlayerState.MOVE && (direction.x != 0f || direction.y != 0f))
         {
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, currentTargetAngle, ref currentVelocity, smoothTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            if (direction.x != 0f || direction.y != 0f)
-            {
-                currentTargetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
-                Vector3 camForward = cameraTransform.forward;
-                Vector3 camRight = cameraTransform.right;
-                camForward.y = 0f;
-                camRight.y = 0f;
-                characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * direction.y + camRight * direction.x).normalized);
-            }
+            currentTargetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
+            Vector3 camForward = cameraTransform.forward;
+            Vector3 camRight = cameraTransform.right;
+            camForward.y = 0f;
+            camRight.y = 0f;
+            characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * direction.y + camRight * direction.x).normalized);
         }
     }
 
@@ -68,5 +65,5 @@ public class PlayerController : MonoBehaviour
     {
         direction = ctx.ReadValue<Vector2>();
     }
-  
+
 }
