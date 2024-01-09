@@ -11,9 +11,10 @@ public class Melee : Sbire
 
     void Update()
     {
-        Cervoh();
+        SimpleAI();
         
-        animator.SetBool("InAttackRange", isInAttackRange);
-        animator.SetBool("Triggered", isTriggered);
+        animator.SetBool("InAttackRange", state == EntityState.ATTACK);
+        animator.SetBool("Triggered", state == EntityState.TRIGGERED || state == EntityState.ATTACK);
+        animator.SetBool("Punch", isAttacking);
     }
 }

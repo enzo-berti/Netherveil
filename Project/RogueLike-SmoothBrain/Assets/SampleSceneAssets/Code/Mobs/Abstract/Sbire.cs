@@ -2,39 +2,66 @@ using UnityEngine;
 
 public class Sbire : Mobs
 {
-    Hero playerScript = null;
+    protected Transform target = null;
+    protected float cooldown = 0;
+    protected bool isAttacking = false;
 
-    protected bool isTriggered = false;
-    protected bool isInAttackRange = false;
-
-    protected void Cervoh()
+    protected void SimpleAI()
     {
-        if (playerScript != null)
-        {
-            Vector3 enemyToPlayerVector = playerScript.gameObject.transform.position - transform.position;
+        Vector3 enemyToTargetVector = Vector3.zero;
 
-            if (enemyToPlayerVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE))
-            {
-                isInAttackRange = true;
-                AttackPlayer();
-            }
+        if (target != null)
+        {
+            enemyToTargetVector = target.position - transform.position;
+            enemyToTargetVector.y = 0;
+
+            if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE))
+                state = EntityState.ATTACK;
             else
-            {
-                isInAttackRange = false;
-                FollowPlayer(enemyToPlayerVector);
-            }
+                state = EntityState.TRIGGERED;
+        }
+
+        if (state != EntityState.ATTACK)
+        {
+            cooldown = 0;
+        }
+
+        // StateMachine
+        switch (state)
+        {
+            case EntityState.WANDERING:
+                break;
+
+            case EntityState.TRIGGERED:
+                FollowPlayer(enemyToTargetVector);
+                break;
+
+            case EntityState.DASH:
+                break;
+
+            case EntityState.ATTACK:
+                AttackPlayer();
+                break;
+
+            case EntityState.HIT:
+                break;
+
+            case EntityState.DEAD:
+                break;
+
+            default:
+                break;
         }
     }
 
+    // sale faut repasser ici
     protected void FollowPlayer(Vector3 _distanceToPlayer)
     {
         _distanceToPlayer.Normalize();
-        _distanceToPlayer.y = 0;
 
-        // Bon faut le faire tourner mieux ça marche moyen là
-        transform.rotation = Quaternion.Euler(_distanceToPlayer);
+        FaceTarget();
 
-        transform.Translate(_distanceToPlayer * stats.GetValueStat(Stat.SPEED) * Time.deltaTime);
+        transform.position += _distanceToPlayer * stats.GetValueStat(Stat.SPEED) * Time.deltaTime;
     }
 
     // fait sa vie, se balade dans la salle
@@ -45,32 +72,50 @@ public class Sbire : Mobs
 
     protected void AttackPlayer()
     {
-        int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
+        cooldown += Time.deltaTime;
 
-        playerScript.ApplyDamage(damage);
+        // tape FIRE_RATE fois par seconde
+        if (cooldown >= 1f / stats.GetValueStat(Stat.FIRE_RATE))
+        {
+            int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
+            Hero playerScript = target.gameObject.GetComponent<Hero>();
+
+            playerScript.ApplyDamage(-damage);
+
+            isAttacking = true;
+            cooldown = 0;
+        }
+        else
+        {
+            FaceTarget();
+            isAttacking = false;
+        }
+    }
+
+    void FaceTarget()
+    {
+        Vector3 enemyToTargetVector = target.position - transform.position;
+        enemyToTargetVector.y = 0;
+
+        float angle = Mathf.Atan2(enemyToTargetVector.x, enemyToTargetVector.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (playerScript == null)
+        if (other.tag == "Player")
         {
-            if (other.tag == "Player")
-            {
-                playerScript = other.gameObject.GetComponent<Hero>();
-                isTriggered = true;
-            }
+            state = EntityState.TRIGGERED;
+            target = other.transform;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (playerScript != null)
+        if (other.tag == "Player")
         {
-            if (other.tag == "Player")
-            {
-                playerScript = null;
-                isTriggered = false;
-            }
+            state = EntityState.WANDERING;
+            target = null;
         }
     }
 }

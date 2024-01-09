@@ -1,12 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
     public enum EntityState
     {
+        // pour ennemis
+        WANDERING,
+        TRIGGERED,
+
+        // pour joueur
         MOVE,
+
         DASH,
         ATTACK,
         HIT,
@@ -17,6 +21,7 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected Stats stats;
     public bool isAlly;
     public EntityState state;
+    
     public Stats Stats
     {
         get
