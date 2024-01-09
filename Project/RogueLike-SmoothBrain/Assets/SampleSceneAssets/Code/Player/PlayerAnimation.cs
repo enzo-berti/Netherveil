@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerAnimation : MonoBehaviour
 {
     PlayerController controller;
-    Animator animator;
+    public Animator animator;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,10 +24,17 @@ public class PlayerAnimation : MonoBehaviour
     public void Attack(InputAction.CallbackContext ctx)
     {
         animator.SetTrigger("BasicAttack");
+        controller.CurrentState = Entity.EntityState.ATTACK;
     }
 
     public void Dash(InputAction.CallbackContext ctx)
     {
         animator.SetTrigger("Dash");
+        controller.CurrentState = Entity.EntityState.DASH;
+    }
+
+    public void EndOfSpecialAnimation() //triggers for dash and attack animations to reset currentState
+    {
+        controller.CurrentState = Entity.EntityState.MOVE;
     }
 }
