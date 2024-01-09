@@ -32,6 +32,12 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         hero = GetComponent<Hero>();
         cameraTransform = Camera.main.transform;
+
+        //initialize starting rotation
+        Vector3 eulerAngles = transform.eulerAngles;
+        eulerAngles.y = 225f;
+        transform.eulerAngles = eulerAngles;
+        currentTargetAngle = transform.eulerAngles.y;
     }
 
     void Update()
