@@ -4,6 +4,10 @@ public class Sbire : Mobs
 {
     Hero playerScript = null;
 
+    private void Start()
+    {
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+    }
     protected void FollowPlayer()
     {
 

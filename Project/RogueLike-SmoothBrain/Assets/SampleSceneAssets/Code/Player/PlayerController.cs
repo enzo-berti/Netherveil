@@ -5,14 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public enum PlayerState
-    {
-        MOVE,
-        DASH,
-        ATTACK,
-        HIT,
-        DEAD
-    }
+    
 
     Transform cameraTransform;
     Vector2 direction = Vector2.zero;
@@ -21,7 +14,7 @@ public class PlayerController : MonoBehaviour
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     float currentTargetAngle = 0f;
-    public PlayerState CurrentState { get; set; } = PlayerState.MOVE;
+    public Entity.EntityState CurrentState { get; set; } = Entity.EntityState.MOVE;
 
     public Vector2 Direction
     {
@@ -47,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (CurrentState == PlayerState.MOVE)
+        if (CurrentState == Entity.EntityState.MOVE)
         {
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, currentTargetAngle, ref currentVelocity, smoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);

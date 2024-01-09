@@ -24,17 +24,17 @@ public class PlayerAnimation : MonoBehaviour
     public void Attack(InputAction.CallbackContext ctx)
     {
         animator.SetTrigger("BasicAttack");
-        controller.CurrentState = PlayerController.PlayerState.ATTACK;
+        controller.CurrentState = Entity.EntityState.ATTACK;
     }
 
     public void Dash(InputAction.CallbackContext ctx)
     {
         animator.SetTrigger("Dash");
-        controller.CurrentState = PlayerController.PlayerState.DASH;
+        controller.CurrentState = Entity.EntityState.DASH;
     }
 
     public void EndOfSpecialAnimation() //triggers for dash and attack animations to reset currentState
     {
-        controller.CurrentState = PlayerController.PlayerState.MOVE;
+        controller.CurrentState = Entity.EntityState.MOVE;
     }
 }

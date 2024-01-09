@@ -9,7 +9,7 @@ public class DamageDealer : MonoBehaviour
 
     [SerializeField] float weaponLenght;
     [SerializeField] Stats dealerWhoGetStats;
-
+    [SerializeField] Entity damageDealer;
     void Start()
     {
         canDealDamage = false;
@@ -22,7 +22,6 @@ public class DamageDealer : MonoBehaviour
         if (canDealDamage)
         {
             RaycastHit hit;
-
             int layerMask = 1 << 9;
             if (Physics.Raycast(transform.position, -transform.up, out hit, weaponLenght,layerMask))
             {
@@ -50,5 +49,15 @@ public class DamageDealer : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, transform.position - transform.up * weaponLenght);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!collision.gameObject.TryGetComponent<Entity>(out Entity entity) || (entity as IDamageable) == null) return;
+        bool canDamage = damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly;
+        if (canDamage)
+        {
+            
+        }
     }
 }
