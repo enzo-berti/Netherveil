@@ -53,11 +53,24 @@ public class DamageDealer : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.TryGetComponent<Entity>(out Entity entity) || (entity as IDamageable) == null) return;
-        bool canDamage = damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly;
-        if (canDamage)
+        bool canDamage;
+        if (!collision.gameObject.TryGetComponent<Hero>(out Hero entity) || (entity as IDamageable) == null)
         {
-            
+            canDamage = (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
+            if(canDamage)
+            {
+                entity.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
+            }
         }
+        else if (!collision.gameObject.TryGetComponent<Mobs>(out Mobs mobs) || (mobs as IDamageable) == null)
+        {
+            canDamage = (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
+            if (canDamage)
+            {
+                entity.ApplyDamage((int)mobs.Stats.GetValueStat(Stat.ATK));
+            }
+        }
+
+        
     }
 }
