@@ -13,7 +13,6 @@ public class DamageDealer : MonoBehaviour
     void Start()
     {
         canDealDamage = false;
-        damageDeal = dealerWhoGetStats.GetValueStat(Stat.ATK) * dealerWhoGetStats.GetValueStat(Stat.ATK_COEFF);
         hasDealtDamage = new List<GameObject>();
     }
 
