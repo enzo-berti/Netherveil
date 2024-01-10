@@ -13,25 +13,11 @@ public class DamageDealer : MonoBehaviour
     void Start()
     {
         canDealDamage = false;
-        damageDeal = dealerWhoGetStats.GetValueStat(Stat.ATK) * dealerWhoGetStats.GetValueStat(Stat.ATK_COEFF);
         hasDealtDamage = new List<GameObject>();
     }
 
     void Update()
     {
-        if (canDealDamage)
-        {
-            RaycastHit hit;
-            int layerMask = 1 << 9;
-            if (Physics.Raycast(transform.position, -transform.up, out hit, weaponLenght,layerMask))
-            {
-                if (!hasDealtDamage.Contains(hit.transform.gameObject))
-                {
-                    print("Damage!");
-                    hasDealtDamage.Add(hit.transform.gameObject);
-                }
-            }
-        }
     }
 
     public void StartDealDamage()
@@ -51,24 +37,27 @@ public class DamageDealer : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position - transform.up * weaponLenght);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Collision");
         bool canDamage;
-        if (!collision.gameObject.TryGetComponent<Hero>(out Hero entity) || (entity as IDamageable) == null)
+        if (other.gameObject.TryGetComponent<Hero>(out Hero entity))
         {
-            canDamage = (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
-            if(canDamage)
+            canDamage = entity.State == Hero.PlayerState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
+            if (canDamage)
             {
                 entity.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
             }
         }
-        else if (!collision.gameObject.TryGetComponent<Mobs>(out Mobs mobs) || (mobs as IDamageable) == null)
+        else if (other.gameObject.TryGetComponent<Mobs>(out Mobs mobs))
         {
-            canDamage = (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
+            canDamage = mobs.State == Mobs.EnemyState.ATTACK && (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
             if (canDamage)
             {
-                entity.ApplyDamage((int)mobs.Stats.GetValueStat(Stat.ATK));
+                mobs.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
             }
         }
+
+        
     }
 }
