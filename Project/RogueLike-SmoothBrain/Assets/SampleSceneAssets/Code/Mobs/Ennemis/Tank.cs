@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Tank : Sbire
 {
-    // Start is called before the first frame update
-    void Start()
+    Animator animator;
+
+    private void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        SimpleAI();
+
+        animator.SetBool("InAttackRange", state == EnemyState.ATTACK);
+        animator.SetBool("Triggered", state == EnemyState.TRIGGERED || state == EnemyState.ATTACK);
+        animator.SetBool("Punch", isAttacking);
     }
 }
