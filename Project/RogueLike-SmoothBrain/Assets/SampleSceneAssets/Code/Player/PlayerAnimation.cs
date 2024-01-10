@@ -23,16 +23,13 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext ctx)
     {
-        if(controller.hero.State == Hero.PlayerState.MOVE)
-        {
-            animator.SetTrigger("BasicAttack");
-            controller.hero.State = Hero.PlayerState.ATTACK;
-        }
+        animator.SetTrigger("BasicAttack");
+        controller.hero.State = Hero.PlayerState.ATTACK;
     }
 
     public void Dash(InputAction.CallbackContext ctx)
     {
-        if(controller.hero.State == Hero.PlayerState.MOVE)
+        if(controller.hero.State != Hero.PlayerState.DASH)
         {
             animator.SetTrigger("Dash");
             controller.hero.State = Hero.PlayerState.DASH;
