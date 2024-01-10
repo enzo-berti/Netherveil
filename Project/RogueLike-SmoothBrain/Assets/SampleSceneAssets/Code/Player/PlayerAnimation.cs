@@ -33,7 +33,7 @@ public class PlayerAnimation : MonoBehaviour
         {
             animator.SetTrigger("Dash");
             controller.hero.State = Hero.PlayerState.DASH;
-            controller.dashDir = controller.Direction;
+            controller.dashDir = controller.LastDir;
         }
     }
 
