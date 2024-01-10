@@ -70,7 +70,5 @@ public class DamageDealer : MonoBehaviour
                 entity.ApplyDamage((int)mobs.Stats.GetValueStat(Stat.ATK));
             }
         }
-
-        
     }
 }
