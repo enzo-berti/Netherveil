@@ -2,21 +2,9 @@ using UnityEngine;
 
 public class Sbire : Mobs
 {
-    public enum EnemyState
-    {
-        WANDERING,
-        TRIGGERED,
-        MOVE,
-        DASH,
-        ATTACK,
-        HIT,
-        DEAD
-    }
-
     protected Transform target = null;
     protected float cooldown = 0;
     protected bool isAttacking = false;
-    protected EnemyState state;
 
     protected void SimpleAI()
     {

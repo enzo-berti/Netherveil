@@ -10,7 +10,7 @@ namespace DialogueSystem.Editor
 {
     public class DialogueTreeEditor : EditorWindow
     {
-        [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
+        //[SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
 
         private DialogueGraphView graphView;
 
