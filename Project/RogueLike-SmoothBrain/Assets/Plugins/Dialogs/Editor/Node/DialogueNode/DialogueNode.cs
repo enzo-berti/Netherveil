@@ -65,7 +65,6 @@ namespace DialogueSystem.Editor.Nodes
             textField.style.minWidth = 60;
             textField.style.maxWidth = 100;
             textField.RegisterValueChangedCallback(evt => generatedPort.portName = evt.newValue);
-            generatedPort.contentContainer.Add(new Label(" "));
             generatedPort.contentContainer.Add(textField);
             var deleteButton = new Button(() => RemovePort(graphView, generatedPort))
             {
