@@ -89,11 +89,6 @@ public class Sbire : Mobs
         // tape FIRE_RATE fois par seconde
         if (cooldown >= 1f / stats.GetValueStat(Stat.FIRE_RATE))
         {
-            int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
-            Hero playerScript = target.gameObject.GetComponent<Hero>();
-
-            playerScript.ApplyDamage(-damage);
-
             isAttacking = true;
             cooldown = 0;
         }
@@ -111,6 +106,14 @@ public class Sbire : Mobs
 
         float angle = Mathf.Atan2(enemyToTargetVector.x, enemyToTargetVector.z) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, angle, 0);
+    }
+
+    void HitPlayer()
+    {
+        int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
+        Hero playerScript = target.gameObject.GetComponent<Hero>();
+
+        playerScript.ApplyDamage(-damage);
     }
 
     private void OnTriggerEnter(Collider other)
