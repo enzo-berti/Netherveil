@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.UIElements;
+#endif
 
 [Serializable]
 public class Stats
@@ -61,6 +63,7 @@ public class Stats
     }
 }
 
+#if UNITY_EDITOR
 ///// Affichage carré dans l'éditeur /////
 
 [CustomPropertyDrawer(typeof(Stats))]
@@ -82,3 +85,4 @@ public class StatsDrawerUIE : PropertyDrawer
         return container;
     }
 }
+#endif

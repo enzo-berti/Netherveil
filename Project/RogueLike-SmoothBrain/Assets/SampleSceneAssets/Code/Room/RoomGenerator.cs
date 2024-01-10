@@ -3,13 +3,33 @@ using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
 {
+    private static int roomGenerated = 0;
+
     private void Awake()
     {
-        List<GameObject> roomSeeds = new List<GameObject>();
+        GameManager.Instance.seed.Set(123456);
+
+        List<GameObject> rooms = new List<GameObject>();
 
         foreach (Transform child in transform)
         {
-            roomSeeds.Add(child.gameObject);
+            rooms.Add(child.gameObject);
         }
+
+        int keepRoomIndex = (GameManager.Instance.seed.Range(0, rooms.Count) + roomGenerated) % rooms.Count;
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (i != keepRoomIndex)
+            {
+                Destroy(rooms[i]);
+            }
+        }
+
+        roomGenerated++;
+    }
+
+    private void Update()
+    {
+
     }
 }
