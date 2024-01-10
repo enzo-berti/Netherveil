@@ -3,10 +3,13 @@ using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> roomSeeds = new List<GameObject>();
+    private readonly List<GameObject> roomSeeds = new List<GameObject>();
 
     private void Awake()
     {
-        
+        foreach (Transform child in transform)
+        {
+            roomSeeds.Add(child.gameObject);
+        }
     }
 }
