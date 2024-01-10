@@ -3,9 +3,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-    
 
     Transform cameraTransform;
     [Range(0f, 20f), SerializeField]
