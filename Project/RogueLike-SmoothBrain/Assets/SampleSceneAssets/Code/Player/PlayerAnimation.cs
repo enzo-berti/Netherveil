@@ -29,8 +29,12 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext ctx)
     {
-        animator.SetTrigger("Dash");
-        controller.hero.State = Hero.PlayerState.DASH;
+        if(controller.hero.State != Hero.PlayerState.DASH)
+        {
+            animator.SetTrigger("Dash");
+            controller.hero.State = Hero.PlayerState.DASH;
+            controller.dashDir = controller.Direction;
+        }
     }
 
     public void EndOfSpecialAnimation() //triggers for dash and attack animations to reset currentState

@@ -8,11 +8,15 @@ public class PlayerController : MonoBehaviour
     
 
     Transform cameraTransform;
-    Vector2 direction = Vector2.zero;
+    [Range(0f, 20f), SerializeField]
+    float dashSpeed;
+    
+    public Vector2 direction = Vector2.zero;
     CharacterController characterController;
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     float currentTargetAngle = 0f;
+    public Vector2 dashDir = Vector2.zero;
 
     public Hero hero;
 
@@ -39,6 +43,15 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
         Move();
+
+        if(hero.State == Hero.PlayerState.DASH)
+        {
+            Vector3 camForward = cameraTransform.forward;
+            Vector3 camRight = cameraTransform.right;
+            camForward.y = 0f;
+            camRight.y = 0f;
+            characterController.Move(dashSpeed * Time.deltaTime * (camForward * dashDir.y + camRight * dashDir.x).normalized);
+        }
     }
 
     void Move()
