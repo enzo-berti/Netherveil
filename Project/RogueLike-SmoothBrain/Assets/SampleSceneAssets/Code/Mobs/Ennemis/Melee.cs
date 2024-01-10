@@ -13,8 +13,8 @@ public class Melee : Sbire
     {
         SimpleAI();
         
-        animator.SetBool("InAttackRange", state == EntityState.ATTACK);
-        animator.SetBool("Triggered", state == EntityState.TRIGGERED || state == EntityState.ATTACK);
+        animator.SetBool("InAttackRange", state == EnemyState.ATTACK);
+        animator.SetBool("Triggered", state == EnemyState.TRIGGERED || state == EnemyState.ATTACK);
         animator.SetBool("Punch", isAttacking);
     }
 }

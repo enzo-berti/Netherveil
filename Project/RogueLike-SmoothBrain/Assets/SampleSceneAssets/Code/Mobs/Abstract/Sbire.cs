@@ -4,13 +4,9 @@ public class Sbire : Mobs
 {
     public enum EnemyState
     {
-        // pour ennemis
         WANDERING,
         TRIGGERED,
-
-        // pour joueur
         MOVE,
-
         DASH,
         ATTACK,
         HIT,
