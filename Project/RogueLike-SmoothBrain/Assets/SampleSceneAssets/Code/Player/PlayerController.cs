@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     float currentTargetAngle = 0f;
     public Vector2 dashDir = Vector2.zero;
     public Vector2 LastDir { get; private set; } = Vector2.zero;
+    public int ComboCount { get; set; } = -1;
+    public readonly int MAX_COMBO_COUNT = 3;
 
     public Hero hero;
 
