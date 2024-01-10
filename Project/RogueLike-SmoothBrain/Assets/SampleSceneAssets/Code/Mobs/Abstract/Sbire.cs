@@ -2,9 +2,25 @@ using UnityEngine;
 
 public class Sbire : Mobs
 {
+    public enum EnemyState
+    {
+        // pour ennemis
+        WANDERING,
+        TRIGGERED,
+
+        // pour joueur
+        MOVE,
+
+        DASH,
+        ATTACK,
+        HIT,
+        DEAD
+    }
+
     protected Transform target = null;
     protected float cooldown = 0;
     protected bool isAttacking = false;
+    protected EnemyState state;
 
     protected void SimpleAI()
     {
@@ -16,12 +32,12 @@ public class Sbire : Mobs
             enemyToTargetVector.y = 0;
 
             if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE))
-                state = EntityState.ATTACK;
+                state = EnemyState.ATTACK;
             else
-                state = EntityState.TRIGGERED;
+                state = EnemyState.TRIGGERED;
         }
 
-        if (state != EntityState.ATTACK)
+        if (state != EnemyState.ATTACK)
         {
             cooldown = 0;
         }
@@ -29,24 +45,24 @@ public class Sbire : Mobs
         // StateMachine
         switch (state)
         {
-            case EntityState.WANDERING:
+            case EnemyState.WANDERING:
                 break;
 
-            case EntityState.TRIGGERED:
+            case EnemyState.TRIGGERED:
                 FollowPlayer(enemyToTargetVector);
                 break;
 
-            case EntityState.DASH:
+            case EnemyState.DASH:
                 break;
 
-            case EntityState.ATTACK:
+            case EnemyState.ATTACK:
                 AttackPlayer();
                 break;
 
-            case EntityState.HIT:
+            case EnemyState.HIT:
                 break;
 
-            case EntityState.DEAD:
+            case EnemyState.DEAD:
                 break;
 
             default:
@@ -105,7 +121,7 @@ public class Sbire : Mobs
     {
         if (other.tag == "Player")
         {
-            state = EntityState.TRIGGERED;
+            state = EnemyState.TRIGGERED;
             target = other.transform;
         }
     }
@@ -114,7 +130,7 @@ public class Sbire : Mobs
     {
         if (other.tag == "Player")
         {
-            state = EntityState.WANDERING;
+            state = EnemyState.WANDERING;
             target = null;
         }
     }

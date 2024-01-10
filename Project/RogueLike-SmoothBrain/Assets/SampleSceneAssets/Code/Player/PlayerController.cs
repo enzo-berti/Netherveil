@@ -10,11 +10,11 @@ public class PlayerController : MonoBehaviour
     Transform cameraTransform;
     Vector2 direction = Vector2.zero;
     CharacterController characterController;
-    Hero hero;
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     float currentTargetAngle = 0f;
-    public Entity.EntityState CurrentState { get; set; } = Entity.EntityState.MOVE;
+
+    public Hero hero;
 
     public Vector2 Direction
     {
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (CurrentState == Entity.EntityState.MOVE && (direction.x != 0f || direction.y != 0f))
+        if (hero.State == Hero.PlayerState.MOVE && (direction.x != 0f || direction.y != 0f))
         {
             currentTargetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
             Vector3 camForward = cameraTransform.forward;

@@ -3,7 +3,18 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimation))]
 public class Hero : Entity, IDamageable
 {
+    public enum PlayerState
+    {
+        MOVE,
+        DASH,
+        ATTACK,
+        HIT,
+        DEAD
+    }
+
     PlayerAnimation playerAnim;
+    PlayerState state;
+    public PlayerState State { get { return state; } set => state = value; }
 
     private void Start()
     {
