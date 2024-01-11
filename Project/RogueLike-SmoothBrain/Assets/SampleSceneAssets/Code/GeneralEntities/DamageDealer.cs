@@ -62,9 +62,4 @@ public class DamageDealer : MonoBehaviour
         
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        Debug.Log(other.name);
-    }
-
 }
