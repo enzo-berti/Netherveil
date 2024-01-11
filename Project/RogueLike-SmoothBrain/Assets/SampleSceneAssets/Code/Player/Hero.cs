@@ -3,9 +3,9 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimation))]
 public class Hero : Entity, IDamageable
 {
-    public enum PlayerState
+    public enum PlayerState : int
     {
-        MOVE,
+        MOVE = EntityState.NB,
         DASH,
         ATTACK,
         HIT,
@@ -13,8 +13,6 @@ public class Hero : Entity, IDamageable
     }
 
     PlayerAnimation playerAnim;
-    PlayerState state;
-    public PlayerState State { get { return state; } set => state = value; }
 
     private void Start()
     {

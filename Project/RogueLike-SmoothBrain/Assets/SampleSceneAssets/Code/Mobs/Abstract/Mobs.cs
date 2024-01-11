@@ -4,9 +4,6 @@ using UnityEngine;
 public abstract class Mobs : Entity, IDamageable
 {
 
-    protected EnemyState state;
-    public EnemyState State {  get { return state; } }
-
     [SerializeField] Drop drops;
     protected void Start()
     {
@@ -15,9 +12,9 @@ public abstract class Mobs : Entity, IDamageable
 	
     protected Transform target = null;
 
-    public enum EnemyState
+    public enum EnemyState : int
     {
-        WANDERING,
+        WANDERING = EntityState.NB,
         TRIGGERED,
         MOVE,
         DASH,
