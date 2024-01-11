@@ -12,6 +12,9 @@ public abstract class Mobs : Entity, IDamageable
     {
         OnDeath += drops.DropLoot;
     }
+	
+    protected Transform target = null;
+
     public enum EnemyState
     {
         WANDERING,
@@ -35,5 +38,12 @@ public abstract class Mobs : Entity, IDamageable
             OnDeath?.Invoke(this.transform.position);
             Destroy(this.gameObject);
         }
+		
+    void HitPlayer()
+    {
+        int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
+        Hero playerScript = target.gameObject.GetComponent<Hero>();
+
+        playerScript.ApplyDamage(-damage);
     }
 }
