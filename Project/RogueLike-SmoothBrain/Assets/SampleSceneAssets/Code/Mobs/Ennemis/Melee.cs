@@ -11,22 +11,10 @@ public class Melee : Sbire
 
     void Update()
     {
-        //SimpleAI();
-        
-        //animator.SetBool("InAttackRange", state == EnemyState.ATTACK);
-        //animator.SetBool("Triggered", state == EnemyState.TRIGGERED || state == EnemyState.ATTACK);
-        //animator.SetBool("Punch", isAttacking);
-    }
+        SimpleAI();
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Trigger");
-        Debug.Log(other.name);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("collision melee");
-        Debug.Log(collision.gameObject.name);
+        animator.SetBool("InAttackRange", state == EnemyState.ATTACK);
+        animator.SetBool("Triggered", state == EnemyState.TRIGGERED || state == EnemyState.ATTACK);
+        animator.SetBool("Punch", isAttacking);
     }
 }
