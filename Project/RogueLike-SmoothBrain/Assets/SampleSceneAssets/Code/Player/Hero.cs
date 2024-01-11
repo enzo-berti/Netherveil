@@ -24,6 +24,8 @@ public class Hero : Entity, IDamageable
         Stats.IncreaseValue(Stat.HP, _value);
         if(_value < 0) //just to be sure it really inflicts damages
         {
+            State = (int)PlayerState.HIT;
+            playerAnim.animator.ResetTrigger("Hit");
             playerAnim.animator.SetTrigger("Hit");
         }
     }
