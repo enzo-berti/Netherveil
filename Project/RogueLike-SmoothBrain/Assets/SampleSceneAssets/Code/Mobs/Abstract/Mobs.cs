@@ -33,12 +33,12 @@ public abstract class Mobs : Entity, IDamageable
 
     public void Update()
     {
-        if(this.stats.GetValueStat(Stat.HP) < 0)
+        if (this.stats.GetValueStat(Stat.HP) < 0)
         {
             OnDeath?.Invoke(this.transform.position);
             Destroy(this.gameObject);
         }
-		
+    }
     void HitPlayer()
     {
         int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
