@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,7 +15,7 @@ public class PlayerController : MonoBehaviour
     float currentVelocity = 0f;
     float currentTargetAngle = 0f;
     public Vector2 dashDir = Vector2.zero;
-    public Vector2 LastDir { get; private set; } = Vector2.zero;
+    public Vector2 LastDir { get; set; } = Vector2.zero;
     public int ComboCount { get; set; } = -1;
     public readonly int MAX_COMBO_COUNT = 3;
 
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         hero = GetComponent<Hero>();
         cameraTransform = Camera.main.transform;
+        hero.State = (int)Hero.PlayerState.MOVE;
 
         //initialize starting rotation
         Vector3 eulerAngles = transform.eulerAngles;
@@ -49,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (hero.State == Hero.PlayerState.MOVE && (direction.x != 0f || direction.y != 0f))
+        if (hero.State == (int)Hero.PlayerState.MOVE && (direction.x != 0f || direction.y != 0f))
         {
             LastDir = direction;
             currentTargetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
     void DashMove()
     {
-        if (hero.State == Hero.PlayerState.DASH)
+        if (hero.State == (int)Hero.PlayerState.DASH)
         {
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;

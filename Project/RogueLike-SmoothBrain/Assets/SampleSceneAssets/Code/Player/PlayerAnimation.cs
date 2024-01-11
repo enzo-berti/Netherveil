@@ -38,9 +38,9 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext ctx)
     {
-        if ((controller.hero.State == Hero.PlayerState.MOVE || controller.hero.State == Hero.PlayerState.ATTACK) && !triggerCooldown)
+        if ((controller.hero.State == (int)Hero.PlayerState.MOVE || controller.hero.State == (int)Hero.PlayerState.ATTACK) && !triggerCooldown)
         {
-            controller.hero.State = Hero.PlayerState.ATTACK;
+            controller.hero.State = (int)Hero.PlayerState.ATTACK;
             animator.SetTrigger("BasicAttack");
             hasTriggeredAttack = true;
             controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
@@ -51,9 +51,9 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext ctx)
     {
-        if(controller.hero.State == Hero.PlayerState.MOVE && !triggerCooldown)
+        if(controller.hero.State == (int)Hero.PlayerState.MOVE && !triggerCooldown)
         {
-            controller.hero.State = Hero.PlayerState.DASH;
+            controller.hero.State = (int)Hero.PlayerState.DASH;
             controller.dashDir = controller.LastDir;
             animator.SetTrigger("Dash");
             triggerCooldown = true;
@@ -62,13 +62,13 @@ public class PlayerAnimation : MonoBehaviour
 
     public void EndOfSpecialAnimation() //triggers for dash and attack animations to reset currentState
     {
-        controller.hero.State = Hero.PlayerState.MOVE;
+        controller.hero.State = (int)Hero.PlayerState.MOVE;
         hasTriggeredAttack = false;
     }
 
     public void EndOfSpecialAnimationAttack() //triggers for dash and attack animations to reset currentState
     {
-        controller.hero.State = Hero.PlayerState.MOVE;
+        controller.hero.State = (int)Hero.PlayerState.MOVE;
         if(hasTriggeredAttack)
         {
             hasTriggeredAttack = false;
