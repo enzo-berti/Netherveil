@@ -5,7 +5,7 @@ public class Seed
     private const int lenght = 6;
     public float Value { private set; get; } = 0f;
 
-#if UNITY_EDITOR
+#if DEBUG
     public float Set(float value)
     {
         return Value = value;

@@ -1,3 +1,6 @@
+#define DEBUG
+//#define RELEASE
+
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
