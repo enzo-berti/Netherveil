@@ -1,4 +1,4 @@
-#if DEBUG
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using UnityEngine;
 
 public class DebugManager : MonoBehaviour
