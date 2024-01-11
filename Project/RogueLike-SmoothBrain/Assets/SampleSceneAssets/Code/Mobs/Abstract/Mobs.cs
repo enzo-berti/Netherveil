@@ -43,4 +43,9 @@ public abstract class Mobs : Entity, IDamageable
 
         playerScript.ApplyDamage(-damage);
     }
+
+    private void OnDestroy()
+    {
+        OnDeath -= drops.DropLoot;
+    }
 }
