@@ -16,4 +16,12 @@ public abstract class Entity : MonoBehaviour
             return stats;
         }
     }
+
+    public enum EntityState : int
+    {
+        TEST,
+        NB
+    }
+
+    public int State;
 }

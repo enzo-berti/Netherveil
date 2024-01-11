@@ -34,7 +34,7 @@ public class DamageDealer : MonoBehaviour
         bool canDamage;
         if (other.gameObject.TryGetComponent<Hero>(out Hero entity))
         {
-            canDamage = (damageDealer as Mobs) != null && (damageDealer as Mobs).State == Mobs.EnemyState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
+            canDamage = (damageDealer as Mobs) != null && (damageDealer as Mobs).State == (int)Mobs.EnemyState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
             if (canDamage)
             {
                 entity.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
@@ -42,7 +42,7 @@ public class DamageDealer : MonoBehaviour
         }
         else if (other.gameObject.TryGetComponent<Mobs>(out Mobs mobs))
         {
-            canDamage = ((damageDealer as Hero) != null && (damageDealer as Hero).State == Hero.PlayerState.ATTACK || (damageDealer as Mobs) != null && (damageDealer as Mobs).State == Mobs.EnemyState.ATTACK) && (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
+            canDamage = ((damageDealer as Hero) != null && (damageDealer as Hero).State == (int)Hero.PlayerState.ATTACK || (damageDealer as Mobs) != null && (damageDealer as Mobs).State == (int)Mobs.EnemyState.ATTACK) && (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
 
             if (canDamage)
             {

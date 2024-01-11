@@ -15,37 +15,37 @@ public class Sbire : Mobs
             enemyToTargetVector.y = 0;
 
             if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE))
-                state = EnemyState.ATTACK;
+                State = (int)EnemyState.ATTACK;
             else
-                state = EnemyState.TRIGGERED;
+                State = (int)EnemyState.TRIGGERED;
         }
 
-        if (state != EnemyState.ATTACK)
+        if (State != (int)EnemyState.ATTACK)
         {
             cooldown = 0;
         }
 
         // StateMachine
-        switch (state)
+        switch (State)
         {
-            case EnemyState.WANDERING:
+            case (int)EnemyState.WANDERING:
                 break;
 
-            case EnemyState.TRIGGERED:
+            case (int)EnemyState.TRIGGERED:
                 FollowPlayer(enemyToTargetVector);
                 break;
 
-            case EnemyState.DASH:
+            case (int)EnemyState.DASH:
                 break;
 
-            case EnemyState.ATTACK:
+            case (int)EnemyState.ATTACK:
                 AttackPlayer();
                 break;
 
-            case EnemyState.HIT:
+            case (int)EnemyState.HIT:
                 break;
 
-            case EnemyState.DEAD:
+            case (int)EnemyState.DEAD:
                 break;
 
             default:
@@ -99,7 +99,7 @@ public class Sbire : Mobs
     {
         if (other.tag == "Player")
         {
-            state = EnemyState.TRIGGERED;
+            State = (int)EnemyState.TRIGGERED;
             target = other.transform;
         }
     }
@@ -108,7 +108,7 @@ public class Sbire : Mobs
     {
         if (other.tag == "Player")
         {
-            state = EnemyState.WANDERING;
+            State = (int)EnemyState.WANDERING;
             target = null;
         }
     }
