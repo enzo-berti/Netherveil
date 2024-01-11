@@ -6,13 +6,15 @@ public class Tank : Sbire
 {
     Animator animator;
 
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    new void Update()
     {
+        base.Update();
         SimpleAI();
 
         animator.SetBool("InAttackRange", state == EnemyState.ATTACK);

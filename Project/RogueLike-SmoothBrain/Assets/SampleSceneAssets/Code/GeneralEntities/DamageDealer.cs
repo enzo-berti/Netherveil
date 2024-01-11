@@ -32,7 +32,6 @@ public class DamageDealer : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         bool canDamage;
-        Debug.Log(other.gameObject.name);
         if (other.gameObject.TryGetComponent<Hero>(out Hero entity))
         {
             canDamage = (damageDealer as Mobs) != null && (damageDealer as Mobs).State == Mobs.EnemyState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
@@ -44,10 +43,9 @@ public class DamageDealer : MonoBehaviour
         else if (other.gameObject.TryGetComponent<Mobs>(out Mobs mobs))
         {
             canDamage = ((damageDealer as Hero) != null && (damageDealer as Hero).State == Hero.PlayerState.ATTACK || (damageDealer as Mobs) != null && (damageDealer as Mobs).State == Mobs.EnemyState.ATTACK) && (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
-            Debug.Log((damageDealer as Hero).State == Hero.PlayerState.ATTACK);
+
             if (canDamage)
             {
-                Debug.Log("Damage");
                 mobs.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
             }
         }

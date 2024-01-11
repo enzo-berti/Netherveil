@@ -8,7 +8,7 @@ public abstract class Mobs : Entity, IDamageable
     public EnemyState State {  get { return state; } }
 
     [SerializeField] Drop drops;
-    private void Start()
+    protected void Start()
     {
         OnDeath += drops.DropLoot;
     }
@@ -31,7 +31,7 @@ public abstract class Mobs : Entity, IDamageable
         Stats.IncreaseValue(Stat.HP, -_value);
     }
 
-    public void Update()
+    protected void Update()
     {
         if (this.stats.GetValueStat(Stat.HP) < 0)
         {

@@ -4,17 +4,19 @@ public class Melee : Sbire
 {
     Animator animator;
 
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    new void Update()
     {
+        base.Update();
         SimpleAI();
 
-        animator.SetBool("InAttackRange", state == EnemyState.ATTACK);
-        animator.SetBool("Triggered", state == EnemyState.TRIGGERED || state == EnemyState.ATTACK);
-        animator.SetBool("Punch", isAttacking);
+        //animator.SetBool("InAttackRange", state == EnemyState.ATTACK);
+        //animator.SetBool("Triggered", state == EnemyState.TRIGGERED || state == EnemyState.ATTACK);
+        //animator.SetBool("Punch", isAttacking);
     }
 }
