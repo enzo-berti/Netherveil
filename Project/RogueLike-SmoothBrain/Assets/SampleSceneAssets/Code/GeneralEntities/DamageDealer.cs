@@ -6,8 +6,6 @@ public class DamageDealer : MonoBehaviour
     bool canDealDamage;
     float damageDeal;
     List<GameObject> hasDealtDamage;
-
-    [SerializeField] float weaponLenght;
     [SerializeField] Stats dealerWhoGetStats;
     [SerializeField] Entity damageDealer;
     void Start()
@@ -31,19 +29,13 @@ public class DamageDealer : MonoBehaviour
         canDealDamage = false;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, transform.position - transform.up * weaponLenght);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         bool canDamage;
         Debug.Log(other.gameObject.name);
         if (other.gameObject.TryGetComponent<Hero>(out Hero entity))
         {
-            canDamage = entity.State == Hero.PlayerState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
+            canDamage = (damageDealer as Mobs) != null && (damageDealer as Mobs).State == Mobs.EnemyState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
             if (canDamage)
             {
                 entity.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
@@ -51,7 +43,7 @@ public class DamageDealer : MonoBehaviour
         }
         else if (other.gameObject.TryGetComponent<Mobs>(out Mobs mobs))
         {
-            canDamage = (damageDealer as Hero).State == Hero.PlayerState.ATTACK && (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
+            canDamage = ((damageDealer as Hero) != null && (damageDealer as Hero).State == Hero.PlayerState.ATTACK || (damageDealer as Mobs) != null && (damageDealer as Mobs).State == Mobs.EnemyState.ATTACK) && (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
             Debug.Log((damageDealer as Hero).State == Hero.PlayerState.ATTACK);
             if (canDamage)
             {

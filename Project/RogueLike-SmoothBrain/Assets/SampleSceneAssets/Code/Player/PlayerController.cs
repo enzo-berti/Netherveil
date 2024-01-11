@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     {
         get { return direction; }
     }
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
