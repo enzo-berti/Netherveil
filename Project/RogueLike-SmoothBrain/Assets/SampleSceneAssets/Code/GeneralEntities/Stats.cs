@@ -17,6 +17,7 @@ public class Stats
     {
         get { return stats.Count; }
     }
+
     public List<Stat> StatsName
     {
         get
@@ -26,6 +27,7 @@ public class Stats
             {
                 list.Add(info.stat);
             }
+
             return list;
         }
     }
@@ -38,6 +40,7 @@ public class Stats
                 return stat.value;
             }
         }
+
         Debug.LogWarning($"Can't find {info} in {name}");
         return -1.0f;
     }
@@ -45,10 +48,9 @@ public class Stats
     public void IncreaseValue(Stat info, float increasingValue)
     {
         int index = stats.FindIndex(x => x.stat == info);
+
         if (index != -1)
-        {
             stats[index].value += increasingValue;
-        }
         else
             Debug.LogWarning($"Can't find {info} in {name}");
     }
