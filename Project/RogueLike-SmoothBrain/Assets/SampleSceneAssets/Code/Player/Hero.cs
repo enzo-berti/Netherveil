@@ -1,8 +1,10 @@
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerAnimation))]
-public class Hero : Entity, IDamageable
+public class Hero : Entity, IDamageable, IAttacker
 {
+    IAttacker.AttackDelegate onAttack;
+    IAttacker.AttackDelegate onHit;
     public enum PlayerState : int
     {
         MOVE = EntityState.NB,
@@ -13,6 +15,8 @@ public class Hero : Entity, IDamageable
     }
 
     PlayerAnimation playerAnim;
+    public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
+    public IAttacker.AttackDelegate OnHit { get => onHit; set => onHit = value; }
 
     private void Start()
     {
@@ -26,5 +30,10 @@ public class Hero : Entity, IDamageable
         {
             playerAnim.animator.SetTrigger("Hit");
         }
+    }
+
+    public void LaunchAttack()
+    {
+        OnAttack.Invoke();
     }
 }

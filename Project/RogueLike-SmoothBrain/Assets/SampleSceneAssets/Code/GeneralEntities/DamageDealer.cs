@@ -4,9 +4,7 @@ using UnityEngine;
 public class DamageDealer : MonoBehaviour
 {
     bool canDealDamage;
-    float damageDeal;
     List<GameObject> hasDealtDamage;
-    [SerializeField] Stats dealerWhoGetStats;
     [SerializeField] Entity damageDealer;
     void Start()
     {
@@ -37,6 +35,7 @@ public class DamageDealer : MonoBehaviour
             canDamage = (damageDealer as Mobs) != null && (damageDealer as Mobs).State == (int)Mobs.EnemyState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
             if (canDamage)
             {
+                (damageDealer as IAttacker).OnHit?.Invoke();
                 entity.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
             }
         }
