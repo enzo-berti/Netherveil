@@ -60,13 +60,13 @@ public class PlayerAnimation : MonoBehaviour
         }
     }
 
-    public void EndOfSpecialAnimation() //triggers for dash and attack animations to reset currentState
+    public void EndOfSpecialAnimation() //triggers for dash and hit animation to reset state
     {
         controller.hero.State = (int)Hero.PlayerState.MOVE;
         hasTriggeredAttack = false;
     }
 
-    public void EndOfSpecialAnimationAttack() //triggers for dash and attack animations to reset currentState
+    public void EndOfSpecialAnimationAttack() //triggers on attack animations to reset combo
     {
         controller.hero.State = (int)Hero.PlayerState.MOVE;
         if(hasTriggeredAttack)
