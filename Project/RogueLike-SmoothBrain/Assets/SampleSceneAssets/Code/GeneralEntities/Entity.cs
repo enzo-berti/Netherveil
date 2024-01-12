@@ -8,6 +8,7 @@ public abstract class Entity : MonoBehaviour
 
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
+
     
     public Stats Stats
     {
