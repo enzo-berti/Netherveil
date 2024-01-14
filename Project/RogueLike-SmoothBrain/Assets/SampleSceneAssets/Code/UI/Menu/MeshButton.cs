@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class MeshButton : MonoBehaviour
 {
     private bool isHovered = false;
+    private bool isPressed = false;
 
     [Header("Events"), Space]
     [SerializeField] private UnityEvent onHoverEnter;
@@ -23,26 +24,22 @@ public class MeshButton : MonoBehaviour
             {
                 if (!isHovered)
                 {
-                    OnHoverEnter();
+                    onHoverEnter?.Invoke();
                 }
 
                 isHovered = true;
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    OnPress();
-                }
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    OnRelease();
+                    onPress?.Invoke();
+                    isPressed = true;
                 }
             }
             else
             {
                 if (isHovered)
                 {
-                    OnHoverExit();
+                    onHoverExit?.Invoke();
                 }
 
                 isHovered = false;
@@ -52,30 +49,16 @@ public class MeshButton : MonoBehaviour
         {
             if (isHovered)
             {
-                OnHoverExit();
+                onHoverExit?.Invoke();
             }
 
             isHovered = false;
         }
-    }
 
-    void OnHoverEnter()
-    {
-        onHoverEnter?.Invoke();
-    }
-
-    void OnHoverExit()
-    {
-        onHoverExit?.Invoke();
-    }
-
-    void OnPress()
-    {
-        onPress?.Invoke();
-    }
-
-    void OnRelease()
-    {
-        onRelease?.Invoke();
+        if (Input.GetMouseButtonUp(0) && isPressed)
+        {
+            onRelease?.Invoke();
+            isPressed = false;
+        }
     }
 }
