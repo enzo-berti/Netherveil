@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Searcher;
 using UnityEngine;
-using UnityEngine.Rendering.UI;
 
 public class ItemBar : MonoBehaviour
 {
@@ -10,6 +8,7 @@ public class ItemBar : MonoBehaviour
     [SerializeField] GameObject[] itemSlot = new GameObject[5];
     GameObject player;
     List<IPassiveItem> items;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
