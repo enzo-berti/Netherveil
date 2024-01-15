@@ -11,7 +11,8 @@ public class PlayerAnimation : MonoBehaviour
 
     //used to prevent that if you press both dash and attack button to do both at the same time
     float keyCooldown = 0f;
-    bool triggerCooldown = false;
+    bool triggerCooldownAttack = false;
+    bool triggerCooldownDash = false;
 
     bool attackQueue = false;
 
@@ -27,12 +28,13 @@ public class PlayerAnimation : MonoBehaviour
     {
         animator.SetFloat("Speed", controller.Direction.magnitude, 0.1f, Time.deltaTime);
 
-        if (triggerCooldown)
+        if (triggerCooldownDash || triggerCooldownAttack)
         {
             keyCooldown += Time.deltaTime;
             if (keyCooldown > 0.2f)
             {
-                triggerCooldown = false;
+                triggerCooldownDash = false;
+                triggerCooldownAttack = false;
                 keyCooldown = 0f;
             }
         }
@@ -40,7 +42,7 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext ctx)
     {
-        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldown)
+        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownDash)
         {
             if (controller.hero.State == (int)Entity.EntityState.ATTACK)
             {
@@ -48,19 +50,19 @@ public class PlayerAnimation : MonoBehaviour
             }
 
             animator.SetTrigger("BasicAttack");
-            triggerCooldown = true;
+            triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
         }
     }
 
     public void Dash(InputAction.CallbackContext ctx)
     {
-        if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldown)
+        if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
             controller.dashDir = controller.LastDir;
             animator.SetTrigger("Dash");
-            triggerCooldown = true;
+            triggerCooldownDash = true;
         }
     }
 
