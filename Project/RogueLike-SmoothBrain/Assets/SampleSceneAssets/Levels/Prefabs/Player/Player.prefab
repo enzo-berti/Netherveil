@@ -46,7 +46,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -66,9 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f68f7ae31edeef4cb14af47acf8c028, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dealerWhoGetStats:
-    stats: []
-    name: Default
   damageDealer: {fileID: 8688002045578851570}
 --- !u!1 &9033929945322975642
 GameObject:
@@ -660,6 +657,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 5363431948807730727}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eb1f3307d5a25c4988a14535c8bd5bd,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 8688002045578851570}
   m_SourcePrefab: {fileID: 100100000, guid: 5eb1f3307d5a25c4988a14535c8bd5bd, type: 3}
 --- !u!1 &966695631222454742 stripped
@@ -734,6 +735,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
+--- !u!114 &5363431948807730727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966695631222454742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f112aa7dcc11bb468b98ca94bb54128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8688002045578851570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -754,13 +767,11 @@ MonoBehaviour:
       value: 5
     - stat: 2
       value: 1
-    - stat: 3
-      value: 1
-    - stat: 4
-      value: 6
+    - stat: 6
+      value: 3
     - stat: 5
       value: 6
-    name: Default
+    name: Hero
   isAlly: 1
   State: 0
 --- !u!4 &1738004170311039823 stripped

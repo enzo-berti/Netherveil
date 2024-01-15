@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public interface IAttacker 
 {
     public delegate void AttackDelegate();
-    public delegate void HitDelegate();
+    public delegate void HitDelegate(Entity entity);
     public AttackDelegate OnAttack
     {
         get;
         set;
     }
 
-    public AttackDelegate OnHit
+    public HitDelegate OnHit
     {
         get;
         set;
