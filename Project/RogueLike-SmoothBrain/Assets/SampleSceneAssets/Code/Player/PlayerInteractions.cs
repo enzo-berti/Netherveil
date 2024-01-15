@@ -21,9 +21,9 @@ public class PlayerInteractions : MonoBehaviour
         {
             foreach (Collider collider in tab) 
             {
-                if((collider as IInterractable) != null)
+                if((collider.gameObject.TryGetComponent<IInterractable>(out IInterractable interractable)))
                 {
-                    (collider as IInterractable).Interract();
+                    interractable.Interract();
                 }
             }
         }

@@ -11,6 +11,8 @@ public abstract class Item : MonoBehaviour, IInterractable
         }
         else if((this.GetComponent<IPassiveItem>()) != null)
         {
+            Debug.Log(inventory == null);
+            Debug.Log(this.GetComponent<IPassiveItem>() == null);
             inventory.AddPassiveItem(this.GetComponent<IPassiveItem>());
         }
 

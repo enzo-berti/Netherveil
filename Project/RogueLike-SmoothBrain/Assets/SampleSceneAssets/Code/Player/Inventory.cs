@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 
+[Serializable]
 public class Inventory
 {
     IActiveItem activeItem = null;
-    List<IPassiveItem> passiveItems;
+    List<IPassiveItem> passiveItems = new List<IPassiveItem>();
 
     public IActiveItem ActiveItem { get { return activeItem; } }
     public List<IPassiveItem> PassiveItems { get { return passiveItems; } }

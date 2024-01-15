@@ -11,7 +11,7 @@ public class Hero : Entity, IDamageable, IAttacker
     }
 
     PlayerAnimation playerAnim;
-    Inventory inventory;
+    Inventory inventory = new Inventory();
     public Inventory Inventory { get { return inventory; } }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
