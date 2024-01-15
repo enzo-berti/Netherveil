@@ -31,10 +31,10 @@ public class DamageDealer : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent<Entity>(out Entity entity))
         {
-            bool canDamage = (damageDealer as Entity) != null && (damageDealer as Entity).State == (int)Entity.EntityState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
+            bool canDamage = damageDealer.State == (int)Entity.EntityState.ATTACK && ((damageDealer.isAlly && !entity.isAlly) || (!damageDealer.isAlly && entity.isAlly));
             if (canDamage)
             {
-                (damageDealer as IAttacker).OnHit?.Invoke();
+                (damageDealer as IAttacker).OnHit?.Invoke(entity);
                 entity.GetComponent<IDamageable>().ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
             }
         }
