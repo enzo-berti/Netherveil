@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb9982cd32d899147a0d38301b858b7e, type: 3}
+  m_Name: test
+  m_EditorClassIdentifier: 
+  nodeLinks:
+  - BaseNodeGuid: 0038818d-876c-4c6c-b48a-a47a106459fc
+    PortName: Dialogue
+    TargetNodeGuid: a1a38e4f-6d5b-4b63-94a6-090cfbadacf4
+  - BaseNodeGuid: a1a38e4f-6d5b-4b63-94a6-090cfbadacf4
+    PortName: Choice 1
+    TargetNodeGuid: eff26cc0-ef92-462a-b30c-a548eb21fade
+  - BaseNodeGuid: a1a38e4f-6d5b-4b63-94a6-090cfbadacf4
+    PortName: Choice 2
+    TargetNodeGuid: 9b833c59-2b89-48e3-acc5-424f1dcdaab6
+  - BaseNodeGuid: eff26cc0-ef92-462a-b30c-a548eb21fade
+    PortName: next dialogue
+    TargetNodeGuid: ac2f5738-0be1-4689-96d3-729fecf1a668
+  - BaseNodeGuid: 9b833c59-2b89-48e3-acc5-424f1dcdaab6
+    PortName: next dialogue
+    TargetNodeGuid: ac2f5738-0be1-4689-96d3-729fecf1a668
+  dialogueNodeData:
+  - Guid: a1a38e4f-6d5b-4b63-94a6-090cfbadacf4
+    nameText: Joe
+    dialogueText: Hello World !
+    illustrationSprite: {fileID: 0}
+    position: {x: 163, y: 0}
+  - Guid: eff26cc0-ef92-462a-b30c-a548eb21fade
+    nameText: Joe
+    dialogueText: Hello World !
+    illustrationSprite: {fileID: 0}
+    position: {x: 492, y: -164}
+  - Guid: 9b833c59-2b89-48e3-acc5-424f1dcdaab6
+    nameText: Joe
+    dialogueText: Hello World !
+    illustrationSprite: {fileID: 0}
+    position: {x: 484, y: 84}
+  - Guid: ac2f5738-0be1-4689-96d3-729fecf1a668
+    nameText: Joe
+    dialogueText: Hello World !
+    illustrationSprite: {fileID: 0}
+    position: {x: 844, y: -20}
+  exposedProperties: []

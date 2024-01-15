@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-
     Transform cameraTransform;
     [Range(0f, 20f), SerializeField]
     float dashSpeed;
@@ -79,5 +77,4 @@ public class PlayerController : MonoBehaviour
     {
         direction = ctx.ReadValue<Vector2>();
     }
-
 }

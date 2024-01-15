@@ -72,7 +72,9 @@ namespace DialogueSystem.Editor
                         dialogueContainer.dialogueNodeData.Add(new DialogueNodeData
                         {
                             Guid = dialogueNode.GUID,
+                            nameText = dialogueNode.NameText,
                             dialogueText = dialogueNode.DialogueText,
+                            illustrationSprite = dialogueNode.IllustrationSprite,
                             position = dialogueNode.GetPosition().position
                         });
                     }
@@ -148,9 +150,11 @@ namespace DialogueSystem.Editor
         {
             foreach (var nodeData in containerCache.dialogueNodeData)
             {
-                var tempNode = targetGraphView.CreateNode(typeof(DialogueNode), nodeData.position) as DialogueNode;
+                var tempNode = targetGraphView.CreateNode(typeof(ChoicesNode), nodeData.position) as ChoicesNode;
                 tempNode.GUID = nodeData.Guid;
+                tempNode.NameText = nodeData.nameText;
                 tempNode.DialogueText = nodeData.dialogueText;
+                tempNode.IllustrationSprite = nodeData.illustrationSprite;
 
                 if (tempNode == null)
                     continue;

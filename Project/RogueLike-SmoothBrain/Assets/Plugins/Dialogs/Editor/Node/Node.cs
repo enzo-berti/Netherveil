@@ -1,8 +1,5 @@
-using UnityEngine;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor;
-using UnityEngine.UIElements;
 using System;
+using UnityEditor.Experimental.GraphView;
 
 namespace DialogueSystem.Editor.Nodes
 {
