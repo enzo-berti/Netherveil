@@ -15,8 +15,8 @@ public class Kamikaze : Sbire
         base.Update();
         SimpleAI();
 
-        animator.SetBool("InAttackRange", State == (int)EnemyState.ATTACK);
-        animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EnemyState.ATTACK);
+        animator.SetBool("InAttackRange", State == (int)EntityState.ATTACK);
+        animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EntityState.ATTACK);
         animator.SetBool("Punch", isAttacking);
     }
 }

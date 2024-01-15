@@ -20,7 +20,10 @@ public abstract class Entity : MonoBehaviour
 
     public enum EntityState : int
     {
-        TEST,
+        MOVE,
+        ATTACK,
+        HIT,
+        DEAD,
         NB
     }
 

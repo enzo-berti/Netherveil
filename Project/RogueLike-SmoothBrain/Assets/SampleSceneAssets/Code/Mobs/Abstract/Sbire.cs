@@ -15,12 +15,12 @@ public class Sbire : Mobs
             enemyToTargetVector.y = 0;
 
             if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE))
-                State = (int)EnemyState.ATTACK;
+                State = (int)EntityState.ATTACK;
             else
                 State = (int)EnemyState.TRIGGERED;
         }
 
-        if (State != (int)EnemyState.ATTACK)
+        if (State != (int)EntityState.ATTACK)
         {
             cooldown = 0;
         }
@@ -28,6 +28,16 @@ public class Sbire : Mobs
         // StateMachine
         switch (State)
         {
+            case (int)EntityState.ATTACK:
+                AttackPlayer();
+                break;
+
+            case (int)EntityState.HIT:
+                break;
+
+            case (int)EntityState.DEAD:
+                break;
+
             case (int)EnemyState.WANDERING:
                 break;
 
@@ -36,16 +46,6 @@ public class Sbire : Mobs
                 break;
 
             case (int)EnemyState.DASH:
-                break;
-
-            case (int)EnemyState.ATTACK:
-                AttackPlayer();
-                break;
-
-            case (int)EnemyState.HIT:
-                break;
-
-            case (int)EnemyState.DEAD:
                 break;
 
             default:

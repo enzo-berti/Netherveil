@@ -16,11 +16,7 @@ public abstract class Mobs : Entity, IDamageable
     {
         WANDERING = EntityState.NB,
         TRIGGERED,
-        MOVE,
-        DASH,
-        ATTACK,
-        HIT,
-        DEAD
+        DASH
     }
 
     public void ApplyDamage(int _value)
