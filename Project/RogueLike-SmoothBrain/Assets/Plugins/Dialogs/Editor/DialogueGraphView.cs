@@ -59,13 +59,21 @@ public class DialogueGraphView : GraphView
     {
         DialogueSystem.Editor.Nodes.Node newNode;
 
-        if (type == typeof(DialogueNode))
+        if (type == typeof(ChoicesNode))
         {
-            newNode = new DialogueNode(this);
+            newNode = new ChoicesNode(this);
             newNode.SetPosition(new Rect(position, defaultNodeSize));
             AddElement(newNode);
             return newNode;
         }
+        if (type == typeof(TextNode))
+        {
+            newNode = new TextNode(this);
+            newNode.SetPosition(new Rect(position, defaultNodeSize));
+            AddElement(newNode);
+            return newNode;
+        }
+
         return null;
     }
 

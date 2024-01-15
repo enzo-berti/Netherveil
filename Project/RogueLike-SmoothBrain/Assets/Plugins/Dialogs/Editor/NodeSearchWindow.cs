@@ -30,9 +30,15 @@ namespace DialogueSystem.Editor
                 new SearchTreeGroupEntry(new GUIContent("Create Elements"), 0),
                 new SearchTreeGroupEntry(new GUIContent("Dialogue"), 1),
 
-                new SearchTreeEntry(new GUIContent("Dialogue Node", indentationIcon))
+                new SearchTreeEntry(new GUIContent("Choices Node", indentationIcon))
                 {
-                    userData = new Nodes.DialogueNode(graphView),
+                    userData = new Nodes.ChoicesNode(graphView),
+                    level = 2
+                },
+
+                new SearchTreeEntry(new GUIContent("Text Node", indentationIcon))
+                {
+                    userData = new Nodes.TextNode(graphView),
                     level = 2
                 },
             };
@@ -41,14 +47,17 @@ namespace DialogueSystem.Editor
 
         public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
         {
-            var worldMousePosition = window.rootVisualElement.ChangeCoordinatesTo(window.rootVisualElement.parent, 
+            var worldMousePosition = window.rootVisualElement.ChangeCoordinatesTo(window.rootVisualElement.parent,
                 context.screenMousePosition - window.position.position);
             var localMousePosition = graphView.contentViewContainer.WorldToLocal(worldMousePosition);
 
             switch (SearchTreeEntry.userData)
             {
-                case Nodes.DialogueNode dialogueNode:
-                    graphView.CreateNode(typeof(Nodes.DialogueNode), localMousePosition);
+                case Nodes.ChoicesNode:
+                    graphView.CreateNode(typeof(Nodes.ChoicesNode), localMousePosition);
+                    return true;
+                case Nodes.TextNode:
+                    graphView.CreateNode(typeof(Nodes.TextNode), localMousePosition);
                     return true;
                 default:
                     return false;
