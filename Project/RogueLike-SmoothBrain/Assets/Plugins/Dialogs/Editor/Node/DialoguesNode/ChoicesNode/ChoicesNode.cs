@@ -5,42 +5,21 @@ using UnityEngine.UIElements;
 
 namespace DialogueSystem.Editor.Nodes
 {
-    public class DialogueNode : Node
+    public class ChoicesNode : DialogueNode
     {
-        public DialogueNode(GraphView graphView) 
-            : base("Assets/Plugins/Dialogs/Editor/Node/DialogueNode/DialogueNodeView.uxml", graphView)
+        public ChoicesNode(GraphView graphView) 
+            : base("Assets/Plugins/Dialogs/Editor/Node/DialoguesNode/ChoicesNode/ChoicesNodeView.uxml", graphView)
         {
-            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/Dialogs/Editor/Node/DialogueNode/DialogueNodeView.uss"));
+            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/Dialogs/Editor/Node/DialoguesNode/ChoicesNode/ChoicesNodeView.uss"));
 
-            title = "Dialogue Node";
-            dialogueText = "Hello World !";
-            AddPort(Direction.Input, Port.Capacity.Multi, "Dialogue");
+            title = "Choices Node";
+            AddPort(Direction.Input, Port.Capacity.Multi, "previous dialogue");
 
             var button = this.Q<Button>("button-new-choice");
-            button.clickable.clicked += () => AddChoicePort(); 
-            
-            var textField = this.Q<TextField>("dialogue-field");
-            textField.RegisterValueChangedCallback(evt =>
-            {
-                dialogueText = evt.newValue;
-            });
-            textField.value = dialogueText;
+            button.clickable.clicked += () => AddChoicePort();
 
             RefreshExpandedState();
             RefreshPorts();
-        }
-
-        private string dialogueText;
-        public string DialogueText
-        {
-            get => dialogueText;
-            set
-            {
-                dialogueText = value;
-
-                var textField = this.Q<TextField>("dialogue-field");
-                textField.value = value;
-            }
         }
 
         public void AddChoicePort(string overridenPortName = "")
