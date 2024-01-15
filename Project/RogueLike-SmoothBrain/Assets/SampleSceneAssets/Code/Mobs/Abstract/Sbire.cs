@@ -1,12 +1,15 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Sbire : Mobs
 {
     protected float cooldown = 0;
     protected bool isAttacking = false;
 
-    protected void SimpleAI()
+    protected override void Update()
     {
+        base.Update();
+
         Vector3 enemyToTargetVector = Vector3.zero;
 
         if (target != null)
@@ -42,7 +45,7 @@ public class Sbire : Mobs
                 break;
 
             case (int)EnemyState.TRIGGERED:
-                FollowPlayer(enemyToTargetVector);
+                FollowPlayer();
                 break;
 
             case (int)EnemyState.DASH:
@@ -53,14 +56,9 @@ public class Sbire : Mobs
         }
     }
 
-    // sale faut repasser ici
-    protected void FollowPlayer(Vector3 _distanceToPlayer)
+    protected void FollowPlayer()
     {
-        _distanceToPlayer.Normalize();
-
-        FaceTarget();
-
-        transform.position += _distanceToPlayer * stats.GetValueStat(Stat.SPEED) * Time.deltaTime;
+        agent.SetDestination(target.position);
     }
 
     // fait sa vie, se balade dans la salle

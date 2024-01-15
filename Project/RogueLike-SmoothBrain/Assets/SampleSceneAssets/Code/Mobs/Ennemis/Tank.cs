@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tank : Sbire
@@ -12,13 +10,12 @@ public class Tank : Sbire
         animator = GetComponent<Animator>();
     }
 
-    new void Update()
+    protected override void Update()
     {
         base.Update();
-        SimpleAI();
 
         animator.SetBool("InAttackRange", State == (int)EntityState.ATTACK);
-        animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EntityState.ATTACK);
+        animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EntityState.ATTACK || agent.hasPath);
         animator.SetBool("Punch", isAttacking);
     }
 }

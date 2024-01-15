@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Melee : Sbire
@@ -10,13 +11,12 @@ public class Melee : Sbire
         animator = GetComponent<Animator>();
     }
 
-    new void Update()
+    protected override void Update()
     {
         base.Update();
-        SimpleAI();
 
-        //animator.SetBool("InAttackRange", state == EnemyState.ATTACK);
-        //animator.SetBool("Triggered", state == EnemyState.TRIGGERED || state == EnemyState.ATTACK);
-        //animator.SetBool("Punch", isAttacking);
+        animator.SetBool("InAttackRange", State == (int)EntityState.ATTACK);
+        animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EntityState.ATTACK || agent.hasPath);
+        animator.SetBool("Punch", isAttacking);
     }
 }
