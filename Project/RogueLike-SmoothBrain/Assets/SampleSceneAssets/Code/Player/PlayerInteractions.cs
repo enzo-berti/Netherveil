@@ -4,6 +4,7 @@ public class PlayerInteractions : MonoBehaviour
 {
     Hero hero;
     Vector3 spherePos = Vector3.zero;
+
     void Start()
     {
         hero = GetComponent<Hero>();
