@@ -55,6 +55,15 @@ public class Stats
             Debug.LogWarning($"Can't find {info} in {name}");
     }
 
+    public void SetValue(Stat info, float value)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+            stats[index].value = value;
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
     public bool HasStat(Stat info)
     {
         foreach (StatInfo stat in stats)
