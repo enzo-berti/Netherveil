@@ -81,7 +81,7 @@ public class PlayerAnimation : MonoBehaviour
         else
         {
             controller.hero.State = (int)Entity.EntityState.MOVE;
-            controller.ComboCount = -1;
+            controller.ComboCount = 0;
         }
     }
 }
