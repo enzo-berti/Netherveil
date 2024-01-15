@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
 {
-    private static int roomGenerated = 0;
-
-    private void Awake()
+    private void Generate(int roomGenerated = 0)
     {
         GameManager.Instance.seed.Set(123456);
 
@@ -24,12 +22,5 @@ public class RoomGenerator : MonoBehaviour
                 Destroy(rooms[i]);
             }
         }
-
-        roomGenerated++;
-    }
-
-    private void Update()
-    {
-
     }
 }

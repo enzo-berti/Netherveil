@@ -8,7 +8,9 @@ public enum Stat
     ATK_RANGE,
     FIRE_RATE,
     SPEED,
-    CATCH_RADIUS
+    CATCH_RADIUS,
+    CRIT_RATE,
+    CRIT_DAMAGE
 }
 
 [Serializable]

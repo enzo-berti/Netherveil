@@ -13,7 +13,7 @@ namespace DialogueSystem.Editor.Nodes
             styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/Dialogs/Editor/Node/RootNode/RootNodeView.uss"));
 
             title = "root";
-            AddPort(Direction.Output, Port.Capacity.Multi, "Dialogue");
+            AddPort(Direction.Output, Port.Capacity.Single, "Dialogue");
 
             capabilities &= ~Capabilities.Movable;
             capabilities &= ~Capabilities.Deletable;
