@@ -12,7 +12,7 @@ public class CameraCinematicsManager : MonoBehaviour
             ActiveCamera(cameras.First());
     }
         
-    public void ActiveCamera(CinemachineVirtualCamera toActive)
+    public void ActiveCamera(CinemachineVirtualCamera toActive) 
     {
         foreach (var cam in cameras)
         {

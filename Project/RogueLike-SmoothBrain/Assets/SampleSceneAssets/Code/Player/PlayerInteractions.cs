@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInteractions : MonoBehaviour
 {
     Hero hero;
     Vector3 spherePos = Vector3.zero;
+
     void Start()
     {
         hero = GetComponent<Hero>();
@@ -14,14 +16,20 @@ public class PlayerInteractions : MonoBehaviour
         spherePos = new Vector3(transform.position.x,
             transform.position.y + GetComponent<CharacterController>().bounds.size.y / 2f,
             transform.position.z);
+        // TODO : Add UI to understand that we can press a touch to take an object
+    }
+
+    public void Interract(InputAction.CallbackContext ctx)
+    {
+        
 
         Collider[] tab = Physics.OverlapSphere(spherePos, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
 
         if (tab.Length > 0)
         {
-            foreach (Collider collider in tab) 
+            foreach (Collider collider in tab)
             {
-                if((collider.gameObject.TryGetComponent<IInterractable>(out IInterractable interractable)))
+                if ((collider.gameObject.TryGetComponent<IInterractable>(out IInterractable interractable)))
                 {
                     interractable.Interract();
                 }

@@ -8,7 +8,11 @@ public class Sbire : Mobs
     protected override void Update()
     {
         base.Update();
+        SimpleAI();
+    }
 
+    protected virtual void SimpleAI()
+    {
         Vector3 enemyToTargetVector = Vector3.zero;
 
         if (target != null)
@@ -45,6 +49,7 @@ public class Sbire : Mobs
                 break;
 
             case (int)EnemyState.WANDERING:
+                Wander();
                 break;
 
             case (int)EnemyState.TRIGGERED:
