@@ -39,6 +39,6 @@ public class Hero : Entity, IDamageable, IAttacker
 
     public void LaunchAttack()
     {
-        OnAttack.Invoke();
+        OnAttack?.Invoke();
     }
 }
