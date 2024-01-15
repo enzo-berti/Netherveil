@@ -1,26 +1,27 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class Mobs : Entity, IDamageable
 {
-
     [SerializeField] Drop drops;
+    protected NavMeshAgent agent;
+
     protected void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+
+        agent.speed = stats.GetValueStat(Stat.SPEED);
+
         OnDeath += drops.DropLoot;
     }
-	
+
     protected Transform target = null;
 
     public enum EnemyState : int
     {
         WANDERING = EntityState.NB,
         TRIGGERED,
-        MOVE,
-        DASH,
-        ATTACK,
-        HIT,
-        DEAD
+        DASH
     }
 
     public void ApplyDamage(int _value)
@@ -28,7 +29,7 @@ public abstract class Mobs : Entity, IDamageable
         Stats.IncreaseValue(Stat.HP, -_value);
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         if (this.stats.GetValueStat(Stat.HP) < 0)
         {
@@ -36,7 +37,8 @@ public abstract class Mobs : Entity, IDamageable
             Destroy(this.gameObject);
         }
     }
-    void HitPlayer()
+
+    public void HitPlayer()
     {
         int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
         Hero playerScript = target.gameObject.GetComponent<Hero>();

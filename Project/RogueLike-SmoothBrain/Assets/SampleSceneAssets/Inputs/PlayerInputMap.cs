@@ -227,6 +227,34 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Interract"",
+            ""id"": ""ea74b840-4d9f-41f6-a14e-088305ed5614"",
+            ""actions"": [
+                {
+                    ""name"": ""Interract"",
+                    ""type"": ""Button"",
+                    ""id"": ""abaa9575-7984-46d0-8c8e-150b1b7924c1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f19bad6e-ade0-4725-8012-baf4794e5012"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -240,6 +268,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         // Dash
         m_Dash = asset.FindActionMap("Dash", throwIfNotFound: true);
         m_Dash_Dash = m_Dash.FindAction("Dash", throwIfNotFound: true);
+        // Interract
+        m_Interract = asset.FindActionMap("Interract", throwIfNotFound: true);
+        m_Interract_Interract = m_Interract.FindAction("Interract", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -435,6 +466,52 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         }
     }
     public DashActions @Dash => new DashActions(this);
+
+    // Interract
+    private readonly InputActionMap m_Interract;
+    private List<IInterractActions> m_InterractActionsCallbackInterfaces = new List<IInterractActions>();
+    private readonly InputAction m_Interract_Interract;
+    public struct InterractActions
+    {
+        private @PlayerInputMap m_Wrapper;
+        public InterractActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Interract => m_Wrapper.m_Interract_Interract;
+        public InputActionMap Get() { return m_Wrapper.m_Interract; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InterractActions set) { return set.Get(); }
+        public void AddCallbacks(IInterractActions instance)
+        {
+            if (instance == null || m_Wrapper.m_InterractActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InterractActionsCallbackInterfaces.Add(instance);
+            @Interract.started += instance.OnInterract;
+            @Interract.performed += instance.OnInterract;
+            @Interract.canceled += instance.OnInterract;
+        }
+
+        private void UnregisterCallbacks(IInterractActions instance)
+        {
+            @Interract.started -= instance.OnInterract;
+            @Interract.performed -= instance.OnInterract;
+            @Interract.canceled -= instance.OnInterract;
+        }
+
+        public void RemoveCallbacks(IInterractActions instance)
+        {
+            if (m_Wrapper.m_InterractActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IInterractActions instance)
+        {
+            foreach (var item in m_Wrapper.m_InterractActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_InterractActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public InterractActions @Interract => new InterractActions(this);
     public interface IMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -446,5 +523,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     public interface IDashActions
     {
         void OnDash(InputAction.CallbackContext context);
+    }
+    public interface IInterractActions
+    {
+        void OnInterract(InputAction.CallbackContext context);
     }
 }

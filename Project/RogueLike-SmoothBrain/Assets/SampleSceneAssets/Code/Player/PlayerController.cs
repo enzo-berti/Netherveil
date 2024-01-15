@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     float currentTargetAngle = 0f;
     public Vector2 dashDir = Vector2.zero;
     public Vector2 LastDir { get; set; } = Vector2.zero;
-    public int ComboCount { get; set; } = -1;
+    public int ComboCount { get; set; } = 0;
     public readonly int MAX_COMBO_COUNT = 3;
 
     public Hero hero;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         hero = GetComponent<Hero>();
         cameraTransform = Camera.main.transform;
-        hero.State = (int)Hero.PlayerState.MOVE;
+        hero.State = (int)Entity.EntityState.MOVE;
 
         //initialize starting rotation
         Vector3 eulerAngles = transform.eulerAngles;
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (hero.State == (int)Hero.PlayerState.MOVE && (direction.x != 0f || direction.y != 0f))
+        if (hero.State == (int)Entity.EntityState.MOVE && (direction.x != 0f || direction.y != 0f))
         {
             LastDir = direction;
             currentTargetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;

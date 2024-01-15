@@ -29,26 +29,15 @@ public class DamageDealer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        bool canDamage;
-        if (other.gameObject.TryGetComponent<Hero>(out Hero entity))
+        if (other.gameObject.TryGetComponent<Entity>(out Entity entity))
         {
-            canDamage = (damageDealer as Mobs) != null && (damageDealer as Mobs).State == (int)Mobs.EnemyState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
+            bool canDamage = damageDealer.State == (int)Entity.EntityState.ATTACK && ((damageDealer.isAlly && !entity.isAlly) || (!damageDealer.isAlly && entity.isAlly));
             if (canDamage)
             {
-                (damageDealer as IAttacker).OnHit?.Invoke();
-                entity.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
+                (damageDealer as IAttacker).OnHit?.Invoke(entity);
+                entity.GetComponent<IDamageable>().ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
             }
         }
-        else if (other.gameObject.TryGetComponent<Mobs>(out Mobs mobs))
-        {
-            canDamage = ((damageDealer as Hero) != null && (damageDealer as Hero).State == (int)Hero.PlayerState.ATTACK || (damageDealer as Mobs) != null && (damageDealer as Mobs).State == (int)Mobs.EnemyState.ATTACK) && (damageDealer.isAlly && !mobs.isAlly || !damageDealer.isAlly && mobs.isAlly);
-
-            if (canDamage)
-            {
-                mobs.ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
-            }
-        }
-        
     }
 
 }

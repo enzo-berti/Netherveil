@@ -4,19 +4,17 @@ using UnityEngine;
 public class Hero : Entity, IDamageable, IAttacker
 {
     IAttacker.AttackDelegate onAttack;
-    IAttacker.AttackDelegate onHit;
+    IAttacker.HitDelegate onHit;
     public enum PlayerState : int
     {
-        MOVE = EntityState.NB,
-        DASH,
-        ATTACK,
-        HIT,
-        DEAD
+        DASH = EntityState.NB
     }
 
     PlayerAnimation playerAnim;
+    Inventory inventory = new Inventory();
+    public Inventory Inventory { get { return inventory; } }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.AttackDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     private void Start()
     {
@@ -26,16 +24,16 @@ public class Hero : Entity, IDamageable, IAttacker
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, _value);
-        if(_value < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
+        if (_value < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
-            State = (int)PlayerState.HIT;
+            State = (int)EntityState.HIT;
             playerAnim.animator.ResetTrigger("Hit");
             playerAnim.animator.SetTrigger("Hit");
         }
 
-        if(stats.GetValueStat(Stat.HP) <= 0 && State != (int) PlayerState.DEAD) 
+        if (stats.GetValueStat(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
         {
-            State = (int)PlayerState.DEAD;
+            State = (int)EntityState.DEAD;
             playerAnim.animator.ResetTrigger("Death");
             playerAnim.animator.SetTrigger("Death");
         }
@@ -43,6 +41,6 @@ public class Hero : Entity, IDamageable, IAttacker
 
     public void LaunchAttack()
     {
-        OnAttack.Invoke();
+        OnAttack?.Invoke();
     }
 }
