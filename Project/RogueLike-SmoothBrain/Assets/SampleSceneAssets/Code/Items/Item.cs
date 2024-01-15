@@ -13,5 +13,12 @@ public abstract class Item : MonoBehaviour, IInterractable
         {
             inventory.AddPassiveItem(this.GetComponent<IPassiveItem>());
         }
+
+        if((this.GetComponent<IPassiveItem>()) != null)
+        {
+            this.GetComponent<IPassiveItem>().OnRetrieved();
+        }
+
+        Item.Destroy(this.gameObject);
     }
 }
