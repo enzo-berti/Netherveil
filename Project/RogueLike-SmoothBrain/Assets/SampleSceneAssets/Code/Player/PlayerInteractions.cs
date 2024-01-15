@@ -33,6 +33,9 @@ public class PlayerInteractions : MonoBehaviour
     {
         Color color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, 0.25f);
         Gizmos.color = color;
-        Gizmos.DrawSphere(spherePos, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
+        if(hero != null)
+        {
+            Gizmos.DrawSphere(spherePos, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
+        }
     }
 }
