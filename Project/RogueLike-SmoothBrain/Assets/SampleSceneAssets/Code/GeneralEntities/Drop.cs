@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [Serializable]
 public class Drop
@@ -34,3 +37,23 @@ public class Drop
         }
     }
 }
+
+#if UNITY_EDITOR
+[CustomPropertyDrawer(typeof(Drop))]
+public class DropDrawerUIE : PropertyDrawer
+{
+    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    {
+        // Create property container element.
+        var container = new VisualElement();
+
+        // Create property fields.
+        var nameField = new PropertyField(property.FindPropertyRelative("dropList"), "Drops");
+
+        // Add fields to the container.
+        container.Add(nameField);
+
+        return container;
+    }
+}
+#endif

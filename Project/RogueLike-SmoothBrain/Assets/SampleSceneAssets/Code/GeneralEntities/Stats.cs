@@ -43,7 +43,7 @@ public class Stats
 
         Debug.LogWarning($"Can't find {info} in {name}");
         return -1.0f;
-    }
+    }   
 
     public void IncreaseValue(Stat info, float increasingValue)
     {
