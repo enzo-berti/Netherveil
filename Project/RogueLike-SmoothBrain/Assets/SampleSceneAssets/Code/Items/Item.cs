@@ -2,6 +2,16 @@ using UnityEngine;
 
 public abstract class Item : MonoBehaviour, IInterractable
 {
+    public enum Rarity
+    {
+        COMMON,
+        UNCOMMON,
+        RARE,
+        EPIC,
+        LEGENDARY
+    }
+
+    public Rarity RarityTier { get; private set; } = 0;
     public virtual void Interract()
     {
         Inventory inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>().Inventory;
