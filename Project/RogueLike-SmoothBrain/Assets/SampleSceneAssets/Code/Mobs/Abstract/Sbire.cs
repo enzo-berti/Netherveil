@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Sbire : Mobs
 {
@@ -26,6 +25,10 @@ public class Sbire : Mobs
         if (State != (int)EntityState.ATTACK)
         {
             cooldown = 0;
+        }
+        else
+        {
+            agent.SetDestination(transform.position);
         }
 
         // StateMachine
@@ -79,18 +82,8 @@ public class Sbire : Mobs
         }
         else
         {
-            FaceTarget();
             isAttacking = false;
         }
-    }
-
-    void FaceTarget()
-    {
-        Vector3 enemyToTargetVector = target.position - transform.position;
-        enemyToTargetVector.y = 0;
-
-        float angle = Mathf.Atan2(enemyToTargetVector.x, enemyToTargetVector.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 
     private void OnTriggerEnter(Collider other)
