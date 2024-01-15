@@ -44,14 +44,18 @@ namespace FMODUnity
 
         internal override bool SupportsAdditionalCPP(BuildTarget target)
         {
+#if UNITY_IOS
             if (target == BuildTarget.iOS)
             {
                 return PlatformIOS.StaticSupportsAdditionalCpp();
             }
             else
             {
-                return base.SupportsAdditionalCPP(target);
+#endif
+            return base.SupportsAdditionalCPP(target);
+#if UNITY_IOS
             }
+#endif
         }
 #endif
 
