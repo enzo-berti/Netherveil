@@ -19,6 +19,6 @@ public abstract class Item : MonoBehaviour, IInterractable
             this.GetComponent<IPassiveItem>().OnRetrieved();
         }
 
-        Item.Destroy(this.gameObject);
+        Destroy(this.gameObject);
     }
 }
