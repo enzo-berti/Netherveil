@@ -4,7 +4,7 @@ using UnityEngine;
 public class Hero : Entity, IDamageable, IAttacker
 {
     IAttacker.AttackDelegate onAttack;
-    IAttacker.AttackDelegate onHit;
+    IAttacker.HitDelegate onHit;
     public enum PlayerState : int
     { 
         DASH = EntityState.NB
@@ -14,7 +14,7 @@ public class Hero : Entity, IDamageable, IAttacker
     Inventory inventory;
     public Inventory Inventory { get { return inventory; } }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.AttackDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     private void Start()
     {
