@@ -20,7 +20,6 @@ public class PlayerAnimation : MonoBehaviour
     {
         controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
-        animator.SetInteger("ComboCount", controller.ComboCount);
     }
 
     // Update is called once per frame
