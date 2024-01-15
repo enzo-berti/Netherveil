@@ -29,17 +29,15 @@ public class DamageDealer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        bool canDamage;
         if (other.gameObject.TryGetComponent<Entity>(out Entity entity))
         {
-            canDamage = (damageDealer as Entity) != null && (damageDealer as Entity).State == (int)Entity.EntityState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
+            bool canDamage = (damageDealer as Entity) != null && (damageDealer as Entity).State == (int)Entity.EntityState.ATTACK && (damageDealer.isAlly && !entity.isAlly || !damageDealer.isAlly && entity.isAlly);
             if (canDamage)
             {
                 (damageDealer as IAttacker).OnHit?.Invoke();
                 entity.GetComponent<IDamageable>().ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
             }
         }
-        
     }
 
 }
