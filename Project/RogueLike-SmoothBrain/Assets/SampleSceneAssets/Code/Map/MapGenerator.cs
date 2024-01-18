@@ -20,7 +20,7 @@ struct GenerationParameters
 
 public class MapGenerator : MonoBehaviour
 {
-    private static int roomGenerated = 0;
+    public static int RoomGenerated { get; private set; } = 0;
 
     [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
     [SerializeField] private List<GameObject> roomTreasure = new List<GameObject>();
@@ -35,11 +35,23 @@ public class MapGenerator : MonoBehaviour
         GenerationParameters generationParam = new GenerationParameters();
         generationParam.nbNormal = 10;
 
-        Generate(generationParam);
+        GenerateMap(generationParam);
     }
 
-    void Generate(GenerationParameters generationParameters)
+    void GenerateMap(GenerationParameters generationParameters)
     {
-        
+        for (int i = 0; i < generationParameters.nbRoom; i++)
+        {
+            GenerateRoom(4);
+        }
+    }
+
+    void GenerateRoom(int numberOfDoor = 1)
+    {
+        var go = Instantiate(roomNormal[0]);
+        go.GetComponentInChildren<RoomGenerator>().Generate(RoomGenerated++); // generate room
+
+        var doorsGO = go.transform.Find("NetherVeilProceduralRooms_merge2_merge2_1_bakedClone");
+        int numberOfDoors = doorsGO.childCount;
     }
 }
