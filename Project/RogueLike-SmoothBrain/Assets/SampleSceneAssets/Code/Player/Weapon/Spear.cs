@@ -2,20 +2,28 @@ using UnityEngine;
 
 public class Spear : MonoBehaviour
 {
-    bool isTrew = false;
+    bool isThrew = false;
+    bool isThrowing = false;
     Transform player;
     Transform parent = null;
     [SerializeField] GameObject trailPf;
     GameObject trail;
+
+    Quaternion initLocalRotation;
+    Vector3 initLocalPosition;
+    Vector3 spearPosition;
     public bool IsThrew
     {
         get
         {
-            return (isTrew);
+            return (isThrew);
         }
-        set
+    }
+    public bool IsThrowing
+    {
+        get
         {
-            isTrew = value;
+            return (isThrowing);
         }
     }
     Vector3 posToReach = new();
@@ -25,6 +33,8 @@ public class Spear : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         rb = GetComponent<Rigidbody>();
+        initLocalRotation = transform.localRotation;
+        initLocalPosition = transform.localPosition;
     }
     void Update()
     {
@@ -32,18 +42,24 @@ public class Spear : MonoBehaviour
         {
             return;
         }
-        if (isTrew && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
+        if (isThrew && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
         {
             Destroy(trail);
             this.gameObject.GetComponent<MeshRenderer>().enabled = true;
             this.gameObject.transform.position = posToReach;
             this.gameObject.transform.rotation = Quaternion.identity * Quaternion.Euler(90,0,0);
+            isThrowing = false;
         }
-        else if(!isTrew && parent != null && (posToReach - this.player.position).magnitude > (parent.position - trail.transform.position).magnitude)
+        else if(!isThrew && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
         {
             rb.velocity = Vector3.zero;
+            this.gameObject.transform.position = posToReach;
+            this.transform.SetParent(parent, true);
+            this.gameObject.transform.localPosition = initLocalPosition;
+            this.gameObject.transform.localRotation = initLocalRotation;
             parent = null;
             this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+            isThrowing = false;
             Destroy(trail);
         }
     }
@@ -53,8 +69,9 @@ public class Spear : MonoBehaviour
         this.gameObject.GetComponent<MeshRenderer>().enabled = false;
         trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
         posToReach = _posToReach;
-        isTrew = true;
-        trail.GetComponent<Rigidbody>().AddForce((posToReach - this.transform.position).normalized * 1000, ForceMode.Force);
+        isThrew = true;
+        isThrowing = true;
+        trail.GetComponent<Rigidbody>().AddForce((posToReach - this.transform.position).normalized * 5000, ForceMode.Force);
         parent = this.transform.parent;
         this.transform.parent = null;
         this.transform.LookAt(posToReach);
@@ -64,8 +81,10 @@ public class Spear : MonoBehaviour
     {
         this.gameObject.GetComponent<MeshRenderer>().enabled = false;
         trail = Instantiate(trailPf, posToReach, Quaternion.identity);
-        IsThrew = false;
+        spearPosition = posToReach;
+        isThrew = false;
+        isThrowing = true;
         posToReach = parent.transform.position;
-        trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * 1000, ForceMode.Force);
+        trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * 5000, ForceMode.Force);
     }
 }
