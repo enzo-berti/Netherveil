@@ -26,17 +26,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.906217
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2416048
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.676675
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
@@ -480,10 +480,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5401277236417435470}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1193694024483068354}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
@@ -500,7 +496,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2567375988861641579}
+      addedObject: {fileID: 5401277236417435470}
   m_SourcePrefab: {fileID: 100100000, guid: 5f01b9ba4c2dd23458410e005530c86f, type: 3}
 --- !u!1 &2471895668351475520 stripped
 GameObject:
@@ -508,37 +504,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3354224951416037905}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5401277236417435470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2471895668351475520}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d39f92fb5982654690e38a7f8159350, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats:
-    stats:
-    - stat: 0
-      value: 10
-    - stat: 1
-      value: 10
-    - stat: 2
-      value: 1
-    - stat: 3
-      value: 3
-    - stat: 4
-      value: 0.5
-    - stat: 5
-      value: 8
-    name: Kamikaze
-  isAlly: 0
-  State: 0
-  drops:
-    dropList: []
 --- !u!136 &1193694024483068354
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -617,10 +582,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VisionRange: 0
-  VisionAngle: 0
-  player: {fileID: 0}
---- !u!114 &2567375988861641579
+  range: 5
+  angle: 300
+--- !u!114 &5401277236417435470
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -629,9 +593,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 2471895668351475520}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d39f92fb5982654690e38a7f8159350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VisionRange: 10
-  VisionAngle: 177.5
-  player: {fileID: 0}
+  stats:
+    stats:
+    - stat: 0
+      value: 10
+    - stat: 1
+      value: 10
+    - stat: 2
+      value: 1
+    - stat: 3
+      value: 3
+    - stat: 4
+      value: 0.5
+    - stat: 5
+      value: 8
+    name: Kamikaze
+  isAlly: 0
+  State: 0
+  drops:
+    dropList: []
