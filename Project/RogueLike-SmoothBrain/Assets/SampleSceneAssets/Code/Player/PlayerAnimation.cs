@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerAnimation : MonoBehaviour
 {
     PlayerController controller;
-    public Animator animator;
+    [HideInInspector] public Animator animator;
 
     //used to prevent that if you press both dash and attack button to do both at the same time
     float keyCooldown = 0f;
@@ -44,9 +42,10 @@ public class PlayerAnimation : MonoBehaviour
     {
         if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownDash)
         {
-            if (controller.hero.State == (int)Entity.EntityState.ATTACK)
+            if (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue)
             {
                 attackQueue = true;
+                controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
             }
 
             animator.SetTrigger("BasicAttack");
@@ -60,7 +59,7 @@ public class PlayerAnimation : MonoBehaviour
         if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
-            controller.dashDir = controller.LastDir;
+            controller.DashDir = controller.LastDir;
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
         }
@@ -74,15 +73,42 @@ public class PlayerAnimation : MonoBehaviour
 
     public void EndOfSpecialAnimationAttack() //triggers on attack animations to reset combo
     {
-        if (attackQueue)
-        {
-            attackQueue = false;
-            controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
-        }
-        else
+        if (!attackQueue)
         {
             controller.hero.State = (int)Entity.EntityState.MOVE;
             controller.ComboCount = 0;
+            attackQueue = false;
+        }
+
+        attackQueue = false;
+
+        foreach (NestedList<Collider> spearColliders in controller.spearAttacks)
+        {
+            foreach(Collider spearCollider in spearColliders.data)
+            {
+                spearCollider.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void StartOfAttackAnimation()
+    {
+        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
+        {
+            spearCollider.gameObject.SetActive(true);
+        }
+
+        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
+        {
+            Collider[] tab = controller.CheckAttackCollide(spearCollider, LayerMask.GetMask("Entity"));
+
+            foreach (Collider col in tab)
+            {
+                if (col.gameObject.GetComponent<IDamageable>() != null)
+                {
+                    controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
+                }
+            }
         }
     }
 }

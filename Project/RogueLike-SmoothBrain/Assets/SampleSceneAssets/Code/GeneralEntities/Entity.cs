@@ -26,5 +26,5 @@ public abstract class Entity : MonoBehaviour
         NB
     }
 
-    public int State;
+    [HideInInspector] public int State;
 }

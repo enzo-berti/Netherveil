@@ -1,53 +1,43 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class Mobs : Entity, IDamageable
+[RequireComponent(typeof(VisionCone))]
+public abstract class Mobs : Entity
 {
     [SerializeField] Drop drops;
     protected NavMeshAgent agent;
-
-    protected void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-
-        agent.speed = stats.GetValueStat(Stat.SPEED);
-
-        OnDeath += drops.DropLoot;
-    }
-
+    protected VisionCone visionCone;
     protected Transform target = null;
 
     public enum EnemyState : int
     {
         WANDERING = EntityState.NB,
         TRIGGERED,
-        DASH
+        DASH,
+        FLEEING,
+        SEARCHING
     }
 
-    public void ApplyDamage(int _value)
+    protected void Start()
     {
-        Stats.IncreaseValue(Stat.HP, -_value);
+        agent = GetComponent<NavMeshAgent>();
+        visionCone = GetComponent<VisionCone>();
+
+        agent.speed = stats.GetValueStat(Stat.SPEED);
+    }
+
+    private void OnEnable()
+    {
+        OnDeath += drops.DropLoot;
+    }
+
+    private void OnDisable()
+    {
+        OnDeath -= drops.DropLoot;
     }
 
     protected virtual void Update()
     {
-        if (this.stats.GetValueStat(Stat.HP) < 0)
-        {
-            OnDeath?.Invoke(this.transform.position);
-            Destroy(this.gameObject);
-        }
-    }
 
-    public void HitPlayer()
-    {
-        int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
-        Hero playerScript = target.gameObject.GetComponent<Hero>();
-
-        playerScript.ApplyDamage(-damage);
-    }
-
-    private void OnDestroy()
-    {
-        OnDeath -= drops.DropLoot;
     }
 }
