@@ -6,7 +6,7 @@ public class Spear : MonoBehaviour
     Transform player;
     Transform parent = null;
     [SerializeField] GameObject trailPf;
-    [SerializeField] GameObject trail;
+    GameObject trail;
     public bool IsThrew
     {
         get
@@ -35,11 +35,15 @@ public class Spear : MonoBehaviour
         if (isTrew && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
         {
             Destroy(trail);
+            this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+            this.gameObject.transform.position = posToReach;
+            this.gameObject.transform.rotation = Quaternion.identity * Quaternion.Euler(90,0,0);
         }
         else if(!isTrew && parent != null && (posToReach - this.player.position).magnitude > (parent.position - trail.transform.position).magnitude)
         {
             rb.velocity = Vector3.zero;
             parent = null;
+            this.gameObject.GetComponent<MeshRenderer>().enabled = true;
             Destroy(trail);
         }
     }
@@ -51,14 +55,17 @@ public class Spear : MonoBehaviour
         posToReach = _posToReach;
         isTrew = true;
         trail.GetComponent<Rigidbody>().AddForce((posToReach - this.transform.position).normalized * 1000, ForceMode.Force);
+        parent = this.transform.parent;
+        this.transform.parent = null;
         this.transform.LookAt(posToReach);
     }
 
     public void Return()
     {
-        trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
+        this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        trail = Instantiate(trailPf, posToReach, Quaternion.identity);
         IsThrew = false;
         posToReach = parent.transform.position;
-        trail.GetComponent<Rigidbody>().AddForce((posToReach - this.transform.position).normalized * 1000, ForceMode.Force);
+        trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * 1000, ForceMode.Force);
     }
 }
