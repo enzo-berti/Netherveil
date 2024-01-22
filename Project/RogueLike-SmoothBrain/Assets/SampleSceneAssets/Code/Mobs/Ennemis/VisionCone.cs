@@ -16,11 +16,12 @@ public class VisionCone : MonoBehaviour
     private void Start()
     {
         OGExtendedHitboxSize = extendedHitboxSize;
+        extendedHitboxSize = 0;
     }
 
     public Transform GetTarget()
     {
-        Transform target = Physics.OverlapSphere(transform.position, angle)
+        Transform target = Physics.OverlapSphere(transform.position, range)
             .Where(x => x.CompareTag("Player"))
             .Select(x => x.transform)
             .FirstOrDefault();
