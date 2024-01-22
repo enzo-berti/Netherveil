@@ -22,7 +22,7 @@ public class Sbire : Mobs
     {
         Vector3 enemyToTargetVector = Vector3.zero;
 
-        if (target != null)
+        if (target)
         {
             enemyToTargetVector = target.position - transform.position;
             enemyToTargetVector.y = 0;
@@ -73,7 +73,8 @@ public class Sbire : Mobs
 
     protected void FollowPlayer()
     {
-        agent.SetDestination(target.position);
+        if (target)
+            agent.SetDestination(target.position);
     }
 
     // fait sa vie, se balade dans la salle

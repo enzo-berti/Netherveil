@@ -32,12 +32,13 @@ public class VisionCone : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (Selection.activeGameObject != gameObject)
-            return;
+        //if (Selection.activeGameObject != gameObject)
+        //    return;
 
         Handles.color = new Color(1, 0, 0, 0.25f);
         Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
         Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
+        Handles.DrawSolidDisc(transform.position, Vector3.up, 2);
     }
 #endif
 }

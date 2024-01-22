@@ -35,19 +35,22 @@ public abstract class Mobs : Entity, IDamageable
 
     protected virtual void Update()
     {
-        if (this.stats.GetValueStat(Stat.HP) < 0)
+        if (stats.GetValueStat(Stat.HP) < 0)
         {
-            OnDeath?.Invoke(this.transform.position);
-            Destroy(this.gameObject);
+            OnDeath?.Invoke(transform.position);
+            Destroy(gameObject);
         }
     }
 
     public void HitPlayer()
     {
-        int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
-        Hero playerScript = target.gameObject.GetComponent<Hero>();
+        if (target)
+        {
+            int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
+            Hero playerScript = target.gameObject.GetComponent<Hero>();
 
-        playerScript.ApplyDamage(-damage);
+            playerScript.ApplyDamage(-damage);
+        }
     }
 
     private void OnDestroy()
