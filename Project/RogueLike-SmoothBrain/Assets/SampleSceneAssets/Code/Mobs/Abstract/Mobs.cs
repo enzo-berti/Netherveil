@@ -7,6 +7,7 @@ public abstract class Mobs : Entity, IDamageable
     [SerializeField] Drop drops;
     protected NavMeshAgent agent;
     protected VisionCone visionCone;
+    protected Transform target = null;
 
     protected void Start()
     {
@@ -18,8 +19,6 @@ public abstract class Mobs : Entity, IDamageable
 
         visionCone = GetComponent<VisionCone>();
     }
-
-    protected Transform target = null;
 
     public enum EnemyState : int
     {

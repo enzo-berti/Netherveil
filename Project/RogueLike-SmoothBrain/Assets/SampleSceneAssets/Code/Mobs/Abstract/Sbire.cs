@@ -9,16 +9,13 @@ public class Sbire : Mobs
     {
         base.Update();
 
-        if (visionCone.SeesPlayer())
+        target = visionCone.GetTarget();
+        if (target)
         {
             State = (int)EnemyState.TRIGGERED;
         }
-        else
-        {
-            visionCone.target = null;
-        }
 
-            SimpleAI();
+        SimpleAI();
     }
 
     protected virtual void SimpleAI()
