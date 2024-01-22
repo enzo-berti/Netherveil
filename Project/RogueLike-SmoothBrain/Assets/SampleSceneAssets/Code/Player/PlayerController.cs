@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,9 @@ public class PlayerController : MonoBehaviour
     Transform cameraTransform;
     [Range(0f, 20f), SerializeField]
     float dashSpeed;
+
+    [SerializeField]
+    BoxCollider spearAttack1;
     
     Vector2 direction = Vector2.zero;
     CharacterController characterController;
@@ -45,6 +49,15 @@ public class PlayerController : MonoBehaviour
 
         Move();
         DashMove();
+
+        //Collider[] tab = CheckAttackCollide(spearAttack1, LayerMask.GetMask("Entity"));
+        //if(tab != null) 
+        //{
+        //    foreach(Collider col in tab) 
+        //    {
+        //        Debug.Log(col.gameObject.name);
+        //    }
+        //}
     }
 
     void Move()
@@ -76,5 +89,29 @@ public class PlayerController : MonoBehaviour
     public void ReadDirection(InputAction.CallbackContext ctx)
     {
         direction = ctx.ReadValue<Vector2>();
+    }
+
+    public Collider[] CheckAttackCollide(Collider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    {
+        if (collider != null)
+        {
+            System.Type colliderType = collider.GetType();
+
+            switch (colliderType.Name)
+            {
+                case nameof(BoxCollider):
+                    return (collider as BoxCollider).BoxOverlap(layerMask, queryTriggerInteraction);
+                case nameof(SphereCollider):
+                    return (collider as SphereCollider).SphereOverlap(layerMask, queryTriggerInteraction);
+                case nameof(CapsuleCollider):
+                    return (collider as CapsuleCollider).CapsuleOverlap(layerMask, queryTriggerInteraction);
+                default:
+                    Debug.LogWarning("Invalid Collider type, can't check the collision.");
+                    return new Collider[0];
+            }
+        }
+
+        Debug.LogWarning("Collider is null.");
+        return new Collider[0];
     }
 }

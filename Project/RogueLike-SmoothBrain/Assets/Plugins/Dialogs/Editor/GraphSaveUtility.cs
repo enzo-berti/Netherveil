@@ -30,7 +30,7 @@ namespace DialogueSystem.Editor
             var dialogueContainer = ScriptableObject.CreateInstance<DialogueContainer>();
 
             if (!SaveNodes(dialogueContainer)) return;
-            SaveExposedProperties(dialogueContainer);
+            //SaveExposedProperties(dialogueContainer);
 
             string path = EditorUtility.SaveFilePanelInProject("Save dialogue tree", "new Dialogue", "asset",
                 "Please enter a file name to save your Dialogue Tree");
@@ -75,8 +75,9 @@ namespace DialogueSystem.Editor
                             nameText = dialogueNode.NameText,
                             dialogueText = dialogueNode.DialogueText,
                             illustrationSprite = dialogueNode.IllustrationSprite,
+                            type = dialogueNode.TypeDialogue,
                             position = dialogueNode.GetPosition().position
-                        });
+                        }); ;
                     }
                 }
             }
@@ -84,10 +85,10 @@ namespace DialogueSystem.Editor
             return true;
         }
 
-        private void SaveExposedProperties(DialogueContainer dialogueContainer)
-        {
-            dialogueContainer.exposedProperties.AddRange(targetGraphView.exposedProperties);
-        }
+        //private void SaveExposedProperties(DialogueContainer dialogueContainer)
+        //{
+        //    dialogueContainer.exposedProperties.AddRange(targetGraphView.exposedProperties);
+        //}
 
         public void LoadGraph()
         {
@@ -105,17 +106,17 @@ namespace DialogueSystem.Editor
             ClearGraph();
             CreateNodes();
             ConnectNodes();
-            CreateExposedProperties();
+            //CreateExposedProperties();
         }
 
-        private void CreateExposedProperties()
-        {
-            targetGraphView.ClearBlackBoardAndExposedProperties();
-            foreach (var exposedProperty in containerCache.exposedProperties)
-            {
-                targetGraphView.AddPropertyToBlackBoard(exposedProperty);
-            }
-        }
+        //private void CreateExposedProperties()
+        //{
+        //    targetGraphView.ClearBlackBoardAndExposedProperties();
+        //    foreach (var exposedProperty in containerCache.exposedProperties)
+        //    {
+        //        targetGraphView.AddPropertyToBlackBoard(exposedProperty);
+        //    }
+        //}
 
         private void ConnectNodes()
         {
@@ -150,10 +151,11 @@ namespace DialogueSystem.Editor
         {
             foreach (var nodeData in containerCache.dialogueNodeData)
             {
-                var tempNode = targetGraphView.CreateNode(typeof(ChoicesNode), nodeData.position) as ChoicesNode;
+                var tempNode = targetGraphView.CreateNode(typeof(DialogueNode), nodeData.position) as DialogueNode;
                 tempNode.GUID = nodeData.Guid;
                 tempNode.NameText = nodeData.nameText;
                 tempNode.DialogueText = nodeData.dialogueText;
+                tempNode.TypeDialogue = nodeData.type;
                 tempNode.IllustrationSprite = nodeData.illustrationSprite;
 
                 if (tempNode == null)

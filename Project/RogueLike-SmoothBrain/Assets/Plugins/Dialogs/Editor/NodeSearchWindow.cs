@@ -30,15 +30,9 @@ namespace DialogueSystem.Editor
                 new SearchTreeGroupEntry(new GUIContent("Create Elements"), 0),
                 new SearchTreeGroupEntry(new GUIContent("Dialogue"), 1),
 
-                new SearchTreeEntry(new GUIContent("Choices Node", indentationIcon))
+                new SearchTreeEntry(new GUIContent("Dialogue Node", indentationIcon))
                 {
-                    userData = new Nodes.ChoicesNode(graphView),
-                    level = 2
-                },
-
-                new SearchTreeEntry(new GUIContent("Text Node", indentationIcon))
-                {
-                    userData = new Nodes.TextNode(graphView),
+                    userData = new Nodes.DialogueNode(graphView),
                     level = 2
                 },
             };
@@ -53,11 +47,8 @@ namespace DialogueSystem.Editor
 
             switch (SearchTreeEntry.userData)
             {
-                case Nodes.ChoicesNode:
-                    graphView.CreateNode(typeof(Nodes.ChoicesNode), localMousePosition);
-                    return true;
-                case Nodes.TextNode:
-                    graphView.CreateNode(typeof(Nodes.TextNode), localMousePosition);
+                case Nodes.DialogueNode:
+                    graphView.CreateNode(typeof(Nodes.DialogueNode), localMousePosition);
                     return true;
                 default:
                     return false;
