@@ -31,7 +31,7 @@ public class MapGenerator : MonoBehaviour
     private void Start()
     {
         GenerationParameters generationParam = new GenerationParameters();
-        generationParam.nbNormal = 10;
+        generationParam.nbNormal = 2;
 
         GenerateMap(generationParam);
     }
@@ -45,13 +45,24 @@ public class MapGenerator : MonoBehaviour
             if (availableDoors.Count != 0)
             {
                 // instantiate room with first availableDoors transform then remove it
-                roomGO = Instantiate(roomNormal[0], availableDoors[0].transform.position, availableDoors[0].transform.rotation);
-                generationParameters.nbNormal -= 1;
+                //roomGO = Instantiate(roomNormal[0], availableDoors[0].transform.position, availableDoors[0].transform.rotation);
+
+                roomGO = Instantiate(roomNormal[0]);
+
+                DoorsGenerator generateTemp = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+
+                GameObject doorSelected = generateTemp.GetRandomAvailableDoor();
+                generateTemp.SetDoorState(DoorState.OPEN, doorSelected);
+                roomGO.transform.position = availableDoors[0].transform.position + (availableDoors[0].transform.position - availableDoors[0].transform.parent.Center());
+                //roomGO.transform.rotation = availableDoors[0].transform.rotation;
+
+                generationParameters.nbNormal--;
                 availableDoors.Remove(availableDoors[0]);
             }
             else
             {
                 roomGO = Instantiate(roomNormal[0]);
+            
             }
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
