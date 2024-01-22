@@ -15,7 +15,7 @@ public static class PhysicsExtensions
 
     public static Collider[] SphereOverlap(this SphereCollider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        //get the radius of the object also considering the scale if scale is even on all values
+        //get the radius of the object also considering the scale if scale is equal on all values
         float adjustedRadius = collider.radius;
 
         if (collider.transform.localScale.IsAllValuesEqual())
