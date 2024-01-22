@@ -25,8 +25,8 @@ public class Hero : Entity, IDamageable, IAttacker
 
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, _value);
-        if (_value < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
+        Stats.IncreaseValue(Stat.HP, -_value);
+        if ((-_value) < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
             playerAnim.animator.ResetTrigger("Hit");
