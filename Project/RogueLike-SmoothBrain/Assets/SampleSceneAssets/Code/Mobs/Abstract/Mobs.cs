@@ -9,6 +9,14 @@ public abstract class Mobs : Entity, IDamageable
     protected VisionCone visionCone;
     protected Transform target = null;
 
+    public enum EnemyState : int
+    {
+        WANDERING = EntityState.NB,
+        TRIGGERED,
+        DASH,
+        FLEEING
+    }
+
     protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -19,27 +27,25 @@ public abstract class Mobs : Entity, IDamageable
 
         visionCone = GetComponent<VisionCone>();
     }
-
-    public enum EnemyState : int
+    protected virtual void Update()
     {
-        WANDERING = EntityState.NB,
-        TRIGGERED,
-        DASH,
-        FLEEING
+
     }
 
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value);
+
+        if (stats.GetValueStat(Stat.HP) <= 0)
+        {
+            Death();
+        }
     }
 
-    protected virtual void Update()
+    public void Death()
     {
-        if (stats.GetValueStat(Stat.HP) < 0)
-        {
-            OnDeath?.Invoke(transform.position);
-            Destroy(gameObject);
-        }
+        OnDeath?.Invoke(transform.position);
+        Destroy(gameObject);
     }
 
     public void HitPlayer()
