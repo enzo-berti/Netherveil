@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     float currentTargetAngle = 0f;
-    public Vector2 dashDir { get; set; } = Vector2.zero;
+    public Vector2 DashDir { get; set; } = Vector2.zero;
     public Vector2 LastDir { get; set; } = Vector2.zero;
     public int ComboCount { get; set; } = 0;
     public readonly int MAX_COMBO_COUNT = 3;
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
             Vector3 camRight = cameraTransform.right;
             camForward.y = 0f;
             camRight.y = 0f;
-            characterController.Move(dashSpeed * Time.deltaTime * (camForward * dashDir.y + camRight * dashDir.x).normalized);
+            characterController.Move(dashSpeed * Time.deltaTime * (camForward * DashDir.y + camRight * DashDir.x).normalized);
         }
     }
 

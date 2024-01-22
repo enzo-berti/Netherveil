@@ -59,7 +59,7 @@ public class PlayerAnimation : MonoBehaviour
         if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
-            controller.dashDir = controller.LastDir;
+            controller.DashDir = controller.LastDir;
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
         }
