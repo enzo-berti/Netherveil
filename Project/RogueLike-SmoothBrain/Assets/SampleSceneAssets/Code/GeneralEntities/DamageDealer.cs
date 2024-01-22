@@ -34,8 +34,7 @@ public class DamageDealer : MonoBehaviour
             bool canDamage = damageDealer.State == (int)Entity.EntityState.ATTACK && ((damageDealer.isAlly && !entity.isAlly) || (!damageDealer.isAlly && entity.isAlly));
             if (canDamage)
             {
-                (damageDealer as IAttacker).OnHit?.Invoke(entity);
-                entity.GetComponent<IDamageable>().ApplyDamage((int)damageDealer.Stats.GetValueStat(Stat.ATK));
+                (damageDealer as IAttacker).Attack(entity.GetComponent<IDamageable>());
             }
         }
     }
