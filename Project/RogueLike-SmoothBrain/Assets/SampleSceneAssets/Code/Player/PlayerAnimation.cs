@@ -98,7 +98,10 @@ public class PlayerAnimation : MonoBehaviour
 
         foreach(Collider col in tab)
         {
-            Debug.Log(col.gameObject.name);
+            if(col.gameObject.GetComponent<IDamageable>() != null)
+            {
+                controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
+            }
         }
     }
 }
