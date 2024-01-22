@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Tank : Sbire, IDamageable, IAttacker
+public class Tank : Sbire, IDamageable, IAttacker, IMovable
 {
     Animator animator;
 
@@ -44,5 +44,10 @@ public class Tank : Sbire, IDamageable, IAttacker
     {
         OnAttack?.Invoke(damageable);
         damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
+    }
+
+    public void MoveTo(Vector3 posToMove)
+    {
+        agent.SetDestination(posToMove);
     }
 }

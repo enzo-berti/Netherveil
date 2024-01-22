@@ -61,11 +61,9 @@ public class Sbire : Mobs
                 break;
 
             case (int)EnemyState.WANDERING:
-                Wander();
                 break;
 
             case (int)EnemyState.TRIGGERED:
-                FollowPlayer();
                 break;
 
             case (int)EnemyState.DASH:
@@ -78,18 +76,6 @@ public class Sbire : Mobs
             default:
                 break;
         }
-    }
-
-    protected void FollowPlayer()
-    {
-        if (target)
-            agent.SetDestination(target.position);
-    }
-
-    // fait sa vie, se balade dans la salle
-    protected void Wander()
-    {
-
     }
 
     protected void AttackPlayer()

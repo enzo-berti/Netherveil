@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Range : Sbire, IDamageable, IAttacker
+public class Range : Sbire, IDamageable, IAttacker, IMovable
 {
     Animator animator;
 
@@ -115,6 +115,11 @@ public class Range : Sbire, IDamageable, IAttacker
     {
         OnAttack?.Invoke(damageable);
         damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
+    }
+
+    public void MoveTo(Vector3 posToMove)
+    {
+        agent.SetDestination(posToMove);
     }
 }
 
