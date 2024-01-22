@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.XR;
 public class PlayerAnimation : MonoBehaviour
 {
     PlayerController controller;
-    public Animator animator;
+    [HideInInspector] public Animator animator;
 
     //used to prevent that if you press both dash and attack button to do both at the same time
     float keyCooldown = 0f;
