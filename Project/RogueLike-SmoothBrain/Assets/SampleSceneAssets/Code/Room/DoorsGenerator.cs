@@ -49,6 +49,7 @@ public class DoorsGenerator : MonoBehaviour
                 result.Add(gameObject.transform.GetChild(index).gameObject);
                 doorsState[index] = DoorState.OPEN;
                 DoorsGenerator.DoorGenerated++;
+                numDoor--;
             }
         }
 

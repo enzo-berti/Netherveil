@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerAnimation : MonoBehaviour
 {
     PlayerController controller;
-    public Animator animator;
+    [HideInInspector] public Animator animator;
 
     //used to prevent that if you press both dash and attack button to do both at the same time
     float keyCooldown = 0f;
@@ -54,8 +51,6 @@ public class PlayerAnimation : MonoBehaviour
             animator.SetTrigger("BasicAttack");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
-
-            Debug.Log("TRIGGER");
         }
     }
 
@@ -64,7 +59,7 @@ public class PlayerAnimation : MonoBehaviour
         if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
-            controller.dashDir = controller.LastDir;
+            controller.DashDir = controller.LastDir;
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
         }
@@ -87,20 +82,33 @@ public class PlayerAnimation : MonoBehaviour
 
         attackQueue = false;
 
-        foreach (BoxCollider spearCollider in controller.spearAttacks)
+        foreach (NestedList<Collider> spearColliders in controller.spearAttacks)
         {
-            spearCollider.gameObject.SetActive(false);
+            foreach(Collider spearCollider in spearColliders.data)
+            {
+                spearCollider.gameObject.SetActive(false);
+            }
         }
     }
 
     public void StartOfAttackAnimation()
     {
-        controller.spearAttacks[Mathf.Min(controller.ComboCount, controller.spearAttacks.Count -1)].gameObject.SetActive(true);
-        Collider[] tab = controller.CheckAttackCollide(controller.spearAttacks[Mathf.Min(controller.ComboCount, controller.spearAttacks.Count - 1)], LayerMask.GetMask("Entity"));
-
-        foreach(Collider col in tab)
+        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
         {
-            Debug.Log(col.gameObject.name);
+            spearCollider.gameObject.SetActive(true);
+        }
+
+        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
+        {
+            Collider[] tab = controller.CheckAttackCollide(spearCollider, LayerMask.GetMask("Entity"));
+
+            foreach (Collider col in tab)
+            {
+                if (col.gameObject.GetComponent<IDamageable>() != null)
+                {
+                    controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
+                }
+            }
         }
     }
 }

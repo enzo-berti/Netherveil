@@ -4,26 +4,28 @@ public class Sbire : Mobs
 {
     protected float cooldown = 0;
     protected bool isAttacking = false;
+    Vector3 lastKnownTarget = Vector3.zero;
+    [SerializeField] float rotationSpeed = 5f;
 
     protected override void Update()
     {
         base.Update();
 
+        lastKnownTarget = transform.position;
+
         target = visionCone.GetTarget();
-        if (target)
-        {
-            State = (int)EnemyState.TRIGGERED;
-        }
+        visionCone.ToggleExtendedVisionCone(target);
 
         SimpleAI();
     }
 
     protected virtual void SimpleAI()
     {
-        Vector3 enemyToTargetVector = Vector3.zero;
-
+        // Si le joueur est dans le cone de vision
         if (target)
         {
+            Vector3 enemyToTargetVector = Vector3.zero;
+
             enemyToTargetVector = target.position - transform.position;
             enemyToTargetVector.y = 0;
 
@@ -33,6 +35,7 @@ public class Sbire : Mobs
                 State = (int)EnemyState.TRIGGERED;
         }
 
+        // Reset le cooldown de l'attaque et fige l'ennemi en place
         if (State != (int)EntityState.ATTACK)
         {
             cooldown = 0;
@@ -41,6 +44,8 @@ public class Sbire : Mobs
         {
             agent.SetDestination(transform.position);
         }
+
+        if (State == (int)EntityState.ATTACK || State == (int)EnemyState.TRIGGERED) RotateTowardsTarget();
 
         // StateMachine
         switch (State)
@@ -56,31 +61,21 @@ public class Sbire : Mobs
                 break;
 
             case (int)EnemyState.WANDERING:
-                Wander();
                 break;
 
             case (int)EnemyState.TRIGGERED:
-                FollowPlayer();
                 break;
 
             case (int)EnemyState.DASH:
                 break;
 
+            case (int)EnemyState.SEARCHING:
+                SearchPlayer();
+                break;
+
             default:
                 break;
         }
-    }
-
-    protected void FollowPlayer()
-    {
-        if (target)
-            agent.SetDestination(target.position);
-    }
-
-    // fait sa vie, se balade dans la salle
-    protected void Wander()
-    {
-
     }
 
     protected void AttackPlayer()
@@ -97,5 +92,24 @@ public class Sbire : Mobs
         {
             isAttacking = false;
         }
+    }
+
+    protected void SearchPlayer()
+    {
+        agent.SetDestination(lastKnownTarget);
+
+        if (!agent.hasPath)
+        {
+            State = (int)EnemyState.WANDERING;
+        }
+    }
+
+    protected void RotateTowardsTarget()
+    {
+        Vector3 targetDirection = target.position - transform.position;
+        targetDirection.y = 0f;
+
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 }
