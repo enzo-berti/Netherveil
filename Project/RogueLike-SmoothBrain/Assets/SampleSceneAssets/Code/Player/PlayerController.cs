@@ -2,13 +2,20 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
+
+[System.Serializable]
+public class NestedList<T>
+{
+    public List<T> data;
+}
+
 public class PlayerController : MonoBehaviour
 {
     Transform cameraTransform;
     [Range(0f, 20f), SerializeField]
     float dashSpeed;
 
-    public List<BoxCollider> spearAttacks;
+    public List<NestedList<Collider>> spearAttacks;
 
     CharacterController characterController;
     readonly float smoothTime = 0.05f;
