@@ -8,7 +8,17 @@ public class Sbire : Mobs
     protected override void Update()
     {
         base.Update();
-        SimpleAI();
+
+        if (visionCone.SeesPlayer())
+        {
+            State = (int)EnemyState.TRIGGERED;
+        }
+        else
+        {
+            visionCone.target = null;
+        }
+
+            SimpleAI();
     }
 
     protected virtual void SimpleAI()
@@ -88,24 +98,6 @@ public class Sbire : Mobs
         else
         {
             isAttacking = false;
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            State = (int)EnemyState.TRIGGERED;
-            target = other.transform;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            State = (int)EnemyState.WANDERING;
-            target = null;
         }
     }
 }

@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(VisionCone))]
 public abstract class Mobs : Entity, IDamageable
 {
     [SerializeField] Drop drops;
     protected NavMeshAgent agent;
+    protected VisionCone visionCone;
 
     protected void Start()
     {
@@ -13,6 +15,8 @@ public abstract class Mobs : Entity, IDamageable
         agent.speed = stats.GetValueStat(Stat.SPEED);
 
         OnDeath += drops.DropLoot;
+
+        visionCone = GetComponent<VisionCone>();
     }
 
     protected Transform target = null;
@@ -21,7 +25,8 @@ public abstract class Mobs : Entity, IDamageable
     {
         WANDERING = EntityState.NB,
         TRIGGERED,
-        DASH
+        DASH,
+        FLEEING
     }
 
     public void ApplyDamage(int _value)
