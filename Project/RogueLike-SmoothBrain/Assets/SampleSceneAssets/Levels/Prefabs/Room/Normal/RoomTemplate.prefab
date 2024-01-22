@@ -121,7 +121,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1914919020512783543
 Transform:
   m_ObjectHideFlags: 0
@@ -130,7 +130,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 802911412923601072}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -748,8 +748,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8708689306056723598}
+  - component: {fileID: 8879691490346867748}
   m_Layer: 0
-  m_Name: NetherVeilProceduralRooms_merge2_merge2_1_bakedClone
+  m_Name: Instances_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -774,6 +775,20 @@ Transform:
   - {fileID: 2358890808737412155}
   m_Father: {fileID: 6745956100815938903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8879691490346867748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8002334025937649398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcd07971c3e364148930d587195a48c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minDoors: 1
+  maxDoors: 4
 --- !u!1 &8823567321642458262
 GameObject:
   m_ObjectHideFlags: 0
