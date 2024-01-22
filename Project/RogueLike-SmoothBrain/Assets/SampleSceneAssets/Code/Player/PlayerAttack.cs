@@ -15,6 +15,8 @@ public class PlayerAttack : MonoBehaviour
     public void ThrowSpear()
     {
         Spear spear = weapon.GetComponent<Spear>();
+
+        if (spear.IsThrowing) return;
         if (!spear.IsThrew)
         {
             spear.Throw(this.transform.position + this.transform.forward * this.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
