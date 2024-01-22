@@ -14,7 +14,7 @@ public class Range : Sbire
 
     protected override void Update()
     {
-        //base.Update();
+        base.Update();
 
         animator.SetBool("InAttackRange", State == (int)EntityState.ATTACK);
         animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EntityState.ATTACK || State == (int)EnemyState.FLEEING || agent.hasPath);

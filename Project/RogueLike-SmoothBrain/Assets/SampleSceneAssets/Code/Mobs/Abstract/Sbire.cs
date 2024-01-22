@@ -15,15 +15,17 @@ public class Sbire : Mobs
             State = (int)EnemyState.TRIGGERED;
         }
 
+        visionCone.ToggleExtendedVisionCone(target);
+
         SimpleAI();
     }
 
     protected virtual void SimpleAI()
     {
-        Vector3 enemyToTargetVector = Vector3.zero;
-
         if (target)
         {
+            Vector3 enemyToTargetVector = Vector3.zero;
+
             enemyToTargetVector = target.position - transform.position;
             enemyToTargetVector.y = 0;
 
