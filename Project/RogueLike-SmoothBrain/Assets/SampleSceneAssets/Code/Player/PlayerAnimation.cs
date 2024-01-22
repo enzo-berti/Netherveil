@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerAnimation : MonoBehaviour
@@ -44,14 +45,17 @@ public class PlayerAnimation : MonoBehaviour
     {
         if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownDash)
         {
-            if (controller.hero.State == (int)Entity.EntityState.ATTACK)
+            if (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue)
             {
                 attackQueue = true;
+                controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
             }
 
             animator.SetTrigger("BasicAttack");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
+
+            Debug.Log("TRIGGER");
         }
     }
 
@@ -74,15 +78,29 @@ public class PlayerAnimation : MonoBehaviour
 
     public void EndOfSpecialAnimationAttack() //triggers on attack animations to reset combo
     {
-        if (attackQueue)
-        {
-            attackQueue = false;
-            controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
-        }
-        else
+        if (!attackQueue)
         {
             controller.hero.State = (int)Entity.EntityState.MOVE;
             controller.ComboCount = 0;
+            attackQueue = false;
+        }
+
+        attackQueue = false;
+
+        foreach (BoxCollider spearCollider in controller.spearAttacks)
+        {
+            spearCollider.gameObject.SetActive(false);
+        }
+    }
+
+    public void StartOfAttackAnimation()
+    {
+        controller.spearAttacks[Mathf.Min(controller.ComboCount, controller.spearAttacks.Count -1)].gameObject.SetActive(true);
+        Collider[] tab = controller.CheckAttackCollide(controller.spearAttacks[Mathf.Min(controller.ComboCount, controller.spearAttacks.Count - 1)], LayerMask.GetMask("Entity"));
+
+        foreach(Collider col in tab)
+        {
+            Debug.Log(col.gameObject.name);
         }
     }
 }

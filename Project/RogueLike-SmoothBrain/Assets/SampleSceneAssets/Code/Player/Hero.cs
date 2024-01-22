@@ -33,10 +33,15 @@ public class Hero : Entity, IDamageable, IAttacker
 
         if (stats.GetValueStat(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
         {
-            State = (int)EntityState.DEAD;
-            playerAnim.animator.ResetTrigger("Death");
-            playerAnim.animator.SetTrigger("Death");
+            Death();
         }
+    }
+
+    public void Death()
+    {
+        State = (int)EntityState.DEAD;
+        playerAnim.animator.ResetTrigger("Death");
+        playerAnim.animator.SetTrigger("Death");
     }
 
     public void LaunchAttack()

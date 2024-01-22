@@ -503,6 +503,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1965406088}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1461468100 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 7077281605876897784, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 1965406088}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1895625525
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -640,7 +646,37 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: spearAttack2
+      value: 
+      objectReference: {fileID: 2146412342}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: spearAttacks.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: spearAttacks.Array.data[0]
+      value: 
+      objectReference: {fileID: 1461468100}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: spearAttacks.Array.data[1]
+      value: 
+      objectReference: {fileID: 2146412342}
+    - target: {fileID: 8012366538100886240, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8411670372649925266, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8681943778645224745, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -713,6 +749,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2146412342 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 2603297276930404244, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 1965406088}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

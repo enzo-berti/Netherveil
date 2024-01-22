@@ -16,32 +16,32 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.065226
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.065226
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.065226
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.4468503
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.12699938
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.1820261
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
@@ -424,10 +424,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 376761312192115368}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05b0d33d5aad952499913ee82460e356,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4820208960738951938}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
@@ -436,15 +432,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6717477466513900798}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05b0d33d5aad952499913ee82460e356,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: -8107865919792594039}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05b0d33d5aad952499913ee82460e356,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1839897350683812668}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05b0d33d5aad952499913ee82460e356,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 376761312192115368}
   m_SourcePrefab: {fileID: 100100000, guid: 05b0d33d5aad952499913ee82460e356, type: 3}
 --- !u!1 &5503706117132804813 stripped
 GameObject:
@@ -452,42 +448,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4656860949911003036}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &376761312192115368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5503706117132804813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26e0b89e5716ea643b5fb0c6c5b51181, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats:
-    stats:
-    - stat: 0
-      value: 30
-    - stat: 1
-      value: 5
-    - stat: 2
-      value: 1
-    - stat: 3
-      value: 1.5
-    - stat: 4
-      value: 2
-    - stat: 5
-      value: 5
-    name: Melee
-  isAlly: 0
-  State: 0
-  drops:
-    dropList:
-    - loot: {fileID: 7017912603344927815, guid: a4428d3876fb2394ca957840af292457,
-        type: 3}
-      chance: 1
-      Quantity: 1
-      isChanceShared: 0
 --- !u!136 &4820208960738951938
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -532,33 +492,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!54 &6717477466513900798
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5503706117132804813}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!195 &-8107865919792594039
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -593,6 +526,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VisionRange: 10
-  VisionAngle: 177.5
-  player: {fileID: 0}
+  range: 10
+  angle: 140
+--- !u!114 &376761312192115368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5503706117132804813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e0b89e5716ea643b5fb0c6c5b51181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    stats:
+    - stat: 0
+      value: 30
+    - stat: 1
+      value: 5
+    - stat: 2
+      value: 1
+    - stat: 3
+      value: 1.5
+    - stat: 4
+      value: 2
+    - stat: 5
+      value: 5
+    name: Melee
+  isAlly: 0
+  State: 0
+  drops:
+    dropList:
+    - loot: {fileID: 7017912603344927815, guid: a4428d3876fb2394ca957840af292457,
+        type: 3}
+      chance: 1
+      Quantity: 1
+      isChanceShared: 0
