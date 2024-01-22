@@ -54,8 +54,6 @@ public class PlayerAnimation : MonoBehaviour
             animator.SetTrigger("BasicAttack");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
-
-            Debug.Log("TRIGGER");
         }
     }
 
