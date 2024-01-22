@@ -41,12 +41,6 @@ public class UI : MonoBehaviour
             Debug.Log(DropDownMenu.options[i].text);
         }
 
-
-
-
-
-
-
     }
 
     public void PlayParticleSystem()
