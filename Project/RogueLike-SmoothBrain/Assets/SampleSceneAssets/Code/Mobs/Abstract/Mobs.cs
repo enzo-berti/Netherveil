@@ -14,7 +14,8 @@ public abstract class Mobs : Entity
         WANDERING = EntityState.NB,
         TRIGGERED,
         DASH,
-        FLEEING
+        FLEEING,
+        SEARCHING
     }
 
     protected void Start()
