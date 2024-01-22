@@ -120,7 +120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6731923033564086527
 Transform:
   m_ObjectHideFlags: 0
@@ -156,7 +156,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2276639448566765808
 Transform:
   m_ObjectHideFlags: 0
@@ -826,8 +826,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dashSpeed: 12.8
-  spearAttack1: {fileID: 7077281605876897784}
-  dashDir: {x: 0, y: 0}
+  spearAttacks:
+  - data:
+    - {fileID: 7077281605876897784}
+  - data:
+    - {fileID: 2603297276930404244}
+  - data:
+    - {fileID: 2603297276930404244}
+    - {fileID: 7077281605876897784}
   hero: {fileID: 0}
 --- !u!114 &4442208228028191441
 MonoBehaviour:
@@ -869,7 +875,7 @@ MonoBehaviour:
   stats:
     stats:
     - stat: 0
-      value: 3000
+      value: 100
     - stat: 1
       value: 5
     - stat: 2

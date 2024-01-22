@@ -4,26 +4,27 @@ public class Sbire : Mobs
 {
     protected float cooldown = 0;
     protected bool isAttacking = false;
+    Vector3 lastKnownTarget = Vector3.zero;
 
     protected override void Update()
     {
         base.Update();
 
+        lastKnownTarget = transform.position;
+
         target = visionCone.GetTarget();
-        if (target)
-        {
-            State = (int)EnemyState.TRIGGERED;
-        }
+        visionCone.ToggleExtendedVisionCone(target);
 
         SimpleAI();
     }
 
     protected virtual void SimpleAI()
     {
-        Vector3 enemyToTargetVector = Vector3.zero;
-
+        // Si le joueur est dans le cone de vision
         if (target)
         {
+            Vector3 enemyToTargetVector = Vector3.zero;
+
             enemyToTargetVector = target.position - transform.position;
             enemyToTargetVector.y = 0;
 
@@ -33,6 +34,7 @@ public class Sbire : Mobs
                 State = (int)EnemyState.TRIGGERED;
         }
 
+        // Reset le cooldown de l'attaque et fige l'ennemi en place
         if (State != (int)EntityState.ATTACK)
         {
             cooldown = 0;
@@ -66,6 +68,10 @@ public class Sbire : Mobs
             case (int)EnemyState.DASH:
                 break;
 
+            case (int)EnemyState.SEARCHING:
+                SearchPlayer();
+                break;
+
             default:
                 break;
         }
@@ -96,6 +102,16 @@ public class Sbire : Mobs
         else
         {
             isAttacking = false;
+        }
+    }
+
+    protected void SearchPlayer()
+    {
+        agent.SetDestination(lastKnownTarget);
+
+        if (!agent.hasPath)
+        {
+            State = (int)EnemyState.WANDERING;
         }
     }
 }

@@ -2,30 +2,34 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
+
+[System.Serializable]
+public class NestedList<T>
+{
+    public List<T> data;
+}
+
 public class PlayerController : MonoBehaviour
 {
     Transform cameraTransform;
     [Range(0f, 20f), SerializeField]
     float dashSpeed;
 
-    public List<BoxCollider> spearAttacks;
+    public List<NestedList<Collider>> spearAttacks;
 
-    Vector2 direction = Vector2.zero;
     CharacterController characterController;
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     float currentTargetAngle = 0f;
-    public Vector2 dashDir = Vector2.zero;
+    public Vector2 dashDir { get; set; } = Vector2.zero;
     public Vector2 LastDir { get; set; } = Vector2.zero;
     public int ComboCount { get; set; } = 0;
     public readonly int MAX_COMBO_COUNT = 3;
 
-    public Hero hero;
+    [HideInInspector] public Hero hero;
 
-    public Vector2 Direction
-    {
-        get { return direction; }
-    }
+    public Vector2 Direction { get; private set; } = Vector2.zero;
+
 
     void Start()
     {
@@ -61,15 +65,15 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (hero.State == (int)Entity.EntityState.MOVE && (direction.x != 0f || direction.y != 0f))
+        if (hero.State == (int)Entity.EntityState.MOVE && (Direction.x != 0f || Direction.y != 0f))
         {
-            LastDir = direction;
-            currentTargetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
+            LastDir = Direction;
+            currentTargetAngle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
             camForward.y = 0f;
             camRight.y = 0f;
-            characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * direction.y + camRight * direction.x).normalized);
+            characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * Direction.y + camRight * Direction.x).normalized);
         }
     }
 
@@ -87,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
     public void ReadDirection(InputAction.CallbackContext ctx)
     {
-        direction = ctx.ReadValue<Vector2>();
+        Direction = ctx.ReadValue<Vector2>();
     }
 
     public Collider[] CheckAttackCollide(Collider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
