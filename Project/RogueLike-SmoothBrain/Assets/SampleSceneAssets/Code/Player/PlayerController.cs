@@ -1,6 +1,6 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,9 +8,8 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 20f), SerializeField]
     float dashSpeed;
 
-    [SerializeField]
-    BoxCollider spearAttack1;
-    
+    public List<BoxCollider> spearAttacks;
+
     Vector2 direction = Vector2.zero;
     CharacterController characterController;
     readonly float smoothTime = 0.05f;
