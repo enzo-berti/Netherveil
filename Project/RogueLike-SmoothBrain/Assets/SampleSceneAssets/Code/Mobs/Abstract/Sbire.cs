@@ -5,6 +5,7 @@ public class Sbire : Mobs
     protected float cooldown = 0;
     protected bool isAttacking = false;
     Vector3 lastKnownTarget = Vector3.zero;
+    [SerializeField] float rotationSpeed = 5f;
 
     protected override void Update()
     {
@@ -43,6 +44,8 @@ public class Sbire : Mobs
         {
             agent.SetDestination(transform.position);
         }
+
+        if (State == (int)EntityState.ATTACK || State == (int)EnemyState.TRIGGERED) RotateTowardsTarget();
 
         // StateMachine
         switch (State)
@@ -113,5 +116,14 @@ public class Sbire : Mobs
         {
             State = (int)EnemyState.WANDERING;
         }
+    }
+
+    protected void RotateTowardsTarget()
+    {
+        Vector3 targetDirection = target.position - transform.position;
+        targetDirection.y = 0f;
+
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 }
