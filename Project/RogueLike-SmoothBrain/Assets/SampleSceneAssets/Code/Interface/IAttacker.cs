@@ -7,5 +7,12 @@ public interface IAttacker
         set;
     }
 
+    public delegate void HitDelegate(IDamageable damageable);
+    public HitDelegate OnHit
+    {
+        get;
+        set;
+    }
+
     public void Attack(IDamageable damageable);
 }

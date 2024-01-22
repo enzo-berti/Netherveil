@@ -1,8 +1,14 @@
 using UnityEngine;
 
-public class Range : Sbire
+public class Range : Sbire, IDamageable, IAttacker
 {
     Animator animator;
+
+    private IAttacker.HitDelegate onHit;
+    private IAttacker.AttackDelegate onAttack;
+    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
+
     private float fleeTimer;
     private float fleeCooldown;
 
@@ -87,6 +93,28 @@ public class Range : Sbire
             State = (int)EnemyState.WANDERING;
             fleeTimer = 0;
         }
+    }
+
+    public void ApplyDamage(int _value)
+    {
+        Stats.IncreaseValue(Stat.HP, -_value);
+
+        if (stats.GetValueStat(Stat.HP) <= 0)
+        {
+            Death();
+        }
+    }
+
+    public void Death()
+    {
+        OnDeath?.Invoke(transform.position);
+        Destroy(gameObject);
+    }
+
+    public void Attack(IDamageable damageable)
+    {
+        OnAttack?.Invoke(damageable);
+        damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
     }
 }
 

@@ -13,10 +13,10 @@ public class Hero : Entity, IDamageable, IAttacker
     public Inventory Inventory { get { return inventory; } }
 
     private IAttacker.AttackDelegate onAttack;
-    private IDamageable.HitDelegate onHit;
+    private IAttacker.HitDelegate onHit;
 
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IDamageable.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     private void Start()
     {
