@@ -16,6 +16,7 @@ public class PlayerAttack : MonoBehaviour
     {
         Spear spear = weapon.GetComponent<Spear>();
 
+        // If spear is being thrown we can't recall this attack
         if (spear.IsThrowing) return;
         if (!spear.IsThrew)
         {
