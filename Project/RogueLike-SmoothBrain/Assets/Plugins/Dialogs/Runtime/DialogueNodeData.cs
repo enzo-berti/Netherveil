@@ -10,6 +10,7 @@ namespace DialogueSystem.Runtime
 
         public string nameText;
         public string dialogueText;
+        public string type;
         public Sprite illustrationSprite;
         public Vector2 position;
     }

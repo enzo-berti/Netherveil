@@ -15,8 +15,8 @@ public class DialogueGraphView : GraphView
 
     private NodeSearchWindow searchWindow;
 
-    public Blackboard blackboard;
-    public List<ExposedProperty> exposedProperties = new List<ExposedProperty>();
+    //public Blackboard blackboard;
+    //public List<ExposedProperty> exposedProperties = new List<ExposedProperty>();
     public readonly Vector2 defaultNodeSize = new Vector2(150, 200);
 
     public DialogueGraphView()
@@ -59,16 +59,9 @@ public class DialogueGraphView : GraphView
     {
         DialogueSystem.Editor.Nodes.Node newNode;
 
-        if (type == typeof(ChoicesNode))
+        if (type == typeof(DialogueNode))
         {
-            newNode = new ChoicesNode(this);
-            newNode.SetPosition(new Rect(position, defaultNodeSize));
-            AddElement(newNode);
-            return newNode;
-        }
-        if (type == typeof(TextNode))
-        {
-            newNode = new TextNode(this);
+            newNode = new DialogueNode(this);
             newNode.SetPosition(new Rect(position, defaultNodeSize));
             AddElement(newNode);
             return newNode;
@@ -77,41 +70,41 @@ public class DialogueGraphView : GraphView
         return null;
     }
 
-    public void ClearBlackBoardAndExposedProperties()
-    {
-        exposedProperties.Clear();
-        blackboard.Clear();
-    }
+    //public void ClearBlackBoardAndExposedProperties()
+    //{
+    //    exposedProperties.Clear();
+    //    blackboard.Clear();
+    //}
 
-    public void AddPropertyToBlackBoard(ExposedProperty exposedProperty)
-    {
-        var localPropertyName = exposedProperty.propertyName;
-        var localPropertyValue = exposedProperty.propertyValue;
+    //public void AddPropertyToBlackBoard(ExposedProperty exposedProperty)
+    //{
+    //    var localPropertyName = exposedProperty.propertyName;
+    //    var localPropertyValue = exposedProperty.propertyValue;
 
-        while (exposedProperties.Any(x => x.propertyName == localPropertyName))
-            localPropertyName = $"{localPropertyName}(1)";
+    //    while (exposedProperties.Any(x => x.propertyName == localPropertyName))
+    //        localPropertyName = $"{localPropertyName}(1)";
 
-        var property = new ExposedProperty();
-        property.propertyName = localPropertyName;
-        property.propertyValue = exposedProperty.propertyValue;
-        exposedProperties.Add(property);
+    //    var property = new ExposedProperty();
+    //    property.propertyName = localPropertyName;
+    //    property.propertyValue = exposedProperty.propertyValue;
+    //    exposedProperties.Add(property);
 
-        var container = new VisualElement();
-        var blackboardField = new BlackboardField { text = property.propertyName, typeText = "string" };
-        container.Add(blackboardField);
+    //    var container = new VisualElement();
+    //    var blackboardField = new BlackboardField { text = property.propertyName, typeText = "string" };
+    //    container.Add(blackboardField);
 
-        var propertyValueTextField = new TextField("Value:")
-        {
-            value = localPropertyValue,
-        };
-        propertyValueTextField.RegisterValueChangedCallback(evt =>
-        {
-            var changingPropertyIndex = exposedProperties.FindIndex(x => x.propertyName == property.propertyName);
-            exposedProperties[changingPropertyIndex].propertyValue = evt.newValue;
-        });
-        var blackBoardValueRow = new BlackboardRow(blackboardField, propertyValueTextField);
-        container.Add(blackBoardValueRow);
+    //    var propertyValueTextField = new TextField("Value:")
+    //    {
+    //        value = localPropertyValue,
+    //    };
+    //    propertyValueTextField.RegisterValueChangedCallback(evt =>
+    //    {
+    //        var changingPropertyIndex = exposedProperties.FindIndex(x => x.propertyName == property.propertyName);
+    //        exposedProperties[changingPropertyIndex].propertyValue = evt.newValue;
+    //    });
+    //    var blackBoardValueRow = new BlackboardRow(blackboardField, propertyValueTextField);
+    //    container.Add(blackBoardValueRow);
 
-        blackboard.Add(container);
-    }
+    //    blackboard.Add(container);
+    //}
 }

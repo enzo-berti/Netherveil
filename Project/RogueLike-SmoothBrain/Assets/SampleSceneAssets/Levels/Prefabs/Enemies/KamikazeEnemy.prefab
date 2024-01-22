@@ -488,15 +488,19 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5933292595456749388}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3210953950999373295}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6203961694971052405}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6277317323656195745}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f01b9ba4c2dd23458410e005530c86f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2567375988861641579}
   m_SourcePrefab: {fileID: 100100000, guid: 5f01b9ba4c2dd23458410e005530c86f, type: 3}
 --- !u!1 &2471895668351475520 stripped
 GameObject:
@@ -558,27 +562,6 @@ CapsuleCollider:
   m_Height: 1.8884408
   m_Direction: 1
   m_Center: {x: 0.00070279394, y: 0.9290768, z: 0.02525218}
---- !u!135 &5933292595456749388
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2471895668351475520}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 10
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &3210953950999373295
 Animator:
   serializedVersion: 5
@@ -622,3 +605,33 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6277317323656195745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471895668351475520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VisionRange: 0
+  VisionAngle: 0
+  player: {fileID: 0}
+--- !u!114 &2567375988861641579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471895668351475520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VisionRange: 10
+  VisionAngle: 177.5
+  player: {fileID: 0}
