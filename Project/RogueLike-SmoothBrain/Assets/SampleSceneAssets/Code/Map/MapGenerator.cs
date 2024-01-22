@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-struct GenerationParameters
+public class GenerationParameters
 {
     public int nbNormal;
     public int nbTreasure;
@@ -12,7 +12,7 @@ struct GenerationParameters
     public int nbRoomMiniBoss;
     public int nbRoomBoss;
 
-    public readonly int nbRoom
+    public int NbRoom
     {
         get { return nbNormal + nbTreasure + nbChallenge + nbMerchant + nbSecret + nbMiniBoss + nbRoomMiniBoss + nbRoomBoss; }
     }
@@ -20,8 +20,6 @@ struct GenerationParameters
 
 public class MapGenerator : MonoBehaviour
 {
-    public static int RoomGenerated { get; private set; } = 0;
-
     [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
     [SerializeField] private List<GameObject> roomTreasure = new List<GameObject>();
     [SerializeField] private List<GameObject> roomChallenge = new List<GameObject>();
@@ -40,19 +38,28 @@ public class MapGenerator : MonoBehaviour
 
     void GenerateMap(GenerationParameters generationParameters)
     {
-        for (int i = 0; i < generationParameters.nbRoom; i++)
+        List<GameObject> availableDoors = new List<GameObject>();
+        for (int i = 0; i < generationParameters.NbRoom; i++)
         {
-            GenerateRoom(4);
-            RoomGenerated++;
+            GameObject roomGO;
+            if (availableDoors.Count != 0)
+            {
+                // instantiate room with first availableDoors transform then remove it
+                roomGO = Instantiate(roomNormal[0], availableDoors[0].transform.position, availableDoors[0].transform.rotation);
+                generationParameters.nbNormal -= 1;
+                availableDoors.Remove(availableDoors[0]);
+            }
+            else
+            {
+                roomGO = Instantiate(roomNormal[0]);
+            }
+
+            roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
+
+            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+            availableDoors.AddRange(doorsGenerator.GenerateDoors(generationParameters));
+
+            RoomGenerator.RoomGenerated++;
         }
-    }
-
-    void GenerateRoom(int numberOfDoor = 1)
-    {
-        var go = Instantiate(roomNormal[0]);
-        go.GetComponentInChildren<RoomGenerator>().Generate(); // generate room
-
-        var doorsGO = go.transform.Find("NetherVeilProceduralRooms_merge2_merge2_1_bakedClone");
-        int numberOfDoors = doorsGO.childCount;
     }
 }
