@@ -9,6 +9,9 @@ public abstract class Mobs : Entity, IDamageable
     protected VisionCone visionCone;
     protected Transform target = null;
 
+    private IDamageable.HitDelegate onHit;
+    public IDamageable.HitDelegate OnHit { get => onHit; set => onHit = value; }
+
     public enum EnemyState : int
     {
         WANDERING = EntityState.NB,
@@ -20,13 +23,21 @@ public abstract class Mobs : Entity, IDamageable
     protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        visionCone = GetComponent<VisionCone>();
 
         agent.speed = stats.GetValueStat(Stat.SPEED);
-
-        OnDeath += drops.DropLoot;
-
-        visionCone = GetComponent<VisionCone>();
     }
+
+    private void OnEnable()
+    {
+        OnDeath += drops.DropLoot;
+    }
+
+    private void OnDisable()
+    {
+        OnDeath -= drops.DropLoot;
+    }
+
     protected virtual void Update()
     {
 
@@ -46,21 +57,5 @@ public abstract class Mobs : Entity, IDamageable
     {
         OnDeath?.Invoke(transform.position);
         Destroy(gameObject);
-    }
-
-    public void HitPlayer()
-    {
-        if (target)
-        {
-            int damage = (int)stats.GetValueStat(Stat.ATK) * (int)stats.GetValueStat(Stat.ATK_COEFF);
-            Hero playerScript = target.gameObject.GetComponent<Hero>();
-
-            playerScript.ApplyDamage(-damage);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        OnDeath -= drops.DropLoot;
     }
 }
