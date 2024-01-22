@@ -1,16 +1,11 @@
 public interface IAttacker 
 {
-    public delegate void AttackDelegate();
-    public delegate void HitDelegate(Entity entity);
+    public delegate void AttackDelegate(IDamageable damageable);
     public AttackDelegate OnAttack
     {
         get;
         set;
     }
 
-    public HitDelegate OnHit
-    {
-        get;
-        set;
-    }
+    public void Attack(IDamageable damageable);
 }

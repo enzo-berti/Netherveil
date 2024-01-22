@@ -3,8 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimation))]
 public class Hero : Entity, IDamageable, IAttacker
 {
-    IAttacker.AttackDelegate onAttack;
-    IAttacker.HitDelegate onHit;
     public enum PlayerState : int
     {
         DASH = EntityState.NB
@@ -13,8 +11,12 @@ public class Hero : Entity, IDamageable, IAttacker
     PlayerAnimation playerAnim;
     Inventory inventory = new Inventory();
     public Inventory Inventory { get { return inventory; } }
+
+    private IAttacker.AttackDelegate onAttack;
+    private IDamageable.HitDelegate onHit;
+
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IDamageable.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     private void Start()
     {
@@ -44,8 +46,9 @@ public class Hero : Entity, IDamageable, IAttacker
         playerAnim.animator.SetTrigger("Death");
     }
 
-    public void LaunchAttack()
+    public void Attack(IDamageable damageable)
     {
-        OnAttack?.Invoke();
+        damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
+        onAttack?.Invoke(damageable);
     }
 }
