@@ -21,7 +21,7 @@ public class DialogueParser : MonoBehaviour
     {
         var text = dialogue.dialogueNodeData.Find(x => x.Guid == narrativeDataGUID).dialogueText;
         var choices = dialogue.nodeLinks.Where(x => x.BaseNodeGuid == narrativeDataGUID);
-        dialogueText.text = ProcessProperties(text);
+        //dialogueText.text = ProcessProperties(text);
         var buttons = buttonContainer.GetComponentsInChildren<Button>();
         for (int i = 0; i < buttons.Length; i++)
         {
@@ -32,17 +32,17 @@ public class DialogueParser : MonoBehaviour
         {
             var button = Instantiate(choicePrefab, buttonContainer);
             button.gameObject.SetActive(true);
-            button.GetComponentInChildren<TMP_Text>().text = ProcessProperties(choice.PortName);
+            //button.GetComponentInChildren<TMP_Text>().text = ProcessProperties(choice.PortName);
             button.onClick.AddListener(() => ProceedToNarrative(choice.TargetNodeGuid));
         }
     }
 
-    private string ProcessProperties(string text)
-    {
-        foreach (var exposedProperty in dialogue.exposedProperties)
-        {
-            text = text.Replace($"[{exposedProperty.propertyName}]", exposedProperty.propertyValue);
-        }
-        return text;
-    }
+    //private string ProcessProperties(string text)
+    //{
+    //    foreach (var exposedProperty in dialogue.exposedProperties)
+    //    {
+    //        text = text.Replace($"[{exposedProperty.propertyName}]", exposedProperty.propertyValue);
+    //    }
+    //    return text;
+    //}
 }
