@@ -43,13 +43,14 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0; i < generationParameters.nbRoom; i++)
         {
             GenerateRoom(4);
+            RoomGenerated++;
         }
     }
 
     void GenerateRoom(int numberOfDoor = 1)
     {
         var go = Instantiate(roomNormal[0]);
-        go.GetComponentInChildren<RoomGenerator>().Generate(RoomGenerated++); // generate room
+        go.GetComponentInChildren<RoomGenerator>().Generate(); // generate room
 
         var doorsGO = go.transform.Find("NetherVeilProceduralRooms_merge2_merge2_1_bakedClone");
         int numberOfDoors = doorsGO.childCount;

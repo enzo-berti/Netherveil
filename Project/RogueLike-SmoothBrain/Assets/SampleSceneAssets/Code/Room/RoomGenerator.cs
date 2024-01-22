@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
@@ -19,7 +18,7 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    public void Generate(int numberOfDoors = 1)
+    public void Generate()
     {
         // DEBUG GameManager.Instance.seed.Set(123456);
 
