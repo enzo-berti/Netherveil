@@ -8,9 +8,16 @@ public static class TransformExtensions
 
         foreach (Transform child in transform)
         {
-            sumVector += child.position;
+            if (child.transform.childCount > 0)
+            {
+                sumVector += child.transform.Center();
+            }
+            else
+            {
+                sumVector += child.transform.position;
+            }
         }
 
-        return sumVector / transform.childCount;
+        return transform.childCount == 0 ? Vector3.zero : sumVector / transform.childCount;
     }
 }
