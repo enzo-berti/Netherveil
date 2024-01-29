@@ -155,7 +155,7 @@ public class PlayerInput : MonoBehaviour
         {
             Vector3 playerToTargetVec = targetTransform.position - transform.position;
             float angle = Vector3.Angle(playerToTargetVec, transform.forward);
-            if (angle <= 45f && angle > float.Epsilon)
+            if (angle <= VISION_CONE_ANGLE && angle > float.Epsilon)
             {
                 //vector that describes the enemy's position offset from the player's position along the player's left/right, up/down, and forward/back axes
                 Vector3 enemyDirectionLocal = transform.InverseTransformPoint(targetTransform.position);
@@ -166,7 +166,7 @@ public class PlayerInput : MonoBehaviour
                     GetComponent<PlayerController>().CurrentTargetAngle -= angle;
                 }
                 //Right side of player
-                else if (enemyDirectionLocal.x > 0)
+                else
                 {
                     GetComponent<PlayerController>().CurrentTargetAngle += angle;
                 }
