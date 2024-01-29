@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+[Serializable]
 public class Bramble : ItemEffect, IPassiveItem
 {
     private int attackStat = 2;

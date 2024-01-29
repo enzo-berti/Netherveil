@@ -28,20 +28,20 @@ public class Inventory
         item.OnRetrieved();
     }
 
-    //public void AddItem(ItemData item)
-    //{
-    //    if(item.GetComponent<IActiveItem>() != null)
-    //    {
-    //        AddActiveItem(item.GetComponent<IActiveItem>());
-    //    }
-    //    else if (item.GetComponent<IPassiveItem>() != null)
-    //    {
-    //        AddPassiveItem(item.GetComponent<IPassiveItem>());
-    //    }
+    public void AddItem(ItemEffect item)
+    {
+        if (item as IActiveItem != null)
+        {
+            AddActiveItem(item as IActiveItem);
+        }
+        else if (item as IPassiveItem!= null)
+        {
+            AddPassiveItem(item as IPassiveItem);
+        }
 
-    //    if ((item.GetComponent<IPassiveItem>()) != null)
-    //    {
-    //        item.GetComponent<IPassiveItem>().OnRetrieved();
-    //    }
-    //}
+        if ((item as IPassiveItem) != null)
+        {
+            (item as IPassiveItem).OnRetrieved();
+        }
+    }
 }
