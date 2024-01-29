@@ -67,7 +67,9 @@ public class MapGenerator : MonoBehaviour
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
-            //availableDoors.AddRange(doorsGenerator.GenerateDoors(generationParameters));
+            doorsGenerator.GenerateSeed(generationParameters);
+            availableDoors.AddRange(doorsGenerator.doors);
+            generationParameters.nbNormal -= doorsGenerator.doors.Count;
 
             RoomGenerator.RoomGenerated++;
         }
