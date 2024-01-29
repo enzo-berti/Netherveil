@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class DragonScale : Item, IPassiveItem
 {
-    private int critRateStat = 2;
+    //between 0 and 1
+    const float critRateStat = .10f;
+    //pourcentage between 0 and 100 or more
+    const int critRateStatPourcentage = (int)(critRateStat * 100f);
 
     public void OnRetrieved()
     {
@@ -11,6 +14,6 @@ public class DragonScale : Item, IPassiveItem
         RarityTier = Rarity.RARE;
         Name = "<color=\"blue\">Dragon Scale";
         Description = "Boosts player's critical hit rate, infusing their attacks with the precision of dragonkind.\n" +
-            "<color=\"green\">Critical hit rate: +" + critRateStat.ToString() + "%";
+            "<color=\"green\">Critical hit rate: +" + critRateStatPourcentage.ToString() + "%";
     }
 }

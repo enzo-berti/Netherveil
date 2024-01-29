@@ -8,9 +8,9 @@ public class SilverAmethystRing : Item , IPassiveItem
     public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.SetValue(Stat.MAX_HP, maxLifeStat);
+        player.Stats.IncreaseValue(Stat.MAX_HP, maxLifeStat);
         player.Stats.IncreaseValue(Stat.HP, maxLifeStat);
-        player.Stats.SetValue(Stat.SPEED, speed);
+        player.Stats.IncreaseValue(Stat.SPEED, speed);
         RarityTier = Rarity.RARE;
         Name = "<color=\"blue\">Silver Amethyst Ring";
         Description = "Elevates player's max health and agility simultaneously, infusing them with both vitality and swiftness for a well-rounded advantage.\n" +
