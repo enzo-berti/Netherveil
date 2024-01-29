@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class VisionCone : MonoBehaviour
 {
+    [SerializeField] bool renderVisionCone = true;
     [SerializeField] private float range = 10f;
-    [SerializeField, Range(0f, 360f)] private float angle = 70f;
+    [SerializeField, Range(0f, 360f)] public float angle = 70f;
     [HideInInspector] public bool extendedVisionCone = false;
     [SerializeField] float extentionCoeff = 1.5f;
 
@@ -19,10 +20,10 @@ public class VisionCone : MonoBehaviour
         extendedHitboxSize = 0;
     }
 
-    public Transform GetTarget()
+    public Transform GetTarget(string tag)
     {
         Transform target = Physics.OverlapSphere(transform.position, range)
-            .Where(x => x.CompareTag("Player"))
+            .Where(x => x.CompareTag(tag))
             .Select(x => x.transform)
             .FirstOrDefault();
 
@@ -70,11 +71,13 @@ public class VisionCone : MonoBehaviour
     {
         //if (Selection.activeGameObject != gameObject)
         //    return;
-
-        Handles.color = new Color(1, 0, 0, 0.25f);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
-        Handles.DrawSolidDisc(transform.position, Vector3.up, extendedHitboxSize);
+        if(renderVisionCone)
+        {
+            Handles.color = new Color(1, 0, 0, 0.25f);
+            Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
+            Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
+            Handles.DrawSolidDisc(transform.position, Vector3.up, extendedHitboxSize);
+        }
     }
 #endif
 }

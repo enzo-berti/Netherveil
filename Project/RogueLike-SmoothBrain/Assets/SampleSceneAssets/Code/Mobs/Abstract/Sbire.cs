@@ -13,7 +13,7 @@ public class Sbire : Mobs
 
         lastKnownTarget = transform.position;
 
-        target = visionCone.GetTarget();
+        target = visionCone.GetTarget("Player");
         visionCone.ToggleExtendedVisionCone(target);
 
         SimpleAI();

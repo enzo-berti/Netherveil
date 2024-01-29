@@ -84,7 +84,7 @@ public class PlayerAnimation : MonoBehaviour
 
         foreach (NestedList<Collider> spearColliders in controller.spearAttacks)
         {
-            foreach(Collider spearCollider in spearColliders.data)
+            foreach (Collider spearCollider in spearColliders.data)
             {
                 spearCollider.gameObject.SetActive(false);
             }
@@ -107,6 +107,29 @@ public class PlayerAnimation : MonoBehaviour
                 if (col.gameObject.GetComponent<IDamageable>() != null)
                 {
                     controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
+                }
+            }
+        }
+
+        Transform targetTransform = GetComponent<VisionCone>().GetTarget("Enemy");
+        if (targetTransform != null)
+        {
+            Vector3 playerToTargetVec = targetTransform.position - transform.position;
+            float angle = Vector3.Angle(playerToTargetVec, transform.forward);
+            if (angle <= GetComponent<VisionCone>().angle && angle > float.Epsilon)
+            {
+                //vector that describes the enemy's position offset from the player's position along the player's left/right, up/down, and forward/back axes
+                Vector3 enemyDirectionLocal = transform.InverseTransformPoint(targetTransform.position);
+
+                //Left side of player
+                if (enemyDirectionLocal.x < 0)
+                {
+                    GetComponent<PlayerController>().CurrentTargetAngle -= angle;
+                }
+                //Right side of player
+                else if (enemyDirectionLocal.x > 0)
+                {
+                    GetComponent<PlayerController>().CurrentTargetAngle += angle;
                 }
             }
         }
