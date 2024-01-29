@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public static class PhysicsExtensions
@@ -45,5 +46,28 @@ public static class PhysicsExtensions
         return Physics.OverlapCapsule(center - new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f),
                                       center + new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f),
                                       adjustedRadius, layerMask, queryTriggerInteraction);
+    }
+
+    /// <summary>
+    /// Find all collider toucing the vision cone.
+    /// </summary>
+    /// <param name="center">The start position of the cone.</param>
+    /// <param name="angle">Cone's angle.</param>
+    /// <param name="range">Cone's range.</param>
+    /// <param name="forward">Where the cone is facing.</param>
+    /// <returns></returns>
+    public static Collider[] OverlapVisionCone(Vector3 center, float angle, float range, Vector3 forward, int layer = -1)
+    {
+        Collider[] result = Physics.OverlapSphere(center, range, layer)
+            .Where(x =>
+            {
+                Vector3 resultPos = x.transform.position - center;
+                resultPos.y = 0;
+                float toCompare = Vector3.Angle(resultPos, forward);
+                return toCompare >= -(angle / 2f) && toCompare <= angle / 2f;
+            })
+            .ToArray();
+
+        return result;
     }
 }
