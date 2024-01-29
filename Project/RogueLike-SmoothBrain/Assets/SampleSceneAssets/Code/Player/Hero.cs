@@ -50,4 +50,25 @@ public class Hero : Entity, IDamageable, IAttacker
         damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
         onAttack?.Invoke(damageable);
     }
+
+    public void LifeSteal(IDamageable damageable)
+    {
+        //life steal is a pourcentage that's incresed by items
+        int lifeIncreasedValue = (int)(Stats.GetValueStat(Stat.LIFE_STEAL) * (Stats.GetValueStat(Stat.ATK) * Stats.GetValueStat(Stat.ATK_COEFF)));
+        Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
+        if (Stats.GetValueStat(Stat.HP) > Stats.GetValueStat(Stat.MAX_HP))
+        {
+            Stats.SetValue(Stat.HP, Stats.GetValueStat(Stat.MAX_HP));
+        }
+    }
+
+    private void OnEnable()
+    {
+        onHit += LifeSteal;
+    }
+
+    private void OnDisable()
+    {
+        onHit -= LifeSteal;
+    }
 }

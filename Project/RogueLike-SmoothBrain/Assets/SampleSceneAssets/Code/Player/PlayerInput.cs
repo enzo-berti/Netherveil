@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
+
+
     PlayerInputMap playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
@@ -60,7 +62,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        animator.SetFloat("Speed", controller.Direction.magnitude, 0.1f, Time.deltaTime);
+        animator.SetFloat("Speed", controller.Direction.magnitude * 10f, 0.1f, Time.deltaTime);
 
         if (triggerCooldownDash || triggerCooldownAttack)
         {
@@ -147,29 +149,39 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
+        //rotate the player to mouse's direction if playing KB/mouse
+        if(Gamepad.all.Count == 0)
+        {
+            MouseOrientation();
+        }
+        OrientationErrorMargin();
+    }
+
+    void MouseOrientation()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit))
+        {
+            float angle = transform.IsTargetLeftOrRightSide(new Vector3(hit.point.x, this.transform.position.y, hit.point.z), VISION_CONE_ANGLE);
+            if (angle != float.MaxValue)
+            {
+                GetComponent<PlayerController>().CurrentTargetAngle += angle;
+            }
+        }
+    }
+
+    void OrientationErrorMargin()
+    {
         Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"))
         .Select(x => x.GetComponent<Transform>())
         .FirstOrDefault();
 
         if (targetTransform != null)
         {
-            Vector3 playerToTargetVec = targetTransform.position - transform.position;
-            float angle = Vector3.Angle(playerToTargetVec, transform.forward);
-            if (angle <= VISION_CONE_ANGLE && angle > float.Epsilon)
+            float angle = transform.IsTargetLeftOrRightSide(targetTransform.position, VISION_CONE_ANGLE);
+            if(angle != float.MaxValue)
             {
-                //vector that describes the enemy's position offset from the player's position along the player's left/right, up/down, and forward/back axes
-                Vector3 enemyDirectionLocal = transform.InverseTransformPoint(targetTransform.position);
-
-                //Left side of player
-                if (enemyDirectionLocal.x < 0)
-                {
-                    GetComponent<PlayerController>().CurrentTargetAngle -= angle;
-                }
-                //Right side of player
-                else
-                {
-                    GetComponent<PlayerController>().CurrentTargetAngle += angle;
-                }
+                GetComponent<PlayerController>().CurrentTargetAngle += angle;
             }
         }
     }

@@ -10,7 +10,7 @@ public class Inventory
     public IActiveItem ActiveItem { get { return activeItem; } }
     public List<IPassiveItem> PassiveItems { get { return passiveItems; } }
 
-    public void AddActiveItem(IActiveItem item)
+    private void AddActiveItem(IActiveItem item)
     {
         if(activeItem == null)
         {
@@ -18,13 +18,30 @@ public class Inventory
         }
         else
         {
-            // TODO : drop l'objet qu'on possède déjà pour le remplacer par le nouveau.
             activeItem = item;
         }
     }
 
-    public void AddPassiveItem(IPassiveItem item)
+    private void AddPassiveItem(IPassiveItem item)
     {
         passiveItems.Add(item);
+        item.OnRetrieved();
     }
+
+    //public void AddItem(ItemData item)
+    //{
+    //    if(item.GetComponent<IActiveItem>() != null)
+    //    {
+    //        AddActiveItem(item.GetComponent<IActiveItem>());
+    //    }
+    //    else if (item.GetComponent<IPassiveItem>() != null)
+    //    {
+    //        AddPassiveItem(item.GetComponent<IPassiveItem>());
+    //    }
+
+    //    if ((item.GetComponent<IPassiveItem>()) != null)
+    //    {
+    //        item.GetComponent<IPassiveItem>().OnRetrieved();
+    //    }
+    //}
 }
