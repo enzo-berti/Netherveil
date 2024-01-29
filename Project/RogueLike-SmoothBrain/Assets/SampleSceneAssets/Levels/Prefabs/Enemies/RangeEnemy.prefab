@@ -288,6 +288,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 19627f3f6130ce04ca8325ceb3cff4e9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 1166754175604888097, guid: 19627f3f6130ce04ca8325ceb3cff4e9,
         type: 3}
       propertyPath: m_Layer
@@ -499,10 +504,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1989937373186243002}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 19627f3f6130ce04ca8325ceb3cff4e9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4698587723743988329}
   m_SourcePrefab: {fileID: 100100000, guid: 19627f3f6130ce04ca8325ceb3cff4e9, type: 3}
 --- !u!1 &1603916860524947548 stripped
 GameObject:
@@ -586,20 +587,4 @@ MonoBehaviour:
   State: 0
   drops:
     dropList: []
---- !u!114 &4698587723743988329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1603916860524947548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 25
-  angle: 70
-  extendedVisionCone: 0
-  extentionCoeff: 1.25
-  extendedHitboxSize: 3
+  rotationSpeed: 5

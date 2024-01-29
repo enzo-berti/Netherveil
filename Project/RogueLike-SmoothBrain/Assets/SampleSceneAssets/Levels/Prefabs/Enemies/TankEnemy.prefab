@@ -26,7 +26,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 3ac1a4dca3b4a1c4fbc2f3d42f7872fa,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -17.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ac1a4dca3b4a1c4fbc2f3d42f7872fa,
         type: 3}
@@ -288,6 +288,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3ac1a4dca3b4a1c4fbc2f3d42f7872fa,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 1166754175604888097, guid: 3ac1a4dca3b4a1c4fbc2f3d42f7872fa,
         type: 3}
       propertyPath: m_Layer
@@ -499,10 +504,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6649333298665830485}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3ac1a4dca3b4a1c4fbc2f3d42f7872fa,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3849092731827042842}
   m_SourcePrefab: {fileID: 100100000, guid: 3ac1a4dca3b4a1c4fbc2f3d42f7872fa, type: 3}
 --- !u!1 &795660099074077446 stripped
 GameObject:
@@ -586,20 +587,4 @@ MonoBehaviour:
   State: 0
   drops:
     dropList: []
---- !u!114 &3849092731827042842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 795660099074077446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 7.5
-  angle: 220
-  extendedVisionCone: 0
-  extentionCoeff: 1.25
-  extendedHitboxSize: 3
+  rotationSpeed: 5

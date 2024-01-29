@@ -1,3 +1,5 @@
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -84,7 +86,7 @@ public class PlayerAnimation : MonoBehaviour
 
         foreach (NestedList<Collider> spearColliders in controller.spearAttacks)
         {
-            foreach(Collider spearCollider in spearColliders.data)
+            foreach (Collider spearCollider in spearColliders.data)
             {
                 spearCollider.gameObject.SetActive(false);
             }
@@ -110,5 +112,47 @@ public class PlayerAnimation : MonoBehaviour
                 }
             }
         }
+
+        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, 45f, 8f, transform.forward, LayerMask.GetMask("Enemy"))
+            .Select(x => x.GetComponent<Transform>())
+            .FirstOrDefault();
+        if (targetTransform != null)
+        {
+            Vector3 playerToTargetVec = targetTransform.position - transform.position;
+            float angle = Vector3.Angle(playerToTargetVec, transform.forward);
+            if (angle <= 45f && angle > float.Epsilon)
+            {
+                //vector that describes the enemy's position offset from the player's position along the player's left/right, up/down, and forward/back axes
+                Vector3 enemyDirectionLocal = transform.InverseTransformPoint(targetTransform.position);
+
+                //Left side of player
+                if (enemyDirectionLocal.x < 0)
+                {
+                    GetComponent<PlayerController>().CurrentTargetAngle -= angle;
+                }
+                //Right side of player
+                else if (enemyDirectionLocal.x > 0)
+                {
+                    GetComponent<PlayerController>().CurrentTargetAngle += angle;
+                }
+            }
+        }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, 45f, 8f, transform.forward, LayerMask.GetMask("Enemy"));
+
+        Handles.color = new Color(1, 0, 0, 0.25f);
+        if (collide.Length != 0)
+        {
+            Handles.color = new Color(0, 1, 0, 0.25f);
+        }
+
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, 45f / 2f, 8f);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -45f / 2f, 8f);
+        Handles.DrawSolidDisc(transform.position, Vector3.up, 8f);
+    }
+#endif
 }

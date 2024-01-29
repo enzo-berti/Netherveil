@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(VisionCone))]
 public abstract class Mobs : Entity
 {
     [SerializeField] Drop drops;
     protected NavMeshAgent agent;
-    protected VisionCone visionCone;
     protected Transform target = null;
 
     public enum EnemyState : int
@@ -21,7 +19,6 @@ public abstract class Mobs : Entity
     protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        visionCone = GetComponent<VisionCone>();
 
         agent.speed = stats.GetValueStat(Stat.SPEED);
     }
