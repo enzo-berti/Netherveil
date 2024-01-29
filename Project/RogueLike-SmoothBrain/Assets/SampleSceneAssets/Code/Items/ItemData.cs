@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+[CreateAssetMenu(menuName = "Item")]
 public class ItemData : ScriptableObject
 {
     public enum Rarity
@@ -12,10 +10,9 @@ public class ItemData : ScriptableObject
         EPIC,
         LEGENDARY
     }
-    [SerializeField] ItemEffect script;
 
-
+    public TextAsset effect;
     public Rarity RarityTier;
     public string Name;
-    public string Description;
+    [Multiline] public string Description;
 }

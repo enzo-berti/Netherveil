@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using static ItemData;
 
 public class MonsterHeart : ItemEffect, IPassiveItem
 {
