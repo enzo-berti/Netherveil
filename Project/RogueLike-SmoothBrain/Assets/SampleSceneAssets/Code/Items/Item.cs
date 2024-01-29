@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 public class Item : MonoBehaviour, IInterractable
 {
-    ItemEffect data;
+    ItemData data;
     public void Interract()
     {
-        throw new System.NotImplementedException();
+        GameObject.FindWithTag("Player").GetComponent<Inventory>().AddItem(Activator.CreateInstance(data.effect.GetClass()) as ItemEffect);
     }
 }
