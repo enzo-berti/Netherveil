@@ -13,8 +13,9 @@ public class Pest : Sbire, IAttacker, IDamageable, IMovable
 
     [Header("Pest Parameters")]
     [SerializeField] private float movementDelay = 2f;
-    [SerializeField, Range(0f, 360f)] private float angle;
-    [SerializeField] private float range;
+    [SerializeField, Range(0f, 360f)] private float angle = 120f;
+    [SerializeField] private float range = 5f;
+    [SerializeField] private float damages = 5f;
 
     private void Start()
     {
@@ -36,8 +37,8 @@ public class Pest : Sbire, IAttacker, IDamageable, IMovable
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                 .ToArray();
 
-            PlayerController player = entities
-                .Select(x => x.GetComponent<PlayerController>())
+            Hero player = entities
+                .Select(x => x.GetComponent<Hero>())
                 .Where(x => x != null)
                 .FirstOrDefault();
 
@@ -67,7 +68,7 @@ public class Pest : Sbire, IAttacker, IDamageable, IMovable
 
     public void Attack(IDamageable damageable)
     {
-        throw new System.NotImplementedException();
+        damageable.ApplyDamage((int)damages);
     }
 
     public void ApplyDamage(int _value)
@@ -87,6 +88,16 @@ public class Pest : Sbire, IAttacker, IDamageable, IMovable
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+
+        if (!collision.gameObject.CompareTag("Player") || damageable == null)
+            return;
+
+        Attack(damageable);
     }
 
 #if UNITY_EDITOR

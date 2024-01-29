@@ -5,12 +5,27 @@ using UnityEngine.AI;
 
 public class Range : Sbire, IDamageable, IAttacker, IMovable
 {
+    private new enum State
+    {
+        MOVE,
+        ATTACK,
+        HIT,
+        DEAD,
+        TRIGGERED,
+        FLEEING,
+        WANDERING
+    }
+
     Animator animator;
 
     private IAttacker.HitDelegate onHit;
     private IAttacker.AttackDelegate onAttack;
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
+
+    private State curState;
+    private bool isAttacking;
+    private float cooldown;
 
     private float fleeTimer;
     private float fleeCooldown;
@@ -26,16 +41,14 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
         animator = GetComponent<Animator>();
     }
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
-
-        animator.SetBool("InAttackRange", State == (int)EntityState.ATTACK);
-        animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EntityState.ATTACK || State == (int)EnemyState.FLEEING || agent.hasPath);
+        animator.SetBool("InAttackRange", curState == State.ATTACK);
+        animator.SetBool("Triggered", curState == State.TRIGGERED || curState == State.ATTACK || curState ==State.FLEEING || agent.hasPath);
         animator.SetBool("Punch", isAttacking);
     }
 
-    protected override void SimpleAI()
+    private void SimpleAI()
     {
         Transform player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
             .Where(x => x.CompareTag("Player"))
@@ -53,17 +66,17 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
             enemyToTargetVector = player.position - transform.position;
             enemyToTargetVector.y = 0;
 
-            if (State != (int)EnemyState.FLEEING)
+            if (curState != State.FLEEING)
             {
                 if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE))
-                    State = (int)EntityState.ATTACK;
+                    curState = State.ATTACK;
                 else
-                    State = (int)EnemyState.TRIGGERED;
+                    curState = State.TRIGGERED;
             }
         }
 
         // reset le cd d'attaque et la destination
-        if (State != (int)EntityState.ATTACK)
+        if (curState != State.ATTACK)
         {
             cooldown = 0;
         }
@@ -75,23 +88,34 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
         // si le joueur est à une certaine distance du range, se met à fuir
         if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE) * 0.5f && !isAttacking)
         {
-            State = (int)EnemyState.FLEEING;
+            curState = State.FLEEING;
         }
 
         // fuis ou continue son comportement de base
-        if (State == (int)EnemyState.FLEEING)
+        if (curState == State.FLEEING)
         {
             Flee(enemyToTargetVector);
         }
         else
         {
-            if (State == (int)EnemyState.TRIGGERED)
+            if (curState == State.TRIGGERED)
             {
                 agent.SetDestination(player.position);
             }
-            else if (State == (int)EntityState.ATTACK)
+            else if (curState == State.ATTACK)
             {
-                AttackPlayer();
+                cooldown += Time.deltaTime;
+
+                // tape FIRE_RATE fois par seconde
+                if (cooldown >= 1f / stats.GetValueStat(Stat.FIRE_RATE))
+                {
+                    isAttacking = true;
+                    cooldown = 0;
+                }
+                else
+                {
+                    isAttacking = false;
+                }
             }
         }
     }
@@ -103,7 +127,7 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
 
         if (fleeTimer > 2f || _enemyToTargetVector.magnitude >= stats.GetValueStat(Stat.ATK_RANGE))
         {
-            State = (int)EnemyState.WANDERING;
+            curState = State.WANDERING;
             fleeTimer = 0;
         }
     }
