@@ -106,10 +106,13 @@ public class Sbire : Mobs
 
     protected void RotateTowardsTarget()
     {
-        Vector3 targetDirection = target.position - transform.position;
-        targetDirection.y = 0f;
+        if (target)
+        {
+            Vector3 targetDirection = target.position - transform.position;
+            targetDirection.y = 0f;
 
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 }
