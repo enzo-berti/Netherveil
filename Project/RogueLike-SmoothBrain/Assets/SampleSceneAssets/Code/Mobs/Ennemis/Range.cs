@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -48,8 +49,10 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
         animator.SetBool("Punch", isAttacking);
     }
 
-    private void SimpleAI()
+    protected override IEnumerator Brain()
     {
+        yield return null;
+
         Transform player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
             .Where(x => x.CompareTag("Player"))
             .Select(x => x.transform)

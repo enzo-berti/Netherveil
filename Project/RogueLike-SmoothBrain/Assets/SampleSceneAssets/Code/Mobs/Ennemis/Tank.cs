@@ -1,0 +1,113 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class Tank : Sbire, IAttacker, IDamageable, IMovable
+{
+    private IAttacker.AttackDelegate onAttack;
+    private IAttacker.HitDelegate onHit;
+    public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
+    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+
+    [Header("Tank Parameters")]
+    [SerializeField, Range(0f, 360f)] private float angle = 120f;
+    [SerializeField] private float range = 5f;
+
+    public void Attack(IDamageable damageable)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ApplyDamage(int _value)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Death()
+    {
+        Destroy(gameObject);
+    }
+
+    public void MoveTo(Vector3 posToMove)
+    {
+        agent.SetDestination(posToMove);
+    }
+
+    protected override IEnumerator Brain()
+    {
+        while (true)
+        {
+            yield return null;
+
+            Hero player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+                .Select(x => x.GetComponent<Hero>())
+                .Where(x => x != null)
+                .FirstOrDefault();
+
+            if (player)
+            {
+                // Player detect
+                if (agent.velocity.magnitude == 0f && Vector3.Distance(transform.position, player.transform.position) < 2f)
+                {
+                    // Do attack
+                }
+                else
+                {
+                    MoveTo(player.transform.position);
+                }
+            }
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //if (Selection.activeGameObject != gameObject)
+        //    return;
+
+        Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+            .Select(x => x.GetComponent<Entity>())
+            .Where(x => x != null && x != this)
+            .ToArray();
+
+        Handles.color = new Color(1, 0, 0, 0.25f);
+        if (entities.Length != 0)
+        {
+            Handles.color = new Color(0, 1, 0, 0.25f);
+        }
+
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
+
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, Vector3.up, range);
+
+        // Debug text
+        Handles.Label(
+        transform.position + transform.up * 2,
+            "Tank" +
+            "\n - Health : " + stats.GetValueStat(Stat.HP) +
+            "\n - Speed : " + stats.GetValueStat(Stat.SPEED),
+            new GUIStyle()
+            {
+                alignment = TextAnchor.MiddleLeft,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.white,
+                }
+            });
+    }
+#endif
+}
+
+// |--------------|
+// |TANK BEHAVIOUR|
+// |--------------|
+// If Player detect
+//  Move to Player
+// Else
+//  Don't move

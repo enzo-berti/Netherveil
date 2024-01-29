@@ -1,6 +1,11 @@
-using UnityEngine;
+using System.Collections;
 
-public class Sbire : Mobs
+public abstract class Sbire : Mobs
 {
+    private void Start()
+    {
+        StartCoroutine(Brain());
+    }
 
+    protected abstract IEnumerator Brain();
 }
