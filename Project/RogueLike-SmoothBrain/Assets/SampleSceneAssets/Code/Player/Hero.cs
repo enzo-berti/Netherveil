@@ -22,6 +22,14 @@ public class Hero : Entity, IDamageable, IAttacker
         animator = GetComponent<Animator>();
     }
 
+    private void Update()
+    {
+        foreach(var item in inventory.PassiveItems)
+        {
+            Debug.Log(item);
+        }
+    }
+
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value);
