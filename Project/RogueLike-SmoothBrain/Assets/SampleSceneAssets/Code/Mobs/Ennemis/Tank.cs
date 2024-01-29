@@ -1,53 +1,113 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Tank : Sbire, IDamageable, IAttacker, IMovable
+public class Tank : Sbire, IAttacker, IDamageable, IMovable
 {
-    Animator animator;
-
-    private IAttacker.HitDelegate onHit;
     private IAttacker.AttackDelegate onAttack;
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
+    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
-    new private void Start()
+    [Header("Tank Parameters")]
+    [SerializeField, Range(0f, 360f)] private float angle = 120f;
+    [SerializeField] private float range = 5f;
+
+    public void Attack(IDamageable damageable)
     {
-        base.Start();
-        animator = GetComponent<Animator>();
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        animator.SetBool("InAttackRange", State == (int)EntityState.ATTACK);
-        animator.SetBool("Triggered", State == (int)EnemyState.TRIGGERED || State == (int)EntityState.ATTACK || agent.hasPath);
-        animator.SetBool("Punch", isAttacking);
+        throw new System.NotImplementedException();
     }
 
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, -_value);
-
-        if (stats.GetValueStat(Stat.HP) <= 0)
-        {
-            Death();
-        }
+        throw new System.NotImplementedException();
     }
 
     public void Death()
     {
-        OnDeath?.Invoke(transform.position);
         Destroy(gameObject);
-    }
-
-    public void Attack(IDamageable damageable)
-    {
-        OnAttack?.Invoke(damageable);
-        damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
     }
 
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
     }
+
+    protected override IEnumerator Brain()
+    {
+        while (true)
+        {
+            yield return null;
+
+            Hero player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+                .Select(x => x.GetComponent<Hero>())
+                .Where(x => x != null)
+                .FirstOrDefault();
+
+            if (player)
+            {
+                // Player detect
+                if (agent.velocity.magnitude == 0f && Vector3.Distance(transform.position, player.transform.position) < 2f)
+                {
+                    // Do attack
+                }
+                else
+                {
+                    MoveTo(player.transform.position);
+                }
+            }
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //if (Selection.activeGameObject != gameObject)
+        //    return;
+
+        Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+            .Select(x => x.GetComponent<Entity>())
+            .Where(x => x != null && x != this)
+            .ToArray();
+
+        Handles.color = new Color(1, 0, 0, 0.25f);
+        if (entities.Length != 0)
+        {
+            Handles.color = new Color(0, 1, 0, 0.25f);
+        }
+
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
+
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, Vector3.up, range);
+
+        // Debug text
+        Handles.Label(
+        transform.position + transform.up * 2,
+            "Tank" +
+            "\n - Health : " + stats.GetValueStat(Stat.HP) +
+            "\n - Speed : " + stats.GetValueStat(Stat.SPEED),
+            new GUIStyle()
+            {
+                alignment = TextAnchor.MiddleLeft,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.white,
+                }
+            });
+    }
+#endif
 }
+
+// |--------------|
+// |TANK BEHAVIOUR|
+// |--------------|
+// If Player detect
+//  Move to Player
+// Else
+//  Don't move

@@ -30,6 +30,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.seed.Set(123456);
         GenerationParameters generationParam = new GenerationParameters();
         generationParam.nbNormal = 2;
 
@@ -45,16 +46,15 @@ public class MapGenerator : MonoBehaviour
             if (availableDoors.Count != 0)
             {
                 // instantiate room with first availableDoors transform then remove it
-                //roomGO = Instantiate(roomNormal[0], availableDoors[0].transform.position, availableDoors[0].transform.rotation);
-
-                roomGO = Instantiate(roomNormal[0]);
+                roomGO = Instantiate(roomNormal[0]); // TODO : add random selection
 
                 DoorsGenerator generateTemp = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
 
-                GameObject doorSelected = generateTemp.GetRandomAvailableDoor();
-                generateTemp.SetDoorState(DoorState.OPEN, doorSelected);
-                roomGO.transform.position = availableDoors[0].transform.position + (availableDoors[0].transform.position - availableDoors[0].transform.parent.Center());
-                //roomGO.transform.rotation = availableDoors[0].transform.rotation;
+                GameObject doorSelected = generateTemp.GetRdmDoor();
+                //generateTemp.CloseDoor(DoorState.OPEN, doorSelected);
+
+                // sortie.pos = entrée.pos + (-entrée.arrow.pos + sortie.arrow.pos)
+                roomGO.transform.position = doorSelected.transform.parent.parent.parent.position + (-doorSelected.transform.position + availableDoors[0].transform.position);
 
                 generationParameters.nbNormal--;
                 availableDoors.Remove(availableDoors[0]);
@@ -62,13 +62,12 @@ public class MapGenerator : MonoBehaviour
             else
             {
                 roomGO = Instantiate(roomNormal[0]);
-            
             }
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
-            availableDoors.AddRange(doorsGenerator.GenerateDoors(generationParameters));
+            //availableDoors.AddRange(doorsGenerator.GenerateDoors(generationParameters));
 
             RoomGenerator.RoomGenerated++;
         }

@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum DoorState : byte
@@ -11,118 +11,79 @@ public enum DoorState : byte
 
 public class DoorsGenerator : MonoBehaviour
 {
+
     public static int RandGenerator { get; private set; } = 0;
-    DoorState[] doorsState;
+    public List<GameObject> doors { get; private set; } = new List<GameObject>();
+    [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
-    [SerializeField, Range(1, int.MaxValue)] private int minDoors = 1;
-    [SerializeField] private int maxDoors = 4;
-
-    public int NbAvailableDoors
-    {
-        get
-        {
-            int availableDoors = 0;
-            foreach (var state in doorsState)
-            {
-                if (state == DoorState.NONE)
-                {
-                    availableDoors++;
-                }
-            }
-
-            return availableDoors;
-        }
-    }
-
-    public List<GameObject> AvailableDoors
-    {
-        get
-        {
-            List<GameObject> result = new List<GameObject>();
-
-            for (int i = 0; i < doorsState.Length; i++)
-            {
-                if (doorsState[i] == DoorState.NONE)
-                {
-                    result.Add(transform.GetChild(i).gameObject);
-                }
-            }
-
-            return result;
-        }
-    }
-
+    // TOTALEMENT BROKEN
     private void OnValidate()
     {
-        minDoors = Mathf.Clamp(minDoors, minDoors, maxDoors);
-        maxDoors = Mathf.Clamp(maxDoors, minDoors, maxDoors);
+        foreach (Transform child in transform)
+        {
+            doors.Add(child.gameObject);
+        }
+
+        if (minMaxDoors.y > doors.Count)
+        {
+            minMaxDoors.y = doors.Count;
+        }
+        if (minMaxDoors.x < 0)
+        {
+            minMaxDoors.x = 0;
+        }
     }
 
     private void Awake()
     {
-        doorsState = new DoorState[transform.childCount];
+        foreach (Transform child in transform)
+        {
+            doors.Add(child.gameObject);
+        }
     }
 
     /// <summary>
-    /// TODO : J'aime pas le fait qu'on renvoie une list de GO alors que la fonction n'est pas un "get"
-    /// surtout que si la fonction est call deux fois elle renvera pas du tout la même chose
+    /// Generate the seed doors (destroy doors between min max range)
     /// </summary>
-    public List<GameObject> GenerateDoors(GenerationParameters generationParameters)
+    /// <param name="generationParameters"></param>
+    public void GenerateSeed(GenerationParameters generationParameters)
     {
-        List<GameObject> result = new List<GameObject>();
-
-        // TODO : ADD RANDOM VALUE BETWEEN (x, y) 
-
         // get number of doors that can spawn depending on the number of rooms available by genParams
-        int numDoor = NbAvailableDoors - Mathf.Clamp(NbAvailableDoors - generationParameters.NbRoom, 0, int.MaxValue);
+        int numDoorsToClose = (GameManager.Instance.seed.Range(minMaxDoors.y - doors.Count, doors.Count - minMaxDoors.x) + DoorsGenerator.RandGenerator) % doors.Count - minMaxDoors.x;
+        DoorsGenerator.RandGenerator++;
 
-        // add doors with state.NONE in a random order
-        while (numDoor > 0)
+        for (int i = 0; i < numDoorsToClose; i++)
         {
-            int index = (GameManager.Instance.seed.Range(0, doorsState.Length) + DoorsGenerator.RandGenerator) % doorsState.Length;
-            DoorsGenerator.RandGenerator++;
+            int index = GameManager.Instance.seed.Range(0, doors.Count - 1);
 
-            if (doorsState[index] == DoorState.NONE)
-            {
-                result.Add(gameObject.transform.GetChild(index).gameObject);
-                doorsState[index] = DoorState.OPEN;
-                numDoor--;
-            }
+            CloseDoor(index);
         }
-
-        // close the other doors
-        for (int i = 0; i < doorsState.Length; i++)
-        {
-            doorsState[i] = doorsState[i] == DoorState.NONE ? DoorState.CLOSE : doorsState[i];
-        }
-
-        return result;
     }
 
-    public GameObject GetRandomAvailableDoor()
+    public GameObject GetRdmDoor()
     {
-        var availableDoors = AvailableDoors;
-        int index = (GameManager.Instance.seed.Range(0, availableDoors.Count) + DoorsGenerator.RandGenerator) % availableDoors.Count;
+        int index = (GameManager.Instance.seed.Range(0, doors.Count) + DoorsGenerator.RandGenerator) % doors.Count;
 
-        return availableDoors[index];
+        return doors[index];
     }
 
-    public void SetDoorState(DoorState state, int index)
+    public void CloseDoor(int index)
     {
-        
+        GameObject go = doors[index];
+        doors.RemoveAt(index);
+
+        // TODO : Close the room (h word)
+        Destroy(go);
     }
 
-    public void SetDoorState(DoorState state, GameObject childObject)
+    public void CloseDoor(GameObject door)
     {
-        for (int i = 0; i < transform.childCount; i++)
+        if (doors.Remove(door))
         {
-            if (childObject == transform.GetChild(i).gameObject)
-            {
-                doorsState[i] = state;
-                return;
-            }
+            // TODO : close the room (h word)
+            Destroy(door);
         }
 
-        Debug.LogWarning("Try to set a door state with the wrong GameObject in " + gameObject, childObject);
+        Debug.LogWarning("Try to set a door state with the wrong GameObject in " + gameObject, door);
     }
 }

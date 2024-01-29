@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerAnimation))]
 public class Hero : Entity, IDamageable, IAttacker
 {
     public enum PlayerState : int
@@ -8,7 +7,7 @@ public class Hero : Entity, IDamageable, IAttacker
         DASH = EntityState.NB
     }
 
-    PlayerAnimation playerAnim;
+    Animator animator;
     Inventory inventory = new Inventory();
     public Inventory Inventory { get { return inventory; } }
 
@@ -20,7 +19,7 @@ public class Hero : Entity, IDamageable, IAttacker
 
     private void Start()
     {
-        playerAnim = GetComponent<PlayerAnimation>();
+        animator = GetComponent<Animator>();
     }
 
     public void ApplyDamage(int _value)
@@ -29,8 +28,8 @@ public class Hero : Entity, IDamageable, IAttacker
         if ((-_value) < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
-            playerAnim.animator.ResetTrigger("Hit");
-            playerAnim.animator.SetTrigger("Hit");
+            animator.ResetTrigger("Hit");
+            animator.SetTrigger("Hit");
         }
 
         if (stats.GetValueStat(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
@@ -42,13 +41,34 @@ public class Hero : Entity, IDamageable, IAttacker
     public void Death()
     {
         State = (int)EntityState.DEAD;
-        playerAnim.animator.ResetTrigger("Death");
-        playerAnim.animator.SetTrigger("Death");
+        animator.ResetTrigger("Death");
+        animator.SetTrigger("Death");
     }
 
     public void Attack(IDamageable damageable)
     {
         damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
         onAttack?.Invoke(damageable);
+    }
+
+    public void LifeSteal(IDamageable damageable)
+    {
+        //life steal is a pourcentage that's incresed by items
+        int lifeIncreasedValue = (int)(Stats.GetValueStat(Stat.LIFE_STEAL) * (Stats.GetValueStat(Stat.ATK) * Stats.GetValueStat(Stat.ATK_COEFF)));
+        Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
+        if (Stats.GetValueStat(Stat.HP) > Stats.GetValueStat(Stat.MAX_HP))
+        {
+            Stats.SetValue(Stat.HP, Stats.GetValueStat(Stat.MAX_HP));
+        }
+    }
+
+    private void OnEnable()
+    {
+        onHit += LifeSteal;
+    }
+
+    private void OnDisable()
+    {
+        onHit -= LifeSteal;
     }
 }
