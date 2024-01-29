@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class Spear : MonoBehaviour
 {
-    bool isThrew = false;
-    bool isThrowing = false;
-
     Transform player;
     Transform parent = null;
 
@@ -15,20 +12,8 @@ public class Spear : MonoBehaviour
     Vector3 initLocalPosition;
 
     Vector3 spearPosition;
-    public bool IsThrown
-    {
-        get
-        {
-            return (isThrew);
-        }
-    }
-    public bool IsThrowing
-    {
-        get
-        {
-            return (isThrowing);
-        }
-    }
+    public bool IsThrown { get; private set; } = false;
+    public bool IsThrowing { get; private set; } = false;
     Vector3 posToReach = new();
     Rigidbody rb;
 
@@ -46,16 +31,16 @@ public class Spear : MonoBehaviour
         {
             return;
         }
-        if (isThrew && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
+        if (IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
         {
             Destroy(trail);
             this.gameObject.GetComponent<MeshRenderer>().enabled = true;
             // We set position at the exact place ( the spear doesn't move, just tp )
             this.gameObject.transform.position = posToReach;
             this.gameObject.transform.rotation = Quaternion.identity * Quaternion.Euler(90,0,0);
-            isThrowing = false;
+            IsThrowing = false;
         }
-        else if(!isThrew && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
+        else if(!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
         {
             rb.velocity = Vector3.zero;
             this.gameObject.transform.position = posToReach;
@@ -66,7 +51,7 @@ public class Spear : MonoBehaviour
             this.gameObject.transform.localRotation = initLocalRotation;
             parent = null;
             this.gameObject.GetComponent<MeshRenderer>().enabled = true;
-            isThrowing = false;
+            IsThrowing = false;
             Destroy(trail);
         }
     }
@@ -83,7 +68,9 @@ public class Spear : MonoBehaviour
             foreach (var hit in hits)
             {
                 if(hit.collider.gameObject.TryGetComponent<IDamageable>(out _))
-                Debug.Log($"damage on {hit.collider.name}");
+                    Debug.Log($"damage on {hit.collider.name}");
+                //else if (hit.collider.gameObject.layer == LayerMask.GetMask("Map")) 
+                //    trail.
             }
         }
 
@@ -91,8 +78,8 @@ public class Spear : MonoBehaviour
         parent = this.transform.parent;
         this.transform.parent = null;
 
-        isThrew = true;
-        isThrowing = true;
+        IsThrown = true;
+        IsThrowing = true;
 
     }
 
@@ -105,7 +92,7 @@ public class Spear : MonoBehaviour
         posToReach = parent.transform.position;
         trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * 5000, ForceMode.Force);
 
-        isThrew = false;
-        isThrowing = true;
+        IsThrown = false;
+        IsThrowing = true;
     }
 }
