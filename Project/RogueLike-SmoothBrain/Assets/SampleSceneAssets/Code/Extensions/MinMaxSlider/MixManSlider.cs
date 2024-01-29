@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 public class MinMaxSliderAttribute : PropertyAttribute
 {
     public float min;

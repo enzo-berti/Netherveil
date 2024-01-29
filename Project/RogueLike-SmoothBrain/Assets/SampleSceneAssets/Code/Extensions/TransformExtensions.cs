@@ -1,7 +1,15 @@
 using UnityEngine;
 
+public enum TargetSide : byte
+{
+    UNDEFINED,
+    LEFT,
+    RIGHT
+}
+
 public static class TransformExtensions
 {
+
     public static Vector3 Center(this Transform transform)
     {
         Vector3 sumVector = new Vector3(0f, 0f, 0f);
@@ -19,5 +27,36 @@ public static class TransformExtensions
         }
 
         return transform.childCount == 0 ? Vector3.zero : sumVector / transform.childCount;
+    }
+
+    /// <summary>
+    /// Returns the angle you need to add to the launcher's rotation to be oriented in front of the target if succeeded, returns float.maxValue otherwise.
+    /// You can add an angle threshold to do the test with a cone that matches the angle passed as parameter
+    /// </summary>
+    public static float IsTargetLeftOrRightSide(this Transform launcherTransform, Vector3 targetPos, float angleThreshold = 360, float rangeThreshold = float.MaxValue)
+    {
+        Vector3 launcherToTargetVec = targetPos - launcherTransform.position;
+        float angle = Vector3.Angle(launcherToTargetVec, launcherTransform.forward);
+
+
+        if (angle <= angleThreshold && angle > float.Epsilon && launcherToTargetVec.magnitude <= rangeThreshold)
+        {
+            //vector that describes the enemy's position offset from the player's position along the player's left/right, up/down, and forward/back axes
+            Vector3 targetLocalPosFromLauncher = launcherTransform.InverseTransformPoint(targetPos);
+
+            //Left side of launcher
+            if (targetLocalPosFromLauncher.x < 0)
+            {
+                return -angle;
+            }
+            //Right side of launcher
+            else
+            {
+                return angle;
+            }
+        }
+
+        //target isnt in the angle
+        return float.MaxValue;
     }
 }
