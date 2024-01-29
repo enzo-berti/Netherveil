@@ -1,10 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Tank : Sbire, IAttacker, IDamageable, IMovable
 {
@@ -19,12 +16,16 @@ public class Tank : Sbire, IAttacker, IDamageable, IMovable
 
     public void Attack(IDamageable damageable)
     {
-        throw new System.NotImplementedException();
+        Destroy(gameObject);
     }
 
     public void ApplyDamage(int _value)
     {
-        throw new System.NotImplementedException();
+        Stats.IncreaseValue(Stat.HP, -_value);
+        if (stats.GetValueStat(Stat.HP) <= 0)
+        {
+            Death();
+        }
     }
 
     public void Death()
