@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Pest : Sbire, IAttacker, IDamageable, IMovable
 {

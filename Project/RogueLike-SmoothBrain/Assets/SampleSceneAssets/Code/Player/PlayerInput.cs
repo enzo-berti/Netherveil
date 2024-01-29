@@ -1,5 +1,7 @@
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +19,10 @@ public class PlayerInput : MonoBehaviour
     //used for the error margin for attacks to auto-redirect on enemies in vision cone
     readonly float VISION_CONE_ANGLE = 45f;
     readonly float VISION_CONE_RANGE = 8f;
+
+    bool dashCooldown = false;
+    readonly float DASH_COOLDOWN_TIME = 2f;
+    float timerDash = 0f;
 
     //used to prevent that if you press both dash and attack button to do both at the same time
     float keyCooldown = 0f;
@@ -75,6 +81,16 @@ public class PlayerInput : MonoBehaviour
                 keyCooldown = 0f;
             }
         }
+
+        if(dashCooldown) 
+        {
+            timerDash += Time.deltaTime;
+            if(timerDash >= DASH_COOLDOWN_TIME)
+            {
+                dashCooldown = false;
+                timerDash = 0f;
+            }
+        }
     }
 
     public void Attack(InputAction.CallbackContext ctx)
@@ -97,12 +113,13 @@ public class PlayerInput : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext ctx)
     {
-        if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack)
+        if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
             controller.DashDir = controller.LastDir;
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
+            dashCooldown = true;
         }
     }
 
