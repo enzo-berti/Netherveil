@@ -1,3 +1,5 @@
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +11,10 @@ public class PlayerInput : MonoBehaviour
     PlayerInteractions m_interaction;
     PlayerAttack m_attack;
     Animator animator;
+
+    //used for the error margin for attacks to auto-redirect on enemies in vision cone
+    readonly float VISION_CONE_ANGLE = 45f;
+    readonly float VISION_CONE_RANGE = 8f;
 
     //used to prevent that if you press both dash and attack button to do both at the same time
     float keyCooldown = 0f;
@@ -141,12 +147,15 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        Transform targetTransform = GetComponent<VisionCone>().GetTarget("Enemy");
+        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"))
+        .Select(x => x.GetComponent<Transform>())
+        .FirstOrDefault();
+
         if (targetTransform != null)
         {
             Vector3 playerToTargetVec = targetTransform.position - transform.position;
             float angle = Vector3.Angle(playerToTargetVec, transform.forward);
-            if (angle <= GetComponent<VisionCone>().angle && angle > float.Epsilon)
+            if (angle <= 45f && angle > float.Epsilon)
             {
                 //vector that describes the enemy's position offset from the player's position along the player's left/right, up/down, and forward/back axes
                 Vector3 enemyDirectionLocal = transform.InverseTransformPoint(targetTransform.position);
@@ -164,4 +173,20 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"));
+
+        Handles.color = new Color(1, 0, 0, 0.25f);
+        //if (collide.Length != 0)
+        //{
+        //    Handles.color = new Color(0, 1, 0, 0.25f);
+        //}
+
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
+    }
+#endif
 }
