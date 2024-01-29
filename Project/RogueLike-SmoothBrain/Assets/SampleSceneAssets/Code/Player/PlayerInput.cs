@@ -21,7 +21,7 @@ public class PlayerInput : MonoBehaviour
     readonly float VISION_CONE_RANGE = 8f;
 
     bool dashCooldown = false;
-    readonly float DASH_COOLDOWN_TIME = 2f;
+    readonly float DASH_COOLDOWN_TIME = 0.5f;
     float timerDash = 0f;
 
     //used to prevent that if you press both dash and attack button to do both at the same time
