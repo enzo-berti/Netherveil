@@ -12,7 +12,8 @@ public enum Stat
     CRIT_RATE,
     CRIT_DAMAGE,
     MAX_HP,
-    CORRUPTION
+    CORRUPTION,
+    LIFE_STEAL
 }
 
 [Serializable]
