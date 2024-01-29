@@ -30,25 +30,26 @@ public static class TransformExtensions
     }
 
     /// <summary>
-    /// returns the value of the angle if operation succeeded, float.maxValue otherwise.you can add an angle threshold to do the test with a cone that matches the angle passed as parameter
+    /// Returns the angle you need to add to the launcher's rotation to be oriented in front of the target if succeeded, returns float.maxValue otherwise.
+    /// You can add an angle threshold to do the test with a cone that matches the angle passed as parameter
     /// </summary>
-    public static float IsTargetLeftOrRightSide(this Transform launcherTransform, Vector3 targetPos, float angleThreshold = 360)
+    public static float IsTargetLeftOrRightSide(this Transform launcherTransform, Vector3 targetPos, float angleThreshold = 360, float rangeThreshold = float.MaxValue)
     {
         Vector3 launcherToTargetVec = targetPos - launcherTransform.position;
         float angle = Vector3.Angle(launcherToTargetVec, launcherTransform.forward);
 
 
-        if (angle <= angleThreshold && angle > float.Epsilon)
+        if (angle <= angleThreshold && angle > float.Epsilon && launcherToTargetVec.magnitude <= rangeThreshold)
         {
             //vector that describes the enemy's position offset from the player's position along the player's left/right, up/down, and forward/back axes
             Vector3 targetLocalPosFromLauncher = launcherTransform.InverseTransformPoint(targetPos);
 
-            //Left side of player
+            //Left side of launcher
             if (targetLocalPosFromLauncher.x < 0)
             {
                 return -angle;
             }
-            //Right side of player
+            //Right side of launcher
             else
             {
                 return angle;

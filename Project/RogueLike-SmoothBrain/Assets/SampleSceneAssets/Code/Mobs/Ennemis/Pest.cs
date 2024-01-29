@@ -6,26 +6,19 @@ using UnityEngine.AI;
 
 public class Pest : Sbire, IAttacker, IDamageable, IMovable
 {
+
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     [Header("Pest Parameters")]
-    [SerializeField] private float movementDelay = 2f;
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
     [SerializeField] private float range = 5f;
+    [SerializeField] private float movementDelay = 2f;
     [SerializeField] private float damages = 5f;
 
-    private void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        agent.speed = stats.GetValueStat(Stat.SPEED);
-
-        StartCoroutine(MovementProcess());
-    }
-
-    private IEnumerator MovementProcess()
+    protected override IEnumerator Brain()
     {
         while (true)
         {
@@ -122,6 +115,21 @@ public class Pest : Sbire, IAttacker, IDamageable, IMovable
 
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, range);
+
+        // Debug text
+        Handles.Label(
+            transform.position + transform.up,
+            "Pest" +
+            "\n - Health : " + stats.GetValueStat(Stat.HP) +
+            "\n - Speed : " + stats.GetValueStat(Stat.SPEED),
+            new GUIStyle()
+            { 
+                alignment = TextAnchor.MiddleLeft,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.white,
+                }
+            });
     }
 #endif
 }

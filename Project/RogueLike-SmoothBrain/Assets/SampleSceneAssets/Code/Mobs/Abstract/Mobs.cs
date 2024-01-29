@@ -4,8 +4,9 @@ public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
 
-    private void Start()
+    private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = stats.GetValueStat(Stat.SPEED);
     }
 }
