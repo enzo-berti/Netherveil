@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerAnimation))]
 public class Hero : Entity, IDamageable, IAttacker
 {
     public enum PlayerState : int
@@ -8,7 +7,7 @@ public class Hero : Entity, IDamageable, IAttacker
         DASH = EntityState.NB
     }
 
-    PlayerAnimation playerAnim;
+    Animator animator;
     Inventory inventory = new Inventory();
     public Inventory Inventory { get { return inventory; } }
 
@@ -20,7 +19,7 @@ public class Hero : Entity, IDamageable, IAttacker
 
     private void Start()
     {
-        playerAnim = GetComponent<PlayerAnimation>();
+        animator = GetComponent<Animator>();
     }
 
     public void ApplyDamage(int _value)
@@ -29,8 +28,8 @@ public class Hero : Entity, IDamageable, IAttacker
         if ((-_value) < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
-            playerAnim.animator.ResetTrigger("Hit");
-            playerAnim.animator.SetTrigger("Hit");
+            animator.ResetTrigger("Hit");
+            animator.SetTrigger("Hit");
         }
 
         if (stats.GetValueStat(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
@@ -42,8 +41,8 @@ public class Hero : Entity, IDamageable, IAttacker
     public void Death()
     {
         State = (int)EntityState.DEAD;
-        playerAnim.animator.ResetTrigger("Death");
-        playerAnim.animator.SetTrigger("Death");
+        animator.ResetTrigger("Death");
+        animator.SetTrigger("Death");
     }
 
     public void Attack(IDamageable damageable)
