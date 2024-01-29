@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,8 +13,7 @@ public class DoorsGenerator : MonoBehaviour
     public static int RandGenerator { get; private set; } = 0;
     DoorState[] doorsState;
 
-    [SerializeField, Range(1, int.MaxValue)] private int minDoors = 1;
-    [SerializeField] private int maxDoors = 4;
+    [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
     public int NbAvailableDoors
     {
@@ -50,12 +48,6 @@ public class DoorsGenerator : MonoBehaviour
 
             return result;
         }
-    }
-
-    private void OnValidate()
-    {
-        minDoors = Mathf.Clamp(minDoors, minDoors, maxDoors);
-        maxDoors = Mathf.Clamp(maxDoors, minDoors, maxDoors);
     }
 
     private void Awake()

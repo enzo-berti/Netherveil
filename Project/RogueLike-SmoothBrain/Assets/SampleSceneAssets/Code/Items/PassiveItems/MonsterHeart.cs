@@ -9,6 +9,7 @@ public class MonsterHeart : ItemData, IPassiveItem
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.SetValue(Stat.MAX_HP, maxLifeStat);
+        player.Stats.IncreaseValue(Stat.HP, maxLifeStat);
         player.Stats.SetValue(Stat.CORRUPTION, corruptionStat);
         RarityTier = Rarity.RARE;
         Name = "<color=\"blue\">Monster's heart";
