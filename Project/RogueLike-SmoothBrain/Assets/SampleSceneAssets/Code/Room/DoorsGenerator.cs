@@ -16,14 +16,6 @@ public class DoorsGenerator : MonoBehaviour
     public List<GameObject> doors { get; private set; } = new List<GameObject>();
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
-    public int NbAvailableDoors
-    {
-        get
-        {
-            return doors.Count;
-        }
-    }
-
     // TOTALEMENT BROKEN
     private void OnValidate()
     {
@@ -50,13 +42,22 @@ public class DoorsGenerator : MonoBehaviour
         }
     }
 
-    public void GenerateDoors(GenerationParameters generationParameters)
+    /// <summary>
+    /// Generate the seed doors (destroy doors between min max range)
+    /// </summary>
+    /// <param name="generationParameters"></param>
+    public void GenerateSeed(GenerationParameters generationParameters)
     {
-        // TODO : ADD RANDOM VALUE BETWEEN (x, y) 
-
         // get number of doors that can spawn depending on the number of rooms available by genParams
-        int numDoor = NbAvailableDoors - Mathf.Clamp(NbAvailableDoors - generationParameters.NbRoom, minMaxDoors.x, minMaxDoors.y);
+        int numDoorsToClose = (GameManager.Instance.seed.Range(minMaxDoors.y - doors.Count, doors.Count - minMaxDoors.x) + DoorsGenerator.RandGenerator) % doors.Count - minMaxDoors.x;
+        DoorsGenerator.RandGenerator++;
 
+        for (int i = 0; i < numDoorsToClose; i++)
+        {
+            int index = GameManager.Instance.seed.Range(0, doors.Count - 1);
+
+            CloseDoor(index);
+        }
     }
 
     public GameObject GetRdmDoor()

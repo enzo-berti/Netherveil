@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class DamageDealer : MonoBehaviour
 {
-    bool canDealDamage;
+    //bool canDealDamage; -> J'ai commenté car le warning m'a cassé les couilles mdr ~Dorian
     List<GameObject> hasDealtDamage;
     [SerializeField] Entity damageDealer;
     void Start()
     {
-        canDealDamage = false;
+        //canDealDamage = false;
         hasDealtDamage = new List<GameObject>();
     }
 
@@ -18,13 +18,13 @@ public class DamageDealer : MonoBehaviour
 
     public void StartDealDamage()
     {
-        canDealDamage = true;
+        //canDealDamage = true;
         hasDealtDamage.Clear();
     }
 
     public void EndDealDamage()
     {
-        canDealDamage = false;
+        //canDealDamage = false;
     }
 
     private void OnTriggerEnter(Collider other)
