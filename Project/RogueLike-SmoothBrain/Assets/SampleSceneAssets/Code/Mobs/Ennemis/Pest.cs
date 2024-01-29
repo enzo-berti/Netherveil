@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class Pest : Sbire, IAttacker, IDamageable, IMovable
@@ -6,6 +9,19 @@ public class Pest : Sbire, IAttacker, IDamageable, IMovable
     private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+
+    [Header("Pest Parameters")]
+    [SerializeField] private float movementDelay = 2f;
+
+    private IEnumerator MovementProcess()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(movementDelay);
+
+            //Entity[] entities = Physics.SphereCast()
+        }
+    }
 
     public void ApplyDamage(int _value)
     {

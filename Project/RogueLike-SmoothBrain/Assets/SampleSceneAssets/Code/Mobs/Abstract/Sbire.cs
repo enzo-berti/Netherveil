@@ -6,15 +6,13 @@ public class Sbire : Mobs
     protected bool isAttacking = false;
     Vector3 lastKnownTarget = Vector3.zero;
     [SerializeField] float rotationSpeed = 5f;
+    private Transform target;
 
     protected override void Update()
     {
         base.Update();
 
         lastKnownTarget = transform.position;
-
-        target = visionCone.GetTarget("Player");
-        visionCone.ToggleExtendedVisionCone(target);
 
         SimpleAI();
     }

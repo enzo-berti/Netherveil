@@ -10,7 +10,9 @@ public enum Stat
     SPEED,
     CATCH_RADIUS,
     CRIT_RATE,
-    CRIT_DAMAGE
+    CRIT_DAMAGE,
+    MAX_HP,
+    CORRUPTION
 }
 
 [Serializable]
