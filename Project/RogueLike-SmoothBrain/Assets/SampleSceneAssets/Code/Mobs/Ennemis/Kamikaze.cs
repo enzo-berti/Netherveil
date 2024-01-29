@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Kamikaze : Sbire, IDamageable, IAttacker, IMovable
 {
@@ -9,9 +10,11 @@ public class Kamikaze : Sbire, IDamageable, IAttacker, IMovable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
-    new private void Start()
+    private void Start()
     {
-        base.Start();
+        agent = GetComponent<NavMeshAgent>();
+        agent.speed = stats.GetValueStat(Stat.SPEED);
+
         animator = GetComponent<Animator>();
     }
 

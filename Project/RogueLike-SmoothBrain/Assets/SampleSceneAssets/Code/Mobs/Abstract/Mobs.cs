@@ -15,13 +15,6 @@ public abstract class Mobs : Entity
         SEARCHING
     }
 
-    protected void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-
-        agent.speed = stats.GetValueStat(Stat.SPEED);
-    }
-
     private void OnEnable()
     {
         OnDeath += drops.DropLoot;
