@@ -15,7 +15,7 @@ public class Spear : MonoBehaviour
     Vector3 initLocalPosition;
 
     Vector3 spearPosition;
-    public bool IsThrew
+    public bool IsThrown
     {
         get
         {

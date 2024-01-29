@@ -24,6 +24,7 @@ public class PlayerInput : MonoBehaviour
     bool triggerCooldownDash = false;
 
     bool attackQueue = false;
+    public bool LaunchedAttack { get; private set; } = false;
 
     void Awake()
     {
@@ -78,7 +79,8 @@ public class PlayerInput : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext ctx)
     {
-        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownDash)
+        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) 
+            && !triggerCooldownDash && !m_attack.weapon.GetComponent<Spear>().IsThrown)
         {
             if (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue)
             {
@@ -89,6 +91,7 @@ public class PlayerInput : MonoBehaviour
             animator.SetTrigger("BasicAttack");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
+            LaunchedAttack = true;
         }
     }
 
@@ -107,6 +110,7 @@ public class PlayerInput : MonoBehaviour
     {
         controller.hero.State = (int)Entity.EntityState.MOVE;
         attackQueue = false;
+        LaunchedAttack = false;
     }
 
     public void EndOfSpecialAnimationAttack() //triggers on attack animations to reset combo
@@ -115,7 +119,7 @@ public class PlayerInput : MonoBehaviour
         {
             controller.hero.State = (int)Entity.EntityState.MOVE;
             controller.ComboCount = 0;
-            attackQueue = false;
+            LaunchedAttack = false;
         }
 
         attackQueue = false;
