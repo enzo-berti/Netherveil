@@ -5,7 +5,6 @@ public abstract class Mobs : Entity
 {
     [SerializeField] Drop drops;
     protected NavMeshAgent agent;
-    protected Transform target = null;
 
     public enum EnemyState : int
     {
