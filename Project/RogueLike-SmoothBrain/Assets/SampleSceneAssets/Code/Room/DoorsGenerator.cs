@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum DoorState : byte
@@ -17,22 +16,22 @@ public class DoorsGenerator : MonoBehaviour
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
     // TOTALEMENT BROKEN
-    private void OnValidate()
-    {
-        foreach (Transform child in transform)
-        {
-            doors.Add(child.gameObject);
-        }
-
-        if (minMaxDoors.y > doors.Count)
-        {
-            minMaxDoors.y = doors.Count;
-        }
-        if (minMaxDoors.x < 0)
-        {
-            minMaxDoors.x = 0;
-        }
-    }
+    //private void OnValidate()
+    //{
+    //    foreach (Transform child in transform)
+    //    {
+    //        doors.Add(child.gameObject);
+    //    }
+    //
+    //    if (minMaxDoors.y > doors.Count)
+    //    {
+    //        minMaxDoors.y = doors.Count;
+    //    }
+    //    if (minMaxDoors.x < 0)
+    //    {
+    //        minMaxDoors.x = 0;
+    //    }
+    //}
 
     private void Awake()
     {

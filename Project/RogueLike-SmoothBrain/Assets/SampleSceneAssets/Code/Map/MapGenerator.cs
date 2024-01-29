@@ -32,7 +32,7 @@ public class MapGenerator : MonoBehaviour
     {
         GameManager.Instance.seed.Set(123456);
         GenerationParameters generationParam = new GenerationParameters();
-        generationParam.nbNormal = 2;
+        generationParam.nbNormal = 4;
 
         GenerateMap(generationParam);
     }
@@ -40,7 +40,8 @@ public class MapGenerator : MonoBehaviour
     void GenerateMap(GenerationParameters generationParameters)
     {
         List<GameObject> availableDoors = new List<GameObject>();
-        for (int i = 0; i < generationParameters.NbRoom; i++)
+        int nbRoom = generationParameters.NbRoom + 1;
+        for (int i = 0; i < nbRoom; i++)
         {
             GameObject roomGO;
             if (availableDoors.Count != 0)
@@ -48,29 +49,32 @@ public class MapGenerator : MonoBehaviour
                 // instantiate room with first availableDoors transform then remove it
                 roomGO = Instantiate(roomNormal[0]); // TODO : add random selection
 
-                DoorsGenerator generateTemp = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+                DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+                doorsGenerator.GenerateSeed(generationParameters);
+                availableDoors.AddRange(doorsGenerator.doors);
+                generationParameters.nbNormal -= doorsGenerator.doors.Count;
+                GameObject doorSelected = doorsGenerator.GetRdmDoor();
 
-                GameObject doorSelected = generateTemp.GetRdmDoor();
-                //generateTemp.CloseDoor(DoorState.OPEN, doorSelected);
-
-                // sortie.pos = entrée.pos + (-entrée.arrow.pos + sortie.arrow.pos)
+                // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos)
                 roomGO.transform.position = doorSelected.transform.parent.parent.parent.position + (-doorSelected.transform.position + availableDoors[0].transform.position);
-
-                generationParameters.nbNormal--;
+                doorsGenerator.CloseDoor(doorSelected);
+                
+                Destroy(availableDoors[0]);
                 availableDoors.Remove(availableDoors[0]);
             }
-            else
+            else // first room
             {
                 roomGO = Instantiate(roomNormal[0]);
+
+                DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+                doorsGenerator.GenerateSeed(generationParameters);
+                availableDoors.AddRange(doorsGenerator.doors);
+                generationParameters.nbNormal -= doorsGenerator.doors.Count;
+
+                Debug.Log("FIRST ROOM INSTANCE", roomGO);
             }
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
-
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
-            doorsGenerator.GenerateSeed(generationParameters);
-            availableDoors.AddRange(doorsGenerator.doors);
-            generationParameters.nbNormal -= doorsGenerator.doors.Count;
-
             RoomGenerator.RoomGenerated++;
         }
     }
