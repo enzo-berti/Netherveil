@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Item")]
 public class ItemData : ScriptableObject
@@ -15,7 +11,7 @@ public class ItemData : ScriptableObject
         LEGENDARY
     }
 
-    public MonoScript effect;
+    public TextAsset effect;
     public Rarity RarityTier;
     public string Name;
     [Multiline] public string Description;
