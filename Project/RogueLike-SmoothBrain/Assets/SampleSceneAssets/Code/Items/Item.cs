@@ -11,7 +11,9 @@ public abstract class Item : MonoBehaviour, IInterractable
         LEGENDARY
     }
 
-    public Rarity RarityTier { get; private set; } = 0;
+    public Rarity RarityTier { get; protected set; } = 0;
+    public string Name { get; protected set; } = "";
+    public string Description { get; protected set; } = "";
     public virtual void Interract()
     {
         Inventory inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>().Inventory;

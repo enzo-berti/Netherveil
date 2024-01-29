@@ -95,10 +95,9 @@ GameObject:
   - component: {fileID: 1749096857048287986}
   - component: {fileID: 2320395733695838959}
   - component: {fileID: 685760080216938473}
-  - component: {fileID: 4372391471397908949}
   m_Layer: 0
   m_Name: Pest
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -155,26 +154,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
     stats: []
-    name: Default
+    name: Pest
   isAlly: 0
   State: 0
   drops:
     dropList: []
   rotationSpeed: 5
---- !u!114 &4372391471397908949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7946285657065441543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1677ddf8c94aa6b4887f17e8f133511d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 4
-  angle: 360
-  extendedVisionCone: 0
-  extentionCoeff: 1.5
-  extendedHitboxSize: 0
+  movementDelay: 2

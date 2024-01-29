@@ -1,3 +1,5 @@
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class Range : Sbire, IDamageable, IAttacker, IMovable
@@ -11,6 +13,9 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
 
     private float fleeTimer;
     private float fleeCooldown;
+
+    [SerializeField] private float range;
+    [SerializeField] private float angle;
 
     new private void Start()
     {
@@ -29,15 +34,20 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
 
     protected override void SimpleAI()
     {
+        Transform player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+            .Where(x => x.CompareTag("Player"))
+            .Select(x => x.transform)
+            .FirstOrDefault();
+
         Vector3 enemyToTargetVector = Vector3.zero;
 
         // update le cooldown de la fuite
         fleeCooldown = (fleeCooldown > 0) ? fleeCooldown - Time.deltaTime : 0;
 
         // comportement de base, court et attaque le joueur
-        if (target != null)
+        if (player != null)
         {
-            enemyToTargetVector = target.position - transform.position;
+            enemyToTargetVector = player.position - transform.position;
             enemyToTargetVector.y = 0;
 
             if (State != (int)EnemyState.FLEEING)
@@ -74,7 +84,7 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
         {
             if (State == (int)EnemyState.TRIGGERED)
             {
-                agent.SetDestination(target.position);
+                agent.SetDestination(player.position);
             }
             else if (State == (int)EntityState.ATTACK)
             {
@@ -121,6 +131,27 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
     {
         agent.SetDestination(posToMove);
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+            .Where(x => x.CompareTag("Player"))
+            .ToArray();
+
+        Handles.color = new Color(1, 0, 0, 0.25f);
+        if (collide.Length != 0)
+        {
+            Handles.color = new Color(0, 1, 0, 0.25f);
+        }
+
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
+
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, Vector3.up, range);
+    }
+#endif
 }
 
 // Quand dans zone de trigger, approche le joueur

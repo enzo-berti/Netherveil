@@ -6,15 +6,13 @@ public class Sbire : Mobs
     protected bool isAttacking = false;
     Vector3 lastKnownTarget = Vector3.zero;
     [SerializeField] float rotationSpeed = 5f;
+    private Transform target;
 
     protected override void Update()
     {
         base.Update();
 
         lastKnownTarget = transform.position;
-
-        target = visionCone.GetTarget();
-        visionCone.ToggleExtendedVisionCone(target);
 
         SimpleAI();
     }
@@ -106,10 +104,13 @@ public class Sbire : Mobs
 
     protected void RotateTowardsTarget()
     {
-        Vector3 targetDirection = target.position - transform.position;
-        targetDirection.y = 0f;
+        if (target)
+        {
+            Vector3 targetDirection = target.position - transform.position;
+            targetDirection.y = 0f;
 
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 }
