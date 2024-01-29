@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RuneOfWrath : ItemData, IPassiveItem
+public class RuneOfWrath : ItemEffect, IPassiveItem
 {
     private int AttackCoeffStat = 2;
 

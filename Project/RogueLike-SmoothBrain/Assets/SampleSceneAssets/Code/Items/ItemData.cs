@@ -1,6 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "newItem", menuName = "Item/NewItem")]
 public class ItemData : ScriptableObject
 {
     public enum Rarity
@@ -11,8 +12,8 @@ public class ItemData : ScriptableObject
         EPIC,
         LEGENDARY
     }
-    [SerializeField] Item script;
-   
+    [SerializeField] ItemEffect script;
+
 
     public Rarity RarityTier;
     public string Name;

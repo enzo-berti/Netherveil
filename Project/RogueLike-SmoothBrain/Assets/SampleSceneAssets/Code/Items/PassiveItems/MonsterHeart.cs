@@ -1,11 +1,12 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using static ItemData;
 
-public class MonsterHeart : ItemData, IPassiveItem
+public class MonsterHeart : ItemEffect, IPassiveItem
 {
     private int maxLifeStat = 10;
     private int corruptionStat = 2;
-
-    public void OnRetrieved()
+    public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.SetValue(Stat.MAX_HP, maxLifeStat);
