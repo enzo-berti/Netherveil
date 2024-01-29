@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MonsterHeart : Item, IPassiveItem
+public class MonsterHeart : ItemData, IPassiveItem
 {
     private int maxLifeStat = 10;
     private int corruptionStat = 2;

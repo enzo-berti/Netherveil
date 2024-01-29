@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BootOfSwiftness : Item, IPassiveItem
+public class BootOfSwiftness : ItemData, IPassiveItem
 {
     private float speedStat = 1.5f;
 

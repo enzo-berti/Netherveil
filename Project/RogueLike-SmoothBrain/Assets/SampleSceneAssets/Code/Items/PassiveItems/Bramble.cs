@@ -1,5 +1,5 @@
 using UnityEngine;
-public class Bramble : Item, IPassiveItem
+public class Bramble : ItemData, IPassiveItem
 {
     private int attackStat = 2;
 
