@@ -195,6 +195,7 @@ public class PlayerInput : MonoBehaviour
     {
         Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"))
         .Select(x => x.GetComponent<Transform>())
+        .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
         .FirstOrDefault();
 
         if (targetTransform != null)
