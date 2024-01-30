@@ -30,9 +30,9 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.seed.Set(123456);
+        GameManager.Instance.seed.Set(42069);
         GenerationParameters generationParam = new GenerationParameters();
-        generationParam.nbNormal = 4;
+        generationParam.nbNormal = 100;
 
         GenerateMap(generationParam);
     }
@@ -51,16 +51,40 @@ public class MapGenerator : MonoBehaviour
 
                 DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
                 doorsGenerator.GenerateSeed(generationParameters);
-                availableDoors.AddRange(doorsGenerator.doors);
-                generationParameters.nbNormal -= doorsGenerator.doors.Count;
-                GameObject doorSelected = doorsGenerator.GetRdmDoor();
+
+                int index = 0;
+                GameObject entranceDoor = null;
+                GameObject exitDoor = null;
+                Debug.Log("GENERATE DOOR");
+                while(entranceDoor == null)
+                {
+                    if (index >= availableDoors.Count)
+                    {
+                        Debug.LogError("NON");
+                        return;
+                    }
+
+                    foreach (var door in doorsGenerator.doors)
+                    {
+                        if (door.transform.rotation.eulerAngles.y == (availableDoors[index].transform.rotation.eulerAngles.y + 180f) % 360f)
+                        {
+                            entranceDoor = door;
+                            exitDoor = availableDoors[index];
+                            break;
+                        }
+                    }
+                    index++;
+                }
 
                 // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos)
-                roomGO.transform.position = doorSelected.transform.parent.parent.parent.position + (-doorSelected.transform.position + availableDoors[0].transform.position);
-                doorsGenerator.CloseDoor(doorSelected);
-                
-                Destroy(availableDoors[0]);
-                availableDoors.Remove(availableDoors[0]);
+                roomGO.transform.position = entranceDoor.transform.parent.parent.parent.position + (-entranceDoor.transform.position + exitDoor.transform.position);
+                doorsGenerator.CloseDoor(entranceDoor);
+
+                Destroy(exitDoor);
+                availableDoors.Remove(exitDoor);
+
+                availableDoors.AddRange(doorsGenerator.doors);
+                generationParameters.nbNormal -= doorsGenerator.doors.Count;
             }
             else // first room
             {
