@@ -62,7 +62,7 @@ public class Spear : MonoBehaviour
         trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
         posToReach = _posToReach;
         trail.GetComponent<Rigidbody>().AddForce((posToReach - this.transform.position).normalized * 5000, ForceMode.Force);
-        RaycastHit[] hits = Physics.BoxCastAll((posToReach - this.transform.position) / 2, new Vector3(1, 1, (posToReach - this.transform.position).magnitude / 2), (posToReach - this.transform.position));
+        RaycastHit[] hits = Physics.RaycastAll(this.transform.position, (posToReach - this.transform.position), (posToReach - this.transform.position).magnitude);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
