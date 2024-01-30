@@ -33,7 +33,7 @@ public static class TransformExtensions
     /// Returns the angle you need to add to the launcher's rotation to be oriented in front of the target if succeeded, returns float.maxValue otherwise.
     /// You can add an angle threshold to do the test with a cone that matches the angle passed as parameter
     /// </summary>
-    public static float IsTargetLeftOrRightSide(this Transform launcherTransform, Vector3 targetPos, float angleThreshold = 360, float rangeThreshold = float.MaxValue)
+    public static float AngleOffsetToFaceTarget(this Transform launcherTransform, Vector3 targetPos, float angleThreshold = 360, float rangeThreshold = float.MaxValue)
     {
         Vector3 launcherToTargetVec = targetPos - launcherTransform.position;
         float angle = Vector3.Angle(launcherToTargetVec, launcherTransform.forward);
