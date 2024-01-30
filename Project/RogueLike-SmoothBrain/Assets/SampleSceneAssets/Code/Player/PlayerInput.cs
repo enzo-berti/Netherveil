@@ -13,8 +13,8 @@ public class PlayerInput : MonoBehaviour
     PlayerInputMap playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
-    PlayerAttack m_attack;
     Animator animator;
+    GameObject weapon;
 
     //used for the error margin for attacks to auto-redirect on enemies in vision cone
     readonly float VISION_CONE_ANGLE = 45f;
@@ -37,7 +37,6 @@ public class PlayerInput : MonoBehaviour
         playerInputMap = new PlayerInputMap();
         controller = GetComponent<PlayerController>();
         m_interaction = GetComponent<PlayerInteractions>();
-        m_attack = GetComponent<PlayerAttack>();
     }
 
     void Start()
@@ -54,7 +53,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.Attack.performed += Attack;
         playerInputMap.Dash.Dash.performed += Dash;
         playerInputMap.Interract.Interract.performed += m_interaction.Interract;
-        playerInputMap.Attack.Throw.performed += ctx => m_attack.ThrowSpear();
+        playerInputMap.Attack.Throw.performed += ctx => ThrowSpear();
     }
 
     private void OnDisable()
@@ -96,7 +95,7 @@ public class PlayerInput : MonoBehaviour
     public void Attack(InputAction.CallbackContext ctx)
     {
         if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) 
-            && !triggerCooldownDash && !m_attack.weapon.GetComponent<Spear>().IsThrown)
+            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
         {
             if (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue)
             {
@@ -208,6 +207,24 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    public void ThrowSpear()
+    {
+        if (!GetComponent<PlayerInput>().LaunchedAttack)
+        {
+            Spear spear = weapon.GetComponent<Spear>();
+
+            // If spear is being thrown we can't recall this attack
+            if (spear.IsThrowing) return;
+            if (!spear.IsThrown)
+            {
+                spear.Throw(this.transform.position + this.transform.forward * this.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
+            }
+            else
+            {
+                spear.Return();
+            }
+        }
+    }
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
