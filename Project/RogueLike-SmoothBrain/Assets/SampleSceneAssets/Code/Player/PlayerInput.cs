@@ -183,7 +183,7 @@ public class PlayerInput : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit))
         {
-            float angle = transform.IsTargetLeftOrRightSide(new Vector3(hit.point.x, this.transform.position.y, hit.point.z), VISION_CONE_ANGLE);
+            float angle = transform.IsTargetLeftOrRightSide(new Vector3(hit.point.x, this.transform.position.y, hit.point.z));
             if (angle != float.MaxValue)
             {
                 GetComponent<PlayerController>().CurrentTargetAngle += angle;
