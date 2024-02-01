@@ -24,10 +24,6 @@ public class Hero : Entity, IDamageable, IAttacker
 
     private void Update()
     {
-        foreach(var item in inventory.PassiveItems)
-        {
-            Debug.Log(item);
-        }
     }
 
     public void ApplyDamage(int _value)

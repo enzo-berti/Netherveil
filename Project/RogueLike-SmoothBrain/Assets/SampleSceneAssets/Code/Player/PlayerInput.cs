@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour
     PlayerController controller;
     PlayerInteractions m_interaction;
     Animator animator;
-    GameObject weapon;
+    [SerializeField] GameObject weapon;
 
     //used for the error margin for attacks to auto-redirect on enemies in vision cone
     readonly float VISION_CONE_ANGLE = 45f;
@@ -64,6 +64,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.Attack.performed -= Attack;
         playerInputMap.Dash.Dash.performed -= Dash;
         playerInputMap.Interract.Interract.performed -= m_interaction.Interract;
+        playerInputMap.Attack.Throw.performed -= ctx => ThrowSpear();
     }
 
     void Update()
@@ -190,6 +191,23 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    void MouseOrientation2()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit))
+        {
+            float angle = transform.AngleOffsetToFaceTarget(new Vector3(hit.point.x, this.transform.position.y, hit.point.z));
+            if (angle != float.MaxValue)
+            {
+                
+                Vector3 a = transform.eulerAngles;
+                a.y += angle;
+                transform.eulerAngles = a;
+                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
+            }
+        }
+    }
+
     void OrientationErrorMargin()
     {
         Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"))
@@ -209,6 +227,12 @@ public class PlayerInput : MonoBehaviour
 
     public void ThrowSpear()
     {
+        //rotate the player to mouse's direction if playing KB/mouse
+        if (Gamepad.all.Count == 0)
+        {
+            MouseOrientation2();
+        }
+
         if (!GetComponent<PlayerInput>().LaunchedAttack)
         {
             Spear spear = weapon.GetComponent<Spear>();

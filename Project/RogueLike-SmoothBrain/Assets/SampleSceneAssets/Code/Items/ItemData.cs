@@ -10,9 +10,9 @@ public class ItemData : ScriptableObject
         EPIC,
         LEGENDARY
     }
-
+    
     public TextAsset effect;
     public Rarity RarityTier;
     public string Name;
     [Multiline] public string Description;
-}
+}   
