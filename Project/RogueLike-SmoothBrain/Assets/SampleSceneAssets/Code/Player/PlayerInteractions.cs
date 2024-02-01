@@ -1,49 +1,35 @@
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Hero))]
 public class PlayerInteractions : MonoBehaviour
 {
-    Hero hero;
-    Vector3 spherePos = Vector3.zero;
-
-    void Start()
-    {
-        hero = GetComponent<Hero>();
-    }
+    [SerializeField] private Hero hero;
 
     void Update()
     {
-        spherePos = new Vector3(transform.position.x,
-            transform.position.y + GetComponent<CharacterController>().bounds.size.y / 2f,
-            transform.position.z);
         // TODO : Add UI to understand that we can press a touch to take an object
     }
 
     public void Interract(InputAction.CallbackContext ctx)
     {
-        
+        IInterractable[] interactables = Physics.OverlapSphere(transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS))
+            .Select(x => x.GetComponent<IInterractable>())
+            .Where(x => x != null)
+            .ToArray();
 
-        Collider[] tab = Physics.OverlapSphere(spherePos, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
-
-        if (tab.Length > 0)
+        foreach (IInterractable interactable in interactables)
         {
-            foreach (Collider collider in tab)
-            {
-                if ((collider.gameObject.TryGetComponent<IInterractable>(out IInterractable interractable)))
-                {
-                    interractable.Interract();
-                }
-            }
+            interactable.Interract();
         }
     }
 
     private void OnDrawGizmos()
     {
-        Color color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, 0.25f);
-        Gizmos.color = color;
-        if(hero != null)
-        {
-            Gizmos.DrawSphere(spherePos, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
-        }
+        Handles.color = new Color(1, 1, 0, 0.25f);
+        Handles.DrawSolidDisc(transform.position, Vector3.up, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
     }
 }
