@@ -32,7 +32,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
-    List<GameObject> availableDoors = new List<GameObject>();
+    List<GameObject> availableDoors = new List<GameObject>(); // UTILISE UN DICO MALO IL EST PAS CON
     GenerationParameters generationParameters;
 
     private void Start()
@@ -57,7 +57,6 @@ public class MapGenerator : MonoBehaviour
         GameObject roomGO;
         if (availableDoors.Count != 0)
         {
-            int indexArrow = Random.Range(0, availableDoors.Count);
             // instantiate room with first availableDoors transform then remove it
             int oui = GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
             roomGO = Instantiate(roomNormal[oui]); // TODO : add random selection
@@ -65,12 +64,14 @@ public class MapGenerator : MonoBehaviour
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(generationParameters);
 
-            int index = 0;
+            int index = Random.Range(0, availableDoors.Count);
+            int countIndex = 0; // pour savoir si j'ai passé toute les flèches
             GameObject entranceDoor = null;
             GameObject exitDoor = null;
             while (entranceDoor == null)
             {
-                if (index >= availableDoors.Count)
+                // nsm pas de candidat trouvé
+                if (countIndex >= availableDoors.Count)
                 {
                     DestroyImmediate(roomGO);
                     DestroyImmediate(exitDoor);
@@ -87,7 +88,8 @@ public class MapGenerator : MonoBehaviour
                         break;
                     }
                 }
-                index++;
+                index = (index + 1) % availableDoors.Count;
+                countIndex++;
             }
 
             // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (pour avoir un offset
