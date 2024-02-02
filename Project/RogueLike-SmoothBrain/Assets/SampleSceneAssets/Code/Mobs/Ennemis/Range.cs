@@ -6,7 +6,7 @@ using UnityEngine.AI;
 using UnityEditor;
 #endif
 
-public class Range : Sbire, IDamageable, IAttacker, IMovable
+public class Range : Mobs, IDamageable, IAttacker, IMovable
 {
     private new enum State
     {
@@ -19,121 +19,52 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
         WANDERING
     }
 
-    Animator animator;
-
     private IAttacker.HitDelegate onHit;
     private IAttacker.AttackDelegate onAttack;
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
-    private State curState;
-    private bool isAttacking;
-    private float cooldown;
-
-    private float fleeTimer;
-    private float fleeCooldown;
-
-    [SerializeField] private float range;
-    [SerializeField] private float angle;
-
-    private void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        agent.speed = stats.GetValueStat(Stat.SPEED);
-
-        animator = GetComponent<Animator>();
-    }
-
-    private void Update()
-    {
-        animator.SetBool("InAttackRange", curState == State.ATTACK);
-        animator.SetBool("Triggered", curState == State.TRIGGERED || curState == State.ATTACK || curState ==State.FLEEING || agent.hasPath);
-        animator.SetBool("Punch", isAttacking);
-    }
+    [Header("Range Parameters")]
+    [SerializeField, Range(0f, 360f)] private float angle = 120f;
 
     protected override IEnumerator Brain()
     {
-        yield return null;
-
-        Transform player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
-            .Where(x => x.CompareTag("Player"))
-            .Select(x => x.transform)
-            .FirstOrDefault();
-
-        Vector3 enemyToTargetVector = Vector3.zero;
-
-        // update le cooldown de la fuite
-        fleeCooldown = (fleeCooldown > 0) ? fleeCooldown - Time.deltaTime : 0;
-
-        // comportement de base, court et attaque le joueur
-        if (player != null)
+        while (true)
         {
-            enemyToTargetVector = player.position - transform.position;
-            enemyToTargetVector.y = 0;
+            yield return null;
 
-            if (curState != State.FLEEING)
+            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+                .Select(x => x.GetComponent<Entity>())
+                .Where(x => x != null && x != this)
+                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+                .ToArray();
+
+            Hero player = entities
+                .Select(x => x.GetComponent<Hero>())
+                .Where(x => x != null)
+                .FirstOrDefault();
+
+            Pest[] pests = entities
+                .Select(x => x.GetComponent<Pest>())
+                .Where(x => x != null)
+                .ToArray();
+
+            if (player)
             {
-                if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE))
-                    curState = State.ATTACK;
-                else
-                    curState = State.TRIGGERED;
+                // Player detect
+                MoveTo(player.transform.position);
             }
-        }
-
-        // reset le cd d'attaque et la destination
-        if (curState != State.ATTACK)
-        {
-            cooldown = 0;
-        }
-        else
-        {
-            agent.SetDestination(transform.position);
-        }
-
-        // si le joueur est à une certaine distance du range, se met à fuir
-        if (enemyToTargetVector.magnitude <= stats.GetValueStat(Stat.ATK_RANGE) * 0.5f && !isAttacking)
-        {
-            curState = State.FLEEING;
-        }
-
-        // fuis ou continue son comportement de base
-        if (curState == State.FLEEING)
-        {
-            Flee(enemyToTargetVector);
-        }
-        else
-        {
-            if (curState == State.TRIGGERED)
+            else if (pests.Any())
             {
-                agent.SetDestination(player.position);
+                // Other pest detect
+                MoveTo(pests.First().transform.position);
             }
-            else if (curState == State.ATTACK)
+            else
             {
-                cooldown += Time.deltaTime;
-
-                // tape FIRE_RATE fois par seconde
-                if (cooldown >= 1f / stats.GetValueStat(Stat.FIRE_RATE))
-                {
-                    isAttacking = true;
-                    cooldown = 0;
-                }
-                else
-                {
-                    isAttacking = false;
-                }
+                // Random movement
+                Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
+                //MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
             }
-        }
-    }
-
-    private void Flee(Vector3 _enemyToTargetVector)
-    {
-        fleeTimer += Time.deltaTime;
-        agent.SetDestination(transform.position - _enemyToTargetVector);
-
-        if (fleeTimer > 2f || _enemyToTargetVector.magnitude >= stats.GetValueStat(Stat.ATK_RANGE))
-        {
-            curState = State.WANDERING;
-            fleeTimer = 0;
         }
     }
 
@@ -167,21 +98,12 @@ public class Range : Sbire, IDamageable, IAttacker, IMovable
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
-            .Where(x => x.CompareTag("Player"))
-            .ToArray();
+        //if (Selection.activeGameObject != gameObject)
+        //    return;
 
-        Handles.color = new Color(1, 0, 0, 0.25f);
-        if (collide.Length != 0)
-        {
-            Handles.color = new Color(0, 1, 0, 0.25f);
-        }
-
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
-
-        Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, range);
+        DisplayVisionRange(angle);
+        DisplayAttackRange(angle);
+        DisplayInfos();
     }
 #endif
 }
