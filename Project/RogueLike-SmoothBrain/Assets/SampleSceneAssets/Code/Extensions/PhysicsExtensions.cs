@@ -33,7 +33,7 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static List<Collider> BoxCastAll(this BoxCollider collider, string targetTag,string tagToIgnore = "", int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public static List<Collider> BoxCastAll(this BoxCollider collider, string targetTag, string tagToIgnore = "", int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         //get the half extents with the real size by considering the scale of the object
         Vector3 adjustedHalfExtents = Vector3.Scale(collider.size * 0.5f, collider.transform.localScale.ToAbs());
@@ -44,7 +44,7 @@ public static class PhysicsExtensions
         RaycastHit[] hits = Physics.BoxCastAll(center, adjustedHalfExtents, collider.gameObject.transform.forward,
             collider.transform.rotation, CAST_THRESHOLD, layerMask, queryTriggerInteraction);
 
-        return GetCollidersFromCast(hits, targetTag, tagToIgnore);
+        return GetCollidersFromCast(hits, collider.transform, targetTag, tagToIgnore);
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public static class PhysicsExtensions
 
         RaycastHit[] hits = Physics.SphereCastAll(center, adjustedRadius, collider.gameObject.transform.forward, CAST_THRESHOLD, layerMask, queryTriggerInteraction);
 
-        return GetCollidersFromCast(hits, targetTag, tagToIgnore);
+        return GetCollidersFromCast(hits, collider.transform, targetTag, tagToIgnore);
     }
 
     /// <summary>
@@ -149,7 +149,7 @@ public static class PhysicsExtensions
             , adjustedRadius, collider.gameObject.transform.forward, CAST_THRESHOLD, layerMask, queryTriggerInteraction);
 
 
-        return GetCollidersFromCast(hits, targetTag, tagToIgnore);
+        return GetCollidersFromCast(hits, collider.transform, targetTag, tagToIgnore);
     }
 
     /// <summary>
@@ -177,10 +177,11 @@ public static class PhysicsExtensions
 
 
 
-    static List<Collider> GetCollidersFromCast(RaycastHit[] hits, string targetTag, string tagToIgnore)
+    static List<Collider> GetCollidersFromCast(RaycastHit[] hits, Transform initialCollider, string targetTag, string tagToIgnore)
     {
         bool hasHitOtherThanTarget = false;
         List<Collider> enemies = new List<Collider>();
+        List<Vector3> obstaclesHitPos = new List<Vector3>();
 
         foreach (RaycastHit hit in hits)
         {
@@ -188,7 +189,9 @@ public static class PhysicsExtensions
             {
                 if (tagToIgnore != string.Empty && !hit.collider.gameObject.CompareTag(tagToIgnore))
                 {
-                    //Debug.Log("hit raté : " + hit.collider.gameObject.name);
+                    //used to have the position in world space when colliding with a meshCollider(MESH COLLIDER NEEDS TO BE ACTIVATED AS CONVEX TO WORK)
+                    //Debug.Log(hit.collider.transform.TransformPoint(hit.point));
+                    obstaclesHitPos.Add(hit.collider.transform.TransformPoint(hit.point));
                     hasHitOtherThanTarget = true;
                 }
                 else if (tagToIgnore == string.Empty)
@@ -207,7 +210,24 @@ public static class PhysicsExtensions
         {
             return enemies;
         }
+        else
+        {
+            List<Collider> enemiesAheadOfObstacles = new List<Collider>();
+            foreach (Collider enemy in enemies)
+            {
+                foreach (Vector3 obstacleHitPos in obstaclesHitPos)
+                {
+                    float colliderToObstacleDist = (obstacleHitPos - initialCollider.transform.position).magnitude;
+                    float colliderToenemyDist = (enemy.transform.position - initialCollider.transform.position).magnitude;
 
-        return new List<Collider>();
+                    if (colliderToObstacleDist >= colliderToenemyDist && !enemiesAheadOfObstacles.Contains(enemy))
+                    {
+                        enemiesAheadOfObstacles.Add(enemy);
+                    }
+                }
+            }
+
+            return enemiesAheadOfObstacles;
+        }
     }
 }

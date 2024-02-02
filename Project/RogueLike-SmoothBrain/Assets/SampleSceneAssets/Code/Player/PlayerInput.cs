@@ -167,7 +167,7 @@ public class PlayerInput : MonoBehaviour
 
         foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
         {
-            Collider[] tab = controller.CheckAttackCollideCast(spearCollider, "Enemy", "Player");
+            Collider[] tab = controller.CheckAttackCollideCast(spearCollider, "Enemy", "Player", ~LayerMask.GetMask("Map"));
             if(tab.Length > 0)
             {
                 foreach (Collider col in tab)
