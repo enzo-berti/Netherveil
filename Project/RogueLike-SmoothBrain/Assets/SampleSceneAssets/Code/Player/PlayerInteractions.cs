@@ -30,6 +30,6 @@ public class PlayerInteractions : MonoBehaviour
     private void OnDrawGizmos()
     {
         Handles.color = new Color(1, 1, 0, 0.25f);
-        Handles.DrawSolidDisc(transform.position, Vector3.up, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
+        //Handles.DrawSolidDisc(transform.position, Vector3.up, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
     }
 }
