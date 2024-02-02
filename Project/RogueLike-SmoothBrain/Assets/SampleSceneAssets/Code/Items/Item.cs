@@ -2,11 +2,9 @@ using System.Reflection;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
-using System.Collections.Generic;
-using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 using System;
+using System.Net;
+using UnityEditor.PackageManager.UI;
 
 [Serializable]
 public class Item : MonoBehaviour, IInterractable
@@ -14,76 +12,100 @@ public class Item : MonoBehaviour, IInterractable
     public string item;
     private void Start()
     {
-        //effect = LoadDataClass();
+        Debug.Log(item);
     }
     private void Update()
     {
-        if( Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position ) < 10 )
+        if (Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position) < 10)
         {
             Interract();
         }
     }
     public void Interract()
     {
-        //GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(LoadDataClass());
+        GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(LoadClass());
         Destroy(this.gameObject);
     }
 
-    //ItemEffect LoadDataClass()
-    //{
-    //    var classArray = data.effect.ToString().Split(' ').ToList();
-    //    int index = classArray.IndexOf("class") + 1;
 
-    //    return Assembly.GetExecutingAssembly().CreateInstance(classArray[index]) as ItemEffect;
-    //}
+    ItemEffect LoadClass()
+    {
+        return Assembly.GetExecutingAssembly().CreateInstance(item) as ItemEffect;
+    }
 }
 [CustomEditor(typeof(Item))]
 public class ItemEditor : Editor
 {
-    int selection;
-    ItemDatabase database;
-    List<string> names = new List<string>();
+    public static string ChosenName;
     Item itemTarget;
+    ResearchItemWindow reseachWindow;
     private void OnEnable()
     {
-        
-        database = Resources.Load<ItemDatabase>("ItemDatabase");
-        names = database.datas.Select(x => x.idName).ToList();
         itemTarget = (Item)target;
-        selection = GetIndex(names, itemTarget.item);
+        ChosenName = itemTarget.item;
     }
     public override void OnInspectorGUI()
     {
-       serializedObject.Update();
+        serializedObject.Update();
 
-        Item itemTarget = (Item)target;
+        itemTarget = (Item)target;
 
+        DrawScript();
         EditorGUILayout.BeginHorizontal();
-        // Utiliser Popup pour afficher et éditer la chaîne sélectionnée
-        EditorGUILayout.LabelField("idName : ");
-        //selection = EditorGUILayout.Popup(selection, names.ToArray(), EditorStyles.popup);
-        if(GUILayout.Button("test"))
+        EditorGUILayout.LabelField("idName : ", EditorStyles.boldLabel, GUILayout.Width(80));
+        if (GUILayout.Button(ChosenName))
         {
-            ResearchItemWizard.CreateWizard();
+            reseachWindow = EditorWindow.GetWindow<ResearchItemWindow>("Select Item");
         }
         EditorGUILayout.EndHorizontal();
-        itemTarget.item = names[selection];
+        itemTarget.item = ChosenName;
+
         serializedObject.ApplyModifiedProperties();
+
     }
 
-    // Méthode pour obtenir l'index d'une chaîne dans un tableau de chaînes
-    private int GetIndex(List<string> options, string selectedOption)
+    void DrawScript()
     {
-        return options.IndexOf(selectedOption);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        MonoScript script = MonoScript.FromMonoBehaviour((Item)target);
+        EditorGUILayout.ObjectField("Script", script, typeof(MonoScript), false);
+        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.EndHorizontal();
     }
 }
 
-public class ResearchItemWizard : ScriptableWizard
+public class ResearchItemWindow : EditorWindow
 {
-    public static void CreateWizard()
+    ItemDatabase database;
+    string search;
+
+
+    private void OnEnable()
     {
-        ScriptableWizard.DisplayWizard<ResearchItemWizard>("Create Light", "Create", "Apply");
-        //If you don't want to use the secondary button simply leave it out:
-        //ScriptableWizard.DisplayWizard<WizardCreateLight>("Create Light", "Create");
+        database = Resources.Load<ItemDatabase>("ItemDatabase");
+        search = string.Empty;
+    }
+
+    private void OnGUI()
+    {
+        EditorGUILayout.BeginHorizontal();
+        search = EditorGUILayout.TextField(search);
+        EditorGUILayout.EndHorizontal();
+        foreach (var item in database.datas.Select(x => x.idName).Where(x => x.ToLower().Contains(search)))
+        {
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button(item))
+            {
+                ItemEditor.ChosenName = item;
+                Close();
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+    }
+
+    public void OnDestroy()
+    {
+        Debug.Log("destroy");
     }
 }
