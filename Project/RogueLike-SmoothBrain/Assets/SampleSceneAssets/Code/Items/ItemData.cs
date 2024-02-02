@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
-[CreateAssetMenu(menuName = "Item")]
-public class ItemData : ScriptableObject
+[Serializable]
+public class ItemData
 {
     public enum Rarity
     {
@@ -10,9 +11,13 @@ public class ItemData : ScriptableObject
         EPIC,
         LEGENDARY
     }
-    
-    public TextAsset effect;
+    public enum ItemType
+    {
+        PASSIVE,
+        ACTIVE
+    }
     public Rarity RarityTier;
-    public string Name;
+    public ItemType Type;
+    public string idName;
     [Multiline] public string Description;
 }   
