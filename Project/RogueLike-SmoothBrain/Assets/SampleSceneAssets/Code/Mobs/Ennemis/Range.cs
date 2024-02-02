@@ -24,16 +24,16 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
-    [SerializeField] private float range;
-    [SerializeField] private float angle;
+    [Header("Range Parameters")]
+    [SerializeField, Range(0f, 360f)] private float angle = 120f;
 
     protected override IEnumerator Brain()
     {
         while (true)
         {
-            yield return new WaitForSeconds(1f);
+            yield return null;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                 .Select(x => x.GetComponent<Entity>())
                 .Where(x => x != null && x != this)
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -44,16 +44,26 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
                 .Where(x => x != null)
                 .FirstOrDefault();
 
+            Pest[] pests = entities
+                .Select(x => x.GetComponent<Pest>())
+                .Where(x => x != null)
+                .ToArray();
+
             if (player)
             {
                 // Player detect
                 MoveTo(player.transform.position);
             }
+            else if (pests.Any())
+            {
+                // Other pest detect
+                MoveTo(pests.First().transform.position);
+            }
             else
             {
                 // Random movement
-                Vector2 rdmPos = Random.insideUnitCircle * range;
-                MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
+                Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
+                //MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
             }
         }
     }
@@ -91,37 +101,9 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         //if (Selection.activeGameObject != gameObject)
         //    return;
 
-        Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
-            .Select(x => x.GetComponent<Entity>())
-            .Where(x => x != null && x != this)
-            .ToArray();
-
-        Handles.color = new Color(1, 0, 0, 0.25f);
-        if (entities.Length != 0)
-        {
-            Handles.color = new Color(0, 1, 0, 0.25f);
-        }
-
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
-
-        Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, range);
-
-        // Debug text
-        Handles.Label(
-            transform.position + transform.up,
-            "Range" +
-            "\n - Health : " + stats.GetValueStat(Stat.HP) +
-            "\n - Speed : " + stats.GetValueStat(Stat.SPEED),
-            new GUIStyle()
-            {
-                alignment = TextAnchor.MiddleLeft,
-                normal = new GUIStyleState()
-                {
-                    textColor = Color.white,
-                }
-            });
+        DisplayVisionRange(angle);
+        DisplayAttackRange(angle);
+        DisplayInfos();
     }
 #endif
 }

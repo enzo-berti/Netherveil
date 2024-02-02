@@ -18,6 +18,11 @@ public class Stats
         get { return stats.Count; }
     }
 
+    public string GetEntityName()
+    {
+        return name;
+    }
+
     public List<Stat> StatsName
     {
         get

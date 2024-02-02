@@ -11,27 +11,9 @@ public enum DoorState : byte
 public class DoorsGenerator : MonoBehaviour
 {
 
-    public static int RandGenerator { get; private set; } = 0;
+    private static int NoiseGenerator = 0;
     public List<GameObject> doors { get; private set; } = new List<GameObject>();
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
-
-    // TOTALEMENT BROKEN
-    //private void OnValidate()
-    //{
-    //    foreach (Transform child in transform)
-    //    {
-    //        doors.Add(child.gameObject);
-    //    }
-    //
-    //    if (minMaxDoors.y > doors.Count)
-    //    {
-    //        minMaxDoors.y = doors.Count;
-    //    }
-    //    if (minMaxDoors.x < 0)
-    //    {
-    //        minMaxDoors.x = 0;
-    //    }
-    //}
 
     private void Awake()
     {
@@ -48,22 +30,14 @@ public class DoorsGenerator : MonoBehaviour
     public void GenerateSeed(GenerationParameters generationParameters)
     {
         // get number of doors that can spawn depending on the number of rooms available by genParams
-        int numDoorsToClose = (GameManager.Instance.seed.Range(minMaxDoors.y - doors.Count, doors.Count - minMaxDoors.x) + DoorsGenerator.RandGenerator) % doors.Count - minMaxDoors.x;
-        DoorsGenerator.RandGenerator++;
-
-        for (int i = 0; i < numDoorsToClose; i++)
-        {
-            int index = GameManager.Instance.seed.Range(0, doors.Count - 1);
-
-            CloseDoor(index);
-        }
-    }
-
-    public GameObject GetRdmDoor()
-    {
-        int index = (GameManager.Instance.seed.Range(0, doors.Count) + DoorsGenerator.RandGenerator) % doors.Count;
-
-        return doors[index];
+        //int numDoorsToClose = GameManager.Instance.seed.Range(doors.Count - minMaxDoors.x, minMaxDoors.y - doors.Count, ref NoiseGenerator) - minMaxDoors.x;
+        //
+        //for (int i = 0; i < numDoorsToClose; i++)
+        //{
+        //    int index = GameManager.Instance.seed.Range(0, doors.Count - 1, ref NoiseGenerator);
+        //
+        //    //CloseDoor(index);
+        //}
     }
 
     public void CloseDoor(int index)
@@ -83,6 +57,6 @@ public class DoorsGenerator : MonoBehaviour
             Destroy(door);
         }
 
-        Debug.LogWarning("Try to set a door state with the wrong GameObject in " + gameObject, door);
+        //Debug.LogWarning("Try to set a door state with the wrong GameObject in " + gameObject, door);
     }
 }

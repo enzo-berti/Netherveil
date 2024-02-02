@@ -9,6 +9,7 @@ public enum Stat
     FIRE_RATE,
     SPEED,
     CATCH_RADIUS,
+    VISION_RANGE,
     CRIT_RATE,
     CRIT_DAMAGE,
     MAX_HP,
