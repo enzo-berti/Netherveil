@@ -17,7 +17,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
     [SerializeField] private float range = 5f;
     [SerializeField] private float movementDelay = 2f;
-    [SerializeField] private float damages = 5f;
 
     protected override IEnumerator Brain()
     {
@@ -62,7 +61,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable
 
     public void Attack(IDamageable damageable)
     {
-        damageable.ApplyDamage((int)damages);
+        damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
     }
 
     public void ApplyDamage(int _value)
@@ -124,7 +123,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable
             "\n - Health : " + stats.GetValueStat(Stat.HP) +
             "\n - Speed : " + stats.GetValueStat(Stat.SPEED),
             new GUIStyle()
-            { 
+            {
                 alignment = TextAnchor.MiddleLeft,
                 normal = new GUIStyleState()
                 {
