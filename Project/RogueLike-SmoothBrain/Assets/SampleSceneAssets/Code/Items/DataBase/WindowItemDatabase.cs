@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -60,7 +61,7 @@ public class WindowItemDatabase : EditorWindow
             GUI.color = Color.red;
             if (GUILayout.Button("X", GUILayout.Width(50)))
             {
-                database.datas.Remove(item);
+                DeleteInDatabase(item);
             }
             GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
@@ -69,5 +70,14 @@ public class WindowItemDatabase : EditorWindow
     void SearchInDatabase()
     {
         searchItems = database.datas.Where(item => item.idName.ToLower().Contains(search.ToLower()) || item.idName.ToLower().Contains(search.ToLower())).ToList();
+    }
+
+    void DeleteInDatabase(ItemData item)
+    {
+        database.datas.Remove(item);
+        string itemName = item.idName.GetCamelCase();
+        string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + (item.Type == ItemData.ItemType.PASSIVE ? "PassiveItems" : "ActiveItems") + $"/{itemName}.cs";
+        File.Delete(path);
+        AssetDatabase.Refresh();
     }
 }
