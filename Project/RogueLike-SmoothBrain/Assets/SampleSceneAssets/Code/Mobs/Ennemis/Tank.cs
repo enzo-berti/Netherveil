@@ -46,23 +46,23 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable
         {
             yield return null;
 
-            Hero player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
-                .Select(x => x.GetComponent<Hero>())
-                .Where(x => x != null)
-                .FirstOrDefault();
+            //    Hero player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
+            //        .Select(x => x.GetComponent<Hero>())
+            //        .Where(x => x != null)
+            //        .FirstOrDefault();
 
-            if (player)
-            {
-                // Player detect
-                if (agent.velocity.magnitude == 0f && Vector3.Distance(transform.position, player.transform.position) < 2f)
-                {
-                    // Do attack
-                }
-                else
-                {
-                    MoveTo(player.transform.position);
-                }
-            }
+            //    if (player)
+            //    {
+            //        // Player detect
+            //        if (agent.velocity.magnitude == 0f && Vector3.Distance(transform.position, player.transform.position) < 2f)
+            //        {
+            //            // Do attack
+            //        }
+            //        else
+            //        {
+            //            MoveTo(player.transform.position);
+            //        }
+            //    }
         }
     }
 
