@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class MonsterHeart : ItemEffect, IPassiveItem
 {
     private int maxLifeStat = 10;

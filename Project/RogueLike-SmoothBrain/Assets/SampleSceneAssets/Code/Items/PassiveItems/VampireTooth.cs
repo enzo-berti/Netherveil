@@ -6,7 +6,6 @@ public class VampireTooth : ItemEffect, IPassiveItem
     const float lifeStealStat = .2f;
     //pourcentage between 0 and 100 or more
     const int lifeStealPourcentage = (int)(lifeStealStat * 100f);
-
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();

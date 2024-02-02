@@ -4,6 +4,7 @@ public class RuneOfWrath : ItemEffect, IPassiveItem
 {
     private int AttackCoeffStat = 1;
 
+
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
