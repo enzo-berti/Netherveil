@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -82,10 +83,10 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        if(dashCooldown) 
+        if (dashCooldown)
         {
             timerDash += Time.deltaTime;
-            if(timerDash >= DASH_COOLDOWN_TIME)
+            if (timerDash >= DASH_COOLDOWN_TIME)
             {
                 dashCooldown = false;
                 timerDash = 0f;
@@ -95,7 +96,7 @@ public class PlayerInput : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext ctx)
     {
-        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK) 
+        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
             && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
         {
             if (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue)
@@ -157,25 +158,27 @@ public class PlayerInput : MonoBehaviour
             spearCollider.gameObject.SetActive(true);
         }
 
-        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
-        {
-            Collider[] tab = controller.CheckAttackCollide(spearCollider, LayerMask.GetMask("Entity"));
-
-            foreach (Collider col in tab)
-            {
-                if (col.gameObject.GetComponent<IDamageable>() != null)
-                {
-                    controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
-                }
-            }
-        }
-
         //rotate the player to mouse's direction if playing KB/mouse
-        if(Gamepad.all.Count == 0)
+        if (Gamepad.all.Count == 0)
         {
             MouseOrientation();
         }
         OrientationErrorMargin();
+
+        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
+        {
+            Collider[] tab = controller.CheckAttackCollideCast(spearCollider, "Enemy", "Player");
+            if(tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<IDamageable>() != null)
+                    {
+                        controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
+                    }
+                }
+            }
+        }
     }
 
     void MouseOrientation()
@@ -199,7 +202,7 @@ public class PlayerInput : MonoBehaviour
             float angle = transform.AngleOffsetToFaceTarget(new Vector3(hit.point.x, this.transform.position.y, hit.point.z));
             if (angle != float.MaxValue)
             {
-                
+
                 Vector3 a = transform.eulerAngles;
                 a.y += angle;
                 transform.eulerAngles = a;
@@ -218,7 +221,7 @@ public class PlayerInput : MonoBehaviour
         if (targetTransform != null)
         {
             float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
-            if(angle != float.MaxValue)
+            if (angle != float.MaxValue)
             {
                 GetComponent<PlayerController>().CurrentTargetAngle += angle;
             }
@@ -252,16 +255,16 @@ public class PlayerInput : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"));
+        ////Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"));
 
-        Handles.color = new Color(1, 0, 0, 0.25f);
-        //if (collide.Length != 0)
-        //{
-        //    Handles.color = new Color(0, 1, 0, 0.25f);
-        //}
+        //Handles.color = new Color(1, 0, 0, 0.25f);
+        ////if (collide.Length != 0)
+        ////{
+        ////    Handles.color = new Color(0, 1, 0, 0.25f);
+        ////}
 
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
+        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
+        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
     }
 #endif
 }
