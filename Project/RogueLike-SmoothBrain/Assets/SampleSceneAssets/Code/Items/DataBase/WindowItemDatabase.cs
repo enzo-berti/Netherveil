@@ -8,6 +8,7 @@ public class WindowItemDatabase : EditorWindow
 {
     ItemDatabase database;
     List<ItemData> searchItems = new List<ItemData>();
+    Vector2 scrollPos = Vector2.zero;
     string search = "";
 
     [MenuItem("Tools/ItemDatabase")]
@@ -24,7 +25,7 @@ public class WindowItemDatabase : EditorWindow
     private void OnGUI()
     {
         SearchInDatabase();
-
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
         // Search Field
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Search :", GUILayout.Width(60));
@@ -54,7 +55,7 @@ public class WindowItemDatabase : EditorWindow
             ItemData item = searchItems[i];
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(item.idName, GUILayout.Width(100));
+            EditorGUILayout.LabelField(item.idName.SeparateAllCase());
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier);
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type);
             EditorGUILayout.TextField(item.Description, GUILayout.Height(100)) ;
@@ -66,6 +67,7 @@ public class WindowItemDatabase : EditorWindow
             GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
         }
+        EditorGUILayout.EndScrollView();
     }
     void SearchInDatabase()
     {
