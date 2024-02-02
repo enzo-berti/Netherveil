@@ -56,19 +56,7 @@ public class CreateItemWindow : EditorWindow
 
     void CreateScript()
     {
-        string itemName = string.Empty;
-        for(int i = 0; i < item.idName.Count(); i++)
-        {
-            if (item.idName[i] == ' ')
-            {   
-                itemName += item.idName[i + 1].ToString().ToUpper();
-                ++i;
-            }
-            else
-            {
-                itemName += item.idName[i];
-            }
-        }
+        string itemName = item.idName.GetCamelCase();
         string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + (item.Type == ItemData.ItemType.PASSIVE ? "PassiveItems" : "ActiveItems") + $"/{itemName}.cs";
         Debug.Log(path);
         StreamReader sr = new StreamReader(path + "/../../ItemSample.txt");
