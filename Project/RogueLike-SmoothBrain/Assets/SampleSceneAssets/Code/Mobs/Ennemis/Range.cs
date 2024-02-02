@@ -44,27 +44,49 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
                 .Where(x => x != null)
                 .FirstOrDefault();
 
-            Pest[] pests = entities
-                .Select(x => x.GetComponent<Pest>())
+            Tank[] tanks = PhysicsExtensions.OverlapVisionCone(transform.position, 360, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+                .Select(x => x.GetComponent<Tank>())
                 .Where(x => x != null)
+                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                 .ToArray();
 
+            // Si le joueur est détecté 
             if (player)
             {
-                // Player detect
-                MoveTo(player.transform.position);
+                // Si un tank est à proximité
+                if (tanks.Any())
+                {
+                    {
+                        Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
+
+                        playerTankVector.Normalize();
+                        Vector3 targetPos = player.transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
+
+                        MoveTo(targetPos);
+                    }
+                }
+                else
+                {
+                    MoveTo(player.transform.position);
+                }
             }
-            else if (pests.Any())
-            {
-                // Other pest detect
-                MoveTo(pests.First().transform.position);
-            }
-            else
-            {
-                // Random movement
-                Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
-                //MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
-            }
+
+            //if (player)
+            //{
+            //    // Player detect
+            //    MoveTo(player.transform.position);
+            //}
+            //else if (tanks.Any())
+            //{
+            //    // Other pest detect
+            //    MoveTo(tanks.First().transform.position);
+            //}
+            //else
+            //{
+            //    // Random movement
+            //    Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
+            //    //MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
+            //}
         }
     }
 
