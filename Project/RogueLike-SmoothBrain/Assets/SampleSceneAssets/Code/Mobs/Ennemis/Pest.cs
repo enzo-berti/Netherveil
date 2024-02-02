@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Pest : Sbire, IAttacker, IDamageable, IMovable
+public class Pest : Mobs, IAttacker, IDamageable, IMovable
 {
 
     private IAttacker.AttackDelegate onAttack;

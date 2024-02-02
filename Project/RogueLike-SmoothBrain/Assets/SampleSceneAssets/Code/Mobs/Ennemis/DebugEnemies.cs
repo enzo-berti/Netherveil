@@ -8,7 +8,6 @@ public class DebugEnemies : MonoBehaviour
     {
         MELEE,
         RANGE,
-        KAMIKAZE,
         TANK
     }
 
@@ -26,14 +25,13 @@ public class DebugEnemies : MonoBehaviour
         keys[0] = KeyCode.Alpha1;
         keys[1] = KeyCode.Alpha2;
         keys[2] = KeyCode.Alpha3;
-        keys[3] = KeyCode.Alpha4;
 
         mobInstances = new GameObject[texts.Count()];
     }
 
     private void Update()
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (Input.GetKeyDown(keys[i]))
             {
@@ -45,7 +43,7 @@ public class DebugEnemies : MonoBehaviour
 
     void UpdateText(bool _state, int i)
     {
-        string[] mobs = new string[] { "Melee", "Range", "Kamikaze", "Tank" };
+        string[] mobs = new string[] { "Melee", "Range", "Tank" };
 
         string text;
 

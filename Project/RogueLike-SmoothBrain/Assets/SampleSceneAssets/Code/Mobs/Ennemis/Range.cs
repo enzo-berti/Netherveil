@@ -6,7 +6,7 @@ using UnityEngine.AI;
 using UnityEditor;
 #endif
 
-public class Range : Sbire, IDamageable, IAttacker, IMovable
+public class Range : Mobs, IDamageable, IAttacker, IMovable
 {
     private new enum State
     {

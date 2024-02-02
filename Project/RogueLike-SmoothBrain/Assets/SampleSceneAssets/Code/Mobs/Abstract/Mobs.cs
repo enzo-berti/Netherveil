@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine.AI;
 
 public abstract class Mobs : Entity
@@ -9,4 +10,11 @@ public abstract class Mobs : Entity
         agent = GetComponent<NavMeshAgent>();
         agent.speed = stats.GetValueStat(Stat.SPEED);
     }
+
+    private void Start()
+    {
+        StartCoroutine(Brain());
+    }
+
+    protected abstract IEnumerator Brain();
 }
