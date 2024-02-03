@@ -73,15 +73,18 @@ public class MapGenerator : MonoBehaviour
 
             GameObject entranceDoor = null;
             GameObject exitDoor = null;
-            foreach (var door in doorsGenerator.doors)
+            int loopCount = 0;
+            for (int startIndex = GameManager.Instance.seed.Range(0, doorsGenerator.doors.Count, ref NoiseGenerator); loopCount < doorsGenerator.doors.Count; loopCount++)
             {
-                float NeededRotation = (door.transform.rotation.eulerAngles.y - 180f) % 360f;
-                if (availableDoors.ContainsKey(NeededRotation) && availableDoors[NeededRotation].Count != 0)
+                GameObject door = doorsGenerator.doors[(startIndex + loopCount) % doorsGenerator.doors.Count];
+                float neededRotation = (door.transform.rotation.eulerAngles.y + 180) % 360;
+                
+                if (availableDoors.ContainsKey(neededRotation) && availableDoors[neededRotation].Count != 0)
                 {
-                    int randIndex = GameManager.Instance.seed.Range(0, availableDoors[NeededRotation].Count, ref NoiseGenerator);
+                    int randIndex = GameManager.Instance.seed.Range(0, availableDoors[neededRotation].Count, ref NoiseGenerator);
 
                     entranceDoor = door;
-                    exitDoor = availableDoors[NeededRotation][randIndex];
+                    exitDoor = availableDoors[neededRotation][randIndex];
                     break;
                 }
             }
@@ -94,7 +97,7 @@ public class MapGenerator : MonoBehaviour
             }
 
             // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (forward = pour avoir un offset)
-            roomGO.transform.position = entranceDoor.transform.parent.parent.parent.position - entranceDoor.transform.position + exitDoor.transform.position + (-exitDoor.transform.forward * 0.01f);
+            roomGO.transform.position = entranceDoor.transform.parent.parent.parent.position - entranceDoor.transform.position + exitDoor.transform.position + (-exitDoor.transform.forward * 0.02f);
             Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
 
             // bon sinon j'évite la collide de la salle et la salle exit (forcément que les deux collides putaig)
@@ -106,7 +109,7 @@ public class MapGenerator : MonoBehaviour
             {
                 availableDoors[exitDoor.transform.rotation.eulerAngles.y].Remove(exitDoor);
                 DestroyImmediate(roomGO);
-                DestroyImmediate(exitDoor);
+                //DestroyImmediate(exitDoor);
                 //i--; // generation failed then continue
                 return;
             }
@@ -121,7 +124,7 @@ public class MapGenerator : MonoBehaviour
             // Add the new doors from the new room into the possible candidates
             foreach (var door in doorsGenerator.doors)
             {
-                float desiredRotation = door.transform.rotation.eulerAngles.y;
+                float desiredRotation = door.transform.rotation.eulerAngles.y % 360f;
                 if (availableDoors.ContainsKey(desiredRotation))
                 {
                     availableDoors[desiredRotation].Add(door);
@@ -143,7 +146,7 @@ public class MapGenerator : MonoBehaviour
 
             foreach (var door in doorsGenerator.doors)
             {
-                float desiredRotation = door.transform.rotation.eulerAngles.y;
+                float desiredRotation = door.transform.rotation.eulerAngles.y % 360f;
                 if (availableDoors.ContainsKey(desiredRotation))
                 {
                     availableDoors[desiredRotation].Add(door);
