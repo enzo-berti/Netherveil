@@ -165,10 +165,13 @@ public class PlayerInput : MonoBehaviour
         }
         OrientationErrorMargin();
 
+        //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
+        Vector3 rayOffset = Vector3.up / 50f;
+
         foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
         {
-            Collider[] tab = controller.CheckAttackCollideCast(spearCollider, "Enemy", "Player", ~LayerMask.GetMask("Map"));
-            if(tab.Length > 0)
+            Collider[] tab = controller.CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy");
+            if (tab.Length > 0)
             {
                 foreach (Collider col in tab)
                 {
