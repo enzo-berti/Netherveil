@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class GenerationParameters
 {
@@ -32,8 +31,9 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
-    List<GameObject> availableDoors = new List<GameObject>(); // UTILISE UN DICO MALO IL EST PAS CON
-    GenerationParameters generationParameters;
+    // will be moved in function directly
+    private readonly Dictionary<float, List<GameObject>> availableDoors = new Dictionary<float, List<GameObject>>();
+    private GenerationParameters generationParameters;
 
     private void Start()
     {
@@ -55,7 +55,7 @@ public class MapGenerator : MonoBehaviour
     void GenerateRoom()
     {
         GameObject roomGO;
-        if (availableDoors.Count != 0)
+        if (availableDoors.CountValues() != 0)
         {
             // instantiate room with first availableDoors transform then remove it
             int oui = GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
