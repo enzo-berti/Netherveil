@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class GenerationParameters
 {
@@ -32,8 +31,17 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
-    List<GameObject> availableDoors = new List<GameObject>(); // UTILISE UN DICO MALO IL EST PAS CON
-    GenerationParameters generationParameters;
+    // will be moved in function directly
+    private readonly Dictionary<float, List<GameObject>> availableDoors = new Dictionary<float, List<GameObject>>();
+    private GenerationParameters generationParameters;
+
+    private MapGenerator()
+    {
+        availableDoors.Add(0f, new List<GameObject>());
+        availableDoors.Add(90f, new List<GameObject>());
+        availableDoors.Add(180f, new List<GameObject>());
+        availableDoors.Add(270f, new List<GameObject>());
+    }
 
     private void Start()
     {
@@ -55,67 +63,78 @@ public class MapGenerator : MonoBehaviour
     void GenerateRoom()
     {
         GameObject roomGO;
-        if (availableDoors.Count != 0)
+        if (availableDoors.CountValues() != 0)
         {
             // instantiate room with first availableDoors transform then remove it
-            int oui = GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
-            roomGO = Instantiate(roomNormal[oui]); // TODO : add random selection
+            roomGO = Instantiate(roomNormal[GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator)]); // TODO : add random selection
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(generationParameters);
 
-            int index = Random.Range(0, availableDoors.Count);
-            int countIndex = 0; // pour savoir si j'ai passé toute les flèches
             GameObject entranceDoor = null;
             GameObject exitDoor = null;
-            while (entranceDoor == null)
+            int loopCount = 0;
+            for (int startIndex = GameManager.Instance.seed.Range(0, doorsGenerator.doors.Count, ref NoiseGenerator); loopCount < doorsGenerator.doors.Count; loopCount++)
             {
-                // nsm pas de candidat trouvé
-                if (countIndex >= availableDoors.Count)
+                GameObject door = doorsGenerator.doors[(startIndex + loopCount) % doorsGenerator.doors.Count];
+                float neededRotation = (door.transform.rotation.eulerAngles.y + 180) % 360;
+                
+                if (availableDoors.ContainsKey(neededRotation) && availableDoors[neededRotation].Count != 0)
                 {
-                    DestroyImmediate(roomGO);
-                    DestroyImmediate(exitDoor);
-                    //i--; // generation failed then continue
-                    return;
-                }
+                    int randIndex = GameManager.Instance.seed.Range(0, availableDoors[neededRotation].Count, ref NoiseGenerator);
 
-                foreach (var door in doorsGenerator.doors)
-                {
-                    if (door.transform.rotation.eulerAngles.y == (availableDoors[index].transform.rotation.eulerAngles.y + 180f) % 360f)
-                    {
-                        entranceDoor = door;
-                        exitDoor = availableDoors[index];
-                        break;
-                    }
+                    entranceDoor = door;
+                    exitDoor = availableDoors[neededRotation][randIndex];
+                    break;
                 }
-                index = (index + 1) % availableDoors.Count;
-                countIndex++;
             }
 
-            // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (pour avoir un offset
-            roomGO.transform.position = entranceDoor.transform.parent.parent.parent.position - entranceDoor.transform.position + exitDoor.transform.position + (-exitDoor.transform.forward * 0.01f);
-            Physics.SyncTransforms();
-
-            // ignoble dégueu pas merci dorian (en vrai un peu si quand même)
-            // bon sinon j'évite la collide de la salle et la salle exit (forcément que les deux collides putaig)
-            BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponentInChildren<BoxCollider>();
-            BoxCollider roomColliderExit = exitDoor.transform.parent.parent.GetComponentInChildren<BoxCollider>();
-            var truc = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(tructruc => (tructruc != roomCollider && tructruc != roomColliderExit)).ToArray();
-            if (truc.Length != 0)
+            if (entranceDoor == null || exitDoor == null)
             {
-                availableDoors.Remove(exitDoor);
                 DestroyImmediate(roomGO);
-                DestroyImmediate(exitDoor);
                 //i--; // generation failed then continue
                 return;
             }
 
+            // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (forward = pour avoir un offset)
+            roomGO.transform.position = entranceDoor.transform.parent.parent.parent.position - entranceDoor.transform.position + exitDoor.transform.position + (-exitDoor.transform.forward * 0.02f);
+            Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
+
+            // bon sinon j'évite la collide de la salle et la salle exit (forcément que les deux collides putaig)
+            BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponentInChildren<BoxCollider>();
+            BoxCollider roomColliderExit = exitDoor.transform.parent.parent.GetComponentInChildren<BoxCollider>();
+
+            Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => (collider != roomCollider && collider != roomColliderExit)).ToArray();
+            if (colliders.Length != 0)
+            {
+                availableDoors[exitDoor.transform.rotation.eulerAngles.y].Remove(exitDoor);
+                DestroyImmediate(roomGO);
+                //DestroyImmediate(exitDoor);
+                //i--; // generation failed then continue
+                return;
+            }
+
+            // Close door for the next generation
             doorsGenerator.CloseDoor(entranceDoor);
 
+            // Destroy used door
+            availableDoors[exitDoor.transform.rotation.eulerAngles.y].Remove(exitDoor);
             DestroyImmediate(exitDoor);
-            availableDoors.Remove(exitDoor);
 
-            availableDoors.AddRange(doorsGenerator.doors);
+            // Add the new doors from the new room into the possible candidates
+            foreach (var door in doorsGenerator.doors)
+            {
+                float desiredRotation = door.transform.rotation.eulerAngles.y % 360f;
+                if (availableDoors.ContainsKey(desiredRotation))
+                {
+                    availableDoors[desiredRotation].Add(door);
+                }
+                else
+                {
+                    Debug.LogError("Error try to insert an object with a not allowed rotation : " + desiredRotation);
+                }
+            }
+
             generationParameters.nbNormal -= doorsGenerator.doors.Count;
         }
         else // first room
@@ -124,10 +143,21 @@ public class MapGenerator : MonoBehaviour
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(generationParameters);
-            availableDoors.AddRange(doorsGenerator.doors);
-            generationParameters.nbNormal -= doorsGenerator.doors.Count;
 
-            Debug.Log("FIRST ROOM INSTANCE", roomGO);
+            foreach (var door in doorsGenerator.doors)
+            {
+                float desiredRotation = door.transform.rotation.eulerAngles.y % 360f;
+                if (availableDoors.ContainsKey(desiredRotation))
+                {
+                    availableDoors[desiredRotation].Add(door);
+                }
+                else
+                {
+                    Debug.LogError("Error try to insert an object with a not allowed rotation : " + desiredRotation);
+                }
+            }
+
+            generationParameters.nbNormal -= doorsGenerator.doors.Count;
         }
 
         roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();

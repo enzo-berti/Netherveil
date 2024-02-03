@@ -4,7 +4,16 @@ using System.Collections.Generic;
 
 public static class PhysicsExtensions
 {
-    static float CAST_THRESHOLD = 0.01f;
+    const float CAST_THRESHOLD = 0.01f;
+
+    static void GetBoxParameters(this BoxCollider collider, out Vector3 adjustedHalfExtents, out Vector3 center)
+    {
+        //get the half extents with the real size by considering the scale of the object
+        adjustedHalfExtents = Vector3.Scale(collider.size * 0.5f, collider.transform.localScale.ToAbs());
+
+        // Get the position of the BoxCollider in world space
+        center = collider.transform.TransformPoint(collider.center);
+    }
 
     /// <summary>
     /// Used To Get Colliders from an overlap from an existing box collider.
@@ -15,17 +24,18 @@ public static class PhysicsExtensions
     /// <returns></returns>
     public static Collider[] BoxOverlap(this BoxCollider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        //get the half extents with the real size by considering the scale of the object
-        Vector3 adjustedHalfExtents = Vector3.Scale(collider.size * 0.5f, collider.transform.localScale.ToAbs());
-
-        // Get the position of the BoxCollider in world space
-        Vector3 center = collider.transform.TransformPoint(collider.center);
-
+        GetBoxParameters(collider, out Vector3 adjustedHalfExtents, out Vector3 center);
         return Physics.OverlapBox(center, adjustedHalfExtents, collider.transform.rotation, layerMask, queryTriggerInteraction);
     }
 
+    public static RaycastHit[] BoxCastAll(this BoxCollider collider, float maxDistance = CAST_THRESHOLD, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    {
+        GetBoxParameters(collider, out Vector3 adjustedHalfExtents, out Vector3 center);
+        return Physics.BoxCastAll(center, adjustedHalfExtents, collider.transform.forward, collider.transform.rotation, maxDistance, layerMask, queryTriggerInteraction);
+    }
+
     /// <summary>
-    /// Used to get colliders from a box cast from an existing box collider.
+    /// Used to get colliders from a box overlap with ray check to know if there is obstacles in from of targets, based on an existing box collider.
     /// </summary>
     /// <param name="collider"></param>
     /// <param name="targetTag"></param>
@@ -33,18 +43,37 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static List<Collider> BoxCastAll(this BoxCollider collider, string targetTag, string tagToIgnore = "", int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public static Collider[] BoxOverlapWithRayCheck(this BoxCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        //get the half extents with the real size by considering the scale of the object
-        Vector3 adjustedHalfExtents = Vector3.Scale(collider.size * 0.5f, collider.transform.localScale.ToAbs());
+        Collider[] colliders = collider.BoxOverlap(layerMask, queryTriggerInteraction);
+        List<Collider> targets = new List<Collider>();
+        foreach (Collider col in colliders)
+        {
+            if (col.CompareTag(targetTag))
+            {
+                targets.Add(col);
+            }
+        }
+
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, layerMask, queryTriggerInteraction) : targets.ToArray();
+    }
+
+    static void GetSphereParameters(this SphereCollider collider, out float adjustedRadius, out Vector3 center)
+    {
+        //get the radius of the object also considering the scale if scale is equal on all values
+        adjustedRadius = collider.radius;
+
+        if (collider.transform.localScale.IsAllValuesEqual())
+        {
+            adjustedRadius *= Mathf.Abs(collider.transform.localScale.x);
+        }
+        else
+        {
+            Debug.LogWarning("The scale of your sphere isn't equal on all axis, this will not be taken into account for collide checks.");
+        }
 
         // Get the position of the BoxCollider in world space
-        Vector3 center = collider.transform.TransformPoint(collider.center);
-
-        RaycastHit[] hits = Physics.BoxCastAll(center, adjustedHalfExtents, collider.gameObject.transform.forward,
-            collider.transform.rotation, CAST_THRESHOLD, layerMask, queryTriggerInteraction);
-
-        return GetCollidersFromCast(hits, collider.transform, targetTag, tagToIgnore);
+        center = collider.transform.TransformPoint(collider.center);
     }
 
     /// <summary>
@@ -56,26 +85,18 @@ public static class PhysicsExtensions
     /// <returns></returns>
     public static Collider[] SphereOverlap(this SphereCollider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        //get the radius of the object also considering the scale if scale is equal on all values
-        float adjustedRadius = collider.radius;
-
-        if (collider.transform.localScale.IsAllValuesEqual())
-        {
-            adjustedRadius *= Mathf.Abs(collider.transform.localScale.x);
-        }
-        else
-        {
-            Debug.LogWarning("The scale of your sphere isn't equal on all axis, this will not be taken into account for collide checks.");
-        }
-
-        // Get the position of the BoxCollider in world space
-        Vector3 center = collider.transform.TransformPoint(collider.center);
-
+        GetSphereParameters(collider, out float adjustedRadius, out Vector3 center);
         return Physics.OverlapSphere(center, adjustedRadius, layerMask, queryTriggerInteraction);
     }
 
+    public static RaycastHit[] SphereCastAll(this SphereCollider collider, float maxDistance = CAST_THRESHOLD, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    {
+        GetSphereParameters(collider, out float adjustedRadius, out Vector3 center);
+        return Physics.SphereCastAll(center, adjustedRadius, collider.transform.forward, maxDistance, layerMask, queryTriggerInteraction);
+    }
+
     /// <summary>
-    /// Used to get colliders from a sphere cast from an existing sphere collider.
+    /// Used to get colliders from a sphere overlap with ray check to know if there is obstacles in from of targets, based on an existing sphere collider.
     /// </summary>
     /// <param name="collider"></param>
     /// <param name="targetTag"></param>
@@ -83,26 +104,29 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static List<Collider> SphereCastAll(this SphereCollider collider, string targetTag, string tagToIgnore = "", int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
+    public static Collider[] SphereOverlapWithRayCheck(this SphereCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
     {
-        //get the radius of the object also considering the scale if scale is equal on all values
-        float adjustedRadius = collider.radius;
-
-        if (collider.transform.localScale.IsAllValuesEqual())
+        Collider[] colliders = collider.SphereOverlap(layerMask, queryTriggerInteraction);
+        List<Collider> targets = new List<Collider>();
+        foreach (Collider col in colliders)
         {
-            adjustedRadius *= Mathf.Abs(collider.transform.localScale.x);
-        }
-        else
-        {
-            Debug.LogWarning("The scale of your sphere isn't equal on all axis, this will not be taken into account for collide checks.");
+            if (col.CompareTag(targetTag))
+            {
+                targets.Add(col);
+            }
         }
 
-        // Get the position of the BoxCollider in world space
-        Vector3 center = collider.transform.TransformPoint(collider.center);
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, layerMask, queryTriggerInteraction) : targets.ToArray();
+    }
 
-        RaycastHit[] hits = Physics.SphereCastAll(center, adjustedRadius, collider.gameObject.transform.forward, CAST_THRESHOLD, layerMask, queryTriggerInteraction);
+    static void GetCapsuleParameters(this CapsuleCollider collider, out float adjustedRadius, out float adjustedHeight, out Vector3 center)
+    {
+        // Calculate the adjusted radius and height based on the capsule's dimensions
+        adjustedRadius = Mathf.Abs(collider.radius * Mathf.Max(collider.transform.localScale.x, collider.transform.localScale.y, collider.transform.localScale.z));
+        adjustedHeight = Mathf.Abs(collider.height * collider.transform.localScale.y);
 
-        return GetCollidersFromCast(hits, collider.transform, targetTag, tagToIgnore);
+        // Get the position of the CapsuleCollider in world space
+        center = collider.transform.TransformPoint(collider.center);
     }
 
     /// <summary>
@@ -114,20 +138,23 @@ public static class PhysicsExtensions
     /// <returns></returns>
     public static Collider[] CapsuleOverlap(this CapsuleCollider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        // Calculate the adjusted radius and height based on the capsule's dimensions
-        float adjustedRadius = Mathf.Abs(collider.radius * Mathf.Max(collider.transform.localScale.x, collider.transform.localScale.y, collider.transform.localScale.z));
-        float adjustedHeight = Mathf.Abs(collider.height * collider.transform.localScale.y);
-
-        // Get the position of the CapsuleCollider in world space
-        Vector3 center = collider.transform.TransformPoint(collider.center);
-
+        GetCapsuleParameters(collider, out float adjustedRadius, out float adjustedHeight, out Vector3 center);
         return Physics.OverlapCapsule(center - new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f),
                                       center + new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f),
                                       adjustedRadius, layerMask, queryTriggerInteraction);
     }
 
+    public static RaycastHit[] CapsuleCastAll(this CapsuleCollider collider, float maxDistance = CAST_THRESHOLD, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    {
+        GetCapsuleParameters(collider, out float adjustedRadius, out float adjustedHeight, out Vector3 center);
+        return Physics.CapsuleCastAll(
+            center - new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f)
+            , center + new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f)
+            , adjustedRadius, collider.transform.forward, maxDistance, layerMask, queryTriggerInteraction);
+    }
+
     /// <summary>
-    /// Used to get colliders from a capsule cast from an existing capsule collider.
+    /// Used to get colliders from a capsule overlap with ray check to know if there is obstacles in from of targets, based on an existing capsule collider.
     /// </summary>
     /// <param name="collider"></param>
     /// <param name="targetTag"></param>
@@ -135,21 +162,19 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static List<Collider> CapsuleCastAll(this CapsuleCollider collider, string targetTag, string tagToIgnore = "", int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
+    public static Collider[] CapsuleOverlapWithRayCheck(this CapsuleCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
     {
-        // Calculate the adjusted radius and height based on the capsule's dimensions
-        float adjustedRadius = Mathf.Abs(collider.radius * Mathf.Max(collider.transform.localScale.x, collider.transform.localScale.y, collider.transform.localScale.z));
-        float adjustedHeight = Mathf.Abs(collider.height * collider.transform.localScale.y);
+        Collider[] colliders = collider.CapsuleOverlap(layerMask, queryTriggerInteraction);
+        List<Collider> targets = new List<Collider>();
+        foreach (Collider col in colliders)
+        {
+            if (col.CompareTag(targetTag))
+            {
+                targets.Add(col);
+            }
+        }
 
-        // Get the position of the CapsuleCollider in world space
-        Vector3 center = collider.transform.TransformPoint(collider.center);
-
-        RaycastHit[] hits = Physics.CapsuleCastAll(center - new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f),
-            center + new Vector3(0f, adjustedHeight / 2f - adjustedRadius, 0f)
-            , adjustedRadius, collider.gameObject.transform.forward, CAST_THRESHOLD, layerMask, queryTriggerInteraction);
-
-
-        return GetCollidersFromCast(hits, collider.transform, targetTag, tagToIgnore);
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, layerMask, queryTriggerInteraction) : targets.ToArray();
     }
 
     /// <summary>
@@ -175,59 +200,33 @@ public static class PhysicsExtensions
         return result;
     }
 
-
-
-    static List<Collider> GetCollidersFromCast(RaycastHit[] hits, Transform initialCollider, string targetTag, string tagToIgnore)
+    static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        bool hasHitOtherThanTarget = false;
-        List<Collider> enemies = new List<Collider>();
-        List<Vector3> obstaclesHitPos = new List<Vector3>();
-
-        foreach (RaycastHit hit in hits)
+        //Debug.Log("HERE");
+        List<Collider> targetsAheadOfObstacles = new List<Collider>();
+        foreach (Collider target in targets)
         {
-            if (!hit.collider.gameObject.CompareTag(targetTag))
+            Vector3 initialToTargetVec = (target.transform.position - rayOrigin);
+            // Draw a debug ray
+            Debug.DrawRay(rayOrigin, initialToTargetVec, Color.green);
+            Ray ray = new Ray(rayOrigin, initialToTargetVec.normalized);
+
+            //if raycast doesn't hit a target, it means that there is an obstacle in from of him, it could hit another target than the one that we should,
+            //but it's not a problem because another target doesnt obstruct the attack on the one that is behind
+            if (Physics.Raycast(ray, out RaycastHit hit, initialToTargetVec.magnitude, layerMask, queryTriggerInteraction))
             {
-                if (tagToIgnore != string.Empty && !hit.collider.gameObject.CompareTag(tagToIgnore))
+                Debug.Log(hit.collider.gameObject.name);
+                if (hit.collider.gameObject.CompareTag(targetTag))
                 {
-                    //used to have the position in world space when colliding with a meshCollider(MESH COLLIDER NEEDS TO BE ACTIVATED AS CONVEX TO WORK)
-                    //Debug.Log(hit.collider.transform.TransformPoint(hit.point));
-                    obstaclesHitPos.Add(hit.collider.transform.TransformPoint(hit.point));
-                    hasHitOtherThanTarget = true;
-                }
-                else if (tagToIgnore == string.Empty)
-                {
-                    //Debug.Log("hit raté : " + hit.collider.gameObject.name);
-                    hasHitOtherThanTarget = true;
+                    targetsAheadOfObstacles.Add(hit.collider);
                 }
             }
-            else
-            {
-                enemies.Add(hit.collider);
-            }
+            //else
+            //{
+            //    Debug.Log("FAILED");
+            //}
         }
 
-        if (!hasHitOtherThanTarget)
-        {
-            return enemies;
-        }
-        else
-        {
-            List<Collider> enemiesAheadOfObstacles = new List<Collider>();
-            foreach (Collider enemy in enemies)
-            {
-                foreach (Vector3 obstacleHitPos in obstaclesHitPos)
-                {
-                    float colliderToObstacleDist = (obstacleHitPos - initialCollider.transform.position).magnitude;
-                    float colliderToenemyDist = (enemy.transform.position - initialCollider.transform.position).magnitude;
-
-                    if (colliderToObstacleDist >= colliderToenemyDist && !enemiesAheadOfObstacles.Contains(enemy))
-                    {
-                        enemiesAheadOfObstacles.Add(enemy);
-                    }
-                }
-            }
-
-            return enemiesAheadOfObstacles;
-        }
+        return targetsAheadOfObstacles.ToArray();
     }
 }

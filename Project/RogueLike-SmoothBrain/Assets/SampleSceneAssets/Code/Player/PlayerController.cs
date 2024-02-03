@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
         Direction = ctx.ReadValue<Vector2>();
     }
 
-    public Collider[] CheckAttackCollide(Collider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public Collider[] CheckAttackCollide(Collider collider,Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         if (collider != null)
         {
@@ -103,35 +103,11 @@ public class PlayerController : MonoBehaviour
             switch (colliderType.Name)
             {
                 case nameof(BoxCollider):
-                    return (collider as BoxCollider).BoxOverlap(layerMask, queryTriggerInteraction);
+                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin,targetTag, layerMask, queryTriggerInteraction);
                 case nameof(SphereCollider):
-                    return (collider as SphereCollider).SphereOverlap(layerMask, queryTriggerInteraction);
+                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin,targetTag, layerMask, queryTriggerInteraction);
                 case nameof(CapsuleCollider):
-                    return (collider as CapsuleCollider).CapsuleOverlap(layerMask, queryTriggerInteraction);
-                default:
-                    Debug.LogWarning("Invalid Collider type, can't check the collision.");
-                    return new Collider[0];
-            }
-        }
-
-        Debug.LogWarning("Collider is null.");
-        return new Collider[0];
-    }
-
-    public Collider[] CheckAttackCollideCast(Collider collider, string targetTag,string tagToIgnore, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
-    {
-        if (collider != null)
-        {
-            System.Type colliderType = collider.GetType();
-
-            switch (colliderType.Name)
-            {
-                case nameof(BoxCollider):
-                    return (collider as BoxCollider).BoxCastAll(targetTag, tagToIgnore, layerMask, queryTriggerInteraction).ToArray();
-                case nameof(SphereCollider):
-                    return (collider as SphereCollider).SphereOverlap(layerMask, queryTriggerInteraction);
-                case nameof(CapsuleCollider):
-                    return (collider as CapsuleCollider).CapsuleOverlap(layerMask, queryTriggerInteraction);
+                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin,targetTag, layerMask, queryTriggerInteraction);
                 default:
                     Debug.LogWarning("Invalid Collider type, can't check the collision.");
                     return new Collider[0];
