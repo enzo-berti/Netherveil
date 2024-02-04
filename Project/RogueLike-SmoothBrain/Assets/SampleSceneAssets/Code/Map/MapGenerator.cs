@@ -60,7 +60,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    bool GetCandidates(DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
+    bool GetDoorCandidates(DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
     {
         entranceDoor = new Door();
         exitDoor = new Door();
@@ -100,7 +100,7 @@ public class MapGenerator : MonoBehaviour
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(generationParameters);
 
-            if (!GetCandidates(doorsGenerator, out Door entranceDoor, out Door exitDoor))
+            if (!GetDoorCandidates(doorsGenerator, out Door entranceDoor, out Door exitDoor))
             {
                 Destroy(roomGO);
                 roomGO = null;
@@ -120,7 +120,9 @@ public class MapGenerator : MonoBehaviour
             {
                 availableDoors[exitDoor.rotation].Remove(exitDoor);
                 DestroyImmediate(roomGO);
-                //DestroyImmediate(exitDoor);
+                roomGO = null;
+
+                // TODO : spawn a little cellule or something like this to hide the hole in the wall
                 //i--; // generation failed then continue
                 return;
             }
@@ -145,30 +147,34 @@ public class MapGenerator : MonoBehaviour
             }
 
             generationParameters.nbNormal -= doorsGenerator.doors.Count;
+
+            roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
         }
-        else // first room
+        else
         {
-            roomGO = Instantiate(roomNormal[0]);
+            InstantiateLobby(out roomGO);
+        }
+    }
 
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
-            doorsGenerator.GenerateSeed(generationParameters);
+    private void InstantiateLobby(out GameObject roomGO)
+    {
+        roomGO = Instantiate(roomNormal[0]);
 
-            foreach (var door in doorsGenerator.doors)
+        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+        doorsGenerator.GenerateSeed(generationParameters);
+
+        foreach (var door in doorsGenerator.doors)
+        {
+            if (availableDoors.ContainsKey(door.rotation))
             {
-                if (availableDoors.ContainsKey(door.rotation))
-                {
-                    availableDoors[door.rotation].Add(door);
-                }
-                else
-                {
-                    Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.rotation);
-                }
+                availableDoors[door.rotation].Add(door);
             }
-
-            generationParameters.nbNormal -= doorsGenerator.doors.Count;
+            else
+            {
+                Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.rotation);
+            }
         }
 
-        roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
-        RoomGenerator.RoomGenerated++;
+        generationParameters.nbNormal -= doorsGenerator.doors.Count;
     }
 }
