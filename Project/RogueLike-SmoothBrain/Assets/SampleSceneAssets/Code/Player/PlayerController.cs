@@ -2,13 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
-
-[System.Serializable]
-public class NestedList<T>
-{
-    public List<T> data;
-}
-
 public class PlayerController : MonoBehaviour
 {
     Transform cameraTransform;
@@ -52,15 +45,6 @@ public class PlayerController : MonoBehaviour
 
         Move();
         DashMove();
-
-        //Collider[] tab = CheckAttackCollide(spearAttack1, LayerMask.GetMask("Entity"));
-        //if(tab != null) 
-        //{
-        //    foreach(Collider col in tab) 
-        //    {
-        //        Debug.Log(col.gameObject.name);
-        //    }
-        //}
     }
 
     void Move()
