@@ -43,5 +43,7 @@ public class RoomGenerator : MonoBehaviour
                 Destroy(rooms[i]);
             }
         }
+
+        rooms[keepRoomIndex].SetActive(true); // activate room
     }
 }
