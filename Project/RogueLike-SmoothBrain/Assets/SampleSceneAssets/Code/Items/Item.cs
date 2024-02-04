@@ -5,11 +5,13 @@ using UnityEditor;
 using System;
 using System.Net;
 using UnityEditor.PackageManager.UI;
+using JetBrains.Annotations;
 
 [Serializable]
 public class Item : MonoBehaviour, IInterractable
 {
     public string item;
+    public float test;
     private void Start()
     {
         Debug.Log(item);
@@ -24,6 +26,7 @@ public class Item : MonoBehaviour, IInterractable
     public void Interract()
     {
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(LoadClass());
+        Debug.Log($"Vous avez bien récupéré {LoadClass().GetType()})");
         Destroy(this.gameObject);
     }
 
@@ -33,32 +36,30 @@ public class Item : MonoBehaviour, IInterractable
         return Assembly.GetExecutingAssembly().CreateInstance(item) as ItemEffect;
     }
 }
+
+
 [CustomEditor(typeof(Item))]
 public class ItemEditor : Editor
 {
     public static string ChosenName;
-    Item itemTarget;
-    ResearchItemWindow reseachWindow;
+    SerializedProperty itemName;
     private void OnEnable()
     {
-        itemTarget = (Item)target;
-        ChosenName = itemTarget.item;
+        itemName = serializedObject.FindProperty("item");
+        ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
-        itemTarget = (Item)target;
-
         DrawScript();
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("idName : ", EditorStyles.boldLabel, GUILayout.Width(80));
         if (GUILayout.Button(ChosenName))
         {
-            reseachWindow = EditorWindow.GetWindow<ResearchItemWindow>("Select Item");
+            EditorWindow.GetWindow<ResearchItemWindow>("Select Item");
         }
         EditorGUILayout.EndHorizontal();
-        itemTarget.item = ChosenName;
+        itemName.stringValue = ChosenName;
 
         serializedObject.ApplyModifiedProperties();
 
