@@ -12,6 +12,10 @@ public class DoorsGenerator : MonoBehaviour
 {
 
     private static int NoiseGenerator = 0;
+
+    // planned for later
+    [SerializeField] private List<Vector3> doorsPosition = new List<Vector3>();
+
     public List<GameObject> doors { get; private set; } = new List<GameObject>();
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
@@ -22,6 +26,21 @@ public class DoorsGenerator : MonoBehaviour
             doors.Add(child.gameObject);
         }
     }
+
+#if UNITY_EDITOR
+    public void GenerateDoorPosition()
+    {
+        foreach (Transform child in transform)
+        {
+            doorsPosition.Add(child.position);
+
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                DestroyImmediate(child.gameObject);
+            };
+        }
+    }
+#endif
 
     /// <summary>
     /// Generate the seed doors (destroy doors between min max range)
