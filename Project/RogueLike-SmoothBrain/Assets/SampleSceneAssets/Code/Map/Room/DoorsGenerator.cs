@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,16 +9,21 @@ public enum DoorState : byte
     CLOSE
 }
 
+[Serializable]
 public struct Door
 {
     public Door(Transform transform)
     {
+        forward = transform.forward;
         position = transform.position;
         rotation = transform.rotation.eulerAngles.y;
+        parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
     }
 
+    public Vector3 forward;
     public Vector3 position;
     public float rotation;
+    public GameObject parentSkeleton;
 }
 
 public class DoorsGenerator : MonoBehaviour
@@ -25,27 +31,18 @@ public class DoorsGenerator : MonoBehaviour
     private static int NoiseGenerator = 0;
 
     // planned for later
-    [SerializeField] public List<Door> doorsPosition = new List<Door>();
+    public List<Door> doors = new List<Door>();
 
-    public List<GameObject> doors { get; private set; } = new List<GameObject>();
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
-
-    private void Awake()
-    {
-        foreach (Transform child in transform)
-        {
-            doors.Add(child.gameObject);
-        }
-    }
 
 #if UNITY_EDITOR
     public void GenerateDoorPosition()
     {
-        doorsPosition.Clear();
+        doors.Clear();
 
         foreach (Transform child in transform)
         {
-            doorsPosition.Add(new Door(child));
+            doors.Add(new Door(child));
 
             UnityEditor.EditorApplication.delayCall += () =>
             {
@@ -67,16 +64,16 @@ public class DoorsGenerator : MonoBehaviour
 
     public void CloseDoor(int index)
     {
-        GameObject go = doors[index];
-        doors.RemoveAt(index);
+        //GameObject go = doors[index];
+        //doors.RemoveAt(index);
 
         // TODO : Close the room
-        Destroy(go);
+        //Destroy(go);
     }
 
-    public void CloseDoor(ref Door door)
+    public void CloseDoor(Door door)
     {
-        if (doorsPosition.Remove(door))
+        if (doors.Remove(door))
         {
             // TODO : close the room
         }
