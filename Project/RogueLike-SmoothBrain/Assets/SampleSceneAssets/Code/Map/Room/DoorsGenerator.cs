@@ -8,13 +8,24 @@ public enum DoorState : byte
     CLOSE
 }
 
+public struct Door
+{
+    public Door(Transform transform)
+    {
+        position = transform.position;
+        rotation = transform.rotation.eulerAngles.y;
+    }
+
+    public Vector3 position;
+    public float rotation;
+}
+
 public class DoorsGenerator : MonoBehaviour
 {
-
     private static int NoiseGenerator = 0;
 
     // planned for later
-    [SerializeField] private List<Vector3> doorsPosition = new List<Vector3>();
+    [SerializeField] public List<Door> doorsPosition = new List<Door>();
 
     public List<GameObject> doors { get; private set; } = new List<GameObject>();
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
@@ -30,9 +41,11 @@ public class DoorsGenerator : MonoBehaviour
 #if UNITY_EDITOR
     public void GenerateDoorPosition()
     {
+        doorsPosition.Clear();
+
         foreach (Transform child in transform)
         {
-            doorsPosition.Add(child.position);
+            doorsPosition.Add(new Door(child));
 
             UnityEditor.EditorApplication.delayCall += () =>
             {
@@ -49,14 +62,7 @@ public class DoorsGenerator : MonoBehaviour
     public void GenerateSeed(GenerationParameters generationParameters)
     {
         // get number of doors that can spawn depending on the number of rooms available by genParams
-        //int numDoorsToClose = GameManager.Instance.seed.Range(doors.Count - minMaxDoors.x, minMaxDoors.y - doors.Count, ref NoiseGenerator) - minMaxDoors.x;
-        //
-        //for (int i = 0; i < numDoorsToClose; i++)
-        //{
-        //    int index = GameManager.Instance.seed.Range(0, doors.Count - 1, ref NoiseGenerator);
-        //
-        //    //CloseDoor(index);
-        //}
+
     }
 
     public void CloseDoor(int index)
@@ -64,18 +70,17 @@ public class DoorsGenerator : MonoBehaviour
         GameObject go = doors[index];
         doors.RemoveAt(index);
 
-        // TODO : Close the room (h word)
+        // TODO : Close the room
         Destroy(go);
     }
 
-    public void CloseDoor(GameObject door)
+    public void CloseDoor(ref Door door)
     {
-        if (doors.Remove(door))
+        if (doorsPosition.Remove(door))
         {
-            // TODO : close the room (h word)
-            Destroy(door);
+            // TODO : close the room
         }
 
-        //Debug.LogWarning("Try to set a door state with the wrong GameObject in " + gameObject, door);
+        Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
     }
 }
