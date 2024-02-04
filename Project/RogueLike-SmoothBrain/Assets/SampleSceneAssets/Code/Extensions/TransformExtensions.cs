@@ -1,15 +1,7 @@
 using UnityEngine;
 
-public enum TargetSide : byte
-{
-    UNDEFINED,
-    LEFT,
-    RIGHT
-}
-
 public static class TransformExtensions
 {
-
     public static Vector3 Center(this Transform transform)
     {
         Vector3 sumVector = new Vector3(0f, 0f, 0f);
@@ -30,14 +22,14 @@ public static class TransformExtensions
     }
 
     /// <summary>
-    /// Returns the angle you need to add to the launcher's rotation to be oriented in front of the target if succeeded, returns float.maxValue otherwise.
+    /// Calculates the angle between the launcher and target to be face to face.
     /// You can add an angle threshold to do the test with a cone that matches the angle passed as parameter
     /// </summary>
+    /// <returns> angle you need to add to the launcher's rotation to be oriented in front of the target if succeeded, float.maxValue otherwise.</returns>
     public static float AngleOffsetToFaceTarget(this Transform launcherTransform, Vector3 targetPos, float angleThreshold = 360, float rangeThreshold = float.MaxValue)
     {
         Vector3 launcherToTargetVec = targetPos - launcherTransform.position;
         float angle = Vector3.Angle(launcherToTargetVec, launcherTransform.forward);
-
 
         if (angle <= angleThreshold && angle > float.Epsilon && launcherToTargetVec.magnitude <= rangeThreshold)
         {

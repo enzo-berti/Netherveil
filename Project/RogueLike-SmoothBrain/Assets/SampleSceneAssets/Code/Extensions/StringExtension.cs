@@ -1,4 +1,3 @@
-
 using System.Linq;
 
 public static class StringExtension
