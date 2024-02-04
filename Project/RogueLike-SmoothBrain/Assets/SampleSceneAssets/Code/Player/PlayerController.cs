@@ -71,8 +71,8 @@ public class PlayerController : MonoBehaviour
             CurrentTargetAngle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
-            camForward.y = 0f;
-            camRight.y = 0f;
+            ModifyCamVectors(ref camRight, ref camForward);
+
             characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * Direction.y + camRight * Direction.x).normalized);
         }
     }
@@ -83,15 +83,15 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
-            camForward.y = 0f;
-            camRight.y = 0f;
+            ModifyCamVectors(ref camRight, ref camForward);
+
             characterController.Move(dashSpeed * Time.deltaTime * (camForward * DashDir.y + camRight * DashDir.x).normalized);
         }
     }
 
     public void ReadDirection(InputAction.CallbackContext ctx)
     {
-        Direction = ctx.ReadValue<Vector2>();
+        Direction = ctx.ReadValue<Vector2>().normalized;
     }
 
     public Collider[] CheckAttackCollide(Collider collider,Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
@@ -116,5 +116,18 @@ public class PlayerController : MonoBehaviour
 
         Debug.LogWarning("Collider is null.");
         return new Collider[0];
+    }
+
+    /// <summary>
+    /// Used to get the directions of camera without the y axis so that the player doesnt move on this axis and renormalize the vectors because of that modification
+    /// </summary>
+    /// <param name="camRight"></param>
+    /// <param name="camForward"></param>
+    void ModifyCamVectors(ref Vector3 camRight, ref Vector3 camForward)
+    {
+        camForward.y = 0f;
+        camRight.y = 0f;
+        camForward = camForward.normalized;
+        camRight = camRight.normalized;
     }
 }
