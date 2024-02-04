@@ -44,10 +44,7 @@ public class DoorsGenerator : MonoBehaviour
         {
             doors.Add(new Door(child));
 
-            UnityEditor.EditorApplication.delayCall += () =>
-            {
-                DestroyImmediate(child.gameObject);
-            };
+            child.gameObject.DestroyOnValidate();
         }
     }
 #endif
