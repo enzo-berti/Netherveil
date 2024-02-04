@@ -10,6 +10,7 @@ static public class ObjectExtensions
     {
         UnityEditor.EditorApplication.delayCall += () =>
         {
+            //Object.DestroyImmediate(component);
             UnityEditor.Undo.DestroyObjectImmediate(component);
         };
     }

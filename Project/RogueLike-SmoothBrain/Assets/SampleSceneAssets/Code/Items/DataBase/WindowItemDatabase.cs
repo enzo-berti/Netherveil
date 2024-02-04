@@ -54,7 +54,7 @@ public class WindowItemDatabase : EditorWindow
         {
             ItemData item = searchItems[i];
 
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
             EditorGUILayout.LabelField(item.idName.SeparateAllCase());
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier);
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type);
