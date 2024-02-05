@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
@@ -35,13 +36,18 @@ public class RoomGenerator : MonoBehaviour
     public void GenerateRoomSeed()
     {
         List<GameObject> rooms = Rooms;
-        int keepRoomIndex = GameManager.Instance.seed.Range(0, rooms.Count, ref RoomGenerated);
 
-        for (int i = 0; i < rooms.Count; i++)
+        int keepRoomIndex = 0;
+        if (rooms.Count > 1)
         {
-            if (i != keepRoomIndex)
+            keepRoomIndex = GameManager.Instance.seed.Range(0, rooms.Count, ref RoomGenerated);
+
+            for (int i = 0; i < rooms.Count; i++)
             {
-                Destroy(rooms[i]);
+                if (i != keepRoomIndex)
+                {
+                    Destroy(rooms[i]);
+                }
             }
         }
 

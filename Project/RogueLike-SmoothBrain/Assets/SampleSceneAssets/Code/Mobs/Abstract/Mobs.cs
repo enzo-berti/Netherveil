@@ -9,9 +9,11 @@ using UnityEditor;
 public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
+    protected Rigidbody rb;
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = stats.GetValueStat(Stat.SPEED);
     }
