@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -28,6 +29,9 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     private RangeState state;
     Vector3 lastKnownPlayerPos;
 
+    private float fleeTimer;
+    private bool isFleeing;
+
     private float staggerImmunity;
     private float staggerTimer;
 
@@ -54,27 +58,26 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                 .ToArray();
 
+            if (fleeTimer > 0)
+            {
+                fleeTimer -= Time.deltaTime;
+            }
+            else
+            {
+                fleeTimer = 0;
+            }
 
-            // Si le joueur est détecté 
             if (player)
             {
                 isFighting = true;
+
+                if (Vector3.Distance(transform.position, player.transform.position) < (int)Stat.ATK_RANGE / 2f && fleeTimer == 0f)
+                {
+                    isFleeing = true;
+                    fleeTimer = 2f;
+                }
+
                 lastKnownPlayerPos = player.transform.position;
-
-                // Si un tank est à proximité
-                if (tanks.Any())
-                {
-                    Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
-
-                    playerTankVector.Normalize();
-                    Vector3 targetPos = player.transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
-
-                    MoveTo(targetPos);
-                }
-                else
-                {
-                    MoveTo(player.transform.position);
-                }
             }
             else if (isFighting)
             {
@@ -127,12 +130,11 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
         agent.SetDestination(posToMove);
     }
 
-
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (Selection.activeGameObject != gameObject)
-            return;
+        //if (Selection.activeGameObject != gameObject)
+        //    return;
 
         DisplayVisionRange(isFighting ? 360 : angle);
         DisplayAttackRange(isFighting ? 360 : angle);
@@ -141,11 +143,34 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 #endif
 }
 
+// quand le joueur est trop près, le range va se réfugier derrière le tank
+// quand le joueur est trop près, si aucun tank n'est à proximité il va fuir en ligne droite
+// il ne le fera pas en boucle, il aura un cd sur sa fuite
+// lorsqu'il est en cd, il va attaquer le joueur simplement
 
-// Quand dans zone de trigger, approche le joueur
-// Quand en range, l'attaque
-// Si le joueur s'est rapproché, commence à fuir
-// Si le joueur est à une distance convenable, le ré-attaque
-// Sinon, au bout de 2s, se retourne et l'attaque
 
-// Plus tard, essayer de se cacher derrière un tank
+////// Code mort
+
+//// Si un tank est à proximité
+//if (tanks.Any())
+//{
+//    Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
+//    playerTankVector.Normalize();
+
+//    Vector3 targetPos = player.transform.position;
+
+//    if (Vector3.Distance(targetPos, tanks.First().transform.position) < 2f)
+//    {
+//        targetPos = tanks.First().transform.position + playerTankVector * 2f;
+//    }
+//    else
+//    {
+//        targetPos = tanks.First().transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
+//    }
+
+//    MoveTo(targetPos);
+//}
+//else
+//{
+//    MoveTo(player.transform.position);
+//}
