@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Linq;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -41,8 +41,16 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable
 
             if (player)
             {
-                // Player detect
-                MoveTo(player.transform.position);
+                // Attack Player
+                if (Vector3.Distance(transform.position, player.transform.position) <= (int)stats.GetValueStat(Stat.ATK_RANGE))
+                {
+                    player.ApplyDamage((int)stats.GetValueStat(Stat.ATK));
+                }
+                // Move to Player
+                else
+                {
+                    MoveTo(player.transform.position);
+                }
             }
             else if (pests.Any())
             {
