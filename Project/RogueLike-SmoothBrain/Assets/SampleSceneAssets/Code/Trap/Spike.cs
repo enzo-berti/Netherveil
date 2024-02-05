@@ -1,42 +1,46 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Spike : MonoBehaviour
 {
-    private Coroutine spikeActivate;
-    private Coroutine spikeDisable;
-    private Coroutine spikeWaitForDisable;
     private float startPosY;
     private float endPosY;
     private bool isOut;
-    [SerializeField] private GameObject spikesToMove;
+    private GameObject spikesToMove;
+    private int damage;
+    List<IDamageable> entitiesToDealDamage;
 
     private void Awake()
     {
+        spikesToMove = transform.GetChild(0).gameObject;
         startPosY = spikesToMove.transform.position.y;
-        endPosY = spikesToMove.transform.position.y + 20;
-        spikeActivate = null;
-        spikeDisable = null;
+        endPosY = spikesToMove.transform.position.y + 1.5f;
+        entitiesToDealDamage = new List<IDamageable>();
+        damage = 10;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        IDamageable damageable = other.GetComponent<IDamageable>();
+        if (damageable != null)
         {
             if (!isOut)
             {
-                spikeActivate = StartCoroutine(Active());
+                entitiesToDealDamage.Add(other.gameObject.GetComponent<IDamageable>());
+                StartCoroutine(Active());
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        IDamageable damageable = other.GetComponent<IDamageable>();
+        if (damageable != null)
         {
             if (isOut)
             {
-                spikeDisable = StartCoroutine(Disable());
+               StartCoroutine(Disable());
             }
         }
     }
@@ -45,8 +49,19 @@ public class Spike : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
         isOut = true;
-        spikeActivate = null;
-        spikeWaitForDisable = StartCoroutine(WaitUntil());
+        while (spikesToMove.transform.position.y != endPosY)
+        {
+            spikesToMove.transform.position += Vector3.up / 20;
+            if (spikesToMove.transform.position.y > endPosY)
+            {
+                spikesToMove.transform.position = new Vector3(spikesToMove.transform.position.x, endPosY, spikesToMove.transform.position.z);
+            }
+            yield return new WaitForSeconds(0.003f);
+        }
+
+        entitiesToDealDamage.ForEach(actualEntity => { actualEntity.ApplyDamage(damage); });
+
+        StartCoroutine(WaitUntil());
     }
 
     IEnumerator WaitUntil()
@@ -54,15 +69,22 @@ public class Spike : MonoBehaviour
         yield return new WaitForSeconds(4f);
         if (isOut)
         {
-            spikeDisable = StartCoroutine(Disable());
+            StartCoroutine(Disable());
         }
-        spikeWaitForDisable = null;
     }
 
     IEnumerator Disable()
     {
-        yield return new WaitForSeconds(0.3f); ;
+        yield return new WaitForSeconds(0.3f);
+        while (spikesToMove.transform.position.y != startPosY)
+        {
+            spikesToMove.transform.position -= Vector3.up / 20;
+            if (spikesToMove.transform.position.y < startPosY)
+            {
+                spikesToMove.transform.position = new Vector3(spikesToMove.transform.position.x, startPosY, spikesToMove.transform.position.z);
+            }
+            yield return new WaitForSeconds(0.003f);
+        }
         isOut = false;
-        spikeDisable = null;
     }
 }
