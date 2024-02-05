@@ -44,6 +44,7 @@ public class Hero : Entity, IDamageable, IAttacker
 
     public void Death()
     {
+        GetComponent<PlayerController>().enabled = false;
         State = (int)EntityState.DEAD;
         animator.ResetTrigger("Death");
         animator.SetTrigger("Death");
