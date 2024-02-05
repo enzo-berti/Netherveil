@@ -1,5 +1,6 @@
 using System;
 
+// Si vous ajoutez un truc, ajoutez le à la fin
 public enum Stat
 {
     HP,
@@ -15,7 +16,9 @@ public enum Stat
     MAX_HP,
     CORRUPTION,
     LIFE_STEAL,
-    HEAL_COEFF
+    HEAL_COEFF,
+    KNOCKBACK_COEFF,
+    STAGGER_DURATION
 }
 
 [Serializable]
