@@ -3,7 +3,11 @@ using UnityEngine;
 
 public class RoomToolWindow : EditorWindow 
 {
-    string typeRoom = "Type";
+    public enum TypeRoom
+    {
+        Normal,
+    }
+    TypeRoom typeRoom = TypeRoom.Normal;
     string prefabName = "Room";
     GameObject roomObj;
 
@@ -20,7 +24,7 @@ public class RoomToolWindow : EditorWindow
 
         roomObj = EditorGUILayout.ObjectField("Room prefab", roomObj, typeof(GameObject), false) as GameObject;
         prefabName = EditorGUILayout.TextField("Prefab Name", prefabName);
-        typeRoom = EditorGUILayout.TextField("Type room", typeRoom);
+        typeRoom = (TypeRoom)EditorGUILayout.EnumPopup("Type of room", typeRoom);
 
         if (GUILayout.Button("Generate Room"))
         {
@@ -67,7 +71,7 @@ public class RoomToolWindow : EditorWindow
         GameObject treasures = new GameObject("Treasures");
         treasures.transform.parent = roomSeed1.transform;
 
-        roomPrefab = PrefabUtility.SaveAsPrefabAsset(roomPrefab, Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Room/" + typeRoom + prefabName + ".prefab");
+        roomPrefab = PrefabUtility.SaveAsPrefabAsset(roomPrefab, Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Room/" + typeRoom.ToString() + "/" + prefabName + ".prefab");
 
         // destroy garbage in scene
         DestroyImmediate(room);
