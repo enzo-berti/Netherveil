@@ -60,6 +60,7 @@ public class RoomToolWindow : EditorWindow
         roomGenerator.AddComponent<RoomGenerator>();
 
         GameObject roomSeed1 = new GameObject("Room1");
+        roomSeed1.SetActive(false);
         roomSeed1.transform.parent = roomGenerator.transform;
 
         GameObject traps = new GameObject("Traps");
@@ -71,9 +72,10 @@ public class RoomToolWindow : EditorWindow
         GameObject treasures = new GameObject("Treasures");
         treasures.transform.parent = roomSeed1.transform;
 
-        roomPrefab = PrefabUtility.SaveAsPrefabAsset(roomPrefab, Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Room/" + typeRoom.ToString() + "/" + prefabName + ".prefab");
+        PrefabUtility.SaveAsPrefabAsset(roomPrefab, Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Room/" + typeRoom.ToString() + "/" + prefabName + ".prefab");
 
         // destroy garbage in scene
         DestroyImmediate(room);
+        DestroyImmediate(roomPrefab);
     }
 }

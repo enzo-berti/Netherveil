@@ -49,12 +49,14 @@ public class MapGenerator : MonoBehaviour
         generationParameters = new GenerationParameters();
         generationParameters.nbNormal = 100;
 
+        InstantiateLobby(out GameObject obj);
+
         //GenerateMap(generationParameters);
     }
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Space))
         {
             GenerateRoom();
         }
@@ -91,18 +93,18 @@ public class MapGenerator : MonoBehaviour
 
     void GenerateRoom()
     {
-        GameObject roomGO;
+        GameObject roomGO = null;
         if (availableDoors.CountValues() != 0)
         {
             // instantiate room with first availableDoors transform then remove it
             roomGO = Instantiate(roomNormal[GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator)]); // TODO : add random selection
 
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(generationParameters);
 
             if (!GetDoorCandidates(doorsGenerator, out Door entranceDoor, out Door exitDoor))
             {
-                Destroy(roomGO);
+                DestroyImmediate(roomGO);
                 roomGO = null;
                 return;
             }
@@ -112,23 +114,23 @@ public class MapGenerator : MonoBehaviour
             Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
 
             // bon sinon j'évite la collide de la salle et la salle exit (forcément que les deux collides putaig)
-            BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponentInChildren<BoxCollider>();
-            BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponentInChildren<BoxCollider>();
+            BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
+            BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
 
-            Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => (collider != roomCollider && collider != roomColliderExit)).ToArray();
+            Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => collider != roomCollider && collider != roomColliderExit).ToArray();
             if (colliders.Length != 0)
             {
                 availableDoors[exitDoor.rotation].Remove(exitDoor);
                 DestroyImmediate(roomGO);
                 roomGO = null;
-
+            
                 // TODO : spawn a little cellule or something like this to hide the hole in the wall
                 //i--; // generation failed then continue
                 return;
             }
 
             // Close door for the next generation
-            //doorsGenerator.RemoveDoor(entranceDoor);
+            doorsGenerator.RemoveDoor(entranceDoor);
 
             // Destroy used door
             availableDoors[exitDoor.rotation].Remove(exitDoor);
@@ -151,19 +153,15 @@ public class MapGenerator : MonoBehaviour
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
         }
-        else
-        {
-            InstantiateLobby(out roomGO);
-        }
     }
 
     private void InstantiateLobby(out GameObject roomGO)
     {
         roomGO = Instantiate(roomNormal[0]);
-
-        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Instances_0").GetComponent<DoorsGenerator>();
+    
+        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(generationParameters);
-
+    
         foreach (var door in doorsGenerator.doors)
         {
             if (availableDoors.ContainsKey(door.rotation))
@@ -175,7 +173,7 @@ public class MapGenerator : MonoBehaviour
                 Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.rotation);
             }
         }
-
+    
         generationParameters.nbNormal -= doorsGenerator.doors.Count;
     }
 }
