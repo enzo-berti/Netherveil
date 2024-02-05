@@ -1,22 +1,19 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class Range : Mobs, IDamageable, IAttacker, IMovable
+public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 {
-    private new enum State
+    private enum RangeState
     {
-        MOVE,
-        ATTACK,
-        HIT,
-        DEAD,
+        WANDERING,
         TRIGGERED,
-        FLEEING,
-        WANDERING
+        STAGGERED,
+        CHARGING
     }
 
     private IAttacker.HitDelegate onHit;
@@ -26,6 +23,18 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
 
     [Header("Range Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
+    [SerializeField, Min(0)] private float staggerDuration;
+
+    private bool isFighting = false;
+    private RangeState state;
+    Vector3 lastKnownPlayerPos;
+
+    private float fleeTimer;
+    private bool isFleeing;
+    private Vector3 fleeTarget;
+
+    private float staggerImmunity;
+    private float staggerTimer;
 
     protected override IEnumerator Brain()
     {
@@ -33,7 +42,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         {
             yield return null;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                 .Select(x => x.GetComponent<Entity>())
                 .Where(x => x != null && x != this)
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -50,43 +59,44 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                 .ToArray();
 
-            // Si le joueur est détecté 
+            if (fleeTimer > 0)
+            {
+                fleeTimer -= Time.deltaTime;
+            }
+            else
+            {
+                fleeTimer = 0;
+            }
+
             if (player)
             {
-                // Si un tank est à proximité
-                if (tanks.Any())
+                isFighting = true;
+
+                if (Vector3.Distance(transform.position, player.transform.position) < (int)Stat.ATK_RANGE / 2f && fleeTimer == 0f)
                 {
-                    {
-                        Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
-
-                        playerTankVector.Normalize();
-                        Vector3 targetPos = player.transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
-
-                        MoveTo(targetPos);
-                    }
+                    isFleeing = true;
+                    fleeTarget = player.transform.position - transform.position;
+                    fleeTarget.Normalize();
+                    fleeTarget = player.transform.position + fleeTarget * (int)stats.GetValueStat(Stat.ATK_RANGE);
                 }
-                else
+
+                lastKnownPlayerPos = player.transform.position;
+            }
+            else if (isFighting)
+            {
+                MoveTo(lastKnownPlayerPos);
+                if (!agent.hasPath)
                 {
-                    MoveTo(player.transform.position);
+                    isFighting = false;
                 }
             }
 
-            //if (player)
-            //{
-            //    // Player detect
-            //    MoveTo(player.transform.position);
-            //}
-            //else if (tanks.Any())
-            //{
-            //    // Other pest detect
-            //    MoveTo(tanks.First().transform.position);
-            //}
-            //else
-            //{
-            //    // Random movement
-            //    Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
-            //    //MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
-            //}
+            if (isFleeing)
+            {
+
+            }
+
+            UpdateStates();
         }
     }
 
@@ -97,6 +107,17 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         if (stats.GetValueStat(Stat.HP) <= 0)
         {
             Death();
+        }
+    }
+    void UpdateStates()
+    {
+        if (isFighting)
+        {
+            state = RangeState.TRIGGERED;
+        }
+        else
+        {
+            state = RangeState.WANDERING;
         }
     }
 
@@ -123,17 +144,41 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         //if (Selection.activeGameObject != gameObject)
         //    return;
 
-        DisplayVisionRange(angle);
-        DisplayAttackRange(angle);
+        DisplayVisionRange(isFighting ? 360 : angle);
+        DisplayAttackRange(isFighting ? 360 : angle);
         DisplayInfos();
     }
 #endif
 }
 
-// Quand dans zone de trigger, approche le joueur
-// Quand en range, l'attaque
-// Si le joueur s'est rapproché, commence à fuir
-// Si le joueur est à une distance convenable, le ré-attaque
-// Sinon, au bout de 2s, se retourne et l'attaque
+// quand le joueur est trop près, le range va se réfugier derrière le tank
+// quand le joueur est trop près, si aucun tank n'est à proximité il va fuir en ligne droite
+// il ne le fera pas en boucle, il aura un cd sur sa fuite
+// lorsqu'il est en cd, il va attaquer le joueur simplement
 
-// Plus tard, essayer de se cacher derrière un tank
+
+////// Code mort
+
+//// Si un tank est à proximité
+//if (tanks.Any())
+//{
+//    Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
+//    playerTankVector.Normalize();
+
+//    Vector3 targetPos = player.transform.position;
+
+//    if (Vector3.Distance(targetPos, tanks.First().transform.position) < 2f)
+//    {
+//        targetPos = tanks.First().transform.position + playerTankVector * 2f;
+//    }
+//    else
+//    {
+//        targetPos = tanks.First().transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
+//    }
+
+//    MoveTo(targetPos);
+//}
+//else
+//{
+//    MoveTo(player.transform.position);
+//}

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
 {
-    public static int RoomGenerated { get; set; } = 0;
+    private static int RoomGenerated = 0; // rand noise
 
     private List<GameObject> Rooms 
     {
@@ -35,13 +35,21 @@ public class RoomGenerator : MonoBehaviour
     public void GenerateRoomSeed()
     {
         List<GameObject> rooms = Rooms;
-        int keepRoomIndex = (GameManager.Instance.seed.Range(0, rooms.Count) + RoomGenerator.RoomGenerated) % rooms.Count;
-        for (int i = 0; i < rooms.Count; i++)
+
+        int keepRoomIndex = 0;
+        if (rooms.Count > 1)
         {
-            if (i != keepRoomIndex)
+            keepRoomIndex = GameManager.Instance.seed.Range(0, rooms.Count, ref RoomGenerated);
+
+            for (int i = 0; i < rooms.Count; i++)
             {
-                Destroy(rooms[i]);
+                if (i != keepRoomIndex)
+                {
+                    Destroy(rooms[i]);
+                }
             }
         }
+
+        rooms[keepRoomIndex].SetActive(true); // activate room
     }
 }

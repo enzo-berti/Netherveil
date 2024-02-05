@@ -2,13 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
-
-[System.Serializable]
-public class NestedList<T>
-{
-    public List<T> data;
-}
-
 public class PlayerController : MonoBehaviour
 {
     Transform cameraTransform;
@@ -52,15 +45,6 @@ public class PlayerController : MonoBehaviour
 
         Move();
         DashMove();
-
-        //Collider[] tab = CheckAttackCollide(spearAttack1, LayerMask.GetMask("Entity"));
-        //if(tab != null) 
-        //{
-        //    foreach(Collider col in tab) 
-        //    {
-        //        Debug.Log(col.gameObject.name);
-        //    }
-        //}
     }
 
     void Move()
@@ -69,10 +53,8 @@ public class PlayerController : MonoBehaviour
         {
             LastDir = Direction;
             CurrentTargetAngle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
-            Vector3 camForward = cameraTransform.forward;
-            Vector3 camRight = cameraTransform.right;
-            camForward.y = 0f;
-            camRight.y = 0f;
+            ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+
             characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * Direction.y + camRight * Direction.x).normalized);
         }
     }
@@ -81,20 +63,16 @@ public class PlayerController : MonoBehaviour
     {
         if (hero.State == (int)Hero.PlayerState.DASH)
         {
-            Vector3 camForward = cameraTransform.forward;
-            Vector3 camRight = cameraTransform.right;
-            camForward.y = 0f;
-            camRight.y = 0f;
-            characterController.Move(dashSpeed * Time.deltaTime * (camForward * DashDir.y + camRight * DashDir.x).normalized);
+            characterController.Move(dashSpeed * Time.deltaTime * transform.forward);
         }
     }
 
     public void ReadDirection(InputAction.CallbackContext ctx)
     {
-        Direction = ctx.ReadValue<Vector2>();
+        Direction = ctx.ReadValue<Vector2>().normalized;
     }
 
-    public Collider[] CheckAttackCollide(Collider collider,Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public Collider[] CheckAttackCollide(Collider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         if (collider != null)
         {
@@ -103,11 +81,11 @@ public class PlayerController : MonoBehaviour
             switch (colliderType.Name)
             {
                 case nameof(BoxCollider):
-                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin,targetTag, layerMask, queryTriggerInteraction);
+                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction);
                 case nameof(SphereCollider):
-                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin,targetTag, layerMask, queryTriggerInteraction);
+                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction);
                 case nameof(CapsuleCollider):
-                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin,targetTag, layerMask, queryTriggerInteraction);
+                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction);
                 default:
                     Debug.LogWarning("Invalid Collider type, can't check the collision.");
                     return new Collider[0];
@@ -116,5 +94,20 @@ public class PlayerController : MonoBehaviour
 
         Debug.LogWarning("Collider is null.");
         return new Collider[0];
+    }
+
+    /// <summary>
+    /// Used to get the directions of camera without the y axis so that the player doesnt move on this axis and renormalize the vectors because of that modification
+    /// </summary>
+    /// <param name="camRight"></param>
+    /// <param name="camForward"></param>
+    void ModifyCamVectors(out Vector3 camRight, out Vector3 camForward)
+    {
+        camForward = cameraTransform.forward;
+        camRight = cameraTransform.right;
+        camForward.y = 0f;
+        camRight.y = 0f;
+        camForward = camForward.normalized;
+        camRight = camRight.normalized;
     }
 }

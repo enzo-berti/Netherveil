@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,20 +9,64 @@ public enum DoorState : byte
     CLOSE
 }
 
+[Serializable]
+public struct Door
+{
+    public Door(Transform transform)
+    {
+        forward = transform.forward;
+        localPosition = transform.position;
+        rotation = transform.rotation.eulerAngles.y;
+        parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
+    }
+
+    public Vector3 forward;
+    [SerializeField] private Vector3 localPosition;
+    public Vector3 Position 
+    { 
+        get 
+        { 
+            return localPosition + parentSkeleton.transform.position; 
+        } 
+    }
+    public float rotation;
+    public GameObject parentSkeleton;
+}
+
 public class DoorsGenerator : MonoBehaviour
 {
-
     private static int NoiseGenerator = 0;
-    public List<GameObject> doors { get; private set; } = new List<GameObject>();
+
+    // planned for later
+    public List<Door> doors = new List<Door>();
+
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
-    private void Awake()
+    private void OnDrawGizmos()
     {
-        foreach (Transform child in transform)
+        Gizmos.color = Color.red;
+        foreach (var door in doors)
         {
-            doors.Add(child.gameObject);
+            Gizmos.DrawSphere(door.Position, 0.25f);
         }
     }
+
+#if UNITY_EDITOR
+    public void GeneratePrefab()
+    {
+        doors.Clear();
+
+        foreach (Transform child in transform)
+        {
+            doors.Add(new Door(child));
+        }
+
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
+        }
+    }
+#endif
 
     /// <summary>
     /// Generate the seed doors (destroy doors between min max range)
@@ -30,33 +75,26 @@ public class DoorsGenerator : MonoBehaviour
     public void GenerateSeed(GenerationParameters generationParameters)
     {
         // get number of doors that can spawn depending on the number of rooms available by genParams
-        //int numDoorsToClose = GameManager.Instance.seed.Range(doors.Count - minMaxDoors.x, minMaxDoors.y - doors.Count, ref NoiseGenerator) - minMaxDoors.x;
-        //
-        //for (int i = 0; i < numDoorsToClose; i++)
-        //{
-        //    int index = GameManager.Instance.seed.Range(0, doors.Count - 1, ref NoiseGenerator);
-        //
-        //    //CloseDoor(index);
-        //}
+
     }
 
     public void CloseDoor(int index)
     {
-        GameObject go = doors[index];
-        doors.RemoveAt(index);
+        //GameObject go = doors[index];
+        //doors.RemoveAt(index);
 
-        // TODO : Close the room (h word)
-        Destroy(go);
+        // TODO : Close the room
+        //Destroy(go);
     }
 
-    public void CloseDoor(GameObject door)
+    public void RemoveDoor(Door door)
     {
-        if (doors.Remove(door))
+        if (!doors.Remove(door))
         {
-            // TODO : close the room (h word)
-            Destroy(door);
+            Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+            return;
         }
 
-        //Debug.LogWarning("Try to set a door state with the wrong GameObject in " + gameObject, door);
+
     }
 }

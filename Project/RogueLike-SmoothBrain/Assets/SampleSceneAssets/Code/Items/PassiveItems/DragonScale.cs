@@ -7,6 +7,11 @@ public class DragonScale : ItemEffect, IPassiveItem
     //pourcentage between 0 and 100 or more
     const int critRateStatPourcentage = (int)(critRateStat * 100f);
 
+    public void OnRemove()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();

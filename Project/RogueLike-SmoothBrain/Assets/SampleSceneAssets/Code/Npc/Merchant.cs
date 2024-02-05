@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Merchant : Npc, IInterractable
 {
-    [Header("Merchant parameters")]
-    [SerializeField] private DialogueContainer dialogue;
+    [Header("Merchand parameters")]
+    [SerializeField] private DialogueTree dialogue;
 
     public void Interract()
     {
@@ -13,6 +13,6 @@ public class Merchant : Npc, IInterractable
 
     private void TriggerDialogue()
     {
-        FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+        FindObjectOfType<DialogueTreeRunner>().StartDialogue(dialogue);
     }
 }

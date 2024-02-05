@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Hero : Entity, IDamageable, IAttacker
+public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
     public enum PlayerState : int
     {
@@ -44,6 +44,8 @@ public class Hero : Entity, IDamageable, IAttacker
 
     public void Death()
     {
+        Destroy(GetComponent<CharacterController>());
+        animator.applyRootMotion = true;
         State = (int)EntityState.DEAD;
         animator.ResetTrigger("Death");
         animator.SetTrigger("Death");
@@ -53,26 +55,11 @@ public class Hero : Entity, IDamageable, IAttacker
     {
         damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
         onAttack?.Invoke(damageable);
-    }
 
-    public void LifeSteal(IDamageable damageable)
-    {
-        //life steal is a pourcentage that's incresed by items
-        int lifeIncreasedValue = (int)(Stats.GetValueStat(Stat.LIFE_STEAL) * (Stats.GetValueStat(Stat.ATK) * Stats.GetValueStat(Stat.ATK_COEFF)));
-        Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
-        if (Stats.GetValueStat(Stat.HP) > Stats.GetValueStat(Stat.MAX_HP))
+        if (damageable is IKnockbackable)
         {
-            Stats.SetValue(Stat.HP, Stats.GetValueStat(Stat.MAX_HP));
+            Vector3 force = ((damageable as MonoBehaviour).transform.position - transform.position).normalized;
+            (damageable as IKnockbackable).GetKnockback(force * stats.GetValueStat(Stat.KNOCKBACK_COEFF));
         }
-    }
-
-    private void OnEnable()
-    {
-        onHit += LifeSteal;
-    }
-
-    private void OnDisable()
-    {
-        onHit -= LifeSteal;
     }
 }

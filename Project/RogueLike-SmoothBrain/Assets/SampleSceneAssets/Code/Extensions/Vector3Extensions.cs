@@ -1,15 +1,30 @@
 using UnityEngine;
 public static class Vector3Extensions
 {
-    public static bool IsAllValuesEqual(this Vector3 vec)
+    public static bool IsAllValuesEqual(this Vector3 vector)
     {
-        return vec.x == vec.y &&
-            vec.x == vec.z &&
-            vec.y == vec.z;
+        return vector.x == vector.y &&
+            vector.x == vector.z &&
+            vector.y == vector.z;
     }
 
     public static Vector3 ToAbs(this Vector3 vector)
     {
         return new Vector3(Mathf.Abs(vector.x), Mathf.Abs(vector.y), Mathf.Abs(vector.z));
+    }
+
+
+    /// <param name="vector"></param>
+    /// <param name="nbDigits"></param>
+    /// <returns>Rounded values of the original vector based on the number of digits passed as parameter.</returns>
+    public static Vector3 ToRound(this Vector3 vector, byte nbDigits)
+    {
+        float multiplier = Mathf.Pow(10, nbDigits);
+        return new Vector3
+        (
+            Mathf.Round(vector.x * multiplier) / multiplier,
+            Mathf.Round(vector.y * multiplier) / multiplier,
+            Mathf.Round(vector.z * multiplier) / multiplier
+        );
     }
 }

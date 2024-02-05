@@ -5,6 +5,11 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
     private int critRateStat = 25;
     private int corruptionStat = 2;
 
+    public void OnRemove()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();

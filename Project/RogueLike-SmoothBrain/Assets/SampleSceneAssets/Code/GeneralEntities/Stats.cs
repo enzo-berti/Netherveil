@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -60,6 +61,36 @@ public class Stats
             Debug.LogWarning($"Can't find {info} in {name}");
     }
 
+    public void DecreaseValue(Stat info, float decreasingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+            stats[index].value -= decreasingValue;
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
+
+    public void MultiplyValue(Stat info, float multiplyingValue) 
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+            stats[index].value *= multiplyingValue;
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
+
+    public void DivideValue(Stat info, float dividingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+            stats[index].value /= dividingValue;
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
+
     public void SetValue(Stat info, float value)
     {
         int index = stats.FindIndex(x => x.stat == info);
@@ -69,6 +100,115 @@ public class Stats
         else
             Debug.LogWarning($"Can't find {info} in {name}");
     }
+
+    public void IncreaseValueClamp(Stat statToIncrease, Stat maxStat, float increasingValue)
+    {
+        int indexIncrease = stats.FindIndex(x => x.stat == statToIncrease);
+        int indexMaxStat = stats.FindIndex(x => x.stat == maxStat);
+
+        if (indexIncrease != -1 && indexMaxStat != -1)
+        {
+            if(stats[indexIncrease].value + increasingValue > stats[indexMaxStat].value)
+            {
+                stats[indexIncrease].value = stats[indexMaxStat].value;
+            }
+            else
+            {
+                stats[indexIncrease].value += increasingValue;
+            }
+        }
+           
+        else if(indexIncrease == -1)
+        {
+            Debug.LogWarning($"Can't find {statToIncrease} in {name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {maxStat} in {name}");
+        }
+    }
+
+    public void DecreaseValueClamp(Stat statToDecrease, Stat minStat, float decreasingValue)
+    {
+        int indexDecrease = stats.FindIndex(x => x.stat == statToDecrease);
+        int indexMinValue = stats.FindIndex(x => x.stat == minStat);
+
+        if (indexDecrease != -1 && indexMinValue != -1)
+        {
+            if (stats[indexDecrease].value - decreasingValue < stats[indexMinValue].value)
+            {
+                stats[indexDecrease].value = stats[indexMinValue].value;
+            }
+            else
+            {
+                stats[indexDecrease].value -= decreasingValue;
+            }
+        }
+
+        else if (indexDecrease == -1)
+        {
+            Debug.LogWarning($"Can't find {statToDecrease} in {name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {minStat} in {name}");
+        }
+    }
+
+    public void MultiplyValueClamp(Stat statToIncrease, Stat maxStat, float increasingValue)
+    {
+        int indexIncrease = stats.FindIndex(x => x.stat == statToIncrease);
+        int indexMaxStat = stats.FindIndex(x => x.stat == maxStat);
+
+        if (indexIncrease != -1 && indexMaxStat != -1)
+        {
+            if (stats[indexIncrease].value * increasingValue > stats[indexMaxStat].value)
+            {
+                stats[indexIncrease].value = stats[indexMaxStat].value;
+            }
+            else
+            {
+                stats[indexIncrease].value *= increasingValue;
+            }
+        }
+
+        else if (indexIncrease == -1)
+        {
+            Debug.LogWarning($"Can't find {statToIncrease} in {name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {maxStat} in {name}");
+        }
+    }
+
+    public void DivideValueClamp(Stat statToDecrease, Stat minStat, float decreasingValue)
+    {
+        int indexDecrease = stats.FindIndex(x => x.stat == statToDecrease);
+        int indexMinValue = stats.FindIndex(x => x.stat == minStat);
+
+        if (indexDecrease != -1 && indexMinValue != -1)
+        {
+            if (stats[indexDecrease].value / decreasingValue < stats[indexMinValue].value)
+            {
+                stats[indexDecrease].value = stats[indexMinValue].value;
+            }
+            else
+            {
+                stats[indexDecrease].value /= decreasingValue;
+            }
+        }
+
+        else if (indexDecrease == -1)
+        {
+            Debug.LogWarning($"Can't find {statToDecrease} in {name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {minStat} in {name}");
+        }
+    }
+
     public bool HasStat(Stat info)
     {
         foreach (StatInfo stat in stats)

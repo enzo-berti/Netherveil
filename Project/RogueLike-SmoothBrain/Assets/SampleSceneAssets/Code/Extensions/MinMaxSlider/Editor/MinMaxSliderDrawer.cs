@@ -4,10 +4,8 @@ using UnityEditor;
 [CustomPropertyDrawer(typeof(MinMaxSliderAttribute))]
 public class MinMaxSliderDrawer : PropertyDrawer
 {
-
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-
         var minMaxAttribute = (MinMaxSliderAttribute)attribute;
         var propertyType = property.propertyType;
 

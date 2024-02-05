@@ -1,20 +1,20 @@
-using System.Reflection;
-using System.Linq;
-using UnityEngine;
-using UnityEditor;
 using System;
-using System.Net;
-using UnityEditor.PackageManager.UI;
-using JetBrains.Annotations;
+using System.Linq;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
 
 [Serializable]
 public class Item : MonoBehaviour, IInterractable
 {
-    public string item;
+    public string idItemName;
     public float test;
+    ItemDatabase database;
     private void Start()
     {
-        Debug.Log(item);
+        database = Resources.Load<ItemDatabase>("ItemDatabase");
+        this.GetComponent<MeshRenderer>().material = database.GetItem(idItemName).mat;
+        this.GetComponent<MeshFilter>().mesh = database.GetItem(idItemName).mesh;
     }
     private void Update()
     {
@@ -26,14 +26,13 @@ public class Item : MonoBehaviour, IInterractable
     public void Interract()
     {
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(LoadClass());
-        Debug.Log($"Vous avez bien récupéré {LoadClass().GetType()})");
+        Debug.Log($"Vous avez bien récupéré {LoadClass().GetType()}");
         Destroy(this.gameObject);
     }
 
-
     ItemEffect LoadClass()
     {
-        return Assembly.GetExecutingAssembly().CreateInstance(item) as ItemEffect;
+        return Assembly.GetExecutingAssembly().CreateInstance(idItemName) as ItemEffect;
     }
 }
 
@@ -45,7 +44,7 @@ public class ItemEditor : Editor
     SerializedProperty itemName;
     private void OnEnable()
     {
-        itemName = serializedObject.FindProperty("item");
+        itemName = serializedObject.FindProperty("idItemName");
         ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()

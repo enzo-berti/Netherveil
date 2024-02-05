@@ -4,7 +4,7 @@ using UnityEngine;
 public class Talker : Npc, IInterractable
 {
     [Header("Talker parameters")]
-    [SerializeField] private DialogueContainer dialogue;
+    [SerializeField] private DialogueTree dialogue;
 
     public void Interract()
     {
@@ -13,6 +13,6 @@ public class Talker : Npc, IInterractable
 
     private void TriggerDialogue()
     {
-        FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+        FindObjectOfType<DialogueTreeRunner>().StartDialogue(dialogue);
     }
 }

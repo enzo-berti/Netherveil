@@ -5,7 +5,11 @@ public class SilverAmethystRing : ItemEffect, IPassiveItem
     private int maxLifeStat = 10;
     private int speed = 1;
 
-    
+    public void OnRemove()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
