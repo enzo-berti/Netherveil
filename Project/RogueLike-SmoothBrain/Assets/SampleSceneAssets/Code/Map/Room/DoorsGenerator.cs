@@ -60,8 +60,11 @@ public class DoorsGenerator : MonoBehaviour
         foreach (Transform child in transform)
         {
             doors.Add(new Door(child));
+        }
 
-            DestroyImmediate(child.gameObject);
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
         }
     }
 #endif
