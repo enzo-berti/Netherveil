@@ -91,7 +91,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable
 
     public void GetKnockback(Vector3 force)
     {
-        Debug.Log("Apply knockback " + force);
         StartCoroutine(ApplyKnockback(force));
     }
 
