@@ -31,6 +31,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 
     private float fleeTimer;
     private bool isFleeing;
+    private Vector3 fleeTarget;
 
     private float staggerImmunity;
     private float staggerTimer;
@@ -74,7 +75,9 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                 if (Vector3.Distance(transform.position, player.transform.position) < (int)Stat.ATK_RANGE / 2f && fleeTimer == 0f)
                 {
                     isFleeing = true;
-                    fleeTimer = 2f;
+                    fleeTarget = player.transform.position - transform.position;
+                    fleeTarget.Normalize();
+                    fleeTarget = player.transform.position + fleeTarget * (int)stats.GetValueStat(Stat.ATK_RANGE);
                 }
 
                 lastKnownPlayerPos = player.transform.position;
@@ -86,6 +89,11 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                 {
                     isFighting = false;
                 }
+            }
+
+            if (isFleeing)
+            {
+
             }
 
             UpdateStates();
