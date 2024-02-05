@@ -25,11 +25,10 @@ public class Item : MonoBehaviour, IInterractable
     }
     public void Interract()
     {
-        //GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(LoadClass());
-        Debug.Log($"Vous avez bien récupéré {LoadClass().GetType()})");
-        //Destroy(this.gameObject);
+        GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(LoadClass());
+        Debug.Log($"Vous avez bien récupéré {LoadClass().GetType()}");
+        Destroy(this.gameObject);
     }
-
 
     ItemEffect LoadClass()
     {
