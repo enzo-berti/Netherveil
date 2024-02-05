@@ -19,5 +19,6 @@ public class ItemData
     public Rarity RarityTier;
     public ItemType Type;
     public string idName;
+    public Material mat;
     [Multiline] public string Description;
 }   
