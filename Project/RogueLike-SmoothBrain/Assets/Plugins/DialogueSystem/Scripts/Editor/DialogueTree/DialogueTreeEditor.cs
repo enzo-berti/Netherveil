@@ -53,11 +53,11 @@ namespace DialogueSystem.Editor
             VisualElement root = rootVisualElement;
 
             // Import UXML
-            VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/DialogueSystem/Scripts/Editor/UIBuilder/DialogueTreeEditor.uxml");
+            VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/DialogueTreeEditor.uxml");
             visualTree.CloneTree(root);
 
             // Instantiate UXML
-            StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/DialogueSystem/Scripts/Editor/UIBuilder/DialogueTreeEditor.uss");
+            StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/DialogueTreeEditor.uss");
             root.styleSheets.Add(styleSheet);
 
             // Querry
