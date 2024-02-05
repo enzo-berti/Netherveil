@@ -89,11 +89,12 @@ public class DoorsGenerator : MonoBehaviour
 
     public void RemoveDoor(Door door)
     {
-        if (doors.Remove(door))
+        if (!doors.Remove(door))
         {
-            // TODO : close the room
+            Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+            return;
         }
 
-        Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+
     }
 }
