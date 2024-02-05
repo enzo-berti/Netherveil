@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Tank : Mobs, IAttacker, IDamageable, IMovable
+public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
@@ -24,6 +24,7 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value);
+        DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, 1);
         if (stats.GetValueStat(Stat.HP) <= 0)
         {
             Death();

@@ -20,11 +20,19 @@ public class DamageManager : MonoBehaviour
     public void CreateDamageText(int dmgPt, Vector3 pos)
     {
         DamageText newText = Instantiate(dmgTextPrefab, pos, Quaternion.identity);
+        newText.SetText(dmgPt.ToString());
         if (dmgPt > 10 && dmgPt < 100)
         {
-            //newText.size = dmgPt;
+            newText.SetSize(dmgPt + 50);
         }
-        newText.SetText(dmgPt.ToString());
+        else if (dmgPt > 100)
+        {
+            newText.SetSize(150);
+        }
+        else if (dmgPt < 10)
+        {
+            newText.SetSize(50);
+        }
     }
 
     public void CreateDamageText(int dmgPt, Vector3 pos, int randPos)

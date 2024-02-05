@@ -40,6 +40,5 @@ public class PlayerInteractions : MonoBehaviour
     {
         Handles.color = new Color(1, 1, 0, 0.25f);
         //Handles.DrawSolidDisc(transform.position, Vector3.up, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
-        Gizmos.DrawSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
     }
 }
