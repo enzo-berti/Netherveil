@@ -2,9 +2,8 @@ using System.Collections;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
-public class ExplodingBomb : MonoBehaviour
+public class ExplodingBomb : MonoBehaviour, IDamageable
 {
     [Header("Bomb Parameter")]
     [SerializeField] private bool activateOnAwake;
@@ -86,6 +85,16 @@ public class ExplodingBomb : MonoBehaviour
     private void OnDisable()
     {
         StopAllCoroutines();
+    }
+
+    public void ApplyDamage(int _value)
+    {
+        Activate();
+    }
+
+    public void Death()
+    {
+        throw new System.NotImplementedException();
     }
 
 #if UNITY_EDITOR
