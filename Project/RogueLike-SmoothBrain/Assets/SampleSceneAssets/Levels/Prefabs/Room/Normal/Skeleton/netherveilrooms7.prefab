@@ -24,8 +24,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2378856762092681785}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 143.24, y: 0, z: 130.46}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -44,6 +44,8 @@ GameObject:
   - component: {fileID: 4165093086254974472}
   - component: {fileID: 6406118747861179574}
   - component: {fileID: 8418529098152162004}
+  - component: {fileID: -7023153620188099226}
+  - component: {fileID: -8371059462035943149}
   m_Layer: 0
   m_Name: NetherVeilProceduralRooms_merge2_merge2_0_bakedClone
   m_TagString: Untagged
@@ -116,6 +118,49 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4302552394778758902}
   m_Mesh: {fileID: 4300000, guid: 35d1a5322ef086849bc739b6a56af1fb, type: 2}
+--- !u!65 &-7023153620188099226
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4302552394778758902}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 19.414118, y: 2, z: 8.940067}
+  m_Center: {x: -0.15811443, y: 1, z: 0.5389806}
+--- !u!64 &-8371059462035943149
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4302552394778758902}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 35d1a5322ef086849bc739b6a56af1fb, type: 2}
 --- !u!1 &6473831506626495713
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,8 +170,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2328165356791390397}
+  - component: {fileID: -7806535433905939571}
   m_Layer: 0
-  m_Name: NetherVeilProceduralRooms_merge2_merge2_1_bakedClone
+  m_Name: Instances_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,81 +190,24 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2011003140026545749}
+  m_Children: []
   m_Father: {fileID: 7928123237388476422}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &6485790855925478568
-PrefabInstance:
+--- !u!114 &-7806535433905939571
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2328165356791390397}
-    m_Modifications:
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.15811443
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3.9298124
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.000063971675
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5377716269713741895, guid: d2ba541fbf97ae645b0febdce3e127fa,
-        type: 3}
-      propertyPath: m_Name
-      value: DebugArrow_Instance3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d2ba541fbf97ae645b0febdce3e127fa, type: 3}
---- !u!4 &2011003140026545749 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4749798804714160893, guid: d2ba541fbf97ae645b0febdce3e127fa,
-    type: 3}
-  m_PrefabInstance: {fileID: 6485790855925478568}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6473831506626495713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcd07971c3e364148930d587195a48c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doors:
+  - forward: {x: -0.00012794335, y: 0, z: -1}
+    localPosition: {x: -0.15811443, y: 0, z: -3.9298124}
+    rotation: 180.00732
+    parentSkeleton: {fileID: 6473831506626495713}
+  minMaxDoors: {x: 0, y: 0}
