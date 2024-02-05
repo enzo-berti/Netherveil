@@ -101,24 +101,24 @@ public class Stats
             Debug.LogWarning($"Can't find {info} in {name}");
     }
 
-    public void IncreaseValueClamp(Stat statToIncrease, Stat maxStat, float increasingValue, float maxValue)
+    public void IncreaseValueClamp(Stat statToIncrease, Stat maxStat, float increasingValue)
     {
         int indexIncrease = stats.FindIndex(x => x.stat == statToIncrease);
         int indexMaxStat = stats.FindIndex(x => x.stat == maxStat);
 
         if (indexIncrease != -1 && indexMaxStat != -1)
         {
-            if(stats[indexIncrease].value + indexIncrease > stats[indexMaxStat].value)
+            if(stats[indexIncrease].value + increasingValue > stats[indexMaxStat].value)
             {
                 stats[indexIncrease].value = stats[indexMaxStat].value;
             }
             else
             {
-                stats[indexIncrease].value += indexIncrease;
+                stats[indexIncrease].value += increasingValue;
             }
         }
            
-        else if(indexIncrease != -1)
+        else if(indexIncrease == -1)
         {
             Debug.LogWarning($"Can't find {statToIncrease} in {name}");
         }
@@ -128,24 +128,24 @@ public class Stats
         }
     }
 
-    public void DecreaseValueClamp(Stat statToDecrease, Stat minStat, float decreasingValue, float minValue)
+    public void DecreaseValueClamp(Stat statToDecrease, Stat minStat, float decreasingValue)
     {
         int indexDecrease = stats.FindIndex(x => x.stat == statToDecrease);
         int indexMinValue = stats.FindIndex(x => x.stat == minStat);
 
         if (indexDecrease != -1 && indexMinValue != -1)
         {
-            if (stats[indexDecrease].value - indexDecrease < stats[indexMinValue].value)
+            if (stats[indexDecrease].value - decreasingValue < stats[indexMinValue].value)
             {
                 stats[indexDecrease].value = stats[indexMinValue].value;
             }
             else
             {
-                stats[indexDecrease].value -= indexDecrease;
+                stats[indexDecrease].value -= decreasingValue;
             }
         }
 
-        else if (indexDecrease != -1)
+        else if (indexDecrease == -1)
         {
             Debug.LogWarning($"Can't find {statToDecrease} in {name}");
         }
@@ -155,24 +155,24 @@ public class Stats
         }
     }
 
-    public void MultiplyValueClamp(Stat statToIncrease, Stat maxStat, float increasingValue, float maxValue)
+    public void MultiplyValueClamp(Stat statToIncrease, Stat maxStat, float increasingValue)
     {
         int indexIncrease = stats.FindIndex(x => x.stat == statToIncrease);
         int indexMaxStat = stats.FindIndex(x => x.stat == maxStat);
 
         if (indexIncrease != -1 && indexMaxStat != -1)
         {
-            if (stats[indexIncrease].value * indexIncrease > stats[indexMaxStat].value)
+            if (stats[indexIncrease].value * increasingValue > stats[indexMaxStat].value)
             {
                 stats[indexIncrease].value = stats[indexMaxStat].value;
             }
             else
             {
-                stats[indexIncrease].value *= indexIncrease;
+                stats[indexIncrease].value *= increasingValue;
             }
         }
 
-        else if (indexIncrease != -1)
+        else if (indexIncrease == -1)
         {
             Debug.LogWarning($"Can't find {statToIncrease} in {name}");
         }
@@ -182,24 +182,24 @@ public class Stats
         }
     }
 
-    public void DivideValueClamp(Stat statToDecrease, Stat minStat, float decreasingValue, float minValue)
+    public void DivideValueClamp(Stat statToDecrease, Stat minStat, float decreasingValue)
     {
         int indexDecrease = stats.FindIndex(x => x.stat == statToDecrease);
         int indexMinValue = stats.FindIndex(x => x.stat == minStat);
 
         if (indexDecrease != -1 && indexMinValue != -1)
         {
-            if (stats[indexDecrease].value / indexDecrease < stats[indexMinValue].value)
+            if (stats[indexDecrease].value / decreasingValue < stats[indexMinValue].value)
             {
                 stats[indexDecrease].value = stats[indexMinValue].value;
             }
             else
             {
-                stats[indexDecrease].value /= indexDecrease;
+                stats[indexDecrease].value /= decreasingValue;
             }
         }
 
-        else if (indexDecrease != -1)
+        else if (indexDecrease == -1)
         {
             Debug.LogWarning($"Can't find {statToDecrease} in {name}");
         }

@@ -10,6 +10,7 @@ public class PlayerInteractions : MonoBehaviour
 
     void Update()
     {
+        RetreivedConsommable();
         // TODO : Add UI to understand that we can press a touch to take an object
     }
 
@@ -29,15 +30,16 @@ public class PlayerInteractions : MonoBehaviour
     public void RetreivedConsommable()
     {
         var colliders =  Physics.OverlapSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
-        foreach(var collider in colliders.Where(x => x.TryGetComponent<IConsommable>(out _)))
+        foreach(var collider in colliders.Where(x => x.gameObject.TryGetComponent<IConsommable>(out var consommable) && consommable.CanBeRetreived))
         {
+            Debug.Log("test");
             collider.GetComponent<IConsommable>().OnRetreived();
-            Destroy(collider.gameObject);
         }
     }
     private void OnDrawGizmos()
     {
         Handles.color = new Color(1, 1, 0, 0.25f);
         //Handles.DrawSolidDisc(transform.position, Vector3.up, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
+        Gizmos.DrawSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
     }
 }
