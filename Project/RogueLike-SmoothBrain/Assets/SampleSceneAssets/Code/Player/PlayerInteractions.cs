@@ -1,5 +1,4 @@
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,6 +26,15 @@ public class PlayerInteractions : MonoBehaviour
         }
     }
 
+    public void RetreivedConsommable()
+    {
+        var colliders =  Physics.OverlapSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
+        foreach(var collider in colliders.Where(x => x.TryGetComponent<IConsommable>(out _)))
+        {
+            collider.GetComponent<IConsommable>().OnRetreived();
+            Destroy(collider.gameObject);
+        }
+    }
     private void OnDrawGizmos()
     {
         Handles.color = new Color(1, 1, 0, 0.25f);

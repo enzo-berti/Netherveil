@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class RoomToolWindow : EditorWindow 
 {
-    string myString = "Hello World";
-    bool groupEnabled;
-    bool myBool = true;
-    float myFloat = 1.23f;
-    GameObject room;
+    public enum TypeRoom
+    {
+        Normal,
+    }
+    TypeRoom typeRoom = TypeRoom.Normal;
+    string prefabName = "Room";
+    GameObject roomObj;
 
     [MenuItem("Tools/Room/Create")]
     public static void CreateRoom()
@@ -20,15 +22,60 @@ public class RoomToolWindow : EditorWindow
         GUILayout.Label("Base Settings", EditorStyles.boldLabel);
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-        room = EditorGUILayout.ObjectField("Room prefab", room, typeof(GameObject), false) as GameObject;
+        roomObj = EditorGUILayout.ObjectField("Room prefab", roomObj, typeof(GameObject), false) as GameObject;
+        prefabName = EditorGUILayout.TextField("Prefab Name", prefabName);
+        typeRoom = (TypeRoom)EditorGUILayout.EnumPopup("Type of room", typeRoom);
 
-        myString = EditorGUILayout.TextField("Text Field", myString);
+        if (GUILayout.Button("Generate Room"))
+        {
+            GenerateRoomPrefab();
+        }
 
-        groupEnabled = EditorGUILayout.BeginToggleGroup("Optional Settings", groupEnabled);
-        myBool = EditorGUILayout.Toggle("Toggle", myBool);
-        myFloat = EditorGUILayout.Slider("Slider", myFloat, -3, 3);
-        EditorGUILayout.EndToggleGroup();
 
         EditorGUILayout.EndVertical();
+    }
+
+    void GenerateRoomPrefab()
+    {
+        GameObject room = Instantiate(roomObj);
+        GameObject roomPrefab = new GameObject(prefabName);
+
+        GameObject skeleton = room.transform.GetChild(0).gameObject;
+        skeleton.gameObject.name = "Skeleton";
+        //skeleton.layer = LayerMask.GetMask("Map");
+        skeleton.transform.parent = roomPrefab.transform;
+        BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
+        boxCollider.isTrigger = true;
+        boxCollider.includeLayers = LayerMask.GetMask("Map");
+        skeleton.AddComponent<MeshCollider>();
+
+        GameObject arrows = room.transform.GetChild(0).gameObject;
+        arrows.gameObject.name = "Doors";
+        arrows.transform.parent = skeleton.transform;
+        DoorsGenerator generator = arrows.AddComponent<DoorsGenerator>();
+        generator.GeneratePrefab();
+
+        GameObject roomGenerator = new GameObject("RoomGenerator");
+        roomGenerator.transform.parent = roomPrefab.transform;
+        roomGenerator.AddComponent<RoomGenerator>();
+
+        GameObject roomSeed1 = new GameObject("Room1");
+        roomSeed1.SetActive(false);
+        roomSeed1.transform.parent = roomGenerator.transform;
+
+        GameObject traps = new GameObject("Traps");
+        traps.transform.parent = roomSeed1.transform;
+        GameObject enemies = new GameObject("Enemies");
+        enemies.transform.parent = roomSeed1.transform;
+        GameObject props = new GameObject("Props");
+        props.transform.parent = roomSeed1.transform;
+        GameObject treasures = new GameObject("Treasures");
+        treasures.transform.parent = roomSeed1.transform;
+
+        PrefabUtility.SaveAsPrefabAsset(roomPrefab, Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Room/" + typeRoom.ToString() + "/" + prefabName + ".prefab");
+
+        // destroy garbage in scene
+        DestroyImmediate(room);
+        DestroyImmediate(roomPrefab);
     }
 }
