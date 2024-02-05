@@ -18,8 +18,8 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] GameObject weapon;
 
     //used for the error margin for attacks to auto-redirect on enemies in vision cone
-    readonly float VISION_CONE_ANGLE = 45f;
-    readonly float VISION_CONE_RANGE = 8f;
+    const float VISION_CONE_ANGLE = 45f;
+    const float VISION_CONE_RANGE = 8f;
 
     bool dashCooldown = false;
     readonly float DASH_COOLDOWN_TIME = 0.5f;
@@ -187,25 +187,11 @@ public class PlayerInput : MonoBehaviour
     void MouseOrientation()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit))
+        if (Physics.Raycast(ray, out var hit, float.MaxValue, LayerMask.GetMask("RaycastGround")))
         {
             float angle = transform.AngleOffsetToFaceTarget(new Vector3(hit.point.x, this.transform.position.y, hit.point.z));
             if (angle != float.MaxValue)
             {
-                GetComponent<PlayerController>().CurrentTargetAngle += angle;
-            }
-        }
-    }
-
-    void MouseOrientation2()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit))
-        {
-            float angle = transform.AngleOffsetToFaceTarget(new Vector3(hit.point.x, this.transform.position.y, hit.point.z));
-            if (angle != float.MaxValue)
-            {
-
                 Vector3 a = transform.eulerAngles;
                 a.y += angle;
                 transform.eulerAngles = a;
@@ -214,9 +200,9 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    void OrientationErrorMargin()
+    void OrientationErrorMargin(float visionConeRange = VISION_CONE_RANGE)
     {
-        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"))
+        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
         .Select(x => x.GetComponent<Transform>())
         .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
         .FirstOrDefault();
@@ -226,7 +212,10 @@ public class PlayerInput : MonoBehaviour
             float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
             if (angle != float.MaxValue)
             {
-                GetComponent<PlayerController>().CurrentTargetAngle += angle;
+                Vector3 a = transform.eulerAngles;
+                a.y += angle;
+                transform.eulerAngles = a;
+                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
             }
         }
     }
@@ -236,7 +225,11 @@ public class PlayerInput : MonoBehaviour
         //rotate the player to mouse's direction if playing KB/mouse
         if (Gamepad.all.Count == 0)
         {
-            MouseOrientation2();
+            MouseOrientation();
+        }
+        else 
+        {
+            OrientationErrorMargin(GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
         }
 
         if (!GetComponent<PlayerInput>().LaunchedAttack)
