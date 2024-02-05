@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Hero : Entity, IDamageable, IAttacker
+public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
     public enum PlayerState : int
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Range : Mobs, IDamageable, IAttacker, IMovable
+public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 {
     private enum RangeState
     {

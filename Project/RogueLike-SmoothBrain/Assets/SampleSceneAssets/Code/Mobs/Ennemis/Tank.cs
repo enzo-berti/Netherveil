@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Tank : Mobs, IAttacker, IDamageable, IMovable
+public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
