@@ -49,12 +49,14 @@ public class MapGenerator : MonoBehaviour
         generationParameters = new GenerationParameters();
         generationParameters.nbNormal = 100;
 
+        InstantiateLobby(out GameObject obj);
+
         //GenerateMap(generationParameters);
     }
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Space))
         {
             GenerateRoom();
         }
@@ -102,7 +104,7 @@ public class MapGenerator : MonoBehaviour
 
             if (!GetDoorCandidates(doorsGenerator, out Door entranceDoor, out Door exitDoor))
             {
-                Destroy(roomGO);
+                DestroyImmediate(roomGO);
                 roomGO = null;
                 return;
             }
@@ -115,13 +117,13 @@ public class MapGenerator : MonoBehaviour
             BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
             BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
 
-            Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => (collider != roomCollider && collider != roomColliderExit)).ToArray();
+            Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => collider != roomCollider && collider != roomColliderExit).ToArray();
             if (colliders.Length != 0)
             {
                 availableDoors[exitDoor.rotation].Remove(exitDoor);
                 DestroyImmediate(roomGO);
                 roomGO = null;
-
+            
                 // TODO : spawn a little cellule or something like this to hide the hole in the wall
                 //i--; // generation failed then continue
                 return;
@@ -150,10 +152,6 @@ public class MapGenerator : MonoBehaviour
             generationParameters.nbNormal -= doorsGenerator.doors.Count;
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
-        }
-        else
-        {
-            InstantiateLobby(out roomGO);
         }
     }
 

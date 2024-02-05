@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public enum DoorState : byte
@@ -18,7 +17,7 @@ public struct Door
         forward = transform.forward;
         localPosition = transform.position;
         rotation = transform.rotation.eulerAngles.y;
-        parentSkeleton = transform.gameObject.transform.parent.gameObject;
+        parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
     }
 
     public Vector3 forward;
@@ -90,11 +89,12 @@ public class DoorsGenerator : MonoBehaviour
 
     public void RemoveDoor(Door door)
     {
-        if (doors.Remove(door))
+        if (!doors.Remove(door))
         {
-            // TODO : close the room
+            Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+            return;
         }
 
-        Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+
     }
 }

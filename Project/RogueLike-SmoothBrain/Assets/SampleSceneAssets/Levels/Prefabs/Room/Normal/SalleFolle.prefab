@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5272071357790819674}
   - component: {fileID: 1880426063501147343}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 2401276659861361151}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.587998, y: 0, z: -10.46015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79,15 +79,15 @@ MonoBehaviour:
   - forward: {x: -0.0003551245, y: 0, z: 0.99999994}
     localPosition: {x: 2.4452004, y: 0, z: 10.4172}
     rotation: 0
-    parentSkeleton: {fileID: 2401276659861361151}
+    parentSkeleton: {fileID: 4048824606729199866}
   - forward: {x: -0.99999875, y: 0, z: -0.0015558004}
     localPosition: {x: -7.1512203, y: 0, z: -6.4291143}
     rotation: 270
-    parentSkeleton: {fileID: 2401276659861361151}
+    parentSkeleton: {fileID: 4048824606729199866}
   - forward: {x: -0.00034368035, y: 0, z: 0.99999994}
-    localPosition: {x: 1.5879982, y: 0, z: -10.46015}
-    rotation: 0
-    parentSkeleton: {fileID: 2401276659861361151}
+    localPosition: {x: 1.587998, y: 0, z: -10.46015}
+    rotation: 180
+    parentSkeleton: {fileID: 4048824606729199866}
   minMaxDoors: {x: 0, y: 0}
 --- !u!1 &2934580080079818883
 GameObject:
@@ -132,8 +132,7 @@ GameObject:
   - component: {fileID: 3448964186824969831}
   - component: {fileID: 4396305782743343368}
   - component: {fileID: 4612914019484776670}
-  - component: {fileID: 8736516256650749067}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +215,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -227,28 +226,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 14.589161, y: 2, z: 20.88212}
   m_Center: {x: 0.13708544, y: 1, z: -0.022089958}
---- !u!64 &8736516256650749067
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4048824606729199866}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: cdebd3232ed4e004cb2c406ace5aacec, type: 2}
 --- !u!1 &4107464693938377919
 GameObject:
   m_ObjectHideFlags: 0

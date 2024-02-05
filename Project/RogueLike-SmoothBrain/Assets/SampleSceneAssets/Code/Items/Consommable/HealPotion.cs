@@ -10,9 +10,14 @@ public class HealPotion : MonoBehaviour, IConsommable
     public float Price => price;
     public bool CanBeRetreived => canBeRetreived;
 
-    Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+    Hero player;
+    private void Start()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+    }
     public void OnRetreived()
     {
-        player.Stats.IncreaseValue(Stat.HP, healValue);
+        player.Stats.IncreaseValueClamp(Stat.HP, Stat.MAX_HP, healValue);
+        Destroy(this.gameObject);
     }
 }
