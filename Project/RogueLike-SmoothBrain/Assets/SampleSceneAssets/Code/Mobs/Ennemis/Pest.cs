@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Pest : Mobs, IAttacker, IDamageable, IMovable
+public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable
 {
 
     private IAttacker.AttackDelegate onAttack;
@@ -14,7 +14,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     [Header("Pest Parameters")]
-    [SerializeField, Range(0f, 360f)] private float angle = 120f;
+    [SerializeField, Range(0f, 360f)] private float angle = 120f; 
+    [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
     [SerializeField] private float movementDelay = 2f;
 
     protected override IEnumerator Brain()
@@ -22,6 +23,9 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable
         while (true)
         {
             yield return new WaitForSeconds(movementDelay);
+
+            if (!agent.enabled)
+                continue;
 
             Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                 .Select(x => x.GetComponent<Entity>())
@@ -83,6 +87,33 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable
     public void Death()
     {
         Destroy(gameObject);
+    }
+
+    public void GetKnockback(Vector3 force)
+    {
+        Debug.Log("Apply knockback " + force);
+        StartCoroutine(ApplyKnockback(force));
+    }
+
+    protected IEnumerator ApplyKnockback(Vector3 force)
+    {
+        yield return null;
+        agent.enabled = false;
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        rb.AddForce(force);
+
+        yield return new WaitForFixedUpdate();
+        yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
+        yield return new WaitForSeconds(0.25f);
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.useGravity = false;
+        rb.isKinematic = true;
+
+        agent.Warp(transform.position);
+        agent.enabled = true;
     }
 
     public void MoveTo(Vector3 posToMove)

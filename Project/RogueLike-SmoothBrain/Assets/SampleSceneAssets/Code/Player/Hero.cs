@@ -55,5 +55,11 @@ public class Hero : Entity, IDamageable, IAttacker
     {
         damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
         onAttack?.Invoke(damageable);
+
+        if (damageable is IKnockbackable)
+        {
+            Vector3 force = ((damageable as MonoBehaviour).transform.position - transform.position).normalized;
+            (damageable as IKnockbackable).GetKnockback(force * stats.GetValueStat(Stat.KNOCKBACK_COEFF));
+        }
     }
 }
