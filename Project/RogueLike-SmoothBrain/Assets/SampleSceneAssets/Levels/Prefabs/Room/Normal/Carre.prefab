@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 5707437431380096463}
   - component: {fileID: 8732442547390823218}
   - component: {fileID: 7997780260977488987}
-  - component: {fileID: 9127449127235767991}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +95,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -107,28 +106,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 11.728407, y: 2, z: 12.085949}
   m_Center: {x: -1.2664986, y: 1, z: 0.18328667}
---- !u!64 &9127449127235767991
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 263120911600839007}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: d6a759921bb09564f8ad746e54c4f162, type: 2}
 --- !u!1 &1056105403721990821
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6251894220857513055}
   - component: {fileID: 817264109780751764}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -284,19 +261,19 @@ MonoBehaviour:
   - forward: {x: 0, y: 0, z: -1}
     localPosition: {x: -1.2878325, y: 0, z: 6.2173185}
     rotation: 0
-    parentSkeleton: {fileID: 2798929761187211921}
-  - forward: {x: 1.0000001, y: 0, z: -0.00000011920929}
-    localPosition: {x: -7.115315, y: 0, z: 0.17434406}
+    parentSkeleton: {fileID: 263120911600839007}
+  - forward: {x: 1.0000001, y: 0, z: -0.0000001192093}
+    localPosition: {x: -7.115315, y: 0, z: 0.1743441}
     rotation: 270
-    parentSkeleton: {fileID: 2798929761187211921}
+    parentSkeleton: {fileID: 263120911600839007}
   - forward: {x: 0, y: 0, z: 1}
-    localPosition: {x: -1.2511115, y: 0, z: -5.8426723}
+    localPosition: {x: -1.251112, y: 0, z: -5.8426723}
     rotation: 180
-    parentSkeleton: {fileID: 2798929761187211921}
+    parentSkeleton: {fileID: 263120911600839007}
   - forward: {x: -1.0000001, y: 0, z: -0.00000011920929}
     localPosition: {x: 4.576371, y: 0, z: 0.20030206}
     rotation: 90
-    parentSkeleton: {fileID: 2798929761187211921}
+    parentSkeleton: {fileID: 263120911600839007}
   minMaxDoors: {x: 0, y: 0}
 --- !u!1 &4477510189689266862
 GameObject:

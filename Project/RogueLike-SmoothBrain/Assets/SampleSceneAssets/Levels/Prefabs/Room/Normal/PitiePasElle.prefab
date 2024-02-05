@@ -43,8 +43,7 @@ GameObject:
   - component: {fileID: 7346903292633103375}
   - component: {fileID: 3145822690464952311}
   - component: {fileID: 3226655300876344581}
-  - component: {fileID: 702987704486977862}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +126,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -138,28 +137,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 13.797688, y: 2, z: 15.509182}
   m_Center: {x: 0.25922608, y: 1, z: -0.005115032}
---- !u!64 &702987704486977862
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038846111267869902}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: f671d8b046d3cf14081f32b893afe2c5, type: 2}
 --- !u!1 &2162264163844875232
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,7 +353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8482262810497498086}
   - component: {fileID: 8334258939534963889}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -414,9 +391,9 @@ MonoBehaviour:
   - forward: {x: -0.9999947, y: 0, z: -0.0032606125}
     localPosition: {x: -6.6273603, y: 0, z: -0.014772087}
     rotation: 270
-    parentSkeleton: {fileID: 8557177173368201077}
+    parentSkeleton: {fileID: 1038846111267869902}
   - forward: {x: 0.9999996, y: 0, z: -0.00095033646}
     localPosition: {x: 7.154481, y: 0, z: -0.019951105}
     rotation: 90
-    parentSkeleton: {fileID: 8557177173368201077}
+    parentSkeleton: {fileID: 1038846111267869902}
   minMaxDoors: {x: 0, y: 0}
