@@ -8,6 +8,7 @@ public class Spear : MonoBehaviour
     Animator playerAnimator;
 
     [SerializeField] GameObject trailPf;
+    [SerializeField] BoxCollider spearThrowCollider;
     GameObject trail;
 
     Quaternion initLocalRotation;
@@ -69,20 +70,41 @@ public class Spear : MonoBehaviour
         this.gameObject.GetComponent<MeshRenderer>().enabled = false;
         trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
         posToReach = _posToReach;
-        trail.GetComponent<Rigidbody>().AddForce((posToReach - this.transform.position).normalized * 5000, ForceMode.Force);
+        Vector3 playerToPosToReachVec = (posToReach - this.transform.position);
+
+        trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * 5000, ForceMode.Force);
         RaycastHit[] hits = Physics.RaycastAll(this.transform.position, (posToReach - this.transform.position), (posToReach - this.transform.position).magnitude);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
             {
-                if(hit.collider.gameObject.TryGetComponent<IDamageable>(out var entity))
+                if (((1 << hit.collider.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
+                {
+                    posToReach = hit.point;
+                    playerToPosToReachVec = (posToReach - this.transform.position);
+                    break;
+                }
+            }
+        }
+
+        //offset so that the collide also takes the spear end spot
+        float collideOffset = 0.3f;
+        //construct collider in scene so that we can debug it
+        Vector3 scale = spearThrowCollider.transform.localScale;
+        scale.z = playerToPosToReachVec.magnitude;
+        spearThrowCollider.transform.localScale = scale;
+        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z/2f + collideOffset);
+
+         hits = spearThrowCollider.BoxCastAll();
+
+        if (hits.Length > 0)
+        {
+            foreach (var hit in hits)
+            {
+                if(hit.collider.gameObject.TryGetComponent<IDamageable>(out var entity) && hit.collider.gameObject != player.gameObject)
                 {
                     entity.ApplyDamage((int)player.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK));
                 }
-            }
-            if(((1 << hits.Last().collider.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
-            {
-                posToReach = hits.Last().point;
             }
         }
 
@@ -103,6 +125,38 @@ public class Spear : MonoBehaviour
         spearPosition = posToReach;
         posToReach = parent.transform.position;
         trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * 5000, ForceMode.Force);
+
+        //orient player in front of spear
+        float angle = player.AngleOffsetToFaceTarget(new Vector3(spearPosition.x, player.position.y, spearPosition.z));
+        if (angle != float.MaxValue)
+        {
+            Vector3 a = player.eulerAngles;
+            a.y += angle;
+            player.eulerAngles = a;
+            player.GetComponent<PlayerController>().CurrentTargetAngle = player.eulerAngles.y;
+        }
+
+        Vector3 playerToSpearVec = spearPosition - player.position;
+        //offset so that the collide also takes the spear end spot
+        float collideOffset = 0.3f;
+        //construct collider in scene so that we can debug it
+        Vector3 scale = spearThrowCollider.transform.localScale;
+        scale.z = playerToSpearVec.magnitude;
+        spearThrowCollider.transform.localScale = scale;
+        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
+
+        RaycastHit[] hits = spearThrowCollider.BoxCastAll();
+
+        if (hits.Length > 0)
+        {
+            foreach (var hit in hits)
+            {
+                if (hit.collider.gameObject.TryGetComponent<IDamageable>(out var entity) && hit.collider.gameObject != player.gameObject)
+                {
+                    entity.ApplyDamage((int)player.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK));
+                }
+            }
+        }
 
         IsThrown = false;
         IsThrowing = true;
