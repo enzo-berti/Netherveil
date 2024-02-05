@@ -29,4 +29,9 @@ public class VampireTooth : ItemEffect, IPassiveItem
             player.Stats.SetValue(Stat.HP, player.Stats.GetValueStat(Stat.MAX_HP));
         }
     }
+
+    public void OnRemove()
+    {
+        throw new System.NotImplementedException();
+    }
 }

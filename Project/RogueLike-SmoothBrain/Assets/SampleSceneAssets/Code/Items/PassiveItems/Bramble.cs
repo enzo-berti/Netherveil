@@ -5,6 +5,11 @@ public class Bramble : ItemEffect, IPassiveItem
 {
     private int attackStat = 2;
 
+    public void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
