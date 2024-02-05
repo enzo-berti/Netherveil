@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class RoomTool : EditorWindow 
+public class RoomToolWindow : EditorWindow 
 {
     string myString = "Hello World";
     bool groupEnabled;
@@ -12,7 +12,7 @@ public class RoomTool : EditorWindow
     [MenuItem("Tools/Room/Create")]
     public static void CreateRoom()
     {
-        EditorWindow.GetWindow(typeof(RoomTool));
+        EditorWindow.GetWindow(typeof(RoomToolWindow));
     }
 
     void OnGUI()
