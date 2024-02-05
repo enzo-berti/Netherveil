@@ -35,4 +35,9 @@ public class DamageText : MonoBehaviour
     {
         m_TextMeshPro.text = text;
     }
+
+    public void SetSize(int size)
+    {
+        m_TextMeshPro.fontSize = size;
+    }
 }
