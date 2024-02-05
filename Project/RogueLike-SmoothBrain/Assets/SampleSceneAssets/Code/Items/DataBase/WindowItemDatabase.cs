@@ -46,6 +46,8 @@ public class WindowItemDatabase : EditorWindow
         EditorGUILayout.LabelField("Rarity");
         EditorGUILayout.LabelField("Type");
         EditorGUILayout.LabelField("Description");
+        EditorGUILayout.LabelField("Material");
+        EditorGUILayout.LabelField("Mesh");
         EditorGUILayout.EndHorizontal();
 
         
@@ -58,7 +60,9 @@ public class WindowItemDatabase : EditorWindow
             EditorGUILayout.LabelField(item.idName.SeparateAllCase());
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier);
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type);
-            EditorGUILayout.TextField(item.Description, GUILayout.Height(100)) ;
+            item.Description = EditorGUILayout.TextArea(item.Description, GUILayout.Height(100));
+            item.mat = (Material)EditorGUILayout.ObjectField("", item.mat, typeof(Material), false);
+            item.mesh = (MeshFilter)EditorGUILayout.ObjectField("", item.mesh, typeof(MeshFilter), false);
             GUI.color = Color.red;
             if (GUILayout.Button("X", GUILayout.Width(50)))
             {
@@ -68,6 +72,8 @@ public class WindowItemDatabase : EditorWindow
             EditorGUILayout.EndHorizontal();
         }
         EditorGUILayout.EndScrollView();
+
+        EditorUtility.SetDirty(database);
     }
     void SearchInDatabase()
     {

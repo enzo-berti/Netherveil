@@ -12,9 +12,9 @@ namespace DialogueSystem.Editor
         public override Type type => typeof(ChoiceDialogueNode);
 
         public ChoiceDialogueNodeView(GraphView graphView)
-            : base("Assets/DialogueSystem/Scripts/Editor/UIBuilder/ChoiceDialogueNodeView.uxml", graphView)
+            : base("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/ChoiceDialogueNodeView.uxml", graphView)
         {
-            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/DialogueSystem/Scripts/Editor/UIBuilder/ChoiceDialogueNodeView.uss"));
+            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/ChoiceDialogueNodeView.uss"));
             AddPort(Direction.Input, Port.Capacity.Single, "previous dialogue");
             title = "Choices Dialogue";
 

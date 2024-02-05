@@ -12,9 +12,9 @@ namespace DialogueSystem.Editor
         public override Type type => typeof(RootNode);
 
         public RootNodeView(GraphView graphView) 
-            : base("Assets/DialogueSystem/Scripts/Editor/UIBuilder/RootNodeView.uxml", graphView)
+            : base("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/RootNodeView.uxml", graphView)
         {
-            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/DialogueSystem/Scripts/Editor/UIBuilder/RootNodeView.uss"));
+            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/RootNodeView.uss"));
 
             title = "Root";
             AddPort(Direction.Output, Port.Capacity.Single, "next dialogue");

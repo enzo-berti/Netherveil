@@ -11,9 +11,9 @@ namespace DialogueSystem.Editor
         public override Type type => typeof(SimpleDialogueNode);
 
         public SimpleDialogueNodeView(GraphView graphView)
-            : base("Assets/DialogueSystem/Scripts/Editor/UIBuilder/SimpleDialogueNodeView.uxml", graphView)
+            : base("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/SimpleDialogueNodeView.uxml", graphView)
         {
-            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/DialogueSystem/Scripts/Editor/UIBuilder/SimpleDialogueNodeView.uss"));
+            styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/SimpleDialogueNodeView.uss"));
             AddPort(Direction.Input, Port.Capacity.Single, "previous dialogue");
             AddPort(Direction.Output, Port.Capacity.Single, "next dialogue");
             title = "Simple Dialogue";

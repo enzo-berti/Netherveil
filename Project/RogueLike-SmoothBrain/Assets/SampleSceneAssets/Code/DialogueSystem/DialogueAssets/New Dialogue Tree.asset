@@ -1,21 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6602613173296481142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
-  m_Name: RootNode
-  m_EditorClassIdentifier: 
-  GUID: 16bf7539-f987-42ca-afc0-33b876a08513
-  position: {x: 88, y: 88}
-  child: {fileID: 8863725352213828248}
---- !u!114 &-6107709589673068042
+--- !u!114 &-6946469951116884061
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -28,66 +13,10 @@ MonoBehaviour:
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
   GUID: d1218d61-0869-4ff8-b17e-d2046bcdd2ca
-  position: {x: 802, y: 72}
+  position: {x: 826, y: 96}
   dialogueData: {fileID: 11400000, guid: 24347ac374557fb46a132462ddc6b102, type: 2}
   child: {fileID: 0}
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
-  m_Name: New Dialogue Tree
-  m_EditorClassIdentifier: 
-  root: {fileID: -6602613173296481142}
-  nodes:
-  - {fileID: -6602613173296481142}
-  - {fileID: 8863725352213828248}
-  - {fileID: 2518231415651575592}
-  - {fileID: 5512313863272518346}
-  - {fileID: -6107709589673068042}
-  currentNode: {fileID: 0}
---- !u!114 &2518231415651575592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
-  m_Name: ChoiceDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 06741823-4197-45de-b805-f72ab5194c47
-  position: {x: 494, y: 96}
-  dialogueData: {fileID: 11400000, guid: e97e259a2a16419479b030e7c7d61fa4, type: 2}
-  options:
-  - option: "Je veux parler \xE0 Enzo"
-    child: {fileID: -6107709589673068042}
-  - option: "Perso je pr\xE9f\xE8re kevin"
-    child: {fileID: 5512313863272518346}
---- !u!114 &5512313863272518346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 19fecbbc-c916-47d7-90bf-cd00e71c9ac2
-  position: {x: 803, y: 167}
-  dialogueData: {fileID: 11400000, guid: 3e91c16b5b2abf04ea267211d3894ae4, type: 2}
-  child: {fileID: 0}
---- !u!114 &8863725352213828248
+--- !u!114 &-6254104211818528436
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,6 +29,77 @@ MonoBehaviour:
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
   GUID: 213a1a6f-dfef-425c-88ea-db13d4e7fd24
-  position: {x: 205, y: 96}
+  position: {x: 229, y: 120}
   dialogueData: {fileID: 11400000, guid: e40f6dca5a371c54e8ec1d6081eaa9d8, type: 2}
-  child: {fileID: 2518231415651575592}
+  child: {fileID: -5580022051435959303}
+--- !u!114 &-5712985188344265122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  GUID: 16bf7539-f987-42ca-afc0-33b876a08513
+  position: {x: 112, y: 112}
+  child: {fileID: -6254104211818528436}
+--- !u!114 &-5580022051435959303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 06741823-4197-45de-b805-f72ab5194c47
+  position: {x: 518, y: 120}
+  dialogueData: {fileID: 11400000, guid: e97e259a2a16419479b030e7c7d61fa4, type: 2}
+  options:
+  - option: "Je veux parler \xE0 Enzo"
+    child: {fileID: -6946469951116884061}
+  - option: "Perso je pr\xE9f\xE8re kevin"
+    child: {fileID: 3529250034675238811}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
+  m_Name: New Dialogue Tree
+  m_EditorClassIdentifier: 
+  root: {fileID: -5712985188344265122}
+  nodes:
+  - {fileID: -5712985188344265122}
+  - {fileID: -6254104211818528436}
+  - {fileID: -5580022051435959303}
+  - {fileID: -6946469951116884061}
+  - {fileID: 3529250034675238811}
+  currentNode: {fileID: 0}
+--- !u!114 &3529250034675238811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
+  m_Name: SimpleDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 19fecbbc-c916-47d7-90bf-cd00e71c9ac2
+  position: {x: 827, y: 191}
+  dialogueData: {fileID: 11400000, guid: 3e91c16b5b2abf04ea267211d3894ae4, type: 2}
+  child: {fileID: 0}

@@ -60,6 +60,36 @@ public class Stats
             Debug.LogWarning($"Can't find {info} in {name}");
     }
 
+    public void DecreaseValue(Stat info, float decreasingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+            stats[index].value -= decreasingValue;
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
+
+    public void MultiplyValue(Stat info, float multiplyingValue) 
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+            stats[index].value *= multiplyingValue;
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
+
+    public void DivideValue(Stat info, float dividingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+            stats[index].value /= dividingValue;
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
+
     public void SetValue(Stat info, float value)
     {
         int index = stats.FindIndex(x => x.stat == info);

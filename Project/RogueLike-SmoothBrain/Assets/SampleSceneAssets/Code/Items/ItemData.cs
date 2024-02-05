@@ -19,5 +19,7 @@ public class ItemData
     public Rarity RarityTier;
     public ItemType Type;
     public string idName;
+    public Material mat;
+    public MeshFilter mesh;
     [Multiline] public string Description;
 }   
