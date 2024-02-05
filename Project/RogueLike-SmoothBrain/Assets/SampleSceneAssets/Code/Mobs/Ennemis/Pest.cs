@@ -101,7 +101,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable
         agent.enabled = false;
         rb.useGravity = true;
         rb.isKinematic = false;
-        rb.AddForce(force);
+        rb.AddForce(force, ForceMode.Impulse);
 
         yield return new WaitForFixedUpdate();
         yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
