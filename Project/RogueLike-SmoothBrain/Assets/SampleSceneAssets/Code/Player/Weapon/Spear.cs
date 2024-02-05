@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class Spear : MonoBehaviour
@@ -67,10 +68,14 @@ public class Spear : MonoBehaviour
         {
             foreach (var hit in hits)
             {
-                if(hit.collider.gameObject.TryGetComponent<IDamageable>(out _))
-                    Debug.Log($"damage on {hit.collider.name}");
-                //else if (hit.collider.gameObject.layer == LayerMask.GetMask("Map")) 
-                //    trail.
+                if(hit.collider.gameObject.TryGetComponent<IDamageable>(out var entity))
+                {
+                    entity.ApplyDamage((int)player.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK));
+                }
+            }
+            if(((1 << hits.Last().collider.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
+            {
+                posToReach = hits.Last().point;
             }
         }
 
