@@ -3,6 +3,12 @@ public class MonsterHeart : ItemEffect, IPassiveItem
 {
     private int maxLifeStat = 10;
     private int corruptionStat = 2;
+
+    public void OnRemove()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();

@@ -10,6 +10,7 @@ public class WindowItemDatabase : EditorWindow
     List<ItemData> searchItems = new List<ItemData>();
     Vector2 scrollPos = Vector2.zero;
     string search = "";
+    const int SizeArea = 100;
 
     [MenuItem("Tools/ItemDatabase")]
     public static void OpenWindow()
@@ -42,10 +43,12 @@ public class WindowItemDatabase : EditorWindow
         EditorGUILayout.EndHorizontal();
         // Infos
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Id_Name");
-        EditorGUILayout.LabelField("Rarity");
-        EditorGUILayout.LabelField("Type");
-        EditorGUILayout.LabelField("Description");
+        EditorGUILayout.LabelField("Id_Name", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Rarity", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Type", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Description", GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Material", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Mesh", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true)) ;
         EditorGUILayout.EndHorizontal();
 
         
@@ -55,10 +58,12 @@ public class WindowItemDatabase : EditorWindow
             ItemData item = searchItems[i];
 
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
-            EditorGUILayout.LabelField(item.idName.SeparateAllCase());
-            item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier);
-            item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type);
-            item.Description = EditorGUILayout.TextField(item.Description, GUILayout.Height(100));
+            EditorGUILayout.LabelField(item.idName.SeparateAllCase(), GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            item.Description = EditorGUILayout.TextArea(item.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
+            item.mat = (Material)EditorGUILayout.ObjectField("", item.mat, typeof(Material), false, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            item.mesh = (Mesh)EditorGUILayout.ObjectField("", item.mesh, typeof(Mesh), false, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             GUI.color = Color.red;
             if (GUILayout.Button("X", GUILayout.Width(50)))
             {
@@ -68,6 +73,8 @@ public class WindowItemDatabase : EditorWindow
             EditorGUILayout.EndHorizontal();
         }
         EditorGUILayout.EndScrollView();
+
+        EditorUtility.SetDirty(database);
     }
     void SearchInDatabase()
     {

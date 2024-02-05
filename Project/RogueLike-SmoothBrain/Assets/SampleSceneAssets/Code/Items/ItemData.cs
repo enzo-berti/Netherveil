@@ -20,5 +20,6 @@ public class ItemData
     public ItemType Type;
     public string idName;
     public Material mat;
+    public Mesh mesh;
     [Multiline] public string Description;
 }   

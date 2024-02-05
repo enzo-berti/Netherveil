@@ -4,6 +4,11 @@ public class GoldEmeraldRing : ItemEffect, IPassiveItem
 {
     private int attackStat = 2;
 
+    public void OnRemove()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
