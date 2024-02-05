@@ -69,40 +69,12 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (Selection.activeGameObject != gameObject)
-        //    return;
+        if (Selection.activeGameObject != gameObject)
+            return;
 
-        Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
-            .Select(x => x.GetComponent<Entity>())
-            .Where(x => x != null && x != this)
-            .ToArray();
-
-        Handles.color = new Color(1, 0, 0, 0.25f);
-        if (entities.Length != 0)
-        {
-            Handles.color = new Color(0, 1, 0, 0.25f);
-        }
-
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, angle / 2f, range);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -angle / 2f, range);
-
-        Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, range);
-
-        // Debug text
-        Handles.Label(
-        transform.position + transform.up * 2,
-            "Tank" +
-            "\n - Health : " + stats.GetValueStat(Stat.HP) +
-            "\n - Speed : " + stats.GetValueStat(Stat.SPEED),
-            new GUIStyle()
-            {
-                alignment = TextAnchor.MiddleLeft,
-                normal = new GUIStyleState()
-                {
-                    textColor = Color.white,
-                }
-            });
+        DisplayVisionRange(angle);
+        DisplayAttackRange(angle);
+        DisplayInfos();
     }
 #endif
 }

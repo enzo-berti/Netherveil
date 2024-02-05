@@ -5,6 +5,7 @@ public class Spear : MonoBehaviour
 {
     Transform player;
     Transform parent = null;
+    Animator playerAnimator;
 
     [SerializeField] GameObject trailPf;
     GameObject trail;
@@ -24,10 +25,14 @@ public class Spear : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
+        playerAnimator = player.GetComponent<Animator>();
     }
 
     void Update()
     {
+        playerAnimator.SetBool("SpearThrowing", IsThrowing);
+        playerAnimator.SetBool("SpearThrown", IsThrown);
+
         if (trail == null)
         {
             return;
@@ -40,6 +45,7 @@ public class Spear : MonoBehaviour
             this.gameObject.transform.position = posToReach;
             this.gameObject.transform.rotation = Quaternion.identity * Quaternion.Euler(90,0,0);
             IsThrowing = false;
+            player.GetComponent<Hero>().State = (int)Entity.EntityState.MOVE;
         }
         else if(!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
         {
@@ -54,6 +60,7 @@ public class Spear : MonoBehaviour
             this.gameObject.GetComponent<MeshRenderer>().enabled = true;
             IsThrowing = false;
             Destroy(trail);
+            player.GetComponent<Hero>().State = (int)Entity.EntityState.MOVE;
         }
     }
 
@@ -85,7 +92,7 @@ public class Spear : MonoBehaviour
 
         IsThrown = true;
         IsThrowing = true;
-
+        player.GetComponent<Hero>().State = (int)Entity.EntityState.ATTACK;
     }
 
     public void Return()
@@ -99,5 +106,6 @@ public class Spear : MonoBehaviour
 
         IsThrown = false;
         IsThrowing = true;
+        player.GetComponent<Hero>().State = (int)Entity.EntityState.ATTACK;
     }
 }

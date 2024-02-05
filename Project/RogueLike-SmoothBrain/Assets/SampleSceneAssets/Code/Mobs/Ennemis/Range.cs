@@ -1,22 +1,18 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 public class Range : Mobs, IDamageable, IAttacker, IMovable
 {
-    private new enum State
+    private enum RangeState
     {
-        MOVE,
-        ATTACK,
-        HIT,
-        DEAD,
+        WANDERING,
         TRIGGERED,
-        FLEEING,
-        WANDERING
+        STAGGERED,
+        CHARGING
     }
 
     private IAttacker.HitDelegate onHit;
@@ -26,6 +22,14 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
 
     [Header("Range Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
+    [SerializeField, Min(0)] private float staggerDuration;
+
+    private bool isFighting = false;
+    private RangeState state;
+    Vector3 lastKnownPlayerPos;
+
+    private float staggerImmunity;
+    private float staggerTimer;
 
     protected override IEnumerator Brain()
     {
@@ -33,7 +37,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         {
             yield return null;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                 .Select(x => x.GetComponent<Entity>())
                 .Where(x => x != null && x != this)
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -50,43 +54,38 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                 .ToArray();
 
+
             // Si le joueur est détecté 
             if (player)
             {
+                isFighting = true;
+                lastKnownPlayerPos = player.transform.position;
+
                 // Si un tank est à proximité
                 if (tanks.Any())
                 {
-                    {
-                        Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
+                    Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
 
-                        playerTankVector.Normalize();
-                        Vector3 targetPos = player.transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
+                    playerTankVector.Normalize();
+                    Vector3 targetPos = player.transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
 
-                        MoveTo(targetPos);
-                    }
+                    MoveTo(targetPos);
                 }
                 else
                 {
                     MoveTo(player.transform.position);
                 }
             }
+            else if (isFighting)
+            {
+                MoveTo(lastKnownPlayerPos);
+                if (!agent.hasPath)
+                {
+                    isFighting = false;
+                }
+            }
 
-            //if (player)
-            //{
-            //    // Player detect
-            //    MoveTo(player.transform.position);
-            //}
-            //else if (tanks.Any())
-            //{
-            //    // Other pest detect
-            //    MoveTo(tanks.First().transform.position);
-            //}
-            //else
-            //{
-            //    // Random movement
-            //    Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
-            //    //MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
-            //}
+            UpdateStates();
         }
     }
 
@@ -97,6 +96,17 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         if (stats.GetValueStat(Stat.HP) <= 0)
         {
             Death();
+        }
+    }
+    void UpdateStates()
+    {
+        if (isFighting)
+        {
+            state = RangeState.TRIGGERED;
+        }
+        else
+        {
+            state = RangeState.WANDERING;
         }
     }
 
@@ -117,18 +127,20 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         agent.SetDestination(posToMove);
     }
 
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (Selection.activeGameObject != gameObject)
-        //    return;
+        if (Selection.activeGameObject != gameObject)
+            return;
 
-        DisplayVisionRange(angle);
-        DisplayAttackRange(angle);
+        DisplayVisionRange(isFighting ? 360 : angle);
+        DisplayAttackRange(isFighting ? 360 : angle);
         DisplayInfos();
     }
 #endif
 }
+
 
 // Quand dans zone de trigger, approche le joueur
 // Quand en range, l'attaque
