@@ -7,7 +7,6 @@ using UnityEditor;
 
 public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable
 {
-
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
