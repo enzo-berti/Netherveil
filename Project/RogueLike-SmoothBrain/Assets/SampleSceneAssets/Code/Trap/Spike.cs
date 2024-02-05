@@ -87,4 +87,9 @@ public class Spike : MonoBehaviour
         }
         isOut = false;
     }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
 }
