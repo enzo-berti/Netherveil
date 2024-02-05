@@ -1,132 +1,114 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Collections;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 public class ExplodingBomb : MonoBehaviour
 {
-    public enum States
-    {
-        IN_MAP,
-        DROPED_ON_ENTITY_DEATH,
-        THROW_BY_ENTITY
-    }
-
     [Header("Bomb Parameter")]
-    public States state;
-    public float timeBeforExplode;
-    public float blastRadius;
-    public bool active;
-    public bool canDealDamageToThrower;
-    public int blastDamage;
-    public LayerMask damageLayer;
-
-    private Vector3 startPos;
-    private Vector3 endPos;
-    private GameObject authorOfTheBombe;
-    List<IDamageable> entitiesToDealDamage;
-
-    private void Awake()
-    {
-        startPos = transform.position;
-        entitiesToDealDamage = new List<IDamageable>();
-    }
+    [SerializeField] private bool activateOnAwake;
+    [SerializeField] private float timerBeforeExplode;
+    [SerializeField] private float blastRadius;
+    [SerializeField] private int blastDamage;
+    [SerializeField] private LayerMask damageLayer;
+    [SerializeField] private float throwHeight = 5f;
+    private bool isActive;
+    private bool isMoving => throwCoroutine != null;
+    private float elapsedExplosionTime;
+    private Coroutine throwCoroutine;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
 
     private void Start()
     {
-        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        switch (state)
-        {
-            case States.IN_MAP:
-                endPos = startPos;
-                active = false;
-                break;
-            case States.DROPED_ON_ENTITY_DEATH:
-                endPos = startPos;
-                active = true;
-                break;
-            case States.THROW_BY_ENTITY:
-                endPos = player.transform.position;
-                active = true;
-                break;
-            default:
-                break;
-        }
-    }
+        startPosition = transform.position;
+        endPosition = transform.position;
 
-    public void SetBombDestination(Vector3 _pos)
-    {
-        endPos = _pos;
-    }
-
-    public void SetBombAuthor(GameObject _gameObject)
-    {
-        authorOfTheBombe = _gameObject;
+        if (activateOnAwake)
+            Activate();
     }
 
     void Update()
     {
-        if (active)
-        {
+        if (isActive)
             UpdateTimerExplotion();
+    }
+
+    public void ThrowTo(Vector3 endPosition, float totalTime = 1f)
+    {
+        if (throwCoroutine != null)
+            return;
+
+        this.endPosition = endPosition;
+        throwCoroutine = StartCoroutine(LerpPositionUpdate(endPosition, totalTime));
+    }
+
+    private IEnumerator LerpPositionUpdate(Vector3 endPosition, float totalTime)
+    {
+        float elapsedTimePosition = 0f;
+
+        while (transform.position != endPosition)
+        {
+            elapsedTimePosition = Mathf.Clamp(elapsedTimePosition + Time.deltaTime, 0f, totalTime);
+            transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTimePosition / totalTime) + Vector3.up * Mathf.Lerp(0f, throwHeight, elapsedTimePosition / totalTime) * Mathf.Sin(elapsedTimePosition / totalTime * Mathf.PI);
+            yield return null;
         }
+        transform.position = endPosition;
+        Activate();
     }
 
     void UpdateTimerExplotion()
     {
-        if (timeBeforExplode > 0)
-        {
-            timeBeforExplode -= Time.deltaTime;
-        }
-        else
-        {
-            ApplyDamage();
-            Destroy(gameObject);
-        }
+        if (elapsedExplosionTime + timerBeforeExplode < Time.time)
+            Explode();
     }
 
-    void FillEntitiesList(Collider[] _hitColliders)
+    public void Activate()
     {
-        foreach (var hitCollider in _hitColliders)
-        {
-            IDamageable damageable = hitCollider.GetComponent<IDamageable>();
-            if (damageable != null)
-            {
-                if (canDealDamageToThrower)
-                {
-                    entitiesToDealDamage.Add(hitCollider.gameObject.GetComponent<IDamageable>());
-                }
-                else
-                {
-                    if (hitCollider.gameObject != authorOfTheBombe)
-                    {
-                        entitiesToDealDamage.Add(hitCollider.gameObject.GetComponent<IDamageable>());
-                    }
-                }
-            }
-        }
+        isActive = true;
+        elapsedExplosionTime = Time.time;
     }
 
-    void ApplyDamage()
+    public void Explode()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position,blastRadius, damageLayer);
-        FillEntitiesList(hitColliders);
-        entitiesToDealDamage.ForEach(actualEntity => { actualEntity.ApplyDamage(blastDamage); });
-    }
+        Physics.OverlapSphere(transform.position, blastRadius, damageLayer)
+            .Select(entity => entity.GetComponent<IBlastable>())
+            .Where(entity => entity != null)
+            .ToList()
+            .ForEach(currentEntity => { 
+                currentEntity.ApplyDamage(blastDamage); 
+            });
 
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (active)
-        {
-            Handles.color = new Color(1,0,0,0.5f);
-            Handles.DrawSolidDisc(endPos, Vector3.up, blastRadius);
-        }
+        Destroy(gameObject);
     }
-#endif
 
     private void OnDisable()
     {
         StopAllCoroutines();
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (isActive || isMoving)
+        {
+            Handles.color = new Color(1, 0, 0, 0.25f);
+            Handles.DrawWireDisc(endPosition, Vector3.up, blastRadius);
+
+            Handles.color = Color.white;
+            Handles.Label(transform.position + Vector3.up,
+                $"Bomb" +
+                $"\nActivate : {isActive}" +
+                $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
+        }
+        else
+        {
+            Handles.color = Color.white;
+            Handles.Label(transform.position + Vector3.up,
+                $"Bomb" +
+                $"\nActivate : {isActive}");
+        }
+    }
+#endif
 }
