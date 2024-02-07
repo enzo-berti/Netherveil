@@ -1,29 +1,30 @@
 using System;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
 public class InputDeviceManager : MonoBehaviour
 {
-    //encore à modifier pour trigger les events aussi quand on déconnecte/connecte un device?
+    //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi
+    [SerializeField] TMP_Text debugText;
+    InputDevice currentDevice = null;
     InputDevice lastUsedDevice = null;
-    public static event Action OnChangedToController;
+    public static event Action OnChangedToGamepad;
     public static event Action OnChangedToKB;
     void Start()
     {
-        // Subscribe to control scheme change event
         InputSystem.onEvent += OnInputSystemEvent;
-
-        // Initially check the current control scheme
-        //UpdateControlScheme();
         InputSystem.onDeviceChange += OnInputSystemDeviceChange;
     }
 
     void OnInputSystemEvent(InputEventPtr eventPtr, InputDevice device)
     {
-        if (lastUsedDevice == device)
+        if (IsSameDevice(device))
+        {
             return;
+        }
 
         // Some devices like to spam events like crazy.
         // Example: PS4 controller on PC keeps triggering events without meaningful change.
@@ -36,35 +37,56 @@ public class InputDeviceManager : MonoBehaviour
                 return;
         }
 
+        lastUsedDevice = currentDevice;
+        currentDevice = device;
 
-        lastUsedDevice = device;
-        if(lastUsedDevice is Gamepad)
-        {
-            //Debug.Log(lastUsedDevice);
-            OnChangedToController?.Invoke();
-        }
-        else
-        {
-            Debug.Log("TEST");
-            OnChangedToKB?.Invoke();
-        }
+        CallChangeEvents();
     }
 
     void OnInputSystemDeviceChange(InputDevice device, InputDeviceChange change)
     {
-        if (lastUsedDevice == device)
-            return;
-
-        lastUsedDevice = device;
-
-        if (lastUsedDevice is Gamepad)
+        if (change == InputDeviceChange.Removed || change == InputDeviceChange.Disconnected || change == InputDeviceChange.Disabled)
         {
-            //Debug.Log(lastUsedDevice);
-            OnChangedToController?.Invoke();
+            currentDevice = lastUsedDevice;
+        }
+        else if (IsSameDevice(device))
+        {
+            return;
         }
         else
         {
-            Debug.Log("TEST");
+           lastUsedDevice = currentDevice;
+            currentDevice = device;
+        }
+
+        CallChangeEvents();
+    }
+
+    bool IsSameDevice(InputDevice device)
+    {
+        return currentDevice == device || (device is Keyboard && currentDevice is Mouse) || (device is Mouse && currentDevice is Keyboard);
+    }
+
+    void CallChangeEvents()
+    {
+        if (currentDevice is Gamepad)
+        {
+            if(debugText != null)
+            {
+                debugText.SetText("GAMEPAD");
+            }
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            OnChangedToGamepad?.Invoke();
+        }
+        else
+        {
+            if (debugText != null)
+            {
+                debugText.SetText("KB");
+            }
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
             OnChangedToKB?.Invoke();
         }
     }
