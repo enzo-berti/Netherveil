@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -27,7 +26,6 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 
     private bool isFighting = false;
     private RangeState state;
-    Vector3 lastKnownPlayerPos;
 
     private float fleeTimer;
     private bool isFleeing;
@@ -53,53 +51,62 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                 .Where(x => x != null)
                 .FirstOrDefault();
 
-            Tank[] tanks = PhysicsExtensions.OverlapVisionCone(transform.position, 360, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            Tank[] tanks = entities
                 .Select(x => x.GetComponent<Tank>())
                 .Where(x => x != null)
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                 .ToArray();
 
-            if (fleeTimer > 0)
-            {
-                fleeTimer -= Time.deltaTime;
-            }
-            else
-            {
-                fleeTimer = 0;
-            }
+            // Update timer fuite
+            fleeTimer = fleeTimer > 0 ? fleeTimer -= Time.deltaTime : 0;
 
             if (player)
             {
                 isFighting = true;
 
-                if (Vector3.Distance(transform.position, player.transform.position) < (int)Stat.ATK_RANGE / 2f && fleeTimer == 0f)
+                if (!isFleeing) MoveTo(player.transform.position);
+
+                // si le joueur est trop près et que la fuite est dispo
+                if (Vector3.Distance(transform.position, player.transform.position) < (int)stats.GetValueStat(Stat.ATK_RANGE) / 2f && fleeTimer == 0f)
                 {
                     isFleeing = true;
-                    fleeTarget = player.transform.position - transform.position;
-                    fleeTarget.Normalize();
-                    fleeTarget = player.transform.position + fleeTarget * (int)stats.GetValueStat(Stat.ATK_RANGE);
-                }
+                    fleeTimer = 4f;
 
-                lastKnownPlayerPos = player.transform.position;
+                    // si tanks à proximité
+                    if (tanks.Any() && Vector3.Distance(player.transform.position, tanks.First().transform.position) + 2f < stats.GetValueStat(Stat.VISION_RANGE))
+                    {
+                        Vector3 playerToTankVector = tanks.First().transform.position - player.transform.position;
+                        playerToTankVector.Normalize();
+
+                        fleeTarget = tanks.First().transform.position + playerToTankVector * 2f;
+                    }
+                    else
+                    {
+                        Vector3 playerToEnemyVector = transform.position - player.transform.position;
+                        playerToEnemyVector.Normalize();
+
+                        fleeTarget = player.transform.position + playerToEnemyVector * (int)stats.GetValueStat(Stat.ATK_RANGE);
+                    }
+
+                    MoveTo(fleeTarget);
+                }
             }
-            else if (isFighting)
+
+            if (!agent.hasPath)
             {
-                MoveTo(lastKnownPlayerPos);
-                if (!agent.hasPath)
+                if (isFleeing)
+                {
+                    isFleeing = false;
+                }
+                else if (isFighting)
                 {
                     isFighting = false;
                 }
             }
 
-            if (isFleeing)
-            {
-
-            }
-
             UpdateStates();
         }
     }
-
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value);
