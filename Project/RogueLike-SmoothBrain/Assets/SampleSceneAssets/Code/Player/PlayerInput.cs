@@ -159,7 +159,7 @@ public class PlayerInput : MonoBehaviour
         }
 
         //rotate the player to mouse's direction if playing KB/mouse
-        if (Gamepad.all.Count == 0)
+        if (InputDeviceManager.Instance.IsPlayingKB())
         {
             MouseOrientation();
         }
@@ -223,7 +223,7 @@ public class PlayerInput : MonoBehaviour
     public void ThrowSpear()
     {
         //rotate the player to mouse's direction if playing KB/mouse
-        if (Gamepad.all.Count == 0)
+        if (InputDeviceManager.Instance.IsPlayingKB())
         {
             MouseOrientation();
         }

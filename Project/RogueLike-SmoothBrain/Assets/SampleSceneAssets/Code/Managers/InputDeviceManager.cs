@@ -11,10 +11,10 @@ public class InputDeviceManager : MonoBehaviour
     [SerializeField] TMP_Text debugText;
     InputDevice currentDevice = null;
     InputDevice lastUsedDevice = null;
+    static private InputDeviceManager instance;
     public static event Action OnChangedToGamepad;
     public static event Action OnChangedToKB;
 
-    static private InputDeviceManager instance;
     static public InputDeviceManager Instance
     {
         get
@@ -37,8 +37,8 @@ public class InputDeviceManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-    }
 
+    }
 
     void Start()
     {
@@ -112,9 +112,15 @@ public class InputDeviceManager : MonoBehaviour
             {
                 debugText.SetText("KB");
             }
-            Cursor.lockState = CursorLockMode.Confined;
+            //should be confined here but for debug reasons we'll put None
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             OnChangedToKB?.Invoke();
         }
+    }
+
+    public bool IsPlayingKB()
+    {
+        return currentDevice is not Gamepad;
     }
 }
