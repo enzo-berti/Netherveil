@@ -13,6 +13,33 @@ public class InputDeviceManager : MonoBehaviour
     InputDevice lastUsedDevice = null;
     public static event Action OnChangedToGamepad;
     public static event Action OnChangedToKB;
+
+    static private InputDeviceManager instance;
+    static public InputDeviceManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                GameObject obj = new GameObject(typeof(InputDeviceManager).Name);
+                instance = obj.AddComponent<InputDeviceManager>();
+                DontDestroyOnLoad(obj);
+            }
+
+            return instance;
+        }
+    }
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+
     void Start()
     {
         InputSystem.onEvent += OnInputSystemEvent;
