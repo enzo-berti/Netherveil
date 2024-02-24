@@ -186,6 +186,25 @@ public class PlayerInput : MonoBehaviour
 
     void MouseOrientation()
     {
+        // petite proposition de code utilisant 0 planeOfDoom, layer et GO :lobsterPraise:
+
+        //Plane plane = new Plane(Vector3.up, 0f); // le foutre dans la class à la place de le créer h24
+        //plane.SetNormalAndPosition(Vector3.up, new Vector3(0f, -2.8f, 0f)); // même idée à mettre dans awake
+        //
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //if (plane.Raycast(ray, out float enter))
+        //{
+        //    Vector3 hitPoint = ray.GetPoint(enter);
+        //    float angle = transform.AngleOffsetToFaceTarget(new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z));
+        //    if (angle != float.MaxValue)
+        //    {
+        //        Vector3 a = transform.eulerAngles;
+        //        a.y += angle;
+        //        transform.eulerAngles = a;
+        //        GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
+        //    }
+        //}
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, float.MaxValue, LayerMask.GetMask("RaycastGround")))
         {
