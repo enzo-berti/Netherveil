@@ -11,22 +11,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private MeshButton[] meshButtons;
     [SerializeField] private TMP_Text[] floatingTexts;
 
-    public void PlayGame()
-    {
-        if (Camera.main.GetComponent<CinemachineBrain>().IsBlending) return;
-        StartCoroutine(EventEnumerator(LoadGame));
-    }
-
-    public IEnumerator EventEnumerator(Action eventMethod)
-    {
-        yield return new WaitForEndOfFrame();
-        CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
-        yield return new WaitWhile(() => brain.IsBlending);
-
-        eventMethod?.Invoke();
-    }
-
-    public void LoadGame()
+    public void StartGame()
     {
         // TODO : Scene loader
         //SceneManager.LoadSceneAsync();
@@ -43,5 +28,32 @@ public class MainMenu : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void FadeFloatingTexts(bool fadeIn)
+    {
+        StartCoroutine(FadeFloatingText(fadeIn));
+    }
+
+    private IEnumerator FadeFloatingText(bool fadeIn)
+    {
+        float elapsed = 0;
+        float time = 0.5f;
+
+        while (elapsed < time)
+        {
+            yield return null;
+            elapsed = Mathf.Clamp(elapsed + Time.deltaTime, 0, time);
+
+            foreach (TMP_Text textMesh in floatingTexts)
+            {
+                textMesh.alpha = fadeIn ? elapsed / time : 1f - elapsed / time;
+            }
+        }
+
+        foreach (TMP_Text textMesh in floatingTexts)
+        {
+            textMesh.alpha = fadeIn ? 1f : 0f;
+        }
     }
 }
