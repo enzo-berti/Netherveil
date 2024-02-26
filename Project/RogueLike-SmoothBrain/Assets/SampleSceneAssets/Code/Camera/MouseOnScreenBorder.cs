@@ -6,10 +6,13 @@ public class MouseOnScreenBorder : MonoBehaviour
     private Vector3 currentVelocity = Vector3.zero;
     private float smoothTime = 0.5f; 
     private Transform playerTransform;
+    private PlayerController playerController;
+
 
     void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        playerController = playerTransform.gameObject.GetComponent<PlayerController>();
     }
 
     void FixedUpdate()
@@ -49,6 +52,13 @@ public class MouseOnScreenBorder : MonoBehaviour
 
     private void ChangeOffsetPos()
     {
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+        if (targetPosition != playerTransform.position && playerController.Direction == Vector2.zero)
+        {
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+        }
+        else
+        {
+            transform.position = playerTransform.position;
+        }
     }
 }
