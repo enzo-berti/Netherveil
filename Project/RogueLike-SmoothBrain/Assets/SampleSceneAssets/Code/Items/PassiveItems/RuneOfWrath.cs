@@ -6,7 +6,8 @@ public class RuneOfWrath : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.ATK_COEFF, AttackCoeffStat);
     }
 
     public override void OnRetrieved()

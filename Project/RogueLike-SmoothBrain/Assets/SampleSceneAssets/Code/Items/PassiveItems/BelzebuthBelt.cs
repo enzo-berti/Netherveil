@@ -7,7 +7,9 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.CRIT_RATE, critRateStat);
+        player.Stats.DecreaseValue(Stat.CORRUPTION, corruptionStat);
     }
 
     public override void OnRetrieved()

@@ -4,7 +4,8 @@ public class RuneOfGluttony : ItemEffect, IPassiveItem
 {
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DivideValue(Stat.HEAL_COEFF, 2f);
     }
 
     public override void OnRetrieved() 

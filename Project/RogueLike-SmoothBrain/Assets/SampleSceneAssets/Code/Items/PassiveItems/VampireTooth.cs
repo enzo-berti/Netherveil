@@ -33,6 +33,8 @@ public class VampireTooth : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat);
+        player.OnHit -= LifeSteal;
     }
 }
