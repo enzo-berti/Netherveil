@@ -42,7 +42,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //used to apply gravity
-        characterController.SimpleMove(Vector3.zero);
+        if(hero.State != (int)Entity.EntityState.DEAD)
+        {
+            characterController.SimpleMove(Vector3.zero);
+        }
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, CurrentTargetAngle, ref currentVelocity, smoothTime);
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
