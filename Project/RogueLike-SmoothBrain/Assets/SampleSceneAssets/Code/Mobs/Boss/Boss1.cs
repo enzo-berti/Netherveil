@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class Boss1 : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
@@ -17,8 +16,22 @@ public class Boss1 : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         RANGE,
         THRUST,
-        DASH
+        DASH,
+        NONE
     }
+
+    enum AttackState
+    {
+        CHARGING,
+        ATTACKING,
+        RECOVERING,
+        IDLE
+    }
+
+    Attacks currentAttack;
+    AttackState attackState;
+    float attackCooldown = 0;
+    bool hasProjectile = false;
 
     protected override IEnumerator Brain()
     {
@@ -31,6 +44,25 @@ public class Boss1 : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 .Where(x => x != null && x != this)
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                 .ToArray();
+
+            Hero player = entities
+                .Select(x => x.GetComponent<Hero>())
+                .Where(x => x != null)
+                .FirstOrDefault();
+
+            if (attackCooldown > 0)
+            {
+                attackState = AttackState.IDLE;
+                attackCooldown -= Time.deltaTime;
+                if (attackCooldown < 0) attackCooldown = 0;
+            }
+            else if (attackCooldown == 0)
+            {
+                currentAttack = (Attacks)Random.Range(0, 3);
+            }
+
+
+
         }
     }
 
