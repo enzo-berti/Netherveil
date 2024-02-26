@@ -1,16 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
 
     public Plane planeOfDoom;
+    IEnumerator chargedAttackCoroutine;
     PlayerInputMap playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
@@ -32,6 +35,9 @@ public class PlayerInput : MonoBehaviour
 
     bool attackQueue = false;
     public bool LaunchedAttack { get; private set; } = false;
+    float chargedAttackTime = 0f;
+    bool chargedAttackMax = false;
+    bool LaunchedSpecialAttack = false;
 
     void Awake()
     {
@@ -46,6 +52,7 @@ public class PlayerInput : MonoBehaviour
     {
         controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
+        chargedAttackCoroutine = ChargedAttackCoroutine();
     }
 
     private void OnEnable()
@@ -57,9 +64,8 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Dash.Dash.performed += Dash;
         playerInputMap.Interract.Interract.performed += m_interaction.Interract;
         playerInputMap.Attack.Throw.performed += ctx => ThrowSpear();
-        playerInputMap.Attack.ChargedAttack.started += ctx => Debug.Log("start hold");
-        playerInputMap.Attack.ChargedAttack.performed += ctx => Debug.Log("hold max");
-        playerInputMap.Attack.ChargedAttack.canceled += ctx => Debug.Log("release");
+        playerInputMap.Attack.ChargedAttack.performed += ChargedAttack;
+        playerInputMap.Attack.ChargedAttack.canceled += ChargedAttackCanceled;
     }
 
     private void OnDisable()
@@ -71,6 +77,8 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Dash.Dash.performed -= Dash;
         playerInputMap.Interract.Interract.performed -= m_interaction.Interract;
         playerInputMap.Attack.Throw.performed -= ctx => ThrowSpear();
+        playerInputMap.Attack.ChargedAttack.performed -= ChargedAttack;
+        playerInputMap.Attack.ChargedAttack.canceled -= ChargedAttackCanceled;
     }
 
     void Update()
@@ -99,15 +107,49 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void StartChargedAttack(InputAction.CallbackContext ctx)
+    public void ChargedAttack(InputAction.CallbackContext ctx)
     {
         if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
     && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
         {
-            animator.SetTrigger("ChargedAttack");
+            controller.ComboCount = 0;
+            animator.SetTrigger("ChargedAttackCharging");
+            triggerCooldownAttack = true;
+            controller.hero.State = (int)Entity.EntityState.ATTACK;
+            LaunchedSpecialAttack = true;
+            StartCoroutine(chargedAttackCoroutine);
+        }
+    }
+
+    public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
+    {
+        StopCoroutine(chargedAttackCoroutine);
+        if(LaunchedSpecialAttack)
+        {
+            animator.ResetTrigger("ChargedAttackRelease");
+            animator.SetTrigger("ChargedAttackRelease");
+        }
+    }
+
+    public void ChargedAttackRelease()
+    {
+        //add check for damage if max
+        AttackCollide(controller.chargedAttack);
+        chargedAttackMax = false;
+    }
+
+    public IEnumerator ChargedAttackCoroutine()
+    {
+        while (chargedAttackTime < 0.5f)
+        {
+            chargedAttackTime += Time.deltaTime;
+            yield return null;
         }
 
+        chargedAttackTime = 0f;
+        chargedAttackMax = true;
     }
+
     public void Attack(InputAction.CallbackContext ctx)
     {
         if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
@@ -165,11 +207,30 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    public void EndOfChargedAttack()
+    {
+        controller.hero.State = (int)Entity.EntityState.MOVE;
+        controller.ComboCount = 0;
+        LaunchedAttack = false;
+        attackQueue = false;
+        LaunchedSpecialAttack = false;
+
+        foreach (Collider collider in controller.chargedAttack)
+        {
+            collider.gameObject.SetActive(false);
+        }
+    }
+
     public void StartOfAttackAnimation()
     {
-        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
+        AttackCollide(controller.spearAttacks[controller.ComboCount].data);
+    }
+
+    void AttackCollide(List<Collider> colliders)
+    {
+        foreach (Collider collider in colliders)
         {
-            spearCollider.gameObject.SetActive(true);
+            collider.gameObject.SetActive(true);
         }
 
         //rotate the player to mouse's direction if playing KB/mouse
@@ -180,17 +241,19 @@ public class PlayerInput : MonoBehaviour
         OrientationErrorMargin();
 
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
-        Vector3 rayOffset = Vector3.up / 50f;
+        Vector3 rayOffset = Vector3.up;
 
-        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
+
+        foreach (Collider spearCollider in colliders)
         {
-            Collider[] tab = controller.CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy");
+            Collider[] tab = controller.CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy", -1, QueryTriggerInteraction.UseGlobal, LayerMask.GetMask("Map"));
             if (tab.Length > 0)
             {
                 foreach (Collider col in tab)
                 {
                     if (col.gameObject.GetComponent<IDamageable>() != null)
                     {
+                        //Debug.Log(col.gameObject.name);
                         controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
                     }
                 }
@@ -242,7 +305,7 @@ public class PlayerInput : MonoBehaviour
         {
             MouseOrientation();
         }
-        else 
+        else
         {
             OrientationErrorMargin(GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
         }
