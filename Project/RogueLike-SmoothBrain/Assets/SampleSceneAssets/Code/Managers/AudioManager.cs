@@ -25,9 +25,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference menuPortalOpenEvent;
     [HideInInspector] public FMOD.Studio.EventInstance menuPortalOpenInstance;
 
-    [SerializeField] EventReference menuPortalExplosionEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance menuPortalExplosionInstance;
-
     [SerializeField] EventReference menuPaperEvent;
     [HideInInspector] public FMOD.Studio.EventInstance menuPaperInstance;
 
@@ -134,9 +131,6 @@ public class AudioManager : MonoBehaviour
     {
         menuPortalOpenInstance = FMODUnity.RuntimeManager.CreateInstance(menuPortalOpenEvent);
         menuPortalOpenInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        menuPortalExplosionInstance = FMODUnity.RuntimeManager.CreateInstance(menuPortalExplosionEvent);
-        menuPortalExplosionInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
 
         menuPaperInstance = FMODUnity.RuntimeManager.CreateInstance(menuPaperEvent);
         menuPaperInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
