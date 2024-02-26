@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance;
-
     [HideInInspector] public FMOD.Studio.Bus masterBus;
     [HideInInspector] public FMOD.Studio.Bus musicsBus;
     [HideInInspector] public FMOD.Studio.Bus soundsFXBus;
@@ -70,6 +68,30 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] EventReference enemyDeathEvent;
     [HideInInspector] public FMOD.Studio.EventInstance enemyDeathInstance;
+
+    [SerializeField] EventReference bombeExplosionEvent;
+    [HideInInspector] public FMOD.Studio.EventInstance bombeExplosionInstance;
+
+    public static AudioManager instance;
+
+    public static AudioManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<AudioManager>();
+
+                if (instance == null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = typeof(AudioManager).Name;
+                    obj.AddComponent<AudioManager>();
+                }
+            }
+            return instance;
+        }
+    }
 
     void Awake()
     {
@@ -151,5 +173,8 @@ public class AudioManager : MonoBehaviour
 
         enemyDeathInstance = FMODUnity.RuntimeManager.CreateInstance(enemyDeathEvent);
         enemyDeathInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+
+        bombeExplosionInstance = FMODUnity.RuntimeManager.CreateInstance(bombeExplosionEvent);
+        bombeExplosionInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
     }
 }
