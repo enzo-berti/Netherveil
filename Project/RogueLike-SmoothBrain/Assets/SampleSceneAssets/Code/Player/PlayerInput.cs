@@ -45,7 +45,7 @@ public class PlayerInput : MonoBehaviour
         controller = GetComponent<PlayerController>();
         m_interaction = GetComponent<PlayerInteractions>();
         planeOfDoom = new Plane(Vector3.up, 0f);
-        planeOfDoom.SetNormalAndPosition(Vector3.up, new Vector3(0f, -2.8f, 0f));
+        planeOfDoom.SetNormalAndPosition(Vector3.up, new Vector3(0f, 0.05f, 0f));
     }
 
     void Start()
