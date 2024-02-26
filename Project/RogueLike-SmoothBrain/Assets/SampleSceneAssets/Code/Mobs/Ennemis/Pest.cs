@@ -86,6 +86,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public void Death()
     {
         Destroy(gameObject);
+        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
     }
 
     public void GetKnockback(Vector3 force)
