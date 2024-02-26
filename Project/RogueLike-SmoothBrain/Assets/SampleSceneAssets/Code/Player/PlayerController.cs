@@ -41,6 +41,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        //used to apply gravity
+        if(hero.State != (int)Entity.EntityState.DEAD)
+        {
+            characterController.SimpleMove(Vector3.zero);
+        }
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, CurrentTargetAngle, ref currentVelocity, smoothTime);
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
@@ -73,7 +78,7 @@ public class PlayerController : MonoBehaviour
         Direction = ctx.ReadValue<Vector2>().normalized;
     }
 
-    public Collider[] CheckAttackCollide(Collider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public Collider[] CheckAttackCollide(Collider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
     {
         if (collider != null)
         {
@@ -82,11 +87,11 @@ public class PlayerController : MonoBehaviour
             switch (colliderType.Name)
             {
                 case nameof(BoxCollider):
-                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction);
+                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction, obstacleLayer);
                 case nameof(SphereCollider):
-                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction);
+                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction, obstacleLayer);
                 case nameof(CapsuleCollider):
-                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction);
+                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction, obstacleLayer);
                 default:
                     Debug.LogWarning("Invalid Collider type, can't check the collision.");
                     return new Collider[0];

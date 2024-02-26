@@ -37,6 +37,7 @@ public class PlayerInput : MonoBehaviour
     public bool LaunchedAttack { get; private set; } = false;
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
+    bool LaunchedSpecialAttack = false;
 
     void Awake()
     {
@@ -115,7 +116,7 @@ public class PlayerInput : MonoBehaviour
             animator.SetTrigger("ChargedAttackCharging");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
-            LaunchedAttack = true;
+            LaunchedSpecialAttack = true;
             StartCoroutine(chargedAttackCoroutine);
         }
     }
@@ -123,7 +124,11 @@ public class PlayerInput : MonoBehaviour
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
         StopCoroutine(chargedAttackCoroutine);
-        animator.SetTrigger("ChargedAttackRelease");
+        if(LaunchedSpecialAttack)
+        {
+            animator.ResetTrigger("ChargedAttackRelease");
+            animator.SetTrigger("ChargedAttackRelease");
+        }
     }
 
     public void ChargedAttackRelease()
@@ -208,7 +213,9 @@ public class PlayerInput : MonoBehaviour
         controller.ComboCount = 0;
         LaunchedAttack = false;
         attackQueue = false;
-        foreach(Collider collider in controller.chargedAttack)
+        LaunchedSpecialAttack = false;
+
+        foreach (Collider collider in controller.chargedAttack)
         {
             collider.gameObject.SetActive(false);
         }
@@ -234,20 +241,19 @@ public class PlayerInput : MonoBehaviour
         OrientationErrorMargin();
 
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
-        Vector3 rayOffset = Vector3.up / 50f;
+        Vector3 rayOffset = Vector3.up;
 
-        List<GameObject> alreadyAttacked = new List<GameObject>();
+
         foreach (Collider spearCollider in colliders)
         {
-            Collider[] tab = controller.CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy");
+            Collider[] tab = controller.CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy", -1, QueryTriggerInteraction.UseGlobal, LayerMask.GetMask("Map"));
             if (tab.Length > 0)
             {
                 foreach (Collider col in tab)
                 {
-                    if (col.gameObject.GetComponent<IDamageable>() != null && !alreadyAttacked.Contains(col.gameObject))
+                    if (col.gameObject.GetComponent<IDamageable>() != null)
                     {
-                        Debug.Log(col.gameObject.name);
-                        alreadyAttacked.Add(col.gameObject);
+                        //Debug.Log(col.gameObject.name);
                         controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
                     }
                 }
