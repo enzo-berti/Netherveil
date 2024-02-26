@@ -1,9 +1,13 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.XInput;
 
 public class InputDeviceManager : MonoBehaviour
 {
@@ -14,6 +18,7 @@ public class InputDeviceManager : MonoBehaviour
     static private InputDeviceManager instance;
     public static event Action OnChangedToGamepad;
     public static event Action OnChangedToKB;
+    public bool toggleVibrations = true;
 
     static public InputDeviceManager Instance
     {
@@ -122,5 +127,30 @@ public class InputDeviceManager : MonoBehaviour
     public bool IsPlayingKB()
     {
         return currentDevice is not Gamepad;
+    }
+
+    public bool IsSupportingVibrations()
+    {
+        return currentDevice is Gamepad && (currentDevice is XInputController || currentDevice is DualShockGamepad);
+    }
+
+    public void ApplyVibrations(float lowFrequency, float highFrequency, float duration)
+    {
+        if(IsSupportingVibrations() && toggleVibrations)
+        {
+            lowFrequency = Mathf.Clamp(lowFrequency, 0f, 1f);
+            highFrequency = Mathf.Clamp(highFrequency, 0f, 1f);
+
+            (currentDevice as Gamepad).SetMotorSpeeds(lowFrequency, highFrequency);
+            StartCoroutine(StopVibration(currentDevice as Gamepad, duration));
+        }
+    }
+
+    private IEnumerator StopVibration(Gamepad gamepad, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        // Stop the vibration after the specified duration
+        gamepad.SetMotorSpeeds(0f, 0f);
     }
 }
