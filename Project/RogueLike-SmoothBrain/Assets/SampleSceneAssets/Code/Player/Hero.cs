@@ -6,17 +6,23 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     {
         DASH = EntityState.NB
     }
-
     Animator animator;
     Inventory inventory = new Inventory();
     public Inventory Inventory { get { return inventory; } }
 
+    public delegate void KillDelegate(IDamageable damageable);
+    private KillDelegate onKill;
+
+    public delegate void ChangeRoomDelegate();
+    private ChangeRoomDelegate onChangeRoom;
+
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
-
+    
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
-
+    public KillDelegate OnKill { get => onKill; set => OnKill = value; }
+    public ChangeRoomDelegate OnChangeRoom { get => OnChangeRoom; set => OnChangeRoom = value; }
     private void Start()
     {
         animator = GetComponent<Animator>();

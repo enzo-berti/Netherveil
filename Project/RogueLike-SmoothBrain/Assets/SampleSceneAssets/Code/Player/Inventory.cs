@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class Inventory
@@ -9,6 +10,7 @@ public class Inventory
 
     public IActiveItem ActiveItem { get { return activeItem; } }
     public List<IPassiveItem> PassiveItems { get { return passiveItems; } }
+    public int Blood = 0;
 
     private void AddActiveItem(IActiveItem item)
     {
@@ -28,6 +30,11 @@ public class Inventory
         item.OnRetrieved();
     }
 
+    public void RemoveItem(IPassiveItem item)
+    {
+        item.OnRemove();
+        passiveItems.Remove(item);
+    }
     public void AddItem(ItemEffect item)
     {
         if (item as IActiveItem != null)
