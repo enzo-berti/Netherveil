@@ -16,9 +16,6 @@ public class MeshButton : MonoBehaviour
 
     void Update()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
-            return;
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -35,6 +32,9 @@ public class MeshButton : MonoBehaviour
 
                 if (Input.GetMouseButtonDown(0))
                 {
+                    if (EventSystem.current.IsPointerOverGameObject())
+                        return;
+
                     onPress?.Invoke();
                     isPressed = true;
                 }
