@@ -45,7 +45,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.25
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -128,6 +128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2979185815156848928}
   - component: {fileID: 3039089203242550272}
+  - component: {fileID: 6304335940925203825}
   m_Layer: 0
   m_Name: PREFAB_Candle_Small
   m_TagString: Untagged
@@ -164,10 +165,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a3ddf16fd0de8a4481237debd2df2be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 0.4
-  randomOffset: 0.03
+  offset: 0.1
+  randomOffset: 0.0075
   timeFactor: 2.25
   light: {fileID: 5006838999556735029}
+--- !u!114 &6304335940925203825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7767267476830947064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1877021572
+      Data2: 1184462845
+      Data3: -1580725859
+      Data4: -890171541
+    Path: event:/Object/Candle
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 5
 --- !u!1001 &5713795823092988498
 PrefabInstance:
   m_ObjectHideFlags: 0
