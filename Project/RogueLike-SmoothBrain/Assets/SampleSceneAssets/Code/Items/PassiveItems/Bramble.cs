@@ -7,7 +7,8 @@ public class Bramble : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.ATK, attackStat);
     }
 
     public override void OnRetrieved()

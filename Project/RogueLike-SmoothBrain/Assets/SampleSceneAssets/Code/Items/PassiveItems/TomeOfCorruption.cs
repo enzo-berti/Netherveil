@@ -4,7 +4,8 @@ public class TomeOfCorruption : ItemEffect, IPassiveItem
 {
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.CORRUPTION, 15);
     }
 
     public override void OnRetrieved() 
