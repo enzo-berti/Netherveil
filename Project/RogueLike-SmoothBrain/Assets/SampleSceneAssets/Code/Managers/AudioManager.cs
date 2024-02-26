@@ -25,9 +25,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference menuPortalOpenEvent;
     [HideInInspector] public FMOD.Studio.EventInstance menuPortalOpenInstance;
 
-    [SerializeField] EventReference menuPortalExplosionEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance menuPortalExplosionInstance;
-
     [SerializeField] EventReference menuPaperEvent;
     [HideInInspector] public FMOD.Studio.EventInstance menuPaperInstance;
 
@@ -71,6 +68,12 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] EventReference bombeExplosionEvent;
     [HideInInspector] public FMOD.Studio.EventInstance bombeExplosionInstance;
+
+    [SerializeField] EventReference spikeUpEvent;
+    [HideInInspector] public FMOD.Studio.EventInstance spikeUpInstance;
+
+    [SerializeField] EventReference spikeDownEvent;
+    [HideInInspector] public FMOD.Studio.EventInstance spikeDownInstance;
 
     public static AudioManager instance;
 
@@ -129,9 +132,6 @@ public class AudioManager : MonoBehaviour
         menuPortalOpenInstance = FMODUnity.RuntimeManager.CreateInstance(menuPortalOpenEvent);
         menuPortalOpenInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
 
-        menuPortalExplosionInstance = FMODUnity.RuntimeManager.CreateInstance(menuPortalExplosionEvent);
-        menuPortalExplosionInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
         menuPaperInstance = FMODUnity.RuntimeManager.CreateInstance(menuPaperEvent);
         menuPaperInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
 
@@ -176,5 +176,11 @@ public class AudioManager : MonoBehaviour
 
         bombeExplosionInstance = FMODUnity.RuntimeManager.CreateInstance(bombeExplosionEvent);
         bombeExplosionInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+
+        spikeUpInstance = FMODUnity.RuntimeManager.CreateInstance(spikeUpEvent);
+        spikeUpInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+
+        spikeDownInstance = FMODUnity.RuntimeManager.CreateInstance(spikeDownEvent);
+        spikeDownInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
     }
 }

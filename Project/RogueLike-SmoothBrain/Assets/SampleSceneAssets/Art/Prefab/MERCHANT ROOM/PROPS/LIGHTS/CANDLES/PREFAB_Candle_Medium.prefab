@@ -128,6 +128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8233218117764968091}
   - component: {fileID: 304299364984446924}
+  - component: {fileID: 7200121903606236220}
   m_Layer: 0
   m_Name: PREFAB_Candle_Medium
   m_TagString: Untagged
@@ -168,6 +169,37 @@ MonoBehaviour:
   randomOffset: 0.0075
   timeFactor: 2.25
   light: {fileID: 8542356137889862621}
+--- !u!114 &7200121903606236220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9145510482464512580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1877021572
+      Data2: 1184462845
+      Data3: -1580725859
+      Data4: -890171541
+    Path: event:/Object/Candle
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 5
 --- !u!1001 &8870748973559794620
 PrefabInstance:
   m_ObjectHideFlags: 0

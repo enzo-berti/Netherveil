@@ -132,6 +132,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     {
         OnDeath?.Invoke(transform.position);
         Destroy(gameObject);
+        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
     }
 
     public void Attack(IDamageable damageable)
@@ -162,30 +163,3 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 // quand le joueur est trop près, si aucun tank n'est à proximité il va fuir en ligne droite
 // il ne le fera pas en boucle, il aura un cd sur sa fuite
 // lorsqu'il est en cd, il va attaquer le joueur simplement
-
-
-////// Code mort
-
-//// Si un tank est à proximité
-//if (tanks.Any())
-//{
-//    Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
-//    playerTankVector.Normalize();
-
-//    Vector3 targetPos = player.transform.position;
-
-//    if (Vector3.Distance(targetPos, tanks.First().transform.position) < 2f)
-//    {
-//        targetPos = tanks.First().transform.position + playerTankVector * 2f;
-//    }
-//    else
-//    {
-//        targetPos = tanks.First().transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
-//    }
-
-//    MoveTo(targetPos);
-//}
-//else
-//{
-//    MoveTo(player.transform.position);
-//}
