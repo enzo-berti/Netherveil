@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     float dashSpeed;
 
     public List<NestedList<Collider>> spearAttacks;
+    public List<Collider> chargedAttack;
 
     CharacterController characterController;
     readonly float smoothTime = 0.05f;

@@ -215,7 +215,7 @@ public static class PhysicsExtensions
             //but it's not a problem because another target doesnt obstruct the attack on the one that is behind
             if (Physics.Raycast(ray, out RaycastHit hit, initialToTargetVec.magnitude, layerMask, queryTriggerInteraction))
             {
-                Debug.Log(hit.collider.gameObject.name);
+                //Debug.Log(hit.collider.gameObject.name);
                 if (hit.collider.gameObject.CompareTag(targetTag))
                 {
                     targetsAheadOfObstacles.Add(hit.collider);
