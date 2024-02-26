@@ -43,7 +43,7 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static Collider[] BoxOverlapWithRayCheck(this BoxCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public static Collider[] BoxOverlapWithRayCheck(this BoxCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
     {
         Collider[] colliders = collider.BoxOverlap(layerMask, queryTriggerInteraction);
         List<Collider> targets = new List<Collider>();
@@ -55,7 +55,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, layerMask, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     static void GetSphereParameters(this SphereCollider collider, out float adjustedRadius, out Vector3 center)
@@ -104,7 +104,7 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static Collider[] SphereOverlapWithRayCheck(this SphereCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public static Collider[] SphereOverlapWithRayCheck(this SphereCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
     {
         Collider[] colliders = collider.SphereOverlap(layerMask, queryTriggerInteraction);
         List<Collider> targets = new List<Collider>();
@@ -116,7 +116,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, layerMask, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     static void GetCapsuleParameters(this CapsuleCollider collider, out float adjustedRadius, out float adjustedHeight, out Vector3 center)
@@ -162,7 +162,7 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static Collider[] CapsuleOverlapWithRayCheck(this CapsuleCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    public static Collider[] CapsuleOverlapWithRayCheck(this CapsuleCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
     {
         Collider[] colliders = collider.CapsuleOverlap(layerMask, queryTriggerInteraction);
         List<Collider> targets = new List<Collider>();
@@ -174,7 +174,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, layerMask, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     /// <summary>
@@ -200,26 +200,28 @@ public static class PhysicsExtensions
         return result;
     }
 
-    static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         //Debug.Log("HERE");
         List<Collider> targetsAheadOfObstacles = new List<Collider>();
         foreach (Collider target in targets)
         {
             Vector3 initialToTargetVec = (target.transform.position - rayOrigin);
+            initialToTargetVec.y = 0;
             // Draw a debug ray
             Debug.DrawRay(rayOrigin, initialToTargetVec, Color.green);
             Ray ray = new Ray(rayOrigin, initialToTargetVec.normalized);
 
             //if raycast doesn't hit a target, it means that there is an obstacle in from of him, it could hit another target than the one that we should,
             //but it's not a problem because another target doesnt obstruct the attack on the one that is behind
-            if (Physics.Raycast(ray, out RaycastHit hit, initialToTargetVec.magnitude, layerMask, queryTriggerInteraction))
+            if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, obstacleLayer, queryTriggerInteraction))
             {
-                //Debug.Log(hit.collider.gameObject.name);
-                if (hit.collider.gameObject.CompareTag(targetTag))
-                {
-                    targetsAheadOfObstacles.Add(hit.collider);
-                }
+                targetsAheadOfObstacles.Add(target);
+            }
+            else
+            {
+                Debug.Log(hit.collider.name, hit.collider.gameObject);
+                Debug.Log("AIE");
             }
             //else
             //{
