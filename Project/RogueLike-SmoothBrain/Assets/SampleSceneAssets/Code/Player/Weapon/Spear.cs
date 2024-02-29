@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class Spear : MonoBehaviour
@@ -130,10 +129,7 @@ public class Spear : MonoBehaviour
         float angle = player.AngleOffsetToFaceTarget(new Vector3(spearPosition.x, player.position.y, spearPosition.z));
         if (angle != float.MaxValue)
         {
-            Vector3 a = player.eulerAngles;
-            a.y += angle;
-            player.eulerAngles = a;
-            player.GetComponent<PlayerController>().CurrentTargetAngle = player.eulerAngles.y;
+            player.GetComponent<PlayerController>().OffsetPlayerRotation(angle, true);
         }
 
         Vector3 playerToSpearVec = spearPosition - player.position;
