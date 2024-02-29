@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -121,14 +124,14 @@ public class PlayerController : MonoBehaviour
         }
 
         //rotate the player to mouse's direction if playing KB/mouse
-        if (InputDeviceManager.Instance.IsPlayingKB())
-        {
-            MouseOrientation();
-        }
+        //if (InputDeviceManager.Instance.IsPlayingKB())
+        //{
+        //    MouseOrientation();
+        //}
         OrientationErrorMargin();
 
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
-        Vector3 rayOffset = Vector3.up;
+        Vector3 rayOffset = Vector3.up/2;
 
         List<Collider> alreadyAttacked = new List<Collider>();
         foreach (Collider spearCollider in colliders)
@@ -171,19 +174,21 @@ public class PlayerController : MonoBehaviour
     public void OrientationErrorMargin(float visionConeRange = VISION_CONE_RANGE)
     {
         Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
+        .Where(x => !x.CompareTag("Player") && x.GetComponent<Transform>() != null)
         .Select(x => x.GetComponent<Transform>())
         .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
         .FirstOrDefault();
 
         if (targetTransform != null)
         {
+            Debug.Log("hello");
             float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
             if (angle != float.MaxValue)
             {
                 Vector3 a = transform.eulerAngles;
                 a.y += angle;
                 transform.eulerAngles = a;
-                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
+                CurrentTargetAngle = transform.eulerAngles.y;
             }
         }
     }
@@ -202,4 +207,22 @@ public class PlayerController : MonoBehaviour
         camForward = camForward.normalized;
         camRight = camRight.normalized;
     }
+
+
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"));
+
+        Handles.color = new Color(1, 0, 0, 0.25f);
+        //if (collide.Length != 0)
+        //{
+        //    Handles.color = new Color(0, 1, 0, 0.25f);
+        //}
+
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
+    }
+#endif
 }

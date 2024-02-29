@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
@@ -250,21 +245,4 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
-
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        ////Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"));
-
-        //Handles.color = new Color(1, 0, 0, 0.25f);
-        ////if (collide.Length != 0)
-        ////{
-        ////    Handles.color = new Color(0, 1, 0, 0.25f);
-        ////}
-
-        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
-        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
-    }
-#endif
 }
