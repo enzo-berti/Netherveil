@@ -7,13 +7,13 @@ public class GoldEmeraldRing : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.DecreaseValue(Stat.ATK, attackStat);
+        player.Stats.DecreaseValue(Stat.ATK, attackStat, false);
     }
 
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.ATK, attackStat);
+        player.Stats.IncreaseValue(Stat.ATK, attackStat, false);
         //RarityTier = Rarity.RARE;
         //Name = "<color=\"blue\">Gold Emerald Ring";
         //Description = "Augments player's attack, gilding their strikes with the radiant power of the emerald, enhancing combat effectiveness.\n" +

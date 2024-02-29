@@ -10,7 +10,7 @@ public class VampireTooth : ItemEffect, IPassiveItem
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat);
+        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat, false);
         player.OnHit += LifeSteal;
         //RarityTier = Rarity.RARE;
         //Name = "<color=\"blue\">Vampire Tooth";
@@ -24,7 +24,7 @@ public class VampireTooth : ItemEffect, IPassiveItem
         //life steal is a pourcentage that's incresed by items
         float lifeIncreasedValue = (int)(player.Stats.GetValueStat(Stat.LIFE_STEAL) * (player.Stats.GetValueStat(Stat.ATK) * player.Stats.GetValueStat(Stat.ATK_COEFF)));
         lifeIncreasedValue = lifeIncreasedValue * player.Stats.GetValueStat(Stat.HEAL_COEFF);
-        player.Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
+        player.Stats.IncreaseValue(Stat.HP, lifeIncreasedValue, false);
         if (player.Stats.GetValueStat(Stat.HP) > player.Stats.GetValueStat(Stat.MAX_HP))
         {
             player.Stats.SetValue(Stat.HP, player.Stats.GetValueStat(Stat.MAX_HP));
@@ -34,7 +34,7 @@ public class VampireTooth : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat);
+        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat, false);
         player.OnHit -= LifeSteal;
     }
 }
