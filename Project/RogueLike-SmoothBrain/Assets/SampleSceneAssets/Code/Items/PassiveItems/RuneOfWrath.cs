@@ -10,7 +10,7 @@ public class RuneOfWrath : ItemEffect, IPassiveItem
         player.Stats.DecreaseValue(Stat.ATK_COEFF, AttackCoeffStat, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.ATK_COEFF, AttackCoeffStat, false);

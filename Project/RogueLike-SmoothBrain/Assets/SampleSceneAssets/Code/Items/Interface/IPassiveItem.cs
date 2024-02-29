@@ -1,5 +1,5 @@
 public interface IPassiveItem
 {
-    void OnRetrieved();
-    void OnRemove();
+    public void OnRetrieved();
+    public void OnRemove();
 }

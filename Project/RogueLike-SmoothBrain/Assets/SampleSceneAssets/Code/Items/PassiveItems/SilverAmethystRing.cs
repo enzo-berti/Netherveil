@@ -13,7 +13,7 @@ public class SilverAmethystRing : ItemEffect, IPassiveItem
         player.Stats.DecreaseValue(Stat.SPEED, speed, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.MAX_HP, maxLifeStat, false);

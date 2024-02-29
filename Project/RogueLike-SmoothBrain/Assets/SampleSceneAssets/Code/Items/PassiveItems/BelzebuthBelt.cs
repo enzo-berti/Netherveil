@@ -12,7 +12,7 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
         player.Stats.DecreaseValue(Stat.CORRUPTION, corruptionStat, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.CRIT_RATE, critRateStat, false);

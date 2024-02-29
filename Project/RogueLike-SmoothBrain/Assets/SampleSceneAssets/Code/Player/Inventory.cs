@@ -40,15 +40,16 @@ public class Inventory
         if (item as IActiveItem != null)
         {
             AddActiveItem(item as IActiveItem);
+            if ((item as IPassiveItem) != null)
+            {
+                (item as IPassiveItem).OnRetrieved();
+            }
         }
         else if (item as IPassiveItem!= null)
         {
             AddPassiveItem(item as IPassiveItem);
         }
 
-        if ((item as IPassiveItem) != null)
-        {
-            (item as IPassiveItem).OnRetrieved();
-        }
+        
     }
 }

@@ -13,7 +13,7 @@ public class RuneOfPride : ItemEffect, IPassiveItem
         player.OnChangeRoom -= Reset;
     }
 
-    public override void OnRetrieved() 
+    public void OnRetrieved() 
     { 
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         player.OnKill += ctx => Berserk();

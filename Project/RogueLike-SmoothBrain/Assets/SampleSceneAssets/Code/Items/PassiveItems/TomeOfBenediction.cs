@@ -7,7 +7,7 @@ public class TomeOfBenediction : ItemEffect , IPassiveItem
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.CORRUPTION, 15, false);
     }
-    public override void OnRetrieved() 
+    public void OnRetrieved() 
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.DecreaseValue(Stat.CORRUPTION, 15, false);

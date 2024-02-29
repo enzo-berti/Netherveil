@@ -10,7 +10,7 @@ public class BootOfSwiftness : ItemEffect, IPassiveItem
         player.Stats.DecreaseValue(Stat.SPEED, speedStat, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.SPEED, speedStat, false);

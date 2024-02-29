@@ -103,9 +103,4 @@ public class ResearchItemWindow : EditorWindow
             EditorGUILayout.EndHorizontal();
         }
     }
-
-    public void OnDestroy()
-    {
-        Debug.Log("destroy");
-    }
 }
