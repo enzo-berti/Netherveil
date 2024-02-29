@@ -37,6 +37,9 @@ public class StatInfo
     public float value;
     public float maxValue;
     public float minValue;
+
+    public float overload;
+    public float underload;
 }
 
 
@@ -52,6 +55,8 @@ public class StatInfoDrawerUIE : PropertyDrawer
     SerializedProperty hasMinStatProperty;
     SerializedProperty maxStatProperty;
     SerializedProperty minStatProperty;
+    SerializedProperty overloadProperty;
+    SerializedProperty underloadProperty;
 
     int nbMember = 0;
 
@@ -67,6 +72,10 @@ public class StatInfoDrawerUIE : PropertyDrawer
         maxStatProperty = property.FindPropertyRelative("maxValue");
         minStatProperty = property.FindPropertyRelative("minValue");
 
+        overloadProperty = property.FindPropertyRelative("overload");
+        underloadProperty = property.FindPropertyRelative("underload");
+
+        label.text = statProperty.enumDisplayNames[statProperty.enumValueIndex];
         Rect foldoutBox = new Rect(position.min.x, position.min.y, position.size.x, EditorGUIUtility.singleLineHeight);
         property.isExpanded = EditorGUI.Foldout(foldoutBox, property.isExpanded, label);
         if (property.isExpanded)
@@ -74,9 +83,21 @@ public class StatInfoDrawerUIE : PropertyDrawer
             DrawMember(position, statProperty);
             DrawMember(position, valueProperty);
             DrawMember(position, hasMaxStatProperty);
-            if (hasMaxStatProperty.boolValue) DrawMember(position, maxStatProperty);
-            DrawMember(position, hasMinStatProperty);   
-            if (hasMinStatProperty.boolValue) DrawMember(position, minStatProperty);
+            if (hasMaxStatProperty.boolValue) 
+            {
+                DrawMember(position, maxStatProperty);
+                GUI.enabled = false;
+                DrawMember(position, overloadProperty);
+                GUI.enabled = true;
+            }
+            DrawMember(position, hasMinStatProperty);
+            if (hasMinStatProperty.boolValue)
+            {
+                DrawMember(position, minStatProperty);
+                GUI.enabled = false;
+                DrawMember(position, underloadProperty); 
+                GUI.enabled = true;
+            }
 
         }
         EditorGUI.EndProperty();
@@ -87,8 +108,8 @@ public class StatInfoDrawerUIE : PropertyDrawer
         if (property.isExpanded)
         {
             totalLine += 4;
-            if (property.FindPropertyRelative("hasMaxStat").boolValue) totalLine++;
-            if (property.FindPropertyRelative("hasMinStat").boolValue) totalLine++;
+            if (property.FindPropertyRelative("hasMaxStat").boolValue) totalLine += 2;
+            if (property.FindPropertyRelative("hasMinStat").boolValue) totalLine += 2;
             
         }
         return EditorGUIUtility.singleLineHeight * totalLine;
@@ -97,77 +118,13 @@ public class StatInfoDrawerUIE : PropertyDrawer
     private void DrawMember(Rect position, SerializedProperty propertyToDraw)
     {
         nbMember++;
-        float posX = position.min.x + 0.5f;
+        float posX = position.min.x + 15;
         float posY = position.min.y + EditorGUIUtility.singleLineHeight * nbMember;
         float width = position.size.x;
         float height = EditorGUIUtility.singleLineHeight;
 
         Rect drawArea = new Rect(posX, posY, width, height);
         EditorGUI.PropertyField(drawArea, propertyToDraw);
-    }
-    private void DrawStat(Rect position)
-    {
-        nbMember++;
-        float posX = position.min.x;
-        float posY = position.min.y + EditorGUIUtility.singleLineHeight;
-        float width = position.size.x;
-        float height = EditorGUIUtility.singleLineHeight;
-
-        Rect drawArea = new Rect(posX, posY, width, height);
-        EditorGUI.PropertyField(drawArea, statProperty);
-    }
-
-    private void DrawValue(Rect position)
-    {
-        float posX = position.min.x;
-        float posY = position.min.y + EditorGUIUtility.singleLineHeight * 2;
-        float width = position.size.x;
-        float height = EditorGUIUtility.singleLineHeight;
-
-        Rect drawArea = new Rect(posX, posY, width, height);
-        EditorGUI.PropertyField(drawArea, valueProperty);
-    }
-    private void DrawBoolMaxStat(Rect position)
-    {
-        float posX = position.min.x;
-        float posY = position.min.y + EditorGUIUtility.singleLineHeight * 3;
-        float width = position.size.x;
-        float height = EditorGUIUtility.singleLineHeight;
-
-        Rect drawArea = new Rect(posX, posY, width, height);
-        EditorGUI.PropertyField(drawArea, hasMaxStatProperty);
-    }
-
-    private void DrawBoolMinStat(Rect position)
-    {
-        float posX = position.min.x;
-        float posY = position.min.y + EditorGUIUtility.singleLineHeight * 4;
-        float width = position.size.x;
-        float height = EditorGUIUtility.singleLineHeight;
-
-        Rect drawArea = new Rect(posX, posY, width, height);
-        EditorGUI.PropertyField(drawArea, hasMinStatProperty);
-    }
-
-    private void DrawMaxStat(Rect position)
-    {
-        float posX = position.min.x;
-        float posY = position.height + EditorGUIUtility.singleLineHeight * 5;
-        float width = position.size.x;
-        float height = EditorGUIUtility.singleLineHeight;
-
-        Rect drawArea = new Rect(posX, posY, width, height);
-        EditorGUI.PropertyField(drawArea, maxStatProperty);
-    }
-    private void DrawMinStat(Rect position)
-    {
-        float posX = position.min.x;
-        float posY = position.min.y + EditorGUIUtility.singleLineHeight * 6;
-        float width = position.size.x;
-        float height = EditorGUIUtility.singleLineHeight;
-
-        Rect drawArea = new Rect(posX, posY, width, height);
-        EditorGUI.PropertyField(drawArea, minStatProperty);
     }
 }
 #endif

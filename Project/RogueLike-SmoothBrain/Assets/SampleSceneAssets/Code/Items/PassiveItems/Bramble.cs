@@ -15,7 +15,6 @@ public class Bramble : ItemEffect, IPassiveItem
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.ATK, attackStat, false);
-        player.Stats.IncreaseValue(Stat.HP, 10000, false);
         // Description = "Amplifies player's attack, infusing their strikes with the thorny power of the wild.\n <color=\"green\">Attack: +" + attackStat.ToString();
     }
 
