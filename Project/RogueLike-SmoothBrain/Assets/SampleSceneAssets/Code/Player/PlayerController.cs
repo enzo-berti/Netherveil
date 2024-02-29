@@ -1,6 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 20f), SerializeField]
     float dashSpeed;
 
+    public Plane PlaneOfDoom { get; private set; }
     public List<NestedList<Collider>> spearAttacks;
     public List<Collider> chargedAttack;
 
@@ -24,6 +26,10 @@ public class PlayerController : MonoBehaviour
 
     public Vector2 Direction { get; private set; } = Vector2.zero;
 
+    //used for the error margin for attacks to auto-redirect on enemies in vision cone
+    public const float VISION_CONE_ANGLE = 45f;
+    public const float VISION_CONE_RANGE = 8f;
+
 
     void Start()
     {
@@ -31,6 +37,8 @@ public class PlayerController : MonoBehaviour
         hero = GetComponent<Hero>();
         cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;
+        PlaneOfDoom = new Plane(Vector3.up, 0f);
+        PlaneOfDoom.SetNormalAndPosition(Vector3.up, new Vector3(0f, 0.05f, 0f));
 
         //initialize starting rotation
         Vector3 eulerAngles = transform.eulerAngles;
@@ -42,7 +50,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //used to apply gravity
-        if(hero.State != (int)Entity.EntityState.DEAD)
+        if (hero.State != (int)Entity.EntityState.DEAD)
         {
             characterController.SimpleMove(Vector3.zero);
         }
@@ -78,7 +86,7 @@ public class PlayerController : MonoBehaviour
         Direction = ctx.ReadValue<Vector2>().normalized;
     }
 
-    public Collider[] CheckAttackCollide(Collider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
+    public Collider[] CheckAttackCollide(Collider collider, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         if (collider != null)
         {
@@ -87,11 +95,11 @@ public class PlayerController : MonoBehaviour
             switch (colliderType.Name)
             {
                 case nameof(BoxCollider):
-                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction, obstacleLayer);
+                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
                 case nameof(SphereCollider):
-                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction, obstacleLayer);
+                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
                 case nameof(CapsuleCollider):
-                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin, targetTag, layerMask, queryTriggerInteraction, obstacleLayer);
+                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
                 default:
                     Debug.LogWarning("Invalid Collider type, can't check the collision.");
                     return new Collider[0];
@@ -100,6 +108,84 @@ public class PlayerController : MonoBehaviour
 
         Debug.LogWarning("Collider is null.");
         return new Collider[0];
+    }
+
+    public void AttackCollide(List<Collider> colliders, bool debugMode = true)
+    {
+        if(debugMode)
+        {
+            foreach (Collider collider in colliders)
+            {
+                collider.gameObject.SetActive(true);
+            }
+        }
+
+        //rotate the player to mouse's direction if playing KB/mouse
+        if (InputDeviceManager.Instance.IsPlayingKB())
+        {
+            MouseOrientation();
+        }
+        OrientationErrorMargin();
+
+        //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
+        Vector3 rayOffset = Vector3.up;
+
+        List<Collider> alreadyAttacked = new List<Collider>();
+        foreach (Collider spearCollider in colliders)
+        {
+            Collider[] tab = CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy", LayerMask.GetMask("Map"));
+            if (tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<IDamageable>() != null && !alreadyAttacked.Contains(col))
+                    {
+                        //Debug.Log(col.gameObject.name);
+                        alreadyAttacked.Add(col);
+                        hero.Attack(col.gameObject.GetComponent<IDamageable>());
+                    }
+                }
+            }
+        }
+    }
+
+    //orients the player to face the position of the mouse
+    public void MouseOrientation()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (PlaneOfDoom.Raycast(ray, out float enter))
+        {
+            Vector3 hitPoint = ray.GetPoint(enter);
+            float angle = transform.AngleOffsetToFaceTarget(new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z));
+            if (angle != float.MaxValue)
+            {
+                Vector3 a = transform.eulerAngles;
+                a.y += angle;
+                transform.eulerAngles = a;
+                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
+            }
+        }
+    }
+
+    //will automatically redirect the player to face the closest enemy in his vision cone
+    public void OrientationErrorMargin(float visionConeRange = VISION_CONE_RANGE)
+    {
+        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
+        .Select(x => x.GetComponent<Transform>())
+        .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+        .FirstOrDefault();
+
+        if (targetTransform != null)
+        {
+            float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
+            if (angle != float.MaxValue)
+            {
+                Vector3 a = transform.eulerAngles;
+                a.y += angle;
+                transform.eulerAngles = a;
+                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
+            }
+        }
     }
 
     /// <summary>

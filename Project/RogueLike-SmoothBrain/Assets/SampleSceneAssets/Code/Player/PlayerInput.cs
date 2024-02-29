@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,18 +10,12 @@ using System.Collections;
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-
-    public Plane planeOfDoom;
     IEnumerator chargedAttackCoroutine;
     PlayerInputMap playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
     Animator animator;
     [SerializeField] GameObject weapon;
-
-    //used for the error margin for attacks to auto-redirect on enemies in vision cone
-    const float VISION_CONE_ANGLE = 45f;
-    const float VISION_CONE_RANGE = 8f;
 
     bool dashCooldown = false;
     readonly float DASH_COOLDOWN_TIME = 0.5f;
@@ -44,8 +37,6 @@ public class PlayerInput : MonoBehaviour
         playerInputMap = new PlayerInputMap();
         controller = GetComponent<PlayerController>();
         m_interaction = GetComponent<PlayerInteractions>();
-        planeOfDoom = new Plane(Vector3.up, 0f);
-        planeOfDoom.SetNormalAndPosition(Vector3.up, new Vector3(0f, 0.05f, 0f));
     }
 
     void Start()
@@ -131,11 +122,13 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    //used as animation event
     public void ChargedAttackRelease()
     {
         //add check for damage if max
-        AttackCollide(controller.chargedAttack);
+        controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
+        chargedAttackTime = 0f;
     }
 
     public IEnumerator ChargedAttackCoroutine()
@@ -180,6 +173,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    //used as animation event
     public void EndOfSpecialAnimation() //triggers for dash and hit animation to reset state
     {
         controller.hero.State = (int)Entity.EntityState.MOVE;
@@ -187,6 +181,7 @@ public class PlayerInput : MonoBehaviour
         LaunchedAttack = false;
     }
 
+    //used as animation event
     public void EndOfSpecialAnimationAttack() //triggers on attack animations to reset combo
     {
         if (!attackQueue)
@@ -221,81 +216,10 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    //used as animation event
     public void StartOfAttackAnimation()
     {
-        AttackCollide(controller.spearAttacks[controller.ComboCount].data);
-    }
-
-    void AttackCollide(List<Collider> colliders)
-    {
-        foreach (Collider collider in colliders)
-        {
-            collider.gameObject.SetActive(true);
-        }
-
-        //rotate the player to mouse's direction if playing KB/mouse
-        if (InputDeviceManager.Instance.IsPlayingKB())
-        {
-            MouseOrientation();
-        }
-        OrientationErrorMargin();
-
-        //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
-        Vector3 rayOffset = Vector3.up;
-
-
-        foreach (Collider spearCollider in colliders)
-        {
-            Collider[] tab = controller.CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy", -1, QueryTriggerInteraction.UseGlobal, LayerMask.GetMask("Map"));
-            if (tab.Length > 0)
-            {
-                foreach (Collider col in tab)
-                {
-                    if (col.gameObject.GetComponent<IDamageable>() != null)
-                    {
-                        //Debug.Log(col.gameObject.name);
-                        controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
-                    }
-                }
-            }
-        }
-    }
-
-    void MouseOrientation()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (planeOfDoom.Raycast(ray, out float enter))
-        {
-            Vector3 hitPoint = ray.GetPoint(enter);
-            float angle = transform.AngleOffsetToFaceTarget(new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z));
-            if (angle != float.MaxValue)
-            {
-                Vector3 a = transform.eulerAngles;
-                a.y += angle;
-                transform.eulerAngles = a;
-                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
-            }
-        }
-    }
-
-    void OrientationErrorMargin(float visionConeRange = VISION_CONE_RANGE)
-    {
-        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
-        .Select(x => x.GetComponent<Transform>())
-        .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-        .FirstOrDefault();
-
-        if (targetTransform != null)
-        {
-            float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
-            if (angle != float.MaxValue)
-            {
-                Vector3 a = transform.eulerAngles;
-                a.y += angle;
-                transform.eulerAngles = a;
-                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
-            }
-        }
+        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
     }
 
     public void ThrowSpear()
@@ -303,11 +227,11 @@ public class PlayerInput : MonoBehaviour
         //rotate the player to mouse's direction if playing KB/mouse
         if (InputDeviceManager.Instance.IsPlayingKB())
         {
-            MouseOrientation();
+            controller.MouseOrientation();
         }
         else
         {
-            OrientationErrorMargin(GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
+            controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
         }
 
         if (!GetComponent<PlayerInput>().LaunchedAttack)
@@ -326,6 +250,8 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
+
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
