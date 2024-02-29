@@ -97,7 +97,7 @@ public class StatInfoDrawerUIE : PropertyDrawer
     private void DrawMember(Rect position, SerializedProperty propertyToDraw)
     {
         nbMember++;
-        float posX = position.min.x;
+        float posX = position.min.x + 0.5f;
         float posY = position.min.y + EditorGUIUtility.singleLineHeight * nbMember;
         float width = position.size.x;
         float height = EditorGUIUtility.singleLineHeight;

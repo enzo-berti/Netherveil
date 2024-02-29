@@ -6,13 +6,13 @@ public class BloodDrop : MonoBehaviour, IConsommable
 {
     public float Price => price;
 
-    public bool CanBeRetreived => canBeRetreived;
+    public bool CanBeRetrieved => canBeRetrieved;
     Hero player;
     [SerializeField] private float price = 0;
-    private bool canBeRetreived = true;
+    private bool canBeRetrieved = true;
 
     [SerializeField] int bloodQuantity = 0;
-    public void OnRetreived()
+    public void OnRetrieved()
     {
         player.Inventory.Blood += bloodQuantity;
     }

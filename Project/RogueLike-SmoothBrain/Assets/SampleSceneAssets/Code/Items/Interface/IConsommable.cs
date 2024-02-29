@@ -5,9 +5,9 @@ public interface IConsommable
         get;
     }
 
-    public bool CanBeRetreived
+    public bool CanBeRetrieved
     {
         get;
     }
-    void OnRetreived();
+    void OnRetrieved();
 }
