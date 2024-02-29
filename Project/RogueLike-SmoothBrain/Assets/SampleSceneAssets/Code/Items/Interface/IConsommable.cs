@@ -9,5 +9,5 @@ public interface IConsommable
     {
         get;
     }
-    void OnRetreived();
+    void OnRetrieved();
 }

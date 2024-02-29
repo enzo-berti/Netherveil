@@ -32,7 +32,7 @@ public class PlayerInteractions : MonoBehaviour
         var colliders =  Physics.OverlapSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
         foreach(var collider in colliders.Where(x => x.gameObject.TryGetComponent<IConsommable>(out var consommable) && consommable.CanBeRetreived))
         {
-            collider.GetComponent<IConsommable>().OnRetreived();
+            collider.GetComponent<IConsommable>().OnRetrieved();
         }
     }
     private void OnDrawGizmos()

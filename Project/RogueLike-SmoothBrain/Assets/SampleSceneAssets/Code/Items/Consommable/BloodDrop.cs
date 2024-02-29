@@ -12,7 +12,7 @@ public class BloodDrop : MonoBehaviour, IConsommable
     private bool canBeRetreived = true;
 
     [SerializeField] int bloodQuantity = 0;
-    public void OnRetreived()
+    public void OnRetrieved()
     {
         player.Inventory.Blood += bloodQuantity;
     }
