@@ -44,10 +44,7 @@ public class PlayerController : MonoBehaviour
         PlaneOfDoom.SetNormalAndPosition(Vector3.up, new Vector3(0f, 0.05f, 0f));
 
         //initialize starting rotation
-        Vector3 eulerAngles = transform.eulerAngles;
-        eulerAngles.y = 225f;
-        transform.eulerAngles = eulerAngles;
-        CurrentTargetAngle = transform.eulerAngles.y;
+        OverridePlayerRotation(225f, true);
     }
 
     void Update()
@@ -115,7 +112,7 @@ public class PlayerController : MonoBehaviour
 
     public void AttackCollide(List<Collider> colliders, bool debugMode = true)
     {
-        if(debugMode)
+        if (debugMode)
         {
             foreach (Collider collider in colliders)
             {
@@ -124,14 +121,14 @@ public class PlayerController : MonoBehaviour
         }
 
         //rotate the player to mouse's direction if playing KB/mouse
-        //if (InputDeviceManager.Instance.IsPlayingKB())
-        //{
-        //    MouseOrientation();
-        //}
+        if (InputDeviceManager.Instance.IsPlayingKB())
+        {
+            MouseOrientation();
+        }
         OrientationErrorMargin();
 
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
-        Vector3 rayOffset = Vector3.up/2;
+        Vector3 rayOffset = Vector3.up / 2;
 
         List<Collider> alreadyAttacked = new List<Collider>();
         foreach (Collider spearCollider in colliders)
@@ -162,10 +159,7 @@ public class PlayerController : MonoBehaviour
             float angle = transform.AngleOffsetToFaceTarget(new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z));
             if (angle != float.MaxValue)
             {
-                Vector3 a = transform.eulerAngles;
-                a.y += angle;
-                transform.eulerAngles = a;
-                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
+                OffsetPlayerRotation(angle, true);
             }
         }
     }
@@ -181,16 +175,38 @@ public class PlayerController : MonoBehaviour
 
         if (targetTransform != null)
         {
-            Debug.Log("hello");
             float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
             if (angle != float.MaxValue)
             {
-                Vector3 a = transform.eulerAngles;
-                a.y += angle;
-                transform.eulerAngles = a;
-                CurrentTargetAngle = transform.eulerAngles.y;
+                OffsetPlayerRotation(angle, true);
             }
         }
+    }
+
+    public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
+    {
+        if (isImmediate)
+        {
+            Vector3 eulerAngles = transform.eulerAngles;
+            eulerAngles.y += angleOffset;
+            transform.eulerAngles = eulerAngles;
+            CurrentTargetAngle = transform.eulerAngles.y;
+        }
+        else
+        {
+            CurrentTargetAngle += angleOffset;
+        }
+    }
+
+    public void OverridePlayerRotation(float newAngle, bool isImmediate = false)
+    {
+        if (isImmediate)
+        {
+            Vector3 eulerAngles = transform.eulerAngles;
+            eulerAngles.y = newAngle;
+            transform.eulerAngles = eulerAngles;
+        }
+        CurrentTargetAngle = newAngle;
     }
 
     /// <summary>
