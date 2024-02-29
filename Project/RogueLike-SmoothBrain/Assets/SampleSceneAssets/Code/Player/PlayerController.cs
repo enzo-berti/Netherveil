@@ -121,10 +121,10 @@ public class PlayerController : MonoBehaviour
         }
 
         //rotate the player to mouse's direction if playing KB/mouse
-        //if (InputDeviceManager.Instance.IsPlayingKB())
-        //{
-        //    MouseOrientation();
-        //}
+        if (InputDeviceManager.Instance.IsPlayingKB())
+        {
+            MouseOrientation();
+        }
         OrientationErrorMargin();
 
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
