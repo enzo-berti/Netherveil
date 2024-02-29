@@ -209,8 +209,6 @@ public static class PhysicsExtensions
             initialToTargetVec.y = 0;
             Ray ray = new Ray(rayOrigin, initialToTargetVec.normalized);
 
-            //if raycast doesn't hit a target, it means that there is an obstacle in from of him, it could hit another target than the one that we should,
-            //but it's not a problem because another target doesnt obstruct the attack on the one that is behind
             if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, obstacleLayer, queryTriggerInteraction))
             {
                 targetsAheadOfObstacles.Add(target);
