@@ -43,7 +43,7 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static Collider[] BoxOverlapWithRayCheck(this BoxCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
+    public static Collider[] BoxOverlapWithRayCheck(this BoxCollider collider, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         Collider[] colliders = collider.BoxOverlap(layerMask, queryTriggerInteraction);
         List<Collider> targets = new List<Collider>();
@@ -104,7 +104,7 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static Collider[] SphereOverlapWithRayCheck(this SphereCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
+    public static Collider[] SphereOverlapWithRayCheck(this SphereCollider collider, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         Collider[] colliders = collider.SphereOverlap(layerMask, queryTriggerInteraction);
         List<Collider> targets = new List<Collider>();
@@ -162,7 +162,7 @@ public static class PhysicsExtensions
     /// <param name="layerMask"></param>
     /// <param name="queryTriggerInteraction"></param>
     /// <returns></returns>
-    public static Collider[] CapsuleOverlapWithRayCheck(this CapsuleCollider collider, Vector3 rayOrigin, string targetTag, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal, int obstacleLayer = -1)
+    public static Collider[] CapsuleOverlapWithRayCheck(this CapsuleCollider collider, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         Collider[] colliders = collider.CapsuleOverlap(layerMask, queryTriggerInteraction);
         List<Collider> targets = new List<Collider>();
