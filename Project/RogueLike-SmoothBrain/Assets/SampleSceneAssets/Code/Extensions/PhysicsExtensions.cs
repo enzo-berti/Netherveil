@@ -202,14 +202,11 @@ public static class PhysicsExtensions
 
     static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        //Debug.Log("HERE");
         List<Collider> targetsAheadOfObstacles = new List<Collider>();
         foreach (Collider target in targets)
         {
             Vector3 initialToTargetVec = (target.transform.position - rayOrigin);
             initialToTargetVec.y = 0;
-            // Draw a debug ray
-            Debug.DrawRay(rayOrigin, initialToTargetVec, Color.green);
             Ray ray = new Ray(rayOrigin, initialToTargetVec.normalized);
 
             //if raycast doesn't hit a target, it means that there is an obstacle in from of him, it could hit another target than the one that we should,
@@ -218,14 +215,10 @@ public static class PhysicsExtensions
             {
                 targetsAheadOfObstacles.Add(target);
             }
-            else
-            {
-                Debug.Log(hit.collider.name, hit.collider.gameObject);
-                Debug.Log("AIE");
-            }
             //else
             //{
-            //    Debug.Log("FAILED");
+            //                    Debug.Log(hit.collider.name, hit.collider.gameObject);
+                    //Debug.Log("AIE");
             //}
         }
 
