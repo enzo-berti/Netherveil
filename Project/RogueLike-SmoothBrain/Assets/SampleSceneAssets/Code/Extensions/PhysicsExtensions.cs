@@ -55,7 +55,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     static void GetSphereParameters(this SphereCollider collider, out float adjustedRadius, out Vector3 center)
@@ -116,7 +116,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     static void GetCapsuleParameters(this CapsuleCollider collider, out float adjustedRadius, out float adjustedHeight, out Vector3 center)
@@ -174,7 +174,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     /// <summary>
@@ -200,32 +200,23 @@ public static class PhysicsExtensions
         return result;
     }
 
-    static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, int obstacleLayer = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        //Debug.Log("HERE");
         List<Collider> targetsAheadOfObstacles = new List<Collider>();
         foreach (Collider target in targets)
         {
             Vector3 initialToTargetVec = (target.transform.position - rayOrigin);
             initialToTargetVec.y = 0;
-            // Draw a debug ray
-            Debug.DrawRay(rayOrigin, initialToTargetVec, Color.green);
             Ray ray = new Ray(rayOrigin, initialToTargetVec.normalized);
 
-            //if raycast doesn't hit a target, it means that there is an obstacle in from of him, it could hit another target than the one that we should,
-            //but it's not a problem because another target doesnt obstruct the attack on the one that is behind
             if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, obstacleLayer, queryTriggerInteraction))
             {
                 targetsAheadOfObstacles.Add(target);
             }
-            else
-            {
-                Debug.Log(hit.collider.name, hit.collider.gameObject);
-                Debug.Log("AIE");
-            }
             //else
             //{
-            //    Debug.Log("FAILED");
+            //    Debug.Log(hit.collider.name, hit.collider.gameObject);
+            //    Debug.Log("AIE");
             //}
         }
 
