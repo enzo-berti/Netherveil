@@ -163,7 +163,7 @@ public class Stats
     #endregion
 
     #region ClampMaths
-    public void IncreaseValueClamp(Stat statToIncrease, float increasingValue)
+    private void IncreaseValueClamp(Stat statToIncrease, float increasingValue)
     {
         int indexIncrease = stats.FindIndex(x => x.stat == statToIncrease);
 
@@ -185,7 +185,7 @@ public class Stats
         }
     }
 
-    public void DecreaseValueClamp(Stat statToDecrease, float decreasingValue)
+    private void DecreaseValueClamp(Stat statToDecrease, float decreasingValue)
     {
         int indexDecrease = stats.FindIndex(x => x.stat == statToDecrease);
 
@@ -207,7 +207,7 @@ public class Stats
         }
     }
 
-    public void MultiplyValueClamp(Stat statToIncrease, float increasingValue)
+    private void MultiplyValueClamp(Stat statToIncrease, float increasingValue)
     {
         int indexIncrease = stats.FindIndex(x => x.stat == statToIncrease);
 
@@ -229,7 +229,7 @@ public class Stats
         }
     }
 
-    public void DivideValueClamp(Stat statToDecrease, float decreasingValue)
+    private void DivideValueClamp(Stat statToDecrease, float decreasingValue)
     {
         int indexDecrease = stats.FindIndex(x => x.stat == statToDecrease);
 
