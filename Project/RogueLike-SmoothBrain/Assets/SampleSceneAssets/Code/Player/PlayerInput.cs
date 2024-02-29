@@ -128,6 +128,7 @@ public class PlayerInput : MonoBehaviour
         //add check for damage if max
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
+        chargedAttackTime = 0f;
     }
 
     public IEnumerator ChargedAttackCoroutine()
