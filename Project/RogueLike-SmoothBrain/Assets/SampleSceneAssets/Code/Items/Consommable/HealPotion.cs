@@ -17,7 +17,7 @@ public class HealPotion : MonoBehaviour, IConsommable
     }
     public void OnRetreived()
     {
-        player.Stats.IncreaseValueClamp(Stat.HP, Stat.MAX_HP, healValue);
+        player.Stats.IncreaseValueClamp(Stat.HP, healValue);
         Destroy(this.gameObject);
     }
 }

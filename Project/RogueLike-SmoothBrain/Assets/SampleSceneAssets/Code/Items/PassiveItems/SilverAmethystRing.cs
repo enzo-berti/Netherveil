@@ -8,17 +8,17 @@ public class SilverAmethystRing : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.DecreaseValue(Stat.MAX_HP, maxLifeStat);
-        player.Stats.DecreaseValue(Stat.HP, maxLifeStat);
-        player.Stats.DecreaseValue(Stat.SPEED, speed);
+        player.Stats.DecreaseValue(Stat.MAX_HP, maxLifeStat, false);
+        player.Stats.DecreaseValue(Stat.HP, maxLifeStat, false);
+        player.Stats.DecreaseValue(Stat.SPEED, speed, false);
     }
 
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.MAX_HP, maxLifeStat);
-        player.Stats.IncreaseValue(Stat.HP, maxLifeStat);
-        player.Stats.IncreaseValue(Stat.SPEED, speed);
+        player.Stats.IncreaseValue(Stat.MAX_HP, maxLifeStat, false);
+        player.Stats.IncreaseValue(Stat.HP, maxLifeStat, false);
+        player.Stats.IncreaseValue(Stat.SPEED, speed, false);
         //RarityTier = Rarity.RARE;
         //Name = "<color=\"blue\">Silver Amethyst Ring";
         //Description = "Elevates player's max health and agility simultaneously, infusing them with both vitality and swiftness for a well-rounded advantage.\n" +

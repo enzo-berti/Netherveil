@@ -109,7 +109,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     }
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, -_value);
+        Stats.IncreaseValue(Stat.HP, -_value, false);
 
         if (stats.GetValueStat(Stat.HP) <= 0)
         {

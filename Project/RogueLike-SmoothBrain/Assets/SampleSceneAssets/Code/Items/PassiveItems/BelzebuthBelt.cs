@@ -8,15 +8,15 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.DecreaseValue(Stat.CRIT_RATE, critRateStat);
-        player.Stats.DecreaseValue(Stat.CORRUPTION, corruptionStat);
+        player.Stats.DecreaseValue(Stat.CRIT_RATE, critRateStat, false);
+        player.Stats.DecreaseValue(Stat.CORRUPTION, corruptionStat, false);
     }
 
     public override void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.CRIT_RATE, critRateStat);
-        player.Stats.IncreaseValue(Stat.CORRUPTION, corruptionStat);
+        player.Stats.IncreaseValue(Stat.CRIT_RATE, critRateStat, false);
+        player.Stats.IncreaseValue(Stat.CORRUPTION, corruptionStat, false);
         //RarityTier = Rarity.RARE;
         //Name = "<color=\"blue\">Belzebuth's Belt";
         //Description = "Significantly raises critical hit rate while simultaneously increasing the player's corruption, tempting them with the dark allure of demonic power.\n" +

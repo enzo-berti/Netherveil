@@ -76,7 +76,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, -_value);
+        Stats.IncreaseValue(Stat.HP, -_value, false);
         if (stats.GetValueStat(Stat.HP) <= 0)
         {
             Death();

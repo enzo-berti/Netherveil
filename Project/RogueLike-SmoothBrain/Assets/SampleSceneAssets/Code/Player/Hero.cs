@@ -34,7 +34,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, -_value);
+        Stats.IncreaseValue(Stat.HP, -_value, false);
         if ((-_value) < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
