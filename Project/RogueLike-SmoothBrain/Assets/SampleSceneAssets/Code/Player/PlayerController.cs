@@ -40,8 +40,7 @@ public class PlayerController : MonoBehaviour
         hero = GetComponent<Hero>();
         cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;
-        PlaneOfDoom = new Plane(Vector3.up, 0f);
-        PlaneOfDoom.SetNormalAndPosition(Vector3.up, new Vector3(0f, 0.05f, 0f));
+        PlaneOfDoom = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
 
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
@@ -156,6 +155,10 @@ public class PlayerController : MonoBehaviour
         if (PlaneOfDoom.Raycast(ray, out float enter))
         {
             Vector3 hitPoint = ray.GetPoint(enter);
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.position = new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z);
+            Debug.DrawRay(ray.origin, ray.direction * 10000f, Color.red, 1000f); // This will draw the ray for 10 seconds
+
             float angle = transform.AngleOffsetToFaceTarget(new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z));
             if (angle != float.MaxValue)
             {
