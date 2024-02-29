@@ -7,6 +7,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         DASH = EntityState.NB
     }
     Animator animator;
+    PlayerInput playerInput;
     Inventory inventory = new Inventory();
     public Inventory Inventory { get { return inventory; } }
 
@@ -26,6 +27,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void Start()
     {
         animator = GetComponent<Animator>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     private void Update()
@@ -59,7 +61,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void Attack(IDamageable damageable)
     {
-        damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
+        int damages = (int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF));
+        if (playerInput.LaunchedChargedAttack)
+        {
+            damages += (int)(playerInput.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+        }
+        damageable.ApplyDamage(damages);
         onAttack?.Invoke(damageable);
 
         if (damageable is IKnockbackable)

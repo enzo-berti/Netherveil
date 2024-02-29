@@ -25,7 +25,10 @@ public class PlayerInput : MonoBehaviour
     public bool LaunchedAttack { get; private set; } = false;
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
-    bool LaunchedSpecialAttack = false;
+    readonly float CHARGED_ATTACK_MAX_TIME = 1.5f;
+    public float ChargedAttackCoef { get; private set; } = 0f;
+    public readonly float CHARGED_ATTACK_DAMAGES = 20f;
+    public bool LaunchedChargedAttack { get; private set; } = false;
 
     void Awake()
     {
@@ -102,16 +105,21 @@ public class PlayerInput : MonoBehaviour
             animator.SetTrigger("ChargedAttackCharging");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
-            LaunchedSpecialAttack = true;
-            StartCoroutine(chargedAttackCoroutine);
+            LaunchedChargedAttack = true;
+
         }
+    }
+
+    public void StartChargedAttackCasting()
+    {
+        StartCoroutine(ChargedAttackCoroutine());
     }
 
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
-        StopCoroutine(chargedAttackCoroutine);
-        if(LaunchedSpecialAttack)
+        if(LaunchedChargedAttack)
         {
+            StopAllCoroutines();
             animator.ResetTrigger("ChargedAttackRelease");
             animator.SetTrigger("ChargedAttackRelease");
         }
@@ -120,7 +128,7 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        //add check for damage if max
+        ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime /CHARGED_ATTACK_MAX_TIME;
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
         chargedAttackTime = 0f;
@@ -128,13 +136,12 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator ChargedAttackCoroutine()
     {
-        while (chargedAttackTime < 0.5f)
+        while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
             yield return null;
         }
 
-        chargedAttackTime = 0f;
         chargedAttackMax = true;
     }
 
@@ -203,7 +210,7 @@ public class PlayerInput : MonoBehaviour
         controller.ComboCount = 0;
         LaunchedAttack = false;
         attackQueue = false;
-        LaunchedSpecialAttack = false;
+        LaunchedChargedAttack = false;
 
         foreach (Collider collider in controller.chargedAttack)
         {
