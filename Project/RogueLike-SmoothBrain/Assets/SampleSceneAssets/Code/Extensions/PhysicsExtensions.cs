@@ -55,7 +55,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     static void GetSphereParameters(this SphereCollider collider, out float adjustedRadius, out Vector3 center)
@@ -116,7 +116,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     static void GetCapsuleParameters(this CapsuleCollider collider, out float adjustedRadius, out float adjustedHeight, out Vector3 center)
@@ -174,7 +174,7 @@ public static class PhysicsExtensions
             }
         }
 
-        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, targetTag, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
+        return targets.Count > 0 ? GetCollidersNotBehindObstacles(targets.ToArray(), rayOrigin, obstacleLayer, queryTriggerInteraction) : targets.ToArray();
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public static class PhysicsExtensions
         return result;
     }
 
-    static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    static Collider[] GetCollidersNotBehindObstacles(Collider[] targets, Vector3 rayOrigin, int obstacleLayer = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         List<Collider> targetsAheadOfObstacles = new List<Collider>();
         foreach (Collider target in targets)
