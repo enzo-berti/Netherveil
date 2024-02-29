@@ -30,7 +30,7 @@ public class PlayerInteractions : MonoBehaviour
     public void RetreivedConsommable()
     {
         var colliders =  Physics.OverlapSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
-        foreach(var collider in colliders.Where(x => x.gameObject.TryGetComponent<IConsommable>(out var consommable) && consommable.CanBeRetreived))
+        foreach(var collider in colliders.Where(x => x.gameObject.TryGetComponent<IConsommable>(out var consommable) && consommable.CanBeRetrieved))
         {
             collider.GetComponent<IConsommable>().OnRetrieved();
         }
