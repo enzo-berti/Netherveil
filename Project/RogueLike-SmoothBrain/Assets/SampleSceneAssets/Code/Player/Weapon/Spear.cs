@@ -126,7 +126,7 @@ public class Spear : MonoBehaviour
         hero.State = (int)Entity.EntityState.ATTACK;
     }
 
-    void ApplyDamages(Vector3 playerToTargetPos, bool debugMode = true)
+    void ApplyDamages(Vector3 playerToTargetPos, bool debugMode)
     {
         if(debugMode)
         {
