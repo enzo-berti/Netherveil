@@ -134,7 +134,7 @@ public class Spear : MonoBehaviour
         }
 
         //offset so that the collide also takes the spear end spot
-        float collideOffset = 0.3f;
+        float collideOffset = 0.2f;
         //construct collider in scene so that we can debug it
         Vector3 scale = spearThrowCollider.transform.localScale;
         scale.z = playerToTargetPos.magnitude;
