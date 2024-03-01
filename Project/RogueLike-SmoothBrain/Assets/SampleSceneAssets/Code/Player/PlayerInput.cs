@@ -101,7 +101,6 @@ public class PlayerInput : MonoBehaviour
         if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
     && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
         {
-            controller.ComboCount = 0;
             animator.SetTrigger("ChargedAttackCharging");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
