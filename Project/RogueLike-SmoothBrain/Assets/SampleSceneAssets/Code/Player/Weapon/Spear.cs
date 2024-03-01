@@ -77,6 +77,8 @@ public class Spear : MonoBehaviour
         Vector3 playerToPosToReachVec = (posToReach - this.transform.position);
 
         trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * 5000, ForceMode.Force);
+
+        //check if colliding with obstacle to stop the spear on collide
         RaycastHit[] hits = Physics.RaycastAll(this.transform.position, (posToReach - this.transform.position), (posToReach - this.transform.position).magnitude);
         if (hits.Length > 0)
         {
