@@ -67,6 +67,14 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         }
     }
 
+    protected override IEnumerator EntityDetection()
+    {
+        while (true)
+        {
+            yield return null;
+        }
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
