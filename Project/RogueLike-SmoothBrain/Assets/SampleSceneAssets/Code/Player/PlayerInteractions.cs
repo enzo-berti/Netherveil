@@ -10,8 +10,8 @@ public class PlayerInteractions : MonoBehaviour
 
     void Update()
     {
-        RetreivedConsommable();
-        // TODO : Add UI to understand that we can press a touch to take an object
+        RetrievedConsommable();
+        // TODO : Add UI to understand that we can press a button to take an object
     }
 
     public void Interract(InputAction.CallbackContext ctx)
@@ -27,7 +27,7 @@ public class PlayerInteractions : MonoBehaviour
         }
     }
 
-    public void RetreivedConsommable()
+    public void RetrievedConsommable()
     {
         var colliders =  Physics.OverlapSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
         foreach(var collider in colliders.Where(x => x.gameObject.TryGetComponent<IConsommable>(out var consommable) && consommable.CanBeRetrieved))
@@ -37,7 +37,7 @@ public class PlayerInteractions : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Handles.color = new Color(1, 1, 0, 0.25f);
+        //Handles.color = new Color(1, 1, 0, 0.25f);
         //Handles.DrawSolidDisc(transform.position, Vector3.up, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
     }
 }
