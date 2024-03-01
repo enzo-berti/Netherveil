@@ -111,6 +111,7 @@ public class PlayerInput : MonoBehaviour
 
     public void StartChargedAttackCasting()
     {
+        controller.ComboCount = 0;
         StartCoroutine(ChargedAttackCoroutine());
     }
 
