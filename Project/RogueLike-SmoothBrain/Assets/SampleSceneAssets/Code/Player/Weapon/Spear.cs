@@ -50,6 +50,7 @@ public class Spear : MonoBehaviour
             this.transform.rotation = Quaternion.identity * Quaternion.Euler(90, 0, 0);
             IsThrowing = false;
             hero.State = (int)Entity.EntityState.MOVE;
+            spearThrowCollider.gameObject.SetActive(false);
         }
         else if (!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
         {
@@ -64,6 +65,7 @@ public class Spear : MonoBehaviour
             IsThrowing = false;
             Destroy(trail);
             hero.State = (int)Entity.EntityState.MOVE;
+            spearThrowCollider.gameObject.SetActive(false);
         }
     }
 
@@ -89,26 +91,7 @@ public class Spear : MonoBehaviour
             }
         }
 
-        //offset so that the collide also takes the spear end spot
-        float collideOffset = 0.3f;
-        //construct collider in scene so that we can debug it
-        Vector3 scale = spearThrowCollider.transform.localScale;
-        scale.z = playerToPosToReachVec.magnitude;
-        spearThrowCollider.transform.localScale = scale;
-        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
-
-        Collider[] colliders = spearThrowCollider.BoxOverlap();
-
-        if (colliders.Length > 0)
-        {
-            foreach (var collider in colliders)
-            {
-                if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
-                {
-                    entity.ApplyDamage((int)(hero.Stats.GetValueStat(Stat.ATK) * hero.Stats.GetValueStat(Stat.ATK_COEFF)));
-                }
-            }
-        }
+        ApplyDamages(playerToPosToReachVec, debugMode: true);
 
         // On set le parent que la lance avait ( la main du joueur ), puis on la retire tant qu'elle est lancée afin de la rendre indépendante 
         parent = this.transform.parent;
@@ -136,29 +119,39 @@ public class Spear : MonoBehaviour
         }
 
         Vector3 playerToSpearVec = spearPosition - player.position;
-        //offset so that the collide also takes the spear end spot
-        float collideOffset = 0.3f;
-        //construct collider in scene so that we can debug it
-        Vector3 scale = spearThrowCollider.transform.localScale;
-        scale.z = playerToSpearVec.magnitude;
-        spearThrowCollider.transform.localScale = scale;
-        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
-
-        RaycastHit[] hits = spearThrowCollider.BoxCastAll();
-
-        if (hits.Length > 0)
-        {
-            foreach (var hit in hits)
-            {
-                if (hit.collider.gameObject.TryGetComponent<IDamageable>(out var entity) && hit.collider.gameObject != player.gameObject)
-                {
-                    entity.ApplyDamage((int)hero.Stats.GetValueStat(Stat.ATK));
-                }
-            }
-        }
+        ApplyDamages(playerToSpearVec, debugMode: true);
 
         IsThrown = false;
         IsThrowing = true;
         hero.State = (int)Entity.EntityState.ATTACK;
+    }
+
+    void ApplyDamages(Vector3 playerToTargetPos, bool debugMode = true)
+    {
+        if(debugMode)
+        {
+            spearThrowCollider.gameObject.SetActive(true);
+        }
+
+        //offset so that the collide also takes the spear end spot
+        float collideOffset = 0.3f;
+        //construct collider in scene so that we can debug it
+        Vector3 scale = spearThrowCollider.transform.localScale;
+        scale.z = playerToTargetPos.magnitude;
+        spearThrowCollider.transform.localScale = scale;
+        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
+
+        Collider[] colliders = spearThrowCollider.BoxOverlap();
+
+        if (colliders.Length > 0)
+        {
+            foreach (var collider in colliders)
+            {
+                if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
+                {
+                    entity.ApplyDamage((int)(hero.Stats.GetValueStat(Stat.ATK) * hero.Stats.GetValueStat(Stat.ATK_COEFF)));
+                }
+            }
+        }
     }
 }
