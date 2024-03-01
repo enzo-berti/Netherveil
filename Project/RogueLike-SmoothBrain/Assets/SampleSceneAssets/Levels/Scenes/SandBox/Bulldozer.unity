@@ -429,7 +429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healValue: 10
   price: 10
-  canBeRetreived: 1
+  canBeRetrieved: 1
 --- !u!1 &313496096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,7 +1009,12 @@ PrefabInstance:
     - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
         type: 3}
       propertyPath: stats.stats.Array.size
-      value: 8
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: stats.stats.Array.data[0].stat
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
         type: 3}
@@ -1035,6 +1040,31 @@ PrefabInstance:
         type: 3}
       propertyPath: stats.stats.Array.data[4].maxStat
       value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: stats.stats.Array.data[0].maxValue
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: stats.stats.Array.data[0].minValue
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: stats.stats.Array.data[0].hasMaxStat
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: stats.stats.Array.data[0].hasMinStat
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: stats.stats.Array.data[1].hasMaxStat
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8688002045578851570, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
         type: 3}
@@ -1093,6 +1123,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547581371596555432, guid: e4d3b79f0a4ad5449a15561541295303,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5808861663249297600, guid: e4d3b79f0a4ad5449a15561541295303,
         type: 3}
@@ -1381,6 +1416,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 5047629768900978217, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

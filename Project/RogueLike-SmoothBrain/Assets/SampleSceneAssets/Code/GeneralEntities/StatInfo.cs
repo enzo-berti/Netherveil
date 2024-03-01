@@ -85,21 +85,26 @@ public class StatInfoDrawerUIE : PropertyDrawer
             DrawMember(position, hasMaxStatProperty);
             if (hasMaxStatProperty.boolValue) 
             {
+                EditorGUI.indentLevel++;
                 DrawMember(position, maxStatProperty);
                 GUI.enabled = false;
                 DrawMember(position, overloadProperty);
                 GUI.enabled = true;
+                EditorGUI.indentLevel--;
             }
             DrawMember(position, hasMinStatProperty);
             if (hasMinStatProperty.boolValue)
             {
+                EditorGUI.indentLevel++;
                 DrawMember(position, minStatProperty);
                 GUI.enabled = false;
                 DrawMember(position, underloadProperty); 
                 GUI.enabled = true;
+                EditorGUI.indentLevel--;
             }
 
         }
+        
         EditorGUI.EndProperty();
     }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -118,13 +123,15 @@ public class StatInfoDrawerUIE : PropertyDrawer
     private void DrawMember(Rect position, SerializedProperty propertyToDraw)
     {
         nbMember++;
-        float posX = position.min.x + 15;
+        EditorGUI.indentLevel++;
+        float posX = position.min.x;
         float posY = position.min.y + EditorGUIUtility.singleLineHeight * nbMember;
         float width = position.size.x;
         float height = EditorGUIUtility.singleLineHeight;
 
         Rect drawArea = new Rect(posX, posY, width, height);
         EditorGUI.PropertyField(drawArea, propertyToDraw);
+        EditorGUI.indentLevel--;
     }
 }
 #endif
