@@ -34,28 +34,47 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     private float staggerImmunity;
     private float staggerTimer;
 
+    protected override IEnumerator EntityDetection()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            if (!agent.enabled)
+                continue;
+
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+                    .Select(x => x.GetComponent<Entity>())
+                    .Where(x => x != null && x != this)
+                    .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+                    .ToArray();
+        }
+    }
+
     protected override IEnumerator Brain()
     {
         while (true)
         {
             yield return null;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
-                .Select(x => x.GetComponent<Entity>())
-                .Where(x => x != null && x != this)
-                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-                .ToArray();
+            if (!agent.enabled)
+                continue;
 
-            Hero player = entities
-                .Select(x => x.GetComponent<Hero>())
-                .Where(x => x != null)
-                .FirstOrDefault();
+            Hero player = null;
+            Tank[] tanks = null;
+            if (nearbyEntities.Length > 0)
+            {
+                player = nearbyEntities
+                    .Select(x => x.GetComponent<Hero>())
+                    .Where(x => x != null)
+                    .FirstOrDefault();
 
-            Tank[] tanks = entities
-                .Select(x => x.GetComponent<Tank>())
-                .Where(x => x != null)
-                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-                .ToArray();
+                tanks = nearbyEntities
+                    .Select(x => x.GetComponent<Tank>())
+                    .Where(x => x != null)
+                    .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+                    .ToArray();
+            }
 
             // Update timer fuite
             fleeTimer = fleeTimer > 0 ? fleeTimer -= Time.deltaTime : 0;

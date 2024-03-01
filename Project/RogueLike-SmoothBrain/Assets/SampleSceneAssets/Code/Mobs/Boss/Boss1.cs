@@ -65,6 +65,13 @@ public class Boss1 : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         }
     }
+    protected override IEnumerator EntityDetection()
+    {
+        while (true)
+        {
+            yield return null;
+        }
+    }
 
     public void Attack(IDamageable _damageable)
     {

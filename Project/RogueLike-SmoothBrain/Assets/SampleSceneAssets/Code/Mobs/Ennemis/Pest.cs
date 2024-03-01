@@ -1,4 +1,4 @@
-    using System.Collections;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -13,9 +13,26 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     [Header("Pest Parameters")]
-    [SerializeField, Range(0f, 360f)] private float angle = 120f; 
+    [SerializeField, Range(0f, 360f)] private float angle = 120f;
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
     [SerializeField] private float movementDelay = 2f;
+
+    protected override IEnumerator EntityDetection()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(movementDelay);
+
+            if (!agent.enabled)
+                continue;
+
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+                    .Select(x => x.GetComponent<Entity>())
+                    .Where(x => x != null && x != this)
+                    .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+                    .ToArray();
+        }
+    }
 
     protected override IEnumerator Brain()
     {
@@ -26,18 +43,12 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
             if (!agent.enabled)
                 continue;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
-                .Select(x => x.GetComponent<Entity>())
-                .Where(x => x != null && x != this)
-                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-                .ToArray();
-
-            Hero player = entities
+            Hero player = nearbyEntities
                 .Select(x => x.GetComponent<Hero>())
                 .Where(x => x != null)
                 .FirstOrDefault();
 
-            Pest[] pests = entities
+            Pest[] pests = nearbyEntities
                 .Select(x => x.GetComponent<Pest>())
                 .Where(x => x != null)
                 .ToArray();
