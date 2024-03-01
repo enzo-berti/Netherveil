@@ -8,6 +8,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     }
     Animator animator;
     PlayerInput playerInput;
+    PlayerController playerController;
     Inventory inventory = new Inventory();
     public Inventory Inventory { get { return inventory; } }
 
@@ -28,6 +29,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     {
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -61,11 +63,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void Attack(IDamageable damageable)
     {
-        int damages = (int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF));
+        int damages = (int)stats.GetValueStat(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {
-            damages += (int)(playerInput.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+            damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
         }
+        else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT -1)
+        {
+            damages += playerController.FINISHER_DAMAGES;
+        }
+
+        damages = (int)(damages * stats.GetValueStat(Stat.ATK_COEFF));
         damageable.ApplyDamage(damages);
         onAttack?.Invoke(damageable);
 

@@ -3,6 +3,7 @@ using UnityEngine;
 public class Spear : MonoBehaviour
 {
     Transform player;
+    Hero hero;
     Transform parent = null;
     Animator playerAnimator;
 
@@ -17,15 +18,16 @@ public class Spear : MonoBehaviour
     public bool IsThrown { get; private set; } = false;
     public bool IsThrowing { get; private set; } = false;
     Vector3 posToReach = new();
-    Rigidbody rb;
+    MeshRenderer meshRenderer;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        rb = GetComponent<Rigidbody>();
+        hero = player.GetComponent<Hero>();
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
         playerAnimator = player.GetComponent<Animator>();
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     void Update()
@@ -37,36 +39,37 @@ public class Spear : MonoBehaviour
         {
             return;
         }
+
+
         if (IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
         {
             Destroy(trail);
-            this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+            meshRenderer.enabled = true;
             // We set position at the exact place ( the spear doesn't move, just tp )
-            this.gameObject.transform.position = posToReach;
-            this.gameObject.transform.rotation = Quaternion.identity * Quaternion.Euler(90,0,0);
+            this.transform.position = posToReach;
+            this.transform.rotation = Quaternion.identity * Quaternion.Euler(90, 0, 0);
             IsThrowing = false;
-            player.GetComponent<Hero>().State = (int)Entity.EntityState.MOVE;
+            hero.State = (int)Entity.EntityState.MOVE;
         }
-        else if(!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
+        else if (!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
         {
-            rb.velocity = Vector3.zero;
-            this.gameObject.transform.position = posToReach;
+            this.transform.position = posToReach;
             // On réatache la lance à la main
             this.transform.SetParent(parent, true);
             // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
-            this.gameObject.transform.localPosition = initLocalPosition;
-            this.gameObject.transform.localRotation = initLocalRotation;
+            this.transform.localPosition = initLocalPosition;
+            this.transform.localRotation = initLocalRotation;
             parent = null;
-            this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+            meshRenderer.enabled = true;
             IsThrowing = false;
             Destroy(trail);
-            player.GetComponent<Hero>().State = (int)Entity.EntityState.MOVE;
+            hero.State = (int)Entity.EntityState.MOVE;
         }
     }
 
     public void Throw(Vector3 _posToReach)
     {
-        this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        meshRenderer.enabled = false;
         trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
         posToReach = _posToReach;
         Vector3 playerToPosToReachVec = (posToReach - this.transform.position);
@@ -92,17 +95,17 @@ public class Spear : MonoBehaviour
         Vector3 scale = spearThrowCollider.transform.localScale;
         scale.z = playerToPosToReachVec.magnitude;
         spearThrowCollider.transform.localScale = scale;
-        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z/2f + collideOffset);
+        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
 
-         hits = spearThrowCollider.BoxCastAll();
+        Collider[] colliders = spearThrowCollider.BoxOverlap();
 
-        if (hits.Length > 0)
+        if (colliders.Length > 0)
         {
-            foreach (var hit in hits)
+            foreach (var collider in colliders)
             {
-                if(hit.collider.gameObject.TryGetComponent<IDamageable>(out var entity) && hit.collider.gameObject != player.gameObject)
+                if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
                 {
-                    entity.ApplyDamage((int)player.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK));
+                    entity.ApplyDamage((int)(hero.Stats.GetValueStat(Stat.ATK) * hero.Stats.GetValueStat(Stat.ATK_COEFF)));
                 }
             }
         }
@@ -113,12 +116,12 @@ public class Spear : MonoBehaviour
 
         IsThrown = true;
         IsThrowing = true;
-        player.GetComponent<Hero>().State = (int)Entity.EntityState.ATTACK;
+        hero.State = (int)Entity.EntityState.ATTACK;
     }
 
     public void Return()
     {
-        this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        meshRenderer.enabled = false;
         trail = Instantiate(trailPf, posToReach, Quaternion.identity);
         // Spear position est la position où la lance était plantée avant de revenir vers le joueur
         spearPosition = posToReach;
@@ -149,13 +152,13 @@ public class Spear : MonoBehaviour
             {
                 if (hit.collider.gameObject.TryGetComponent<IDamageable>(out var entity) && hit.collider.gameObject != player.gameObject)
                 {
-                    entity.ApplyDamage((int)player.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK));
+                    entity.ApplyDamage((int)hero.Stats.GetValueStat(Stat.ATK));
                 }
             }
         }
 
         IsThrown = false;
         IsThrowing = true;
-        player.GetComponent<Hero>().State = (int)Entity.EntityState.ATTACK;
+        hero.State = (int)Entity.EntityState.ATTACK;
     }
 }

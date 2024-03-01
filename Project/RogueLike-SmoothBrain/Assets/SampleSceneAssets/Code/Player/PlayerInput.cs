@@ -27,7 +27,6 @@ public class PlayerInput : MonoBehaviour
     bool chargedAttackMax = false;
     readonly float CHARGED_ATTACK_MAX_TIME = 1.5f;
     public float ChargedAttackCoef { get; private set; } = 0f;
-    public readonly float CHARGED_ATTACK_DAMAGES = 20f;
     public bool LaunchedChargedAttack { get; private set; } = false;
 
     void Awake()
@@ -244,7 +243,7 @@ public class PlayerInput : MonoBehaviour
             if (spear.IsThrowing) return;
             if (!spear.IsThrown)
             {
-                spear.Throw(this.transform.position + this.transform.forward * this.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
+                spear.Throw(this.transform.position + this.transform.forward *controller.hero.Stats.GetValueStat(Stat.ATK_RANGE));
             }
             else
             {

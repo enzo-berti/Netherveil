@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
     public const float VISION_CONE_ANGLE = 45f;
     public const float VISION_CONE_RANGE = 8f;
 
+    //attack damages
+    public readonly int FINISHER_DAMAGES = 10;
+    public readonly int CHARGED_ATTACK_DAMAGES = 20;
+
 
     void Start()
     {
