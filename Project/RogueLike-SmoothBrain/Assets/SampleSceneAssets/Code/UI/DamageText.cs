@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -23,7 +21,9 @@ public class DamageText : MonoBehaviour
 
         //fade + gris
         newColor -= 1f * Time.deltaTime;
-        m_TextMeshPro.color = new Color(newColor, newColor, newColor, newColor);
+        Color newColor2 = m_TextMeshPro.color;
+        newColor2.a = newColor;
+        m_TextMeshPro.color = newColor2;
 
         if (m_TextMeshPro.alpha <= 0)
         {
@@ -39,5 +39,10 @@ public class DamageText : MonoBehaviour
     public void SetSize(int size)
     {
         m_TextMeshPro.fontSize = size;
+    }
+
+    public void SetColor(Color color)
+    { 
+        m_TextMeshPro.color = color;
     }
 }
