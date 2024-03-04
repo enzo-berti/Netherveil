@@ -11,7 +11,7 @@ public class RoomToolWindow : EditorWindow
     string prefabName = "";
     GameObject roomObj;
 
-    [MenuItem("Tools/Room/Create")]
+    [UnityEditor.MenuItem("Tools/Room/Create")]
     public static void CreateRoom()
     {
         EditorWindow.GetWindow(typeof(RoomToolWindow));
