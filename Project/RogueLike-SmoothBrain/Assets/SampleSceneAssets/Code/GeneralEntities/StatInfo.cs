@@ -54,6 +54,7 @@ public class StatInfoDrawerUIE : PropertyDrawer
     SerializedProperty statProperty;
     SerializedProperty valueProperty;
     SerializedProperty coeffProperty;
+    SerializedProperty hasCoeffProperty;
     SerializedProperty hasMaxStatProperty;
     SerializedProperty hasMinStatProperty;
     SerializedProperty maxStatProperty;
@@ -70,6 +71,8 @@ public class StatInfoDrawerUIE : PropertyDrawer
         statProperty = property.FindPropertyRelative("stat");
         valueProperty = property.FindPropertyRelative("value");
         coeffProperty = property.FindPropertyRelative("coeff");
+
+        hasCoeffProperty = property.FindPropertyRelative("hasCoeff");
         hasMaxStatProperty = property.FindPropertyRelative("hasMaxStat");
         hasMinStatProperty = property.FindPropertyRelative("hasMinStat");
 
@@ -86,7 +89,14 @@ public class StatInfoDrawerUIE : PropertyDrawer
         {
             DrawMember(position, statProperty);
             DrawMember(position, valueProperty);
-            DrawMember(position, coeffProperty);
+
+            DrawMember(position, hasCoeffProperty);
+            if (hasCoeffProperty.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                DrawMember(position, coeffProperty);
+                EditorGUI.indentLevel--;
+            }
 
             DrawMember(position, hasMaxStatProperty);
             if (hasMaxStatProperty.boolValue) 
@@ -122,6 +132,7 @@ public class StatInfoDrawerUIE : PropertyDrawer
             totalLine += 5;
             if (property.FindPropertyRelative("hasMaxStat").boolValue) totalLine += 2;
             if (property.FindPropertyRelative("hasMinStat").boolValue) totalLine += 2;
+            if (property.FindPropertyRelative("hasCoeff").boolValue) totalLine += 1;
             
         }
         return EditorGUIUtility.singleLineHeight * totalLine;
