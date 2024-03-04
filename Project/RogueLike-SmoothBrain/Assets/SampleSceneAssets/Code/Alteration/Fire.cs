@@ -8,7 +8,6 @@ public class Fire : Status
     {
         this.damage = damage;
         this.duration = duration;
-        this.isConst = true;
     }
 
     public override void ApplyEffect(Entity target)
