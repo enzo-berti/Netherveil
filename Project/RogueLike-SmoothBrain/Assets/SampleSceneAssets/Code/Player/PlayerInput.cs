@@ -27,7 +27,7 @@ public class PlayerInput : MonoBehaviour
     public bool LaunchedAttack { get; private set; } = false;
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
-    readonly float CHARGED_ATTACK_MAX_TIME = 1.5f;
+    readonly float CHARGED_ATTACK_MAX_TIME = 1f;
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
 
@@ -158,7 +158,7 @@ public class PlayerInput : MonoBehaviour
     public void StartChargedAttackCasting()
     {
         controller.ComboCount = 0;
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.65f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.35f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
         StartCoroutine(ChargedAttackCoroutine());
     }
 
@@ -175,9 +175,9 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        cameraUtilities.ShakeCamera(0.35f, 0.5f, easeFuncs[(int)easeShake]);
+        ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
+        cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
-        ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime /CHARGED_ATTACK_MAX_TIME;
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
         chargedAttackTime = 0f;
