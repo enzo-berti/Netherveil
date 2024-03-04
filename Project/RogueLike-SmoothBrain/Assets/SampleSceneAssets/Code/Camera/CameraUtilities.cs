@@ -32,9 +32,8 @@ public class CameraUtilities : MonoBehaviour
 
         while (elapsedTime < _duration)
         {
-            float zoomProgression = elapsedTime / _duration; 
-            float smoothT = 1 - Mathf.Pow(1 - zoomProgression, 3);
-            float currentFOV = Mathf.Lerp(initialFOV, _reachedFOV, smoothT);
+            float zoomProgression = elapsedTime / _duration;
+            float currentFOV = Mathf.Lerp(initialFOV, _reachedFOV, EaseInCubic(zoomProgression));
             virtualCamera.m_Lens.FieldOfView = currentFOV;
 
             elapsedTime += Time.deltaTime;
@@ -63,5 +62,10 @@ public class CameraUtilities : MonoBehaviour
             float smoothT = 1 - Mathf.Pow(1 - shackProgression, 3);
             cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(startingIntensity, 0f, smoothT);
         }
+    }
+
+    private float EaseInCubic(float t)
+    {
+        return t * t * t;
     }
 }
