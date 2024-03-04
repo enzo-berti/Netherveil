@@ -12,6 +12,8 @@ public class Stats
 { 
     [SerializeField] List<StatInfo> stats = new();
     [SerializeField] private string name = "Default";
+    public delegate void OnStatChangeDelegate(Stat stat);
+    public OnStatChangeDelegate onStatChange;
 
     #region Getters
     // Get number of stats
@@ -165,7 +167,7 @@ public class Stats
                 else
                     stats[index].value += increasingValue;
             }
-            if (stats[index].value != baseValue) stats[index].onStatChange?.Invoke(info);
+            if (stats[index].value != baseValue) onStatChange?.Invoke(info);
         }
         else
         {
@@ -230,7 +232,7 @@ public class Stats
             else
                 stats[index].value -= decreasingValue;
 
-            if (baseValue != stats[index].value) stats[index].onStatChange?.Invoke(info);
+            if (baseValue != stats[index].value) onStatChange?.Invoke(info);
         }
         else
             Debug.LogWarning($"Can't find {info} in {name}");
