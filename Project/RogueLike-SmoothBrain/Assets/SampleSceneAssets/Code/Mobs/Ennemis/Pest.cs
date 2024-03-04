@@ -16,6 +16,9 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
     [SerializeField] private float movementDelay = 2f;
+    [SerializeField] private float attackDelay = 2f;
+    private Coroutine attackRoutine;
+    private Coroutine knockbackRoutine;
 
     protected override IEnumerator EntityDetection()
     {
@@ -102,7 +105,42 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     public void GetKnockback(Vector3 force)
     {
-        StartCoroutine(ApplyKnockback(force));
+        if (knockbackRoutine == null)
+            return;
+
+        knockbackRoutine = StartCoroutine(ApplyKnockback(force));
+    }
+
+    public void MoveTo(Vector3 posToMove)
+    {
+        agent.SetDestination(posToMove);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+
+        if (!collision.gameObject.CompareTag("Player") || damageable == null || attackRoutine != null)
+            return;
+
+        attackRoutine = StartCoroutine(ApplyAttack(damageable));
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (!collision.gameObject.CompareTag("Player") || attackRoutine == null)
+            return;
+
+        StopCoroutine(attackRoutine);
+    }
+
+    private IEnumerator ApplyAttack(IDamageable damageable)
+    {
+        while (true)
+        {
+            Attack(damageable);
+            yield return new WaitForSeconds(attackDelay);
+        }
     }
 
     protected IEnumerator ApplyKnockback(Vector3 force)
@@ -126,26 +164,11 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
         agent.enabled = true;
     }
 
-    public void MoveTo(Vector3 posToMove)
-    {
-        agent.SetDestination(posToMove);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-
-        if (!collision.gameObject.CompareTag("Player") || damageable == null)
-            return;
-
-        Attack(damageable);
-    }
-
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (Selection.activeGameObject != gameObject)
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(angle);
         DisplayAttackRange(angle);
