@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
@@ -11,12 +13,27 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
+    [SerializeField] float maxDashRange;
+
+    [Header("Boss Attack Hitboxes")]
+    [SerializeField] List<NestedList<Collider>> attacks;
+
+    [Header("Thrust")]
+    [SerializeField] float thrustCooldown = 0.5f;
+    float thrustCDTimer;
+    [SerializeField] float thrustCharge = 1f;
+    float thrustChargeTimer;
+    [SerializeField] float thrustDuration = 1f;
+    float thrustDurationTimer;
+
+    int thrustCounter = 0;
 
     enum Attacks
     {
-        RANGE,
         THRUST,
         DASH,
+        AOE,
+        RANGE,
         NONE
     }
 
@@ -50,6 +67,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 .Where(x => x != null)
                 .FirstOrDefault();
 
+            if (player && attackState != AttackState.ATTACKING)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                lookRotation.x = 0;
+                lookRotation.z = 0;
+                transform.rotation = lookRotation;
+            }
+
             if (attackCooldown > 0)
             {
                 attackState = AttackState.IDLE;
@@ -58,7 +83,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
             else if (attackCooldown == 0)
             {
-                currentAttack = (Attacks)Random.Range(0, 3);
+                //currentAttack = (Attacks)Random.Range(0, 3);
+                currentAttack = Attacks.THRUST;
             }
 
             switch (currentAttack)
@@ -68,19 +94,16 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     break;
 
                 case Attacks.THRUST:
-                    TripleThrurst();
+                    TripleThrust();
                     break;
 
                 case Attacks.DASH:
                     Dash();
                     break;
-
-                case Attacks.NONE:
-                    break;
             }
-
         }
     }
+
     protected override IEnumerator EntityDetection()
     {
         while (true)
@@ -161,10 +184,67 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         attackState = AttackState.IDLE;
     }
 
-    void TripleThrurst()
+    void TripleThrust()
     {
-        currentAttack = Attacks.NONE;
-        attackState = AttackState.IDLE;
+        Debug.Log(attackState);
+
+        switch (attackState)
+        {
+            case AttackState.IDLE:
+
+                attackState = AttackState.CHARGING;
+                break;
+
+            case AttackState.CHARGING:
+
+                if (thrustChargeTimer < thrustCharge)
+                {
+                    thrustChargeTimer += Time.deltaTime;
+                }
+                else
+                {
+                    AttackCollide(attacks[(int)Attacks.THRUST].data);
+                    thrustChargeTimer = 0;
+                    attackState = AttackState.ATTACKING;
+                }
+                break;
+
+            case AttackState.ATTACKING:
+
+                if (thrustDurationTimer < thrustDuration)
+                {
+                    thrustDurationTimer += Time.deltaTime;
+                }
+                else
+                {
+                    DisableHitboxes();
+                    thrustDurationTimer = 0;
+                    attackState = AttackState.RECOVERING;
+                }
+                break;
+
+            case AttackState.RECOVERING:
+
+                thrustCounter++;
+
+                if (thrustCounter < 3)
+                {
+                    attackState = AttackState.IDLE;
+                }
+                else if (thrustCDTimer < thrustCooldown)
+                {
+                    thrustCDTimer += Time.deltaTime;
+                }
+                else
+                {
+                    thrustCDTimer = 0;
+                    thrustCounter = 0;
+                    currentAttack = Attacks.NONE;
+                    attackState = AttackState.IDLE;
+                    attackCooldown = 1f;
+                }
+                break;
+        }
     }
 
     void Dash()
@@ -172,4 +252,27 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
     }
+
+    void DisableHitboxes()
+    {
+        foreach (NestedList<Collider> attackColliders in attacks)
+        {
+            foreach (Collider attackCollider in attackColliders.data)
+            {
+                attackCollider.gameObject.SetActive(false);
+            }
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (!Selection.Contains(gameObject))
+            return;
+
+        DisplayVisionRange(visionAngle);
+        DisplayAttackRange(visionAngle);
+        DisplayInfos();
+    }
+#endif
 }

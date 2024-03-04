@@ -14,17 +14,21 @@ public abstract class Entity : MonoBehaviour
 
     private void Update()
     {
-        foreach (var status in statusList)
+        if(statusList.Count > 0)
         {
-            if(!status.isFinished)
+            for(int i = statusList.Count - 1; i >= 0; i--)
             {
-                status.DoEffect();
-            }
-            else
-            {
-                statusList.Remove(status);
+                if (!statusList[i].isFinished)
+                {
+                    statusList[i].DoEffect();
+                }
+                else
+                {
+                    statusList.RemoveAt(i);
+                }
             }
         }
+        
     }
     public Stats Stats
     {
