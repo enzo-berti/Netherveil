@@ -33,9 +33,11 @@ public class Seed
 
     public int Range(int minInclusive, int maxExclusive, ref int noise)
     {
-        noise++;
-
-        return (int)((Value + noise) % (maxExclusive - minInclusive)) + minInclusive;
+        //noise += Mathf.Abs(maxExclusive) + 1;
+        //int seed = (int)Value + noise;
+        //
+        //return (seed % (maxExclusive - minInclusive)) + minInclusive;
+        return Random.Range(minInclusive, maxExclusive);
     }
 
     public float Range(float minInclusive, float maxExclusive)
