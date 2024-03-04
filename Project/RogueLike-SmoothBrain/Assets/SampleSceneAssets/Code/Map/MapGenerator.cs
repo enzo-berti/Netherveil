@@ -64,7 +64,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.Instance.seed.Set(39423823219);
+        GameManager.Instance.seed.Set(341304);
 
         GenerationParam genParam = new GenerationParam(nbNormal: 5);
 

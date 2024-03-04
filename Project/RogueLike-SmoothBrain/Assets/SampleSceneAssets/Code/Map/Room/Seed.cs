@@ -33,22 +33,9 @@ public class Seed
 
     public int Range(int minInclusive, int maxExclusive, ref int noise)
     {
-        //Debug.Log("RANGE : " + minInclusive + " " + maxExclusive + " " + (noise + 1));
-        //int firstModulo = (int)Value % (maxExclusive - minInclusive);
-        //Debug.Log(firstModulo);
-        //int randValue = firstModulo + minInclusive;
-        //Debug.Log(randValue);
-        //int noiseValue = (randValue + (++noise));
-        //Debug.Log(noiseValue);
-        //int lastModulo = noiseValue % maxExclusive;
-        //Debug.Log(lastModulo);
-        //return lastModulo;
+        noise++;
 
-        //Debug.Log("RAND : " + minInclusive + " " + maxExclusive);
-        //Debug.Log("modulo inside = " + Value + " " + (maxExclusive - minInclusive));
-
-        //return (int)(Value % (maxExclusive - minInclusive)) + minInclusive;
-        return Random.Range(minInclusive, maxExclusive);
+        return (int)((Value + noise) % (maxExclusive - minInclusive)) + minInclusive;
     }
 
     public float Range(float minInclusive, float maxExclusive)
