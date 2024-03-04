@@ -20,6 +20,24 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     private Coroutine attackRoutine;
     private Coroutine knockbackRoutine;
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+
+        if (!collision.gameObject.CompareTag("Player") || damageable == null || attackRoutine != null)
+            return;
+
+        attackRoutine = StartCoroutine(ApplyAttack(damageable));
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (!collision.gameObject.CompareTag("Player") || attackRoutine == null)
+            return;
+
+        StopCoroutine(attackRoutine);
+    }
+
     protected override IEnumerator EntityDetection()
     {
         while (true)
@@ -105,7 +123,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     public void GetKnockback(Vector3 force)
     {
-        if (knockbackRoutine == null)
+        if (knockbackRoutine != null)
             return;
 
         knockbackRoutine = StartCoroutine(ApplyKnockback(force));
@@ -114,24 +132,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-
-        if (!collision.gameObject.CompareTag("Player") || damageable == null || attackRoutine != null)
-            return;
-
-        attackRoutine = StartCoroutine(ApplyAttack(damageable));
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (!collision.gameObject.CompareTag("Player") || attackRoutine == null)
-            return;
-
-        StopCoroutine(attackRoutine);
     }
 
     private IEnumerator ApplyAttack(IDamageable damageable)
@@ -147,7 +147,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     {
         yield return null;
         agent.enabled = false;
-        rb.useGravity = true;
         rb.isKinematic = false;
         rb.AddForce(force, ForceMode.Impulse);
 
@@ -157,11 +156,12 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.useGravity = false;
         rb.isKinematic = true;
 
         agent.Warp(transform.position);
         agent.enabled = true;
+
+        knockbackRoutine = null;
     }
 
 #if UNITY_EDITOR

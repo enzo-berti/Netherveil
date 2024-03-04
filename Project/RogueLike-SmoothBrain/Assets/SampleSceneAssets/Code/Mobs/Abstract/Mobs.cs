@@ -16,7 +16,7 @@ public abstract class Mobs : Entity
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = stats.GetValueStat(Stat.SPEED);
-        nearbyEntities = new Entity[0];
+        nearbyEntities = null;
     }
 
     private void Start()
