@@ -60,7 +60,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
-    private void Start()
+    private void Awake()
     {
         GameManager.Instance.seed.Set(39423823219);
 
