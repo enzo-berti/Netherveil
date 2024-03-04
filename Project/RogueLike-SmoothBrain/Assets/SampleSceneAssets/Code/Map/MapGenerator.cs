@@ -5,6 +5,7 @@ using UnityEngine;
 public enum RoomType
 {
     None,
+    Lobby,
     Normal,
     Treasure,
     Challenge,
@@ -52,6 +53,7 @@ public class MapGenerator : MonoBehaviour
 {
     public static int NoiseGenerator = 0;
 
+    [SerializeField] private List<GameObject> roomLobby = new List<GameObject>();
     [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
     [SerializeField] private List<GameObject> roomTreasure = new List<GameObject>();
     [SerializeField] private List<GameObject> roomChallenge = new List<GameObject>();
@@ -64,7 +66,7 @@ public class MapGenerator : MonoBehaviour
     {
         GameManager.Instance.seed.Set(39423823219);
 
-        GenerationParam genParam = new GenerationParam(nbNormal: 20);
+        GenerationParam genParam = new GenerationParam(nbNormal: 5);
 
         GenerateMap(ref genParam);
     }
@@ -169,13 +171,14 @@ public class MapGenerator : MonoBehaviour
             genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
+            roomGO.transform.parent = gameObject.transform;
             hasGenerated = true;
         }
     }
 
     private void InstantiateLobby(out GameObject roomGO, ref GenerationParam genParam)
     {
-        roomGO = Instantiate(roomNormal[0]);
+        roomGO = Instantiate(roomLobby[GameManager.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
     
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(genParam);
@@ -193,5 +196,6 @@ public class MapGenerator : MonoBehaviour
         }
     
         genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
+        roomGO.transform.parent = gameObject.transform;
     }
 }

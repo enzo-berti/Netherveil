@@ -42,12 +42,12 @@ public class RoomToolWindow : EditorWindow
 
         GameObject skeleton = room.transform.GetChild(1).gameObject;
         skeleton.gameObject.name = "Skeleton";
-        skeleton.layer = LayerMask.GetMask("Map");
+        skeleton.layer = LayerMask.NameToLayer("Map");
         skeleton.transform.parent = roomPrefab.transform;
         BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
         boxCollider.isTrigger = true;
         MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
-        collisionPlayer.includeLayers = LayerMask.GetMask("Everything");
+        collisionPlayer.includeLayers = -1;
 
         GameObject arrows = room.transform.GetChild(0).gameObject;
         arrows.gameObject.name = "Doors";
