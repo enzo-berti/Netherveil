@@ -9,13 +9,28 @@ public class DamageManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = Instantiate(Resources.Load("DamageManager") as GameObject).GetComponent<DamageManager>();
+                Instantiate(Resources.Load("DamageManager") as GameObject);
             }
+
             return instance;
         }
     }
 
     [SerializeField] DamageText dmgTextPrefab;
+
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     public void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit)
     {
