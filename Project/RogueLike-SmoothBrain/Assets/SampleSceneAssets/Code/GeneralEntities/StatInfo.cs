@@ -42,6 +42,9 @@ public class StatInfo
 
     public float overload;
     public float underload;
+
+    public delegate void OnStatChangeDelegate(Stat stat);
+    public OnStatChangeDelegate onStatChange;
 }
 
 
