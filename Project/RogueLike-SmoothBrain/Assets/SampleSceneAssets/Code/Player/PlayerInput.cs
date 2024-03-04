@@ -127,6 +127,7 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
+        Camera.main.GetComponent<CameraUtilities>().ShakeCamera(0.35f, 0.5f);
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime /CHARGED_ATTACK_MAX_TIME;
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
