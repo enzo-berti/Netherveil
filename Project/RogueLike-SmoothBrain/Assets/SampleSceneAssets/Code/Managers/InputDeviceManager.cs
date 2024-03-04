@@ -49,6 +49,11 @@ public class InputDeviceManager : MonoBehaviour
     {
         InputSystem.onEvent += OnInputSystemEvent;
         InputSystem.onDeviceChange += OnInputSystemDeviceChange;
+        if(Gamepad.all.Count > 0)
+        {
+            currentDevice = Gamepad.all[0];
+            lastUsedDevice = currentDevice;
+        }
     }
 
     void OnInputSystemEvent(InputEventPtr eventPtr, InputDevice device)

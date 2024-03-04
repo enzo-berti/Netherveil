@@ -177,6 +177,7 @@ public class PlayerInput : MonoBehaviour
     {
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
         cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
+        InputDeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;

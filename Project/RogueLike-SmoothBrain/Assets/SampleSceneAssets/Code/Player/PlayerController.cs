@@ -115,12 +115,18 @@ public class PlayerController : MonoBehaviour
         foreach (Collider spearCollider in colliders)
         {
             Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(spearCollider, transform.position + rayOffset, "Enemy", LayerMask.GetMask("Map"));
+            bool applyVibrations = true;
             if (tab.Length > 0)
             {
                 foreach (Collider col in tab)
                 {
                     if (col.gameObject.GetComponent<IDamageable>() != null && !alreadyAttacked.Contains(col))
                     {
+                        if(applyVibrations && !playerInput.LaunchedChargedAttack)
+                        {
+                            InputDeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
+                            applyVibrations = false;
+                        }
                         //Debug.Log(col.gameObject.name);
                         alreadyAttacked.Add(col);
                         hero.Attack(col.gameObject.GetComponent<IDamageable>());
