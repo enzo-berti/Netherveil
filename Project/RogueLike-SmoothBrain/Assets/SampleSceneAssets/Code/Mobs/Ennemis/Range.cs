@@ -34,12 +34,12 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     private float staggerImmunity;
     private float staggerTimer;
 
+    private float FleeingRange => (int)stats.GetValue(Stat.ATK_RANGE) / 2f;
+
     protected override IEnumerator EntityDetection()
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.5f);
-
             if (!agent.enabled)
                 continue;
 
@@ -48,6 +48,8 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
+
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -82,11 +84,10 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
             if (player)
             {
                 isFighting = true;
-
-                if (!isFleeing) MoveTo(player.transform.position);
+                float distanceFromPlayer = Vector3.Distance(transform.position, player.transform.position);
 
                 // si le joueur est trop près et que la fuite est dispo
-                if (Vector3.Distance(transform.position, player.transform.position) < (int)stats.GetValue(Stat.ATK_RANGE) / 2f && fleeTimer == 0f)
+                if (distanceFromPlayer < FleeingRange && fleeTimer == 0f)
                 {
                     isFleeing = true;
                     fleeTimer = 4f;
@@ -109,9 +110,20 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 
                     MoveTo(fleeTarget);
                 }
+                // sinon si dans la zone d'attaque, attaquer
+                else if (distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE))
+                {
+                    // Attacker
+                }
+                // sinon si pas en fuite, avancer vers le joueur
+                else if (!isFleeing)
+                {
+                    Vector3 direction = (player.transform.position - transform.position).normalized;
+                    float factor = (int)stats.GetValue(Stat.VISION_RANGE) - (int)stats.GetValue(Stat.ATK_RANGE);
+                    MoveTo(transform.position + direction * factor);
+                }
             }
-
-            if (!agent.hasPath)
+            else if (!agent.hasPath)
             {
                 if (isFleeing)
                 {
@@ -167,6 +179,16 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     }
 
 #if UNITY_EDITOR
+    private void DisplayFleeingRange(float _angle)
+    {
+        Handles.color = new Color(1, 1, 0f, 0.25f);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, FleeingRange);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, FleeingRange);
+
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, Vector3.up, FleeingRange);
+    }
+
     private void OnDrawGizmos()
     {
         if (!Selection.Contains(gameObject))
@@ -174,6 +196,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 
         DisplayVisionRange(isFighting ? 360 : angle);
         DisplayAttackRange(isFighting ? 360 : angle);
+        DisplayFleeingRange(isFighting ? 360 : angle);
         DisplayInfos();
     }
 #endif
@@ -182,4 +205,4 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 // quand le joueur est trop près, le range va se réfugier derrière le tank
 // quand le joueur est trop près, si aucun tank n'est à proximité il va fuir en ligne droite
 // il ne le fera pas en boucle, il aura un cd sur sa fuite
-// lorsqu'il est en cd, il va attaquer le joueur simplement
+// lorsqu'il est en cd, il va attaquer le joueur simplement -> TODO
