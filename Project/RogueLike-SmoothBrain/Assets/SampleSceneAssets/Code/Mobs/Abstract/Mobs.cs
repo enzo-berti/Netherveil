@@ -17,7 +17,7 @@ public abstract class Mobs : Entity
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = stats.GetValueStat(Stat.SPEED);
+        agent.speed = stats.GetValue(Stat.SPEED);
         nearbyEntities = null;
     }
 
@@ -33,7 +33,7 @@ public abstract class Mobs : Entity
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)
     {
-        Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, _angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward)
+        Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, _angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward)
            .Select(x => x.GetComponent<Entity>())
            .Where(x => x != null && x != this)
            .ToArray();
@@ -44,21 +44,21 @@ public abstract class Mobs : Entity
             Handles.color = new Color(0, 1, 0, 0.25f);
         }
 
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)stats.GetValueStat(Stat.VISION_RANGE));
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)stats.GetValueStat(Stat.VISION_RANGE));
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)stats.GetValue(Stat.VISION_RANGE));
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)stats.GetValue(Stat.VISION_RANGE));
 
         Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValueStat(Stat.VISION_RANGE));
+        Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValue(Stat.VISION_RANGE));
     }
 
     virtual protected void DisplayAttackRange(float _angle)
     {
         Handles.color = new Color(1, 1, 0.5f, 0.25f);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)stats.GetValueStat(Stat.ATK_RANGE));
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)stats.GetValueStat(Stat.ATK_RANGE));
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)stats.GetValue(Stat.ATK_RANGE));
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)stats.GetValue(Stat.ATK_RANGE));
 
         Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValueStat(Stat.ATK_RANGE));
+        Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValue(Stat.ATK_RANGE));
     }
 
     virtual protected void DisplayInfos()
@@ -66,8 +66,8 @@ public abstract class Mobs : Entity
         Handles.Label(
     transform.position + transform.up,
     stats.GetEntityName() +
-    "\n - Health : " + stats.GetValueStat(Stat.HP) +
-    "\n - Speed : " + stats.GetValueStat(Stat.SPEED),
+    "\n - Health : " + stats.GetValue(Stat.HP) +
+    "\n - Speed : " + stats.GetValue(Stat.SPEED),
     new GUIStyle()
     {
         alignment = TextAnchor.MiddleLeft,

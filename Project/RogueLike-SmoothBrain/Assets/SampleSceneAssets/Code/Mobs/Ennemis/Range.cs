@@ -43,7 +43,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
             if (!agent.enabled)
                 continue;
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -86,13 +86,13 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                 if (!isFleeing) MoveTo(player.transform.position);
 
                 // si le joueur est trop près et que la fuite est dispo
-                if (Vector3.Distance(transform.position, player.transform.position) < (int)stats.GetValueStat(Stat.ATK_RANGE) / 2f && fleeTimer == 0f)
+                if (Vector3.Distance(transform.position, player.transform.position) < (int)stats.GetValue(Stat.ATK_RANGE) / 2f && fleeTimer == 0f)
                 {
                     isFleeing = true;
                     fleeTimer = 4f;
 
                     // si tanks à proximité
-                    if (tanks.Any() && Vector3.Distance(player.transform.position, tanks.First().transform.position) + 2f < stats.GetValueStat(Stat.VISION_RANGE))
+                    if (tanks.Any() && Vector3.Distance(player.transform.position, tanks.First().transform.position) + 2f < stats.GetValue(Stat.VISION_RANGE))
                     {
                         Vector3 playerToTankVector = tanks.First().transform.position - player.transform.position;
                         playerToTankVector.Normalize();
@@ -104,7 +104,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                         Vector3 playerToEnemyVector = transform.position - player.transform.position;
                         playerToEnemyVector.Normalize();
 
-                        fleeTarget = player.transform.position + playerToEnemyVector * (int)stats.GetValueStat(Stat.ATK_RANGE);
+                        fleeTarget = player.transform.position + playerToEnemyVector * (int)stats.GetValue(Stat.ATK_RANGE);
                     }
 
                     MoveTo(fleeTarget);
@@ -130,7 +130,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
 
-        if (stats.GetValueStat(Stat.HP) <= 0)
+        if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
         }
@@ -158,7 +158,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     public void Attack(IDamageable damageable)
     {
         OnAttack?.Invoke(damageable);
-        damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
+        damageable.ApplyDamage((int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF)));
     }
 
     public void MoveTo(Vector3 posToMove)

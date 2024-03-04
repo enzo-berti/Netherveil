@@ -39,7 +39,7 @@ public class Boss1 : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             yield return null;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                 .Select(x => x.GetComponent<Entity>())
                 .Where(x => x != null && x != this)
                 .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -75,13 +75,13 @@ public class Boss1 : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public void Attack(IDamageable _damageable)
     {
-        _damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
+        _damageable.ApplyDamage((int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF)));
     }
 
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        if (stats.GetValueStat(Stat.HP) <= 0)
+        if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
         }

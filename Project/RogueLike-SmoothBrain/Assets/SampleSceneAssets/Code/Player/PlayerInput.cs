@@ -233,7 +233,7 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
+            controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE));
         }
 
         if (!GetComponent<PlayerInput>().LaunchedAttack)
@@ -244,7 +244,7 @@ public class PlayerInput : MonoBehaviour
             if (spear.IsThrowing) return;
             if (!spear.IsThrown)
             {
-                spear.Throw(this.transform.position + this.transform.forward *controller.hero.Stats.GetValueStat(Stat.ATK_RANGE));
+                spear.Throw(this.transform.position + this.transform.forward *controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
             else
             {

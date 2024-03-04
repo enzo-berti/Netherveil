@@ -14,6 +14,7 @@ public class Stats
     [SerializeField] private string name = "Default";
 
     #region Getters
+    // Get number of stats
     public int Size
     {
         get { return stats.Count; }
@@ -24,6 +25,7 @@ public class Stats
         return name;
     }
 
+    // Return a list with all stats used. Exemple return {ATK, HP, CATCH_RANGE}
     public List<Stat> StatsName
     {
         get
@@ -37,7 +39,24 @@ public class Stats
             return list;
         }
     }
-    public float GetValueStat(Stat info)
+    // Get value of a stat, if there is a coeff, returns value * coeff
+    public float GetValue(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                float coeff = stat.hasCoeff ? stat.coeff : 1;
+                return stat.value * coeff;
+            }
+        }
+
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+
+    // Returns straight value
+    public float GetValueWithoutCoeff(Stat info)
     {
         foreach (StatInfo stat in stats)
         {
@@ -51,13 +70,47 @@ public class Stats
         return -1.0f;
     }
 
-    public float GeteMaxValueStat(Stat info)
+    // Get the maximum value of a stat
+    public float GetMaxValue(Stat info)
     {
         foreach (StatInfo stat in stats)
         {
             if (stat.stat == info)
             {
                 return stat.maxValue;
+            }
+        }
+
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+
+    // Get the minimal value of a stat
+    public float GetMinValue(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.minValue;
+            }
+        }
+
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+
+    // If has coeff, returns coeff. Else, returns 1
+    public float GetCoeff(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                if(stat.hasCoeff)
+                    return stat.coeff;
+                else
+                    return 1.0f;
             }
         }
 

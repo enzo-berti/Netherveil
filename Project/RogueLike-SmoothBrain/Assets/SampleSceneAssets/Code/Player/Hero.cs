@@ -39,14 +39,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        if ((-_value) < 0 && stats.GetValueStat(Stat.HP) > 0) //just to be sure it really inflicts damages
+        if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
             animator.ResetTrigger("Hit");
             animator.SetTrigger("Hit");
         }
 
-        if (stats.GetValueStat(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
+        if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
         {
             Death();
         }
@@ -63,7 +63,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void Attack(IDamageable damageable)
     {
-        int damages = (int)stats.GetValueStat(Stat.ATK);
+        int damages = (int)stats.GetValue(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {
             damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
@@ -73,14 +73,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             damages += playerController.FINISHER_DAMAGES;
         }
 
-        damages = (int)(damages * stats.GetValueStat(Stat.ATK_COEFF));
+        damages = (int)(damages * stats.GetValue(Stat.ATK_COEFF));
         damageable.ApplyDamage(damages);
         onAttack?.Invoke(damageable);
 
         if (damageable is IKnockbackable)
         {
             Vector3 force = ((damageable as MonoBehaviour).transform.position - transform.position).normalized;
-            (damageable as IKnockbackable).GetKnockback(force * stats.GetValueStat(Stat.KNOCKBACK_COEFF));
+            (damageable as IKnockbackable).GetKnockback(force * stats.GetValue(Stat.KNOCKBACK_COEFF));
         }
     }
 }

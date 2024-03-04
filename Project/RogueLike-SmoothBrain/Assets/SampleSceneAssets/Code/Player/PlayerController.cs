@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
             CurrentTargetAngle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
             ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
 
-            characterController.Move(hero.Stats.GetValueStat(Stat.SPEED) * Time.deltaTime * (camForward * Direction.y + camRight * Direction.x).normalized);
+            characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * Direction.y + camRight * Direction.x).normalized);
         }
     }
 

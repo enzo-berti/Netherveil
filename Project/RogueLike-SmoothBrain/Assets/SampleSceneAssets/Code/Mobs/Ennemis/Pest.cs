@@ -28,7 +28,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
             if (!agent.enabled)
                 continue;
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -58,9 +58,9 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
             if (player)
             {
                 // Attack Player
-                if (Vector3.Distance(transform.position, player.transform.position) <= (int)stats.GetValueStat(Stat.ATK_RANGE))
+                if (Vector3.Distance(transform.position, player.transform.position) <= (int)stats.GetValue(Stat.ATK_RANGE))
                 {
-                    player.ApplyDamage((int)stats.GetValueStat(Stat.ATK));
+                    player.ApplyDamage((int)stats.GetValue(Stat.ATK));
                 }
                 // Move to Player
                 else
@@ -76,7 +76,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
             else
             {
                 // Random movement
-                Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
+                Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValue(Stat.VISION_RANGE);
                 MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
             }
         }
@@ -84,13 +84,13 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     public void Attack(IDamageable damageable)
     {
-        damageable.ApplyDamage((int)(stats.GetValueStat(Stat.ATK) * stats.GetValueStat(Stat.ATK_COEFF)));
+        damageable.ApplyDamage((int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF)));
     }
 
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        if (stats.GetValueStat(Stat.HP) <= 0)
+        if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
         }

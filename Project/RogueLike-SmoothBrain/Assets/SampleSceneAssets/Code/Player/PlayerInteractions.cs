@@ -16,7 +16,7 @@ public class PlayerInteractions : MonoBehaviour
 
     public void Interract(InputAction.CallbackContext ctx)
     {
-        IInterractable[] interactables = Physics.OverlapSphere(transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS))
+        IInterractable[] interactables = Physics.OverlapSphere(transform.position, hero.Stats.GetValue(Stat.CATCH_RADIUS))
             .Select(x => x.GetComponent<IInterractable>())
             .Where(x => x != null)
             .ToArray();
@@ -29,7 +29,7 @@ public class PlayerInteractions : MonoBehaviour
 
     public void RetrievedConsommable()
     {
-        var colliders =  Physics.OverlapSphere(this.transform.position, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
+        var colliders =  Physics.OverlapSphere(this.transform.position, hero.Stats.GetValue(Stat.CATCH_RADIUS));
         foreach(var collider in colliders.Where(x => x.gameObject.TryGetComponent<IConsommable>(out var consommable) && consommable.CanBeRetrieved))
         {
             collider.GetComponent<IConsommable>().OnRetrieved();
