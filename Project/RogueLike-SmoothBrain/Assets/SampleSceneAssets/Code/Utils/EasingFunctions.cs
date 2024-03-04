@@ -100,17 +100,22 @@ public static class EasingFunctions
 
     public static float EaseInCirc(float t)
     {
-        return 1 - Mathf.Sqrt(1 - t * t);
+        return 1 - Mathf.Sqrt(Mathf.Max(0, 1 - t * t));
     }
 
     public static float EaseOutCirc(float t)
     {
-        return Mathf.Sqrt(1 - (t - 1) * (t - 1));
+        return Mathf.Sqrt(Mathf.Max(0, 1 - (t - 1) * (t - 1)));
     }
 
     public static float EaseInOutCirc(float t)
     {
-        return t < 0.5f ? (1 - Mathf.Sqrt(1 - 4 * t * t)) / 2 : (Mathf.Sqrt(-((2 * t - 3) * (2 * t - 1))) + 1) / 2;
+        if (t < 0.25f)
+            return (1 - Mathf.Sqrt(1 - 4 * t * t)) / 2;
+        else if (t < 0.75f)
+            return (Mathf.Sqrt(1 - 4 * (t - 0.5f) * (t - 0.5f)) + 1) / 2;
+        else
+            return (Mathf.Sqrt(1 - 4 * (t - 1) * (t - 1)) + 1) / 2;
     }
 
     public static float EaseInElastic(float t)
