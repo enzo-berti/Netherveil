@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,6 +12,7 @@ public abstract class Mobs : Entity
     protected NavMeshAgent agent;
     protected Rigidbody rb;
     protected Entity[] nearbyEntities;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
