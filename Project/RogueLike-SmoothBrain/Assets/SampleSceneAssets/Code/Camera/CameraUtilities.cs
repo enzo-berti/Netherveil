@@ -9,7 +9,7 @@ public class CameraUtilities : MonoBehaviour
     private float shakeTotalTime;
     private float startingIntensity;
 
-    public float defaultFOV;
+    [HideInInspector]public float defaultFOV;
 
     private void Start()
     {
