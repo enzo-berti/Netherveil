@@ -46,6 +46,7 @@ public struct GenerationParam
     public int TotalRoom
     {
         get { return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss] + nbRoom[RoomType.Boss]; }
+ 
     }
 }
 
@@ -64,10 +65,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.Instance.seed.Set(341304);
-
         GenerationParam genParam = new GenerationParam(nbNormal: 20);
-
         GenerateMap(ref genParam);
     }
 
@@ -87,6 +85,7 @@ public class MapGenerator : MonoBehaviour
                 int randIndex = GameManager.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
 
                 entranceDoor = door;
+
                 exitDoor = genParam.availableDoors[neededRotation][randIndex];
                 break;
             }
@@ -119,7 +118,8 @@ public class MapGenerator : MonoBehaviour
         while (!hasGenerated)
         {
             // instantiate room with first availableDoors transform then remove it
-            GameObject roomGO = Instantiate(roomNormal[GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator)]); // TODO : add random selection
+            int prefabIndex = GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
+            GameObject roomGO = Instantiate(roomNormal[prefabIndex]); // TODO : add random selection
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(genParam);
