@@ -91,30 +91,6 @@ public class PlayerController : MonoBehaviour
         Direction = ctx.ReadValue<Vector2>().normalized;
     }
 
-    public Collider[] CheckAttackCollide(Collider collider, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
-    {
-        if (collider != null)
-        {
-            System.Type colliderType = collider.GetType();
-
-            switch (colliderType.Name)
-            {
-                case nameof(BoxCollider):
-                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
-                case nameof(SphereCollider):
-                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
-                case nameof(CapsuleCollider):
-                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
-                default:
-                    Debug.LogWarning("Invalid Collider type, can't check the collision.");
-                    return new Collider[0];
-            }
-        }
-
-        Debug.LogWarning("Collider is null.");
-        return new Collider[0];
-    }
-
     public void AttackCollide(List<Collider> colliders, bool debugMode = true)
     {
         if (debugMode)
@@ -138,13 +114,19 @@ public class PlayerController : MonoBehaviour
         List<Collider> alreadyAttacked = new List<Collider>();
         foreach (Collider spearCollider in colliders)
         {
-            Collider[] tab = CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy", LayerMask.GetMask("Map"));
+            Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(spearCollider, transform.position + rayOffset, "Enemy", LayerMask.GetMask("Map"));
+            bool applyVibrations = true;
             if (tab.Length > 0)
             {
                 foreach (Collider col in tab)
                 {
                     if (col.gameObject.GetComponent<IDamageable>() != null && !alreadyAttacked.Contains(col))
                     {
+                        if(applyVibrations && !playerInput.LaunchedChargedAttack)
+                        {
+                            InputDeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
+                            applyVibrations = false;
+                        }
                         //Debug.Log(col.gameObject.name);
                         alreadyAttacked.Add(col);
                         hero.Attack(col.gameObject.GetComponent<IDamageable>());

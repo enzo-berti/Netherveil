@@ -49,6 +49,11 @@ public class InputDeviceManager : MonoBehaviour
     {
         InputSystem.onEvent += OnInputSystemEvent;
         InputSystem.onDeviceChange += OnInputSystemDeviceChange;
+        if(Gamepad.all.Count > 0)
+        {
+            currentDevice = Gamepad.all[0];
+            lastUsedDevice = currentDevice;
+        }
     }
 
     void OnInputSystemEvent(InputEventPtr eventPtr, InputDevice device)
@@ -152,5 +157,14 @@ public class InputDeviceManager : MonoBehaviour
 
         // Stop the vibration after the specified duration
         gamepad.SetMotorSpeeds(0f, 0f);
+    }
+
+    public void ForceStopVibrations()
+    {
+        StopAllCoroutines();
+        if (currentDevice is Gamepad)
+        {
+            (currentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
+        }
     }
 }
