@@ -38,7 +38,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, -_value, false);
+        Stats.DecreaseValue(Stat.HP, _value, false);
         DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
@@ -52,7 +52,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Death();
         }
     }
-
     public void Death()
     {
         Destroy(GetComponent<CharacterController>());
@@ -64,6 +63,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void Attack(IDamageable damageable)
     {
+        Entity test = (damageable as Entity);
+        test.ApplyEffect(new Fire(1000, 5f));
         int damages = (int)stats.GetValue(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {

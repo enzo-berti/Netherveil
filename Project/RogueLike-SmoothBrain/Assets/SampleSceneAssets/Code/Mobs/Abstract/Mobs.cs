@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
-using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,14 +17,24 @@ public abstract class Mobs : Entity
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = stats.GetValue(Stat.SPEED);
         nearbyEntities = null;
+
+        ApplySpeed(Stat.SPEED);
+        stats.onStatChange += ApplySpeed;
     }
 
     private void Start()
     {
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());
+    }
+
+    private void ApplySpeed(Stat speedStat)
+    {
+        if (!speedStat.HasFlag(Stat.SPEED))
+            return;
+
+        agent.speed = stats.GetValue(Stat.SPEED);
     }
 
     protected abstract IEnumerator Brain();
