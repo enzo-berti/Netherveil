@@ -44,7 +44,11 @@ public class Seed
         //Debug.Log(lastModulo);
         //return lastModulo;
 
-        return Random.Range(minInclusive, maxExclusive); // pour le moment j'utilise le random de unity
+        //Debug.Log("RAND : " + minInclusive + " " + maxExclusive);
+        //Debug.Log("modulo inside = " + Value + " " + (maxExclusive - minInclusive));
+
+        //return (int)(Value % (maxExclusive - minInclusive)) + minInclusive;
+        return Random.Range(minInclusive, maxExclusive);
     }
 
     public float Range(float minInclusive, float maxExclusive)
