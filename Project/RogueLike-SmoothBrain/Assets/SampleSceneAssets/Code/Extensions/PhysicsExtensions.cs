@@ -222,4 +222,28 @@ public static class PhysicsExtensions
 
         return targetsAheadOfObstacles.ToArray();
     }
+
+    public static Collider[] CheckAttackCollideRayCheck(Collider collider, Vector3 rayOrigin, string targetTag, int obstacleLayer = -1, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    {
+        if (collider != null)
+        {
+            System.Type colliderType = collider.GetType();
+
+            switch (colliderType.Name)
+            {
+                case nameof(BoxCollider):
+                    return (collider as BoxCollider).BoxOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
+                case nameof(SphereCollider):
+                    return (collider as SphereCollider).SphereOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
+                case nameof(CapsuleCollider):
+                    return (collider as CapsuleCollider).CapsuleOverlapWithRayCheck(rayOrigin, targetTag, obstacleLayer, layerMask, queryTriggerInteraction);
+                default:
+                    Debug.LogWarning("Invalid Collider type, can't check the collision.");
+                    return new Collider[0];
+            }
+        }
+
+        Debug.LogWarning("Collider is null.");
+        return new Collider[0];
+    }
 }

@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
+using static PlayerInput;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -25,12 +27,18 @@ public class PlayerInput : MonoBehaviour
     public bool LaunchedAttack { get; private set; } = false;
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
-    readonly float CHARGED_ATTACK_MAX_TIME = 1.5f;
+    readonly float CHARGED_ATTACK_MAX_TIME = 1f;
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
+    public delegate float EaseFunc(float t);
+    List<System.Func<float, float>> easeFuncs = new List<System.Func<float, float>>();
+
+    public EasingFunctions.EaseName easeUnzoom;
+    public EasingFunctions.EaseName easeZoom;
+    public EasingFunctions.EaseName easeShake;
     void Awake()
     {
         playerInputMap = new PlayerInputMap();
@@ -43,6 +51,36 @@ public class PlayerInput : MonoBehaviour
         controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+
+        easeFuncs.Add(EasingFunctions.EaseInBack);
+        easeFuncs.Add(EasingFunctions.EaseInBounce);
+        easeFuncs.Add(EasingFunctions.EaseInCirc);
+        easeFuncs.Add(EasingFunctions.EaseInCubic);
+        easeFuncs.Add(EasingFunctions.EaseInElastic);
+        easeFuncs.Add(EasingFunctions.EaseInExpo);
+        easeFuncs.Add(EasingFunctions.EaseInOutBack);
+        easeFuncs.Add(EasingFunctions.EaseInOutBounce);
+        easeFuncs.Add(EasingFunctions.EaseInOutCirc);
+        easeFuncs.Add(EasingFunctions.EaseInOutCubic);
+        easeFuncs.Add(EasingFunctions.EaseInOutElastic);
+        easeFuncs.Add(EasingFunctions.EaseInOutExpo);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuad);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuart);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuint);
+        easeFuncs.Add(EasingFunctions.EaseInOutSin);
+        easeFuncs.Add(EasingFunctions.EaseInQuad);
+        easeFuncs.Add(EasingFunctions.EaseInQuint);
+        easeFuncs.Add(EasingFunctions.EaseInSin);
+        easeFuncs.Add(EasingFunctions.EaseOutBack);
+        easeFuncs.Add(EasingFunctions.EaseOutBounce);
+        easeFuncs.Add(EasingFunctions.EaseOutCirc);
+        easeFuncs.Add(EasingFunctions.EaseOutCubic);
+        easeFuncs.Add(EasingFunctions.EaseOutElastic);
+        easeFuncs.Add(EasingFunctions.EaseOutExpo);
+        easeFuncs.Add(EasingFunctions.EaseOutQuad);
+        easeFuncs.Add(EasingFunctions.EaseOutQuart);
+        easeFuncs.Add(EasingFunctions.EaseOutQuint);
+        easeFuncs.Add(EasingFunctions.EaseOutSin);
     }
 
     private void OnEnable()
@@ -73,7 +111,14 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        animator.SetFloat("Speed", controller.Direction.magnitude * 10f, 0.1f, Time.deltaTime);
+        //used so that you don't see the character running while in transition between the normal attack and the charged attack casting
+        float magnitudeCoef = 10;
+        if(LaunchedChargedAttack)
+        {
+            magnitudeCoef = 0f;
+        }
+
+        animator.SetFloat("Speed", controller.Direction.magnitude * magnitudeCoef, 0.1f, Time.deltaTime);
 
         if (triggerCooldownDash || triggerCooldownAttack)
         {
@@ -113,7 +158,7 @@ public class PlayerInput : MonoBehaviour
     public void StartChargedAttackCasting()
     {
         controller.ComboCount = 0;
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.65f, ZOOM_DEZOOM_TIME, EasingFunctions.EaseInCirc);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.35f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
         StartCoroutine(ChargedAttackCoroutine());
     }
 
@@ -130,9 +175,9 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        cameraUtilities.ShakeCamera(0.35f, 0.5f, EasingFunctions.EaseInOutCubic);
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, EasingFunctions.EaseInCirc);
-        ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime /CHARGED_ATTACK_MAX_TIME;
+        ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
+        cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
         chargedAttackTime = 0f;
@@ -192,7 +237,10 @@ public class PlayerInput : MonoBehaviour
     {
         if (!attackQueue)
         {
-            controller.hero.State = (int)Entity.EntityState.MOVE;
+            if(!LaunchedChargedAttack)
+            {
+                controller.hero.State = (int)Entity.EntityState.MOVE;
+            }
             controller.ComboCount = 0;
             LaunchedAttack = false;
         }
@@ -230,29 +278,32 @@ public class PlayerInput : MonoBehaviour
 
     public void ThrowSpear()
     {
-        //rotate the player to mouse's direction if playing KB/mouse
-        if (InputDeviceManager.Instance.IsPlayingKB())
+        if(controller.hero.State == (int)Entity.EntityState.MOVE)
         {
-            controller.MouseOrientation();
-        }
-        else
-        {
-            controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE));
-        }
-
-        if (!GetComponent<PlayerInput>().LaunchedAttack)
-        {
-            Spear spear = weapon.GetComponent<Spear>();
-
-            // If spear is being thrown we can't recall this attack
-            if (spear.IsThrowing) return;
-            if (!spear.IsThrown)
+            //rotate the player to mouse's direction if playing KB/mouse
+            if (InputDeviceManager.Instance.IsPlayingKB())
             {
-                spear.Throw(this.transform.position + this.transform.forward *controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+                controller.MouseOrientation();
             }
             else
             {
-                spear.Return();
+                controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE));
+            }
+
+            if (!LaunchedAttack && !LaunchedChargedAttack)
+            {
+                Spear spear = weapon.GetComponent<Spear>();
+
+                // If spear is being thrown we can't recall this attack
+                if (spear.IsThrowing) return;
+                if (!spear.IsThrown)
+                {
+                    spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+                }
+                else
+                {
+                    spear.Return();
+                }
             }
         }
     }
