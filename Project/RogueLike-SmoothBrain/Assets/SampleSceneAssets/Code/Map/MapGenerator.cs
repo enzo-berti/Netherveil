@@ -65,8 +65,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        GenerationParam genParam = new GenerationParam(nbNormal: 100);
-        
+        GenerationParam genParam = new GenerationParam(nbNormal: 20);
         GenerateMap(ref genParam);
     }
 

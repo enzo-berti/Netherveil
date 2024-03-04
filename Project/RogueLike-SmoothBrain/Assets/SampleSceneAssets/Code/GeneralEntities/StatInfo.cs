@@ -42,6 +42,8 @@ public class StatInfo
 
     public float overload;
     public float underload;
+
+    
 }
 
 
