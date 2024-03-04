@@ -132,6 +132,7 @@ public class Stats
     public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue)
     {
         int index = stats.FindIndex(x => x.stat == info);
+        float baseValue = stats[index].value;
 
         if (index != -1)
         {
@@ -142,7 +143,11 @@ public class Stats
                 IncreaseValueOverload(info, increasingValue);
 
             else if (clampToMaxValue && !stats[index].hasMaxStat)
+            {
                 Debug.LogWarning($"Missing max value of {info} in {name}");
+                return;
+            }
+               
 
             else
             {
@@ -160,7 +165,7 @@ public class Stats
                 else
                     stats[index].value += increasingValue;
             }
-                
+            if (stats[index].value != baseValue) stats[index].onStatChange?.Invoke(info);
         }
         else
         {
@@ -206,7 +211,7 @@ public class Stats
     public void DecreaseValue(Stat info, float decreasingValue, bool clampToMinValue)
     {
         int index = stats.FindIndex(x => x.stat == info);
-
+        float baseValue = stats[index].value;
         if (index != -1)
         {
             if (clampToMinValue && stats[index].hasMinStat)
@@ -216,10 +221,16 @@ public class Stats
                 DecreaseValueUnderload(info, decreasingValue);
 
             else if (clampToMinValue && !stats[index].hasMinStat)
+            {
                 Debug.LogWarning($"Missing min value of {info} in {name}");
+                return;
+            }
+                
 
             else
                 stats[index].value -= decreasingValue;
+
+            if (baseValue != stats[index].value) stats[index].onStatChange?.Invoke(info);
         }
         else
             Debug.LogWarning($"Can't find {info} in {name}");
@@ -399,6 +410,21 @@ public class Stats
                 stats[index].minValue = value;
             else
                 Debug.Log($"Missing min value of {info} in {name}");
+        }
+
+        else
+            Debug.LogWarning($"Can't find {info} in {name}");
+    }
+
+    public void SetCoeffValue(Stat info, float value)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+        if (index != -1)
+        {
+            if (stats[index].hasCoeff)
+                stats[index].coeff = value;
+            else
+                Debug.Log($"Missing coeff value of {info} in {name}");
         }
 
         else
