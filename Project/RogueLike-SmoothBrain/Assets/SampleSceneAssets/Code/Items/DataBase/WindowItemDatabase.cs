@@ -12,7 +12,7 @@ public class WindowItemDatabase : EditorWindow
     string search = "";
     const int SizeArea = 100;
 
-    [MenuItem("Tools/ItemDatabase")]
+    [UnityEditor.MenuItem("Tools/ItemDatabase")]
     public static void OpenWindow()
     {
         GetWindow<WindowItemDatabase>("Item Database");
