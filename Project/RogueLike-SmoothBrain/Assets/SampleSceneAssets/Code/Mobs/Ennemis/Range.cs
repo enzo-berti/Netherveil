@@ -34,7 +34,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     private float staggerImmunity;
     private float staggerTimer;
 
-    private float FleeingRange => (int)stats.GetValueStat(Stat.ATK_RANGE) / 2f;
+    private float FleeingRange => (int)stats.GetValue(Stat.ATK_RANGE) / 2f;
 
     protected override IEnumerator EntityDetection()
     {
@@ -111,7 +111,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                     MoveTo(fleeTarget);
                 }
                 // sinon si dans la zone d'attaque, attaquer
-                else if (distanceFromPlayer < stats.GetValueStat(Stat.ATK_RANGE))
+                else if (distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE))
                 {
                     // Attacker
                 }
@@ -119,7 +119,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                 else if (!isFleeing)
                 {
                     Vector3 direction = (player.transform.position - transform.position).normalized;
-                    float factor = (int)stats.GetValueStat(Stat.VISION_RANGE) - (int)stats.GetValueStat(Stat.ATK_RANGE);
+                    float factor = (int)stats.GetValue(Stat.VISION_RANGE) - (int)stats.GetValue(Stat.ATK_RANGE);
                     MoveTo(transform.position + direction * factor);
                 }
             }
