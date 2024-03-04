@@ -111,7 +111,14 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        animator.SetFloat("Speed", controller.Direction.magnitude * 10f, 0.1f, Time.deltaTime);
+        //used so that you don't see the character running while in transition between the normal attack and the charged attack casting
+        float magnitudeCoef = 10;
+        if(LaunchedChargedAttack)
+        {
+            magnitudeCoef = 0f;
+        }
+
+        animator.SetFloat("Speed", controller.Direction.magnitude * magnitudeCoef, 0.1f, Time.deltaTime);
 
         if (triggerCooldownDash || triggerCooldownAttack)
         {
@@ -230,7 +237,10 @@ public class PlayerInput : MonoBehaviour
     {
         if (!attackQueue)
         {
-            controller.hero.State = (int)Entity.EntityState.MOVE;
+            if(!LaunchedChargedAttack)
+            {
+                controller.hero.State = (int)Entity.EntityState.MOVE;
+            }
             controller.ComboCount = 0;
             LaunchedAttack = false;
         }
@@ -268,29 +278,32 @@ public class PlayerInput : MonoBehaviour
 
     public void ThrowSpear()
     {
-        //rotate the player to mouse's direction if playing KB/mouse
-        if (InputDeviceManager.Instance.IsPlayingKB())
+        if(controller.hero.State == (int)Entity.EntityState.MOVE)
         {
-            controller.MouseOrientation();
-        }
-        else
-        {
-            controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE));
-        }
-
-        if (!GetComponent<PlayerInput>().LaunchedAttack)
-        {
-            Spear spear = weapon.GetComponent<Spear>();
-
-            // If spear is being thrown we can't recall this attack
-            if (spear.IsThrowing) return;
-            if (!spear.IsThrown)
+            //rotate the player to mouse's direction if playing KB/mouse
+            if (InputDeviceManager.Instance.IsPlayingKB())
             {
-                spear.Throw(this.transform.position + this.transform.forward *controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+                controller.MouseOrientation();
             }
             else
             {
-                spear.Return();
+                controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE));
+            }
+
+            if (!LaunchedAttack && !LaunchedChargedAttack)
+            {
+                Spear spear = weapon.GetComponent<Spear>();
+
+                // If spear is being thrown we can't recall this attack
+                if (spear.IsThrowing) return;
+                if (!spear.IsThrown)
+                {
+                    spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+                }
+                else
+                {
+                    spear.Return();
+                }
             }
         }
     }

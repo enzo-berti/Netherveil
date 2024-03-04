@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public readonly int MAX_COMBO_COUNT = 3;
 
     [HideInInspector] public Hero hero;
+    PlayerInput playerInput;
 
     public Vector2 Direction { get; private set; } = Vector2.zero;
 
@@ -42,6 +43,7 @@ public class PlayerController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         hero = GetComponent<Hero>();
+        playerInput = GetComponent<PlayerInput>();
         cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;
         PlaneOfDoom = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
