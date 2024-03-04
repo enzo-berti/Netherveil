@@ -209,14 +209,14 @@ public static class PhysicsExtensions
             initialToTargetVec.y = 0;
             Ray ray = new Ray(rayOrigin, initialToTargetVec.normalized);
 
-            if (!Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, obstacleLayer, queryTriggerInteraction))
+            if (!Physics.Raycast(ray, initialToTargetVec.magnitude, obstacleLayer, queryTriggerInteraction))
             {
                 targetsAheadOfObstacles.Add(target);
             }
             //else
             //{
             //    Debug.Log(hit.collider.name, hit.collider.gameObject);
-            //    Debug.Log("AIE");
+            //    Debug.Log(hit.collider.GetType().ToString());
             //}
         }
 

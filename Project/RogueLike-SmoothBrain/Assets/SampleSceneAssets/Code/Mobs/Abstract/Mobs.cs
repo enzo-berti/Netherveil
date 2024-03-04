@@ -17,8 +17,10 @@ public abstract class Mobs : Entity
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = stats.GetValue(Stat.SPEED);
         nearbyEntities = null;
+
+        ApplySpeed(Stat.SPEED);
+        stats.onStatChange += ApplySpeed;
     }
 
     private void Start()
@@ -27,8 +29,17 @@ public abstract class Mobs : Entity
         StartCoroutine(Brain());
     }
 
+    private void ApplySpeed(Stat speedStat)
+    {
+        if (!speedStat.HasFlag(Stat.SPEED))
+            return;
+
+        agent.speed = stats.GetValue(Stat.SPEED);
+    }
+
     protected abstract IEnumerator Brain();
     protected abstract IEnumerator EntityDetection();
+
 
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)

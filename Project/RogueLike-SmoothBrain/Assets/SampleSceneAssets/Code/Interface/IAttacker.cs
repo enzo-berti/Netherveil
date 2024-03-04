@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 public interface IAttacker 
 {
     public delegate void AttackDelegate(IDamageable damageable);

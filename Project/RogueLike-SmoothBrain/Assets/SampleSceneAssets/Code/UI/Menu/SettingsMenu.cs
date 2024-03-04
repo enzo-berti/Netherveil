@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SettingsMenu : MonoBehaviour
+public class SettingsMenu : MenuHandler
 {
     public void ToggleVsync()
     {
