@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -29,6 +30,7 @@ public abstract class Mobs : Entity
 
     protected abstract IEnumerator Brain();
     protected abstract IEnumerator EntityDetection();
+
 
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)
