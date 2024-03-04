@@ -175,10 +175,13 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
+        InputDeviceManager.Instance.ForceStopVibrations();
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
+
         cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
         InputDeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
+
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
         chargedAttackTime = 0f;
@@ -186,12 +189,15 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator ChargedAttackCoroutine()
     {
+        InputDeviceManager.Instance.ApplyVibrations(0.01f, 0.005f, float.MaxValue);
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
             yield return null;
         }
 
+        InputDeviceManager.Instance.ForceStopVibrations();
+        InputDeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
         chargedAttackMax = true;
     }
 
@@ -210,6 +216,10 @@ public class PlayerInput : MonoBehaviour
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedAttack = true;
+        }
+        else if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownDash && weapon.GetComponent<Spear>().IsThrown)
+        {
+            ThrowSpear();
         }
     }
 

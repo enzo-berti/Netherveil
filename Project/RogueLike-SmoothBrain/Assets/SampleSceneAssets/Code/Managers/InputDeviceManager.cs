@@ -158,4 +158,13 @@ public class InputDeviceManager : MonoBehaviour
         // Stop the vibration after the specified duration
         gamepad.SetMotorSpeeds(0f, 0f);
     }
+
+    public void ForceStopVibrations()
+    {
+        StopAllCoroutines();
+        if (currentDevice is Gamepad)
+        {
+            (currentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
+        }
+    }
 }
