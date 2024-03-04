@@ -135,6 +135,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
             Death();
         }
     }
+
     void UpdateStates()
     {
         if (isFighting)
@@ -168,8 +169,8 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (Selection.activeGameObject != gameObject)
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(isFighting ? 360 : angle);
         DisplayAttackRange(isFighting ? 360 : angle);
