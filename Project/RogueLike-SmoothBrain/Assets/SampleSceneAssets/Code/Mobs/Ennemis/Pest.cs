@@ -16,34 +16,14 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     [Header("Pest Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
-    [SerializeField] private float movementDelay = 2f;
-    [SerializeField] private float attackDelay = 2f;
-    private Coroutine attackRoutine;
+    [SerializeField] private float brainDelay = 2f;
     private Coroutine knockbackRoutine;
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-
-        if (!collision.gameObject.CompareTag("Player") || damageable == null || attackRoutine != null)
-            return;
-
-        attackRoutine = StartCoroutine(ApplyAttack(damageable));
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (!collision.gameObject.CompareTag("Player") || attackRoutine == null)
-            return;
-
-        StopCoroutine(attackRoutine);
-    }
 
     protected override IEnumerator EntityDetection()
     {
         while (true)
         {
-            yield return new WaitForSeconds(movementDelay);
+            yield return new WaitForSeconds(brainDelay);
 
             if (!agent.enabled)
                 continue;
@@ -60,7 +40,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     {
         while (true)
         {
-            yield return new WaitForSeconds(movementDelay);
+            yield return new WaitForSeconds(brainDelay);
 
             if (!agent.enabled)
                 continue;
@@ -133,15 +113,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
-    }
-
-    private IEnumerator ApplyAttack(IDamageable damageable)
-    {
-        while (true)
-        {
-            Attack(damageable);
-            yield return new WaitForSeconds(attackDelay);
-        }
     }
 
     protected IEnumerator ApplyKnockback(Vector3 force)
