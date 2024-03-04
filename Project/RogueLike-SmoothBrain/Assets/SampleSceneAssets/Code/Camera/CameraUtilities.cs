@@ -20,14 +20,6 @@ public class CameraUtilities : MonoBehaviour
         startingIntensity = 0f;
     }
 
-    public void ShakeCamera(float _intensity, float _time)
-    {
-        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = _intensity;
-        startingIntensity = _intensity;
-        shakeTotalTime = _time;
-        shakeTimer = _time;
-    }
     public void ChangeFov(int _reachedFOV, float _duration)
     {
         StartCoroutine(ChangeFovCoroutine(_reachedFOV, _duration));
@@ -50,13 +42,24 @@ public class CameraUtilities : MonoBehaviour
         virtualCamera.m_Lens.FieldOfView = _reachedFOV;
     }
 
+    public void ShakeCamera(float _intensity, float _time)
+    {
+        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = _intensity;
+        startingIntensity = _intensity;
+        shakeTotalTime = _time;
+        shakeTimer = _time;
+    }
+
     private void Update()
     {
         if (shakeTimer > 0f)
         {
             shakeTimer -= Time.deltaTime;
             CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(startingIntensity, 0f, 1 - (shakeTimer / shakeTotalTime));
+            float shackProgression = 1 - (shakeTimer / shakeTotalTime); 
+            float smoothT = 1 - Mathf.Pow(1 - shackProgression, 3);
+            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(startingIntensity, 0f, smoothT);
         }
     }
 }
