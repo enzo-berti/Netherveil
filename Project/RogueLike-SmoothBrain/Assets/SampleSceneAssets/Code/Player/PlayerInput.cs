@@ -33,7 +33,6 @@ public class PlayerInput : MonoBehaviour
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
-    public delegate float EaseFunc(float t);
     List<System.Func<float, float>> easeFuncs = new List<System.Func<float, float>>();
 
     public EasingFunctions.EaseName easeUnzoom;
@@ -91,7 +90,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.Attack.performed += Attack;
         playerInputMap.Dash.Dash.performed += Dash;
         playerInputMap.Interract.Interract.performed += m_interaction.Interract;
-        playerInputMap.Attack.Throw.performed += ctx => ThrowSpear();
+        playerInputMap.Attack.Throw.performed += ctx => ThrowOrRetrieveSpear();
         playerInputMap.Attack.ChargedAttack.performed += ChargedAttack;
         playerInputMap.Attack.ChargedAttack.canceled += ChargedAttackCanceled;
     }
@@ -104,7 +103,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.Attack.performed -= Attack;
         playerInputMap.Dash.Dash.performed -= Dash;
         playerInputMap.Interract.Interract.performed -= m_interaction.Interract;
-        playerInputMap.Attack.Throw.performed -= ctx => ThrowSpear();
+        playerInputMap.Attack.Throw.performed -= ctx => ThrowOrRetrieveSpear();
         playerInputMap.Attack.ChargedAttack.performed -= ChargedAttack;
         playerInputMap.Attack.ChargedAttack.canceled -= ChargedAttackCanceled;
     }
@@ -158,7 +157,7 @@ public class PlayerInput : MonoBehaviour
     public void StartChargedAttackCasting()
     {
         controller.ComboCount = 0;
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.35f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
         StartCoroutine(ChargedAttackCoroutine());
     }
 
@@ -219,7 +218,7 @@ public class PlayerInput : MonoBehaviour
         }
         else if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownDash && weapon.GetComponent<Spear>().IsThrown)
         {
-            ThrowSpear();
+            ThrowOrRetrieveSpear();
         }
     }
 
@@ -267,6 +266,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    //used as animation event
     public void EndOfChargedAttack()
     {
         controller.hero.State = (int)Entity.EntityState.MOVE;
@@ -287,7 +287,7 @@ public class PlayerInput : MonoBehaviour
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
     }
 
-    public void ThrowSpear()
+    public void ThrowOrRetrieveSpear()
     {
         if(controller.hero.State == (int)Entity.EntityState.MOVE)
         {
