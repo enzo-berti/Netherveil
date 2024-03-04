@@ -32,7 +32,9 @@ public class CameraUtilities : MonoBehaviour
 
         while (elapsedTime < _duration)
         {
-            float currentFOV = Mathf.Lerp(initialFOV, _reachedFOV, elapsedTime / _duration);
+            float zoomProgression = elapsedTime / _duration; 
+            float smoothT = 1 - Mathf.Pow(1 - zoomProgression, 3);
+            float currentFOV = Mathf.Lerp(initialFOV, _reachedFOV, smoothT);
             virtualCamera.m_Lens.FieldOfView = currentFOV;
 
             elapsedTime += Time.deltaTime;
