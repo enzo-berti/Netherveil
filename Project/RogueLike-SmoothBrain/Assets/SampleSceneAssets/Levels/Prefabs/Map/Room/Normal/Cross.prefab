@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 347611440227130296}
   - component: {fileID: 3423756967646413044}
   - component: {fileID: 3657629945348656510}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ Transform:
   m_GameObject: {fileID: 4791870105276944327}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -182.72293, y: 0, z: 177.01491}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -132,7 +132,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2c2d9011ea3e94748be3ea62f8891b06, type: 2}
+  - {fileID: 840229486357391384, guid: 5f01b9ba4c2dd23458410e005530c86f, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -172,7 +172,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -193,7 +193,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -282,22 +282,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors:
   - forward: {x: 0, y: 0, z: 1}
-    localPosition: {x: -182, y: 0, z: 166.00002}
+    localPosition: {x: 0.72293043, y: 0, z: -11.01489}
     rotation: 0
     parentSkeleton: {fileID: 4791870105276944327}
   - forward: {x: -1.0000001, y: 0, z: -0.00000011920929}
-    localPosition: {x: -158, y: 0, z: 176.5}
+    localPosition: {x: 24.72293, y: 0, z: -0.51491547}
     rotation: 270
     parentSkeleton: {fileID: 4791870105276944327}
   - forward: {x: 0.00000008742278, y: 0, z: -1}
-    localPosition: {x: -182, y: 0, z: 187.00002}
+    localPosition: {x: 0.72292995, y: 0, z: 9.985107}
     rotation: 180
     parentSkeleton: {fileID: 4791870105276944327}
   - forward: {x: 1.0000001, y: 0, z: -0.00000011920929}
-    localPosition: {x: -207, y: 0, z: 176.50002}
+    localPosition: {x: -24.27707, y: 0, z: -0.51489305}
     rotation: 90
     parentSkeleton: {fileID: 4791870105276944327}
-  minMaxDoors: {x: 0, y: 0}
+  minMaxDoors: {x: 1, y: 4}
 --- !u!1 &5637305220643949064
 GameObject:
   m_ObjectHideFlags: 0

@@ -72,7 +72,7 @@ public class DoorsGenerator : MonoBehaviour
     /// Generate the seed doors (destroy doors between min max range)
     /// </summary>
     /// <param name="generationParameters"></param>
-    public void GenerateSeed(GenerationParameters generationParameters)
+    public void GenerateSeed(GenerationParam generationParameters)
     {
         // get number of doors that can spawn depending on the number of rooms available by genParams
 
