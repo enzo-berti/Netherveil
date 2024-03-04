@@ -2,6 +2,38 @@ using UnityEngine;
 
 public static class EasingFunctions
 {
+    public enum EaseName
+    {
+        EaseInBack,
+        EaseInBounce,
+        EaseInCirc,
+        EaseInCubic,
+        EaseInElastic,
+        EaseInExpo,
+        EaseInOutBack,
+        EaseInOutBounce,
+        EaseInOutCirc,
+        EaseInOutCubic,
+        EaseInOutElastic,
+        EaseInOutExpo,
+        EaseInOutQuad,
+        EaseInOutQuart,
+        EaseInOutQuint,
+        EaseInOutSin,
+        EaseInQuad,
+        EaseInQuint,
+        EaseInSin,
+        EaseOutBack,
+        EaseOutBounce,
+        EaseOutCirc,
+        EaseOutCubic,
+        EaseOutElastic,
+        EaseOutExpo,
+        EaseOutQuad,
+        EaseOutQuart,
+        EaseOutQuint,
+        EaseOutSin
+    }
     public static float EaseInQuad(float t)
     {
         return t * t;

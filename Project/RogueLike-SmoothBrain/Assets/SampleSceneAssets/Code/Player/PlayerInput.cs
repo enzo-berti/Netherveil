@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
+using static PlayerInput;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -31,6 +33,12 @@ public class PlayerInput : MonoBehaviour
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
+    public delegate float EaseFunc(float t);
+    List<System.Func<float, float>> easeFuncs = new List<System.Func<float, float>>();
+
+    public EasingFunctions.EaseName easeUnzoom;
+    public EasingFunctions.EaseName easeZoom;
+    public EasingFunctions.EaseName easeShake;
     void Awake()
     {
         playerInputMap = new PlayerInputMap();
@@ -43,6 +51,36 @@ public class PlayerInput : MonoBehaviour
         controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+
+        easeFuncs.Add(EasingFunctions.EaseInBack);
+        easeFuncs.Add(EasingFunctions.EaseInBounce);
+        easeFuncs.Add(EasingFunctions.EaseInCirc);
+        easeFuncs.Add(EasingFunctions.EaseInCubic);
+        easeFuncs.Add(EasingFunctions.EaseInElastic);
+        easeFuncs.Add(EasingFunctions.EaseInExpo);
+        easeFuncs.Add(EasingFunctions.EaseInOutBack);
+        easeFuncs.Add(EasingFunctions.EaseInOutBounce);
+        easeFuncs.Add(EasingFunctions.EaseInOutCirc);
+        easeFuncs.Add(EasingFunctions.EaseInOutCubic);
+        easeFuncs.Add(EasingFunctions.EaseInOutElastic);
+        easeFuncs.Add(EasingFunctions.EaseInOutExpo);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuad);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuart);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuint);
+        easeFuncs.Add(EasingFunctions.EaseInOutSin);
+        easeFuncs.Add(EasingFunctions.EaseInQuad);
+        easeFuncs.Add(EasingFunctions.EaseInQuint);
+        easeFuncs.Add(EasingFunctions.EaseInSin);
+        easeFuncs.Add(EasingFunctions.EaseOutBack);
+        easeFuncs.Add(EasingFunctions.EaseOutBounce);
+        easeFuncs.Add(EasingFunctions.EaseOutCirc);
+        easeFuncs.Add(EasingFunctions.EaseOutCubic);
+        easeFuncs.Add(EasingFunctions.EaseOutElastic);
+        easeFuncs.Add(EasingFunctions.EaseOutExpo);
+        easeFuncs.Add(EasingFunctions.EaseOutQuad);
+        easeFuncs.Add(EasingFunctions.EaseOutQuart);
+        easeFuncs.Add(EasingFunctions.EaseOutQuint);
+        easeFuncs.Add(EasingFunctions.EaseOutSin);
     }
 
     private void OnEnable()
@@ -113,7 +151,7 @@ public class PlayerInput : MonoBehaviour
     public void StartChargedAttackCasting()
     {
         controller.ComboCount = 0;
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.65f, ZOOM_DEZOOM_TIME, EasingFunctions.EaseInCirc);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.65f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
         StartCoroutine(ChargedAttackCoroutine());
     }
 
@@ -130,8 +168,8 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        cameraUtilities.ShakeCamera(0.35f, 0.5f, EasingFunctions.EaseInCirc);
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, EasingFunctions.EaseInCirc);
+        cameraUtilities.ShakeCamera(0.35f, 0.5f, easeFuncs[(int)easeShake]);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime /CHARGED_ATTACK_MAX_TIME;
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
