@@ -20,12 +20,12 @@ public class CameraUtilities : MonoBehaviour
         startingIntensity = 0f;
     }
 
-    public void ChangeFov(int _reachedFOV, float _duration)
+    public void ChangeFov(float _reachedFOV, float _duration)
     {
         StartCoroutine(ChangeFovCoroutine(_reachedFOV, _duration));
     }
 
-    private IEnumerator ChangeFovCoroutine(int _reachedFOV, float _duration)
+    private IEnumerator ChangeFovCoroutine(float _reachedFOV, float _duration)
     {
         float elapsedTime = 0f;
         float initialFOV = virtualCamera.m_Lens.FieldOfView;
