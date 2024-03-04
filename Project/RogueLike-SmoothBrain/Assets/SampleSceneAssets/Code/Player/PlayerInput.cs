@@ -5,12 +5,12 @@ using System.Collections;
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-    IEnumerator chargedAttackCoroutine;
     PlayerInputMap playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
     Animator animator;
     [SerializeField] GameObject weapon;
+    CameraUtilities cameraUtilities;
 
     bool dashCooldown = false;
     readonly float DASH_COOLDOWN_TIME = 0.5f;
@@ -29,6 +29,8 @@ public class PlayerInput : MonoBehaviour
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
 
+    readonly float ZOOM_DEZOOM_TIME = 0.2f;
+
     void Awake()
     {
         playerInputMap = new PlayerInputMap();
@@ -40,7 +42,7 @@ public class PlayerInput : MonoBehaviour
     {
         controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
-        chargedAttackCoroutine = ChargedAttackCoroutine();
+        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
     }
 
     private void OnEnable()
@@ -111,6 +113,7 @@ public class PlayerInput : MonoBehaviour
     public void StartChargedAttackCasting()
     {
         controller.ComboCount = 0;
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.65f, ZOOM_DEZOOM_TIME);
         StartCoroutine(ChargedAttackCoroutine());
     }
 
@@ -127,7 +130,8 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        Camera.main.GetComponent<CameraUtilities>().ShakeCamera(0.35f, 0.5f);
+        cameraUtilities.ShakeCamera(0.35f, 0.5f);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME);
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime /CHARGED_ATTACK_MAX_TIME;
         controller.AttackCollide(controller.chargedAttack);
         chargedAttackMax = false;
