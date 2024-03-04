@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9007129667067453063}
   m_Layer: 3
   m_Name: Tank
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,9 +95,21 @@ MonoBehaviour:
   stats:
     stats:
     - stat: 0
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 80
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     - stat: 5
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 0.5
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     name: Tank
   isAlly: 0
   State: 0
