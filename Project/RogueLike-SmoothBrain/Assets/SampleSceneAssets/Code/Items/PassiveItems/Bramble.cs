@@ -7,13 +7,16 @@ public class Bramble : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.ATK, attackStat, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.ATK, attackStat);
+        player.Stats.IncreaseValue(Stat.ATK, attackStat, false);
         // Description = "Amplifies player's attack, infusing their strikes with the thorny power of the wild.\n <color=\"green\">Attack: +" + attackStat.ToString();
     }
+
+   
 }

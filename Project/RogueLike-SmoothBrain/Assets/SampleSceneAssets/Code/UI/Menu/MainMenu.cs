@@ -1,40 +1,25 @@
 using Cinemachine;
+using System;
 using System.Collections;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void PlayGame()
-    {
-        if (Camera.main.GetComponent<CinemachineBrain>().IsBlending) return;
-        StartCoroutine(StartEnumerator());
-    }
+    [SerializeField] private MeshButton[] meshButtons;
+    [SerializeField] private TMP_Text[] floatingTexts;
 
-    public void ExitGame()
+    public void StartGame()
     {
-        if (Camera.main.GetComponent<CinemachineBrain>().IsBlending) return;
-        StartCoroutine(ExitEnumerator());
-    }
-
-    public IEnumerator StartEnumerator()
-    {
-        yield return new WaitForEndOfFrame();
-        CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
-        yield return new WaitWhile(() => brain.IsBlending);
-
         // TODO : Scene loader
         //SceneManager.LoadSceneAsync();
         Debug.Log("Game started");
     }
 
-    public IEnumerator ExitEnumerator()
+    public void Quit()
     {
-        yield return new WaitForEndOfFrame();
-        CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
-        yield return new WaitWhile(() => brain.IsBlending);
-
 #if UNITY_EDITOR
         if (EditorApplication.isPlaying)
         {
@@ -43,5 +28,32 @@ public class MainMenu : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void FadeFloatingTexts(bool fadeIn)
+    {
+        StartCoroutine(FadeFloatingText(fadeIn));
+    }
+
+    private IEnumerator FadeFloatingText(bool fadeIn)
+    {
+        float elapsed = 0;
+        float time = 0.5f;
+
+        while (elapsed < time)
+        {
+            yield return null;
+            elapsed = Mathf.Clamp(elapsed + Time.deltaTime, 0, time);
+
+            foreach (TMP_Text textMesh in floatingTexts)
+            {
+                textMesh.alpha = fadeIn ? elapsed / time : 1f - elapsed / time;
+            }
+        }
+
+        foreach (TMP_Text textMesh in floatingTexts)
+        {
+            textMesh.alpha = fadeIn ? 1f : 0f;
+        }
     }
 }

@@ -9,19 +9,24 @@ using UnityEditor;
 public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
-
+    protected Rigidbody rb;
+    protected Entity[] nearbyEntities;
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = stats.GetValueStat(Stat.SPEED);
+        nearbyEntities = null;
     }
 
     private void Start()
     {
+        StartCoroutine(EntityDetection());
         StartCoroutine(Brain());
     }
 
     protected abstract IEnumerator Brain();
+    protected abstract IEnumerator EntityDetection();
 
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)

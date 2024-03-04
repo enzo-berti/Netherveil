@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1749096857048287986}
   - component: {fileID: 6406154243714290038}
+  - component: {fileID: 2049373169672691703}
   - component: {fileID: 2320395733695838959}
   - component: {fileID: 685760080216938473}
   m_Layer: 3
@@ -126,7 +127,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7946285657065441543}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 39f72cefca53ebd46ac34b16323d059a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -142,6 +143,33 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &2049373169672691703
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7946285657065441543}
+  serializedVersion: 4
+  m_Mass: 5
+  m_Drag: 5
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 80
+  m_CollisionDetection: 1
 --- !u!195 &2320395733695838959
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -179,21 +207,65 @@ MonoBehaviour:
   stats:
     stats:
     - stat: 0
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 20
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     - stat: 1
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 5
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     - stat: 2
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 1
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     - stat: 3
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 1
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     - stat: 4
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 1
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     - stat: 5
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 5
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     - stat: 7
+      hasMaxStat: 0
+      hasMinStat: 0
       value: 5
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     name: Pest
   isAlly: 0
   State: 0
   angle: 320
+  StillThreshold: 0.05
   movementDelay: 2
+  attackDelay: 2

@@ -6,13 +6,14 @@ public class RuneOfWrath : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.ATK_COEFF, AttackCoeffStat, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.ATK_COEFF, AttackCoeffStat);
+        player.Stats.IncreaseValue(Stat.ATK_COEFF, AttackCoeffStat, false);
         //RarityTier = Rarity.LEGENDARY;
         //Name = "<color=\"yellow\">Rune of Wrath";
         //Description = "Elevates player's attack coefficient, unleashing a surge of furious power in every strike.\n" +

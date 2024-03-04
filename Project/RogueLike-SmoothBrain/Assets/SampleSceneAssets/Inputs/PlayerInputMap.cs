@@ -171,6 +171,15 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChargedAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""b723b306-91aa-4de6-be1d-7243c80d40c2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -204,6 +213,39 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58dd8c9c-f9fa-4486-8d11-1d6879ea41df"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aed7bd2c-fca2-4646-a095-f0cdc00db56e"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChargedAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f41a1169-358f-44ee-bb2a-5728984be39a"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChargedAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -286,6 +328,7 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         m_Attack = asset.FindActionMap("Attack", throwIfNotFound: true);
         m_Attack_Attack = m_Attack.FindAction("Attack", throwIfNotFound: true);
         m_Attack_Throw = m_Attack.FindAction("Throw", throwIfNotFound: true);
+        m_Attack_ChargedAttack = m_Attack.FindAction("ChargedAttack", throwIfNotFound: true);
         // Dash
         m_Dash = asset.FindActionMap("Dash", throwIfNotFound: true);
         m_Dash_Dash = m_Dash.FindAction("Dash", throwIfNotFound: true);
@@ -401,12 +444,14 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     private List<IAttackActions> m_AttackActionsCallbackInterfaces = new List<IAttackActions>();
     private readonly InputAction m_Attack_Attack;
     private readonly InputAction m_Attack_Throw;
+    private readonly InputAction m_Attack_ChargedAttack;
     public struct AttackActions
     {
         private @PlayerInputMap m_Wrapper;
         public AttackActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @Attack => m_Wrapper.m_Attack_Attack;
         public InputAction @Throw => m_Wrapper.m_Attack_Throw;
+        public InputAction @ChargedAttack => m_Wrapper.m_Attack_ChargedAttack;
         public InputActionMap Get() { return m_Wrapper.m_Attack; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -422,6 +467,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
             @Throw.started += instance.OnThrow;
             @Throw.performed += instance.OnThrow;
             @Throw.canceled += instance.OnThrow;
+            @ChargedAttack.started += instance.OnChargedAttack;
+            @ChargedAttack.performed += instance.OnChargedAttack;
+            @ChargedAttack.canceled += instance.OnChargedAttack;
         }
 
         private void UnregisterCallbacks(IAttackActions instance)
@@ -432,6 +480,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
             @Throw.started -= instance.OnThrow;
             @Throw.performed -= instance.OnThrow;
             @Throw.canceled -= instance.OnThrow;
+            @ChargedAttack.started -= instance.OnChargedAttack;
+            @ChargedAttack.performed -= instance.OnChargedAttack;
+            @ChargedAttack.canceled -= instance.OnChargedAttack;
         }
 
         public void RemoveCallbacks(IAttackActions instance)
@@ -549,6 +600,7 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     {
         void OnAttack(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
+        void OnChargedAttack(InputAction.CallbackContext context);
     }
     public interface IDashActions
     {

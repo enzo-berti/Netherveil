@@ -1,22 +1,18 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class Range : Mobs, IDamageable, IAttacker, IMovable
+public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 {
-    private new enum State
+    private enum RangeState
     {
-        MOVE,
-        ATTACK,
-        HIT,
-        DEAD,
+        WANDERING,
         TRIGGERED,
-        FLEEING,
-        WANDERING
+        STAGGERED,
+        CHARGING
     }
 
     private IAttacker.HitDelegate onHit;
@@ -26,6 +22,34 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
 
     [Header("Range Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
+    [SerializeField, Min(0)] private float staggerDuration;
+
+    private bool isFighting = false;
+    private RangeState state;
+
+    private float fleeTimer;
+    private bool isFleeing;
+    private Vector3 fleeTarget;
+
+    private float staggerImmunity;
+    private float staggerTimer;
+
+    protected override IEnumerator EntityDetection()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            if (!agent.enabled)
+                continue;
+
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+                    .Select(x => x.GetComponent<Entity>())
+                    .Where(x => x != null && x != this)
+                    .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+                    .ToArray();
+        }
+    }
 
     protected override IEnumerator Brain()
     {
@@ -33,70 +57,93 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         {
             yield return null;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
-                .Select(x => x.GetComponent<Entity>())
-                .Where(x => x != null && x != this)
-                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-                .ToArray();
+            if (!agent.enabled)
+                continue;
 
-            Hero player = entities
-                .Select(x => x.GetComponent<Hero>())
-                .Where(x => x != null)
-                .FirstOrDefault();
+            Hero player = null;
+            Tank[] tanks = null;
+            if (nearbyEntities.Length > 0)
+            {
+                player = nearbyEntities
+                    .Select(x => x.GetComponent<Hero>())
+                    .Where(x => x != null)
+                    .FirstOrDefault();
 
-            Tank[] tanks = PhysicsExtensions.OverlapVisionCone(transform.position, 360, (int)stats.GetValueStat(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
-                .Select(x => x.GetComponent<Tank>())
-                .Where(x => x != null)
-                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-                .ToArray();
+                tanks = nearbyEntities
+                    .Select(x => x.GetComponent<Tank>())
+                    .Where(x => x != null)
+                    .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+                    .ToArray();
+            }
 
-            // Si le joueur est détecté 
+            // Update timer fuite
+            fleeTimer = fleeTimer > 0 ? fleeTimer -= Time.deltaTime : 0;
+
             if (player)
             {
-                // Si un tank est à proximité
-                if (tanks.Any())
+                isFighting = true;
+
+                if (!isFleeing) MoveTo(player.transform.position);
+
+                // si le joueur est trop près et que la fuite est dispo
+                if (Vector3.Distance(transform.position, player.transform.position) < (int)stats.GetValueStat(Stat.ATK_RANGE) / 2f && fleeTimer == 0f)
                 {
+                    isFleeing = true;
+                    fleeTimer = 4f;
+
+                    // si tanks à proximité
+                    if (tanks.Any() && Vector3.Distance(player.transform.position, tanks.First().transform.position) + 2f < stats.GetValueStat(Stat.VISION_RANGE))
                     {
-                        Vector3 playerTankVector = tanks.First().transform.position - player.transform.position;
+                        Vector3 playerToTankVector = tanks.First().transform.position - player.transform.position;
+                        playerToTankVector.Normalize();
 
-                        playerTankVector.Normalize();
-                        Vector3 targetPos = player.transform.position + playerTankVector * stats.GetValueStat(Stat.ATK_RANGE);
-
-                        MoveTo(targetPos);
+                        fleeTarget = tanks.First().transform.position + playerToTankVector * 2f;
                     }
-                }
-                else
-                {
-                    MoveTo(player.transform.position);
+                    else
+                    {
+                        Vector3 playerToEnemyVector = transform.position - player.transform.position;
+                        playerToEnemyVector.Normalize();
+
+                        fleeTarget = player.transform.position + playerToEnemyVector * (int)stats.GetValueStat(Stat.ATK_RANGE);
+                    }
+
+                    MoveTo(fleeTarget);
                 }
             }
 
-            //if (player)
-            //{
-            //    // Player detect
-            //    MoveTo(player.transform.position);
-            //}
-            //else if (tanks.Any())
-            //{
-            //    // Other pest detect
-            //    MoveTo(tanks.First().transform.position);
-            //}
-            //else
-            //{
-            //    // Random movement
-            //    Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValueStat(Stat.VISION_RANGE);
-            //    //MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
-            //}
+            if (!agent.hasPath)
+            {
+                if (isFleeing)
+                {
+                    isFleeing = false;
+                }
+                else if (isFighting)
+                {
+                    isFighting = false;
+                }
+            }
+
+            UpdateStates();
         }
     }
-
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, -_value);
+        Stats.IncreaseValue(Stat.HP, -_value, false);
 
         if (stats.GetValueStat(Stat.HP) <= 0)
         {
             Death();
+        }
+    }
+    void UpdateStates()
+    {
+        if (isFighting)
+        {
+            state = RangeState.TRIGGERED;
+        }
+        else
+        {
+            state = RangeState.WANDERING;
         }
     }
 
@@ -104,6 +151,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
     {
         OnDeath?.Invoke(transform.position);
         Destroy(gameObject);
+        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
     }
 
     public void Attack(IDamageable damageable)
@@ -123,17 +171,14 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable
         //if (Selection.activeGameObject != gameObject)
         //    return;
 
-        DisplayVisionRange(angle);
-        DisplayAttackRange(angle);
+        DisplayVisionRange(isFighting ? 360 : angle);
+        DisplayAttackRange(isFighting ? 360 : angle);
         DisplayInfos();
     }
 #endif
 }
 
-// Quand dans zone de trigger, approche le joueur
-// Quand en range, l'attaque
-// Si le joueur s'est rapproché, commence à fuir
-// Si le joueur est à une distance convenable, le ré-attaque
-// Sinon, au bout de 2s, se retourne et l'attaque
-
-// Plus tard, essayer de se cacher derrière un tank
+// quand le joueur est trop près, le range va se réfugier derrière le tank
+// quand le joueur est trop près, si aucun tank n'est à proximité il va fuir en ligne droite
+// il ne le fera pas en boucle, il aura un cd sur sa fuite
+// lorsqu'il est en cd, il va attaquer le joueur simplement

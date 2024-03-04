@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class CreateItemWindow : EditorWindow
@@ -48,6 +49,8 @@ public class CreateItemWindow : EditorWindow
             database.datas.Add(item);
             CreateScript();
             Close();
+            EditorUtility.SetDirty(database);
+            AssetDatabase.SaveAssetIfDirty(database);
         }
         GUI.color = Color.white;
         EditorGUILayout.EndHorizontal();

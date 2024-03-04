@@ -15,13 +15,20 @@ public struct Door
     public Door(Transform transform)
     {
         forward = transform.forward;
-        position = transform.position;
+        localPosition = transform.position;
         rotation = transform.rotation.eulerAngles.y;
         parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
     }
 
     public Vector3 forward;
-    public Vector3 position;
+    [SerializeField] private Vector3 localPosition;
+    public Vector3 Position 
+    { 
+        get 
+        { 
+            return localPosition + parentSkeleton.transform.position; 
+        } 
+    }
     public float rotation;
     public GameObject parentSkeleton;
 }
@@ -35,16 +42,28 @@ public class DoorsGenerator : MonoBehaviour
 
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        foreach (var door in doors)
+        {
+            Gizmos.DrawSphere(door.Position, 0.25f);
+        }
+    }
+
 #if UNITY_EDITOR
-    public void GenerateDoorPosition()
+    public void GeneratePrefab()
     {
         doors.Clear();
 
         foreach (Transform child in transform)
         {
             doors.Add(new Door(child));
+        }
 
-            child.gameObject.DestroyOnValidate();
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
         }
     }
 #endif
@@ -68,13 +87,14 @@ public class DoorsGenerator : MonoBehaviour
         //Destroy(go);
     }
 
-    public void CloseDoor(Door door)
+    public void RemoveDoor(Door door)
     {
-        if (doors.Remove(door))
+        if (!doors.Remove(door))
         {
-            // TODO : close the room
+            Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+            return;
         }
 
-        Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+
     }
 }

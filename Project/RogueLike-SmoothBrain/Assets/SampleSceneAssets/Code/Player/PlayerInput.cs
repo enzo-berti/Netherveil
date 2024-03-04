@@ -1,25 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-
-
+    IEnumerator chargedAttackCoroutine;
     PlayerInputMap playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
     Animator animator;
     [SerializeField] GameObject weapon;
-
-    //used for the error margin for attacks to auto-redirect on enemies in vision cone
-    readonly float VISION_CONE_ANGLE = 45f;
-    readonly float VISION_CONE_RANGE = 8f;
 
     bool dashCooldown = false;
     readonly float DASH_COOLDOWN_TIME = 0.5f;
@@ -32,6 +23,11 @@ public class PlayerInput : MonoBehaviour
 
     bool attackQueue = false;
     public bool LaunchedAttack { get; private set; } = false;
+    float chargedAttackTime = 0f;
+    bool chargedAttackMax = false;
+    readonly float CHARGED_ATTACK_MAX_TIME = 1.5f;
+    public float ChargedAttackCoef { get; private set; } = 0f;
+    public bool LaunchedChargedAttack { get; private set; } = false;
 
     void Awake()
     {
@@ -44,6 +40,7 @@ public class PlayerInput : MonoBehaviour
     {
         controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
+        chargedAttackCoroutine = ChargedAttackCoroutine();
     }
 
     private void OnEnable()
@@ -55,6 +52,8 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Dash.Dash.performed += Dash;
         playerInputMap.Interract.Interract.performed += m_interaction.Interract;
         playerInputMap.Attack.Throw.performed += ctx => ThrowSpear();
+        playerInputMap.Attack.ChargedAttack.performed += ChargedAttack;
+        playerInputMap.Attack.ChargedAttack.canceled += ChargedAttackCanceled;
     }
 
     private void OnDisable()
@@ -66,6 +65,8 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Dash.Dash.performed -= Dash;
         playerInputMap.Interract.Interract.performed -= m_interaction.Interract;
         playerInputMap.Attack.Throw.performed -= ctx => ThrowSpear();
+        playerInputMap.Attack.ChargedAttack.performed -= ChargedAttack;
+        playerInputMap.Attack.ChargedAttack.canceled -= ChargedAttackCanceled;
     }
 
     void Update()
@@ -92,6 +93,55 @@ public class PlayerInput : MonoBehaviour
                 timerDash = 0f;
             }
         }
+    }
+
+    public void ChargedAttack(InputAction.CallbackContext ctx)
+    {
+        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
+    && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
+        {
+            animator.SetTrigger("ChargedAttackCharging");
+            triggerCooldownAttack = true;
+            controller.hero.State = (int)Entity.EntityState.ATTACK;
+            LaunchedChargedAttack = true;
+
+        }
+    }
+
+    public void StartChargedAttackCasting()
+    {
+        controller.ComboCount = 0;
+        StartCoroutine(ChargedAttackCoroutine());
+    }
+
+    public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
+    {
+        if(LaunchedChargedAttack)
+        {
+            StopAllCoroutines();
+            animator.ResetTrigger("ChargedAttackRelease");
+            animator.SetTrigger("ChargedAttackRelease");
+        }
+    }
+
+    //used as animation event
+    public void ChargedAttackRelease()
+    {
+        ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime /CHARGED_ATTACK_MAX_TIME;
+        controller.AttackCollide(controller.chargedAttack);
+        chargedAttackMax = false;
+        chargedAttackTime = 0f;
+    }
+
+    public IEnumerator ChargedAttackCoroutine()
+    {
+        while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
+        {
+            chargedAttackTime += Time.deltaTime;
+            yield return null;
+        }
+
+        chargedAttackMax = true;
     }
 
     public void Attack(InputAction.CallbackContext ctx)
@@ -124,6 +174,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    //used as animation event
     public void EndOfSpecialAnimation() //triggers for dash and hit animation to reset state
     {
         controller.hero.State = (int)Entity.EntityState.MOVE;
@@ -131,6 +182,7 @@ public class PlayerInput : MonoBehaviour
         LaunchedAttack = false;
     }
 
+    //used as animation event
     public void EndOfSpecialAnimationAttack() //triggers on attack animations to reset combo
     {
         if (!attackQueue)
@@ -151,92 +203,36 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    public void EndOfChargedAttack()
+    {
+        controller.hero.State = (int)Entity.EntityState.MOVE;
+        controller.ComboCount = 0;
+        LaunchedAttack = false;
+        attackQueue = false;
+        LaunchedChargedAttack = false;
+
+        foreach (Collider collider in controller.chargedAttack)
+        {
+            collider.gameObject.SetActive(false);
+        }
+    }
+
+    //used as animation event
     public void StartOfAttackAnimation()
     {
-        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
-        {
-            spearCollider.gameObject.SetActive(true);
-        }
-
-        //rotate the player to mouse's direction if playing KB/mouse
-        if (Gamepad.all.Count == 0)
-        {
-            MouseOrientation();
-        }
-        OrientationErrorMargin();
-
-        //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
-        Vector3 rayOffset = Vector3.up / 50f;
-
-        foreach (Collider spearCollider in controller.spearAttacks[controller.ComboCount].data)
-        {
-            Collider[] tab = controller.CheckAttackCollide(spearCollider, transform.position + rayOffset, "Enemy");
-            if (tab.Length > 0)
-            {
-                foreach (Collider col in tab)
-                {
-                    if (col.gameObject.GetComponent<IDamageable>() != null)
-                    {
-                        controller.hero.Attack(col.gameObject.GetComponent<IDamageable>());
-                    }
-                }
-            }
-        }
-    }
-
-    void MouseOrientation()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit))
-        {
-            float angle = transform.AngleOffsetToFaceTarget(new Vector3(hit.point.x, this.transform.position.y, hit.point.z));
-            if (angle != float.MaxValue)
-            {
-                GetComponent<PlayerController>().CurrentTargetAngle += angle;
-            }
-        }
-    }
-
-    void MouseOrientation2()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit))
-        {
-            float angle = transform.AngleOffsetToFaceTarget(new Vector3(hit.point.x, this.transform.position.y, hit.point.z));
-            if (angle != float.MaxValue)
-            {
-
-                Vector3 a = transform.eulerAngles;
-                a.y += angle;
-                transform.eulerAngles = a;
-                GetComponent<PlayerController>().CurrentTargetAngle = transform.eulerAngles.y;
-            }
-        }
-    }
-
-    void OrientationErrorMargin()
-    {
-        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"))
-        .Select(x => x.GetComponent<Transform>())
-        .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-        .FirstOrDefault();
-
-        if (targetTransform != null)
-        {
-            float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
-            if (angle != float.MaxValue)
-            {
-                GetComponent<PlayerController>().CurrentTargetAngle += angle;
-            }
-        }
+        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
     }
 
     public void ThrowSpear()
     {
         //rotate the player to mouse's direction if playing KB/mouse
-        if (Gamepad.all.Count == 0)
+        if (InputDeviceManager.Instance.IsPlayingKB())
         {
-            MouseOrientation2();
+            controller.MouseOrientation();
+        }
+        else
+        {
+            controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
         }
 
         if (!GetComponent<PlayerInput>().LaunchedAttack)
@@ -247,7 +243,7 @@ public class PlayerInput : MonoBehaviour
             if (spear.IsThrowing) return;
             if (!spear.IsThrown)
             {
-                spear.Throw(this.transform.position + this.transform.forward * this.gameObject.GetComponent<Hero>().Stats.GetValueStat(Stat.ATK_RANGE));
+                spear.Throw(this.transform.position + this.transform.forward *controller.hero.Stats.GetValueStat(Stat.ATK_RANGE));
             }
             else
             {
@@ -255,19 +251,4 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        ////Collider[] collide = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, VISION_CONE_RANGE, transform.forward, LayerMask.GetMask("Entity"));
-
-        //Handles.color = new Color(1, 0, 0, 0.25f);
-        ////if (collide.Length != 0)
-        ////{
-        ////    Handles.color = new Color(0, 1, 0, 0.25f);
-        ////}
-
-        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
-        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -VISION_CONE_ANGLE / 2f, VISION_CONE_RANGE);
-    }
-#endif
 }

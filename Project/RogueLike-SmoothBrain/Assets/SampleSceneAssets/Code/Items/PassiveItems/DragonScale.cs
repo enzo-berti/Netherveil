@@ -9,13 +9,14 @@ public class DragonScale : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.CRIT_RATE, critRateStat, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.CRIT_RATE, critRateStat);
+        player.Stats.IncreaseValue(Stat.CRIT_RATE, critRateStat, false);
         //RarityTier = Rarity.RARE;
         //Name = "<color=\"blue\">Dragon Scale";
         //Description = "Boosts player's critical hit rate, infusing their attacks with the precision of dragonkind.\n" +

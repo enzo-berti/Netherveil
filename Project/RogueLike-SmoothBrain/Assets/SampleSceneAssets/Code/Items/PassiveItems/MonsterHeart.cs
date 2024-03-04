@@ -6,15 +6,18 @@ public class MonsterHeart : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        throw new System.NotImplementedException();
+        Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        player.Stats.DecreaseValue(Stat.MAX_HP, maxLifeStat, false);
+        player.Stats.DecreaseValue(Stat.HP, maxLifeStat, false);
+        player.Stats.DecreaseValue(Stat.CORRUPTION, corruptionStat, false);
     }
 
-    public override void OnRetrieved()
+    public void OnRetrieved()  
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.MAX_HP, maxLifeStat);
-        player.Stats.IncreaseValue(Stat.HP, maxLifeStat);
-        player.Stats.IncreaseValue(Stat.CORRUPTION, corruptionStat);
+        player.Stats.IncreaseValue(Stat.MAX_HP, maxLifeStat, false);
+        player.Stats.IncreaseValue(Stat.HP, maxLifeStat, false);
+        player.Stats.IncreaseValue(Stat.CORRUPTION, corruptionStat, false);
         //RarityTier = Rarity.RARE;
         //Name = "<color=\"blue\">Monster's heart";
         //Description = "Boosts max health while corrupting the player, a perilous choice between vitality and darkness.\n" +

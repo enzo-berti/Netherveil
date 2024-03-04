@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Collider))]
 public class MeshButton : MonoBehaviour
@@ -31,6 +32,9 @@ public class MeshButton : MonoBehaviour
 
                 if (Input.GetMouseButtonDown(0))
                 {
+                    if (EventSystem.current.IsPointerOverGameObject())
+                        return;
+
                     onPress?.Invoke();
                     isPressed = true;
                 }
