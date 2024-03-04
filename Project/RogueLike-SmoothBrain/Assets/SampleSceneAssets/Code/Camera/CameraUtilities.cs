@@ -60,8 +60,8 @@ public class CameraUtilities : MonoBehaviour
         {
             shakeTimer -= Time.deltaTime;
             CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-            float shackProgression = 1 - (shakeTimer / shakeTotalTime);
-            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(startingIntensity, 0f, easingFunction(shackProgression));
+            float shakeProgression = 1 - (shakeTimer / shakeTotalTime);
+            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(startingIntensity, 0f, easingFunction(shakeProgression));
             yield return null;
         }
     }
