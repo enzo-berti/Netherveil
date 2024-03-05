@@ -6,6 +6,10 @@ using UnityEngine;
 [Serializable]
 public abstract class Status
 {
+    public Status()
+    {
+        this.stopTimes.Add(this.duration);
+    }
     public Status(Entity launcher)
     {
         this.duration *= launcher.Stats.GetValue(Stat.STATUS_DURATION);

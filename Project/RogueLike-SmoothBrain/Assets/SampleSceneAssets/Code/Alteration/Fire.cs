@@ -3,6 +3,11 @@ using UnityEngine;
 public class Fire : Status
 {
     private int damage = 10;
+    public Fire()
+    {
+        duration = 10.0f;
+        this.frequency = 0.5f;
+    }
     public Fire(Entity entity) : base(entity)
     {
         duration = 10.0f;
