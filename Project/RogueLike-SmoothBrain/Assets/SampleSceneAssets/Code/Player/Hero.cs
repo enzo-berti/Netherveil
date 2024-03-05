@@ -64,7 +64,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void Attack(IDamageable damageable)
     {
         Entity test = (damageable as Entity);
-        test.ApplyEffect(new Fire(1000, 5f));
+        test.ApplyEffect(new Fire(this));
         int damages = (int)stats.GetValue(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {

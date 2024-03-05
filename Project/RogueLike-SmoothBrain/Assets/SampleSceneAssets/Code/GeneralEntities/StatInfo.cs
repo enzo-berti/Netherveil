@@ -23,7 +23,9 @@ public enum Stat
     LIFE_STEAL,
     HEAL_COEFF,
     KNOCKBACK_COEFF,
-    STAGGER_DURATION
+    STAGGER_DURATION,
+    STATUS_DURATION,
+    STATUS_POWER
 }
 
 [Serializable]
