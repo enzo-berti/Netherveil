@@ -23,7 +23,6 @@ public class Fire : Status
 
     public override void OnFinished()
     {
-        target.Stats.SetCoeffValue(Stat.SPEED, 1f);
     }
 
     protected override void Effect()

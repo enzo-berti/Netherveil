@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 [Serializable]
@@ -11,6 +8,7 @@ public abstract class Status
     public Entity target;
     protected bool isConst = false;
     protected float duration = 10;
+    // Frequency ( seconds )
     protected float frequency = 1f;
 
     public bool isFinished = false;
