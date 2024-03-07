@@ -1,21 +1,23 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameAssets : MonoBehaviour
 {
-    static private GameManager instance;
-    static public GameManager Instance
+    static private GameAssets instance;
+    static public GameAssets Instance
     {
         get
         {
             if (instance == null)
             {
-                GameObject obj = new GameObject(typeof(GameManager).Name);
-                obj.AddComponent<GameManager>();
+                GameObject obj = new GameObject(typeof(GameAssets).Name);
+                obj.AddComponent<GameAssets>();
             }
 
             return instance;
         }
     }
+
+    public readonly Seed seed = new Seed();
 
     private void Awake()
     {
