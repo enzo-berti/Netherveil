@@ -22,6 +22,9 @@ public struct Door
 
     public Vector3 forward;
     [SerializeField] private Vector3 localPosition;
+    public float rotation;
+    public GameObject parentSkeleton;
+
     public Vector3 Position 
     { 
         get 
@@ -29,8 +32,6 @@ public struct Door
             return localPosition + parentSkeleton.transform.position; 
         } 
     }
-    public float rotation;
-    public GameObject parentSkeleton;
 }
 
 public class DoorsGenerator : MonoBehaviour

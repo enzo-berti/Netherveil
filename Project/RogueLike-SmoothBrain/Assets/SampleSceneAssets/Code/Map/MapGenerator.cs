@@ -141,7 +141,7 @@ public class MapGenerator : MonoBehaviour
         }
 
         // TODO : spawn things to hides the holes
-        foreach (var truc in genParam.availableDoors)
+        foreach (var door in genParam.availableDoors)
         {
             //Debug.Log(truc.Value.Count);
         }
