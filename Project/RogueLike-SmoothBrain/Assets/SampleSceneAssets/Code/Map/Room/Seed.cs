@@ -12,11 +12,6 @@ public class Seed
     }
 #endif
 
-    public Seed()
-    {
-        Generate();
-    }
-
     /// <summary>
     /// Generate new seed value
     /// </summary>

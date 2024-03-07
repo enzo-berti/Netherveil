@@ -31,5 +31,7 @@ public class GameAssets : MonoBehaviour
             Destroy(instance);
             return;
         }
+
+        seed.Generate();
     }
 }
