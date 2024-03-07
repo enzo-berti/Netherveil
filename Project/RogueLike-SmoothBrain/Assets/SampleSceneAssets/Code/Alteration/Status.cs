@@ -39,14 +39,20 @@ public abstract class Status
 
     // Do something when status is removed from the target
     public abstract void OnFinished();
-    public void AddStack(int nb)
+
+    public virtual void AddStack(int nb)
     {
         stack += nb;
         stopTimes.Add(duration + currentTime);
     }
+
+    public virtual void RemoveStack(int nb) 
+    { 
+        stack -= nb;
+    }
+
     public void DoEffect()
     {
-        
         if (!isFinished)
         {
             currentTime += Time.deltaTime;
@@ -68,7 +74,6 @@ public abstract class Status
             }
             
         }
-
     }
     private async void EffectAsync()
     {

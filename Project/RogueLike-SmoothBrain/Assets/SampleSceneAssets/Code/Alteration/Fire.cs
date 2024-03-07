@@ -22,9 +22,6 @@ public class Fire : Status
             this.stack++;
             target.AddStatus(this);
         }
-        else
-        {
-        }
     }
 
     public override void OnFinished()
