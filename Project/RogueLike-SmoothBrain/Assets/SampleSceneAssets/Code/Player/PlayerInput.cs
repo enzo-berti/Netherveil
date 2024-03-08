@@ -177,11 +177,11 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        InputDeviceManager.Instance.ForceStopVibrations();
+        DeviceManager.Instance.ForceStopVibrations();
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
 
         cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
-        InputDeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
+        DeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
         controller.AttackCollide(controller.chargedAttack);
@@ -191,15 +191,15 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator ChargedAttackCoroutine()
     {
-        InputDeviceManager.Instance.ApplyVibrations(0.01f, 0.005f, float.MaxValue);
+        DeviceManager.Instance.ApplyVibrations(0.01f, 0.005f, float.MaxValue);
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
             yield return null;
         }
 
-        InputDeviceManager.Instance.ForceStopVibrations();
-        InputDeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
+        DeviceManager.Instance.ForceStopVibrations();
+        DeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
         chargedAttackMax = true;
     }
 
@@ -308,7 +308,7 @@ public class PlayerInput : MonoBehaviour
         if(controller.hero.State == (int)Entity.EntityState.MOVE)
         {
             //rotate the player to mouse's direction if playing KB/mouse
-            if (InputDeviceManager.Instance.IsPlayingKB())
+            if (DeviceManager.Instance.IsPlayingKB())
             {
                 controller.MouseOrientation();
             }

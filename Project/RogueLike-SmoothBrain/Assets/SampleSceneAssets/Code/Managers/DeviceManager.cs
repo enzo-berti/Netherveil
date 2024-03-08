@@ -9,25 +9,25 @@ using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.XInput;
 
-public class InputDeviceManager : MonoBehaviour
+public class DeviceManager : MonoBehaviour
 {
     //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi
     [SerializeField] TMP_Text debugText;
     InputDevice currentDevice = null;
     InputDevice lastUsedDevice = null;
-    static private InputDeviceManager instance;
+    static private DeviceManager instance;
     public static event Action OnChangedToGamepad;
     public static event Action OnChangedToKB;
     public bool toggleVibrations = true;
 
-    static public InputDeviceManager Instance
+    static public DeviceManager Instance
     {
         get
         {
             if (instance == null)
             {
-                GameObject obj = new GameObject(typeof(InputDeviceManager).Name);
-                instance = obj.AddComponent<InputDeviceManager>();
+                GameObject obj = new GameObject(typeof(DeviceManager).Name);
+                instance = obj.AddComponent<DeviceManager>();
                 DontDestroyOnLoad(obj);
             }
 
