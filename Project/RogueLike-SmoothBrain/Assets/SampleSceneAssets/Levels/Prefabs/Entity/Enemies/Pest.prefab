@@ -125,7 +125,9 @@ MonoBehaviour:
     - stat: 0
       hasMaxStat: 0
       hasMinStat: 0
+      hasCoeff: 0
       value: 20
+      coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
@@ -133,7 +135,9 @@ MonoBehaviour:
     - stat: 1
       hasMaxStat: 0
       hasMinStat: 0
+      hasCoeff: 0
       value: 5
+      coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
@@ -141,7 +145,9 @@ MonoBehaviour:
     - stat: 2
       hasMaxStat: 0
       hasMinStat: 0
+      hasCoeff: 0
       value: 1
+      coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
@@ -149,7 +155,9 @@ MonoBehaviour:
     - stat: 3
       hasMaxStat: 0
       hasMinStat: 0
+      hasCoeff: 0
       value: 1
+      coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
@@ -157,7 +165,9 @@ MonoBehaviour:
     - stat: 4
       hasMaxStat: 0
       hasMinStat: 0
+      hasCoeff: 0
       value: 1
+      coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
@@ -165,7 +175,9 @@ MonoBehaviour:
     - stat: 5
       hasMaxStat: 0
       hasMinStat: 0
+      hasCoeff: 0
       value: 5
+      coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
@@ -173,7 +185,9 @@ MonoBehaviour:
     - stat: 7
       hasMaxStat: 0
       hasMinStat: 0
+      hasCoeff: 0
       value: 5
+      coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
@@ -181,10 +195,16 @@ MonoBehaviour:
     name: Pest
   isAlly: 0
   State: 0
+  deathSound:
+    Guid:
+      Data1: 47670446
+      Data2: 1242984026
+      Data3: 521774752
+      Data4: 1157363826
+    Path: event:/Enemy/EnemyDeath
   angle: 320
   StillThreshold: 0.05
-  movementDelay: 2
-  attackDelay: 2
+  brainDelay: 2
 --- !u!1001 &798137630765714195
 PrefabInstance:
   m_ObjectHideFlags: 0
