@@ -7,11 +7,9 @@ using UnityEngine;
 [Serializable]
 public abstract class Status
 {
-    public Status(Entity launcher, float _duration)
+    public Status(float _duration)
     {
-        target = launcher;
         this.duration = _duration;
-
         this.stopTimes.Add(duration);
     }
 
@@ -28,7 +26,7 @@ public abstract class Status
     public float statusChance = 0.3f;
 
     // one stack duration
-    
+
     protected float duration = 1;
 
     public bool isFinished = false;
@@ -82,6 +80,7 @@ public abstract class Status
 
         }
     }
+
     private async void EffectAsync()
     {
         isCoroutineOn = true;

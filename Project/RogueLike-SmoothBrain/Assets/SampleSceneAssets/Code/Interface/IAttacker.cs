@@ -1,4 +1,7 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public interface IAttacker 
 {
@@ -21,6 +24,7 @@ public interface IAttacker
 
     public void ApplyStatus(IDamageable damageable)
     {
+        Debug.Log("ApplyStatus");
         Entity entity = damageable as Entity;
         if (entity == null) return;
         foreach (var status in StatusToApply)

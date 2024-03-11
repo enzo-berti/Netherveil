@@ -35,6 +35,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
+
+        statusToApply.Add(new Fire(3f));
     }
 
     private void Update()

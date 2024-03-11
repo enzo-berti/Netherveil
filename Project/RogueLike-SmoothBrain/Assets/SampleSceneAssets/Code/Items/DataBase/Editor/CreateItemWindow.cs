@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class CreateItemWindow : EditorWindow

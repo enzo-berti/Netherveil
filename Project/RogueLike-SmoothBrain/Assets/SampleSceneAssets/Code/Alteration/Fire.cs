@@ -3,10 +3,11 @@ using UnityEngine;
 public class Fire : Status
 {
     private int damage = 10;
-    public Fire(Entity entity, float duration = 10f) : base(entity, duration)
+
+    public Fire(float _duration) : base(_duration)
     {
-        this.frequency = 0.5f;
     }
+
     public override void ApplyEffect(Entity target)
     {
         if (target.gameObject.TryGetComponent<IDamageable>(out _))
