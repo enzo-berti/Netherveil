@@ -18,7 +18,7 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     [Header("Tank Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
-    [SerializeField] private float range = 5f;
+    //[SerializeField] private float range = 5f;
 
     public void Attack(IDamageable damageable)
     {
