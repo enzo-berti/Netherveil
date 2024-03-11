@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Progress;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [Serializable]
 public class Item : MonoBehaviour, IInterractable
@@ -66,7 +68,7 @@ public class Item : MonoBehaviour, IInterractable
     }
 }
 
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(Item))]
 public class ItemEditor : Editor
 {
@@ -140,3 +142,4 @@ public class ResearchItemWindow : EditorWindow
         }
     }
 }
+#endif

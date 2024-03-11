@@ -13,9 +13,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        // TODO : Scene loader
-        //SceneManager.LoadSceneAsync();
-        Debug.Log("Game started");
+        SceneManager.LoadSceneAsync("InGame");
     }
 
     public void Quit()
