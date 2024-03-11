@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +19,6 @@ public class CorruptionBar : MonoBehaviour
 
     void Update()
     {
-        negative.value = negative.maxValue - positive.value;
+        negative.value = positive.value;
     }
 }
