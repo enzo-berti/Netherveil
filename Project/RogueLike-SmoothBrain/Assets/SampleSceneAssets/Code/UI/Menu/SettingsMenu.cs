@@ -11,7 +11,7 @@ public class SettingsMenu : MenuHandler
 
     public void ToggleVibrations()
     {
-        InputDeviceManager.Instance.toggleVibrations = !InputDeviceManager.Instance.toggleVibrations;
+        DeviceManager.Instance.toggleVibrations = !DeviceManager.Instance.toggleVibrations;
     }
 
     public void Borderless()

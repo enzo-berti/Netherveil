@@ -39,7 +39,7 @@ public class RoomGenerator : MonoBehaviour
         int keepRoomIndex = 0;
         if (rooms.Count > 1)
         {
-            keepRoomIndex = GameManager.Instance.seed.Range(0, rooms.Count, ref RoomGenerated);
+            keepRoomIndex = GameAssets.Instance.seed.Range(0, rooms.Count, ref RoomGenerated);
 
             for (int i = 0; i < rooms.Count; i++)
             {
