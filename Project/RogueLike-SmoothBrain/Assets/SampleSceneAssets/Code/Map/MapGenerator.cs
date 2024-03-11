@@ -68,13 +68,13 @@ public struct GenerationParam
     {
         foreach (var door in doorsGenerator.doors)
         {
-            if (availableDoors.ContainsKey(door.rotation))
+            if (availableDoors.ContainsKey(door.Rotation))
             {
-                availableDoors[door.rotation].Add(door);
+                availableDoors[door.Rotation].Add(door);
             }
             else
             {
-                Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.rotation);
+                Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.Rotation);
             }
         }
         Object.Destroy(doorsGenerator); // destroy doorsGenerator
@@ -112,7 +112,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: 3));
+        GenerateMap(new GenerationParam(nbNormal: 100));
     }
 
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
@@ -128,17 +128,17 @@ public class MapGenerator : MonoBehaviour
 
             for (int j = 0; j < 4; j++)
             {
-                float neededRotation = (door.rotation + 180f + (90f * j)) % 360f;
+                float doorRotation = door.Rotation + 90f * j;
+                float neededRotation = (doorRotation + 180f) % 360f;
 
                 if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
                 {
                     int randIndex = GameAssets.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
-                    exitDoor = genParam.availableDoors[neededRotation][randIndex];
-
-                    Debug.Log(neededRotation + " " + (door.rotation + 90f * j) + " " + 90f * j + " " + exitDoor.Position);
-                    doorsGenerator.transform.parent.parent.Rotate(0, 90f * j, 0); // rotate gameObject entrance to correspond the neededRotation
 
                     entranceDoor = door;
+                    exitDoor = genParam.availableDoors[neededRotation][randIndex];
+
+                    doorsGenerator.transform.parent.parent.Rotate(0, 90f * j, 0); // rotate gameObject entrance to correspond the neededRotation
 
                     return true;
                 }
@@ -191,10 +191,10 @@ public class MapGenerator : MonoBehaviour
             }
 
             // Destroy used door
-            genParam.availableDoors[exitDoor.rotation].Remove(exitDoor);
+            genParam.availableDoors[exitDoor.Rotation].Remove(exitDoor);
 
             // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (forward = pour avoir un offset)
-            roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position + (-exitDoor.forward * 1f);
+            roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position + (-exitDoor.Forward * 1f);
             Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
 
             // bon sinon j'évite la collide de la salle et la salle exit (forcément que les deux collides putaig)
@@ -209,6 +209,9 @@ public class MapGenerator : MonoBehaviour
                 // TODO : spawn a little cellule or something like this to hide the hole in the wall
                 continue;
             }
+
+            // removed door
+            doorsGenerator.RemoveDoor(entranceDoor);
 
             // Add the new doors from the new room into the possible candidates
             genParam.AddDoorsGenerator(doorsGenerator);

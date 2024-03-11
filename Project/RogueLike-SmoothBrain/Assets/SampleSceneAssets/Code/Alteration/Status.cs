@@ -12,31 +12,29 @@ public abstract class Status
         this.duration = _duration;
         this.stopTimes.Add(duration);
     }
+    public abstract Status ShallowCopy();
 
+    #region Properties
     public Entity target;
+    // If an effect is not played cyclically
     protected bool isConst = false;
-
-
-    // --------Status Stats-------- //
-
-    // Frequency ( seconds )
+    // If an effect is played cyclically, at which frequency ( in seconds )
     protected float frequency = 1f;
-
-    // Chance to apply status ( 1 = 100% )
+    // Chance to apply a status ( 0 -> 1 )
     public float statusChance = 0.3f;
-
-    // one stack duration
-
+    // Duration of one stack of the effect
     protected float duration = 1;
+    #endregion
 
+    #region Time
     public bool isFinished = false;
     private float currentTime = 0;
 
     readonly private List<float> stopTimes = new();
     private bool isCoroutineOn = false;
+    #endregion
 
-    protected int stack = 0;
-    public int Stack { get => stack; }
+    #region Abstract Effect Functions
     protected abstract void Effect();
 
     // Apply effect only if entity is effectable by this. Exemple, you won't apply Fire if entity doesn't have Idamageable
@@ -44,21 +42,26 @@ public abstract class Status
 
     // Do something when status is removed from the target
     public abstract void OnFinished();
-    public abstract Status ShallowCopy();
+    #endregion
+    
+    #region Stack
+    protected int stack = 0;
+    public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
         stack += nb;
         stopTimes.Add(duration + currentTime);
     }
-
     public virtual void RemoveStack(int nb)
     {
         stack -= nb;
     }
+    #endregion
 
+    // Update and play effect on a target
     public void DoEffect()
     {
-        if (!isFinished)
+        if (!isFinished && stopTimes.Count > 0)
         {
             currentTime += Time.deltaTime;
             if (currentTime >= stopTimes[0])

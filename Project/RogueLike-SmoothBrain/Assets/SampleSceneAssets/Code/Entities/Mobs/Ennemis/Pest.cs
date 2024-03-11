@@ -98,7 +98,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position);
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
@@ -107,6 +107,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     public void Death()
     {
+        OnDeath?.Invoke(this.transform.position);
         Destroy(gameObject);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
     }

@@ -16,14 +16,30 @@ public struct Door
     {
         forward = transform.forward;
         localPosition = transform.position;
-        rotation = transform.rotation.eulerAngles.y;
+        localRotation = transform.rotation.eulerAngles.y;
         parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
     }
 
     public Vector3 forward;
     [SerializeField] private Vector3 localPosition;
-    public float rotation;
+    public float localRotation;
     public GameObject parentSkeleton;
+
+    public Vector3 Forward
+    {
+        get
+        {
+            return Quaternion.Euler(0, parentSkeleton.transform.eulerAngles.y, 0) * forward;
+        }
+    }
+
+    public float Rotation
+    {
+        get
+        {
+            return parentSkeleton.transform.eulerAngles.y + localRotation;
+        }
+    }
 
     public Vector3 Position 
     {
