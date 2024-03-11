@@ -330,6 +330,15 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""bae5907d-3243-4339-a122-62e29dc6cad4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -352,6 +361,28 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ToggleMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c470eb8f-d89e-4dbb-b856-dcfc1cd7e5dd"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""89d620d7-e992-4402-9df0-64858063b333"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -377,6 +408,7 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_ToggleMap = m_UI.FindAction("ToggleMap", throwIfNotFound: true);
+        m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -639,11 +671,13 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_ToggleMap;
+    private readonly InputAction m_UI_Pause;
     public struct UIActions
     {
         private @PlayerInputMap m_Wrapper;
         public UIActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @ToggleMap => m_Wrapper.m_UI_ToggleMap;
+        public InputAction @Pause => m_Wrapper.m_UI_Pause;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -656,6 +690,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
             @ToggleMap.started += instance.OnToggleMap;
             @ToggleMap.performed += instance.OnToggleMap;
             @ToggleMap.canceled += instance.OnToggleMap;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -663,6 +700,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
             @ToggleMap.started -= instance.OnToggleMap;
             @ToggleMap.performed -= instance.OnToggleMap;
             @ToggleMap.canceled -= instance.OnToggleMap;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -701,5 +741,6 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnToggleMap(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }
