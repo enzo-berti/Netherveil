@@ -42,7 +42,6 @@ public class DeviceManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
     }
 
     void Start()

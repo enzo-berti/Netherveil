@@ -28,7 +28,7 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
