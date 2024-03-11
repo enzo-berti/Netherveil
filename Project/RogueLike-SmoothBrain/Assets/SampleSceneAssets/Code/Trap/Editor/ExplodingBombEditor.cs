@@ -21,7 +21,7 @@ public class ExplodingBombEditor : Editor
         }
         if (GUILayout.Button("Throw"))
         {
-            bomb.ThrowTo(FindObjectOfType<Hero>().transform.position, 0.5f);
+            bomb.ThrowTo(FindObjectOfType<Hero>().transform.position, 5f);
         }
     }
 }

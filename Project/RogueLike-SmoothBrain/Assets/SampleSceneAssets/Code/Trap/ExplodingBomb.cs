@@ -2,9 +2,13 @@ using System.Collections;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class ExplodingBomb : MonoBehaviour, IDamageable
 {
+    [Header("Gameobjects & Components")]
+    [SerializeField] private GameObject graphics;
+    [SerializeField] private VisualEffect VFX;
     [Header("Bomb Parameter")]
     [SerializeField] private bool activateOnAwake;
     [SerializeField] private float timerBeforeExplode;
@@ -13,9 +17,10 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask damageLayer;
     [SerializeField] private float throwHeight = 5f;
     private bool isActive;
-    private bool isMoving => throwCoroutine != null;
+    private bool isMoving => throwRoutine != null;
     private float elapsedExplosionTime;
-    private Coroutine throwCoroutine;
+    private Coroutine throwRoutine;
+    private Coroutine explosionRoutine;
     private Vector3 startPosition;
     private Vector3 endPosition;
 
@@ -36,11 +41,17 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
 
     public void ThrowTo(Vector3 endPosition, float totalTime = 1f)
     {
-        if (throwCoroutine != null)
+        if (throwRoutine != null)
             return;
 
+        VFX.transform.parent = null;
+        VFX.transform.position = endPosition;
+        VFX.SetFloat("TimeToExplode", totalTime);
+        VFX.SetFloat("ExplosionRadius", blastRadius);
+        VFX.Play();
+
         this.endPosition = endPosition;
-        throwCoroutine = StartCoroutine(LerpPositionUpdate(endPosition, totalTime));
+        throwRoutine = StartCoroutine(LerpPositionUpdate(endPosition, totalTime));
     }
 
     private IEnumerator LerpPositionUpdate(Vector3 endPosition, float totalTime)
@@ -54,7 +65,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
             yield return null;
         }
         transform.position = endPosition;
-        Activate();
+        Explode();
     }
 
     void UpdateTimerExplotion()
@@ -71,15 +82,31 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
 
     public void Explode()
     {
+        if (explosionRoutine == null)
+            explosionRoutine = StartCoroutine(ExplodeRoutine());
+    }
+
+    private IEnumerator ExplodeRoutine()
+    {
         Physics.OverlapSphere(transform.position, blastRadius, damageLayer)
             .Select(entity => entity.GetComponent<IBlastable>())
             .Where(entity => entity != null)
             .ToList()
-            .ForEach(currentEntity => { 
-                currentEntity.ApplyDamage(blastDamage); 
+            .ForEach(currentEntity => {
+                currentEntity.ApplyDamage(blastDamage);
             });
 
+        graphics.SetActive(false);
+        float timer = VFX.GetFloat("ExplosionTime");
+
+        while (timer > 0f)
+        {
+            yield return null;
+            timer -= Time.deltaTime;
+        }
+
         Destroy(gameObject);
+        Destroy(VFX.gameObject);
     }
 
     private void OnDisable()
