@@ -124,7 +124,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         _damageable.ApplyDamage((int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF)));
     }
 
-    public void ApplyDamage(int _value)
+    public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
         FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);

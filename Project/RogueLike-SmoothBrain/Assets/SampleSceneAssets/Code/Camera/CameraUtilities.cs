@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CameraUtilities : MonoBehaviour
 {
-    private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
     private float shakeTimer;
     private float shakeTotalTime;
     private float startingIntensity;
@@ -15,7 +15,6 @@ public class CameraUtilities : MonoBehaviour
 
     private void Start()
     {
-        virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
         defaultFOV = virtualCamera.m_Lens.FieldOfView;
         shakeTimer = 0f;
         shakeTotalTime = 0f;

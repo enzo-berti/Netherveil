@@ -24,8 +24,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
-    public KillDelegate OnKill { get => onKill; set => OnKill = value; }
-    public ChangeRoomDelegate OnChangeRoom { get => OnChangeRoom; set => OnChangeRoom = value; }
+    public KillDelegate OnKill { get => onKill; set => onKill = value; }
+    public ChangeRoomDelegate OnChangeRoom { get => onChangeRoom; set => onChangeRoom = value; }
 
     private List<Status> statusToApply = new List<Status>();
     public List<Status> StatusToApply => statusToApply;
@@ -37,17 +37,19 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerController = GetComponent<PlayerController>();
 
         statusToApply.Add(new Fire(3f));
+
+        if (this is IAttacker attacker)
+        {
+            attacker.OnHit += attacker.ApplyStatus;
+        }
     }
 
-    private void Update()
-    {
-    }
 
-    public void ApplyDamage(int _value)
+    public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
         FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
-        if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
+        if (hasAnimation && (-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
             animator.ResetTrigger("Hit");
@@ -82,7 +84,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         damages = (int)(damages * stats.GetValue(Stat.ATK_COEFF));
         damageable.ApplyDamage(damages);
-        onAttack?.Invoke(damageable);
+
+        onHit?.Invoke(damageable);
 
         if (damageable is IKnockbackable)
         {

@@ -6,7 +6,7 @@ using UnityEngine;
 public interface IAttacker 
 {
     public List<Status> StatusToApply { get; }
-    public delegate void AttackDelegate(IDamageable damageable);
+    public delegate void AttackDelegate();
     public AttackDelegate OnAttack
     {
         get;
@@ -24,7 +24,6 @@ public interface IAttacker
 
     public void ApplyStatus(IDamageable damageable)
     {
-        Debug.Log("ApplyStatus");
         Entity entity = damageable as Entity;
         if (entity == null) return;
         foreach (var status in StatusToApply)

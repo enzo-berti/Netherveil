@@ -6,6 +6,8 @@ public class Fire : Status
 
     public Fire(float _duration) : base(_duration)
     {
+        statusChance = 1.0f;
+        frequency = 0.5f;
     }
 
     public override void ApplyEffect(Entity target)
@@ -28,6 +30,6 @@ public class Fire : Status
 
     protected override void Effect()
     {
-        target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack);
+        target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack, false);
     }
 }

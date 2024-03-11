@@ -187,9 +187,13 @@ public class PlayerInput : MonoBehaviour
         DeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
-        controller.AttackCollide(controller.chargedAttack);
+        controller.AttackCollide(controller.chargedAttack, false);
         chargedAttackMax = false;
         chargedAttackTime = 0f;
+
+        controller.VFXWrapper.transform.position = transform.position;
+        controller.VFXWrapper.transform.rotation = transform.rotation;
+        controller.chargedAttackVFX.Play();
     }
 
     public IEnumerator ChargedAttackCoroutine()
@@ -231,10 +235,14 @@ public class PlayerInput : MonoBehaviour
         if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
-            controller.DashDir = controller.LastDir;
+            controller.DashDir = transform.forward.normalized;
+
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
             dashCooldown = true;
+            controller.VFXWrapper.transform.position = transform.position;
+            controller.VFXWrapper.transform.rotation = transform.rotation;
+            controller.dashVFX.Play();
         }
     }
 
@@ -292,7 +300,11 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void StartOfAttackAnimation()
     {
+        controller.hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
+        controller.VFXWrapper.transform.position = transform.position;
+        controller.VFXWrapper.transform.rotation = transform.rotation;
+        controller.spearAttacksVFX[controller.ComboCount].Play();
     }
 
     public void StartOfIdleAnimation()
