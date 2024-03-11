@@ -6,6 +6,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
@@ -230,7 +231,19 @@ public class PlayerController : MonoBehaviour
         camRight = camRight.normalized;
     }
 
+    public void PlayVFX(VisualEffect VFX)
+    {
+        VFXWrapper.transform.position = transform.position;
+        VFXWrapper.transform.rotation = transform.rotation;
+        VFX.Play();
+    }
 
+    public void PlayVFX2(ParticleSystem VFX)
+    {
+        VFXWrapper.transform.position = transform.position;
+        VFXWrapper.transform.rotation = transform.rotation;
+        VFX.Play();
+    }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
