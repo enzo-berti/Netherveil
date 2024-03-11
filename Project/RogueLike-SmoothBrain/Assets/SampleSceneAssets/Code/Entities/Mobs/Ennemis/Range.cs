@@ -142,7 +142,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
             UpdateStates();
         }
     }
-    public void ApplyDamage(int _value)
+    public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
         FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);

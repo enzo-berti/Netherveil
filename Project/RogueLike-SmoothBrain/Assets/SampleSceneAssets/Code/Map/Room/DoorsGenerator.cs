@@ -26,11 +26,16 @@ public struct Door
     public GameObject parentSkeleton;
 
     public Vector3 Position 
-    { 
+    {
         get 
-        { 
-            return Quaternion.AngleAxis(parentSkeleton.transform.eulerAngles.y, Vector3.up) * (localPosition + parentSkeleton.transform.position); 
-        } 
+        {
+            Vector3 pos = localPosition + parentSkeleton.transform.position;
+            Vector3 dir = pos - parentSkeleton.transform.position;
+            dir = Quaternion.Euler(0, parentSkeleton.transform.eulerAngles.y, 0) * dir;
+            pos = dir + parentSkeleton.transform.position;
+
+            return pos;
+        }
     }
 }
 
