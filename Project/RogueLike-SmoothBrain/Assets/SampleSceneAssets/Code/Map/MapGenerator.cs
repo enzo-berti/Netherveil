@@ -49,6 +49,21 @@ public struct GenerationParam
 
     }
 
+    public int NumRoomAvaibles
+    {
+        get
+        {
+            int count = 0;
+
+            foreach (var list in availableDoors.Values)
+            {
+                count += list.Count;
+            }
+            
+            return count;
+        }
+    }
+
     public void AddDoorsGenerator(DoorsGenerator doorsGenerator)
     {
         foreach (var door in doorsGenerator.doors)
@@ -79,23 +94,25 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
-    //GenerationParam test;
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    foreach (var listDoors in test.availableDoors)
-    //    {
-    //        foreach (var door in listDoors.Value)
-    //        {
-    //            Gizmos.DrawSphere(door.Position, 0.25f);
-    //        }
-    //    }
-    //}
+    GenerationParam debugGen;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        if (debugGen.availableDoors != null)
+        {
+            foreach (var listDoors in debugGen.availableDoors)
+            {
+                foreach (var door in listDoors.Value)
+                {
+                    Gizmos.DrawSphere(door.Position, 0.25f);
+                }
+            }
+        }
+    }
 
     private void Awake()
     {
-        GenerationParam genParam = new GenerationParam(nbNormal: 20);
-        GenerateMap(ref genParam);
+        GenerateMap(new GenerationParam(nbNormal: 3));
     }
 
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
@@ -111,16 +128,17 @@ public class MapGenerator : MonoBehaviour
 
             for (int j = 0; j < 4; j++)
             {
-                float neededRotation = (door.rotation + 180f * (i + 1)) % 360f;
+                float neededRotation = (door.rotation + 180f + (90f * j)) % 360f;
 
                 if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
                 {
                     int randIndex = GameAssets.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
-
-                    entranceDoor = door;
                     exitDoor = genParam.availableDoors[neededRotation][randIndex];
 
-                    doorsGenerator.transform.parent.parent.Rotate(0, 180f * i, 0);
+                    Debug.Log(neededRotation + " " + (door.rotation + 90f * j) + " " + 90f * j + " " + exitDoor.Position);
+                    doorsGenerator.transform.parent.parent.Rotate(0, 90f * j, 0); // rotate gameObject entrance to correspond the neededRotation
+
+                    entranceDoor = door;
 
                     return true;
                 }
@@ -130,7 +148,7 @@ public class MapGenerator : MonoBehaviour
         return false;
     }
 
-    void GenerateMap(ref GenerationParam genParam)
+    void GenerateMap(GenerationParam genParam)
     {
         int nbRoom = genParam.TotalRoom;
         InstantiateLobby(out GameObject obj, ref genParam);
@@ -139,6 +157,8 @@ public class MapGenerator : MonoBehaviour
         {
             GenerateRoom(ref genParam);
         }
+
+        debugGen = genParam;
 
         // TODO : spawn things to hides the holes
         foreach (var door in genParam.availableDoors)
@@ -152,6 +172,11 @@ public class MapGenerator : MonoBehaviour
         bool hasGenerated = false;
         while (!hasGenerated)
         {
+            if (genParam.NumRoomAvaibles == 0)
+            {
+                Debug.LogWarning("Can't generate room anymore : no candidate");
+                break;
+            }
             // instantiate room with first availableDoors transform then remove it
             int prefabIndex = GameAssets.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
             GameObject roomGO = Instantiate(roomNormal[prefabIndex]); // TODO : add random selection
@@ -165,6 +190,9 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
 
+            // Destroy used door
+            genParam.availableDoors[exitDoor.rotation].Remove(exitDoor);
+
             // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (forward = pour avoir un offset)
             roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position + (-exitDoor.forward * 1f);
             Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
@@ -176,22 +204,14 @@ public class MapGenerator : MonoBehaviour
             Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => collider != roomCollider && collider != roomColliderExit).ToArray();
             if (colliders.Length > 2) // more than the two meshCollider
             {
-                genParam.availableDoors[exitDoor.rotation].Remove(exitDoor);
                 DestroyImmediate(roomGO);
 
                 // TODO : spawn a little cellule or something like this to hide the hole in the wall
                 continue;
             }
 
-            // Close door for the next generation
-            doorsGenerator.RemoveDoor(entranceDoor);
-
-            // Destroy used door
-            genParam.availableDoors[exitDoor.rotation].Remove(exitDoor);
-
             // Add the new doors from the new room into the possible candidates
             genParam.AddDoorsGenerator(doorsGenerator);
-            Destroy(doorsGenerator);
 
             genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
 
