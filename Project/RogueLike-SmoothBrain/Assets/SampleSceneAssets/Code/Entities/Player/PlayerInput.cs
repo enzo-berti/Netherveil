@@ -292,6 +292,7 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void StartOfAttackAnimation()
     {
+        controller.hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
         controller.spearAttacksVFX[controller.ComboCount].Play();
     }
