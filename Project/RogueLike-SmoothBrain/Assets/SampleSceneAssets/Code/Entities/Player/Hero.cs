@@ -49,7 +49,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position);
         if (hasAnimation && (-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
