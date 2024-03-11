@@ -293,6 +293,7 @@ public class PlayerInput : MonoBehaviour
     public void StartOfAttackAnimation()
     {
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
+        controller.spearAttacksVFX[controller.ComboCount].Play();
     }
 
     public void StartOfIdleAnimation()
