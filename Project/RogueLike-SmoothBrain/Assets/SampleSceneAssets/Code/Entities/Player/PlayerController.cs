@@ -5,10 +5,12 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
 {
     Transform cameraTransform;
+    [Header("Mechanics")]
     [Range(0f, 20f), SerializeField]
     float dashSpeed;
 
@@ -37,6 +39,10 @@ public class PlayerController : MonoBehaviour
     //attack damages
     public readonly int FINISHER_DAMAGES = 10;
     public readonly int CHARGED_ATTACK_DAMAGES = 20;
+
+    [Header("VFXs")]
+    public List<ParticleSystem> spearAttacksVFX;
+    public ParticleSystem dashVFX;
 
 
     void Start()
