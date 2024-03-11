@@ -174,7 +174,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 
     public void Attack(IDamageable damageable)
     {
-        OnAttack?.Invoke(damageable);
+        OnAttack?.Invoke();
         damageable.ApplyDamage((int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF)));
     }
 

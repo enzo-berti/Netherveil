@@ -33,6 +33,8 @@ public class FloatingText : MonoBehaviour
 
     public void SetText(string text)
     {
+        Debug.Log("SetText");
+        Debug.Log(m_TextMeshPro == null);
         m_TextMeshPro.text = text;
     }
 

@@ -1,10 +1,10 @@
 public class Electricity : Status
 {
     private float entityBaseSpeed;
-    public Electricity(Entity entity, float duration = 1f) : base(entity, duration)
+    public Electricity(float duration = 1f) : base(duration)
     {
         this.isConst = true;
-        entityBaseSpeed = entity.Stats.GetValue(Stat.SPEED);
+        //entityBaseSpeed = entity.Stats.GetValue(Stat.SPEED);
     }
     public override void ApplyEffect(Entity target)
     {
@@ -14,7 +14,7 @@ public class Electricity : Status
 
     public override void OnFinished()
     {
-        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
+       // target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
     }
 
     public override Status ShallowCopy()

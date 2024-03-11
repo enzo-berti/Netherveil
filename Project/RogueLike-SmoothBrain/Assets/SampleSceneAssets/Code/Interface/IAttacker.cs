@@ -1,9 +1,12 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public interface IAttacker 
 {
     public List<Status> StatusToApply { get; }
-    public delegate void AttackDelegate(IDamageable damageable);
+    public delegate void AttackDelegate();
     public AttackDelegate OnAttack
     {
         get;

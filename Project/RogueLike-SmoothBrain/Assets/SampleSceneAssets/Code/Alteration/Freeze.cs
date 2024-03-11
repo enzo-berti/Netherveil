@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Freeze : Status
 {
-    public Freeze(Entity launcher, float duration) : base(launcher, duration)
+    public Freeze(float duration) : base(duration)
     {
         isConst = true;
     }

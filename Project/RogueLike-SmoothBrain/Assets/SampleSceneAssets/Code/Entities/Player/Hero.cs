@@ -24,8 +24,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
-    public KillDelegate OnKill { get => onKill; set => OnKill = value; }
-    public ChangeRoomDelegate OnChangeRoom { get => OnChangeRoom; set => OnChangeRoom = value; }
+    public KillDelegate OnKill { get => onKill; set => onKill = value; }
+    public ChangeRoomDelegate OnChangeRoom { get => onChangeRoom; set => onChangeRoom = value; }
 
     private List<Status> statusToApply = new List<Status>();
     public List<Status> StatusToApply => statusToApply;
@@ -35,6 +35,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
+
+        statusToApply.Add(new Fire(3f));
+
+        if (this is IAttacker attacker)
+        {
+            attacker.OnHit += attacker.ApplyStatus;
+        }
     }
 
     private void Update()
@@ -80,7 +87,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         damages = (int)(damages * stats.GetValue(Stat.ATK_COEFF));
         damageable.ApplyDamage(damages);
-        onAttack?.Invoke(damageable);
+
+        onHit?.Invoke(damageable);
 
         if (damageable is IKnockbackable)
         {
