@@ -4,17 +4,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class SettingsMenu : MenuHandler
 {
     Resolution[] resolutions;
     [SerializeField] TMP_Dropdown resolutionDropdown;
     [SerializeField] TMP_Dropdown displayModeDropdown;
+    [SerializeField] TMP_Dropdown qualityDropdown;
+    [SerializeField] Toggle vSyncToggle;
 
     private void Start()
     {
         SetResolutionDropdown();
         SetDefaultScreenMode();
+
+        qualityDropdown.value = QualitySettings.GetQualityLevel();
+        qualityDropdown.RefreshShownValue();
+
+        vSyncToggle.isOn = QualitySettings.vSyncCount > 0;
     }
 
     private void SetResolutionDropdown()
@@ -67,6 +75,11 @@ public class SettingsMenu : MenuHandler
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
     }
 
+    public void SetQuality(int qualityIndex)
+    {
+        QualitySettings.SetQualityLevel(qualityIndex);
+    }
+
     public void ToggleVsync(bool toggle)
     {
         QualitySettings.vSyncCount = toggle ? 1 : 0;
@@ -84,7 +97,7 @@ public class SettingsMenu : MenuHandler
 
     public void SetDisplayMode(int displayIndex)
     {
-        if(displayIndex == 2)
+        if (displayIndex == 2)
         {
             Screen.fullScreenMode = FullScreenMode.Windowed;
             return;
