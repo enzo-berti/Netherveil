@@ -1,33 +1,40 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 
 [Serializable]
 public abstract class Status
 {
-    public Status()
+    public Status(Entity launcher, float _duration)
     {
-        this.stopTimes.Add(this.duration);
-    }
-    public Status(Entity launcher)
-    {
-        this.duration *= launcher.Stats.GetValue(Stat.STATUS_DURATION);
-        this.stopTimes.Add(this.duration);
+        target = launcher;
+        this.duration = _duration;
+
+        this.stopTimes.Add(duration);
     }
 
     public Entity target;
     protected bool isConst = false;
-    
+
+
+    // --------Status Stats-------- //
+
     // Frequency ( seconds )
     protected float frequency = 1f;
 
+    // Chance to apply status ( 1 = 100% )
+    public float statusChance = 0.3f;
+
+    // one stack duration
+    
+    protected float duration = 1;
+
     public bool isFinished = false;
-
-    protected float duration = 10;
     private float currentTime = 0;
-    private List<float> stopTimes = new();
 
+    readonly private List<float> stopTimes = new();
     private bool isCoroutineOn = false;
 
     protected int stack = 0;
@@ -39,15 +46,15 @@ public abstract class Status
 
     // Do something when status is removed from the target
     public abstract void OnFinished();
-
+    public abstract Status ShallowCopy();
     public virtual void AddStack(int nb)
     {
         stack += nb;
         stopTimes.Add(duration + currentTime);
     }
 
-    public virtual void RemoveStack(int nb) 
-    { 
+    public virtual void RemoveStack(int nb)
+    {
         stack -= nb;
     }
 
@@ -65,14 +72,14 @@ public abstract class Status
                     isFinished = true;
                     this.OnFinished();
                 }
-               
+
             }
             if (isConst) return;
             if (!isCoroutineOn)
             {
-               EffectAsync();
+                EffectAsync();
             }
-            
+
         }
     }
     private async void EffectAsync()
@@ -82,5 +89,4 @@ public abstract class Status
         Effect();
         isCoroutineOn = false;
     }
-
 }

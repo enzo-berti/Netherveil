@@ -3,17 +3,9 @@ using UnityEngine;
 public class Fire : Status
 {
     private int damage = 10;
-    public Fire()
+    public Fire(Entity entity, float duration = 10f) : base(entity, duration)
     {
-        duration = 10.0f;
         this.frequency = 0.5f;
-    }
-    public Fire(Entity entity) : base(entity)
-    {
-        duration = 10.0f;
-        this.frequency = 0.5f;
-        damage *= (int)entity.Stats.GetValue(Stat.STATUS_POWER);
-        duration *= (int)entity.Stats.GetValue(Stat.STATUS_DURATION);
     }
     public override void ApplyEffect(Entity target)
     {
@@ -26,6 +18,11 @@ public class Fire : Status
 
     public override void OnFinished()
     {
+    }
+
+    public override Status ShallowCopy()
+    {
+        return (Fire)this.MemberwiseClone();
     }
 
     protected override void Effect()

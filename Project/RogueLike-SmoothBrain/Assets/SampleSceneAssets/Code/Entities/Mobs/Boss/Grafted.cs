@@ -12,6 +12,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
+    private List<Status> statusToApply = new List<Status>();
+    public List<Status> StatusToApply => statusToApply;
+
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
     [SerializeField] float maxDashRange;
 

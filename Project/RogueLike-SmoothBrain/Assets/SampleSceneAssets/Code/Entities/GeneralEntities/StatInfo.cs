@@ -24,8 +24,6 @@ public enum Stat
     HEAL_COEFF,
     KNOCKBACK_COEFF,
     STAGGER_DURATION,
-    STATUS_DURATION,
-    STATUS_POWER
 }
 
 [Serializable]
