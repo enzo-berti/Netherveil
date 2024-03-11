@@ -193,9 +193,7 @@ public class PlayerInput : MonoBehaviour
         chargedAttackMax = false;
         chargedAttackTime = 0f;
 
-        controller.VFXWrapper.transform.position = transform.position;
-        controller.VFXWrapper.transform.rotation = transform.rotation;
-        controller.chargedAttackVFX.Play();
+        controller.PlayVFX(controller.chargedAttackVFX);
 
         AudioManager.Instance.PlaySound(controller.playerAttacks[0]);
     }
@@ -244,9 +242,7 @@ public class PlayerInput : MonoBehaviour
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
             dashCooldown = true;
-            controller.VFXWrapper.transform.position = transform.position -2 * transform.forward;
-            controller.VFXWrapper.transform.rotation = transform.rotation;
-            controller.dashVFX.Play();
+            controller.PlayVFX2(controller.dashVFX);
 
             AudioManager.Instance.PlaySound(controller.playerDash);
         }
@@ -308,10 +304,7 @@ public class PlayerInput : MonoBehaviour
     {
         controller.hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
-        controller.VFXWrapper.transform.position = transform.position;
-        controller.VFXWrapper.transform.rotation = transform.rotation;
-        controller.spearAttacksVFX[controller.ComboCount].Play();
-
+        controller.PlayVFX2(controller.spearAttacksVFX[controller.ComboCount]);
         AudioManager.Instance.PlaySound(controller.playerAttacks[controller.ComboCount]);
     }
 
