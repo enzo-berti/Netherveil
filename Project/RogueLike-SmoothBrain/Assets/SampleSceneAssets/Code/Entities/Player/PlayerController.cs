@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     public readonly int CHARGED_ATTACK_DAMAGES = 20;
 
     [Header("VFXs")]
+    public GameObject VFXWrapper;
     public List<ParticleSystem> spearAttacksVFX;
     public ParticleSystem dashVFX;
 
