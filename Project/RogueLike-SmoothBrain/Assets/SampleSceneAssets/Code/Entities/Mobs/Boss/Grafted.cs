@@ -16,7 +16,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public List<Status> StatusToApply => statusToApply;
 
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
-    [SerializeField] float maxDashRange;
 
     [Header("Boss parameters")]
     public bool isTriggered = true;
@@ -32,6 +31,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     float thrustChargeTimer;
     [SerializeField] float thrustDuration = 1f;
     float thrustDurationTimer;
+
+    [Header("Dash")]
+    [SerializeField] float maxDashRange;
 
     int thrustCounter = 0;
 
@@ -78,6 +80,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                         lookRotation.z = 0;
 
                         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+                    }
+                    else if (attackState == AttackState.IDLE)
+                    {
+                        MoveTo(player.transform.position);
                     }
 
                     if (attackCooldown > 0)
@@ -166,7 +172,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     if (col.gameObject.GetComponent<Hero>() != null)
                     {
-                        //Debug.Log(col.gameObject.name);
                         Attack(col.gameObject.GetComponent<IDamageable>());
                         break;
                     }
