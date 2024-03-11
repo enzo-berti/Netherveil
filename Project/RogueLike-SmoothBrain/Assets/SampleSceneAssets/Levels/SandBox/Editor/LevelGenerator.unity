@@ -5913,6 +5913,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 323672176}
   m_PrefabAsset: {fileID: 0}
+--- !u!198 &350682420 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 9070238662812805558, guid: 26404b3d0ee193642ab6144f41945093,
+    type: 3}
+  m_PrefabInstance: {fileID: 1032562168}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &354091743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8022,6 +8028,12 @@ MonoBehaviour:
     _childOutputs: []
     isInstancer: 1
   _volumeLayerName: 
+--- !u!2083052967 &569162469 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 8775161177173821424, guid: 26404b3d0ee193642ab6144f41945093,
+    type: 3}
+  m_PrefabInstance: {fileID: 1032562168}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &570735530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18361,6 +18373,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: dashVFX
+      value: 
+      objectReference: {fileID: 1898917866}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: VFXWrapper
+      value: 
+      objectReference: {fileID: 1311434850}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: chargedAttackVFX
+      value: 
+      objectReference: {fileID: 569162469}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: spearAttacksVFX.Array.data[0]
+      value: 
+      objectReference: {fileID: 350682420}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: spearAttacksVFX.Array.data[1]
+      value: 
+      objectReference: {fileID: 350682420}
+    - target: {fileID: 1610977551032845076, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      propertyPath: spearAttacksVFX.Array.data[2]
+      value: 
+      objectReference: {fileID: 350682420}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19036,6 +19078,80 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!1001 &1032562168
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1375802845}
+    m_Modifications:
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8899160901616816595, guid: 26404b3d0ee193642ab6144f41945093,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerVFXs
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 26404b3d0ee193642ab6144f41945093, type: 3}
+--- !u!4 &1032562169 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8667415063596521656, guid: 26404b3d0ee193642ab6144f41945093,
+    type: 3}
+  m_PrefabInstance: {fileID: 1032562168}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1037484245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19696,6 +19812,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _softDeleted: 0
+--- !u!1 &1311434850 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8899160901616816595, guid: 26404b3d0ee193642ab6144f41945093,
+    type: 3}
+  m_PrefabInstance: {fileID: 1032562168}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1334430695
 Mesh:
   m_ObjectHideFlags: 0
@@ -19976,6 +20098,7 @@ Transform:
   - {fileID: 137866523}
   - {fileID: 137851991}
   - {fileID: 106884091}
+  - {fileID: 1032562169}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1386087849
@@ -30084,6 +30207,12 @@ MonoBehaviour:
   _showInstanceInputs: 1
   _numInputsToShowUI: 5
   _inputsPageIndexUI: 0
+--- !u!198 &1898917866 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 9135247559891538065, guid: 26404b3d0ee193642ab6144f41945093,
+    type: 3}
+  m_PrefabInstance: {fileID: 1032562168}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1905305526
 MonoBehaviour:
   m_ObjectHideFlags: 0

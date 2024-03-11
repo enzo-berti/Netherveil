@@ -77,7 +77,10 @@ public struct GenerationParam
                 Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.Rotation);
             }
         }
+
+#if !UNITY_EDITOR
         Object.Destroy(doorsGenerator); // destroy doorsGenerator
+#endif
     }
 }
 
@@ -94,6 +97,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
+#if UNITY_EDITOR
     GenerationParam debugGen;
     private void OnDrawGizmos()
     {
@@ -109,10 +113,34 @@ public class MapGenerator : MonoBehaviour
             }
         }
     }
+#endif
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: 100));
+        GenerateMap(new GenerationParam(nbNormal: 20));
+    }
+
+    float @switch = 0f;
+    private void FixedUpdate()
+    {
+        if (@switch == 0.1f)
+        {
+            GenerateMap(new GenerationParam(nbNormal: 20));
+        }
+
+        @switch -= Time.deltaTime;
+
+        if (@switch <= 0f)
+        {
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            debugGen = new GenerationParam();
+
+            @switch = 0.1f;
+        }
     }
 
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
@@ -128,7 +156,8 @@ public class MapGenerator : MonoBehaviour
 
             for (int j = 0; j < 4; j++)
             {
-                float doorRotation = door.Rotation + 90f * j;
+                float indexRotation = (noiseIndex + j) % 4;
+                float doorRotation = door.Rotation + 90f * indexRotation;
                 float neededRotation = (doorRotation + 180f) % 360f;
 
                 if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
@@ -138,7 +167,7 @@ public class MapGenerator : MonoBehaviour
                     entranceDoor = door;
                     exitDoor = genParam.availableDoors[neededRotation][randIndex];
 
-                    doorsGenerator.transform.parent.parent.Rotate(0, 90f * j, 0); // rotate gameObject entrance to correspond the neededRotation
+                    doorsGenerator.transform.parent.parent.Rotate(0, 90f * indexRotation, 0); // rotate gameObject entrance to correspond the neededRotation
 
                     return true;
                 }
@@ -155,10 +184,13 @@ public class MapGenerator : MonoBehaviour
 
         for (int i = 0; i < nbRoom - 1; i++)
         {
+            Debug.Log("JE GENERE : " + i);
             GenerateRoom(ref genParam);
         }
 
+#if UNITY_EDITOR
         debugGen = genParam;
+#endif
 
         // TODO : spawn things to hides the holes
         foreach (var door in genParam.availableDoors)
@@ -174,6 +206,8 @@ public class MapGenerator : MonoBehaviour
         {
             if (genParam.NumRoomAvaibles == 0)
             {
+                Debug.Break();
+                @switch = 1000000000000f;
                 Debug.LogWarning("Can't generate room anymore : no candidate");
                 break;
             }
