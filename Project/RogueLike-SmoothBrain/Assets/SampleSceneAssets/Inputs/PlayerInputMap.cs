@@ -330,15 +330,6 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""TogglePause"",
-                    ""type"": ""Button"",
-                    ""id"": ""38dfdf0f-bf14-4448-adfc-6a2d5aea41fd"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -361,28 +352,6 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ToggleMap"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f584e137-6a95-4ab8-a8b4-6645c18f4850"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TogglePause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3676d5e2-e77e-41d6-8dfb-762a1d7c3898"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TogglePause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -408,7 +377,6 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_ToggleMap = m_UI.FindAction("ToggleMap", throwIfNotFound: true);
-        m_UI_TogglePause = m_UI.FindAction("TogglePause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -671,13 +639,11 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_ToggleMap;
-    private readonly InputAction m_UI_TogglePause;
     public struct UIActions
     {
         private @PlayerInputMap m_Wrapper;
         public UIActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @ToggleMap => m_Wrapper.m_UI_ToggleMap;
-        public InputAction @TogglePause => m_Wrapper.m_UI_TogglePause;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -690,9 +656,6 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
             @ToggleMap.started += instance.OnToggleMap;
             @ToggleMap.performed += instance.OnToggleMap;
             @ToggleMap.canceled += instance.OnToggleMap;
-            @TogglePause.started += instance.OnTogglePause;
-            @TogglePause.performed += instance.OnTogglePause;
-            @TogglePause.canceled += instance.OnTogglePause;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -700,9 +663,6 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
             @ToggleMap.started -= instance.OnToggleMap;
             @ToggleMap.performed -= instance.OnToggleMap;
             @ToggleMap.canceled -= instance.OnToggleMap;
-            @TogglePause.started -= instance.OnTogglePause;
-            @TogglePause.performed -= instance.OnTogglePause;
-            @TogglePause.canceled -= instance.OnTogglePause;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -741,6 +701,5 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnToggleMap(InputAction.CallbackContext context);
-        void OnTogglePause(InputAction.CallbackContext context);
     }
 }

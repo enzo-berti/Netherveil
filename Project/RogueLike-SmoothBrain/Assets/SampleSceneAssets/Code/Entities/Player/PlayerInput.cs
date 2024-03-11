@@ -95,7 +95,6 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.ChargedAttack.performed += ChargedAttack;
         playerInputMap.Attack.ChargedAttack.canceled += ChargedAttackCanceled;
         playerInputMap.UI.ToggleMap.started += hudHandler.ToggleMap;
-        playerInputMap.UI.TogglePause.started += ctx => hudHandler.OpenClosePause();
     }
 
     private void OnDisable()
@@ -110,7 +109,6 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.ChargedAttack.performed -= ChargedAttack;
         playerInputMap.Attack.ChargedAttack.canceled -= ChargedAttackCanceled;
         playerInputMap.UI.ToggleMap.started -= hudHandler.ToggleMap;
-        playerInputMap.UI.TogglePause.started -= ctx => hudHandler.OpenClosePause();
     }
 
     void Update()
