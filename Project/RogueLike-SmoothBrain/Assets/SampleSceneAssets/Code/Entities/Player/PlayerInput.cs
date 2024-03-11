@@ -194,6 +194,8 @@ public class PlayerInput : MonoBehaviour
         controller.VFXWrapper.transform.position = transform.position;
         controller.VFXWrapper.transform.rotation = transform.rotation;
         controller.chargedAttackVFX.Play();
+
+        AudioManager.Instance.PlaySound(controller.playerAttack);
     }
 
     public IEnumerator ChargedAttackCoroutine()
@@ -243,6 +245,8 @@ public class PlayerInput : MonoBehaviour
             controller.VFXWrapper.transform.position = transform.position -2 * transform.forward;
             controller.VFXWrapper.transform.rotation = transform.rotation;
             controller.dashVFX.Play();
+
+            AudioManager.Instance.PlaySound(controller.playerDash);
         }
     }
 
@@ -305,6 +309,8 @@ public class PlayerInput : MonoBehaviour
         controller.VFXWrapper.transform.position = transform.position;
         controller.VFXWrapper.transform.rotation = transform.rotation;
         controller.spearAttacksVFX[controller.ComboCount].Play();
+
+        AudioManager.Instance.PlaySound(controller.playerAttack);
     }
 
     public void StartOfIdleAnimation()

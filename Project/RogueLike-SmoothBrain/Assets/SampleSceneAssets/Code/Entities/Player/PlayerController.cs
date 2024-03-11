@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections.Generic;
 using System.Linq;
 #if UNITY_EDITOR
@@ -45,6 +46,12 @@ public class PlayerController : MonoBehaviour
     public List<ParticleSystem> spearAttacksVFX;
     public ParticleSystem dashVFX;
     public VisualEffect chargedAttackVFX;
+
+    [Header("SFXs")]
+    public EventReference playerDash;
+    public EventReference playerHit;
+    public EventReference playerDead;
+    public EventReference playerAttack;
 
 
     void Start()

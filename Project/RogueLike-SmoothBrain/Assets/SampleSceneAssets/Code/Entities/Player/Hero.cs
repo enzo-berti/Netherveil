@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -54,11 +55,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             State = (int)EntityState.HIT;
             animator.ResetTrigger("Hit");
             animator.SetTrigger("Hit");
+            AudioManager.Instance.PlaySound(playerController.playerHit);
         }
 
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
         {
             Death();
+            AudioManager.Instance.PlaySound(playerController.playerDead);
         }
     }
     public void Death()
