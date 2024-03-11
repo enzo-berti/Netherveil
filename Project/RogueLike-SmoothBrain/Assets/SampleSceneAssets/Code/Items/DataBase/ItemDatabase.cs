@@ -6,7 +6,7 @@ using UnityEngine;
 public class ItemDatabase : ScriptableObject
 {
     [HideInInspector]
-    public List<ItemData> datas = new();
+    public List<ItemData> datas;
 
     public ItemData GetItem(string name)
     {

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
 
 public enum RoomType
 {
@@ -48,23 +46,7 @@ public struct GenerationParam
     public int TotalRoom
     {
         get { return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss] + nbRoom[RoomType.Boss]; }
-
-    }
-
-    public void AddDoorsGenerator(DoorsGenerator doorsGenerator)
-    {
-        foreach (var door in doorsGenerator.doors)
-        {
-            if (availableDoors.ContainsKey(door.rotation))
-            {
-                availableDoors[door.rotation].Add(door);
-            }
-            else
-            {
-                Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.rotation);
-            }
-        }
-        Object.Destroy(doorsGenerator); // destroy doorsGenerator
+ 
     }
 }
 
@@ -81,19 +63,6 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
-    //GenerationParam test;
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    foreach (var listDoors in test.availableDoors)
-    //    {
-    //        foreach (var door in listDoors.Value)
-    //        {
-    //            Gizmos.DrawSphere(door.Position, 0.25f);
-    //        }
-    //    }
-    //}
-
     private void Awake()
     {
         GenerationParam genParam = new GenerationParam(nbNormal: 20);
@@ -106,14 +75,14 @@ public class MapGenerator : MonoBehaviour
         exitDoor = new Door();
 
         int loopCount = 0;
-        for (int startIndex = GameAssets.Instance.seed.Range(0, doorsGenerator.doors.Count, ref NoiseGenerator); loopCount < doorsGenerator.doors.Count; loopCount++)
+        for (int startIndex = GameManager.Instance.seed.Range(0, doorsGenerator.doors.Count, ref NoiseGenerator); loopCount < doorsGenerator.doors.Count; loopCount++)
         {
             Door door = doorsGenerator.doors[(startIndex + loopCount) % doorsGenerator.doors.Count];
             float neededRotation = (door.rotation + 180f) % 360f;
 
             if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
             {
-                int randIndex = GameAssets.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
+                int randIndex = GameManager.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
 
                 entranceDoor = door;
 
@@ -141,10 +110,6 @@ public class MapGenerator : MonoBehaviour
         }
 
         // TODO : spawn things to hides the holes
-        foreach (var door in genParam.availableDoors)
-        {
-            //Debug.Log(truc.Value.Count);
-        }
     }
 
     void GenerateRoom(ref GenerationParam genParam)
@@ -153,7 +118,7 @@ public class MapGenerator : MonoBehaviour
         while (!hasGenerated)
         {
             // instantiate room with first availableDoors transform then remove it
-            int prefabIndex = GameAssets.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
+            int prefabIndex = GameManager.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
             GameObject roomGO = Instantiate(roomNormal[prefabIndex]); // TODO : add random selection
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
@@ -190,8 +155,18 @@ public class MapGenerator : MonoBehaviour
             genParam.availableDoors[exitDoor.rotation].Remove(exitDoor);
 
             // Add the new doors from the new room into the possible candidates
-            genParam.AddDoorsGenerator(doorsGenerator);
-            Destroy(doorsGenerator);
+            foreach (var door in doorsGenerator.doors)
+            {
+                if (genParam.availableDoors.ContainsKey(door.rotation))
+                {
+                    genParam.availableDoors[door.rotation].Add(door);
+                    //doorsGenerator.RemoveDoor(door);
+                }
+                else
+                {
+                    Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.rotation);
+                }
+            }
 
             genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
 
@@ -203,14 +178,23 @@ public class MapGenerator : MonoBehaviour
 
     private void InstantiateLobby(out GameObject roomGO, ref GenerationParam genParam)
     {
-        roomGO = Instantiate(roomLobby[GameAssets.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
-
+        roomGO = Instantiate(roomLobby[GameManager.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
+    
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(genParam);
-
-        genParam.AddDoorsGenerator(doorsGenerator);
-        Destroy(doorsGenerator);
-
+    
+        foreach (var door in doorsGenerator.doors)
+        {
+            if (genParam.availableDoors.ContainsKey(door.rotation))
+            {
+                genParam.availableDoors[door.rotation].Add(door);
+            }
+            else
+            {
+                Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.rotation);
+            }
+        }
+    
         genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
         roomGO.transform.parent = gameObject.transform;
     }

@@ -9,34 +9,19 @@ public class DamageManager : MonoBehaviour
         {
             if (instance == null)
             {
-                Instantiate(Resources.Load("DamageManager") as GameObject);
+                instance = Instantiate(Resources.Load("DamageManager") as GameObject).GetComponent<DamageManager>();
             }
-
             return instance;
         }
     }
 
     [SerializeField] DamageText dmgTextPrefab;
 
-    public void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
-
     public void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit)
     {
         DamageText newText = Instantiate(dmgTextPrefab, pos, Quaternion.identity);
         newText.SetText(dmgPt.ToString());
-        if (dmgPt >= 10 && dmgPt < 100)
+        if (dmgPt > 10 && dmgPt < 100)
         {
             newText.SetSize(dmgPt + 50);
         }
