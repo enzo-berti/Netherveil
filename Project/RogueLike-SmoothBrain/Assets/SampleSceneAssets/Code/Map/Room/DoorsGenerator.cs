@@ -29,7 +29,7 @@ public struct Door
     { 
         get 
         { 
-            return localPosition + parentSkeleton.transform.position; 
+            return Quaternion.AngleAxis(parentSkeleton.transform.eulerAngles.y, Vector3.up) * (localPosition + parentSkeleton.transform.position); 
         } 
     }
 }

@@ -108,25 +108,26 @@ public class MapGenerator : MonoBehaviour
         {
             int index = (i + noiseIndex) % doorsGenerator.doors.Count;
             Door door = doorsGenerator.doors[index];
-            float neededRotation = (door.rotation + 180f) % 360f;
 
-            if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
+            for (int j = 0; j < 4; j++)
             {
-                int randIndex = GameAssets.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
+                float neededRotation = (door.rotation + 180f * (i + 1)) % 360f;
 
-                entranceDoor = door;
+                if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
+                {
+                    int randIndex = GameAssets.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
 
-                exitDoor = genParam.availableDoors[neededRotation][randIndex];
-                break;
+                    entranceDoor = door;
+                    exitDoor = genParam.availableDoors[neededRotation][randIndex];
+
+                    doorsGenerator.transform.parent.parent.Rotate(0, 180f * i, 0);
+
+                    return true;
+                }
             }
         }
 
-        if (noiseIndex == doorsGenerator.doors.Count) // couldn't find a candidate
-        {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     void GenerateMap(ref GenerationParam genParam)
