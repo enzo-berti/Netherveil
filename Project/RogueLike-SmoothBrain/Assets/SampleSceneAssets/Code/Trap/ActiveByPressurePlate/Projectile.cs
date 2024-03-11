@@ -51,6 +51,12 @@ public class Projectile : MonoBehaviour, IProjectile
 
             if (elementalDamage != DamageState.NORMAL && TryGetComponent<Entity>(out var entity))
             {
+                switch (elementalDamage)
+                {
+                    case DamageState.FIRE:
+                        entity.ApplyEffect(new Fire());
+                        break;
+                }
                 // apply elementalState
             }
 
