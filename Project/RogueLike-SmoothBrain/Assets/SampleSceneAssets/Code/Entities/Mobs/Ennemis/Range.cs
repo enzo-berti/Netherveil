@@ -26,7 +26,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     [SerializeField, Min(0)] private float staggerDuration;
 
     private bool isFighting = false;
-    private RangeState state;
+    //private RangeState state;
 
     private float fleeTimer;
     private bool isFleeing;
@@ -139,7 +139,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
                 }
             }
 
-            UpdateStates();
+            //UpdateStates();
         }
     }
     public void ApplyDamage(int _value, bool hasAnimation = true)
@@ -153,17 +153,17 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
         }
     }
 
-    void UpdateStates()
-    {
-        if (isFighting)
-        {
-            state = RangeState.TRIGGERED;
-        }
-        else
-        {
-            state = RangeState.WANDERING;
-        }
-    }
+    //void UpdateStates()
+    //{
+    //    if (isFighting)
+    //    {
+    //        state = RangeState.TRIGGERED;
+    //    }
+    //    else
+    //    {
+    //        state = RangeState.WANDERING;
+    //    }
+    //}
 
     public void Death()
     {
