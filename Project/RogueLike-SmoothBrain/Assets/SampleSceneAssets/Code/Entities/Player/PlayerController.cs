@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     public GameObject VFXWrapper;
     public List<ParticleSystem> spearAttacksVFX;
     public ParticleSystem dashVFX;
+    public VisualEffect chargedAttackVFX;
 
 
     void Start()
