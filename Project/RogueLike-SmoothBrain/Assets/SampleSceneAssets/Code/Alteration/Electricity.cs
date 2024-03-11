@@ -1,3 +1,5 @@
+using static UnityEngine.EventSystems.EventTrigger;
+
 public class Electricity : Status
 {
     private float entityBaseSpeed;
@@ -10,11 +12,12 @@ public class Electricity : Status
     {
         if (target.Stats.HasStat(Stat.SPEED))
             target.AddStatus(this);
+            entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
     }
 
     public override void OnFinished()
     {
-       // target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
+       target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
     }
 
     public override Status ShallowCopy()

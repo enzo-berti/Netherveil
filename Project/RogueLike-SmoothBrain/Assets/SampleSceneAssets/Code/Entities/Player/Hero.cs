@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -44,24 +45,23 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    private void Update()
-    {
-    }
 
-    public void ApplyDamage(int _value)
+    public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
-        if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
+        FloatingTextGenerator.CreateDamageText(_value, transform.position);
+        if (hasAnimation && (-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
             animator.ResetTrigger("Hit");
             animator.SetTrigger("Hit");
+            AudioManager.Instance.PlaySound(playerController.playerHit);
         }
 
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
         {
             Death();
+            AudioManager.Instance.PlaySound(playerController.playerDead);
         }
     }
     public void Death()

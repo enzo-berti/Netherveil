@@ -19,7 +19,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField] float maxDashRange;
 
     [Header("Boss parameters")]
-    public bool isTriggered = false;
+    public bool isTriggered = true;
     Hero player = null;
 
     [Header("Boss Attack Hitboxes")]
@@ -76,8 +76,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                         Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
                         lookRotation.x = 0;
                         lookRotation.z = 0;
-                        transform.rotation = lookRotation;
-                        // possibilité de mettre une rotation fluide, là en l'occurence j'ai pas envie
+
+                        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
                     }
 
                     if (attackCooldown > 0)
@@ -124,10 +124,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         _damageable.ApplyDamage((int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF)));
     }
 
-    public void ApplyDamage(int _value)
+    public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position);
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();

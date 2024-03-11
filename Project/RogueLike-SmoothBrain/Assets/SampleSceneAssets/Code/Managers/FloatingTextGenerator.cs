@@ -5,7 +5,6 @@ static public class FloatingTextGenerator
     public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit)
     {
         FloatingText newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.identity).GetComponent<FloatingText>();
-        Debug.Log(dmgPt);
         newText.SetText(dmgPt.ToString());
         if (dmgPt >= 10 && dmgPt < 100)
         {
@@ -30,8 +29,9 @@ static public class FloatingTextGenerator
         }
     }
 
-    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit, int randPos)
+    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit = false, int randPos = 1)
     {
+        pos += Vector3.up * 2;
         pos += Random.onUnitSphere * randPos;
         CreateDamageText(dmgPt, pos, isCrit);
     }

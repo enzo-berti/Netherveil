@@ -18,17 +18,17 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     [Header("Tank Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
-    [SerializeField] private float range = 5f;
+    //[SerializeField] private float range = 5f;
 
     public void Attack(IDamageable damageable)
     {
         Destroy(gameObject);
     }
 
-    public void ApplyDamage(int _value)
+    public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position);
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
