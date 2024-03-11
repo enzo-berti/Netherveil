@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
@@ -25,6 +26,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public KillDelegate OnKill { get => onKill; set => OnKill = value; }
     public ChangeRoomDelegate OnChangeRoom { get => OnChangeRoom; set => OnChangeRoom = value; }
+
+    private List<Status> statusToApply = new List<Status>();
+    public List<Status> StatusToApply => statusToApply;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -63,8 +68,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void Attack(IDamageable damageable)
     {
-        Entity test = (damageable as Entity);
-        test.ApplyEffect(new Fire(this));
         int damages = (int)stats.GetValue(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {

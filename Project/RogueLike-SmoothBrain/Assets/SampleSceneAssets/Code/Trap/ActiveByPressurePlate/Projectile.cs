@@ -54,7 +54,7 @@ public class Projectile : MonoBehaviour, IProjectile
                 switch (elementalDamage)
                 {
                     case DamageState.FIRE:
-                        entity.ApplyEffect(new Fire());
+                        entity.ApplyEffect(new Fire(entity));
                         break;
                 }
                 // apply elementalState

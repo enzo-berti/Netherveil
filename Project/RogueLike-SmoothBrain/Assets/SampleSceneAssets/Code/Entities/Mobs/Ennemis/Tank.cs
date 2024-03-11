@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,6 +12,9 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+
+    private List<Status> statusToApply = new();
+    public List<Status> StatusToApply => throw new System.NotImplementedException();
 
     [Header("Tank Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
