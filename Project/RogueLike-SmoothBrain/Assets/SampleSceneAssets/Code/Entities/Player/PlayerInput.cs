@@ -231,7 +231,8 @@ public class PlayerInput : MonoBehaviour
         if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
-            controller.DashDir = controller.LastDir;
+            controller.DashDir = transform.forward.normalized;
+
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
             dashCooldown = true;

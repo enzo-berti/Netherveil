@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     public float CurrentTargetAngle { get; set; } = 0f;
-    public Vector2 DashDir { get; set; } = Vector2.zero;
+    public Vector3 DashDir { get; set; } = Vector3.zero;
     public Vector2 LastDir { get; set; } = Vector2.zero;
     public int ComboCount { get; set; } = 0;
     public readonly int MAX_COMBO_COUNT = 3;
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //used to apply gravity
-        if (hero.State != (int)Entity.EntityState.DEAD)
+        if (hero.State != (int)Entity.EntityState.DEAD && hero.State != (int)Hero.PlayerState.DASH)
         {
             characterController.SimpleMove(Vector3.zero);
         }
@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
     {
         if (hero.State == (int)Hero.PlayerState.DASH)
         {
-            characterController.Move(dashSpeed * Time.deltaTime * transform.forward);
+            characterController.Move(dashSpeed * Time.deltaTime * DashDir);
         }
     }
 
