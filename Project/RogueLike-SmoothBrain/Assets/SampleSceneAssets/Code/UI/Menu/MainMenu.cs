@@ -1,5 +1,3 @@
-using Cinemachine;
-using System;
 using System.Collections;
 using TMPro;
 using UnityEditor;
@@ -13,7 +11,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadSceneAsync("InGame");
+        SceneManager.LoadScene("InGame");
     }
 
     public void Quit()
