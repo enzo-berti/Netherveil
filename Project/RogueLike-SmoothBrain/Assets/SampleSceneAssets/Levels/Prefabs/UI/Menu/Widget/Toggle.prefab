@@ -27,7 +27,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3978247202427255528}
   - {fileID: 3716462776826544228}
@@ -84,7 +84,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
+        m_MethodName: ToggleVsync
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &3429410177952225539
 GameObject:
@@ -97,6 +109,7 @@ GameObject:
   - component: {fileID: 5074371644809791478}
   - component: {fileID: 8540151169788923917}
   - component: {fileID: 920077837488389520}
+  - component: {fileID: 5539602265567885303}
   m_Layer: 0
   m_Name: Checkmark
   m_TagString: Untagged
@@ -118,11 +131,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3978247202427255528}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 20}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &8540151169788923917
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -161,6 +174,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5539602265567885303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3429410177952225539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 2
+  m_AspectRatio: 1
 --- !u!1 &4789900328722531650
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,10 +221,10 @@ RectTransform:
   - {fileID: 5074371644809791478}
   m_Father: {fileID: 5397334617604537889}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 15, y: -15}
-  m_SizeDelta: {x: 30, y: 30}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2092596852018774955
 CanvasRenderer:
@@ -236,7 +263,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!1 &5622328535925120963
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,8 +299,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 15, y: 0}
-  m_SizeDelta: {x: -30, y: 0}
+  m_AnchoredPosition: {x: -17.499992, y: 0}
+  m_SizeDelta: {x: -35.000015, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &862974580608239028
 CanvasRenderer:
@@ -303,7 +330,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Toggle
+  m_text: ENABLE / DISABLE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
   m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
@@ -334,8 +361,8 @@ MonoBehaviour:
   m_fontSize: 16
   m_fontSizeBase: 16
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 12
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 8
   m_fontSizeMax: 16
   m_fontStyle: 0
   m_HorizontalAlignment: 1
@@ -367,7 +394,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 8, y: 0, z: 0, w: 0}
+  m_margin: {x: 8, y: 0, z: 8, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

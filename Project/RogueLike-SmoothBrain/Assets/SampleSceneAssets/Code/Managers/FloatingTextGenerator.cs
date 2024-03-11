@@ -32,9 +32,7 @@ static public class FloatingTextGenerator
 
     public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit, int randPos)
     {
-        Debug.Log("CreateDamageText");
         pos += Random.onUnitSphere * randPos;
-        Debug.Log(pos);
         CreateDamageText(dmgPt, pos, isCrit);
     }
 
