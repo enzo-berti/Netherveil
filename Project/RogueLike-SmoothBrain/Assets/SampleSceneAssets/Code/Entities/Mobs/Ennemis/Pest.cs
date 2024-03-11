@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,8 +11,10 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 {
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
+    private List<Status> statusToApply = new List<Status>();
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public List<Status> StatusToApply { get => statusToApply; }
 
     [Header("Pest Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
@@ -90,7 +93,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();

@@ -1,186 +1,77 @@
+using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    [HideInInspector] public FMOD.Studio.Bus masterBus;
-    [HideInInspector] public FMOD.Studio.Bus musicsBus;
-    [HideInInspector] public FMOD.Studio.Bus soundsFXBus;
-    [HideInInspector] public FMOD.Studio.Bus ambiencesBus;
+    public static AudioManager Instance { get; private set; }
 
-    [SerializeField, Range(0, 1)]
-    public float masterVolumeBarValue;
+    [Range(0, 1)] public float masterVolumeBarValue = 1f;
+    [Range(0, 1)] public float musicVolumeBarValue = 1f;
+    [Range(0, 1)] public float soundsFXVolumeBarValue = 1f;
+    [Range(0, 1)] public float ambiencesVolumeBarValue = 1f;
 
-    [SerializeField, Range(0, 1)]
-    public float musicVolumeBarValue;
+    private Bus masterBus;
+    private Bus musicsBus;
+    private Bus soundsFXBus;
+    private Bus ambiencesBus;
 
-    [SerializeField, Range(0, 1)]
-    public float soundsFXVolumeBarValue;
+    public Bus MasterBus { get => masterBus; }
+    public Bus MusicsBus { get => musicsBus; }
+    public Bus SoundsFXBus { get => soundsFXBus; }
+    public Bus AmbiencesBus { get => ambiencesBus; }
 
-    [SerializeField, Range(0, 1)]
-    public float ambiencesVolumeBarValue;
-
-    [Header("Ambiences Sounds")]
-
-    [SerializeField] EventReference menuPortalOpenEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance menuPortalOpenInstance;
-
-    [SerializeField] EventReference menuPaperEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance menuPaperInstance;
-
-    [SerializeField] EventReference menuCandleEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance menuCandleInstance;
-
-    [SerializeField] EventReference menuWoodStairsEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance menuWoodStairsInstance;
-
-    [Header("SoundFX sounds")]
-
-    [SerializeField] EventReference buttonClickEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance buttonClickInstance;
-
-    [SerializeField] EventReference buttonSelectEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance buttonSelectInstance;
-
-    [SerializeField] EventReference swordSlash1Event;
-    [HideInInspector] public FMOD.Studio.EventInstance swordSlash1Instance;
-
-    [SerializeField] EventReference swordSlash2Event;
-    [HideInInspector] public FMOD.Studio.EventInstance swordSlash2Instance;
-
-    [SerializeField] EventReference swordSlash3Event;
-    [HideInInspector] public FMOD.Studio.EventInstance swordSlash3Instance;
-
-    [SerializeField] EventReference playerHitEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance playerHitInstance;
-
-    [SerializeField] EventReference playerDashEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance playerDashInstance;
-
-    [SerializeField] EventReference playerDeathEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance playerDeathInstance;
-
-    [SerializeField] EventReference bloodVacuumingEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance bloodVacuumingInstance;
-
-    [SerializeField] EventReference enemyDeathEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance enemyDeathInstance;
-
-    [SerializeField] EventReference bombeExplosionEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance bombeExplosionInstance;
-
-    [SerializeField] EventReference spikeUpEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance spikeUpInstance;
-
-    [SerializeField] EventReference spikeDownEvent;
-    [HideInInspector] public FMOD.Studio.EventInstance spikeDownInstance;
-
-    public static AudioManager instance;
-
-    public static AudioManager Instance
+    private void Awake()
     {
-        get
+        if (Instance == null)
         {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<AudioManager>();
-
-                if (instance == null)
-                {
-                    GameObject obj = new GameObject();
-                    obj.name = typeof(AudioManager).Name;
-                    obj.AddComponent<AudioManager>();
-                }
-            }
-            return instance;
-        }
-    }
-
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            transform.parent = null;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadBuses();
         }
         else
         {
             Destroy(gameObject);
-            return;
         }
-
-        LoadBus();
-        LoadAmbienceSounds();
-        LoadSoundsFX();
     }
 
-    private void LoadBus()
+    private void LoadBuses()
     {
-        masterBus = FMODUnity.RuntimeManager.GetBus("bus:/");
-        musicsBus = FMODUnity.RuntimeManager.GetBus("bus:/Musics");
-        soundsFXBus = FMODUnity.RuntimeManager.GetBus("bus:/SoundsFX");
-        ambiencesBus = FMODUnity.RuntimeManager.GetBus("bus:/Ambiences");
-        masterBus.setVolume(masterVolumeBarValue);
-        musicsBus.setVolume(musicVolumeBarValue);
-        soundsFXBus.setVolume(soundsFXVolumeBarValue);
-        ambiencesBus.setVolume(ambiencesVolumeBarValue);
+        masterBus = RuntimeManager.GetBus("bus:/");
+        musicsBus = RuntimeManager.GetBus("bus:/Musics");
+        soundsFXBus = RuntimeManager.GetBus("bus:/SoundsFX");
+        ambiencesBus = RuntimeManager.GetBus("bus:/Ambiences");
+
+        SetBusVolumes();
     }
 
-    private void LoadAmbienceSounds()
+    private void SetBusVolumes()
     {
-        menuPortalOpenInstance = FMODUnity.RuntimeManager.CreateInstance(menuPortalOpenEvent);
-        menuPortalOpenInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        menuPaperInstance = FMODUnity.RuntimeManager.CreateInstance(menuPaperEvent);
-        menuPaperInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        menuCandleInstance = FMODUnity.RuntimeManager.CreateInstance(menuCandleEvent);
-        menuCandleInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        menuWoodStairsInstance = FMODUnity.RuntimeManager.CreateInstance(menuWoodStairsEvent);
-        menuWoodStairsInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+        SetBusVolume(masterBus, masterVolumeBarValue);
+        SetBusVolume(musicsBus, musicVolumeBarValue);
+        SetBusVolume(soundsFXBus, soundsFXVolumeBarValue);
+        SetBusVolume(ambiencesBus, ambiencesVolumeBarValue);
     }
 
-    private void LoadSoundsFX()
+    private void SetBusVolume(Bus bus, float volume)
     {
-        buttonClickInstance = FMODUnity.RuntimeManager.CreateInstance(buttonClickEvent);
-        buttonClickInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+        if (bus.isValid())
+        {
+            bus.setVolume(Mathf.Clamp01(volume));
+        }
+        else
+        {
+            Debug.LogWarning("Attempted to set volume on a null bus.");
+        }
+    }
 
-        buttonSelectInstance = FMODUnity.RuntimeManager.CreateInstance(buttonSelectEvent);
-        buttonSelectInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+    public void PlaySound(string path)
+    {
+        RuntimeManager.PlayOneShot(path);
+    }
 
-        swordSlash1Instance = FMODUnity.RuntimeManager.CreateInstance(swordSlash1Event);
-        swordSlash1Instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        swordSlash2Instance = FMODUnity.RuntimeManager.CreateInstance(swordSlash2Event);
-        swordSlash2Instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-        
-        swordSlash3Instance = FMODUnity.RuntimeManager.CreateInstance(swordSlash3Event);
-        swordSlash3Instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        playerHitInstance = FMODUnity.RuntimeManager.CreateInstance(playerHitEvent);
-        playerHitInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        playerDashInstance = FMODUnity.RuntimeManager.CreateInstance(playerDashEvent);
-        playerDashInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        playerDeathInstance = FMODUnity.RuntimeManager.CreateInstance(playerDeathEvent);
-        playerDeathInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        bloodVacuumingInstance = FMODUnity.RuntimeManager.CreateInstance(bloodVacuumingEvent);
-        bloodVacuumingInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        enemyDeathInstance = FMODUnity.RuntimeManager.CreateInstance(enemyDeathEvent);
-        enemyDeathInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        bombeExplosionInstance = FMODUnity.RuntimeManager.CreateInstance(bombeExplosionEvent);
-        bombeExplosionInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        spikeUpInstance = FMODUnity.RuntimeManager.CreateInstance(spikeUpEvent);
-        spikeUpInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
-        spikeDownInstance = FMODUnity.RuntimeManager.CreateInstance(spikeDownEvent);
-        spikeDownInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+    public void PlaySound(EventReference reference)
+    {
+        RuntimeManager.PlayOneShot(reference);
     }
 }

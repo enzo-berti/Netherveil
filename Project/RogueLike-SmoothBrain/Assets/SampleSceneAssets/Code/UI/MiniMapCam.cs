@@ -1,22 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MiniMapCam : MonoBehaviour
 {
-    [SerializeField] Transform player;
+    private Transform player;
 
     void Start()
     {
-        SetPosition();
+        if (player == null)
+            player = FindObjectOfType<PlayerController>().transform;
     }
 
     void LateUpdate()
     {
-        if (player != null)
-        {
+        if (player)
             SetPosition();
-        }
     }
 
     private void SetPosition()

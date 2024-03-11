@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
@@ -25,11 +26,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public KillDelegate OnKill { get => onKill; set => OnKill = value; }
     public ChangeRoomDelegate OnChangeRoom { get => OnChangeRoom; set => OnChangeRoom = value; }
+
+    private List<Status> statusToApply = new List<Status>();
+    public List<Status> StatusToApply => statusToApply;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
+
+        statusToApply.Add(new Fire(3f));
     }
 
     private void Update()
@@ -39,7 +46,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void ApplyDamage(int _value)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             State = (int)EntityState.HIT;
@@ -63,8 +70,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void Attack(IDamageable damageable)
     {
-        Entity test = (damageable as Entity);
-        test.ApplyEffect(new Fire(this));
         int damages = (int)stats.GetValue(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {

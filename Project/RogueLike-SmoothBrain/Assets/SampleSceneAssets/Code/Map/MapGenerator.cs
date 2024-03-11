@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
 
 public enum RoomType
 {
@@ -105,29 +103,31 @@ public class MapGenerator : MonoBehaviour
         entranceDoor = new Door();
         exitDoor = new Door();
 
-        int loopCount = 0;
-        for (int startIndex = GameAssets.Instance.seed.Range(0, doorsGenerator.doors.Count, ref NoiseGenerator); loopCount < doorsGenerator.doors.Count; loopCount++)
+        int noiseIndex = GameAssets.Instance.seed.Range(0, doorsGenerator.doors.Count, ref NoiseGenerator);
+        for (int i = 0; noiseIndex < doorsGenerator.doors.Count; i++)
         {
-            Door door = doorsGenerator.doors[(startIndex + loopCount) % doorsGenerator.doors.Count];
-            float neededRotation = (door.rotation + 180f) % 360f;
+            int index = (i + noiseIndex) % doorsGenerator.doors.Count;
+            Door door = doorsGenerator.doors[index];
 
-            if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
+            for (int j = 0; j < 4; j++)
             {
-                int randIndex = GameAssets.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
+                float neededRotation = (door.rotation + 180f * (i + 1)) % 360f;
 
-                entranceDoor = door;
+                if (genParam.availableDoors.ContainsKey(neededRotation) && genParam.availableDoors[neededRotation].Count != 0)
+                {
+                    int randIndex = GameAssets.Instance.seed.Range(0, genParam.availableDoors[neededRotation].Count, ref NoiseGenerator);
 
-                exitDoor = genParam.availableDoors[neededRotation][randIndex];
-                break;
+                    entranceDoor = door;
+                    exitDoor = genParam.availableDoors[neededRotation][randIndex];
+
+                    doorsGenerator.transform.parent.parent.Rotate(0, 180f * i, 0);
+
+                    return true;
+                }
             }
         }
 
-        if (loopCount == doorsGenerator.doors.Count) // couldn't find a candidate
-        {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     void GenerateMap(ref GenerationParam genParam)

@@ -12,6 +12,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
+    private List<Status> statusToApply = new List<Status>();
+    public List<Status> StatusToApply => statusToApply;
+
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
     [SerializeField] float maxDashRange;
 
@@ -124,7 +127,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public void ApplyDamage(int _value)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();

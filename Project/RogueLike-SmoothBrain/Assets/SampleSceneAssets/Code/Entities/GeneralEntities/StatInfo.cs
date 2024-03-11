@@ -1,9 +1,6 @@
 using System;
-using UnityEditor.UIElements;
 using UnityEditor;
-using UnityEngine.UIElements;
 using UnityEngine;
-using TMPro.EditorUtilities;
 
 // Si vous ajoutez un truc, ajoutez le à la fin
 public enum Stat
@@ -24,8 +21,6 @@ public enum Stat
     HEAL_COEFF,
     KNOCKBACK_COEFF,
     STAGGER_DURATION,
-    STATUS_DURATION,
-    STATUS_POWER
 }
 
 [Serializable]

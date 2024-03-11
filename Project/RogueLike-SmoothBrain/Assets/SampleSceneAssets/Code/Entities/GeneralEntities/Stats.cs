@@ -134,10 +134,12 @@ public class Stats
     public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue)
     {
         int index = stats.FindIndex(x => x.stat == info);
-        float baseValue = stats[index].value;
+        
 
         if (index != -1)
         {
+            float baseValue = stats[index].value;
+
             if (clampToMaxValue && stats[index].hasMaxStat)
                 IncreaseValueClamp(info, increasingValue);
 
@@ -213,9 +215,10 @@ public class Stats
     public void DecreaseValue(Stat info, float decreasingValue, bool clampToMinValue)
     {
         int index = stats.FindIndex(x => x.stat == info);
-        float baseValue = stats[index].value;
         if (index != -1)
         {
+            float baseValue = stats[index].value;
+
             if (clampToMinValue && stats[index].hasMinStat)
                 DecreaseValueClamp(info, decreasingValue);
 

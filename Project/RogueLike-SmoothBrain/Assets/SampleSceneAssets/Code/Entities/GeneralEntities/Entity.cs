@@ -10,21 +10,22 @@ public abstract class Entity : MonoBehaviour
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
 
-    public List<Status> statusList = new();
+    public List<Status> AppliedStatusList = new();
+    [HideInInspector] public int State;
 
     private void Update()
     {
-        if(statusList.Count > 0)
+        if(AppliedStatusList.Count > 0)
         {
-            for(int i = statusList.Count - 1; i >= 0; i--)
+            for(int i = AppliedStatusList.Count - 1; i >= 0; i--)
             {
-                if (!statusList[i].isFinished)
+                if (!AppliedStatusList[i].isFinished)
                 {
-                    statusList[i].DoEffect();
+                    AppliedStatusList[i].DoEffect();
                 }
                 else
                 {
-                    statusList.RemoveAt(i);
+                    AppliedStatusList.RemoveAt(i);
                 }
             }
         }
@@ -41,15 +42,20 @@ public abstract class Entity : MonoBehaviour
     public void ApplyEffect(Status status)
     {
         status.target = this;
-        foreach(var item in statusList)
+        float chance = Random.value;
+        if(chance <= status.statusChance)
         {
-            if (item.GetType() == status.GetType())
+            foreach (var item in AppliedStatusList)
             {
-                item.AddStack(1);
-                return;
+                if (item.GetType() == status.GetType())
+                {
+                    item.AddStack(1);
+                    return;
+                }
             }
+            status.ApplyEffect(this);
         }
-        status.ApplyEffect(this);
+        
     }
     public enum EntityState : int
     {
@@ -62,7 +68,7 @@ public abstract class Entity : MonoBehaviour
 
     public void AddStatus(Status status)
     {
-        statusList.Add(status);
+        AppliedStatusList.Add(status);
     }
-    [HideInInspector] public int State;
+    
 }

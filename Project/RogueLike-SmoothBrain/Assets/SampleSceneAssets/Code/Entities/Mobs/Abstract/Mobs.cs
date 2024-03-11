@@ -21,6 +21,11 @@ public abstract class Mobs : Entity
 
         ApplySpeed(Stat.SPEED);
         stats.onStatChange += ApplySpeed;
+
+        if (this is IAttacker attacker)
+        {
+            attacker.OnHit += attacker.ApplyStatus;
+        }
     }
 
     private void Start()

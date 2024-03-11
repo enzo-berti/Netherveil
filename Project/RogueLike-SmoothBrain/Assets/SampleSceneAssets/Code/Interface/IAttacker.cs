@@ -1,8 +1,11 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public interface IAttacker 
 {
+    public List<Status> StatusToApply { get; }
     public delegate void AttackDelegate(IDamageable damageable);
     public AttackDelegate OnAttack
     {
@@ -18,4 +21,15 @@ public interface IAttacker
     }
 
     public void Attack(IDamageable damageable);
+
+    public void ApplyStatus(IDamageable damageable)
+    {
+        Debug.Log("ApplyStatus");
+        Entity entity = damageable as Entity;
+        if (entity == null) return;
+        foreach (var status in StatusToApply)
+        {
+            entity.ApplyEffect(status.ShallowCopy());
+        }
+    }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -35,6 +36,9 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     private float staggerTimer;
 
     private float FleeingRange => (int)stats.GetValue(Stat.ATK_RANGE) / 2f;
+
+    private List<Status> statusToApply = new List<Status>();
+    public List<Status> StatusToApply { get => statusToApply; }
 
     protected override IEnumerator EntityDetection()
     {
@@ -141,7 +145,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     public void ApplyDamage(int _value)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
+        FloatingTextGenerator.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
 
         if (stats.GetValue(Stat.HP) <= 0)
         {
