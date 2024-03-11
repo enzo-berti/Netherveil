@@ -8,10 +8,10 @@ public class RoomToolWindow : EditorWindow
         Normal,
     }
     TypeRoom typeRoom = TypeRoom.Normal;
-    string prefabName = "Room";
+    string prefabName = "";
     GameObject roomObj;
 
-    [MenuItem("Tools/Room/Create")]
+    [UnityEditor.MenuItem("Tools/Room/Create")]
     public static void CreateRoom()
     {
         EditorWindow.GetWindow(typeof(RoomToolWindow));
@@ -38,16 +38,16 @@ public class RoomToolWindow : EditorWindow
     void GenerateRoomPrefab()
     {
         GameObject room = Instantiate(roomObj);
-        GameObject roomPrefab = new GameObject(prefabName);
+        GameObject roomPrefab = new GameObject(prefabName == "" ? roomObj.name : prefabName);
 
-        GameObject skeleton = room.transform.GetChild(0).gameObject;
+        GameObject skeleton = room.transform.GetChild(1).gameObject;
         skeleton.gameObject.name = "Skeleton";
-        //skeleton.layer = LayerMask.GetMask("Map");
+        skeleton.layer = LayerMask.NameToLayer("Map");
         skeleton.transform.parent = roomPrefab.transform;
         BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
         boxCollider.isTrigger = true;
-        boxCollider.includeLayers = LayerMask.GetMask("Map");
-        skeleton.AddComponent<MeshCollider>();
+        MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
+        collisionPlayer.includeLayers = -1;
 
         GameObject arrows = room.transform.GetChild(0).gameObject;
         arrows.gameObject.name = "Doors";
@@ -72,7 +72,7 @@ public class RoomToolWindow : EditorWindow
         GameObject treasures = new GameObject("Treasures");
         treasures.transform.parent = roomSeed1.transform;
 
-        PrefabUtility.SaveAsPrefabAsset(roomPrefab, Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Room/" + typeRoom.ToString() + "/" + prefabName + ".prefab");
+        PrefabUtility.SaveAsPrefabAsset(roomPrefab, Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString() + "/" + prefabName + ".prefab");
 
         // destroy garbage in scene
         DestroyImmediate(room);

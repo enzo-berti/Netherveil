@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SettingsMenu : MonoBehaviour
+public class SettingsMenu : MenuHandler
 {
     public void ToggleVsync()
     {
@@ -11,7 +11,7 @@ public class SettingsMenu : MonoBehaviour
 
     public void ToggleVibrations()
     {
-        InputDeviceManager.Instance.toggleVibrations = !InputDeviceManager.Instance.toggleVibrations;
+        DeviceManager.Instance.toggleVibrations = !DeviceManager.Instance.toggleVibrations;
     }
 
     public void Borderless()

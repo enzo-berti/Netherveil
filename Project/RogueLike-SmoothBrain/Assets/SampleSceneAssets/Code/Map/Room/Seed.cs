@@ -33,18 +33,11 @@ public class Seed
 
     public int Range(int minInclusive, int maxExclusive, ref int noise)
     {
-        //Debug.Log("RANGE : " + minInclusive + " " + maxExclusive + " " + (noise + 1));
-        //int firstModulo = (int)Value % (maxExclusive - minInclusive);
-        //Debug.Log(firstModulo);
-        //int randValue = firstModulo + minInclusive;
-        //Debug.Log(randValue);
-        //int noiseValue = (randValue + (++noise));
-        //Debug.Log(noiseValue);
-        //int lastModulo = noiseValue % maxExclusive;
-        //Debug.Log(lastModulo);
-        //return lastModulo;
-
-        return Random.Range(minInclusive, maxExclusive); // pour le moment j'utilise le random de unity
+        //noise += Mathf.Abs(maxExclusive) + 1;
+        //int seed = (int)Value + noise;
+        //
+        //return (seed % (maxExclusive - minInclusive)) + minInclusive;
+        return Random.Range(minInclusive, maxExclusive);
     }
 
     public float Range(float minInclusive, float maxExclusive)

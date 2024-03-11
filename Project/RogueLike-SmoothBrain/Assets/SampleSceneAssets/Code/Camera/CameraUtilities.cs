@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class CameraUtilities : MonoBehaviour
     private float shakeTotalTime;
     private float startingIntensity;
 
-    public float defaultFOV;
+    [HideInInspector]public float defaultFOV;
 
     private void Start()
     {
@@ -20,27 +21,20 @@ public class CameraUtilities : MonoBehaviour
         startingIntensity = 0f;
     }
 
-    public void ShakeCamera(float _intensity, float _time)
+    public void ChangeFov(float _reachedFOV, float _duration, Func<float, float> easingFunction)
     {
-        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = _intensity;
-        startingIntensity = _intensity;
-        shakeTotalTime = _time;
-        shakeTimer = _time;
-    }
-    public void ChangeFov(int _reachedFOV, float _duration)
-    {
-        StartCoroutine(ChangeFovCoroutine(_reachedFOV, _duration));
+        StartCoroutine(ChangeFovCoroutine(_reachedFOV, _duration, easingFunction));
     }
 
-    private IEnumerator ChangeFovCoroutine(int _reachedFOV, float _duration)
+    private IEnumerator ChangeFovCoroutine(float _reachedFOV, float _duration, Func<float, float> easingFunction)
     {
         float elapsedTime = 0f;
         float initialFOV = virtualCamera.m_Lens.FieldOfView;
 
         while (elapsedTime < _duration)
         {
-            float currentFOV = Mathf.Lerp(initialFOV, _reachedFOV, elapsedTime / _duration);
+            float t = elapsedTime / _duration;
+            float currentFOV = Mathf.Lerp(initialFOV, _reachedFOV, easingFunction(t));
             virtualCamera.m_Lens.FieldOfView = currentFOV;
 
             elapsedTime += Time.deltaTime;
@@ -50,13 +44,25 @@ public class CameraUtilities : MonoBehaviour
         virtualCamera.m_Lens.FieldOfView = _reachedFOV;
     }
 
-    private void Update()
+    public void ShakeCamera(float _intensity, float _time, Func<float, float> easingFunction)
     {
-        if (shakeTimer > 0f)
+        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = _intensity;
+        startingIntensity = _intensity;
+        shakeTotalTime = _time;
+        shakeTimer = _time;
+        StartCoroutine(ShakeCameraCoroutine(easingFunction));
+    }
+
+    private IEnumerator ShakeCameraCoroutine(Func<float, float> easingFunction)
+    {
+        while (shakeTimer > 0f)
         {
             shakeTimer -= Time.deltaTime;
             CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(startingIntensity, 0f, 1 - (shakeTimer / shakeTotalTime));
+            float shakeProgression = 1 - (shakeTimer / shakeTotalTime);
+            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(startingIntensity, 0f, easingFunction(shakeProgression));
+            yield return null;
         }
     }
 }

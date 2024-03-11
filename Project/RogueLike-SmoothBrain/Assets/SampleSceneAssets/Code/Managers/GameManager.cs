@@ -10,29 +10,24 @@ public class GameManager : MonoBehaviour
             if (instance == null)
             {
                 GameObject obj = new GameObject(typeof(GameManager).Name);
-                instance = obj.AddComponent<GameManager>();
-                DontDestroyOnLoad(obj);
+                obj.AddComponent<GameManager>();
             }
 
             return instance;
         }
     }
 
-    public readonly Seed seed = new Seed();
-
-    private void Instantiate()
-    {
-        seed.Generate();
-    }
-
     private void Awake()
     {
-        if (instance != null)
+        if (instance == null)
         {
-            Destroy(gameObject);
+            instance = this;
+            DontDestroyOnLoad(instance);
+        }
+        else
+        {
+            Destroy(instance);
             return;
         }
-
-        Instantiate();
     }
 }

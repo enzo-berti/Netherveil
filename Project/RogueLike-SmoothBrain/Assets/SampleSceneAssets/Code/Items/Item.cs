@@ -1,20 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [Serializable]
 public class Item : MonoBehaviour, IInterractable
 {
     public string idItemName;
-    public float test;
     ItemDatabase database;
-    private void Start()
+    private void Awake()
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
         this.GetComponent<MeshRenderer>().material = database.GetItem(idItemName).mat;
         this.GetComponent<MeshFilter>().mesh = database.GetItem(idItemName).mesh;
+
+        RandomizeItem(this);
+        Debug.Log(idItemName);
     }
     private void Update()
     {
@@ -33,6 +37,32 @@ public class Item : MonoBehaviour, IInterractable
     ItemEffect LoadClass()
     {
         return Assembly.GetExecutingAssembly().CreateInstance(idItemName) as ItemEffect;
+    }
+
+    static public void RandomizeItem(Item item)
+    {
+        List<string> allItems = new();
+        ItemDatabase db = Resources.Load<ItemDatabase>("ItemDatabase");
+        foreach (var itemInDb in db.datas)
+        {
+            allItems.Add(itemInDb.idName);
+        }
+        int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
+        item.idItemName = allItems[indexRandom];
+        Debug.Log("Random askip");
+    }
+
+    public void RandomizeItem()
+    {
+        List<string> allItems = new();
+        foreach (var itemInDb in database.datas)
+        {
+            allItems.Add(itemInDb.idName);
+        }
+        int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
+        idItemName = allItems[indexRandom];
+        Debug.Log("Random askip");
+
     }
 }
 
@@ -56,6 +86,12 @@ public class ItemEditor : Editor
         if (GUILayout.Button(ChosenName))
         {
             EditorWindow.GetWindow<ResearchItemWindow>("Select Item");
+        }
+        
+        if (GUILayout.Button("Randomize item"))
+        {
+            Item.RandomizeItem((Item)target);
+            ChosenName = (target as Item).idItemName;
         }
         EditorGUILayout.EndHorizontal();
         itemName.stringValue = ChosenName;
