@@ -235,6 +235,9 @@ public class PlayerInput : MonoBehaviour
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
             dashCooldown = true;
+            controller.VFXWrapper.transform.position = transform.position;
+            controller.VFXWrapper.transform.rotation = transform.rotation;
+            controller.dashVFX.Play();
         }
     }
 
@@ -294,6 +297,8 @@ public class PlayerInput : MonoBehaviour
     {
         controller.hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
+        controller.VFXWrapper.transform.position = transform.position;
+        controller.VFXWrapper.transform.rotation = transform.rotation;
         controller.spearAttacksVFX[controller.ComboCount].Play();
     }
 
