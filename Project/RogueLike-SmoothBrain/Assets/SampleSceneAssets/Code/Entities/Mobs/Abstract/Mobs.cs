@@ -56,10 +56,7 @@ public abstract class Mobs : Entity
         AudioManager.Instance.PlaySound(deathSound);
     }
 
-    private void ClearStatus()
-    {
-        AppliedStatusList.Clear();
-    }
+    
 
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)
