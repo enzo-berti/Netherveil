@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class DamageText : MonoBehaviour
+public class FloatingText : MonoBehaviour
 {
     [SerializeField] TMP_Text m_TextMeshPro;
     Vector3 newPos;
