@@ -222,7 +222,7 @@ public class Stats
             if (clampToMinValue && stats[index].hasMinStat)
                 DecreaseValueClamp(info, decreasingValue);
 
-            else if (!clampToMinValue && stats[index].hasMaxStat)
+            else if (!clampToMinValue && stats[index].hasMinStat)
                 DecreaseValueUnderload(info, decreasingValue);
 
             else if (clampToMinValue && !stats[index].hasMinStat)

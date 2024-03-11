@@ -12,7 +12,10 @@ public abstract class Entity : MonoBehaviour
 
     public List<Status> AppliedStatusList = new();
     [HideInInspector] public int State;
-
+    protected Entity()
+    {
+        OnDeath += ctx => ClearStatus();
+    }
     private void Update()
     {
         if(AppliedStatusList.Count > 0)
@@ -70,5 +73,9 @@ public abstract class Entity : MonoBehaviour
     {
         AppliedStatusList.Add(status);
     }
-    
+
+    protected void ClearStatus()
+    {
+        AppliedStatusList.Clear();
+    }
 }
