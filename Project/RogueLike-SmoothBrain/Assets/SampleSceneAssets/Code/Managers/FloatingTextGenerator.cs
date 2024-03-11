@@ -29,8 +29,9 @@ static public class FloatingTextGenerator
         }
     }
 
-    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit, int randPos)
+    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit = false, int randPos = 1)
     {
+        pos += Vector3.up * 2;
         pos += Random.onUnitSphere * randPos;
         CreateDamageText(dmgPt, pos, isCrit);
     }

@@ -6,6 +6,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
@@ -42,7 +43,7 @@ public class PlayerController : MonoBehaviour
     public readonly int CHARGED_ATTACK_DAMAGES = 20;
 
     [Header("VFXs")]
-    public GameObject VFXWrapper;
+    [SerializeField] GameObject VFXWrapper;
     public List<ParticleSystem> spearAttacksVFX;
     public ParticleSystem dashVFX;
     public VisualEffect chargedAttackVFX;
@@ -158,9 +159,6 @@ public class PlayerController : MonoBehaviour
         if (PlaneOfDoom.Raycast(ray, out float enter))
         {
             Vector3 hitPoint = ray.GetPoint(enter);
-            //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //cube.transform.position = new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z);
-            //Debug.DrawRay(ray.origin, ray.direction * 10000f, Color.red, 1000f); // This will draw the ray for 10 seconds
 
             float angle = transform.AngleOffsetToFaceTarget(new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z));
             if (angle != float.MaxValue)
@@ -230,7 +228,17 @@ public class PlayerController : MonoBehaviour
         camRight = camRight.normalized;
     }
 
+    public void PlayVFX(VisualEffect VFX)
+    {
+        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        VFX.Play();
+    }
 
+    public void PlayVFX2(ParticleSystem VFX)
+    {
+        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        VFX.Play();
+    }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
