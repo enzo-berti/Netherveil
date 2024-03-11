@@ -37,7 +37,7 @@ public struct Door
     {
         get
         {
-            return parentSkeleton.transform.eulerAngles.y + localRotation;
+            return (parentSkeleton.transform.eulerAngles.y + localRotation) % 360;
         }
     }
 
