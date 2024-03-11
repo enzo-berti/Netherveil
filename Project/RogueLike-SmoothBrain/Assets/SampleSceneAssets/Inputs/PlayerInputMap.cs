@@ -317,6 +317,34 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""e4e292c6-50e8-4e76-b594-9f916dba2d22"",
+            ""actions"": [
+                {
+                    ""name"": ""ToggleMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4b308a9-ddc6-43cd-a65f-216169e2fd10"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e066ddeb-043b-499b-b249-08a2e098d6c5"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -335,6 +363,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         // Interract
         m_Interract = asset.FindActionMap("Interract", throwIfNotFound: true);
         m_Interract_Interract = m_Interract.FindAction("Interract", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_ToggleMap = m_UI.FindAction("ToggleMap", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -592,6 +623,52 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         }
     }
     public InterractActions @Interract => new InterractActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_ToggleMap;
+    public struct UIActions
+    {
+        private @PlayerInputMap m_Wrapper;
+        public UIActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ToggleMap => m_Wrapper.m_UI_ToggleMap;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void AddCallbacks(IUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @ToggleMap.started += instance.OnToggleMap;
+            @ToggleMap.performed += instance.OnToggleMap;
+            @ToggleMap.canceled += instance.OnToggleMap;
+        }
+
+        private void UnregisterCallbacks(IUIActions instance)
+        {
+            @ToggleMap.started -= instance.OnToggleMap;
+            @ToggleMap.performed -= instance.OnToggleMap;
+            @ToggleMap.canceled -= instance.OnToggleMap;
+        }
+
+        public void RemoveCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     public interface IMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -609,5 +686,9 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     public interface IInterractActions
     {
         void OnInterract(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnToggleMap(InputAction.CallbackContext context);
     }
 }
