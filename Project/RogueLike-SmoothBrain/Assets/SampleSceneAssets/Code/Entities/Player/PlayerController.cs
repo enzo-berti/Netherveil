@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     public EventReference playerDash;
     public EventReference playerHit;
     public EventReference playerDead;
-    public EventReference playerAttack;
+    public EventReference[] playerAttacks;
 
 
     void Start()
