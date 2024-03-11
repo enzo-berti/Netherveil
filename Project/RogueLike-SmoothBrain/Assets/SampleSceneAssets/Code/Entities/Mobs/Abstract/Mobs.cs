@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
+using FMODUnity;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,6 +13,8 @@ public abstract class Mobs : Entity
     protected NavMeshAgent agent;
     protected Rigidbody rb;
     protected Entity[] nearbyEntities;
+
+    [SerializeField] EventReference deathSound;
 
     private void Awake()
     {
@@ -33,6 +36,8 @@ public abstract class Mobs : Entity
     {
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());
+        OnDeath += ctx => PlayDeathSong();
+        OnDeath += cts => ClearStatus();
     }
 
     private void ApplySpeed(Stat speedStat)
@@ -46,6 +51,15 @@ public abstract class Mobs : Entity
     protected abstract IEnumerator Brain();
     protected abstract IEnumerator EntityDetection();
 
+    private void PlayDeathSong()
+    {
+        AudioManager.Instance.PlaySound(deathSound);
+    }
+
+    private void ClearStatus()
+    {
+        AppliedStatusList.Clear();
+    }
 
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)
