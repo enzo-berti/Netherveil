@@ -2,33 +2,34 @@ using UnityEngine;
 
 public class Fire : Status
 {
-    public int damage = 0;
-
-    public Fire(int damage, float duration)
+    private int damage = 10;
+    public Fire()
     {
-        this.damage = damage;
-        this.duration = duration;
+        duration = 10.0f;
+        this.frequency = 0.5f;
     }
-
+    public Fire(Entity entity) : base(entity)
+    {
+        duration = 10.0f;
+        this.frequency = 0.5f;
+        damage *= (int)entity.Stats.GetValue(Stat.STATUS_POWER);
+        duration *= (int)entity.Stats.GetValue(Stat.STATUS_DURATION);
+    }
     public override void ApplyEffect(Entity target)
     {
         if (target.gameObject.TryGetComponent<IDamageable>(out _))
         {
+            this.stack++;
             target.AddStatus(this);
-        }
-        else
-        {
         }
     }
 
     public override void OnFinished()
     {
-        target.Stats.SetCoeffValue(Stat.SPEED, 1f);
     }
 
     protected override void Effect()
     {
-        target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage);
-        Debug.Log("damage");
+        target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack);
     }
 }

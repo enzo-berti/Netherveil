@@ -36,7 +36,7 @@ public class DamageManager : MonoBehaviour
     {
         DamageText newText = Instantiate(dmgTextPrefab, pos, Quaternion.identity);
         newText.SetText(dmgPt.ToString());
-        if (dmgPt > 10 && dmgPt < 100)
+        if (dmgPt >= 10 && dmgPt < 100)
         {
             newText.SetSize(dmgPt + 50);
         }

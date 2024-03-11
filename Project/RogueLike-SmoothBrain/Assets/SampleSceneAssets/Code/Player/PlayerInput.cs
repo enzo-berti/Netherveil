@@ -118,6 +118,8 @@ public class PlayerInput : MonoBehaviour
         }
 
         animator.SetFloat("Speed", controller.Direction.magnitude * magnitudeCoef, 0.1f, Time.deltaTime);
+        animator.SetBool("BasicAttacking", LaunchedAttack);
+        animator.SetInteger("ComboCount", controller.ComboCount);
 
         if (triggerCooldownDash || triggerCooldownAttack)
         {
@@ -146,6 +148,7 @@ public class PlayerInput : MonoBehaviour
         if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
     && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
         {
+            LaunchedAttack = false;
             animator.SetTrigger("ChargedAttackCharging");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
@@ -156,17 +159,17 @@ public class PlayerInput : MonoBehaviour
 
     public void StartChargedAttackCasting()
     {
-        controller.ComboCount = 0;
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
         StartCoroutine(ChargedAttackCoroutine());
     }
 
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
-        if(LaunchedChargedAttack)
+        animator.ResetTrigger("ChargedAttackRelease");
+        if (LaunchedChargedAttack)
         {
             StopAllCoroutines();
-            animator.ResetTrigger("ChargedAttackRelease");
+            controller.ComboCount = 0;
             animator.SetTrigger("ChargedAttackRelease");
         }
     }
@@ -174,11 +177,11 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        InputDeviceManager.Instance.ForceStopVibrations();
+        DeviceManager.Instance.ForceStopVibrations();
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
 
         cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
-        InputDeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
+        DeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
         controller.AttackCollide(controller.chargedAttack);
@@ -188,15 +191,15 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator ChargedAttackCoroutine()
     {
-        InputDeviceManager.Instance.ApplyVibrations(0.01f, 0.005f, float.MaxValue);
+        DeviceManager.Instance.ApplyVibrations(0.01f, 0.005f, float.MaxValue);
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
             yield return null;
         }
 
-        InputDeviceManager.Instance.ForceStopVibrations();
-        InputDeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
+        DeviceManager.Instance.ForceStopVibrations();
+        DeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
         chargedAttackMax = true;
     }
 
@@ -208,10 +211,8 @@ public class PlayerInput : MonoBehaviour
             if (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue)
             {
                 attackQueue = true;
-                controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
             }
 
-            animator.SetTrigger("BasicAttack");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedAttack = true;
@@ -254,6 +255,10 @@ public class PlayerInput : MonoBehaviour
             controller.ComboCount = 0;
             LaunchedAttack = false;
         }
+        else
+        {
+            controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
+        }
 
         attackQueue = false;
 
@@ -287,12 +292,23 @@ public class PlayerInput : MonoBehaviour
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
     }
 
+    public void StartOfIdleAnimation()
+    {
+        if(!LaunchedChargedAttack)
+        {
+            controller.hero.State = (int)Entity.EntityState.MOVE;
+        }
+        controller.ComboCount = 0;
+        LaunchedAttack = false;
+        attackQueue = false;
+    }
+
     public void ThrowOrRetrieveSpear()
     {
         if(controller.hero.State == (int)Entity.EntityState.MOVE)
         {
             //rotate the player to mouse's direction if playing KB/mouse
-            if (InputDeviceManager.Instance.IsPlayingKB())
+            if (DeviceManager.Instance.IsPlayingKB())
             {
                 controller.MouseOrientation();
             }

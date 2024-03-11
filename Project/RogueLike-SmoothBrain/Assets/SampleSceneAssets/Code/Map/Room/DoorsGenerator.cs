@@ -22,6 +22,9 @@ public struct Door
 
     public Vector3 forward;
     [SerializeField] private Vector3 localPosition;
+    public float rotation;
+    public GameObject parentSkeleton;
+
     public Vector3 Position 
     { 
         get 
@@ -29,14 +32,10 @@ public struct Door
             return localPosition + parentSkeleton.transform.position; 
         } 
     }
-    public float rotation;
-    public GameObject parentSkeleton;
 }
 
 public class DoorsGenerator : MonoBehaviour
 {
-    private static int NoiseGenerator = 0;
-
     // planned for later
     public List<Door> doors = new List<Door>();
 
@@ -78,15 +77,6 @@ public class DoorsGenerator : MonoBehaviour
 
     }
 
-    public void CloseDoor(int index)
-    {
-        //GameObject go = doors[index];
-        //doors.RemoveAt(index);
-
-        // TODO : Close the room
-        //Destroy(go);
-    }
-
     public void RemoveDoor(Door door)
     {
         if (!doors.Remove(door))
@@ -94,7 +84,10 @@ public class DoorsGenerator : MonoBehaviour
             Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
             return;
         }
+    }
 
-
+    public void EmptyDoors()
+    {
+        doors.Clear();
     }
 }

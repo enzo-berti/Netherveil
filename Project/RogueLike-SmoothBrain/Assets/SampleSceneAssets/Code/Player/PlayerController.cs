@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //rotate the player to mouse's direction if playing KB/mouse
-        if (InputDeviceManager.Instance.IsPlayingKB())
+        if (DeviceManager.Instance.IsPlayingKB())
         {
             MouseOrientation();
         }
@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
                     {
                         if(applyVibrations && !playerInput.LaunchedChargedAttack)
                         {
-                            InputDeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
+                            DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
                             applyVibrations = false;
                         }
                         //Debug.Log(col.gameObject.name);

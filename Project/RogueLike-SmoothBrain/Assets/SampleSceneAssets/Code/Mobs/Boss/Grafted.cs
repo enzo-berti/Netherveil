@@ -15,6 +15,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
     [SerializeField] float maxDashRange;
 
+    [Header("Boss parameters")]
+    public bool isTriggered = false;
+    Hero player = null;
+
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
 
@@ -56,50 +60,50 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             yield return null;
 
-            Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, visionAngle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
-                .Select(x => x.GetComponent<Entity>())
-                .Where(x => x != null && x != this)
-                .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
-                .ToArray();
-
-            Hero player = entities
-                .Select(x => x.GetComponent<Hero>())
-                .Where(x => x != null)
-                .FirstOrDefault();
-
-            if (player && attackState != AttackState.ATTACKING)
+            if (isTriggered)
             {
-                Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-                lookRotation.x = 0;
-                lookRotation.z = 0;
-                transform.rotation = lookRotation;
-            }
+                if (!player)
+                {
+                    player = FindObjectOfType<Hero>();
+                }
+                else
+                {
+                    if (attackState != AttackState.ATTACKING)
+                    {
+                        Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                        lookRotation.x = 0;
+                        lookRotation.z = 0;
+                        transform.rotation = lookRotation;
+                        // possibilité de mettre une rotation fluide, là en l'occurence j'ai pas envie
+                    }
 
-            if (attackCooldown > 0)
-            {
-                attackState = AttackState.IDLE;
-                attackCooldown -= Time.deltaTime;
-                if (attackCooldown < 0) attackCooldown = 0;
-            }
-            else if (attackCooldown == 0)
-            {
-                //currentAttack = (Attacks)Random.Range(0, 3);
-                currentAttack = Attacks.THRUST;
-            }
+                    if (attackCooldown > 0)
+                    {
+                        attackState = AttackState.IDLE;
+                        attackCooldown -= Time.deltaTime;
+                        if (attackCooldown < 0) attackCooldown = 0;
+                    }
+                    else if (attackCooldown == 0)
+                    {
+                        //currentAttack = (Attacks)Random.Range(0, 3);
+                        currentAttack = Attacks.THRUST;
+                    }
 
-            switch (currentAttack)
-            {
-                case Attacks.RANGE:
-                    if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
-                    break;
+                    switch (currentAttack)
+                    {
+                        case Attacks.RANGE:
+                            if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
+                            break;
 
-                case Attacks.THRUST:
-                    TripleThrust();
-                    break;
+                        case Attacks.THRUST:
+                            TripleThrust();
+                            break;
 
-                case Attacks.DASH:
-                    Dash();
-                    break;
+                        case Attacks.DASH:
+                            Dash();
+                            break;
+                    }
+                }
             }
         }
     }
@@ -119,7 +123,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public void ApplyDamage(int _value)
     {
-        Stats.IncreaseValue(Stat.HP, -_value, false);
+        Stats.DecreaseValue(Stat.HP, _value, false);
         DamageManager.Instance.CreateDamageText(_value, transform.position + Vector3.up * 2, false, 1);
         if (stats.GetValue(Stat.HP) <= 0)
         {

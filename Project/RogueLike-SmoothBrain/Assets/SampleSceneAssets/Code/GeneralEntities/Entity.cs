@@ -10,7 +10,7 @@ public abstract class Entity : MonoBehaviour
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
 
-    List<Status> statusList = new();
+    public List<Status> statusList = new();
 
     private void Update()
     {
@@ -40,8 +40,15 @@ public abstract class Entity : MonoBehaviour
 
     public void ApplyEffect(Status status)
     {
-        Debug.Log("ApplyEffect Entity");
         status.target = this;
+        foreach(var item in statusList)
+        {
+            if (item.GetType() == status.GetType())
+            {
+                item.AddStack(1);
+                return;
+            }
+        }
         status.ApplyEffect(this);
     }
     public enum EntityState : int
