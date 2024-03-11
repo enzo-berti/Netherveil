@@ -27,7 +27,7 @@ public class Spear : MonoBehaviour
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
         playerAnimator = player.GetComponent<Animator>();
-        meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
     void Update()
@@ -47,7 +47,7 @@ public class Spear : MonoBehaviour
             meshRenderer.enabled = true;
             // We set position at the exact place ( the spear doesn't move, just tp )
             this.transform.position = posToReach;
-            this.transform.rotation = Quaternion.identity * Quaternion.Euler(90, 0, 0);
+            this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90, 0, 0);
             IsThrowing = false;
             hero.State = (int)Entity.EntityState.MOVE;
             spearThrowCollider.gameObject.SetActive(false);

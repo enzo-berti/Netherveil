@@ -1,40 +1,11 @@
 using UnityEngine;
 
-public class DamageManager : MonoBehaviour
+static public class FloatingTextGenerator
 {
-    static DamageManager instance;
-    public static DamageManager Instance
+    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit)
     {
-        get
-        {
-            if (instance == null)
-            {
-                Instantiate(Resources.Load("DamageManager") as GameObject);
-            }
+        FloatingText newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.identity).GetComponent<FloatingText>();
 
-            return instance;
-        }
-    }
-
-    [SerializeField] DamageText dmgTextPrefab;
-
-    public void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
-
-    public void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit)
-    {
-        DamageText newText = Instantiate(dmgTextPrefab, pos, Quaternion.identity);
         newText.SetText(dmgPt.ToString());
         if (dmgPt >= 10 && dmgPt < 100)
         {
@@ -59,15 +30,15 @@ public class DamageManager : MonoBehaviour
         }
     }
 
-    public void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit, int randPos)
+    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit, int randPos)
     {
         pos += Random.onUnitSphere * randPos;
         CreateDamageText(dmgPt, pos, isCrit);
     }
 
-    public void CreateHealText(int healPt, Vector3 pos)
+    public static void CreateHealText(int healPt, Vector3 pos)
     {
-        DamageText newText = Instantiate(dmgTextPrefab, pos, Quaternion.identity);
+        FloatingText newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.identity).GetComponent<FloatingText>();
         newText.SetText(healPt.ToString());
         newText.SetColor(new Color(0.5f, 0.72f, 0.09f));//green  //(0.95f, 0.89f, 0.03f));//yellow
         if (healPt > 10 && healPt < 100)
@@ -84,9 +55,9 @@ public class DamageManager : MonoBehaviour
         }
     }
 
-    public void CreatePushedText(Vector3 pos)
+    public static void CreatePushedText(Vector3 pos)
     {
-        DamageText newText = Instantiate(dmgTextPrefab, pos, Quaternion.Euler(0, 0, 40));
+        FloatingText newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.Euler(0, 0, 40)).GetComponent<FloatingText>();
         newText.SetText("*PUSHED*");
         newText.SetColor(new Color(0.75f, 0.75f, 0.75f));//grey
         newText.SetSize(50);
