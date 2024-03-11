@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
-using static PlayerInput;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -10,6 +9,7 @@ public class PlayerInput : MonoBehaviour
     PlayerInputMap playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
+    HudHandler hudHandler;
     Animator animator;
     [SerializeField] GameObject weapon;
     CameraUtilities cameraUtilities;
@@ -43,6 +43,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap = new PlayerInputMap();
         controller = GetComponent<PlayerController>();
         m_interaction = GetComponent<PlayerInteractions>();
+        hudHandler = FindObjectOfType<HudHandler>();
     }
 
     void Start()
@@ -93,6 +94,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.Throw.performed += ctx => ThrowOrRetrieveSpear();
         playerInputMap.Attack.ChargedAttack.performed += ChargedAttack;
         playerInputMap.Attack.ChargedAttack.canceled += ChargedAttackCanceled;
+        playerInputMap.UI.ToggleMap.started += hudHandler.ToggleMap;
     }
 
     private void OnDisable()
@@ -106,6 +108,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.Throw.performed -= ctx => ThrowOrRetrieveSpear();
         playerInputMap.Attack.ChargedAttack.performed -= ChargedAttack;
         playerInputMap.Attack.ChargedAttack.canceled -= ChargedAttackCanceled;
+        playerInputMap.UI.ToggleMap.started -= hudHandler.ToggleMap;
     }
 
     void Update()
