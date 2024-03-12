@@ -80,7 +80,7 @@ public class SettingsMenu : MenuHandler
 
         if (SettingsManager.Instance.GetComponent<Volume>().profile.TryGet(out LiftGammaGain LFG))
         {
-            brightnessSlider.value = LFG.gamma.value.w ;
+            brightnessSlider.value = LFG.gamma.value.w;
         }
 
         screenShakeToggle.isOn = CameraUtilities.toggleScreenShake;
