@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
