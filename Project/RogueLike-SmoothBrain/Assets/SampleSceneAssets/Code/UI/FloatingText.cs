@@ -16,11 +16,11 @@ public class FloatingText : MonoBehaviour
     {
         //grind
         newPos = transform.position;
-        newPos.y += 1f * Time.deltaTime;
+        newPos.y += Time.deltaTime;
         transform.position = newPos;
 
         //fade + gris
-        newColor -= 1f * Time.deltaTime;
+        newColor -= Time.deltaTime;
         Color newColor2 = m_TextMeshPro.color;
         newColor2.a = newColor;
         m_TextMeshPro.color = newColor2;
