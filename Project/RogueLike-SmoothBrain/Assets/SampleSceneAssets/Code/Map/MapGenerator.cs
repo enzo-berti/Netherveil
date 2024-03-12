@@ -126,7 +126,7 @@ public class MapGenerator : MonoBehaviour
 #if UNITY_EDITOR
         if (@switch == 0.1f)
         {
-            //GenerateMap(new GenerationParam(nbNormal: 20));
+            GenerateMap(new GenerationParam(nbNormal: 20));
         }
 
         @switch -= Time.fixedDeltaTime;
@@ -135,7 +135,7 @@ public class MapGenerator : MonoBehaviour
         {
             foreach (Transform child in transform)
             {
-                //Destroy(child.gameObject);
+                Destroy(child.gameObject);
             }
 
             debugGen = new GenerationParam();
