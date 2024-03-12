@@ -132,30 +132,30 @@ public class MapGenerator : MonoBehaviour
         GenerateMap(new GenerationParam(nbNormal: 20));
     }
 
-    float @switch = 0f;
-    private void FixedUpdate()
-    {
-#if UNITY_EDITOR
-        if (@switch == 0.1f)
-        {
-            GenerateMap(new GenerationParam(nbNormal: 20));
-        }
-
-        @switch -= Time.fixedDeltaTime;
-
-        if (@switch <= 0f)
-        {
-            foreach (Transform child in transform)
-            {
-                Destroy(child.gameObject);
-            }
-
-            debugGen = new GenerationParam();
-
-            @switch = 0.1f;
-        }
-#endif
-    }
+      float @switch = 0f;
+//    private void FixedUpdate()
+//    {
+//#if UNITY_EDITOR
+//        if (@switch == 0.1f)
+//        {
+//            GenerateMap(new GenerationParam(nbNormal: 20));
+//        }
+//
+//        @switch -= Time.fixedDeltaTime;
+//
+//        if (@switch <= 0f)
+//        {
+//            foreach (Transform child in transform)
+//            {
+//                Destroy(child.gameObject);
+//            }
+//
+//            debugGen = new GenerationParam();
+//
+//            @switch = 0.1f;
+//        }
+//#endif
+//    }
 
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
     {

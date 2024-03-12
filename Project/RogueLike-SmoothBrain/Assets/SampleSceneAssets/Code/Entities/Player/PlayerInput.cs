@@ -210,6 +210,7 @@ public class PlayerInput : MonoBehaviour
         DeviceManager.Instance.ForceStopVibrations();
         DeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
         chargedAttackMax = true;
+        FloatingTextGenerator.CreateActionText(transform.position, "Max!");
     }
 
     public void Attack(InputAction.CallbackContext ctx)

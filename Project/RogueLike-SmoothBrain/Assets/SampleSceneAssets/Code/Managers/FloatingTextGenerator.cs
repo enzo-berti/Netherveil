@@ -20,10 +20,14 @@ static public class FloatingTextGenerator
         CreateNumberText(healPt, pos, healColor, out _, randPos);
     }
 
-    public static void CreatePushedText(Vector3 pos)
+    public static void CreateActionText(Vector3 pos, string text, int randPos = 1)
     {
-        FloatingText newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.Euler(0, 0, 40)).GetComponent<FloatingText>();
-        newText.SetText("*PUSHED*");
+        pos += Vector3.up * 2;
+        Vector3 randomOffsetVec = Random.onUnitSphere * randPos;
+        pos += new Vector3(randomOffsetVec.x, 0f, randomOffsetVec.z);
+
+        FloatingText newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.identity).GetComponent<FloatingText>();
+        newText.SetText(text);
         newText.SetColor(actionColor);
         newText.SetSize(MIN_SIZE);
     }
