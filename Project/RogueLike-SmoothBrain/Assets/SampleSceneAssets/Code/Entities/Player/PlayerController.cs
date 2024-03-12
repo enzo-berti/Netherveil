@@ -217,7 +217,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="camRight"></param>
     /// <param name="camForward"></param>
-    void ModifyCamVectors(out Vector3 camRight, out Vector3 camForward)
+    public void ModifyCamVectors(out Vector3 camRight, out Vector3 camForward)
     {
         camForward = cameraTransform.forward;
         camRight = cameraTransform.right;

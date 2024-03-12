@@ -238,7 +238,17 @@ public class PlayerInput : MonoBehaviour
         if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown)
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
-            controller.DashDir = transform.forward.normalized;
+            if(controller.Direction.x != 0f || controller.Direction.y != 0f)
+            {
+                controller.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+                controller.DashDir = (camForward * controller.Direction.y + camRight * controller.Direction.x).normalized;
+
+            }
+            else
+            {
+                controller.DashDir = transform.forward;
+            }
+            controller.OverridePlayerRotation(Quaternion.LookRotation(controller.DashDir).eulerAngles.y, true);
 
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
