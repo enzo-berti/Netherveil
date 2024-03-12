@@ -59,6 +59,15 @@ public struct GenerationParam
             {
                 count += list.Count;
             }
+
+            if (count == 0)
+            {
+                Debug.Log(availableDoors.Values.Count);
+                foreach (var truc in availableDoors)
+                {
+                    Debug.Log("LIST : " + truc.Key + " NB : " + truc.Value.Count);
+                }
+            }
             
             return count;
         }
@@ -117,6 +126,9 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
+        if (Application.isEditor)
+            Application.runInBackground = true;
+
         GenerateMap(new GenerationParam(nbNormal: 20));
     }
 
@@ -226,9 +238,6 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
 
-            // Destroy used door
-            genParam.availableDoors[exitDoor.Rotation].Remove(exitDoor);
-
             // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (forward = pour avoir un offset)
             roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position + (-exitDoor.Forward * 1f);
             Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
@@ -246,6 +255,8 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
 
+            // Destroy used door
+            genParam.availableDoors[exitDoor.Rotation].Remove(exitDoor);
             // removed door
             doorsGenerator.RemoveDoor(entranceDoor);
 
