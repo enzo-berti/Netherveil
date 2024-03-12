@@ -4,7 +4,25 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager Instance { get; private set; }
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void LoadAudioManager()
+    {
+        AudioManager dummyLoad = Instance;
+    }
+
+    private static AudioManager instance = null;
+    public static AudioManager Instance
+    {
+        get 
+        { 
+            if (instance == null)
+            {
+                Instantiate(Resources.Load<GameObject>("AudioManager"));
+            }
+
+            return instance; 
+        }
+    }
 
     [Range(0, 1)] public float masterVolumeBarValue = 1f;
     [Range(0, 1)] public float musicVolumeBarValue = 1f;
@@ -23,15 +41,16 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
             LoadBuses();
         }
         else
         {
             Destroy(gameObject);
+            return;
         }
     }
 

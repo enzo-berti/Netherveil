@@ -123,24 +123,26 @@ public class MapGenerator : MonoBehaviour
     float @switch = 0f;
     private void FixedUpdate()
     {
+#if UNITY_EDITOR
         if (@switch == 0.1f)
         {
-            GenerateMap(new GenerationParam(nbNormal: 20));
+            //GenerateMap(new GenerationParam(nbNormal: 20));
         }
 
-        @switch -= Time.deltaTime;
+        @switch -= Time.fixedDeltaTime;
 
         if (@switch <= 0f)
         {
             foreach (Transform child in transform)
             {
-                Destroy(child.gameObject);
+                //Destroy(child.gameObject);
             }
 
             debugGen = new GenerationParam();
 
             @switch = 0.1f;
         }
+#endif
     }
 
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
@@ -184,7 +186,7 @@ public class MapGenerator : MonoBehaviour
 
         for (int i = 0; i < nbRoom - 1; i++)
         {
-            Debug.Log("JE GENERE : " + i);
+            //Debug.Log("JE GENERE : " + i);
             GenerateRoom(ref genParam);
         }
 
