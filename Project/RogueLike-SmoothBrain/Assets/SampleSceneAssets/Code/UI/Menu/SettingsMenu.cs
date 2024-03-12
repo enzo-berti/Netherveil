@@ -34,6 +34,23 @@ public class SettingsMenu : MenuHandler
         DefaultVideoSettings();
         DefaultControlSettings();
         DefaultAudioSettings();
+        DeviceManager.OnChangedToKB += ToggleGamepadSettings;
+        DeviceManager.OnChangedToGamepad += ToggleGamepadSettings;
+    }
+
+    private void OnDestroy()
+    {
+        DeviceManager.OnChangedToKB -= ToggleGamepadSettings;
+        DeviceManager.OnChangedToGamepad -= ToggleGamepadSettings;
+    }
+
+    private void ToggleGamepadSettings()
+    {
+        bool toggle = !DeviceManager.Instance.IsPlayingKB();
+
+        deadzoneMin.gameObject.SetActive(toggle);
+        deadzoneMax.gameObject.SetActive(toggle);
+        vibrationsToggle.gameObject.SetActive(toggle);
     }
 
     private void DefaultAudioSettings()
