@@ -6,7 +6,6 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
