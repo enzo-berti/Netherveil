@@ -13,6 +13,9 @@ public class SettingsMenu : MenuHandler
     [SerializeField] TMP_Dropdown displayModeDropdown;
     [SerializeField] TMP_Dropdown qualityDropdown;
     [SerializeField] Toggle vSyncToggle;
+    [SerializeField] Slider deadzoneMin;
+    [SerializeField] Slider deadzoneMax;
+    [SerializeField] Toggle vibrationsToggle;
 
     private void Start()
     {
@@ -48,6 +51,10 @@ public class SettingsMenu : MenuHandler
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+
+        deadzoneMin.value = InputSystem.settings.defaultDeadzoneMin;
+        deadzoneMax.value = InputSystem.settings.defaultDeadzoneMax;
+        vibrationsToggle.isOn = DeviceManager.Instance.toggleVibrations;
     }
 
     private void SetDefaultScreenMode()
