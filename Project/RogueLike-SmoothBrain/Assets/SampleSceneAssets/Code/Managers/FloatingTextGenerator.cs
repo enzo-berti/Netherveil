@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 static public class FloatingTextGenerator
@@ -9,39 +8,42 @@ static public class FloatingTextGenerator
     static Color healColor = new(0.5f, 0.72f, 0.09f);
     static Color actionColor = new(0.75f, 0.75f, 0.75f);
 
-    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit = false, int randPos = 1)
+    public static void CreateDamageText(int dmgPt, Vector3 pos, bool isCrit = false, int randScale = 1)
     {
-        CreateNumberText(dmgPt, pos, Color.white, out FloatingText newText, randPos);
-        newText.SetColor(isCrit ? critColor : Color.white);
+        Color color = (isCrit ? critColor : Color.white);
+        CreateNumberText(dmgPt, pos, color, randScale);
     }
 
-    public static void CreateHealText(int healPt, Vector3 pos, int randPos)
+    public static void CreateHealText(int healPt, Vector3 pos, int randScale = 1)
     {
-        CreateNumberText(healPt, pos, healColor, out _, randPos);
+        CreateNumberText(healPt, pos, healColor, randScale);
     }
 
-    public static void CreateActionText(Vector3 pos, string text, int randPos = 1)
+    public static void CreateActionText(Vector3 pos, string text, int randScale = 1)
     {
-        pos += Vector3.up * 2;
-        Vector3 randomOffsetVec = Random.onUnitSphere * randPos;
-        pos += new Vector3(randomOffsetVec.x, 0f, randomOffsetVec.z);
-
-        FloatingText newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.identity).GetComponent<FloatingText>();
-        newText.SetText(text);
-        newText.SetColor(actionColor);
+        FloatingText newText = CreateText(pos, text, actionColor, randScale);
         newText.SetSize(MIN_SIZE);
     }
 
-    private static void CreateNumberText(int nb, Vector3 pos, Color color, out FloatingText newText, int randPos)
+    private static void CreateNumberText(int nb, Vector3 pos, Color color, int randScale = 1)
     {
-        pos += Vector3.up * 2;
-        pos += Random.onUnitSphere * randPos;
-
-        newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Quaternion.identity).GetComponent<FloatingText>();
-        newText.SetText(nb.ToString());
-        newText.SetColor(color);
+        FloatingText newText = CreateText(pos, nb.ToString(), color, randScale);
 
         int size = Mathf.Clamp(nb + MIN_SIZE, MIN_SIZE, MAX_SIZE);
         newText.SetSize(size);
+    }
+
+    private static FloatingText CreateText(Vector3 pos, string text, Color color, int randScale = 1)
+    {
+        // offset
+        pos += Vector3.up * 2;
+        Vector3 randomOffsetVec = Random.onUnitSphere * randScale;
+        pos += new Vector3(randomOffsetVec.x, 0f, randomOffsetVec.z);
+
+        var newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Camera.main.transform.rotation).GetComponent<FloatingText>();
+        newText.SetColor(color);
+        newText.SetText(text);
+
+        return newText;
     }
 }
