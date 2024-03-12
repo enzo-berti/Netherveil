@@ -80,7 +80,7 @@ public class SettingsMenu : MenuHandler
 
         if (SettingsManager.Instance.GetComponent<Volume>().profile.TryGet(out LiftGammaGain LFG))
         {
-            brightnessSlider.value = LFG.gamma.value.w;
+            brightnessSlider.value = LFG.gamma.value.w - 1f;
         }
 
         screenShakeToggle.isOn = CameraUtilities.toggleScreenShake;
@@ -91,7 +91,7 @@ public class SettingsMenu : MenuHandler
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 
-        List<string> options = new List<string>();
+        List<string> options = new();
         int currentResolutionIndex = 0;
 
         for (int i = 0; i < resolutions.Length; i++)
