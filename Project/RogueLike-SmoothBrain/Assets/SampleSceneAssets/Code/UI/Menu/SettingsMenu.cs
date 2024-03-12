@@ -26,6 +26,10 @@ public class SettingsMenu : MenuHandler
         qualityDropdown.RefreshShownValue();
 
         vSyncToggle.isOn = QualitySettings.vSyncCount > 0;
+
+        deadzoneMin.value = InputSystem.settings.defaultDeadzoneMin;
+        deadzoneMax.value = InputSystem.settings.defaultDeadzoneMax;
+        vibrationsToggle.isOn = DeviceManager.Instance.toggleVibrations;
     }
 
     private void SetResolutionDropdown()
@@ -51,10 +55,6 @@ public class SettingsMenu : MenuHandler
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
-
-        deadzoneMin.value = InputSystem.settings.defaultDeadzoneMin;
-        deadzoneMax.value = InputSystem.settings.defaultDeadzoneMax;
-        vibrationsToggle.isOn = DeviceManager.Instance.toggleVibrations;
     }
 
     private void SetDefaultScreenMode()
