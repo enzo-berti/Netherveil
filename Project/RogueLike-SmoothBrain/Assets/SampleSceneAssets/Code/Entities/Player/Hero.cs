@@ -94,6 +94,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             Vector3 force = ((damageable as MonoBehaviour).transform.position - transform.position).normalized;
             (damageable as IKnockbackable).GetKnockback(force * stats.GetValue(Stat.KNOCKBACK_COEFF));
+            FloatingTextGenerator.CreateActionText((damageable as MonoBehaviour).transform.position, "Pushed!");
         }
     }
 }
