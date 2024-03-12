@@ -9,15 +9,49 @@ using UnityEngine.UI;
 public class SettingsMenu : MenuHandler
 {
     Resolution[] resolutions;
+
+    [Header("Video Settings")]
     [SerializeField] TMP_Dropdown resolutionDropdown;
     [SerializeField] TMP_Dropdown displayModeDropdown;
     [SerializeField] TMP_Dropdown qualityDropdown;
+    [SerializeField] Slider brightnessSlider;
     [SerializeField] Toggle vSyncToggle;
+    [SerializeField] Toggle screenShakeToggle;
+
+    [Header("Audio Settings")]
+    [SerializeField] Slider mainVolumeSlider;
+    [SerializeField] Slider SFXVolumeSlider;
+    [SerializeField] Slider AmbienceVolumeSlider;
+    [SerializeField] Slider MusicVolumeSlider;
+
+    [Header("Control Settings")]
     [SerializeField] Slider deadzoneMin;
     [SerializeField] Slider deadzoneMax;
     [SerializeField] Toggle vibrationsToggle;
 
     private void Start()
+    {
+        DefaultVideoSettings();
+        DefaultControlSettings();
+        DefaultAudioSettings();
+    }
+
+    private void DefaultAudioSettings()
+    {
+        mainVolumeSlider.value = AudioManager.Instance.masterVolumeBarValue;
+        SFXVolumeSlider.value = AudioManager.Instance.soundsFXVolumeBarValue;
+        MusicVolumeSlider.value = AudioManager.Instance.musicVolumeBarValue;
+        AmbienceVolumeSlider.value = AudioManager.Instance.ambiencesVolumeBarValue;
+    }
+
+    private void DefaultControlSettings()
+    {
+        deadzoneMin.value = InputSystem.settings.defaultDeadzoneMin;
+        deadzoneMax.value = InputSystem.settings.defaultDeadzoneMax;
+        vibrationsToggle.isOn = DeviceManager.Instance.toggleVibrations;
+    }
+
+    private void DefaultVideoSettings()
     {
         SetResolutionDropdown();
         SetDefaultScreenMode();
@@ -27,9 +61,12 @@ public class SettingsMenu : MenuHandler
 
         vSyncToggle.isOn = QualitySettings.vSyncCount > 0;
 
-        deadzoneMin.value = InputSystem.settings.defaultDeadzoneMin;
-        deadzoneMax.value = InputSystem.settings.defaultDeadzoneMax;
-        vibrationsToggle.isOn = DeviceManager.Instance.toggleVibrations;
+        if (SettingsManager.Instance.GetComponent<Volume>().profile.TryGet(out LiftGammaGain LFG))
+        {
+            brightnessSlider.value = LFG.gamma.value.w;
+        }
+
+        screenShakeToggle.isOn = CameraUtilities.toggleScreenShake;
     }
 
     private void SetResolutionDropdown()
