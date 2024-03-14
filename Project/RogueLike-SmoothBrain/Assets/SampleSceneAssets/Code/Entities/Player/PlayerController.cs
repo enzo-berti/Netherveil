@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour
     float currentVelocity = 0f;
     public float CurrentTargetAngle { get; set; } = 0f;
     public Vector3 DashDir { get; set; } = Vector3.zero;
-    public Vector2 LastDir { get; set; } = Vector2.zero;
     public int ComboCount { get; set; } = 0;
     public readonly int MAX_COMBO_COUNT = 3;
 
@@ -69,26 +68,32 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //used to apply gravity
+        ApplyGravity();
+        Rotate();
+        Move();
+        DashMove();
+    }
+
+    private void Rotate()
+    {
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, CurrentTargetAngle, ref currentVelocity, smoothTime);
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
+    }
+
+    private void ApplyGravity()
+    {
         if (hero.State != (int)Entity.EntityState.DEAD && hero.State != (int)Hero.PlayerState.DASH)
         {
             characterController.SimpleMove(Vector3.zero);
         }
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, CurrentTargetAngle, ref currentVelocity, smoothTime);
-        transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-        Move();
-        DashMove();
     }
 
     void Move()
     {
         if (hero.State == (int)Entity.EntityState.MOVE && (Direction.x != 0f || Direction.y != 0f))
         {
-            LastDir = Direction;
             CurrentTargetAngle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
             ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
-
             characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * Direction.y + camRight * Direction.x).normalized);
         }
     }
