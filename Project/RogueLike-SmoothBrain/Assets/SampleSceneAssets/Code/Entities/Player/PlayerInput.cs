@@ -174,7 +174,6 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    //used as animation event
     public void ChargedAttackRelease()
     {
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
@@ -217,9 +216,11 @@ public class PlayerInput : MonoBehaviour
             {
                 attackQueue = true;
             }
-
-            animator.ResetTrigger("BasicAttack");
-            animator.SetTrigger("BasicAttack");
+            else
+            {
+                animator.ResetTrigger("BasicAttack");
+                animator.SetTrigger("BasicAttack");
+            }
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
 
@@ -263,9 +264,10 @@ public class PlayerInput : MonoBehaviour
         controller.ChangeState((int)Entity.EntityState.MOVE);
     }
 
-    //used as animation event
-    public void EndOfSpecialAnimationAttack() //triggers on attack animations to reset combo
+    public void EndOfBasicAttack() //triggers on attack animations to reset combo
     {
+        animator.ResetTrigger("BasicAttack");
+
         if (!attackQueue)
         {
             if (!LaunchedChargedAttack)
@@ -273,10 +275,12 @@ public class PlayerInput : MonoBehaviour
                 controller.ChangeState((int)Entity.EntityState.MOVE);
             }
             controller.ComboCount = 0;
-            animator.ResetTrigger("BasicAttack");
         }
         else
         {
+            
+            animator.SetTrigger("BasicAttack");
+            controller.hero.State = (int)Entity.EntityState.ATTACK;
             controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
         }
 
@@ -291,14 +295,12 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    //used as animation event
     public void EndOfChargedAttack()
     {
         controller.ChangeState((int)Entity.EntityState.MOVE);
     }
 
-    //used as animation event
-    public void StartOfAttackAnimation()
+    public void StartOfBasicAttack()
     {
         controller.hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
