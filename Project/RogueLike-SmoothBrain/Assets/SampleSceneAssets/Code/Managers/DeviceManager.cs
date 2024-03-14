@@ -12,6 +12,7 @@ public class DeviceManager : MonoBehaviour
 {
     //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi
     [SerializeField] TMP_Text debugText;
+    [SerializeField] private InputActionAsset inputActions;
     InputDevice currentDevice = null;
     InputDevice lastUsedDevice = null;
     static private DeviceManager instance;
@@ -167,6 +168,13 @@ public class DeviceManager : MonoBehaviour
         if (currentDevice is Gamepad)
         {
             (currentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
+        }
+    }
+    public void ResetBindings()
+    {
+        foreach (InputActionMap map in inputActions.actionMaps)
+        {
+            map.RemoveAllBindingOverrides();
         }
     }
 }

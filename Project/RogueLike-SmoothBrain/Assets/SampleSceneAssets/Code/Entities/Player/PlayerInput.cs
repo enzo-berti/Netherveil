@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-    PlayerInputMap playerInputMap;
+    [SerializeField] UnityEngine.InputSystem.PlayerInput playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
     HudHandler hudHandler;
@@ -39,7 +39,6 @@ public class PlayerInput : MonoBehaviour
     public EasingFunctions.EaseName easeShake;
     void Awake()
     {
-        playerInputMap = new PlayerInputMap();
         controller = GetComponent<PlayerController>();
         m_interaction = GetComponent<PlayerInteractions>();
         hudHandler = FindObjectOfType<HudHandler>();
@@ -83,32 +82,33 @@ public class PlayerInput : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInputMap.Enable();
-        playerInputMap.Movement.Movement.performed += controller.ReadDirection;
-        playerInputMap.Movement.Movement.canceled += controller.ReadDirection;
-        playerInputMap.Attack.Attack.performed += Attack;
-        playerInputMap.Dash.Dash.performed += Dash;
-        playerInputMap.Interract.Interract.performed += m_interaction.Interract;
-        playerInputMap.Attack.Throw.performed += ctx => ThrowOrRetrieveSpear();
-        playerInputMap.Attack.ChargedAttack.performed += ChargedAttack;
-        playerInputMap.Attack.ChargedAttack.canceled += ChargedAttackCanceled;
-        playerInputMap.UI.ToggleMap.started += hudHandler.ToggleMap;
-        playerInputMap.UI.Pause.started += ctx => hudHandler.TogglePause();
+        playerInputMap.actions.Enable();
+        playerInputMap.actions["Movement"].performed += controller.ReadDirection;
+        playerInputMap.actions["Movement"].canceled += controller.ReadDirection;
+        playerInputMap.actions["BasicAttack"].performed += Attack;
+        playerInputMap.actions["Dash"].performed += Dash;
+        playerInputMap.actions["Interact"].performed += m_interaction.Interract;
+        playerInputMap.actions["Spear"].performed += ctx => ThrowOrRetrieveSpear();
+        playerInputMap.actions["ChargedAttack"].performed += ChargedAttack;
+        playerInputMap.actions["ChargedAttack"].canceled += ChargedAttackCanceled;
+        playerInputMap.actions["ToggleMap"].started += hudHandler.ToggleMap;
+        playerInputMap.actions["Pause"].started += ctx => hudHandler.TogglePause();
     }
 
     private void OnDisable()
     {
-        playerInputMap.Movement.Movement.performed -= controller.ReadDirection;
-        playerInputMap.Movement.Movement.canceled -= controller.ReadDirection;
-        playerInputMap.Attack.Attack.performed -= Attack;
-        playerInputMap.Dash.Dash.performed -= Dash;
-        playerInputMap.Interract.Interract.performed -= m_interaction.Interract;
-        playerInputMap.Attack.Throw.performed -= ctx => ThrowOrRetrieveSpear();
-        playerInputMap.Attack.ChargedAttack.performed -= ChargedAttack;
-        playerInputMap.Attack.ChargedAttack.canceled -= ChargedAttackCanceled;
-        playerInputMap.UI.ToggleMap.started -= hudHandler.ToggleMap;
-        playerInputMap.UI.Pause.started -= ctx => hudHandler.TogglePause();
-        playerInputMap.Disable();
+        playerInputMap.actions["Movement"].performed -= controller.ReadDirection;
+        playerInputMap.actions["Movement"].canceled -= controller.ReadDirection;
+        playerInputMap.actions["BasicAttack"].performed -= Attack;
+        playerInputMap.actions["Dash"].performed -= Dash;
+        playerInputMap.actions["Interact"].performed -= m_interaction.Interract;
+        playerInputMap.actions["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        playerInputMap.actions["ChargedAttack"].performed -= ChargedAttack;
+        playerInputMap.actions["ChargedAttack"].canceled -= ChargedAttackCanceled;
+        playerInputMap.actions["ToggleMap"].started -= hudHandler.ToggleMap;
+        playerInputMap.actions["Pause"].started -= ctx => hudHandler.TogglePause();
+
+        playerInputMap.actions.Disable();
     }
 
     void Update()
