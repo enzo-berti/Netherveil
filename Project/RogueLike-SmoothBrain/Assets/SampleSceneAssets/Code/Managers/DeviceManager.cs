@@ -26,8 +26,7 @@ public class DeviceManager : MonoBehaviour
             if (instance == null)
             {
                 GameObject obj = new GameObject(nameof(DeviceManager));
-                instance = obj.AddComponent<DeviceManager>();
-                DontDestroyOnLoad(obj);
+                obj.AddComponent<DeviceManager>();
             }
 
             return instance;
@@ -36,7 +35,12 @@ public class DeviceManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null)
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
         {
             Destroy(gameObject);
             return;
