@@ -51,7 +51,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         FloatingTextGenerator.CreateDamageText(_value, transform.position);
         if (hasAnimation && (-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
-            State = (int)EntityState.HIT;
+            
             animator.ResetTrigger("Hit");
             animator.SetTrigger("Hit");
             AudioManager.Instance.PlaySound(playerController.playerHit);
