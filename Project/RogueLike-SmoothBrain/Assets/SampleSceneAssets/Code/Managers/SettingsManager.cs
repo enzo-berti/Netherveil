@@ -1,17 +1,21 @@
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 public class SettingsManager : MonoBehaviour
 {
-    static SettingsManager instance;
-    static public SettingsManager Instance
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void LoadSettingsManager()
+    {
+        _ = Instance;
+    }
+
+    private static SettingsManager instance = null;
+    public static SettingsManager Instance
     {
         get
         {
-            if(instance == null)
+            if (instance == null)
             {
-                throw new System.Exception("ADD THE PREFAB TO YOUR SCENE SCUMBAG");
+                Instantiate(Resources.Load<GameObject>(nameof(SettingsManager)));
             }
 
             return instance;
@@ -27,7 +31,6 @@ public class SettingsManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Try to create a second SettingsManager", gameObject);
             Destroy(gameObject);
             return;
         }

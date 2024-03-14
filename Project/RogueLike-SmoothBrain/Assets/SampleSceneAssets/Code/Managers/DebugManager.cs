@@ -10,7 +10,7 @@ public class DebugManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject obj = new GameObject(typeof(DebugManager).Name);
+                GameObject obj = new GameObject(nameof(DebugManager));
                 instance = obj.AddComponent<DebugManager>();
                 DontDestroyOnLoad(obj);
             }

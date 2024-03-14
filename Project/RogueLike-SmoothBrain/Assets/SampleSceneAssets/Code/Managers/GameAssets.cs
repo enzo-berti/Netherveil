@@ -9,7 +9,7 @@ public class GameAssets : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject obj = new GameObject(typeof(GameAssets).Name);
+                GameObject obj = new GameObject(nameof(GameAssets));
                 obj.AddComponent<GameAssets>();
             }
 

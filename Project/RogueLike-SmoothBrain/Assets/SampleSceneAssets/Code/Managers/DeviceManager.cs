@@ -25,7 +25,7 @@ public class DeviceManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject obj = new GameObject(typeof(DeviceManager).Name);
+                GameObject obj = new GameObject(nameof(DeviceManager));
                 instance = obj.AddComponent<DeviceManager>();
                 DontDestroyOnLoad(obj);
             }

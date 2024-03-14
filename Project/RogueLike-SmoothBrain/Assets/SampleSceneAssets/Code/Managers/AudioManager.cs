@@ -7,7 +7,7 @@ public class AudioManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadAudioManager()
     {
-        AudioManager dummyLoad = Instance;
+        _ = Instance;
     }
 
     private static AudioManager instance = null;
@@ -17,7 +17,7 @@ public class AudioManager : MonoBehaviour
         { 
             if (instance == null)
             {
-                Instantiate(Resources.Load<GameObject>("AudioManager"));
+                Instantiate(Resources.Load<GameObject>(nameof(AudioManager)));
             }
 
             return instance; 
