@@ -1,7 +1,7 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -24,7 +24,6 @@ public class PlayerInput : MonoBehaviour
     bool triggerCooldownDash = false;
 
     bool attackQueue = false;
-    public bool LaunchedAttack { get; private set; } = false;
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
     readonly float CHARGED_ATTACK_MAX_TIME = 1f;
@@ -117,13 +116,12 @@ public class PlayerInput : MonoBehaviour
     {
         //used so that you don't see the character running while in transition between the normal attack and the charged attack casting
         float magnitudeCoef = 10;
-        if(LaunchedChargedAttack)
+        if (LaunchedChargedAttack)
         {
             magnitudeCoef = 0f;
         }
 
         animator.SetFloat("Speed", controller.Direction.magnitude * magnitudeCoef, 0.1f, Time.deltaTime);
-        animator.SetBool("BasicAttacking", LaunchedAttack);
         animator.SetInteger("ComboCount", controller.ComboCount);
 
         if (triggerCooldownDash || triggerCooldownAttack)
@@ -150,15 +148,13 @@ public class PlayerInput : MonoBehaviour
 
     public void ChargedAttack(InputAction.CallbackContext ctx)
     {
-        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
-    && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
+        if (CanCastChargedAttack())
         {
-            LaunchedAttack = false;
+            animator.ResetTrigger("ChargedAttackCharging");
             animator.SetTrigger("ChargedAttackCharging");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedChargedAttack = true;
-
         }
     }
 
@@ -182,19 +178,20 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void ChargedAttackRelease()
     {
-        DeviceManager.Instance.ForceStopVibrations();
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
-
-        cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
-        DeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
         controller.AttackCollide(controller.chargedAttack, false);
         chargedAttackMax = false;
         chargedAttackTime = 0f;
 
-        controller.PlayVFX(controller.chargedAttackVFX);
+        //apply visual effects and controller vibrations
+        DeviceManager.Instance.ForceStopVibrations();
+        DeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
 
+        cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
+
+        controller.PlayVFX(controller.chargedAttackVFX);
         AudioManager.Instance.PlaySound(controller.playerAttacks[0]);
     }
 
@@ -215,19 +212,20 @@ public class PlayerInput : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext ctx)
     {
-        if ((controller.hero.State == (int)Entity.EntityState.MOVE || controller.hero.State == (int)Entity.EntityState.ATTACK)
-            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown)
+        if (CanAttack())
         {
-            if (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue)
+            if (controller.hero.State == (int)Entity.EntityState.ATTACK)
             {
                 attackQueue = true;
             }
 
+            animator.ResetTrigger("BasicAttack");
+            animator.SetTrigger("BasicAttack");
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
-            LaunchedAttack = true;
+
         }
-        else if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownDash && weapon.GetComponent<Spear>().IsThrown)
+        else if (CanRetrieveSpear())
         {
             ThrowOrRetrieveSpear();
         }
@@ -235,14 +233,14 @@ public class PlayerInput : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext ctx)
     {
-        if (controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown)
+        if (CanDash())
         {
             controller.hero.State = (int)Hero.PlayerState.DASH;
-            if(controller.Direction.x != 0f || controller.Direction.y != 0f)
+
+            if (controller.Direction.x != 0f || controller.Direction.y != 0f)
             {
                 controller.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
                 controller.DashDir = (camForward * controller.Direction.y + camRight * controller.Direction.x).normalized;
-
             }
             else
             {
@@ -250,11 +248,12 @@ public class PlayerInput : MonoBehaviour
             }
             controller.OverridePlayerRotation(Quaternion.LookRotation(controller.DashDir).eulerAngles.y, true);
 
+            animator.ResetTrigger("Dash");
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
             dashCooldown = true;
-            controller.PlayVFX2(controller.dashVFX);
 
+            controller.PlayVFX2(controller.dashVFX);
             AudioManager.Instance.PlaySound(controller.playerDash);
         }
     }
@@ -262,9 +261,7 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void EndOfSpecialAnimation() //triggers for dash and hit animation to reset state
     {
-        controller.hero.State = (int)Entity.EntityState.MOVE;
-        attackQueue = false;
-        LaunchedAttack = false;
+        controller.ChangeState((int)Entity.EntityState.MOVE);
     }
 
     //used as animation event
@@ -272,12 +269,12 @@ public class PlayerInput : MonoBehaviour
     {
         if (!attackQueue)
         {
-            if(!LaunchedChargedAttack)
+            if (!LaunchedChargedAttack)
             {
-                controller.hero.State = (int)Entity.EntityState.MOVE;
+                controller.ChangeState((int)Entity.EntityState.MOVE);
             }
             controller.ComboCount = 0;
-            LaunchedAttack = false;
+            animator.ResetTrigger("BasicAttack");
         }
         else
         {
@@ -298,16 +295,7 @@ public class PlayerInput : MonoBehaviour
     //used as animation event
     public void EndOfChargedAttack()
     {
-        controller.hero.State = (int)Entity.EntityState.MOVE;
-        controller.ComboCount = 0;
-        LaunchedAttack = false;
-        attackQueue = false;
-        LaunchedChargedAttack = false;
-
-        foreach (Collider collider in controller.chargedAttack)
-        {
-            collider.gameObject.SetActive(false);
-        }
+        controller.ChangeState((int)Entity.EntityState.MOVE);
     }
 
     //used as animation event
@@ -319,20 +307,28 @@ public class PlayerInput : MonoBehaviour
         AudioManager.Instance.PlaySound(controller.playerAttacks[controller.ComboCount]);
     }
 
-    public void StartOfIdleAnimation()
+    public void ResetValuesInput()
     {
-        if(!LaunchedChargedAttack)
-        {
-            controller.hero.State = (int)Entity.EntityState.MOVE;
-        }
-        controller.ComboCount = 0;
-        LaunchedAttack = false;
         attackQueue = false;
+        LaunchedChargedAttack = false;
+
+        foreach (Collider collider in controller.chargedAttack)
+        {
+            collider.gameObject.SetActive(false);
+        }
+
+        foreach (NestedList<Collider> colliders in controller.spearAttacks)
+        {
+            foreach (Collider collider in colliders.data)
+            {
+                collider.gameObject.SetActive(false);
+            }
+        }
     }
 
     public void ThrowOrRetrieveSpear()
     {
-        if(controller.hero.State == (int)Entity.EntityState.MOVE)
+        if (controller.hero.State == (int)Entity.EntityState.MOVE)
         {
             //rotate the player to mouse's direction if playing KB/mouse
             if (DeviceManager.Instance.IsPlayingKB())
@@ -344,21 +340,43 @@ public class PlayerInput : MonoBehaviour
                 controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE));
             }
 
-            if (!LaunchedAttack && !LaunchedChargedAttack)
-            {
-                Spear spear = weapon.GetComponent<Spear>();
+            Spear spear = weapon.GetComponent<Spear>();
 
-                // If spear is being thrown we can't recall this attack
-                if (spear.IsThrowing) return;
-                if (!spear.IsThrown)
-                {
-                    spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
-                }
-                else
-                {
-                    spear.Return();
-                }
+            // If spear is being thrown we can't recall this attack
+            if (spear.IsThrowing) return;
+            if (!spear.IsThrown)
+            {
+                spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
+            else
+            {
+                spear.Return();
+            }
+
         }
+    }
+
+    private bool CanAttack()
+    {
+        return (controller.hero.State == (int)Entity.EntityState.MOVE ||
+            (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
+            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown;
+    }
+
+    private bool CanCastChargedAttack()
+    {
+        return (controller.hero.State == (int)Entity.EntityState.MOVE 
+            || controller.hero.State == (int)Entity.EntityState.ATTACK)
+            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown;
+    }
+
+    private bool CanRetrieveSpear()
+    {
+        return controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownDash && weapon.GetComponent<Spear>().IsThrown;
+    }
+
+    private bool CanDash()
+    {
+        return controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown;
     }
 }

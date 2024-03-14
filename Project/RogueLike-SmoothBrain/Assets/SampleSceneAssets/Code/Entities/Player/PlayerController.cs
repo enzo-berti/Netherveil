@@ -239,6 +239,19 @@ public class PlayerController : MonoBehaviour
         VFX.Play();
     }
 
+    //used whenever you want to reset a lot of things when transitioning to another State
+    public void ChangeState(int newState)
+    {
+        hero.State = newState;
+        ResetValues();
+    }
+
+    public void ResetValues()
+    {
+        ComboCount = 0;
+        playerInput.ResetValuesInput();
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
