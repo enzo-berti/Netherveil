@@ -249,6 +249,20 @@ public class PlayerController : MonoBehaviour
     public void ResetValues()
     {
         ComboCount = 0;
+
+        foreach (Collider collider in chargedAttack)
+        {
+            collider.gameObject.SetActive(false);
+        }
+
+        foreach (NestedList<Collider> colliders in spearAttacks)
+        {
+            foreach (Collider collider in colliders.data)
+            {
+                collider.gameObject.SetActive(false);
+            }
+        }
+
         playerInput.ResetValuesInput();
     }
 

@@ -43,14 +43,13 @@ public class PlayerInput : MonoBehaviour
         controller = GetComponent<PlayerController>();
         m_interaction = GetComponent<PlayerInteractions>();
         hudHandler = FindObjectOfType<HudHandler>();
-    }
-
-    void Start()
-    {
-        controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+        EaseFuncsShitStorm();
+    }
 
+    private void EaseFuncsShitStorm()
+    {
         easeFuncs.Add(EasingFunctions.EaseInBack);
         easeFuncs.Add(EasingFunctions.EaseInBounce);
         easeFuncs.Add(EasingFunctions.EaseInCirc);
@@ -99,7 +98,6 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDisable()
     {
-        playerInputMap.Disable();
         playerInputMap.Movement.Movement.performed -= controller.ReadDirection;
         playerInputMap.Movement.Movement.canceled -= controller.ReadDirection;
         playerInputMap.Attack.Attack.performed -= Attack;
@@ -110,6 +108,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.Attack.ChargedAttack.canceled -= ChargedAttackCanceled;
         playerInputMap.UI.ToggleMap.started -= hudHandler.ToggleMap;
         playerInputMap.UI.Pause.started -= ctx => hudHandler.TogglePause();
+        playerInputMap.Disable();
     }
 
     void Update()
@@ -311,19 +310,6 @@ public class PlayerInput : MonoBehaviour
     {
         attackQueue = false;
         LaunchedChargedAttack = false;
-
-        foreach (Collider collider in controller.chargedAttack)
-        {
-            collider.gameObject.SetActive(false);
-        }
-
-        foreach (NestedList<Collider> colliders in controller.spearAttacks)
-        {
-            foreach (Collider collider in colliders.data)
-            {
-                collider.gameObject.SetActive(false);
-            }
-        }
     }
 
     public void ThrowOrRetrieveSpear()
@@ -337,7 +323,7 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                controller.OrientationErrorMargin(GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE));
+                controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
 
             Spear spear = weapon.GetComponent<Spear>();
