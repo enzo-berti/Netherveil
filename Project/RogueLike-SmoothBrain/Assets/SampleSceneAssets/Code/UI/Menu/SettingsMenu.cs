@@ -48,9 +48,9 @@ public class SettingsMenu : MenuHandler
     {
         bool toggle = !DeviceManager.Instance.IsPlayingKB();
 
-        deadzoneMin.gameObject.SetActive(toggle);
-        deadzoneMax.gameObject.SetActive(toggle);
-        vibrationsToggle.gameObject.SetActive(toggle);
+        deadzoneMin.transform.parent.gameObject.SetActive(toggle);
+        deadzoneMax.transform.parent.gameObject.SetActive(toggle);
+        vibrationsToggle.transform.parent.gameObject.SetActive(toggle);
     }
 
     private void DefaultAudioSettings()
@@ -80,6 +80,7 @@ public class SettingsMenu : MenuHandler
 
         if (SettingsManager.Instance.GetComponent<Volume>().profile.TryGet(out LiftGammaGain LFG))
         {
+            Debug.Log(LFG.gamma.value.w);
             brightnessSlider.value = LFG.gamma.value.w;
         }
 
@@ -181,7 +182,7 @@ public class SettingsMenu : MenuHandler
     {
         if (SettingsManager.Instance.GetComponent<Volume>().profile.TryGet(out LiftGammaGain LFG))
         {
-            LFG.gamma.Override(new Vector4(LFG.gamma.value.x, LFG.gamma.value.y, LFG.gamma.value.z, value - 1f));
+            LFG.gamma.Override(new Vector4(1f, 1f, 1f, value));
         }
     }
 
