@@ -64011,7 +64011,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 966695631222454742, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1514617157646064636}
   m_SourcePrefab: {fileID: 100100000, guid: a2bd9ea4b8855734ba7378dfaf4a56ad, type: 3}
 --- !u!4 &8168290879274137259 stripped
 Transform:
@@ -64019,3 +64023,72 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8609243546994431431}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8795611343295278097 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 966695631222454742, guid: a2bd9ea4b8855734ba7378dfaf4a56ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 8609243546994431431}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1514617157646064636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8795611343295278097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 265257847d33b76449ed90f675b85193,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5608f3eb-ca2b-42c3-a2de-6adfffa8f11a
+    m_ActionName: Game/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 017a0e5c-3a7a-4866-ade3-788788399d8f
+    m_ActionName: Game/BasicAttack[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2b38a7ee-7606-41ae-84ee-66f698cda467
+    m_ActionName: Game/ChargedAttack[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cd9ce065-145a-45cf-b78a-843dd1732144
+    m_ActionName: Game/Spear[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3e093fa7-fc99-4735-8a5b-e33a66875adc
+    m_ActionName: Game/Dash[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 725f77ac-803c-4ebe-9677-9c6adc825539
+    m_ActionName: Game/Interact[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 65bb6ba4-6bfe-4405-bf76-aaf08c00aa82
+    m_ActionName: Game/ToggleMap[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b509354d-e83b-46a0-bb93-ea4669c59244
+    m_ActionName: Game/Pause[/Keyboard/escape]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Game
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}

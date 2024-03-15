@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] UnityEngine.InputSystem.PlayerInput playerInputMap;
+    UnityEngine.InputSystem.PlayerInput playerInputMap;
     PlayerController controller;
     PlayerInteractions m_interaction;
     HudHandler hudHandler;
@@ -44,6 +44,7 @@ public class PlayerInput : MonoBehaviour
         hudHandler = FindObjectOfType<HudHandler>();
         animator = GetComponent<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+        playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         EaseFuncsShitStorm();
     }
 
