@@ -27,7 +27,6 @@ public abstract class Mobs : Entity
 
         if (this is IAttacker attacker)
         {
-            Debug.Log($"Apply status in {attacker}");
             attacker.OnHit += attacker.ApplyStatus;
         }
     }
