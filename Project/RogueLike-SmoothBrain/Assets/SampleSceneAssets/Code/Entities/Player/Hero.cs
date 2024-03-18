@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
+    public static event Action OnTakeDamage; 
     
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
@@ -58,7 +60,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 playerController.ResetValues(); //possible source de bugs
             }
 
-            
+            OnTakeDamage?.Invoke();
             AudioManager.Instance.PlaySound(playerController.playerHit);
         }
 
