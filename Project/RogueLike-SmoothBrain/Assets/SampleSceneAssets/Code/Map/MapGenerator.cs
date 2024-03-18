@@ -68,7 +68,7 @@ public struct GenerationParam
                     Debug.Log("LIST : " + truc.Key + " NB : " + truc.Value.Count);
                 }
             }
-            
+
             return count;
         }
     }
@@ -106,6 +106,8 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
+    [SerializeField] private List<GameObject> obstructionsDoor;
+
 #if UNITY_EDITOR
     GenerationParam debugGen;
     private void OnDrawGizmos()
@@ -132,30 +134,30 @@ public class MapGenerator : MonoBehaviour
         GenerateMap(new GenerationParam(nbNormal: 20));
     }
 
-      float @switch = 0f;
-//    private void FixedUpdate()
-//    {
-//#if UNITY_EDITOR
-//        if (@switch == 0.1f)
-//        {
-//            GenerateMap(new GenerationParam(nbNormal: 20));
-//        }
-//
-//        @switch -= Time.fixedDeltaTime;
-//
-//        if (@switch <= 0f)
-//        {
-//            foreach (Transform child in transform)
-//            {
-//                Destroy(child.gameObject);
-//            }
-//
-//            debugGen = new GenerationParam();
-//
-//            @switch = 0.1f;
-//        }
-//#endif
-//    }
+    float @switch = 0f;
+    //    private void FixedUpdate()
+    //    {
+    //#if UNITY_EDITOR
+    //        if (@switch == 0.1f)
+    //        {
+    //            GenerateMap(new GenerationParam(nbNormal: 20));
+    //        }
+    //
+    //        @switch -= Time.fixedDeltaTime;
+    //
+    //        if (@switch <= 0f)
+    //        {
+    //            foreach (Transform child in transform)
+    //            {
+    //                Destroy(child.gameObject);
+    //            }
+    //
+    //            debugGen = new GenerationParam();
+    //
+    //            @switch = 0.1f;
+    //        }
+    //#endif
+    //    }
 
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
     {
@@ -207,9 +209,13 @@ public class MapGenerator : MonoBehaviour
 #endif
 
         // TODO : spawn things to hides the holes
-        foreach (var door in genParam.availableDoors)
+        foreach (var listDoors in debugGen.availableDoors)
         {
-            //Debug.Log(truc.Value.Count);
+            foreach (var door in listDoors.Value)
+            {
+                GameObject go = Instantiate(obstructionsDoor[Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
+                go.transform.Rotate(0, (door.Rotation + 180f) % 360, 0);
+            }
         }
     }
 
