@@ -33,7 +33,6 @@ public struct GenerationParam
             { RoomType.Boss, nbBoss },
         };
 
-
         availableDoors = new Dictionary<float, List<Door>>
         {
             { 0f, new List<Door>() },
@@ -43,10 +42,12 @@ public struct GenerationParam
         };
     }
 
-    public int TotalRoom
+    public readonly int TotalRoom
     {
-        get { return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss] + nbRoom[RoomType.Boss]; }
-
+        get 
+        { 
+            return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss] + nbRoom[RoomType.Boss]; 
+        }
     }
 
     public int NumRoomAvaibles
@@ -87,9 +88,7 @@ public struct GenerationParam
             }
         }
 
-#if !UNITY_EDITOR
         Object.Destroy(doorsGenerator); // destroy doorsGenerator
-#endif
     }
 }
 
@@ -133,31 +132,6 @@ public class MapGenerator : MonoBehaviour
 
         GenerateMap(new GenerationParam(nbNormal: 20));
     }
-
-    float @switch = 0f;
-    //    private void FixedUpdate()
-    //    {
-    //#if UNITY_EDITOR
-    //        if (@switch == 0.1f)
-    //        {
-    //            GenerateMap(new GenerationParam(nbNormal: 20));
-    //        }
-    //
-    //        @switch -= Time.fixedDeltaTime;
-    //
-    //        if (@switch <= 0f)
-    //        {
-    //            foreach (Transform child in transform)
-    //            {
-    //                Destroy(child.gameObject);
-    //            }
-    //
-    //            debugGen = new GenerationParam();
-    //
-    //            @switch = 0.1f;
-    //        }
-    //#endif
-    //    }
 
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
     {
@@ -228,7 +202,6 @@ public class MapGenerator : MonoBehaviour
             if (genParam.NumRoomAvaibles == 0)
             {
                 Debug.Break();
-                @switch = 1000000000000f;
                 Debug.LogWarning("Can't generate room anymore : no candidate");
                 break;
             }
