@@ -49,11 +49,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
         FloatingTextGenerator.CreateDamageText(_value, transform.position);
-        if (hasAnimation && (-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
+        if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
+           if(hasAnimation && !playerInput.LaunchedChargedAttack)
+            {
+                animator.ResetTrigger("Hit");
+                animator.SetTrigger("Hit");
+                playerController.ResetValues(); //possible source de bugs
+            }
+
             
-            animator.ResetTrigger("Hit");
-            animator.SetTrigger("Hit");
             AudioManager.Instance.PlaySound(playerController.playerHit);
         }
 
