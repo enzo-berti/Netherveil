@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour, IProjectile
         NORMAL,
         FIRE,
         ICE,
-        POISON
+        ELECTRICITY
     }
 
     void Start()
@@ -55,6 +55,12 @@ public class Projectile : MonoBehaviour, IProjectile
                 {
                     case DamageState.FIRE:
                         entity.ApplyEffect(new Fire(10));
+                        break;
+                    case DamageState.ICE:
+                        entity.ApplyEffect(new Freeze(10));
+                        break;
+                    case DamageState.ELECTRICITY:
+                        entity.ApplyEffect(new Electricity(10));
                         break;
                 }
                 // apply elementalState
