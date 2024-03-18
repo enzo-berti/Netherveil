@@ -96,11 +96,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 10
+  m_Acceleration: 32
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 240
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -186,7 +186,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 5
+      value: 10
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -204,7 +204,7 @@ MonoBehaviour:
     Path: event:/Enemy/EnemyDeath
   angle: 320
   StillThreshold: 0.05
-  brainDelay: 3.5
+  brainDelay: 1
 --- !u!1001 &4706510688428890628
 PrefabInstance:
   m_ObjectHideFlags: 0
