@@ -1,13 +1,11 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Samples.RebindUI;
 
 public class Keybinding : MonoBehaviour
 {
     [SerializeField] GameObject KBPanel;
     [SerializeField] GameObject GamepadPanel;
+    [SerializeField] UnityEngine.InputSystem.PlayerInput playerInput;
 
     void Start()
     {
@@ -17,6 +15,11 @@ public class Keybinding : MonoBehaviour
 
     private void OnDestroy()
     {
+    }
+
+    public void ResetBindings()
+    {
+        playerInput.currentActionMap.RemoveAllBindingOverrides();
     }
 
     private void SwitchBindings()

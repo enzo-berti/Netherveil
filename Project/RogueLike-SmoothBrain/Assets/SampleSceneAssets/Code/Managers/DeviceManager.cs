@@ -182,11 +182,4 @@ public class DeviceManager : MonoBehaviour
             (currentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
         }
     }
-    public void ResetBindings()
-    {
-        foreach (InputActionMap map in playerInput.actions.actionMaps)
-        {
-            map.RemoveAllBindingOverrides();
-        }
-    }
 }
