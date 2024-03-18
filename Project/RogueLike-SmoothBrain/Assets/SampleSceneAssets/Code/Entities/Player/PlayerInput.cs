@@ -79,36 +79,63 @@ public class PlayerInput : MonoBehaviour
         easeFuncs.Add(EasingFunctions.EaseOutQuart);
         easeFuncs.Add(EasingFunctions.EaseOutQuint);
         easeFuncs.Add(EasingFunctions.EaseOutSin);
+
+        playerInputMap.currentActionMap["Movement"].performed += controller.ReadDirection;
+        playerInputMap.currentActionMap["Movement"].canceled += controller.ReadDirection;
+        playerInputMap.currentActionMap["BasicAttack"].performed += Attack;
+        playerInputMap.currentActionMap["Dash"].performed += Dash;
+        playerInputMap.currentActionMap["Interact"].performed += m_interaction.Interract;
+        playerInputMap.currentActionMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
+        playerInputMap.currentActionMap["ChargedAttack"].performed += ChargedAttack;
+        playerInputMap.currentActionMap["ChargedAttack"].canceled += ChargedAttackCanceled;
+        playerInputMap.currentActionMap["ToggleMap"].performed += hudHandler.ToggleMap;
+        playerInputMap.currentActionMap["Pause"].started += ctx => hudHandler.TogglePause();
+
+        InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
+
+        gamepadMap["Movement"].performed += controller.ReadDirection;
+        gamepadMap["Movement"].canceled += controller.ReadDirection;
+        gamepadMap["BasicAttack"].performed += Attack;
+        gamepadMap["Dash"].performed += Dash;
+        gamepadMap["Interact"].performed += m_interaction.Interract;
+        gamepadMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
+        gamepadMap["ChargedAttack"].performed += ChargedAttack;
+        gamepadMap["ChargedAttack"].canceled += ChargedAttackCanceled;
+        gamepadMap["ToggleMap"].started += hudHandler.ToggleMap;
+        gamepadMap["Pause"].started += ctx => hudHandler.TogglePause();
     }
 
     private void OnEnable()
     {
-        playerInputMap.actions.Enable();
-        playerInputMap.actions["Movement"].performed += controller.ReadDirection;
-        playerInputMap.actions["Movement"].canceled += controller.ReadDirection;
-        playerInputMap.actions["BasicAttack"].performed += Attack;
-        playerInputMap.actions["Dash"].performed += Dash;
-        playerInputMap.actions["Interact"].performed += m_interaction.Interract;
-        playerInputMap.actions["Spear"].performed += ctx => ThrowOrRetrieveSpear();
-        playerInputMap.actions["ChargedAttack"].performed += ChargedAttack;
-        playerInputMap.actions["ChargedAttack"].canceled += ChargedAttackCanceled;
-        playerInputMap.actions["ToggleMap"].started += hudHandler.ToggleMap;
-        playerInputMap.actions["Pause"].started += ctx => hudHandler.TogglePause();
+
     }
 
     private void OnDisable()
     {
+        playerInputMap.currentActionMap["Movement"].performed -= controller.ReadDirection;
+        playerInputMap.currentActionMap["Movement"].canceled -= controller.ReadDirection;
+        playerInputMap.currentActionMap["BasicAttack"].performed -= Attack;
+        playerInputMap.currentActionMap["Dash"].performed -= Dash;
+        playerInputMap.currentActionMap["Interact"].performed -= m_interaction.Interract;
+        playerInputMap.currentActionMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        playerInputMap.currentActionMap["ChargedAttack"].performed -= ChargedAttack;
+        playerInputMap.currentActionMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
+        playerInputMap.currentActionMap["ToggleMap"].performed -= hudHandler.ToggleMap;
+        playerInputMap.currentActionMap["Pause"].started -= ctx => hudHandler.TogglePause();
+
+        InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
+
+        gamepadMap["Movement"].performed -= controller.ReadDirection;
+        gamepadMap["Movement"].canceled -= controller.ReadDirection;
+        gamepadMap["BasicAttack"].performed -= Attack;
+        gamepadMap["Dash"].performed -= Dash;
+        gamepadMap["Interact"].performed -= m_interaction.Interract;
+        gamepadMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        gamepadMap["ChargedAttack"].performed -= ChargedAttack;
+        gamepadMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
+        gamepadMap["ToggleMap"].started -= hudHandler.ToggleMap;
+        gamepadMap["Pause"].started -= ctx => hudHandler.TogglePause();
         playerInputMap.actions.Disable();
-        playerInputMap.actions["Movement"].performed -= controller.ReadDirection;
-        playerInputMap.actions["Movement"].canceled -= controller.ReadDirection;
-        playerInputMap.actions["BasicAttack"].performed -= Attack;
-        playerInputMap.actions["Dash"].performed -= Dash;
-        playerInputMap.actions["Interact"].performed -= m_interaction.Interract;
-        playerInputMap.actions["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
-        playerInputMap.actions["ChargedAttack"].performed -= ChargedAttack;
-        playerInputMap.actions["ChargedAttack"].canceled -= ChargedAttackCanceled;
-        playerInputMap.actions["ToggleMap"].started -= hudHandler.ToggleMap;
-        playerInputMap.actions["Pause"].started -= ctx => hudHandler.TogglePause();
     }
 
     void Update()
@@ -304,7 +331,7 @@ public class PlayerInput : MonoBehaviour
     {
         controller.hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
-        controller.PlayVFX2(controller.spearAttacksVFX[controller.ComboCount]);
+        controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
         AudioManager.Instance.PlaySound(controller.playerAttacks[controller.ComboCount]);
     }
 
