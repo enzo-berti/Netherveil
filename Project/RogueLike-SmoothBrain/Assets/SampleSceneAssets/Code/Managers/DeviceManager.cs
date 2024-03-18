@@ -12,7 +12,7 @@ public class DeviceManager : MonoBehaviour
 {
     //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi
     [SerializeField] TMP_Text debugText;
-    [SerializeField] private InputActionAsset inputActions;
+    public UnityEngine.InputSystem.PlayerInput playerInput;
     InputDevice currentDevice = null;
     InputDevice lastUsedDevice = null;
     static private DeviceManager instance;
@@ -48,6 +48,11 @@ public class DeviceManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        ForceStopVibrations();
+    }
+
     void Start()
     {
         InputSystem.onEvent += OnInputSystemEvent;
@@ -55,7 +60,14 @@ public class DeviceManager : MonoBehaviour
         if(Gamepad.all.Count > 0)
         {
             currentDevice = Gamepad.all[0];
-            lastUsedDevice = currentDevice;
+            if(Keyboard.current != null)
+            {
+                lastUsedDevice = Keyboard.current;
+            }
+            else
+            {
+                lastUsedDevice = currentDevice;
+            }
         }
     }
 
@@ -117,6 +129,12 @@ public class DeviceManager : MonoBehaviour
             }
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            if (playerInput != null)
+            {
+                playerInput.currentActionMap.Disable();
+                playerInput.actions.FindActionMap("Gamepad", true).Enable();
+                playerInput.SwitchCurrentActionMap("Gamepad");
+            }
             OnChangedToGamepad?.Invoke();
         }
         else
@@ -128,6 +146,12 @@ public class DeviceManager : MonoBehaviour
             //should be confined here but for debug reasons we'll put None
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            if(playerInput != null)
+            {
+                playerInput.currentActionMap.Disable();
+                playerInput.actions.FindActionMap("Keyboard", true).Enable();
+                playerInput.SwitchCurrentActionMap("Keyboard");
+            }
             OnChangedToKB?.Invoke();
         }
     }
@@ -168,13 +192,6 @@ public class DeviceManager : MonoBehaviour
         if (currentDevice is Gamepad)
         {
             (currentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
-        }
-    }
-    public void ResetBindings()
-    {
-        foreach (InputActionMap map in inputActions.actionMaps)
-        {
-            map.RemoveAllBindingOverrides();
         }
     }
 }

@@ -16,7 +16,7 @@ public abstract class Mobs : Entity
 
     [SerializeField] EventReference deathSound;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
@@ -27,12 +27,11 @@ public abstract class Mobs : Entity
 
         if (this is IAttacker attacker)
         {
-            Debug.Log($"Apply status in {attacker}");
             attacker.OnHit += attacker.ApplyStatus;
         }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());

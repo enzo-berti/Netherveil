@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private MeshButton[] meshButtons;
     [SerializeField] private TMP_Text[] floatingTexts;
 
     public void StartGame()

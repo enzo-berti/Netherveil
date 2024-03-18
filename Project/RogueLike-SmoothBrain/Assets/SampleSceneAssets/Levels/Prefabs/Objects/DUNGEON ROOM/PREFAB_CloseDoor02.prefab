@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 580465055758600543}
-  m_Layer: 0
+  - component: {fileID: 6859691795820209584}
+  m_Layer: 6
   m_Name: PREFAB_CloseDoor02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,6 +48,27 @@ Transform:
   - {fileID: 8448089014329106674}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6859691795820209584
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6449547905454529274}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.9, y: 3, z: 1.25}
+  m_Center: {x: 0, y: 1.5, z: 0.74}
 --- !u!1001 &949001831814799528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105,10 +127,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1579359803685516885, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
         type: 3}
       propertyPath: m_Name
       value: MESH_Coin
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432574051479413816, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -184,6 +226,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: MESH_WoodenCrate
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b32c31ce54d5cc14d89b9c78ae2c008a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: b32c31ce54d5cc14d89b9c78ae2c008a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6746536798615368316, guid: b32c31ce54d5cc14d89b9c78ae2c008a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -253,10 +310,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8459100646097369270, guid: c6da9a04ad2ed4746b0224c121a7e34d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c6da9a04ad2ed4746b0224c121a7e34d,
         type: 3}
       propertyPath: m_Name
       value: MESH_SmallArch
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c6da9a04ad2ed4746b0224c121a7e34d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4600802193341086733, guid: c6da9a04ad2ed4746b0224c121a7e34d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -332,6 +404,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: MESH_Dagger
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 81bd60ac314fd3e4fa959a373d1e902e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 81bd60ac314fd3e4fa959a373d1e902e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561850595630689333, guid: 81bd60ac314fd3e4fa959a373d1e902e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164860490932450629, guid: 81bd60ac314fd3e4fa959a373d1e902e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -405,6 +497,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MESH_Jar
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4f1c08b2f129b464997f46c809c20ac1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077041215533412209, guid: 4f1c08b2f129b464997f46c809c20ac1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3799577715390625190, guid: 4f1c08b2f129b464997f46c809c20ac1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 4f1c08b2f129b464997f46c809c20ac1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -480,6 +592,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: MESH_Bones
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6ba8c9429818d6c4899aca861a73ed7f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 6ba8c9429818d6c4899aca861a73ed7f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8042801417951580683, guid: 6ba8c9429818d6c4899aca861a73ed7f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -549,10 +676,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1579359803685516885, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
         type: 3}
       propertyPath: m_Name
       value: MESH_Coin (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432574051479413816, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -628,6 +775,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: MESH_Barrel
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 73d3786dd93f29c44917806b45342996,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 73d3786dd93f29c44917806b45342996,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5145841828361119524, guid: 73d3786dd93f29c44917806b45342996,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -697,10 +859,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 17.642
       objectReference: {fileID: 0}
+    - target: {fileID: -1579359803685516885, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
         type: 3}
       propertyPath: m_Name
       value: MESH_Coin (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432574051479413816, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -771,10 +953,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1579359803685516885, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
         type: 3}
       propertyPath: m_Name
       value: MESH_Coin (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432574051479413816, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -850,6 +1052,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: MESH_Bones (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6ba8c9429818d6c4899aca861a73ed7f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 6ba8c9429818d6c4899aca861a73ed7f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8042801417951580683, guid: 6ba8c9429818d6c4899aca861a73ed7f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -919,10 +1136,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -103.351
       objectReference: {fileID: 0}
+    - target: {fileID: -4608359639003333539, guid: 6c19ccff2579e4b4bb8a4be20f05678d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6c19ccff2579e4b4bb8a4be20f05678d,
         type: 3}
       propertyPath: m_Name
       value: MESH_PoisonPotion
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6c19ccff2579e4b4bb8a4be20f05678d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077041215533412209, guid: 6c19ccff2579e4b4bb8a4be20f05678d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 6c19ccff2579e4b4bb8a4be20f05678d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -993,10 +1230,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 17.642
       objectReference: {fileID: 0}
+    - target: {fileID: -1579359803685516885, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
         type: 3}
       propertyPath: m_Name
       value: MESH_Coin (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432574051479413816, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1067,10 +1324,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8459100646097369270, guid: a0ee2b12a73a5634597c5f505d122122,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a0ee2b12a73a5634597c5f505d122122,
         type: 3}
       propertyPath: m_Name
       value: MESH_ClosedArch
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a0ee2b12a73a5634597c5f505d122122,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3624054518424945546, guid: a0ee2b12a73a5634597c5f505d122122,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1141,10 +1413,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1579359803685516885, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
         type: 3}
       propertyPath: m_Name
       value: MESH_Coin (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432574051479413816, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 823fdf7a104c16947919973a0134874b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1215,10 +1507,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 14.036
       objectReference: {fileID: 0}
+    - target: {fileID: -5183069503032779149, guid: 62c40876fe4cc4046a4c27025fa6a466,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 62c40876fe4cc4046a4c27025fa6a466,
         type: 3}
       propertyPath: m_Name
       value: MESH_Purse
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62c40876fe4cc4046a4c27025fa6a466,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432574051479413816, guid: 62c40876fe4cc4046a4c27025fa6a466,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4483257031528486705, guid: 62c40876fe4cc4046a4c27025fa6a466,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

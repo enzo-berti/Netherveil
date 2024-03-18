@@ -4,18 +4,14 @@ public class PressurePlateTrap : MonoBehaviour
 {
     public GameObject[] trapToActivate;
     public float cooldownTime = 2f;
-    private float lastActivationTime;
-    private bool firstActivation = true;
+    private float currentCooldownTime = 0;
+    private bool canActive = true;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (firstActivation || Time.time - lastActivationTime >= cooldownTime && other.CompareTag("Player"))
+        if (canActive && other.CompareTag("Player"))
         {
             ActivateTraps();
-            if (firstActivation)
-            {
-                firstActivation = false;
-            }
         }
     }
 
@@ -29,17 +25,18 @@ public class PressurePlateTrap : MonoBehaviour
                 activableTrap.Active();
             }
         }
-        lastActivationTime = Time.time;
+        canActive = false;
     }
 
     private void Update()
     {
-        if (!firstActivation && Time.time - lastActivationTime < cooldownTime)
+        if (!canActive)
         {
-            cooldownTime -= Time.deltaTime;
-            if (cooldownTime < 0f)
+            currentCooldownTime += Time.deltaTime;
+            if (currentCooldownTime >= cooldownTime)
             {
-                cooldownTime = 0f;
+                currentCooldownTime = 0;
+                canActive = true;
             }
         }
     }
