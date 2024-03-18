@@ -46,6 +46,8 @@ public class PlayerInput : MonoBehaviour
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
         playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         EaseFuncsShitStorm();
+        InputSetup();
+        //MapUtilities.ExitEvents += (ref MapData FuckEnzo) => RetrieveSpear();
     }
 
     private void EaseFuncsShitStorm()
@@ -79,7 +81,10 @@ public class PlayerInput : MonoBehaviour
         easeFuncs.Add(EasingFunctions.EaseOutQuart);
         easeFuncs.Add(EasingFunctions.EaseOutQuint);
         easeFuncs.Add(EasingFunctions.EaseOutSin);
+    }
 
+    private void InputSetup()
+    {
         playerInputMap.currentActionMap["Movement"].performed += controller.ReadDirection;
         playerInputMap.currentActionMap["Movement"].canceled += controller.ReadDirection;
         playerInputMap.currentActionMap["BasicAttack"].performed += Attack;
@@ -91,7 +96,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.currentActionMap["ToggleMap"].performed += hudHandler.ToggleMap;
         playerInputMap.currentActionMap["Pause"].started += ctx => hudHandler.TogglePause();
 
-        InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
+        InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
 
         gamepadMap["Movement"].performed += controller.ReadDirection;
         gamepadMap["Movement"].canceled += controller.ReadDirection;
@@ -103,11 +108,6 @@ public class PlayerInput : MonoBehaviour
         gamepadMap["ChargedAttack"].canceled += ChargedAttackCanceled;
         gamepadMap["ToggleMap"].started += hudHandler.ToggleMap;
         gamepadMap["Pause"].started += ctx => hudHandler.TogglePause();
-    }
-
-    private void OnEnable()
-    {
-
     }
 
     private void OnDisable()
@@ -368,6 +368,25 @@ public class PlayerInput : MonoBehaviour
                 spear.Return();
             }
 
+        }
+    }
+
+    private void RetrieveSpear()
+    {
+        Spear spear = weapon.GetComponent<Spear>();
+        if (controller.hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown && !spear.IsThrowing)
+        {
+            //rotate the player to mouse's direction if playing KB/mouse
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                controller.MouseOrientation();
+            }
+            else
+            {
+                controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+            }
+
+            spear.Return();
         }
     }
 
