@@ -107,24 +107,6 @@ public class MapGenerator : MonoBehaviour
 
     [SerializeField] private List<GameObject> obstructionsDoor;
 
-#if UNITY_EDITOR
-    GenerationParam debugGen;
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        if (debugGen.availableDoors != null)
-        {
-            foreach (var listDoors in debugGen.availableDoors)
-            {
-                foreach (var door in listDoors.Value)
-                {
-                    Gizmos.DrawSphere(door.Position, 0.25f);
-                }
-            }
-        }
-    }
-#endif
-
     private void Awake()
     {
         if (Application.isEditor)
@@ -170,7 +152,7 @@ public class MapGenerator : MonoBehaviour
     void GenerateMap(GenerationParam genParam)
     {
         int nbRoom = genParam.TotalRoom;
-        InstantiateLobby(out GameObject obj, ref genParam);
+        InstantiateLobby(ref genParam);
 
         for (int i = 0; i < nbRoom - 1; i++)
         {
@@ -178,12 +160,8 @@ public class MapGenerator : MonoBehaviour
             GenerateRoom(ref genParam);
         }
 
-#if UNITY_EDITOR
-        debugGen = genParam;
-#endif
-
         // TODO : spawn things to hides the holes
-        foreach (var listDoors in debugGen.availableDoors)
+        foreach (var listDoors in genParam.availableDoors)
         {
             foreach (var door in listDoors.Value)
             {
@@ -199,12 +177,6 @@ public class MapGenerator : MonoBehaviour
         bool hasGenerated = false;
         while (!hasGenerated)
         {
-            if (genParam.NumRoomAvaibles == 0)
-            {
-                Debug.Break();
-                Debug.LogWarning("Can't generate room anymore : no candidate");
-                break;
-            }
             // instantiate room with first availableDoors transform then remove it
             int prefabIndex = GameAssets.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
             GameObject roomGO = Instantiate(roomNormal[prefabIndex]); // TODO : add random selection
@@ -251,9 +223,9 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void InstantiateLobby(out GameObject roomGO, ref GenerationParam genParam)
+    private void InstantiateLobby(ref GenerationParam genParam)
     {
-        roomGO = Instantiate(roomLobby[GameAssets.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
+        GameObject roomGO = Instantiate(roomLobby[GameAssets.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
 
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(genParam);
