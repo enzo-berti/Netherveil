@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Keybinding : MonoBehaviour
 {
-    [SerializeField] GameObject KBPanel;
-    [SerializeField] GameObject GamepadPanel;
+    [SerializeField] List<GameObject> KBBindings;
+    [SerializeField] List<GameObject> GamepadBindings;
     [SerializeField] UnityEngine.InputSystem.PlayerInput playerInput;
 
     void Start()
@@ -26,15 +27,12 @@ public class Keybinding : MonoBehaviour
     {
         if (this != null)
         {
-            if (DeviceManager.Instance.IsPlayingKB())
+            bool isPlayingKB = DeviceManager.Instance.IsPlayingKB();
+
+            for (int i = 0; i < KBBindings.Count; ++i)
             {
-                GamepadPanel.SetActive(false);
-                KBPanel.SetActive(true);
-            }
-            else
-            {
-                GamepadPanel.SetActive(true);
-                KBPanel.SetActive(false);
+                KBBindings[i].SetActive(isPlayingKB);
+                GamepadBindings[i].SetActive(!isPlayingKB);
             }
         }
     }
