@@ -16,7 +16,7 @@ public abstract class Mobs : Entity
 
     [SerializeField] EventReference deathSound;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
@@ -31,7 +31,7 @@ public abstract class Mobs : Entity
         }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());

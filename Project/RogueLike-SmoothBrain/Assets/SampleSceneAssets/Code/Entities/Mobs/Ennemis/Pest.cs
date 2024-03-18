@@ -22,10 +22,18 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     [SerializeField] private float brainDelay = 2f;
     private Coroutine knockbackRoutine;
 
-    Pest()
+    // Animator
+    private Animator animator;
+    private int movingTriggerHash;
+
+    protected override void Start()
     {
-        statusToApply.Add(new Fire(10f));
+        base.Start();
+        animator = GetComponentInChildren<Animator>();
+
+        movingTriggerHash = Animator.StringToHash("MovingTrigger");
     }
+
     protected override IEnumerator EntityDetection()
     {
         while (true)
@@ -83,9 +91,12 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
             else
             {
                 // Random movement
-                Vector2 rdmPos = Random.insideUnitCircle * (int)stats.GetValue(Stat.VISION_RANGE);
+                Vector2 rdmPos = Random.insideUnitCircle.normalized * (int)stats.GetValue(Stat.VISION_RANGE);
                 MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
             }
+
+            animator.ResetTrigger(movingTriggerHash);
+            animator.SetTrigger(movingTriggerHash);
         }
     }
 
