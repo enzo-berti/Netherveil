@@ -6,7 +6,7 @@ public class Keybinding : MonoBehaviour
 {
     [SerializeField] List<GameObject> KBBindings;
     [SerializeField] List<GameObject> GamepadBindings;
-    [SerializeField] UnityEngine.InputSystem.PlayerInput playerInput;
+    [SerializeField] InputActionAsset playerInput;
 
     void Start()
     {
@@ -20,7 +20,14 @@ public class Keybinding : MonoBehaviour
 
     public void ResetBindings()
     {
-        playerInput.currentActionMap.RemoveAllBindingOverrides();
+        if(DeviceManager.Instance.IsPlayingKB())
+        {
+            playerInput.FindActionMap("Keyboard", throwIfNotFound: true).RemoveAllBindingOverrides();
+        }
+        else
+        {
+            playerInput.FindActionMap("Gamepad", throwIfNotFound: true).RemoveAllBindingOverrides();
+        }
     }
 
     private void SwitchBindings()
@@ -29,10 +36,13 @@ public class Keybinding : MonoBehaviour
         {
             bool isPlayingKB = DeviceManager.Instance.IsPlayingKB();
 
-            for (int i = 0; i < KBBindings.Count; ++i)
+            foreach (var binding in KBBindings)
             {
-                KBBindings[i].SetActive(isPlayingKB);
-                GamepadBindings[i].SetActive(!isPlayingKB);
+                binding.SetActive(isPlayingKB);
+            }
+            foreach (var binding in GamepadBindings)
+            {
+                binding.SetActive(!isPlayingKB);
             }
         }
     }
