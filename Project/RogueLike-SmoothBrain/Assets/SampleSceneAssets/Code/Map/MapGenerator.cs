@@ -215,6 +215,7 @@ public class MapGenerator : MonoBehaviour
             {
                 GameObject go = Instantiate(obstructionsDoor[Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
                 go.transform.Rotate(0, (door.Rotation + 180f) % 360, 0);
+                go.transform.parent = gameObject.transform;
             }
         }
     }
@@ -245,7 +246,7 @@ public class MapGenerator : MonoBehaviour
             }
 
             // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (forward = pour avoir un offset)
-            roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position + (-exitDoor.Forward * 1.01f);
+            roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position + (-exitDoor.Forward * 1.001f);
             Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
 
             // bon sinon j'évite la collide de la salle et la salle exit (forcément que les deux collides putaig)
