@@ -48,6 +48,11 @@ public class DeviceManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        ForceStopVibrations();
+    }
+
     void Start()
     {
         InputSystem.onEvent += OnInputSystemEvent;
@@ -55,7 +60,14 @@ public class DeviceManager : MonoBehaviour
         if(Gamepad.all.Count > 0)
         {
             currentDevice = Gamepad.all[0];
-            lastUsedDevice = currentDevice;
+            if(Keyboard.current != null)
+            {
+                lastUsedDevice = Keyboard.current;
+            }
+            else
+            {
+                lastUsedDevice = currentDevice;
+            }
         }
     }
 
