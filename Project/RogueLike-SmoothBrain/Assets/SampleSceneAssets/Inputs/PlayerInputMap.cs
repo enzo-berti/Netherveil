@@ -15,12 +15,14 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
+namespace Netherveil.Inputs
 {
-    public InputActionAsset asset { get; }
-    public @PlayerInputMap()
+    public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
     {
-        asset = InputActionAsset.FromJson(@"{
+        public InputActionAsset asset { get; }
+        public @PlayerInputMap()
+        {
+            asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerInputMap"",
     ""maps"": [
         {
@@ -392,193 +394,194 @@ public partial class @PlayerInputMap: IInputActionCollection2, IDisposable
         }
     ]
 }");
+            // Game
+            m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
+            m_Game_Movement = m_Game.FindAction("Movement", throwIfNotFound: true);
+            m_Game_BasicAttack = m_Game.FindAction("BasicAttack", throwIfNotFound: true);
+            m_Game_ChargedAttack = m_Game.FindAction("ChargedAttack", throwIfNotFound: true);
+            m_Game_Spear = m_Game.FindAction("Spear", throwIfNotFound: true);
+            m_Game_Dash = m_Game.FindAction("Dash", throwIfNotFound: true);
+            m_Game_Interact = m_Game.FindAction("Interact", throwIfNotFound: true);
+            m_Game_ToggleMap = m_Game.FindAction("ToggleMap", throwIfNotFound: true);
+            m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
+        }
+
+        public void Dispose()
+        {
+            UnityEngine.Object.Destroy(asset);
+        }
+
+        public InputBinding? bindingMask
+        {
+            get => asset.bindingMask;
+            set => asset.bindingMask = value;
+        }
+
+        public ReadOnlyArray<InputDevice>? devices
+        {
+            get => asset.devices;
+            set => asset.devices = value;
+        }
+
+        public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+
+        public bool Contains(InputAction action)
+        {
+            return asset.Contains(action);
+        }
+
+        public IEnumerator<InputAction> GetEnumerator()
+        {
+            return asset.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Enable()
+        {
+            asset.Enable();
+        }
+
+        public void Disable()
+        {
+            asset.Disable();
+        }
+
+        public IEnumerable<InputBinding> bindings => asset.bindings;
+
+        public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
+        {
+            return asset.FindAction(actionNameOrId, throwIfNotFound);
+        }
+
+        public int FindBinding(InputBinding bindingMask, out InputAction action)
+        {
+            return asset.FindBinding(bindingMask, out action);
+        }
+
         // Game
-        m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
-        m_Game_Movement = m_Game.FindAction("Movement", throwIfNotFound: true);
-        m_Game_BasicAttack = m_Game.FindAction("BasicAttack", throwIfNotFound: true);
-        m_Game_ChargedAttack = m_Game.FindAction("ChargedAttack", throwIfNotFound: true);
-        m_Game_Spear = m_Game.FindAction("Spear", throwIfNotFound: true);
-        m_Game_Dash = m_Game.FindAction("Dash", throwIfNotFound: true);
-        m_Game_Interact = m_Game.FindAction("Interact", throwIfNotFound: true);
-        m_Game_ToggleMap = m_Game.FindAction("ToggleMap", throwIfNotFound: true);
-        m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
-    }
-
-    public void Dispose()
-    {
-        UnityEngine.Object.Destroy(asset);
-    }
-
-    public InputBinding? bindingMask
-    {
-        get => asset.bindingMask;
-        set => asset.bindingMask = value;
-    }
-
-    public ReadOnlyArray<InputDevice>? devices
-    {
-        get => asset.devices;
-        set => asset.devices = value;
-    }
-
-    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
-
-    public bool Contains(InputAction action)
-    {
-        return asset.Contains(action);
-    }
-
-    public IEnumerator<InputAction> GetEnumerator()
-    {
-        return asset.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
-    public void Enable()
-    {
-        asset.Enable();
-    }
-
-    public void Disable()
-    {
-        asset.Disable();
-    }
-
-    public IEnumerable<InputBinding> bindings => asset.bindings;
-
-    public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
-    {
-        return asset.FindAction(actionNameOrId, throwIfNotFound);
-    }
-
-    public int FindBinding(InputBinding bindingMask, out InputAction action)
-    {
-        return asset.FindBinding(bindingMask, out action);
-    }
-
-    // Game
-    private readonly InputActionMap m_Game;
-    private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
-    private readonly InputAction m_Game_Movement;
-    private readonly InputAction m_Game_BasicAttack;
-    private readonly InputAction m_Game_ChargedAttack;
-    private readonly InputAction m_Game_Spear;
-    private readonly InputAction m_Game_Dash;
-    private readonly InputAction m_Game_Interact;
-    private readonly InputAction m_Game_ToggleMap;
-    private readonly InputAction m_Game_Pause;
-    public struct GameActions
-    {
-        private @PlayerInputMap m_Wrapper;
-        public GameActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movement => m_Wrapper.m_Game_Movement;
-        public InputAction @BasicAttack => m_Wrapper.m_Game_BasicAttack;
-        public InputAction @ChargedAttack => m_Wrapper.m_Game_ChargedAttack;
-        public InputAction @Spear => m_Wrapper.m_Game_Spear;
-        public InputAction @Dash => m_Wrapper.m_Game_Dash;
-        public InputAction @Interact => m_Wrapper.m_Game_Interact;
-        public InputAction @ToggleMap => m_Wrapper.m_Game_ToggleMap;
-        public InputAction @Pause => m_Wrapper.m_Game_Pause;
-        public InputActionMap Get() { return m_Wrapper.m_Game; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
-        public void AddCallbacks(IGameActions instance)
+        private readonly InputActionMap m_Game;
+        private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
+        private readonly InputAction m_Game_Movement;
+        private readonly InputAction m_Game_BasicAttack;
+        private readonly InputAction m_Game_ChargedAttack;
+        private readonly InputAction m_Game_Spear;
+        private readonly InputAction m_Game_Dash;
+        private readonly InputAction m_Game_Interact;
+        private readonly InputAction m_Game_ToggleMap;
+        private readonly InputAction m_Game_Pause;
+        public struct GameActions
         {
-            if (instance == null || m_Wrapper.m_GameActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_GameActionsCallbackInterfaces.Add(instance);
-            @Movement.started += instance.OnMovement;
-            @Movement.performed += instance.OnMovement;
-            @Movement.canceled += instance.OnMovement;
-            @BasicAttack.started += instance.OnBasicAttack;
-            @BasicAttack.performed += instance.OnBasicAttack;
-            @BasicAttack.canceled += instance.OnBasicAttack;
-            @ChargedAttack.started += instance.OnChargedAttack;
-            @ChargedAttack.performed += instance.OnChargedAttack;
-            @ChargedAttack.canceled += instance.OnChargedAttack;
-            @Spear.started += instance.OnSpear;
-            @Spear.performed += instance.OnSpear;
-            @Spear.canceled += instance.OnSpear;
-            @Dash.started += instance.OnDash;
-            @Dash.performed += instance.OnDash;
-            @Dash.canceled += instance.OnDash;
-            @Interact.started += instance.OnInteract;
-            @Interact.performed += instance.OnInteract;
-            @Interact.canceled += instance.OnInteract;
-            @ToggleMap.started += instance.OnToggleMap;
-            @ToggleMap.performed += instance.OnToggleMap;
-            @ToggleMap.canceled += instance.OnToggleMap;
-            @Pause.started += instance.OnPause;
-            @Pause.performed += instance.OnPause;
-            @Pause.canceled += instance.OnPause;
-        }
+            private @PlayerInputMap m_Wrapper;
+            public GameActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Movement => m_Wrapper.m_Game_Movement;
+            public InputAction @BasicAttack => m_Wrapper.m_Game_BasicAttack;
+            public InputAction @ChargedAttack => m_Wrapper.m_Game_ChargedAttack;
+            public InputAction @Spear => m_Wrapper.m_Game_Spear;
+            public InputAction @Dash => m_Wrapper.m_Game_Dash;
+            public InputAction @Interact => m_Wrapper.m_Game_Interact;
+            public InputAction @ToggleMap => m_Wrapper.m_Game_ToggleMap;
+            public InputAction @Pause => m_Wrapper.m_Game_Pause;
+            public InputActionMap Get() { return m_Wrapper.m_Game; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
+            public void AddCallbacks(IGameActions instance)
+            {
+                if (instance == null || m_Wrapper.m_GameActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_GameActionsCallbackInterfaces.Add(instance);
+                @Movement.started += instance.OnMovement;
+                @Movement.performed += instance.OnMovement;
+                @Movement.canceled += instance.OnMovement;
+                @BasicAttack.started += instance.OnBasicAttack;
+                @BasicAttack.performed += instance.OnBasicAttack;
+                @BasicAttack.canceled += instance.OnBasicAttack;
+                @ChargedAttack.started += instance.OnChargedAttack;
+                @ChargedAttack.performed += instance.OnChargedAttack;
+                @ChargedAttack.canceled += instance.OnChargedAttack;
+                @Spear.started += instance.OnSpear;
+                @Spear.performed += instance.OnSpear;
+                @Spear.canceled += instance.OnSpear;
+                @Dash.started += instance.OnDash;
+                @Dash.performed += instance.OnDash;
+                @Dash.canceled += instance.OnDash;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
+                @ToggleMap.started += instance.OnToggleMap;
+                @ToggleMap.performed += instance.OnToggleMap;
+                @ToggleMap.canceled += instance.OnToggleMap;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
+            }
 
-        private void UnregisterCallbacks(IGameActions instance)
-        {
-            @Movement.started -= instance.OnMovement;
-            @Movement.performed -= instance.OnMovement;
-            @Movement.canceled -= instance.OnMovement;
-            @BasicAttack.started -= instance.OnBasicAttack;
-            @BasicAttack.performed -= instance.OnBasicAttack;
-            @BasicAttack.canceled -= instance.OnBasicAttack;
-            @ChargedAttack.started -= instance.OnChargedAttack;
-            @ChargedAttack.performed -= instance.OnChargedAttack;
-            @ChargedAttack.canceled -= instance.OnChargedAttack;
-            @Spear.started -= instance.OnSpear;
-            @Spear.performed -= instance.OnSpear;
-            @Spear.canceled -= instance.OnSpear;
-            @Dash.started -= instance.OnDash;
-            @Dash.performed -= instance.OnDash;
-            @Dash.canceled -= instance.OnDash;
-            @Interact.started -= instance.OnInteract;
-            @Interact.performed -= instance.OnInteract;
-            @Interact.canceled -= instance.OnInteract;
-            @ToggleMap.started -= instance.OnToggleMap;
-            @ToggleMap.performed -= instance.OnToggleMap;
-            @ToggleMap.canceled -= instance.OnToggleMap;
-            @Pause.started -= instance.OnPause;
-            @Pause.performed -= instance.OnPause;
-            @Pause.canceled -= instance.OnPause;
-        }
+            private void UnregisterCallbacks(IGameActions instance)
+            {
+                @Movement.started -= instance.OnMovement;
+                @Movement.performed -= instance.OnMovement;
+                @Movement.canceled -= instance.OnMovement;
+                @BasicAttack.started -= instance.OnBasicAttack;
+                @BasicAttack.performed -= instance.OnBasicAttack;
+                @BasicAttack.canceled -= instance.OnBasicAttack;
+                @ChargedAttack.started -= instance.OnChargedAttack;
+                @ChargedAttack.performed -= instance.OnChargedAttack;
+                @ChargedAttack.canceled -= instance.OnChargedAttack;
+                @Spear.started -= instance.OnSpear;
+                @Spear.performed -= instance.OnSpear;
+                @Spear.canceled -= instance.OnSpear;
+                @Dash.started -= instance.OnDash;
+                @Dash.performed -= instance.OnDash;
+                @Dash.canceled -= instance.OnDash;
+                @Interact.started -= instance.OnInteract;
+                @Interact.performed -= instance.OnInteract;
+                @Interact.canceled -= instance.OnInteract;
+                @ToggleMap.started -= instance.OnToggleMap;
+                @ToggleMap.performed -= instance.OnToggleMap;
+                @ToggleMap.canceled -= instance.OnToggleMap;
+                @Pause.started -= instance.OnPause;
+                @Pause.performed -= instance.OnPause;
+                @Pause.canceled -= instance.OnPause;
+            }
 
-        public void RemoveCallbacks(IGameActions instance)
-        {
-            if (m_Wrapper.m_GameActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
+            public void RemoveCallbacks(IGameActions instance)
+            {
+                if (m_Wrapper.m_GameActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
 
-        public void SetCallbacks(IGameActions instance)
-        {
-            foreach (var item in m_Wrapper.m_GameActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_GameActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
+            public void SetCallbacks(IGameActions instance)
+            {
+                foreach (var item in m_Wrapper.m_GameActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_GameActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
         }
-    }
-    public GameActions @Game => new GameActions(this);
-    private int m_NewcontrolschemeSchemeIndex = -1;
-    public InputControlScheme NewcontrolschemeScheme
-    {
-        get
+        public GameActions @Game => new GameActions(this);
+        private int m_NewcontrolschemeSchemeIndex = -1;
+        public InputControlScheme NewcontrolschemeScheme
         {
-            if (m_NewcontrolschemeSchemeIndex == -1) m_NewcontrolschemeSchemeIndex = asset.FindControlSchemeIndex("New control scheme");
-            return asset.controlSchemes[m_NewcontrolschemeSchemeIndex];
+            get
+            {
+                if (m_NewcontrolschemeSchemeIndex == -1) m_NewcontrolschemeSchemeIndex = asset.FindControlSchemeIndex("New control scheme");
+                return asset.controlSchemes[m_NewcontrolschemeSchemeIndex];
+            }
         }
-    }
-    public interface IGameActions
-    {
-        void OnMovement(InputAction.CallbackContext context);
-        void OnBasicAttack(InputAction.CallbackContext context);
-        void OnChargedAttack(InputAction.CallbackContext context);
-        void OnSpear(InputAction.CallbackContext context);
-        void OnDash(InputAction.CallbackContext context);
-        void OnInteract(InputAction.CallbackContext context);
-        void OnToggleMap(InputAction.CallbackContext context);
-        void OnPause(InputAction.CallbackContext context);
+        public interface IGameActions
+        {
+            void OnMovement(InputAction.CallbackContext context);
+            void OnBasicAttack(InputAction.CallbackContext context);
+            void OnChargedAttack(InputAction.CallbackContext context);
+            void OnSpear(InputAction.CallbackContext context);
+            void OnDash(InputAction.CallbackContext context);
+            void OnInteract(InputAction.CallbackContext context);
+            void OnToggleMap(InputAction.CallbackContext context);
+            void OnPause(InputAction.CallbackContext context);
+        }
     }
 }

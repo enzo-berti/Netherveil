@@ -98,6 +98,7 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDisable()
     {
+        playerInputMap.actions.Disable();
         playerInputMap.actions["Movement"].performed -= controller.ReadDirection;
         playerInputMap.actions["Movement"].canceled -= controller.ReadDirection;
         playerInputMap.actions["BasicAttack"].performed -= Attack;
@@ -108,8 +109,6 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.actions["ChargedAttack"].canceled -= ChargedAttackCanceled;
         playerInputMap.actions["ToggleMap"].started -= hudHandler.ToggleMap;
         playerInputMap.actions["Pause"].started -= ctx => hudHandler.TogglePause();
-
-        playerInputMap.actions.Disable();
     }
 
     void Update()
