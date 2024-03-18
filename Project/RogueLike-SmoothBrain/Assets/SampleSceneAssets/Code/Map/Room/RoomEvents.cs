@@ -6,8 +6,6 @@ public class RoomEvents : MonoBehaviour
     public delegate void Exit(ref MapData mapData);
 
     MapData mapData = new MapData();
-    public event Enter EnterEvents;
-    public event Exit ExitEvents;
 
     private void Start()
     {
@@ -18,7 +16,7 @@ public class RoomEvents : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            EnterEvents?.Invoke(ref mapData);
+            MapUtilities.EnterEvents?.Invoke(ref mapData);
         }
     }
 
@@ -26,17 +24,7 @@ public class RoomEvents : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            ExitEvents?.Invoke(ref mapData);
+            MapUtilities.ExitEvents?.Invoke(ref mapData);
         }
-    }
-
-    public void AddEnterEvent(Enter enterEvent)
-    {
-        EnterEvents += enterEvent;
-    }
-
-    public void AddExitEvent(Exit exitEvent)
-    {
-        ExitEvents += exitEvent;
     }
 }

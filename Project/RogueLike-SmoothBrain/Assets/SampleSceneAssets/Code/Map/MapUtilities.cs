@@ -1,20 +1,8 @@
 using UnityEngine;
+using static RoomEvents;
 
-public class MapUtilities : MonoBehaviour
+static public class MapUtilities
 {
-    public void AddRoomsEnterEvent(RoomEvents.Enter enter)
-    {
-        foreach (RoomEvents room in transform.GetComponentsInChildren<RoomEvents>())
-        {
-            room.AddEnterEvent(enter);
-        }
-    }
-
-    public void AddRoomsExitEvent(RoomEvents.Exit exit)
-    {
-        foreach (RoomEvents room in transform.GetComponentsInChildren<RoomEvents>())
-        {
-            room.AddExitEvent(exit);
-        }
-    }
+    static public Enter EnterEvents;
+    static public Exit ExitEvents;
 }
