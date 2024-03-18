@@ -9,11 +9,6 @@ public class RoomEvents : MonoBehaviour
     public Enter enterEvents;
     public Exit exitEvents;
 
-    private void Awake()
-    {
-        AddEnterEvent(TestFunction);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -28,11 +23,6 @@ public class RoomEvents : MonoBehaviour
         {
             exitEvents?.Invoke(ref mapData);
         }
-    }
-
-    public void TestFunction(ref MapData mapData)
-    {
-        Debug.Log("WOOOW");
     }
 
     public void AddEnterEvent(Enter enterEvent)
