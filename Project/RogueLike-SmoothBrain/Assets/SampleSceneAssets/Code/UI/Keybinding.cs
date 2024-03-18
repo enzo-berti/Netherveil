@@ -1,9 +1,11 @@
 using UnityEngine;
-using UnityEngine.InputSystem.Samples.RebindUI;
+using UnityEngine.InputSystem;
 
 public class Keybinding : MonoBehaviour
 {
-    [SerializeField] RebindActionUI dashRebind;
+    [SerializeField] GameObject KBPanel;
+    [SerializeField] GameObject GamepadPanel;
+    [SerializeField] UnityEngine.InputSystem.PlayerInput playerInput;
 
     void Start()
     {
@@ -13,14 +15,27 @@ public class Keybinding : MonoBehaviour
 
     private void OnDestroy()
     {
-        DeviceManager.OnChangedToKB -= SwitchBindings;
-        DeviceManager.OnChangedToGamepad -= SwitchBindings;
+    }
+
+    public void ResetBindings()
+    {
+        playerInput.currentActionMap.RemoveAllBindingOverrides();
     }
 
     private void SwitchBindings()
     {
-        int value = DeviceManager.Instance.IsPlayingKB() ? 0 : 1;
-
-        //dashRebind.bindingId = dashRebind.actionReference.action.bindings[value].id.ToString();
+        if (this != null)
+        {
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                GamepadPanel.SetActive(false);
+                KBPanel.SetActive(true);
+            }
+            else
+            {
+                GamepadPanel.SetActive(true);
+                KBPanel.SetActive(false);
+            }
+        }
     }
 }
