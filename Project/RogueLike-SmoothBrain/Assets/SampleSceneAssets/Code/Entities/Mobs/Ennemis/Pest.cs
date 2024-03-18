@@ -86,7 +86,17 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
             else if (pests.Any())
             {
                 // Other pest detect
-                MoveTo(pests.First().transform.position);
+                Vector3 averagePos = Vector3.zero;
+                foreach (Pest pest in pests)
+                {
+                    averagePos += pest.transform.position;
+                }
+                averagePos /= pests.Count();
+
+                Vector2 rnadomCirc = Random.insideUnitCircle * 2.5f;
+                Vector3 randomPos = new Vector3(rnadomCirc.x, 0, rnadomCirc.y);
+
+                MoveTo(averagePos + randomPos);
             }
             else
             {
