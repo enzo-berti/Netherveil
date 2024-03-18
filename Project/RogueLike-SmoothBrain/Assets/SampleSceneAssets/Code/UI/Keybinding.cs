@@ -21,15 +21,18 @@ public class Keybinding : MonoBehaviour
 
     private void SwitchBindings()
     {
-        if(DeviceManager.Instance.IsPlayingKB())
+        if (this != null)
         {
-            GamepadPanel.SetActive(false);
-            KBPanel.SetActive(true);
-        }
-        else
-        {
-            GamepadPanel.SetActive(true);
-            KBPanel.SetActive(false);
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                GamepadPanel.SetActive(false);
+                KBPanel.SetActive(true);
+            }
+            else
+            {
+                GamepadPanel.SetActive(true);
+                KBPanel.SetActive(false);
+            }
         }
     }
 }
