@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ZoomMap : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class ZoomMap : MonoBehaviour
 
     private void Update()
     {
-        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize + Input.mouseScrollDelta.y * 5, 25, 110);
+        Gamepad gamepad = DeviceManager.Instance.CurrentDevice as Gamepad;
+
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize + 
+            (DeviceManager.Instance.IsPlayingKB() ? Input.mouseScrollDelta.y : gamepad.leftTrigger.EvaluateMagnitude()) * 5, 25, 110);
     }
 }

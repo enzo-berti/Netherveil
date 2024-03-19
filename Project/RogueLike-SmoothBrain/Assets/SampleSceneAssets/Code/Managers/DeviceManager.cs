@@ -13,7 +13,7 @@ public class DeviceManager : MonoBehaviour
     //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi
     [SerializeField] TMP_Text debugText;
     public UnityEngine.InputSystem.PlayerInput playerInput;
-    InputDevice currentDevice = null;
+    public InputDevice CurrentDevice { get; private set; } = null;
     InputDevice lastUsedDevice = null;
     static private DeviceManager instance;
     public static event Action OnChangedToGamepad;
@@ -59,14 +59,14 @@ public class DeviceManager : MonoBehaviour
         InputSystem.onDeviceChange += OnInputSystemDeviceChange;
         if(Gamepad.all.Count > 0)
         {
-            currentDevice = Gamepad.all[0];
+            CurrentDevice = Gamepad.all[0];
             if(Keyboard.current != null)
             {
                 lastUsedDevice = Keyboard.current;
             }
             else
             {
-                lastUsedDevice = currentDevice;
+                lastUsedDevice = CurrentDevice;
             }
         }
     }
@@ -89,8 +89,8 @@ public class DeviceManager : MonoBehaviour
                 return;
         }
 
-        lastUsedDevice = currentDevice;
-        currentDevice = device;
+        lastUsedDevice = CurrentDevice;
+        CurrentDevice = device;
 
         CallChangeEvents();
     }
@@ -99,7 +99,7 @@ public class DeviceManager : MonoBehaviour
     {
         if (change == InputDeviceChange.Removed || change == InputDeviceChange.Disconnected || change == InputDeviceChange.Disabled)
         {
-            currentDevice = lastUsedDevice;
+            CurrentDevice = lastUsedDevice;
         }
         else if (IsSameDevice(device))
         {
@@ -107,8 +107,8 @@ public class DeviceManager : MonoBehaviour
         }
         else
         {
-           lastUsedDevice = currentDevice;
-            currentDevice = device;
+           lastUsedDevice = CurrentDevice;
+            CurrentDevice = device;
         }
 
         CallChangeEvents();
@@ -116,12 +116,12 @@ public class DeviceManager : MonoBehaviour
 
     bool IsSameDevice(InputDevice device)
     {
-        return currentDevice == device || (device is Keyboard && currentDevice is Mouse) || (device is Mouse && currentDevice is Keyboard);
+        return CurrentDevice == device || (device is Keyboard && CurrentDevice is Mouse) || (device is Mouse && CurrentDevice is Keyboard);
     }
 
     void CallChangeEvents()
     {
-        if (currentDevice is Gamepad)
+        if (CurrentDevice is Gamepad)
         {
             if(debugText != null)
             {
@@ -158,12 +158,12 @@ public class DeviceManager : MonoBehaviour
 
     public bool IsPlayingKB()
     {
-        return currentDevice is not Gamepad;
+        return CurrentDevice is not Gamepad;
     }
 
     public bool IsSupportingVibrations()
     {
-        return currentDevice is Gamepad && (currentDevice is XInputController || currentDevice is DualShockGamepad);
+        return CurrentDevice is Gamepad && (CurrentDevice is XInputController || CurrentDevice is DualShockGamepad);
     }
 
     public void ApplyVibrations(float lowFrequency, float highFrequency, float duration)
@@ -173,8 +173,8 @@ public class DeviceManager : MonoBehaviour
             lowFrequency = Mathf.Clamp(lowFrequency, 0f, 1f);
             highFrequency = Mathf.Clamp(highFrequency, 0f, 1f);
 
-            (currentDevice as Gamepad).SetMotorSpeeds(lowFrequency, highFrequency);
-            StartCoroutine(StopVibration(currentDevice as Gamepad, duration));
+            (CurrentDevice as Gamepad).SetMotorSpeeds(lowFrequency, highFrequency);
+            StartCoroutine(StopVibration(CurrentDevice as Gamepad, duration));
         }
     }
 
@@ -189,9 +189,9 @@ public class DeviceManager : MonoBehaviour
     public void ForceStopVibrations()
     {
         StopAllCoroutines();
-        if (currentDevice is Gamepad)
+        if (CurrentDevice is Gamepad)
         {
-            (currentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
+            (CurrentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
         }
     }
 }
