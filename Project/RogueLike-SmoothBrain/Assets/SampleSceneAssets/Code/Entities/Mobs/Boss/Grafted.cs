@@ -133,7 +133,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        FloatingTextGenerator.CreateDamageText(_value, transform.position);
+        if (hasAnimation)
+        {
+            FloatingTextGenerator.CreateDamageText(_value, transform.position);
+            //add SFX here
+        }
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
