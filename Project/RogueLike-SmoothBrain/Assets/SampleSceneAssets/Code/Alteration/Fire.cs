@@ -3,6 +3,7 @@ using UnityEngine;
 public class Fire : Status
 {
     private int damage = 10;
+    static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1);
 
     public Fire(float _duration) : base(_duration)
     {
@@ -30,6 +31,10 @@ public class Fire : Status
 
     protected override void Effect()
     {
-        target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack, false);
+        //if(stack > 0)
+        //{
+            FloatingTextGenerator.CreateEffectDamageText(damage * stack, target.transform.position, fireColor);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack, false);
+        //}
     }
 }

@@ -50,7 +50,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        FloatingTextGenerator.CreateDamageText(_value, transform.position);
+       
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
            if(hasAnimation && !playerInput.LaunchedChargedAttack)
@@ -58,10 +58,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 animator.ResetTrigger("Hit");
                 animator.SetTrigger("Hit");
                 playerController.ResetValues(); //possible source de bugs
+                animator.ResetTrigger("ChargedAttackRelease");
+                animator.ResetTrigger("ChargedAttackCharging");
+                animator.ResetTrigger("BasicAttack");
+                AudioManager.Instance.PlaySound(playerController.playerHit);
+                FloatingTextGenerator.CreateDamageText(_value, transform.position);
             }
 
             OnTakeDamage?.Invoke();
-            AudioManager.Instance.PlaySound(playerController.playerHit);
         }
 
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)

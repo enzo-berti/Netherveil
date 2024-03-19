@@ -330,7 +330,7 @@ public class PlayerInput : MonoBehaviour
     public void StartOfBasicAttack()
     {
         controller.hero.OnAttack?.Invoke();
-        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data);
+        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data, false);
         controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
         AudioManager.Instance.PlaySound(controller.playerAttacks[controller.ComboCount]);
     }

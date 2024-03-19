@@ -14,6 +14,11 @@ static public class FloatingTextGenerator
         CreateNumberText(dmgPt, pos, color, randScale);
     }
 
+    public static void CreateEffectDamageText(int dmgPt, Vector3 pos, Color customColor, int randScale = 1) 
+    {
+        CreateNumberText(dmgPt, pos, customColor, randScale);
+    }
+
     public static void CreateHealText(int healPt, Vector3 pos, int randScale = 1)
     {
         CreateNumberText(healPt, pos, healColor, randScale);
