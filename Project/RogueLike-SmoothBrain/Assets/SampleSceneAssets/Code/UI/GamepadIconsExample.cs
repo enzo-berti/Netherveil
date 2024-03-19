@@ -22,8 +22,11 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             var rebindUIComponents = transform.GetComponentsInChildren<RebindActionUI>();
             foreach (var component in rebindUIComponents)
             {
-                component.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
-                component.UpdateBindingDisplay();
+                if(component.gameObject.name.Contains("GP"))
+                {
+                    component.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
+                    component.UpdateBindingDisplay();
+                }
             }
         }
 
@@ -33,6 +36,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 return;
 
             var icon = default(Sprite);
+            Debug.Log(deviceLayoutName);
             if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "DualShockGamepad"))
                 icon = ps4.GetSprite(controlPath);
             else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Gamepad"))
