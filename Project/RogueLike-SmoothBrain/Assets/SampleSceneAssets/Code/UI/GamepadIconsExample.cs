@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine.UI;
 
 ////TODO: have updateBindingUIEvent receive a control path string, too (in addition to the device layout name)
@@ -15,6 +17,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
     {
         public GamepadIcons xbox;
         public GamepadIcons ps4;
+        [SerializeField] List<Sprite> kbIcons = new List<Sprite>();
 
         protected void OnEnable()
         {
@@ -22,11 +25,8 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             var rebindUIComponents = transform.GetComponentsInChildren<RebindActionUI>();
             foreach (var component in rebindUIComponents)
             {
-                if(component.gameObject.name.Contains("GP"))
-                {
-                    component.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
-                    component.UpdateBindingDisplay();
-                }
+                component.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
+                component.UpdateBindingDisplay();
             }
         }
 
@@ -36,28 +36,35 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 return;
 
             var icon = default(Sprite);
-            Debug.Log(controlPath);
+            //Debug.Log(deviceLayoutName + " " + controlPath);
             if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "DualShockGamepad"))
                 icon = ps4.GetSprite(controlPath);
             else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Gamepad"))
                 icon = xbox.GetSprite(controlPath);
+            else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
+                icon = kbIcons.Find(x => x.name.ToLower() == controlPath.ToLower());
 
+            
             var textComponent = component.bindingText;
 
             // Grab Image component.
             var imageGO = textComponent.transform.parent.Find("ActionBindingIcon");
-            var imageComponent = imageGO.GetComponent<Image>();
+            if (imageGO != null)
+            {
+                var imageComponent = imageGO.GetComponent<Image>();
 
-            if (icon != null)
-            {
-                textComponent.gameObject.SetActive(false);
-                imageComponent.sprite = icon;
-                imageComponent.gameObject.SetActive(true);
-            }
-            else
-            {
-                textComponent.gameObject.SetActive(true);
-                imageComponent.gameObject.SetActive(false);
+                if (icon != null)
+                {
+                    //textComponent.transform.parent.parent.parent.Find("Label").GetComponent<TMP_Text>().text += 
+                    textComponent.gameObject.SetActive(false);
+                    imageComponent.sprite = icon;
+                    imageComponent.gameObject.SetActive(true);
+                }
+                else
+                {
+                    textComponent.gameObject.SetActive(true);
+                    imageComponent.gameObject.SetActive(false);
+                }
             }
         }
 
