@@ -18,6 +18,7 @@ public class HealPotion : MonoBehaviour, IConsommable
     public void OnRetrieved()
     {
         player.Stats.IncreaseValue(Stat.HP, healValue, true);
+        FloatingTextGenerator.CreateHealText((int)healValue, player.transform.position);
         Destroy(this.gameObject);
     }
 }
