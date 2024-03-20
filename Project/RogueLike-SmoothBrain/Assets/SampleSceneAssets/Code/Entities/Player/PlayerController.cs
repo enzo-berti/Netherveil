@@ -47,10 +47,14 @@ public class PlayerController : MonoBehaviour
     public VisualEffect chargedAttackVFX;
 
     [Header("SFXs")]
-    public EventReference playerDash;
-    public EventReference playerHit;
-    public EventReference playerDead;
-    public EventReference[] playerAttacks;
+    public EventReference dashSFX;
+    public EventReference hitSFX;
+    public EventReference deadSFX;
+    public EventReference throwSpearSFX;
+    public EventReference retrieveSpearSFX;
+    public EventReference chargedAttackMaxSFX;
+    public EventReference chargedAttackReleaseSFX;
+    public EventReference[] attacksSFX;
 
 
     void Start()
