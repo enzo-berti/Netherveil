@@ -112,8 +112,10 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     public void Attack(IDamageable damageable)
     {
+        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
         onHit?.Invoke(damageable);
-        damageable.ApplyDamage((int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF)));
+        damageable.ApplyDamage(damages);
+        FloatingTextGenerator.CreateDamageText(damages, (damageable as MonoBehaviour).transform.position);
     }
 
     public void ApplyDamage(int _value, bool hasAnimation = true)
@@ -121,7 +123,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
         Stats.IncreaseValue(Stat.HP, -_value, false);
         if(hasAnimation)
         {
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
             //add SFX here
         }
 

@@ -4,7 +4,7 @@ static public class FloatingTextGenerator
 {
     static readonly int MAX_SIZE = 150;
     static readonly int MIN_SIZE = 50;
-    static Color critColor = new(0.98f, 0.18f, 0.01f);
+    static Color critColor = new(0.67f, 0.06f, 0.06f);
     static Color healColor = new(0.5f, 0.72f, 0.09f);
     static Color actionColor = new(0.75f, 0.75f, 0.75f);
 
