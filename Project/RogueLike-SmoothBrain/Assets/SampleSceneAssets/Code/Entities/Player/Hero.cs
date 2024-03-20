@@ -61,7 +61,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 animator.ResetTrigger("ChargedAttackRelease");
                 animator.ResetTrigger("ChargedAttackCharging");
                 animator.ResetTrigger("BasicAttack");
-                AudioManager.Instance.PlaySound(playerController.playerHit);
+                AudioManager.Instance.PlaySound(playerController.hitSFX);
                 FloatingTextGenerator.CreateDamageText(_value, transform.position);
             }
 
@@ -71,7 +71,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
         {
             Death();
-            AudioManager.Instance.PlaySound(playerController.playerDead);
+            AudioManager.Instance.PlaySound(playerController.deadSFX);
         }
     }
     public void Death()

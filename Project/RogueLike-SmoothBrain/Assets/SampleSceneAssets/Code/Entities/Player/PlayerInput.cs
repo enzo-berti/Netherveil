@@ -217,7 +217,7 @@ public class PlayerInput : MonoBehaviour
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
         controller.PlayVFX(controller.chargedAttackVFX);
-        AudioManager.Instance.PlaySound(controller.playerAttacks[0]);
+        AudioManager.Instance.PlaySound(controller.chargedAttackReleaseSFX);
     }
 
     public IEnumerator ChargedAttackCoroutine()
@@ -233,6 +233,7 @@ public class PlayerInput : MonoBehaviour
         DeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
         chargedAttackMax = true;
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
+        AudioManager.Instance.PlaySound(controller.chargedAttackMaxSFX);
     }
 
     public void Attack(InputAction.CallbackContext ctx)
@@ -281,7 +282,7 @@ public class PlayerInput : MonoBehaviour
             dashCooldown = true;
 
             controller.PlayVFX2(controller.dashVFX);
-            AudioManager.Instance.PlaySound(controller.playerDash);
+            AudioManager.Instance.PlaySound(controller.dashSFX);
         }
     }
 
@@ -332,7 +333,7 @@ public class PlayerInput : MonoBehaviour
         controller.hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data, false);
         controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
-        AudioManager.Instance.PlaySound(controller.playerAttacks[controller.ComboCount]);
+        AudioManager.Instance.PlaySound(controller.attacksSFX[controller.ComboCount]);
     }
 
     public void ResetValuesInput()
@@ -362,9 +363,11 @@ public class PlayerInput : MonoBehaviour
             if (!spear.IsThrown)
             {
                 spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+                AudioManager.Instance.PlaySound(controller.throwSpearSFX);
             }
             else
             {
+                AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
                 spear.Return();
             }
 
@@ -386,6 +389,7 @@ public class PlayerInput : MonoBehaviour
                 controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
 
+            AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
             spear.Return();
         }
     }
