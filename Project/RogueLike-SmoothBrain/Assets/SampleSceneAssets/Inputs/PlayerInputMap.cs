@@ -53,7 +53,7 @@ namespace Netherveil.Inputs
                     ""id"": ""2b38a7ee-7606-41ae-84ee-66f698cda467"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -173,7 +173,7 @@ namespace Netherveil.Inputs
                     ""name"": """",
                     ""id"": ""3156ed42-dacd-4e06-be49-fd651a04d142"",
                     ""path"": ""<Keyboard>/f"",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ChargedAttack"",
@@ -265,7 +265,7 @@ namespace Netherveil.Inputs
                     ""id"": ""3c4db0dc-e68a-42f0-b91b-ba85846f36a5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -385,7 +385,7 @@ namespace Netherveil.Inputs
                     ""name"": """",
                     ""id"": ""5518075c-eb0f-4403-b1d8-b8b756bde63b"",
                     ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ChargedAttack"",

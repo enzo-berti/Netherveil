@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 
@@ -13,11 +12,10 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
     /// of a binding should be refreshed. It then checks whether we have an icon for the current binding
     /// and if so, replaces the default text display with an icon.
     /// </summary>
-    public class GamepadIconsExample : MonoBehaviour
+    public class GamepadIcons : MonoBehaviour
     {
-        public GamepadIcons xbox;
-        public GamepadIcons ps4;
-        [SerializeField] List<Sprite> kbIcons = new List<Sprite>();
+        public GamepadIconsSprites xbox;
+        public GamepadIconsSprites ps4;
 
         protected void OnEnable()
         {
@@ -35,41 +33,60 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             if (string.IsNullOrEmpty(deviceLayoutName) || string.IsNullOrEmpty(controlPath))
                 return;
 
+            // Debug.Log(Keyboard.current.capsLockKey.displayName);
             var icon = default(Sprite);
-            //Debug.Log(deviceLayoutName + " " + controlPath);
+            
+            //Debug.Log(deviceLayoutName + " version FR : " + bindingDisplayString + " version US : " + controlPath);
             if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "DualShockGamepad"))
                 icon = ps4.GetSprite(controlPath);
             else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Gamepad"))
                 icon = xbox.GetSprite(controlPath);
-            else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
-                icon = kbIcons.Find(x => x.name.ToLower() == controlPath.ToLower());
 
-            
+
             var textComponent = component.bindingText;
 
             // Grab Image component.
             var imageGO = textComponent.transform.parent.Find("ActionBindingIcon");
+
             if (imageGO != null)
             {
                 var imageComponent = imageGO.GetComponent<Image>();
 
                 if (icon != null)
                 {
-                    //textComponent.transform.parent.parent.parent.Find("Label").GetComponent<TMP_Text>().text += 
                     textComponent.gameObject.SetActive(false);
                     imageComponent.sprite = icon;
                     imageComponent.gameObject.SetActive(true);
+                    AddInteractionsToLabel(component);
                 }
                 else
                 {
-                    textComponent.gameObject.SetActive(true);
                     imageComponent.gameObject.SetActive(false);
+                    textComponent.gameObject.SetActive(true);
                 }
             }
         }
 
+        private void AddInteractionsToLabel(RebindActionUI component)
+        {
+            var label = component.transform.parent.Find("Label");
+            string[] interactions = component.actionReference.action.interactions.Split(";");
+
+            if (interactions.Length > 0 && interactions[0] != string.Empty)
+            {
+                label.GetComponent<TMP_Text>().text += " (";
+
+                for (int i = 0; i < interactions.Length; ++i)
+                {
+                    label.GetComponent<TMP_Text>().text += interactions[i] + (i != interactions.Length - 1 ? "," : "");
+                }
+                label.GetComponent<TMP_Text>().text += ")";
+            }
+        }
+
         [Serializable]
-        public struct GamepadIcons
+        public struct GamepadIconsSprites
+
         {
             public Sprite buttonSouth;
             public Sprite buttonNorth;
