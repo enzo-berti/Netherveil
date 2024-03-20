@@ -12,7 +12,7 @@ public class DeviceManager : MonoBehaviour
 {
     //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi
     [SerializeField] TMP_Text debugText;
-    public UnityEngine.InputSystem.PlayerInput playerInput;
+    [SerializeField] InputActionAsset playerInput;
     public InputDevice CurrentDevice { get; private set; } = null;
     InputDevice lastUsedDevice = null;
     static private DeviceManager instance;
@@ -26,8 +26,7 @@ public class DeviceManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject obj = new GameObject(nameof(DeviceManager));
-                obj.AddComponent<DeviceManager>();
+                Instantiate(Resources.Load<GameObject>(nameof(DeviceManager)));
             }
 
             return instance;
@@ -57,10 +56,10 @@ public class DeviceManager : MonoBehaviour
     {
         InputSystem.onEvent += OnInputSystemEvent;
         InputSystem.onDeviceChange += OnInputSystemDeviceChange;
-        if(Gamepad.all.Count > 0)
+        if (Gamepad.all.Count > 0)
         {
             CurrentDevice = Gamepad.all[0];
-            if(Keyboard.current != null)
+            if (Keyboard.current != null)
             {
                 lastUsedDevice = Keyboard.current;
             }
@@ -107,7 +106,7 @@ public class DeviceManager : MonoBehaviour
         }
         else
         {
-           lastUsedDevice = CurrentDevice;
+            lastUsedDevice = CurrentDevice;
             CurrentDevice = device;
         }
 
@@ -123,18 +122,14 @@ public class DeviceManager : MonoBehaviour
     {
         if (CurrentDevice is Gamepad)
         {
-            if(debugText != null)
+            if (debugText != null)
             {
                 debugText.SetText("GAMEPAD");
             }
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            if (playerInput != null)
-            {
-                playerInput.currentActionMap.Disable();
-                playerInput.actions.FindActionMap("Gamepad", true).Enable();
-                playerInput.SwitchCurrentActionMap("Gamepad");
-            }
+            playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Disable();
+            playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Enable();
             OnChangedToGamepad?.Invoke();
         }
         else
@@ -146,12 +141,8 @@ public class DeviceManager : MonoBehaviour
             //should be confined here but for debug reasons we'll put None
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            if(playerInput != null)
-            {
-                playerInput.currentActionMap.Disable();
-                playerInput.actions.FindActionMap("Keyboard", true).Enable();
-                playerInput.SwitchCurrentActionMap("Keyboard");
-            }
+            playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Disable();
+            playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Enable();
             OnChangedToKB?.Invoke();
         }
     }
@@ -168,7 +159,7 @@ public class DeviceManager : MonoBehaviour
 
     public void ApplyVibrations(float lowFrequency, float highFrequency, float duration)
     {
-        if(IsSupportingVibrations() && toggleVibrations)
+        if (IsSupportingVibrations() && toggleVibrations)
         {
             lowFrequency = Mathf.Clamp(lowFrequency, 0f, 1f);
             highFrequency = Mathf.Clamp(highFrequency, 0f, 1f);
