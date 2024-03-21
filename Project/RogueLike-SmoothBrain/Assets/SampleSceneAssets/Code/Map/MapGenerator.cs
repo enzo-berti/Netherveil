@@ -161,15 +161,15 @@ public class MapGenerator : MonoBehaviour
         }
 
         // TODO : spawn things to hides the holes
-        foreach (var listDoors in genParam.availableDoors)
-        {
-            foreach (var door in listDoors.Value)
-            {
-                GameObject go = Instantiate(obstructionsDoor[Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
-                go.transform.Rotate(0, (door.Rotation + 180f) % 360, 0);
-                go.transform.parent = gameObject.transform;
-            }
-        }
+        //foreach (var listDoors in genParam.availableDoors)
+        //{
+        //    foreach (var door in listDoors.Value)
+        //    {
+        //        GameObject go = Instantiate(obstructionsDoor[Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
+        //        go.transform.Rotate(0, (door.Rotation + 180f) % 360, 0);
+        //        go.transform.parent = gameObject.transform;
+        //    }
+        //}
     }
 
     void GenerateRoom(ref GenerationParam genParam)

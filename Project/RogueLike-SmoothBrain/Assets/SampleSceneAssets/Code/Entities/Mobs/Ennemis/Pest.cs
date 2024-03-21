@@ -37,6 +37,10 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
         movingTriggerHash = Animator.StringToHash("MovingTrigger");
         lifebar.maxValue = stats.GetValue(Stat.HP);
         lifebar.value = lifebar.maxValue;
+        Vector2 size = lifebar.transform.parent.GetComponent<RectTransform>().sizeDelta;
+        size.x *= stats.GetValue(Stat.HP) / 100;
+        size.x = Mathf.Clamp(size.x, 100f, 300f);
+        lifebar.transform.parent.GetComponent<RectTransform>().sizeDelta = size;
     }
 
     protected override IEnumerator EntityDetection()
