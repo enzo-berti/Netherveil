@@ -18,6 +18,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public List<Status> StatusToApply { get => statusToApply; }
 
     [SerializeField] Slider lifebar;
+    [SerializeField] Slider damageBar;
 
     [Header("Pest Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
@@ -35,8 +36,16 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
         animator = GetComponentInChildren<Animator>();
 
         movingTriggerHash = Animator.StringToHash("MovingTrigger");
+
+        InitLifeBar();
+    }
+
+    private void InitLifeBar()
+    {
         lifebar.maxValue = stats.GetValue(Stat.HP);
+        damageBar.maxValue = stats.GetValue(Stat.HP);
         lifebar.value = lifebar.maxValue;
+        damageBar.value = damageBar.maxValue;
         Vector2 size = lifebar.transform.parent.GetComponent<RectTransform>().sizeDelta;
         size.x *= stats.GetValue(Stat.HP) / 100;
         size.x = Mathf.Clamp(size.x, 100f, 300f);
