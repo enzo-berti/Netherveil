@@ -1,6 +1,18 @@
 using FMOD.Studio;
 using FMODUnity;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class CustomEventTrigger : EventTrigger
+{
+    public static EventReference buttonSelectSFX;
+    public override void OnSelect(BaseEventData data)
+    {
+        AudioManager.Instance.PlaySound(buttonSelectSFX);
+    }
+}
 
 public class AudioManager : MonoBehaviour
 {
@@ -29,6 +41,9 @@ public class AudioManager : MonoBehaviour
     [Range(0, 1)] public float soundsFXVolumeBarValue = 1f;
     [Range(0, 1)] public float ambiencesVolumeBarValue = 1f;
 
+    [SerializeField] EventReference buttonClick;
+    [SerializeField] EventReference buttonSelect;
+
     private Bus masterBus;
     private Bus musicsBus;
     private Bus soundsFXBus;
@@ -51,6 +66,16 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
             return;
+        }
+    }
+    void Start()
+    {
+        CustomEventTrigger.buttonSelectSFX = buttonSelect;
+        Button[] buttons = FindObjectsOfType<Button>(true); // parameter makes it include inactive UI elements with buttons
+        foreach (Button b in buttons)
+        {
+            b.onClick.AddListener(ButtonClickSFX);
+            b.AddComponent<CustomEventTrigger>();
         }
     }
 
@@ -92,5 +117,10 @@ public class AudioManager : MonoBehaviour
     public void PlaySound(EventReference reference)
     {
         RuntimeManager.PlayOneShot(reference);
+    }
+
+    public void ButtonClickSFX()
+    {
+        Instance.PlaySound(buttonClick);
     }
 }
