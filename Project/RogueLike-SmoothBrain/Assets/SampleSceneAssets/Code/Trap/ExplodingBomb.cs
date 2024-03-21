@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using System.Linq;
 using UnityEditor;
@@ -9,6 +10,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
     [Header("Gameobjects & Components")]
     [SerializeField] private GameObject graphics;
     [SerializeField] private VisualEffect VFX;
+    [SerializeField] private EventReference bombSFX;
     [Header("Bomb Parameter")]
     [SerializeField] private bool activateOnAwake;
     [SerializeField] private float timerBeforeExplode;
@@ -97,6 +99,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
             });
 
         graphics.SetActive(false);
+        AudioManager.Instance.PlaySound(bombSFX);
         float timer = VFX.GetFloat("ExplosionTime");
 
         while (timer > 0f)

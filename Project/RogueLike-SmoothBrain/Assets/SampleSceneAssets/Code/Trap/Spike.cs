@@ -1,9 +1,12 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Spike : MonoBehaviour
 {
+    [SerializeField] EventReference spikesUpSFX;
+    [SerializeField] EventReference spikesDownSFX;
     private float startPosY;
     private float endPosY;
     private bool isOut;
@@ -49,6 +52,7 @@ public class Spike : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
         isOut = true;
+        AudioManager.Instance.PlaySound(spikesUpSFX);
         while (spikesToMove.transform.position.y != endPosY)
         {
             spikesToMove.transform.position += Vector3.up / 20;
@@ -60,6 +64,7 @@ public class Spike : MonoBehaviour
         }
 
         entitiesToDealDamage.ForEach(actualEntity => { actualEntity.ApplyDamage(damage); });
+        
 
         StartCoroutine(WaitUntil());
     }
@@ -75,6 +80,7 @@ public class Spike : MonoBehaviour
 
     IEnumerator Disable()
     {
+        AudioManager.Instance.PlaySound(spikesDownSFX);
         yield return new WaitForSeconds(0.3f);
         while (spikesToMove.transform.position.y != startPosY)
         {
