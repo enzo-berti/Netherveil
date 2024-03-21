@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 {
     Transform cameraTransform;
     [Header("Mechanics")]
-    [Range(0f, 20f), SerializeField]
+    [Range(0f, 100f), SerializeField]
     float dashSpeed;
 
     public Plane PlaneOfDoom { get; private set; }

@@ -16,6 +16,6 @@ public class ZoomMap : MonoBehaviour
         Gamepad gamepad = DeviceManager.Instance.CurrentDevice as Gamepad;
 
         cam.orthographicSize = Mathf.Clamp(cam.orthographicSize + 
-            (DeviceManager.Instance.IsPlayingKB() ? Input.mouseScrollDelta.y : gamepad.leftTrigger.EvaluateMagnitude()) * 5, 25, 110);
+            (DeviceManager.Instance.IsPlayingKB() ? -Input.mouseScrollDelta.y * 5 : gamepad.leftTrigger.EvaluateMagnitude() - gamepad.rightTrigger.EvaluateMagnitude()), 25, 110);
     }
 }
