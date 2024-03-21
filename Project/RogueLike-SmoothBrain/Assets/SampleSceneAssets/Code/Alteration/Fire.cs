@@ -31,10 +31,10 @@ public class Fire : Status
 
     protected override void Effect()
     {
-        //if(stack > 0)
-        //{
+        if (target != null)
+        {
             FloatingTextGenerator.CreateEffectDamageText(damage * stack, target.transform.position, fireColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack, false);
-        //}
+        }
     }
 }

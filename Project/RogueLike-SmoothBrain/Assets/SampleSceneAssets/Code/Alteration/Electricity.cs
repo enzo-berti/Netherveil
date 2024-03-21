@@ -27,6 +27,9 @@ public class Electricity : Status
 
     protected override void Effect()
     {
-        target.Stats.SetValue(Stat.SPEED, 0f);
+        if (target != null)
+        {
+            target.Stats.SetValue(Stat.SPEED, 0f);
+        }
     }
 }
