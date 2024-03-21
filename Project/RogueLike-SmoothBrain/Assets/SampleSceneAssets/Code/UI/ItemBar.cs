@@ -6,23 +6,19 @@ public class ItemBar : MonoBehaviour
 {
     [SerializeField] GameObject frame;
     [SerializeField] GameObject[] itemSlot = new GameObject[5];
-    GameObject player;
+    Hero player;
     List<IPassiveItem> items;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
     }
 
     void Update()
     {
-        if (player == null)
+        if (player.Inventory.PassiveItems != null)
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-        }
-        else if (player.TryGetComponent(out Hero hero) && hero.Inventory.PassiveItems != null)
-        {
-            List<IPassiveItem> passiveItems = hero.Inventory.PassiveItems;
+            List<IPassiveItem> passiveItems = player.Inventory.PassiveItems;
             items = passiveItems
                 .Skip(Mathf.Max(0, passiveItems.Count() - 5))
                 .ToList();
