@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,6 +16,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public List<Status> StatusToApply { get => statusToApply; }
+
+    [SerializeField] Slider lifebar;
 
     [Header("Pest Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
@@ -32,6 +35,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
         animator = GetComponentInChildren<Animator>();
 
         movingTriggerHash = Animator.StringToHash("MovingTrigger");
+        lifebar.maxValue = stats.GetValue(Stat.HP);
+        lifebar.value = lifebar.maxValue;
     }
 
     protected override IEnumerator EntityDetection()
@@ -121,7 +126,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
     public void ApplyDamage(int _value, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        if(hasAnimation)
+        lifebar.value = stats.GetValue(Stat.HP);
+        if (hasAnimation)
         {
             //add SFX here
         }
