@@ -2,8 +2,9 @@ using UnityEngine;
 
 static public class FloatingTextGenerator
 {
-    static readonly int MAX_SIZE = 150;
-    static readonly int MIN_SIZE = 50;
+    static readonly int MAX_SIZE = 95;
+    static readonly int MIN_SIZE = 40;
+    static readonly int ACTION_TEXT_SIZE = 35;
     static Color critColor = new(0.67f, 0.06f, 0.06f);
     static Color healColor = new(0.5f, 0.72f, 0.09f);
     static Color actionColor = new(0.75f, 0.75f, 0.75f);
@@ -27,13 +28,13 @@ static public class FloatingTextGenerator
     public static void CreateActionText(Vector3 pos, string text, int randScale = 1)
     {
         FloatingText newText = CreateText(pos, text, actionColor, randScale);
-        newText.SetSize(MIN_SIZE);
+        newText.SetSize(ACTION_TEXT_SIZE);
     }
 
     private static void CreateNumberText(int nb, Vector3 pos, Color color, int randScale = 1)
     {
         FloatingText newText = CreateText(pos, nb.ToString(), color, randScale);
-
+        newText.toggleTextReduction = true;
         int size = Mathf.Clamp(nb + MIN_SIZE, MIN_SIZE, MAX_SIZE);
         newText.SetSize(size);
     }

@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class FloatingText : MonoBehaviour
 {
-    [SerializeField] TMP_Text m_TextMeshPro;
+    [SerializeField] TMP_Text text;
     Vector3 newPos;
     float newColor;
+    public bool toggleTextReduction = false;
 
     void Start()
     {
@@ -21,11 +22,16 @@ public class FloatingText : MonoBehaviour
 
         //fade + gris
         newColor -= Time.deltaTime;
-        Color newColor2 = m_TextMeshPro.color;
+        Color newColor2 = text.color;
         newColor2.a = newColor;
-        m_TextMeshPro.color = newColor2;
+        text.color = newColor2;
 
-        if (m_TextMeshPro.alpha <= 0)
+        if(toggleTextReduction)
+        {
+            text.fontSize -= Time.deltaTime * 20f;
+        }
+
+        if (text.alpha <= 0)
         {
             Destroy(gameObject);
         }
@@ -33,16 +39,18 @@ public class FloatingText : MonoBehaviour
 
     public void SetText(string text)
     {
-        m_TextMeshPro.text = text;
+        this.text.text = text;
     }
 
     public void SetSize(int size)
     {
-        m_TextMeshPro.fontSize = size;
+        text.fontSize = size;
     }
 
     public void SetColor(Color color)
     { 
-        m_TextMeshPro.color = color;
+        text.color = color;
     }
+
+
 }
