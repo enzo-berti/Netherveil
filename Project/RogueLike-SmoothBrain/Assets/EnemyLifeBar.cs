@@ -21,7 +21,7 @@ public class EnemyLifeBar : MonoBehaviour
     private IEnumerator DamageBarCoroutine()
     {
         coroutineRunning = true;
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.3f);
         float barDiff = damageBarSlider.value - lifeBarSlider.value;
         while (lifeBarSlider.value < damageBarSlider.value)
         {
