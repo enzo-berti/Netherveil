@@ -13,26 +13,31 @@ public class Item : MonoBehaviour, IInterractable
 {
     public string idItemName;
     ItemDatabase database;
+    [SerializeField] Mesh defaultMesh;
+    [SerializeField] Material defaultMat;
     private void Awake()
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
-        this.GetComponent<MeshRenderer>().material = database.GetItem(idItemName).mat;
-        this.GetComponent<MeshFilter>().mesh = database.GetItem(idItemName).mesh;
+        Material matToRender = database.GetItem(idItemName).mat;
+        Mesh meshToRender = database.GetItem(idItemName).mesh;
+        this.GetComponent<MeshRenderer>().material = matToRender != null ? matToRender : defaultMat;
+        this.GetComponent<MeshFilter>().mesh = meshToRender != null ? meshToRender : defaultMesh;
 
         RandomizeItem(this);
         Debug.Log(idItemName);
     }
     private void Update()
     {
-        if (Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position) < 10)
+        if (Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position) < 2)
         {
             Interract();
         }
     }
     public void Interract()
     {
-        GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(LoadClass());
-        Debug.Log($"Vous avez bien récupéré {LoadClass().GetType()}");
+        ItemEffect itemToAdd = LoadClass();
+        GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToAdd);
+        Debug.Log($"Vous avez bien récupéré {itemToAdd.GetType()}");
         Destroy(this.gameObject);
     }
 
@@ -51,7 +56,6 @@ public class Item : MonoBehaviour, IInterractable
         }
         int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
         item.idItemName = allItems[indexRandom];
-        Debug.Log("Random askip");
     }
 
     public void RandomizeItem()
@@ -74,9 +78,13 @@ public class ItemEditor : Editor
 {
     public static string ChosenName;
     SerializedProperty itemName;
+    SerializedProperty defaultMeshProperty;
+    SerializedProperty defaultMatProperty;
     private void OnEnable()
     {
         itemName = serializedObject.FindProperty("idItemName");
+        defaultMeshProperty = serializedObject.FindProperty("defaultMesh");
+        defaultMatProperty = serializedObject.FindProperty("defaultMat");
         ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()
@@ -96,8 +104,16 @@ public class ItemEditor : Editor
             ChosenName = (target as Item).idItemName;
         }
         EditorGUILayout.EndHorizontal();
-        itemName.stringValue = ChosenName;
 
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(defaultMeshProperty, new GUIContent("Default Mesh : "));
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(defaultMatProperty, new GUIContent("Default Material : "));
+        EditorGUILayout.EndHorizontal();
+
+        itemName.stringValue = ChosenName;
         serializedObject.ApplyModifiedProperties();
 
     }
