@@ -22,7 +22,6 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
     [Header("Range Parameters")]
-    [SerializeField, Range(0f, 360f)] private float angle = 120f;
     [SerializeField, Min(0)] private float staggerDuration;
 
     private bool isFighting = false;
@@ -47,7 +46,7 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
             if (!agent.enabled)
                 continue;
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : (int)stats.GetValue(Stat.CATCH_RADIUS), (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -204,9 +203,9 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
         if (!Selection.Contains(gameObject))
             return;
 
-        DisplayVisionRange(isFighting ? 360 : angle);
-        DisplayAttackRange(isFighting ? 360 : angle);
-        DisplayFleeingRange(isFighting ? 360 : angle);
+        DisplayVisionRange(isFighting ? 360 : (int)stats.GetValue(Stat.CATCH_RADIUS));
+        DisplayAttackRange(isFighting ? 360 : (int)stats.GetValue(Stat.CATCH_RADIUS));
+        DisplayFleeingRange(isFighting ? 360 : (int)stats.GetValue(Stat.CATCH_RADIUS));
         DisplayInfos();
     }
 #endif
