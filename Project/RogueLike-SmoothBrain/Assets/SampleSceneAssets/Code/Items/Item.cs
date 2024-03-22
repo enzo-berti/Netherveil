@@ -22,7 +22,7 @@ public class Item : MonoBehaviour, IInterractable
     private void Awake()
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
-        //RandomizeItem(this);
+        RandomizeItem(this);
         Debug.Log(idItemName);
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
@@ -76,7 +76,6 @@ public class Item : MonoBehaviour, IInterractable
         }
         int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
         idItemName = allItems[indexRandom];
-        Debug.Log("Random askip");
     }
 
     private void InitDescription()
@@ -86,10 +85,6 @@ public class Item : MonoBehaviour, IInterractable
         string finalDescription = string.Empty;
         FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 
-        foreach (var a in fieldOfItem)
-        {
-            Debug.Log(a.GetValue(itemToGive));
-        }
         for (int i = 0; i < splitDescription.Length; i++)
         {
             if (splitDescription[i][0] == '{')
