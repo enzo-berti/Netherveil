@@ -87,7 +87,8 @@ public abstract class Status
     {
         isCoroutineOn = true;
         await Task.Delay((int)(frequency * 1000));
-        Effect();
+        if(!isFinished)
+            Effect();
         isCoroutineOn = false;
     }
 }
