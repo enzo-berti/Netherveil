@@ -28,8 +28,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("Pest audio")]
     [SerializeField] private EventReference deathSound;
 
-    private SkinnedMeshRenderer skinnedMeshRenderer;
-
     // Animator
     private Animator animator;
     private int movingTriggerHash;
@@ -39,7 +37,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         base.Start();
 
         animator = GetComponentInChildren<Animator>();
-        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
         movingTriggerHash = Animator.StringToHash("MovingTrigger");
 
@@ -173,17 +170,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
-    }
-
-    private IEnumerator HitRoutine()
-    {
-        skinnedMeshRenderer.material.SetInt("_isHit", 1);
-        yield return new WaitForSeconds(0.05f);
-        skinnedMeshRenderer.material.SetInt("_isHit", 0);
-        yield return new WaitForSeconds(0.05f);
-        skinnedMeshRenderer.material.SetInt("_isHit", 1);
-        yield return new WaitForSeconds(0.05f);
-        skinnedMeshRenderer.material.SetInt("_isHit", 0);
     }
 
 #if UNITY_EDITOR

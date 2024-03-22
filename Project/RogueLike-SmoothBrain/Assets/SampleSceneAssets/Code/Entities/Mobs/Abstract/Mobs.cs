@@ -12,12 +12,14 @@ public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
     protected Rigidbody rb;
+    protected SkinnedMeshRenderer skinnedMeshRenderer;
     protected Entity[] nearbyEntities;
 
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         nearbyEntities = null;
 
         ApplySpeed(Stat.SPEED);
@@ -58,7 +60,18 @@ public abstract class Mobs : Entity
             yield return null;
         }
     }
-    
+
+    protected IEnumerator HitRoutine()
+    {
+        skinnedMeshRenderer.material.SetInt("_isHit", 1);
+        yield return new WaitForSeconds(0.05f);
+        skinnedMeshRenderer.material.SetInt("_isHit", 0);
+        yield return new WaitForSeconds(0.05f);
+        skinnedMeshRenderer.material.SetInt("_isHit", 1);
+        yield return new WaitForSeconds(0.05f);
+        skinnedMeshRenderer.material.SetInt("_isHit", 0);
+    }
+
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)
     {
