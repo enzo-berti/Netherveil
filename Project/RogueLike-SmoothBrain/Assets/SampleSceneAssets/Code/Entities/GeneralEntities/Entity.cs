@@ -12,7 +12,7 @@ public abstract class Entity : MonoBehaviour
 
     public List<Status> AppliedStatusList = new();
     [HideInInspector] public int State;
-    protected Entity()
+    private void Start()
     {
         OnDeath += ctx => ClearStatus();
     }
