@@ -18,7 +18,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
 
     [Header("Boss parameters")]
-    public bool isTriggered = true;
     Hero player = null;
 
     [Header("Boss Attack Hitboxes")]
@@ -34,6 +33,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     [Header("Dash")]
     [SerializeField] float maxDashRange;
+    [SerializeField] Transform dashPivot;
 
     int thrustCounter = 0;
 
@@ -54,8 +54,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         IDLE
     }
 
-    Attacks currentAttack;
-    AttackState attackState;
+    Attacks currentAttack = Attacks.NONE;
+    AttackState attackState = AttackState.IDLE;
     float attackCooldown = 0;
     bool hasProjectile = false;
 
@@ -65,63 +65,56 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             yield return null;
 
-            if (isTriggered)
+
+            if (!player)
             {
-                if (!player)
+                player = FindObjectOfType<Hero>();
+            }
+            else
+            {
+                // Face player
+                if (attackState != AttackState.ATTACKING)
                 {
-                    player = FindObjectOfType<Hero>();
+                    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                    lookRotation.x = 0;
+                    lookRotation.z = 0;
+
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
                 }
-                else
+
+                // Move towards player
+
+                MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
+
+
+                // Attacks
+                if (attackCooldown > 0)
                 {
-                    if (attackState != AttackState.ATTACKING)
-                    {
-                        Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-                        lookRotation.x = 0;
-                        lookRotation.z = 0;
+                    attackState = AttackState.IDLE;
+                    attackCooldown -= Time.deltaTime;
+                    if (attackCooldown < 0) attackCooldown = 0;
+                }
+                else if (attackCooldown == 0)
+                {
+                    //currentAttack = (Attacks)Random.Range(0, 3);
+                    currentAttack = Attacks.THRUST;
+                }
 
-                        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
-                    }
-                    else if (attackState == AttackState.IDLE)
-                    {
-                        MoveTo(player.transform.position);
-                    }
+                switch (currentAttack)
+                {
+                    case Attacks.RANGE:
+                        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
+                        break;
 
-                    if (attackCooldown > 0)
-                    {
-                        attackState = AttackState.IDLE;
-                        attackCooldown -= Time.deltaTime;
-                        if (attackCooldown < 0) attackCooldown = 0;
-                    }
-                    else if (attackCooldown == 0)
-                    {
-                        //currentAttack = (Attacks)Random.Range(0, 3);
-                        currentAttack = Attacks.THRUST;
-                    }
+                    case Attacks.THRUST:
+                        TripleThrust();
+                        break;
 
-                    switch (currentAttack)
-                    {
-                        case Attacks.RANGE:
-                            if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
-                            break;
-
-                        case Attacks.THRUST:
-                            TripleThrust();
-                            break;
-
-                        case Attacks.DASH:
-                            Dash();
-                            break;
-                    }
+                    case Attacks.DASH:
+                        Dash();
+                        break;
                 }
             }
-        }
-    }
-
-    protected override IEnumerator EntityDetection()
-    {
-        while (true)
-        {
-            yield return null;
         }
     }
 
@@ -259,7 +252,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     thrustCounter = 0;
                     currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
-                    attackCooldown = 1f;
+                    attackCooldown = 2f;
                 }
                 break;
         }

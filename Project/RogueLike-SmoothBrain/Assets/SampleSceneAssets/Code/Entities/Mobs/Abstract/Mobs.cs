@@ -44,8 +44,20 @@ public abstract class Mobs : Entity
         agent.speed = stats.GetValue(Stat.SPEED);
     }
 
-    protected abstract IEnumerator Brain();
-    protected abstract IEnumerator EntityDetection();
+    protected virtual IEnumerator Brain()
+    {
+        while (true)
+        {
+            yield return null;
+        }
+    }
+    protected virtual IEnumerator EntityDetection()
+    {
+        while (true)
+        {
+            yield return null;
+        }
+    }
     
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)
