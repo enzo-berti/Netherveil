@@ -34,6 +34,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("Dash")]
     [SerializeField] float maxDashRange;
     [SerializeField] Transform dashPivot;
+    [SerializeField] float dashSpeed = 2f;
+    float dashTimer = 0f;
+    float minDashSize = 2;
 
     int thrustCounter = 0;
 
@@ -97,7 +100,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 else if (attackCooldown == 0)
                 {
                     //currentAttack = (Attacks)Random.Range(0, 3);
-                    currentAttack = Attacks.THRUST;
+                    currentAttack = Attacks.DASH;
                 }
 
                 switch (currentAttack)
@@ -262,6 +265,12 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
+
+        dashTimer += Time.deltaTime * dashSpeed;
+        if (minDashSize + dashTimer < maxDashRange)
+        {
+            dashPivot.localScale = new Vector3(1, 1, minDashSize + dashTimer);
+        }
     }
 
     void DisableHitboxes()
