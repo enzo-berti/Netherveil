@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2049373169672691703}
   - component: {fileID: 2320395733695838959}
   - component: {fileID: 685760080216938473}
+  - component: {fileID: 1395338572117502349}
   m_Layer: 3
   m_Name: Pest
   m_TagString: Enemy
@@ -196,6 +197,10 @@ MonoBehaviour:
     name: Pest
   isAlly: 0
   State: 0
+  lifebar: {fileID: 2418544669836114175}
+  damageBar: {fileID: 3491882036401347763}
+  angle: 320
+  brainDelay: 1
   deathSound:
     Guid:
       Data1: 47670446
@@ -203,11 +208,19 @@ MonoBehaviour:
       Data3: 521774752
       Data4: 1157363826
     Path: event:/Enemy/EnemyDeath
-  lifebar: {fileID: 2418544669836114175}
-  damageBar: {fileID: 3491882036401347763}
-  angle: 320
+--- !u!114 &1395338572117502349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7946285657065441543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   StillThreshold: 0.05
-  brainDelay: 1
 --- !u!1001 &4706510688428890628
 PrefabInstance:
   m_ObjectHideFlags: 0

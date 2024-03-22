@@ -3,12 +3,13 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using FMODUnity;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBlastable
+public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
@@ -22,9 +23,10 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     [Header("Pest Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
-    [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
     [SerializeField] private float brainDelay = 2f;
-    private Coroutine knockbackRoutine;
+
+    [Header("Pest audio")]
+    [SerializeField] private EventReference deathSound;
 
     // Animator
     private Animator animator;
@@ -149,7 +151,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
             //add SFX here
         }
 
-
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
@@ -158,43 +159,15 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IKnockbackable, IBla
 
     public void Death()
     {
-        OnDeath?.Invoke(this.transform.position);
+        OnDeath?.Invoke(transform.position);
         Destroy(gameObject);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
-    }
-
-    public void GetKnockback(Vector3 force)
-    {
-        if (knockbackRoutine != null)
-            return;
-
-        knockbackRoutine = StartCoroutine(ApplyKnockback(force));
+        AudioManager.Instance.PlaySound(deathSound);
     }
 
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
-    }
-
-    protected IEnumerator ApplyKnockback(Vector3 force)
-    {
-        yield return null;
-        agent.enabled = false;
-        rb.isKinematic = false;
-        rb.AddForce(force, ForceMode.Impulse);
-
-        yield return new WaitForFixedUpdate();
-        yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
-        yield return new WaitForSeconds(0.25f);
-
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true;
-
-        agent.Warp(transform.position);
-        agent.enabled = true;
-
-        knockbackRoutine = null;
     }
 
 #if UNITY_EDITOR
