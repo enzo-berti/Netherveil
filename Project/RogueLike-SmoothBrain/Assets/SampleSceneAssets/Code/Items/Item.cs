@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
+using System.Runtime.CompilerServices;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,7 +19,10 @@ public class Item : MonoBehaviour, IInterractable
     ItemDatabase database;
     [SerializeField] Mesh defaultMesh;
     [SerializeField] Material defaultMat;
+    [SerializeField] Material outlineMaterial;
     ItemEffect itemToGive;
+
+    bool isInItemZone = false;
     private void Awake()
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
@@ -32,15 +36,36 @@ public class Item : MonoBehaviour, IInterractable
         InitDescription();
         
     }
-    private void Start()
-    {
-        
-    }
     private void Update()
     {
-        if (Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position) < 2)
+        if (Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position) < 3)
         {
-            Interract();
+            if(!isInItemZone)
+            {
+                var meshRenderer = this.GetComponent<MeshRenderer>();
+                List<Material> finalMaterial = new()
+                {
+                    meshRenderer.material,
+                    outlineMaterial
+                };
+                meshRenderer.SetMaterials(finalMaterial);
+                isInItemZone = true;
+            }
+            if(Input.GetKey(KeyCode.E))
+                Interract();
+        }
+        else
+        {
+            if(isInItemZone)
+            {
+                var meshRenderer = this.GetComponent<MeshRenderer>();
+                List<Material> finalMaterial = new()
+                {
+                    meshRenderer.material
+                };
+                meshRenderer.SetMaterials(finalMaterial);
+                isInItemZone = false;
+            }
         }
     }
     public void Interract()
@@ -115,11 +140,13 @@ public class ItemEditor : Editor
     SerializedProperty itemName;
     SerializedProperty defaultMeshProperty;
     SerializedProperty defaultMatProperty;
+    SerializedProperty outlineMatProperty;
     private void OnEnable()
     {
         itemName = serializedObject.FindProperty("idItemName");
         defaultMeshProperty = serializedObject.FindProperty("defaultMesh");
         defaultMatProperty = serializedObject.FindProperty("defaultMat");
+        outlineMatProperty = serializedObject.FindProperty("outlineMaterial");
         ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()
@@ -146,6 +173,10 @@ public class ItemEditor : Editor
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(defaultMatProperty, new GUIContent("Default Material : "));
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(outlineMatProperty, new GUIContent("Outline Material : "));
         EditorGUILayout.EndHorizontal();
 
         itemName.stringValue = ChosenName;
