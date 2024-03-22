@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -33,6 +35,9 @@ public class PlayerInput : MonoBehaviour
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
     List<System.Func<float, float>> easeFuncs = new List<System.Func<float, float>>();
+
+    //used to cancel queued attacks when pressing another button during attack sequence
+    bool forceReturnToMove = false;
 
     public EasingFunctions.EaseName easeUnzoom;
     public EasingFunctions.EaseName easeZoom;
@@ -85,16 +90,18 @@ public class PlayerInput : MonoBehaviour
 
     private void InputSetup()
     {
-        playerInputMap.currentActionMap["Movement"].performed += controller.ReadDirection;
-        playerInputMap.currentActionMap["Movement"].canceled += controller.ReadDirection;
-        playerInputMap.currentActionMap["BasicAttack"].performed += Attack;
-        playerInputMap.currentActionMap["Dash"].performed += Dash;
-        playerInputMap.currentActionMap["Interact"].performed += m_interaction.Interract;
-        playerInputMap.currentActionMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
-        playerInputMap.currentActionMap["ChargedAttack"].performed += ChargedAttack;
-        playerInputMap.currentActionMap["ChargedAttack"].canceled += ChargedAttackCanceled;
-        playerInputMap.currentActionMap["ToggleMap"].performed += hudHandler.ToggleMap;
-        playerInputMap.currentActionMap["Pause"].started += ctx => hudHandler.TogglePause();
+        InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
+
+        kbMap["Movement"].performed += controller.ReadDirection;
+        kbMap["Movement"].canceled += controller.ReadDirection;
+        kbMap["BasicAttack"].performed += Attack;
+        kbMap["Dash"].performed += Dash;
+        kbMap["Interact"].performed += m_interaction.Interract;
+        kbMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
+        kbMap["ChargedAttack"].performed += ChargedAttack;
+        kbMap["ChargedAttack"].canceled += ChargedAttackCanceled;
+        kbMap["ToggleMap"].performed += hudHandler.ToggleMap;
+        kbMap["Pause"].started += ctx => hudHandler.TogglePause();
 
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
 
@@ -112,16 +119,18 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDisable()
     {
-        playerInputMap.currentActionMap["Movement"].performed -= controller.ReadDirection;
-        playerInputMap.currentActionMap["Movement"].canceled -= controller.ReadDirection;
-        playerInputMap.currentActionMap["BasicAttack"].performed -= Attack;
-        playerInputMap.currentActionMap["Dash"].performed -= Dash;
-        playerInputMap.currentActionMap["Interact"].performed -= m_interaction.Interract;
-        playerInputMap.currentActionMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
-        playerInputMap.currentActionMap["ChargedAttack"].performed -= ChargedAttack;
-        playerInputMap.currentActionMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
-        playerInputMap.currentActionMap["ToggleMap"].performed -= hudHandler.ToggleMap;
-        playerInputMap.currentActionMap["Pause"].started -= ctx => hudHandler.TogglePause();
+        InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
+
+        kbMap["Movement"].performed -= controller.ReadDirection;
+        kbMap["Movement"].canceled -= controller.ReadDirection;
+        kbMap["BasicAttack"].performed -= Attack;
+        kbMap["Dash"].performed -= Dash;
+        kbMap["Interact"].performed -= m_interaction.Interract;
+        kbMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        kbMap["ChargedAttack"].performed -= ChargedAttack;
+        kbMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
+        kbMap["ToggleMap"].performed -= hudHandler.ToggleMap;
+        kbMap["Pause"].started -= ctx => hudHandler.TogglePause();
 
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
 
@@ -170,6 +179,23 @@ public class PlayerInput : MonoBehaviour
                 timerDash = 0f;
             }
         }
+
+        if (controller.hero.State == (int)Entity.EntityState.MOVE)
+        {
+           forceReturnToMove = false;
+        }
+
+        //il est immonde mais la vérité je pouvais pas faire mieux
+        if ((
+                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
+                (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
+            )
+                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
+           )
+        {
+            forceReturnToMove = true;
+            controller.ResetValues();
+        }
     }
 
     public void ChargedAttack(InputAction.CallbackContext ctx)
@@ -193,6 +219,7 @@ public class PlayerInput : MonoBehaviour
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
         animator.ResetTrigger("ChargedAttackRelease");
+        animator.ResetTrigger("ChargedAttackCharging");
         if (LaunchedChargedAttack)
         {
             StopAllCoroutines();
@@ -238,7 +265,7 @@ public class PlayerInput : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext ctx)
     {
-        if (CanAttack())
+        if (CanAttack() && !forceReturnToMove)
         {
             if (controller.hero.State == (int)Entity.EntityState.ATTACK)
             {
