@@ -178,7 +178,11 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     private IEnumerator HitRoutine()
     {
         skinnedMeshRenderer.material.SetInt("_isHit", 1);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
+        skinnedMeshRenderer.material.SetInt("_isHit", 0);
+        yield return new WaitForSeconds(0.05f);
+        skinnedMeshRenderer.material.SetInt("_isHit", 1);
+        yield return new WaitForSeconds(0.05f);
         skinnedMeshRenderer.material.SetInt("_isHit", 0);
     }
 
