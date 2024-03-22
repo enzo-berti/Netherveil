@@ -3,28 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.ProBuilder.MeshOperations;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+// This class is the item that is rendered in the 3D world
 [Serializable]
 public class Item : MonoBehaviour, IInterractable
 {
     public string idItemName;
+    string descriptionToDisplay;
     ItemDatabase database;
     [SerializeField] Mesh defaultMesh;
     [SerializeField] Material defaultMat;
+    ItemEffect itemToGive;
     private void Awake()
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
+        //RandomizeItem(this);
+        Debug.Log(idItemName);
+        itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
         this.GetComponent<MeshRenderer>().material = matToRender != null ? matToRender : defaultMat;
         this.GetComponent<MeshFilter>().mesh = meshToRender != null ? meshToRender : defaultMesh;
-
-        RandomizeItem(this);
-        Debug.Log(idItemName);
+        InitDescription();
+        
+    }
+    private void Start()
+    {
+        
     }
     private void Update()
     {
@@ -35,9 +45,8 @@ public class Item : MonoBehaviour, IInterractable
     }
     public void Interract()
     {
-        ItemEffect itemToAdd = LoadClass();
-        GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToAdd);
-        Debug.Log($"Vous avez bien récupéré {itemToAdd.GetType()}");
+        GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
+        Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
         Destroy(this.gameObject);
     }
 
@@ -68,7 +77,38 @@ public class Item : MonoBehaviour, IInterractable
         int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
         idItemName = allItems[indexRandom];
         Debug.Log("Random askip");
+    }
 
+    private void InitDescription()
+    {
+        descriptionToDisplay = database.GetItem(idItemName).Description;
+        string[] splitDescription = descriptionToDisplay.Split(" ");
+        string finalDescription = string.Empty;
+        FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (var a in fieldOfItem)
+        {
+            Debug.Log(a.GetValue(itemToGive));
+        }
+        for (int i = 0; i < splitDescription.Length; i++)
+        {
+            if (splitDescription[i][0] == '{')
+            {
+                string valueToFind = splitDescription[i].Split('{', '}')[1];
+                FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
+                if (valueInfo != null)
+                {
+                    splitDescription[i] = valueInfo.GetValue(itemToGive).ToString();
+                }
+                else
+                {
+                    splitDescription[i] = "N/A";
+                    Debug.LogWarning($"value : {valueToFind}, has not be found");
+                }
+            }
+            finalDescription += splitDescription[i] + " ";
+        }
+        descriptionToDisplay = finalDescription;
     }
 }
 
