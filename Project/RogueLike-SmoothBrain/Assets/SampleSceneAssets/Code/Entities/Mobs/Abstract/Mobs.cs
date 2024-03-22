@@ -14,8 +14,6 @@ public abstract class Mobs : Entity
     protected Rigidbody rb;
     protected Entity[] nearbyEntities;
 
-    [SerializeField] EventReference deathSound;
-
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -35,7 +33,6 @@ public abstract class Mobs : Entity
     {
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());
-        OnDeath += ctx => PlayDeathSong();
         OnDeath += cts => ClearStatus();
     }
 
@@ -49,14 +46,7 @@ public abstract class Mobs : Entity
 
     protected abstract IEnumerator Brain();
     protected abstract IEnumerator EntityDetection();
-
-    private void PlayDeathSong()
-    {
-        AudioManager.Instance.PlaySound(deathSound);
-    }
-
     
-
 #if UNITY_EDITOR
     virtual protected void DisplayVisionRange(float _angle)
     {
