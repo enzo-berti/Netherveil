@@ -126,14 +126,15 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
         onHit?.Invoke(_damageable);
         _damageable.ApplyDamage(damages);
-        FloatingTextGenerator.CreateDamageText(damages, (_damageable as MonoBehaviour).transform.position);
     }
 
-    public void ApplyDamage(int _value, bool hasAnimation = true)
+    public void ApplyDamage(int _value,bool isCrit = false, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
+        
         if (hasAnimation)
         {
+            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             //add SFX here
         }
         if (stats.GetValue(Stat.HP) <= 0)

@@ -47,22 +47,25 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     }
 
 
-    public void ApplyDamage(int _value, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
        
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
-           if(hasAnimation && !playerInput.LaunchedChargedAttack)
+           if(hasAnimation)
             {
-                animator.ResetTrigger("Hit");
-                animator.SetTrigger("Hit");
-                playerController.ResetValues(); //possible source de bugs
-                animator.ResetTrigger("ChargedAttackRelease");
-                animator.ResetTrigger("ChargedAttackCharging");
-                animator.ResetTrigger("BasicAttack");
+                if(!playerInput.LaunchedChargedAttack)
+                {
+                    //animator.ResetTrigger("Hit");
+                    //animator.SetTrigger("Hit");
+                    playerController.ResetValues(); //possible source de bugs
+                    animator.ResetTrigger("ChargedAttackRelease");
+                    animator.ResetTrigger("ChargedAttackCharging");
+                    animator.ResetTrigger("BasicAttack");
+                }
                 AudioManager.Instance.PlaySound(playerController.hitSFX);
-               
+                FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             }
 
             OnTakeDamage?.Invoke();
@@ -105,7 +108,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         damages = (int)(damages * stats.GetValue(Stat.ATK_COEFF));
         damageable.ApplyDamage(damages);
-        FloatingTextGenerator.CreateDamageText(damages, (damageable as MonoBehaviour).transform.position, isCrit);
 
         onHit?.Invoke(damageable);
 

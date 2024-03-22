@@ -117,7 +117,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         StopAllCoroutines();
     }
 
-    public void ApplyDamage(int _value, bool hasAnimation = true)
+    public void ApplyDamage(int _value,bool isCrit = false, bool hasAnimation = true)
     {
         Activate();
     }

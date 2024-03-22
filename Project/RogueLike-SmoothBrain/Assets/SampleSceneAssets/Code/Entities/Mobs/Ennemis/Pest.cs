@@ -140,16 +140,17 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
-        FloatingTextGenerator.CreateDamageText(damages, (damageable as MonoBehaviour).transform.position);
     }
 
-    public void ApplyDamage(int _value, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
         lifebar.value = stats.GetValue(Stat.HP);
+        
         if (hasAnimation)
         {
             //add SFX here
+            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             StartCoroutine(HitRoutine());
         }
 

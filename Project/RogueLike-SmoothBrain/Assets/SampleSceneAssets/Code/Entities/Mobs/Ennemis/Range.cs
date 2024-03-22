@@ -141,11 +141,13 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
             //UpdateStates();
         }
     }
-    public void ApplyDamage(int _value, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
+       
         if (hasAnimation)
         {
+            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             //add SFX here
         }
 
@@ -179,7 +181,6 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
         int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
-        FloatingTextGenerator.CreateDamageText(damages, (damageable as MonoBehaviour).transform.position);
     }
 
     public void MoveTo(Vector3 posToMove)

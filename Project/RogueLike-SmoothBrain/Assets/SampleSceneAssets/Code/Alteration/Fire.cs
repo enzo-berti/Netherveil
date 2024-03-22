@@ -34,7 +34,7 @@ public class Fire : Status
         if (target != null)
         {
             FloatingTextGenerator.CreateEffectDamageText(damage * stack, target.transform.position, fireColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack, false);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack, false, false);
         }
     }
 }
