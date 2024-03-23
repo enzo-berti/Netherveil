@@ -12,10 +12,12 @@ public abstract class Entity : MonoBehaviour
 
     public List<Status> AppliedStatusList = new();
     [HideInInspector] public int State;
+
     private void Start()
     {
         OnDeath += ctx => ClearStatus();
     }
+
     private void Update()
     {
         if(AppliedStatusList.Count > 0)
@@ -34,6 +36,7 @@ public abstract class Entity : MonoBehaviour
         }
         
     }
+
     public Stats Stats
     {
         get

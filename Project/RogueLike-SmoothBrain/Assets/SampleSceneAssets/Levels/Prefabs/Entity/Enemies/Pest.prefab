@@ -197,8 +197,6 @@ MonoBehaviour:
     name: Pest
   isAlly: 0
   State: 0
-  lifebar: {fileID: 2418544669836114175}
-  damageBar: {fileID: 3491882036401347763}
   angle: 320
   brainDelay: 1
   deathSound:
@@ -406,22 +404,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8707564
+      value: -0.8998499
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.22658327
+      value: -0.23201787
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.422334
+      value: -0.35767686
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.10989732
+      value: 0.09222363
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
@@ -431,7 +429,7 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.82
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
@@ -606,6 +604,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeBarSlider: {fileID: 2418544669836114175}
   damageBarSlider: {fileID: 3491882036401347763}
+  barSizeClamp: {x: 100, y: 300}
+  damageDisplayTime: 0.3
 --- !u!224 &7904333292077390013 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,

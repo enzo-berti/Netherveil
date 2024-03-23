@@ -2,40 +2,36 @@ using System.Collections;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
-using FMODUnity;
+using System.Runtime.CompilerServices;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+[RequireComponent(typeof(NavMeshAgent))]
 public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
-    protected Rigidbody rb;
     protected SkinnedMeshRenderer skinnedMeshRenderer;
     protected Entity[] nearbyEntities;
 
-    protected virtual void Awake()
+    protected virtual void Start()
     {
-        rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        nearbyEntities = null;
 
+        nearbyEntities = null;
         ApplySpeed(Stat.SPEED);
         stats.onStatChange += ApplySpeed;
+        OnDeath += cts => ClearStatus();
 
         if (this is IAttacker attacker)
         {
             attacker.OnHit += attacker.ApplyStatus;
         }
-    }
 
-    protected virtual void Start()
-    {
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());
-        OnDeath += cts => ClearStatus();
     }
 
     private void ApplySpeed(Stat speedStat)
@@ -48,17 +44,12 @@ public abstract class Mobs : Entity
 
     protected virtual IEnumerator Brain()
     {
-        while (true)
-        {
-            yield return null;
-        }
+        yield return null;
     }
+
     protected virtual IEnumerator EntityDetection()
     {
-        while (true)
-        {
-            yield return null;
-        }
+        yield return null;
     }
 
     protected IEnumerator HitRoutine()
