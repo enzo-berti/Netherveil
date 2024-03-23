@@ -11,6 +11,7 @@ using UnityEditor;
 
 public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
+    // think useless
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     private List<Status> statusToApply = new List<Status>();
@@ -18,41 +19,35 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public List<Status> StatusToApply { get => statusToApply; }
 
-    [SerializeField] Slider lifebar;
-    [SerializeField] Slider damageBar;
+    // gameobjects & components
+    private Animator animator;
+    private EnemyLifeBar lifeBar;
 
+    // pest parameters
     [Header("Pest Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
     [SerializeField] private float brainDelay = 2f;
 
+    // audio
     [Header("Pest audio")]
     [SerializeField] private EventReference deathSound;
 
-    // Animator
-    private Animator animator;
+    // animation hashing
     private int movingTriggerHash;
 
     protected override void Start()
     {
         base.Start();
 
+        // component initialization
         animator = GetComponentInChildren<Animator>();
+        lifeBar = GetComponentInChildren<EnemyLifeBar>();
 
+        // animator hashing
         movingTriggerHash = Animator.StringToHash("MovingTrigger");
 
-        InitLifeBar();
-    }
-
-    private void InitLifeBar()
-    {
-        lifebar.maxValue = stats.GetValue(Stat.HP);
-        damageBar.maxValue = stats.GetValue(Stat.HP);
-        lifebar.value = lifebar.maxValue;
-        damageBar.value = damageBar.maxValue;
-        Vector2 size = lifebar.transform.parent.GetComponent<RectTransform>().sizeDelta;
-        size.x *= stats.GetValue(Stat.HP) / 100;
-        size.x = Mathf.Clamp(size.x, 100f, 300f);
-        lifebar.transform.parent.GetComponent<RectTransform>().sizeDelta = size;
+        // common initialization
+        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
     }
 
     protected override IEnumerator EntityDetection()
@@ -145,7 +140,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        lifebar.value = stats.GetValue(Stat.HP);
+        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
         
         if (hasAnimation)
         {
