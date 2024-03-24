@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -65,7 +66,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                     animator.ResetTrigger("BasicAttack");
                 }
                 AudioManager.Instance.PlaySound(playerController.hitSFX);
-                FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+                FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
+                //FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             }
 
             OnTakeDamage?.Invoke();
@@ -99,15 +101,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             damages += playerController.FINISHER_DAMAGES;
         }
 
-        bool isCrit = UnityEngine.Random.Range(0, 101) <= stats.GetValue(Stat.CRIT_RATE);
-        if (isCrit)
-        {
-            float critDamageCoef = stats.GetValue(Stat.CRIT_DAMAGE)/100;
-            damages = (int)(damages * critDamageCoef);
-        }
+        //bool isCrit = UnityEngine.Random.Range(0, 101) <= stats.GetValue(Stat.CRIT_RATE);
+        //if (isCrit)
+        //{
+        //    float critDamageCoef = stats.GetValue(Stat.CRIT_DAMAGE)/100;
+        //    damages = (int)(damages * critDamageCoef);
+        //}
 
         damages = (int)(damages * stats.GetValue(Stat.ATK_COEFF));
-        damageable.ApplyDamage(damages);
+        damageable.ApplyDamage(damages/*, isCrit*/);
 
         onHit?.Invoke(damageable);
 

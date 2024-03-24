@@ -7,21 +7,26 @@ public class LifeBar : MonoBehaviour
 {
     [SerializeField] Image filledHeart;
 
-    [SerializeField, Range(0f, 100f)] private float lifePourcentage = 0f;
+    private float lifePourcentage = 0f;
+    Hero player;
     public float LifePourcentage
     {
         get { return lifePourcentage; }
-        set { lifePourcentage = Mathf.Clamp(lifePourcentage, 0, value); }
+        set { lifePourcentage = Mathf.Clamp(value, 0f, 1f); }
     }
 
     void Start()
     {
-        LifePourcentage = 100f;
-        filledHeart.rectTransform.transform.localScale = new Vector3(LifePourcentage / 100f, LifePourcentage / 100f, LifePourcentage / 100f);
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        LifePourcentage = 1f;
+        filledHeart.rectTransform.transform.localScale = new Vector3(LifePourcentage, LifePourcentage, LifePourcentage);
     }
 
     void Update()
     {
-        filledHeart.rectTransform.transform.localScale = new Vector3(LifePourcentage / 100f, LifePourcentage / 100f, LifePourcentage / 100f);
+        float valueClamped = Mathf.Clamp(player.Stats.GetValue(Stat.HP), 0, player.Stats.GetMaxValue(Stat.HP));
+        LifePourcentage = valueClamped / player.Stats.GetMaxValue(Stat.HP);
+
+        filledHeart.rectTransform.transform.localScale = new Vector3(LifePourcentage, LifePourcentage, LifePourcentage);
     }
 }
