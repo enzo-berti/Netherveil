@@ -95,7 +95,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     IEnumerator DeathCoroutine()
     {
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Attack(IDamageable damageable)
