@@ -6,7 +6,12 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Hero))]
 public class PlayerInteractions : MonoBehaviour
 {
-    [SerializeField] private Hero hero;
+    private Hero hero;
+
+    private void Start()
+    {
+        hero = GetComponent<Hero>();
+    }
 
     void Update()
     {
