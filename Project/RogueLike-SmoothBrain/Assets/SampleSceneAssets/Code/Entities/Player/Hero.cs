@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEngine.Rendering.DebugUI;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
@@ -87,6 +89,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         State = (int)EntityState.DEAD;
         animator.ResetTrigger("Death");
         animator.SetTrigger("Death");
+        StartCoroutine(DeathCoroutine());
+    }
+
+    IEnumerator DeathCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void Attack(IDamageable damageable)
