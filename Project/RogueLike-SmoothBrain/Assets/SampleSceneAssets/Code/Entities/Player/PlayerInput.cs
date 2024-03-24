@@ -47,7 +47,7 @@ public class PlayerInput : MonoBehaviour
         controller = GetComponent<PlayerController>();
         m_interaction = GetComponent<PlayerInteractions>();
         hudHandler = FindObjectOfType<HudHandler>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
         playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         EaseFuncsShitStorm();

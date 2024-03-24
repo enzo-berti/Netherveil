@@ -15504,7 +15504,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 200325822250048358}
-  - {fileID: 4360676764020579664}
+  - {fileID: 5979827630346455854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6538476713930355996
@@ -20393,6 +20393,415 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &6854569171507519650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5979827630346455854}
+  - component: {fileID: 4698072993601050955}
+  - component: {fileID: 4491413966762970475}
+  - component: {fileID: 1911203549151711130}
+  - component: {fileID: 2000081675053181033}
+  - component: {fileID: 8524448187533866682}
+  - component: {fileID: 6505181789325521950}
+  m_Layer: 3
+  m_Name: Player
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5979827630346455854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854569171507519650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4360676764020579664}
+  - {fileID: 6117368172986529172}
+  - {fileID: 5680085074375357738}
+  m_Father: {fileID: 1378612059112917621}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &4698072993601050955
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854569171507519650}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &4491413966762970475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854569171507519650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71b316b3a27bc2747b3aaba9d80a4f3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashSpeed: 22
+  spearAttacks:
+  - data:
+    - {fileID: 8567801458383647344}
+  - data:
+    - {fileID: 4336622302204605675}
+  - data:
+    - {fileID: 8792934050674335225}
+    - {fileID: 8567801458383647344}
+  chargedAttack:
+  - {fileID: 3162097009205579242}
+  - {fileID: 4918555150882924578}
+  - {fileID: 1174136246685776134}
+  - {fileID: 5239971407784389308}
+  hero: {fileID: 0}
+  VFXWrapper: {fileID: 2553172325082090671}
+  spearAttacksVFX:
+  - {fileID: 6270312603214981742}
+  - {fileID: 6270312603214981742}
+  - {fileID: 6270312603214981742}
+  dashVFX: {fileID: 6314439840902499623}
+  chargedAttackVFX: {fileID: 4339925852799118057}
+  dashSFX:
+    Guid:
+      Data1: 1298710530
+      Data2: 1200650640
+      Data3: -1147760464
+      Data4: 1052327008
+    Path: event:/Player/PlayerDash
+  hitSFX:
+    Guid:
+      Data1: 1411913334
+      Data2: 1298929135
+      Data3: 1596140962
+      Data4: 1747856450
+    Path: event:/Player/PlayerHit
+  deadSFX:
+    Guid:
+      Data1: -1065008551
+      Data2: 1240623093
+      Data3: -148541528
+      Data4: -499186190
+    Path: event:/Player/PlayerDeath
+  throwSpearSFX:
+    Guid:
+      Data1: -194858840
+      Data2: 1109465189
+      Data3: -350840411
+      Data4: -1209571899
+    Path: event:/Player/ThrowSpear
+  retrieveSpearSFX:
+    Guid:
+      Data1: 1486363685
+      Data2: 1283774188
+      Data3: -240864859
+      Data4: -1646648715
+    Path: event:/Player/RetrieveSpear
+  chargedAttackMaxSFX:
+    Guid:
+      Data1: 1241253240
+      Data2: 1150628473
+      Data3: 732896916
+      Data4: 1283348218
+    Path: event:/Player/SpearSpinMax
+  chargedAttackReleaseSFX:
+    Guid:
+      Data1: -397771047
+      Data2: 1152290493
+      Data3: -1510668634
+      Data4: -925195866
+    Path: event:/Player/SpearSpinReleased
+  attacksSFX:
+  - Guid:
+      Data1: -479215713
+      Data2: 1228942623
+      Data3: -798828628
+      Data4: 1492511062
+    Path: event:/Player/SpearSlash1
+  - Guid:
+      Data1: 335603003
+      Data2: 1111548807
+      Data3: -293071991
+      Data4: -1471285844
+    Path: event:/Player/SpearSlash2
+  - Guid:
+      Data1: -1584890161
+      Data2: 1336471974
+      Data3: -574242681
+      Data4: -1683332758
+    Path: event:/Player/SpearSlash3
+--- !u!114 &1911203549151711130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854569171507519650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb2c83ec8697ac4a8b816480020ac2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapon: {fileID: 802356439152402610}
+  easeUnzoom: 17
+  easeZoom: 17
+  easeShake: 17
+--- !u!114 &2000081675053181033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854569171507519650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 265257847d33b76449ed90f675b85193,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5608f3eb-ca2b-42c3-a2de-6adfffa8f11a
+    m_ActionName: Keyboard/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 017a0e5c-3a7a-4866-ade3-788788399d8f
+    m_ActionName: Keyboard/BasicAttack[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2b38a7ee-7606-41ae-84ee-66f698cda467
+    m_ActionName: Keyboard/ChargedAttack[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cd9ce065-145a-45cf-b78a-843dd1732144
+    m_ActionName: Keyboard/Spear[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3e093fa7-fc99-4735-8a5b-e33a66875adc
+    m_ActionName: Keyboard/Dash[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 725f77ac-803c-4ebe-9677-9c6adc825539
+    m_ActionName: Keyboard/Interact[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 65bb6ba4-6bfe-4405-bf76-aaf08c00aa82
+    m_ActionName: Keyboard/ToggleMap[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b509354d-e83b-46a0-bb93-ea4669c59244
+    m_ActionName: Keyboard/Pause[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 133bdb3c-dbcb-4413-9585-dfa8cd5a932c
+    m_ActionName: Gamepad/Movement
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 11ad5c4a-022f-4d2f-825e-e038225ef2c5
+    m_ActionName: Gamepad/BasicAttack
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3c4db0dc-e68a-42f0-b91b-ba85846f36a5
+    m_ActionName: Gamepad/ChargedAttack
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8e0220b5-5e72-4ccf-84df-3e0aa0fbaa68
+    m_ActionName: Gamepad/Spear
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: afb2cfa0-06e4-4c28-97ae-9280b51e3829
+    m_ActionName: Gamepad/Dash
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a7490cf1-d3ef-49dd-9105-9331b4655f58
+    m_ActionName: Gamepad/Interact
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8e70fd4d-7c29-4331-9da2-4444d40328fb
+    m_ActionName: Gamepad/ToggleMap
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d7a44e10-a428-446a-b43c-35957627e9f1
+    m_ActionName: Gamepad/Pause
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Keyboard
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &8524448187533866682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854569171507519650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 144b6e3df1e33da48b21c13ea28cb518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    stats:
+    - stat: 0
+      hasMaxStat: 1
+      hasMinStat: 0
+      hasCoeff: 1
+      value: 9000000
+      coeff: 1
+      maxValue: 300
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 1
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 5
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 2
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 1
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 6
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 1
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 5
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 8
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 7
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 15
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 14
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 100
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 3
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 10
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 8
+      hasMaxStat: 1
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 15
+      coeff: 0
+      maxValue: 100
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 9
+      hasMaxStat: 0
+      hasMinStat: 1
+      hasCoeff: 0
+      value: 150
+      coeff: 0
+      maxValue: 100
+      minValue: 100
+      overload: 0
+      underload: 0
+    name: Default
+  isAlly: 1
+  State: 0
+--- !u!114 &6505181789325521950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6854569171507519650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f112aa7dcc11bb468b98ca94bb54128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hero: {fileID: 8524448187533866682}
 --- !u!1 &6879266251131845972
 GameObject:
   m_ObjectHideFlags: 0
@@ -20418,13 +20827,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6879266251131845972}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9060559928041242253}
-  m_Father: {fileID: 4360676764020579664}
+  m_Father: {fileID: 5979827630346455854}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -20746,7 +21155,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8461627360647682909}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -20756,7 +21165,7 @@ Transform:
   - {fileID: 3465642274164069325}
   - {fileID: 1993950241127163703}
   - {fileID: 4056218583236382207}
-  m_Father: {fileID: 4360676764020579664}
+  m_Father: {fileID: 5979827630346455854}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8663540108515972346
 GameObject:
@@ -21006,7 +21415,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1378612059112917621}
+    m_TransformParent: {fileID: 5979827630346455854}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6a08537d0a2ae7a498650e023286d2a9,
         type: 3}
@@ -21206,7 +21615,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
         type: 3}
       propertyPath: m_Name
-      value: Player
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
         type: 3}
@@ -21216,7 +21625,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
         type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 1056333058978312523, guid: 6a08537d0a2ae7a498650e023286d2a9,
         type: 3}
@@ -21362,14 +21771,6 @@ PrefabInstance:
     - {fileID: 5866666021909216657, guid: 6a08537d0a2ae7a498650e023286d2a9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6117368172986529172}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5680085074375357738}
     - targetCorrespondingSourceObject: {fileID: -1540757047741829392, guid: 6a08537d0a2ae7a498650e023286d2a9,
         type: 3}
       insertIndex: -1
@@ -21379,30 +21780,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6670051131721241655}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3132996602055498138}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3930901027973134626}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 366138780152945334}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 413975145375433423}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3354122649509041354}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a08537d0a2ae7a498650e023286d2a9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1241696069421464813}
   m_SourcePrefab: {fileID: 100100000, guid: 6a08537d0a2ae7a498650e023286d2a9, type: 3}
 --- !u!1 &4021693323672504298 stripped
 GameObject:
@@ -21431,375 +21808,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &3132996602055498138
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4021693323672504298}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &3930901027973134626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4021693323672504298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71b316b3a27bc2747b3aaba9d80a4f3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dashSpeed: 22
-  spearAttacks:
-  - data:
-    - {fileID: 8567801458383647344}
-  - data:
-    - {fileID: 4336622302204605675}
-  - data:
-    - {fileID: 8792934050674335225}
-    - {fileID: 8567801458383647344}
-  chargedAttack:
-  - {fileID: 3162097009205579242}
-  - {fileID: 4918555150882924578}
-  - {fileID: 1174136246685776134}
-  - {fileID: 5239971407784389308}
-  hero: {fileID: 0}
-  VFXWrapper: {fileID: 2553172325082090671}
-  spearAttacksVFX:
-  - {fileID: 6270312603214981742}
-  - {fileID: 6270312603214981742}
-  - {fileID: 6270312603214981742}
-  dashVFX: {fileID: 6314439840902499623}
-  chargedAttackVFX: {fileID: 4339925852799118057}
-  dashSFX:
-    Guid:
-      Data1: 1298710530
-      Data2: 1200650640
-      Data3: -1147760464
-      Data4: 1052327008
-    Path: event:/Player/PlayerDash
-  hitSFX:
-    Guid:
-      Data1: 1411913334
-      Data2: 1298929135
-      Data3: 1596140962
-      Data4: 1747856450
-    Path: event:/Player/PlayerHit
-  deadSFX:
-    Guid:
-      Data1: -1065008551
-      Data2: 1240623093
-      Data3: -148541528
-      Data4: -499186190
-    Path: event:/Player/PlayerDeath
-  throwSpearSFX:
-    Guid:
-      Data1: -194858840
-      Data2: 1109465189
-      Data3: -350840411
-      Data4: -1209571899
-    Path: event:/Player/ThrowSpear
-  retrieveSpearSFX:
-    Guid:
-      Data1: 1486363685
-      Data2: 1283774188
-      Data3: -240864859
-      Data4: -1646648715
-    Path: event:/Player/RetrieveSpear
-  chargedAttackMaxSFX:
-    Guid:
-      Data1: 1241253240
-      Data2: 1150628473
-      Data3: 732896916
-      Data4: 1283348218
-    Path: event:/Player/SpearSpinMax
-  chargedAttackReleaseSFX:
-    Guid:
-      Data1: -397771047
-      Data2: 1152290493
-      Data3: -1510668634
-      Data4: -925195866
-    Path: event:/Player/SpearSpinReleased
-  attacksSFX:
-  - Guid:
-      Data1: -479215713
-      Data2: 1228942623
-      Data3: -798828628
-      Data4: 1492511062
-    Path: event:/Player/SpearSlash1
-  - Guid:
-      Data1: 335603003
-      Data2: 1111548807
-      Data3: -293071991
-      Data4: -1471285844
-    Path: event:/Player/SpearSlash2
-  - Guid:
-      Data1: -1584890161
-      Data2: 1336471974
-      Data3: -574242681
-      Data4: -1683332758
-    Path: event:/Player/SpearSlash3
---- !u!114 &366138780152945334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4021693323672504298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fb2c83ec8697ac4a8b816480020ac2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapon: {fileID: 802356439152402610}
-  easeUnzoom: 17
-  easeZoom: 17
-  easeShake: 17
---- !u!114 &413975145375433423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4021693323672504298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 265257847d33b76449ed90f675b85193,
-    type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 5608f3eb-ca2b-42c3-a2de-6adfffa8f11a
-    m_ActionName: Keyboard/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 017a0e5c-3a7a-4866-ade3-788788399d8f
-    m_ActionName: Keyboard/BasicAttack[/Keyboard/f]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 2b38a7ee-7606-41ae-84ee-66f698cda467
-    m_ActionName: Keyboard/ChargedAttack[/Keyboard/f]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cd9ce065-145a-45cf-b78a-843dd1732144
-    m_ActionName: Keyboard/Spear[/Keyboard/q]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 3e093fa7-fc99-4735-8a5b-e33a66875adc
-    m_ActionName: Keyboard/Dash[/Keyboard/leftShift]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 725f77ac-803c-4ebe-9677-9c6adc825539
-    m_ActionName: Keyboard/Interact[/Keyboard/e]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 65bb6ba4-6bfe-4405-bf76-aaf08c00aa82
-    m_ActionName: Keyboard/ToggleMap[/Keyboard/tab]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b509354d-e83b-46a0-bb93-ea4669c59244
-    m_ActionName: Keyboard/Pause[/Keyboard/escape]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 133bdb3c-dbcb-4413-9585-dfa8cd5a932c
-    m_ActionName: Gamepad/Movement[/DualSenseGamepadHID/leftStick/up,/DualSenseGamepadHID/leftStick/down,/DualSenseGamepadHID/leftStick/left,/DualSenseGamepadHID/leftStick/right]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 11ad5c4a-022f-4d2f-825e-e038225ef2c5
-    m_ActionName: Gamepad/BasicAttack[/DualSenseGamepadHID/buttonWest]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 3c4db0dc-e68a-42f0-b91b-ba85846f36a5
-    m_ActionName: Gamepad/ChargedAttack[/DualSenseGamepadHID/buttonWest]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8e0220b5-5e72-4ccf-84df-3e0aa0fbaa68
-    m_ActionName: Gamepad/Spear[/DualSenseGamepadHID/buttonNorth]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: afb2cfa0-06e4-4c28-97ae-9280b51e3829
-    m_ActionName: Gamepad/Dash[/DualSenseGamepadHID/buttonEast]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: a7490cf1-d3ef-49dd-9105-9331b4655f58
-    m_ActionName: Gamepad/Interact[/DualSenseGamepadHID/buttonSouth]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8e70fd4d-7c29-4331-9da2-4444d40328fb
-    m_ActionName: Gamepad/ToggleMap[/DualSenseGamepadHID/select]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: d7a44e10-a428-446a-b43c-35957627e9f1
-    m_ActionName: Gamepad/Pause[/DualSenseGamepadHID/start]
-  m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Keyboard
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!114 &3354122649509041354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4021693323672504298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 144b6e3df1e33da48b21c13ea28cb518, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats:
-    stats:
-    - stat: 0
-      hasMaxStat: 1
-      hasMinStat: 0
-      hasCoeff: 1
-      value: 9000000
-      coeff: 1
-      maxValue: 300
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 1
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 5
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 2
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 1
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 6
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 1
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 5
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 8
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 7
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 15
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 14
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 100
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 3
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 10
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 8
-      hasMaxStat: 1
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 15
-      coeff: 0
-      maxValue: 100
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 9
-      hasMaxStat: 0
-      hasMinStat: 1
-      hasCoeff: 0
-      value: 150
-      coeff: 0
-      maxValue: 100
-      minValue: 100
-      overload: 0
-      underload: 0
-    name: Default
-  isAlly: 1
-  State: 0
---- !u!114 &1241696069421464813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4021693323672504298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f112aa7dcc11bb468b98ca94bb54128, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hero: {fileID: 3354122649509041354}
 --- !u!4 &4360676764020579664 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a08537d0a2ae7a498650e023286d2a9,

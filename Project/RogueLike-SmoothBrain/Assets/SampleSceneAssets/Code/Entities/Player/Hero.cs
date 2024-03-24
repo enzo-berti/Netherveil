@@ -35,7 +35,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
 

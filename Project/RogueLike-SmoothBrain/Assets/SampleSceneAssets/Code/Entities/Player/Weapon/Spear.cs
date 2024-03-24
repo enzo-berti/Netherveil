@@ -26,7 +26,7 @@ public class Spear : MonoBehaviour
         hero = player.GetComponent<Hero>();
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
-        playerAnimator = player.GetComponent<Animator>();
+        playerAnimator = player.GetComponentInChildren<Animator>();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
