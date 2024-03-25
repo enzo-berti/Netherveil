@@ -72,10 +72,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        ApplyGravity();
-        Rotate();
-        Move();
-        DashMove();
+        if(hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        {
+            ApplyGravity();
+            Rotate();
+            Move();
+            DashMove();
+        }
     }
 
     private void Rotate()
