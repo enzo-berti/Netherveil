@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.ProBuilder.MeshOperations;
-using System.Runtime.CompilerServices;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -21,6 +19,7 @@ public class Item : MonoBehaviour, IInterractable
     [SerializeField] Material defaultMat;
     [SerializeField] Material outlineMaterial;
     ItemEffect itemToGive;
+    public static event Action onRetrieved;
 
     bool isInItemZone = false;
     private void Awake()
@@ -78,6 +77,7 @@ public class Item : MonoBehaviour, IInterractable
         itemToGive.Name = idItemName;
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
         Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
+        onRetrieved?.Invoke();
         Destroy(this.gameObject);
     }
 

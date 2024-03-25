@@ -100,8 +100,11 @@ public class PlayerInput : MonoBehaviour
         kbMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
         kbMap["ChargedAttack"].performed += ChargedAttack;
         kbMap["ChargedAttack"].canceled += ChargedAttackCanceled;
-        kbMap["ToggleMap"].performed += hudHandler.ToggleMap;
-        kbMap["Pause"].started += ctx => hudHandler.TogglePause();
+        if(hudHandler != null)
+        {
+            kbMap["ToggleMap"].performed += hudHandler.ToggleMap;
+            kbMap["Pause"].started += ctx => hudHandler.TogglePause();
+        }
 
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
 
@@ -113,8 +116,11 @@ public class PlayerInput : MonoBehaviour
         gamepadMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
         gamepadMap["ChargedAttack"].performed += ChargedAttack;
         gamepadMap["ChargedAttack"].canceled += ChargedAttackCanceled;
-        gamepadMap["ToggleMap"].started += hudHandler.ToggleMap;
-        gamepadMap["Pause"].started += ctx => hudHandler.TogglePause();
+        if (hudHandler != null)
+        {
+            gamepadMap["ToggleMap"].started += hudHandler.ToggleMap;
+            gamepadMap["Pause"].started += ctx => hudHandler.TogglePause();
+        }
     }
 
     private void OnDisable()
@@ -129,8 +135,11 @@ public class PlayerInput : MonoBehaviour
         kbMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
         kbMap["ChargedAttack"].performed -= ChargedAttack;
         kbMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
-        kbMap["ToggleMap"].performed -= hudHandler.ToggleMap;
-        kbMap["Pause"].started -= ctx => hudHandler.TogglePause();
+        if (hudHandler != null)
+        {
+            kbMap["ToggleMap"].performed -= hudHandler.ToggleMap;
+            kbMap["Pause"].started -= ctx => hudHandler.TogglePause();
+        }
 
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
 
@@ -142,8 +151,11 @@ public class PlayerInput : MonoBehaviour
         gamepadMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
         gamepadMap["ChargedAttack"].performed -= ChargedAttack;
         gamepadMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
-        gamepadMap["ToggleMap"].started -= hudHandler.ToggleMap;
-        gamepadMap["Pause"].started -= ctx => hudHandler.TogglePause();
+        if (hudHandler != null)
+        {
+            gamepadMap["ToggleMap"].started -= hudHandler.ToggleMap;
+            gamepadMap["Pause"].started -= ctx => hudHandler.TogglePause();
+        }
         playerInputMap.actions.Disable();
     }
 
