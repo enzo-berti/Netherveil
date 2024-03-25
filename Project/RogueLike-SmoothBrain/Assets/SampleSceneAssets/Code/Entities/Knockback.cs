@@ -11,6 +11,7 @@ public class Knockback : MonoBehaviour
     private Coroutine knockbackRoutine;
     private Animator animator;
     private Hero hero;
+    private Collider col;
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
 
     private void Start()
@@ -20,6 +21,7 @@ public class Knockback : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         hero = GetComponent<Hero>();
+        col = GetComponent<CapsuleCollider>();
     }
 
     public void GetKnockback(Vector3 force)
@@ -63,6 +65,7 @@ public class Knockback : MonoBehaviour
     {
         yield return null;
         characterController.enabled = false;
+        col.enabled = true;
         animator.SetBool("IsKnockback", true);
         hero.State = (int)Hero.PlayerState.KNOCKBACK;
         rb.isKinematic = false;
@@ -77,6 +80,7 @@ public class Knockback : MonoBehaviour
 
         animator.SetBool("IsKnockback", false);
         characterController.enabled = true;
+        col.enabled = false;
         hero.State = (int)Entity.EntityState.MOVE;
 
         knockbackRoutine = null;
