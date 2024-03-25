@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using static UnityEditor.FilePathAttribute;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -211,7 +212,7 @@ public class PlayerInput : MonoBehaviour
                 (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
                 (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
             )
-                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
+                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack
            )
         {
             forceReturnToMove = true;
@@ -223,8 +224,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (CanCastChargedAttack())
         {
-            animator.ResetTrigger("ChargedAttackCharging");
-            animator.SetTrigger("ChargedAttackCharging");
+            animator.SetBool("ChargedAttackCasting", true);
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedChargedAttack = true;
@@ -240,12 +240,18 @@ public class PlayerInput : MonoBehaviour
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
         animator.ResetTrigger("ChargedAttackRelease");
-        animator.ResetTrigger("ChargedAttackCharging");
-        if (LaunchedChargedAttack)
+        animator.SetBool("ChargedAttackCasting", false);
+        if (LaunchedChargedAttack && (chargedAttackTime/ CHARGED_ATTACK_MAX_TIME) > 0.2f)
         {
             StopAllCoroutines();
             controller.ComboCount = 0;
             animator.SetTrigger("ChargedAttackRelease");
+        }
+        else if (LaunchedChargedAttack && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= 0.2f)
+        {
+            StopAllCoroutines();
+            DeviceManager.Instance.ForceStopVibrations();
+            controller.ChangeState((int)Entity.EntityState.MOVE);
         }
     }
 
@@ -275,15 +281,35 @@ public class PlayerInput : MonoBehaviour
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                controller.MouseOrientation();
+            }
+            else
+            {
+                controller.JoystickOrientation();
+            }
             yield return null;
         }
 
-        DeviceManager.Instance.ForceStopVibrations();
-        yield return null;
         DeviceManager.Instance.ApplyVibrations(0.005f, 0.005f, float.MaxValue);
         chargedAttackMax = true;
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
         AudioManager.Instance.PlaySound(controller.chargedAttackMaxSFX);
+        yield return null;
+
+        while(true)
+        {
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                controller.MouseOrientation();
+            }
+            else
+            {
+                controller.JoystickOrientation();
+            }
+            yield return null;
+        }
     }
 
     public void Attack(InputAction.CallbackContext ctx)
@@ -314,7 +340,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (CanDash())
         {
-            controller.hero.State = (int)Hero.PlayerState.DASH;
+            ResetComboWhenMoving();
 
             if (controller.Direction.x != 0f || controller.Direction.y != 0f)
             {
@@ -329,9 +355,6 @@ public class PlayerInput : MonoBehaviour
 
             animator.ResetTrigger("Dash");
             animator.SetTrigger("Dash");
-            triggerCooldownDash = true;
-            dashCooldown = true;
-            AudioManager.Instance.PlaySound(controller.dashSFX);
         }
     }
 
@@ -402,6 +425,7 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
+                controller.JoystickOrientation();
                 controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
 
@@ -435,12 +459,19 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
+                controller.JoystickOrientation();
                 controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
 
             AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
             spear.Return();
         }
+    }
+
+    public void TriggerDashCooldown()
+    {
+        triggerCooldownDash = true;
+        dashCooldown = true;
     }
 
     private bool CanAttack()
@@ -464,6 +495,7 @@ public class PlayerInput : MonoBehaviour
 
     private bool CanDash()
     {
-        return controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown;
+        return (controller.hero.State == (int)Entity.EntityState.MOVE
+            || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownAttack && !dashCooldown && !LaunchedChargedAttack;
     }
 }
