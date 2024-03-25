@@ -37,8 +37,13 @@ public class Item : MonoBehaviour, IInterractable
     }
     private void Update()
     {
-        Vector3 playerPos = GameObject.FindWithTag("Player").transform.position;
-        if (Vector2.Distance(playerPos, transform.position) < 3)
+        GameObject player = GameObject.FindWithTag("Player");
+        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+        Vector3 playerPos = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
+        Vector3 itemPos = (cameraForward * this.transform.position.z + cameraRight * this.transform.position.x) ;
+        
+        if (Vector2.Distance(playerPos, itemPos) < 3)
         {
             if(!isInItemZone)
             {

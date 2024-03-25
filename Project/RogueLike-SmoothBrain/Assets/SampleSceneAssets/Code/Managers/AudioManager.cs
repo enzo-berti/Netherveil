@@ -85,11 +85,11 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        foreach (var audio in audioInstance)
+        for(int i = audioInstance.Count - 1; i >= 0; --i)
         {
-            audio.getPlaybackState(out PLAYBACK_STATE state);
+            audioInstance[i].getPlaybackState(out PLAYBACK_STATE state);
             if (state == PLAYBACK_STATE.STOPPED)
-                audioInstance.Remove(audio);
+                audioInstance.Remove(audioInstance[i]);
         }
     }
 
