@@ -27,7 +27,6 @@ public class Item : MonoBehaviour, IInterractable
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
         RandomizeItem(this);
-        Debug.Log(idItemName);
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
@@ -38,7 +37,8 @@ public class Item : MonoBehaviour, IInterractable
     }
     private void Update()
     {
-        if (Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position) < 3)
+        Vector3 playerPos = GameObject.FindWithTag("Player").transform.position;
+        if (Vector2.Distance(playerPos, transform.position) < 3)
         {
             if(!isInItemZone)
             {
@@ -70,6 +70,7 @@ public class Item : MonoBehaviour, IInterractable
     }
     public void Interract()
     {
+        itemToGive.Name = idItemName;
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
         Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
         Destroy(this.gameObject);
