@@ -36,7 +36,6 @@ public class Range : Mobs, IDamageable, IAttacker, IMovable, IBlastable
 
     private float FleeingRange => (int)stats.GetValue(Stat.ATK_RANGE) / 2f;
 
-    private List<Status> statusToApply = new List<Status>();
     public List<Status> StatusToApply { get => statusToApply; }
 
     protected override IEnumerator EntityDetection()

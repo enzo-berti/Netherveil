@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Rendering.DebugUI;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -33,7 +32,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public KillDelegate OnKill { get => onKill; set => onKill = value; }
     public ChangeRoomDelegate OnChangeRoom { get => onChangeRoom; set => onChangeRoom = value; }
 
-    private List<Status> statusToApply = new List<Status>();
     public List<Status> StatusToApply => statusToApply;
 
     private void Start()
@@ -109,6 +107,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT -1)
         {
             damages += playerController.FINISHER_DAMAGES;
+            DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+        }
+        else
+        {
+            DeviceManager.Instance.ApplyVibrations(0f, 0.1f, 0.1f);
         }
 
         //bool isCrit = UnityEngine.Random.Range(0, 101) <= stats.GetValue(Stat.CRIT_RATE);

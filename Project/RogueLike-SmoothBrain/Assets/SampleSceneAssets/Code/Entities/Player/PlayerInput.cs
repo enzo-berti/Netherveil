@@ -198,16 +198,16 @@ public class PlayerInput : MonoBehaviour
         }
 
         //il est immonde mais la vérité je pouvais pas faire mieux
-        if ((
-                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
-                (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
-            )
-                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
-           )
-        {
-            forceReturnToMove = true;
-            controller.ResetValues();
-        }
+        //if ((
+        //        (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
+        //        (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
+        //    )
+        //        && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
+        //   )
+        //{
+        //    forceReturnToMove = true;
+        //    controller.ResetValues();
+        //}
     }
 
     public void ChargedAttack(InputAction.CallbackContext ctx)
@@ -249,8 +249,8 @@ public class PlayerInput : MonoBehaviour
         chargedAttackTime = 0f;
 
         //apply visual effects and controller vibrations
-        DeviceManager.Instance.ForceStopVibrations();
-        DeviceManager.Instance.ApplyVibrations(0.3f * ChargedAttackCoef, 0.3f * ChargedAttackCoef, 0.25f);
+        //DeviceManager.Instance.ForceStopVibrations();
+        DeviceManager.Instance.ApplyVibrations(0.8f * ChargedAttackCoef, 0.8f * ChargedAttackCoef, 0.25f);
 
         cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
@@ -261,7 +261,8 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator ChargedAttackCoroutine()
     {
-        DeviceManager.Instance.ApplyVibrations(0.01f, 0.005f, float.MaxValue);
+        DeviceManager.Instance.ApplyVibrations(0f, 0.005f, float.MaxValue);
+        
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
@@ -269,7 +270,8 @@ public class PlayerInput : MonoBehaviour
         }
 
         DeviceManager.Instance.ForceStopVibrations();
-        DeviceManager.Instance.ApplyVibrations(0.01f, 0.01f, float.MaxValue);
+        yield return null;
+        DeviceManager.Instance.ApplyVibrations(0.005f, 0.005f, float.MaxValue);
         chargedAttackMax = true;
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
         AudioManager.Instance.PlaySound(controller.chargedAttackMaxSFX);
@@ -443,7 +445,7 @@ public class PlayerInput : MonoBehaviour
     {
         return (controller.hero.State == (int)Entity.EntityState.MOVE 
             || controller.hero.State == (int)Entity.EntityState.ATTACK)
-            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown;
+            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown && !LaunchedChargedAttack;
     }
 
     private bool CanRetrieveSpear()

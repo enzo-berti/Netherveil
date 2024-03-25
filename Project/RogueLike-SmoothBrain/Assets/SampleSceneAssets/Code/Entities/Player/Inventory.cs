@@ -8,6 +8,16 @@ public class Inventory
     List<IPassiveItem> passiveItems = new List<IPassiveItem>();
     public IActiveItem ActiveItem { get { return activeItem; } }
     public List<IPassiveItem> PassiveItems { get { return passiveItems; } }
+    public List<IItem> AllItems 
+    { 
+        get 
+        { 
+            List<IItem> itemList = new List<IItem>();
+            itemList.Add(activeItem);
+            itemList.AddRange(passiveItems);
+            return itemList;
+        } 
+    }
     public int Blood = 0;
 
     private void AddActiveItem(IActiveItem item)
@@ -47,7 +57,5 @@ public class Inventory
         {
             AddPassiveItem(item as IPassiveItem);
         }
-
-        
     }
 }
