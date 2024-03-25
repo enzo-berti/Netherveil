@@ -49,7 +49,10 @@ public class Spear : MonoBehaviour
             this.transform.position = posToReach;
             this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90, 0, 0);
             IsThrowing = false;
-            hero.State = (int)Entity.EntityState.MOVE;
+            if(hero.State != (int)Hero.PlayerState.KNOCKBACK)
+            {
+                hero.State = (int)Entity.EntityState.MOVE;
+            }
             spearThrowCollider.gameObject.SetActive(false);
         }
         else if (!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
@@ -64,7 +67,10 @@ public class Spear : MonoBehaviour
             meshRenderer.enabled = true;
             IsThrowing = false;
             Destroy(trail);
-            hero.State = (int)Entity.EntityState.MOVE;
+            if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
+            {
+                hero.State = (int)Entity.EntityState.MOVE;
+            }
             spearThrowCollider.gameObject.SetActive(false);
         }
     }
@@ -77,6 +83,7 @@ public class Spear : MonoBehaviour
         Vector3 playerToPosToReachVec = (posToReach - this.transform.position);
 
         trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * 5000, ForceMode.Force);
+        DeviceManager.Instance.ApplyVibrations(0.001f, 0.005f, 0.1f);
 
         //check if colliding with obstacle to stop the spear on collide
         RaycastHit[] hits = Physics.RaycastAll(this.transform.position, (posToReach - this.transform.position), (posToReach - this.transform.position).magnitude);
@@ -112,6 +119,7 @@ public class Spear : MonoBehaviour
         spearPosition = posToReach;
         posToReach = parent.transform.position;
         trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * 5000, ForceMode.Force);
+        DeviceManager.Instance.ApplyVibrations(0.005f, 0.001f, 0.1f);
 
         //orient player in front of spear
         float angle = player.AngleOffsetToFaceTarget(new Vector3(spearPosition.x, player.position.y, spearPosition.z));

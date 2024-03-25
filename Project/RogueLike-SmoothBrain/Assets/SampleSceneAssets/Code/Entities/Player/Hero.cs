@@ -107,6 +107,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT -1)
         {
             damages += playerController.FINISHER_DAMAGES;
+            DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+        }
+        else
+        {
+            DeviceManager.Instance.ApplyVibrations(0f, 0.1f, 0.1f);
         }
 
         //bool isCrit = UnityEngine.Random.Range(0, 101) <= stats.GetValue(Stat.CRIT_RATE);

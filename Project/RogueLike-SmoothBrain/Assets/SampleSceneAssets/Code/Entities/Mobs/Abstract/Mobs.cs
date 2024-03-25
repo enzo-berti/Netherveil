@@ -107,9 +107,9 @@ public abstract class Mobs : Entity
         alignment = TextAnchor.MiddleLeft,
         normal = new GUIStyleState()
         {
-            textColor = Color.white,
+            textColor = Color.black
         }
-    }); ;
+    });
     }
 #endif
 }
