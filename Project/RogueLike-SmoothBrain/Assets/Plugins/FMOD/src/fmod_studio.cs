@@ -24,6 +24,7 @@ namespace FMOD.Studio
     {
         ALLOWFADEOUT,
         IMMEDIATE,
+        Immediate,
     }
 
     public enum LOADING_STATE : int
