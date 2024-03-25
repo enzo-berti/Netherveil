@@ -33,7 +33,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField] private EventReference deathSound;
 
     // animation hashing
-    private int movingTriggerHash;
+    private int ChargeInHash;
+    private int ChargeOutHash;
 
     protected override void Start()
     {
@@ -43,7 +44,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
 
         // animator hashing
-        movingTriggerHash = Animator.StringToHash("MovingTrigger");
+        ChargeInHash = Animator.StringToHash("ChargeIn");
+        ChargeOutHash = Animator.StringToHash("ChargeOut");
 
         // common initialization
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
@@ -123,9 +125,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 Vector2 rdmPos = Random.insideUnitCircle.normalized * (int)stats.GetValue(Stat.VISION_RANGE);
                 MoveTo(transform.position + new Vector3(rdmPos.x, 0, rdmPos.y));
             }
-
-            animator.ResetTrigger(movingTriggerHash);
-            animator.SetTrigger(movingTriggerHash);
         }
     }
 
