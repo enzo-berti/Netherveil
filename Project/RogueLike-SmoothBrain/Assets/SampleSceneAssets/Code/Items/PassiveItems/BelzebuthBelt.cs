@@ -17,9 +17,5 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.CRIT_RATE, critRateStat, false);
         player.Stats.IncreaseValue(Stat.CORRUPTION, corruptionStat, false);
-        //RarityTier = Rarity.RARE;
-        //Name = "<color=\"blue\">Belzebuth's Belt";
-        //Description = "Significantly raises critical hit rate while simultaneously increasing the player's corruption, tempting them with the dark allure of demonic power.\n" +
-        //    "<color=\"green\">Critical hit rate: +" + critRateStat.ToString() + "  <color=\"purple\">Corruption: +" + corruptionStat.ToString();
     }
 }

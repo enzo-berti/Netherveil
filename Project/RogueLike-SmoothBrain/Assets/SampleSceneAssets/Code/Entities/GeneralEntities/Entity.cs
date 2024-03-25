@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class Entity : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public abstract class Entity : MonoBehaviour
 
     public List<Status> AppliedStatusList = new();
     [HideInInspector] public int State;
-
     private void Start()
     {
         OnDeath += ctx => ClearStatus();
