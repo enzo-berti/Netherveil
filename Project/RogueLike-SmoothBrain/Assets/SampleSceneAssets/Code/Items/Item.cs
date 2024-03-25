@@ -15,7 +15,7 @@ using UnityEditor;
 public class Item : MonoBehaviour, IInterractable
 {
     public string idItemName;
-    string descriptionToDisplay;
+    public string descriptionToDisplay;
     ItemDatabase database;
     [SerializeField] Mesh defaultMesh;
     [SerializeField] Material defaultMat;
