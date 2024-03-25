@@ -224,8 +224,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (CanCastChargedAttack())
         {
-            animator.ResetTrigger("ChargedAttackCharging");
-            animator.SetTrigger("ChargedAttackCharging");
+            animator.SetBool("ChargedAttackCasting", true);
             triggerCooldownAttack = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedChargedAttack = true;
@@ -241,12 +240,18 @@ public class PlayerInput : MonoBehaviour
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
         animator.ResetTrigger("ChargedAttackRelease");
-        animator.ResetTrigger("ChargedAttackCharging");
-        if (LaunchedChargedAttack)
+        animator.SetBool("ChargedAttackCasting", false);
+        if (LaunchedChargedAttack && (chargedAttackTime/ CHARGED_ATTACK_MAX_TIME) > 0.2f)
         {
             StopAllCoroutines();
             controller.ComboCount = 0;
             animator.SetTrigger("ChargedAttackRelease");
+        }
+        else if (LaunchedChargedAttack && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= 0.2f)
+        {
+            StopAllCoroutines();
+            DeviceManager.Instance.ForceStopVibrations();
+            controller.ChangeState((int)Entity.EntityState.MOVE);
         }
     }
 
