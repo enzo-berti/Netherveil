@@ -93,6 +93,7 @@ public class PlayerInput : MonoBehaviour
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
 
         kbMap["Movement"].performed += controller.ReadDirection;
+        kbMap["Movement"].started += ctx => ResetComboWhenMoving();
         kbMap["Movement"].canceled += controller.ReadDirection;
         kbMap["BasicAttack"].performed += Attack;
         kbMap["Dash"].performed += Dash;
@@ -109,6 +110,7 @@ public class PlayerInput : MonoBehaviour
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
 
         gamepadMap["Movement"].performed += controller.ReadDirection;
+        gamepadMap["Movement"].started += ctx => ResetComboWhenMoving();
         gamepadMap["Movement"].canceled += controller.ReadDirection;
         gamepadMap["BasicAttack"].performed += Attack;
         gamepadMap["Dash"].performed += Dash;
@@ -128,6 +130,7 @@ public class PlayerInput : MonoBehaviour
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
 
         kbMap["Movement"].performed -= controller.ReadDirection;
+        kbMap["Movement"].started -= ctx => ResetComboWhenMoving();
         kbMap["Movement"].canceled -= controller.ReadDirection;
         kbMap["BasicAttack"].performed -= Attack;
         kbMap["Dash"].performed -= Dash;
@@ -144,6 +147,7 @@ public class PlayerInput : MonoBehaviour
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
 
         gamepadMap["Movement"].performed -= controller.ReadDirection;
+        gamepadMap["Movement"].started -= ctx => ResetComboWhenMoving();
         gamepadMap["Movement"].canceled -= controller.ReadDirection;
         gamepadMap["BasicAttack"].performed -= Attack;
         gamepadMap["Dash"].performed -= Dash;
@@ -194,20 +198,25 @@ public class PlayerInput : MonoBehaviour
 
         if (controller.hero.State == (int)Entity.EntityState.MOVE)
         {
-           forceReturnToMove = false;
+            forceReturnToMove = false;
         }
 
+        //Test();
+    }
+
+    private void ResetComboWhenMoving()
+    {
         //il est immonde mais la vérité je pouvais pas faire mieux
-        //if ((
-        //        (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
-        //        (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
-        //    )
-        //        && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
-        //   )
-        //{
-        //    forceReturnToMove = true;
-        //    controller.ResetValues();
-        //}
+        if ((
+                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
+                (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
+            )
+                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
+           )
+        {
+            forceReturnToMove = true;
+            controller.ResetValues();
+        }
     }
 
     public void ChargedAttack(InputAction.CallbackContext ctx)
