@@ -14,7 +14,7 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     // think useless
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
-    private List<Status> statusToApply = new List<Status>();
+    
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public List<Status> StatusToApply { get => statusToApply; }
@@ -38,7 +38,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     protected override void Start()
     {
         base.Start();
-
         // component initialization
         animator = GetComponentInChildren<Animator>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();

@@ -1,39 +1,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemBar : MonoBehaviour
 {
-    [SerializeField] GameObject frame;
-    [SerializeField] GameObject[] itemSlot = new GameObject[5];
-    Hero player;
-    List<IPassiveItem> items;
+    [SerializeField] private GameObject framePf;
+    private List<GameObject> itemSlot = new List<GameObject>();
+    private ItemDatabase database;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
+        database = Resources.Load<ItemDatabase>("ItemDatabase");
+        Item.onRetrieved += OnItemAdd;
+        //subscribe event
     }
 
-    void Update()
+    private void OnItemAdd(ItemEffect itemAdd)
     {
-        if (player.Inventory.PassiveItems != null)
-        {
-            List<IPassiveItem> passiveItems = player.Inventory.PassiveItems;
-            items = passiveItems
-                .Skip(Mathf.Max(0, passiveItems.Count() - 5))
-                .ToList();
-        }
+        GameObject frame = Instantiate(framePf, transform);
+        frame.GetComponentInChildren<RawImage>().texture = database.GetItem(itemAdd.Name).icon;
+        itemSlot.Add(frame);
 
-        int c = 0;
-        foreach (var item in items)
-        {
-            if (itemSlot[c] != null)
-            {
-                Destroy(itemSlot[c]);
-            }
-            itemSlot[c] = Instantiate(frame, transform);
-            c++;
-        }
+        if (transform.childCount > 5)
+            DestroyImmediate(transform.GetChild(0).gameObject);
     }
 }
 
@@ -46,7 +36,7 @@ static class ItemsExtensions
             N--;
         }
 
-        Debug.Log(source.Count() - N);
+        //Debug.Log(source.Count() - N);
         return source.Skip(Mathf.Max(0, source.Count() - N));
     }
 }

@@ -13,7 +13,6 @@ public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
-    private List<Status> statusToApply = new();
     public List<Status> StatusToApply => statusToApply;
 
     [Header("Tank Parameters")]
