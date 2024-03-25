@@ -291,12 +291,11 @@ public class PlayerInput : MonoBehaviour
             yield return null;
         }
 
-        DeviceManager.Instance.ForceStopVibrations();
-        yield return null;
         DeviceManager.Instance.ApplyVibrations(0.005f, 0.005f, float.MaxValue);
         chargedAttackMax = true;
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
         AudioManager.Instance.PlaySound(controller.chargedAttackMaxSFX);
+        yield return null;
 
         while(true)
         {
@@ -344,7 +343,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (CanDash())
         {
-            controller.hero.State = (int)Hero.PlayerState.DASH;
+            ResetComboWhenMoving();
 
             if (controller.Direction.x != 0f || controller.Direction.y != 0f)
             {
@@ -359,9 +358,6 @@ public class PlayerInput : MonoBehaviour
 
             animator.ResetTrigger("Dash");
             animator.SetTrigger("Dash");
-            triggerCooldownDash = true;
-            dashCooldown = true;
-            AudioManager.Instance.PlaySound(controller.dashSFX);
         }
     }
 
@@ -473,6 +469,12 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    public void TriggerDashCooldown()
+    {
+        triggerCooldownDash = true;
+        dashCooldown = true;
+    }
+
     private bool CanAttack()
     {
         return (controller.hero.State == (int)Entity.EntityState.MOVE ||
@@ -494,6 +496,7 @@ public class PlayerInput : MonoBehaviour
 
     private bool CanDash()
     {
-        return controller.hero.State == (int)Entity.EntityState.MOVE && !triggerCooldownAttack && !dashCooldown;
+        return (controller.hero.State == (int)Entity.EntityState.MOVE
+            || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownAttack && !dashCooldown && !LaunchedChargedAttack;
     }
 }
