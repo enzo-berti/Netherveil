@@ -27,6 +27,7 @@ public class WindowItemDatabase : EditorWindow
     {
         SearchInDatabase();
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        Vector2 scroll = Vector2.zero;
         // Search Field
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Search :", GUILayout.Width(60));
@@ -78,7 +79,7 @@ public class WindowItemDatabase : EditorWindow
     }
     void SearchInDatabase()
     {
-        searchItems = database.datas.Where(item => item.idName.ToLower().Contains(search.ToLower()) || item.idName.ToLower().Contains(search.ToLower())).ToList();
+        searchItems = database.datas.Where(item => item.idName.SeparateAllCase().ToLower().Contains(search.ToLower()) || item.idName.SeparateAllCase().ToLower().Contains(search.ToLower())).ToList();
     }
 
     void DeleteInDatabase(ItemData item)
