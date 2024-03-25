@@ -98,9 +98,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 }
                 else if (attackCooldown == 0)
                 {
-                    attackState = AttackState.CHARGING;
                     //currentAttack = (Attacks)Random.Range(0, 3);
-                    currentAttack = Attacks.THRUST;
+                    currentAttack = Attacks.DASH;
                 }
 
                 switch (currentAttack)
@@ -271,7 +270,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         dashTimer += Time.deltaTime * dashSpeed;
 
-        AttackCollide(attacks[(int)Attacks.DASH].data, new Vector3(-transform.forward.z, 0, transform.forward.x) * 5f);
+        if (!triggerAOE)
+        {
+            AttackCollide(attacks[(int)Attacks.DASH].data, new Vector3(-transform.forward.z, 0, transform.forward.x) * 5f);
+        }
 
         if (!dashRetracting)
         {
@@ -279,7 +281,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             {
                 originalPos = dashPivot.localPosition;
                 dashPivot.localScale = new Vector3(1, 1, dashRange.x + dashTimer);
-                dashPivot.gameObject.SetActive(true);
             }
             else
             {
@@ -296,9 +297,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
             else if (!triggerAOE)
             {
-                AttackCollide(attacks[(int)Attacks.DASH + 1].data);
-                dashPivot.gameObject.SetActive(false);
+                DisableHitboxes();
                 transform.position += transform.forward * dashRange.y;
+                AttackCollide(attacks[(int)Attacks.DASH + 1].data);
                 triggerAOE = true;
             }
             else
