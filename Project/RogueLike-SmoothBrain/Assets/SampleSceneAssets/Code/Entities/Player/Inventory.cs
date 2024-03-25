@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 [Serializable]
 public class Inventory
 {
     IActiveItem activeItem = null;
     List<IPassiveItem> passiveItems = new List<IPassiveItem>();
-
     public IActiveItem ActiveItem { get { return activeItem; } }
     public List<IPassiveItem> PassiveItems { get { return passiveItems; } }
     public int Blood = 0;

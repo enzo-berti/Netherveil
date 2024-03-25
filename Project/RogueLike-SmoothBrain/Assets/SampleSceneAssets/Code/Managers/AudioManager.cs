@@ -1,5 +1,6 @@
 using FMOD.Studio;
 using FMODUnity;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,7 +11,7 @@ public class CustomEventTrigger : EventTrigger
     public static EventReference buttonSelectSFX;
     public override void OnSelect(BaseEventData data)
     {
-        AudioManager.Instance.PlaySound(buttonSelectSFX);
+        AudioManager.Instance.buttonSFXInstances.Add(AudioManager.Instance.PlaySound(buttonSelectSFX));
     }
 }
 
@@ -41,8 +42,11 @@ public class AudioManager : MonoBehaviour
     [Range(0, 1)] public float soundsFXVolumeBarValue = 1f;
     [Range(0, 1)] public float ambiencesVolumeBarValue = 1f;
 
-    [SerializeField] EventReference buttonClick;
-    [SerializeField] EventReference buttonSelect;
+    [SerializeField] private EventReference buttonClick;
+    [SerializeField] private EventReference buttonSelect;
+
+    private List<EventInstance> audioInstance = new List<EventInstance>();
+    public List<EventInstance> buttonSFXInstances = new List<EventInstance>();
 
     private Bus masterBus;
     private Bus musicsBus;
@@ -68,6 +72,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
     }
+
     void Start()
     {
         CustomEventTrigger.buttonSelectSFX = buttonSelect;
@@ -76,6 +81,16 @@ public class AudioManager : MonoBehaviour
         {
             b.onClick.AddListener(ButtonClickSFX);
             b.AddComponent<CustomEventTrigger>();
+        }
+    }
+
+    private void Update()
+    {
+        for(int i = audioInstance.Count - 1; i >= 0; --i)
+        {
+            audioInstance[i].getPlaybackState(out PLAYBACK_STATE state);
+            if (state == PLAYBACK_STATE.STOPPED)
+                audioInstance.Remove(audioInstance[i]);
         }
     }
 
@@ -109,18 +124,50 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySound(string path)
+    public EventInstance PlaySound(string path)
     {
-        RuntimeManager.PlayOneShot(path);
+        EventInstance result = RuntimeManager.CreateInstance(path);
+        result.start();
+        audioInstance.Add(result);
+
+        return result;
     }
 
-    public void PlaySound(EventReference reference)
+    public EventInstance PlaySound(EventReference reference)
     {
-        RuntimeManager.PlayOneShot(reference);
+        EventInstance result = RuntimeManager.CreateInstance(reference);
+        result.start();
+        audioInstance.Add(result);
+
+        return result;
+    }
+
+    public void StopAllSounds(FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
+    {
+        for (int i = audioInstance.Count - 1; i >= 0; --i)
+        {
+            audioInstance[i].stop(stopMode);
+            audioInstance.RemoveAt(i);
+        }
+    }
+
+    public void StopSound(EventInstance eventInstance, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
+    {
+        if (!audioInstance.Contains(eventInstance))
+            return;
+
+        eventInstance.stop(stopMode);
+        audioInstance.Remove(eventInstance);
     }
 
     public void ButtonClickSFX()
     {
-        Instance.PlaySound(buttonClick);
+        for (int i = buttonSFXInstances.Count - 1; i >= 0; --i)
+        {
+            buttonSFXInstances[i].stop(FMOD.Studio.STOP_MODE.Immediate);
+            audioInstance.RemoveAt(i);
+        }
+
+        buttonSFXInstances.Add(Instance.PlaySound(buttonClick));
     }
 }

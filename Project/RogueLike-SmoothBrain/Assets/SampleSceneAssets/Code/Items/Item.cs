@@ -15,7 +15,7 @@ using UnityEditor;
 public class Item : MonoBehaviour, IInterractable
 {
     public string idItemName;
-    string descriptionToDisplay;
+    public string descriptionToDisplay;
     ItemDatabase database;
     [SerializeField] Mesh defaultMesh;
     [SerializeField] Material defaultMat;
@@ -27,7 +27,6 @@ public class Item : MonoBehaviour, IInterractable
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
         RandomizeItem(this);
-        Debug.Log(idItemName);
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
@@ -38,7 +37,13 @@ public class Item : MonoBehaviour, IInterractable
     }
     private void Update()
     {
-        if (Vector2.Distance(GameObject.FindWithTag("Player").transform.position, transform.position) < 3)
+        GameObject player = GameObject.FindWithTag("Player");
+        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+        Vector3 playerPos = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
+        Vector3 itemPos = (cameraForward * this.transform.position.z + cameraRight * this.transform.position.x) ;
+        
+        if (Vector2.Distance(playerPos, itemPos) < 3)
         {
             if(!isInItemZone)
             {
@@ -70,6 +75,7 @@ public class Item : MonoBehaviour, IInterractable
     }
     public void Interract()
     {
+        itemToGive.Name = idItemName;
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
         Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
         Destroy(this.gameObject);
