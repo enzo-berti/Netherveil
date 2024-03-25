@@ -64,7 +64,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                     //animator.SetTrigger("Hit");
                     playerController.ResetValues(); //possible source de bugs
                     animator.ResetTrigger("ChargedAttackRelease");
-                    animator.ResetTrigger("ChargedAttackCharging");
+                    animator.SetBool("ChargedAttackCasting", false);
                     animator.ResetTrigger("BasicAttack");
                 }
                 AudioManager.Instance.PlaySound(playerController.hitSFX);
