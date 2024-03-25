@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
+
 [Serializable]
 public class ItemData
 {
@@ -22,4 +24,5 @@ public class ItemData
     public Material mat;
     public Mesh mesh;
     [Multiline] public string Description;
+    public Texture icon;
 }   

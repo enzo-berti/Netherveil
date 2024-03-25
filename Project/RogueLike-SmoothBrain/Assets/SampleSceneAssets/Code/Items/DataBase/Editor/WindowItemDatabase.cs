@@ -27,7 +27,6 @@ public class WindowItemDatabase : EditorWindow
     {
         SearchInDatabase();
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
-        Vector2 scroll = Vector2.zero;
         // Search Field
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Search :", GUILayout.Width(60));
@@ -48,8 +47,9 @@ public class WindowItemDatabase : EditorWindow
         EditorGUILayout.LabelField("Rarity", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Type", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Description", GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Icon", GUILayout.Width(SizeArea/3), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Material", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
-        EditorGUILayout.LabelField("Mesh", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true)) ;
+        EditorGUILayout.LabelField("Mesh", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.EndHorizontal();
 
         
@@ -63,6 +63,7 @@ public class WindowItemDatabase : EditorWindow
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Description = EditorGUILayout.TextArea(item.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
+            item.icon = (Texture)EditorGUILayout.ObjectField("", item.icon, typeof(Texture), false, GUILayout.Width(SizeArea/3), GUILayout.ExpandWidth(true));
             item.mat = (Material)EditorGUILayout.ObjectField("", item.mat, typeof(Material), false, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.mesh = (Mesh)EditorGUILayout.ObjectField("", item.mesh, typeof(Mesh), false, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             GUI.color = Color.red;
