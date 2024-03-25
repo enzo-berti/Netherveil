@@ -29,7 +29,7 @@ public abstract class Entity : MonoBehaviour
             }
         }
     }
-    protected void Start()
+    protected virtual void Start()
     {
         Debug.Log("coucou " + this.gameObject.name);
         OnDeath += ctx => ClearStatus();

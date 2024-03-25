@@ -15,7 +15,7 @@ public abstract class Mobs : Entity
     protected SkinnedMeshRenderer skinnedMeshRenderer;
     protected Entity[] nearbyEntities;
 
-    protected new virtual void Start()
+    protected override void Start()
     {
         base.Start();
         agent = GetComponent<NavMeshAgent>();
