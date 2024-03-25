@@ -41,7 +41,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
 
-        statusToApply.Add(new Fire(3f));
+        //statusToApply.Add(new Fire(3f));
 
         if (this is IAttacker attacker)
         {

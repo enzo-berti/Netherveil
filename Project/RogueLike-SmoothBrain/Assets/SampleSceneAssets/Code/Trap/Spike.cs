@@ -10,13 +10,12 @@ public class Spike : MonoBehaviour
     private float startPosY;
     private float endPosY;
     private bool isOut;
-    private GameObject spikesToMove;
+    [SerializeField] GameObject spikesToMove;
     private int damage;
     List<IDamageable> entitiesToDealDamage;
 
     private void Awake()
     {
-        spikesToMove = transform.GetChild(0).gameObject;
         startPosY = spikesToMove.transform.position.y;
         endPosY = spikesToMove.transform.position.y + 1.5f;
         entitiesToDealDamage = new List<IDamageable>();
@@ -43,6 +42,7 @@ public class Spike : MonoBehaviour
         {
             if (isOut)
             {
+               entitiesToDealDamage.Remove(other.gameObject.GetComponent<IDamageable>());
                StartCoroutine(Disable());
             }
         }
