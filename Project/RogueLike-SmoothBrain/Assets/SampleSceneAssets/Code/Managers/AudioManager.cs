@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.Timeline.AnimationPlayableAsset;
 
 public class CustomEventTrigger : EventTrigger
 {
