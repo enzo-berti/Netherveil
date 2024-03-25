@@ -38,6 +38,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     bool dashRetracting = false;
     Vector3 originalPos;
     bool triggerAOE = false;
+    float mescouillesfix = 0f;
 
     int thrustCounter = 0;
 
@@ -69,6 +70,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             yield return null;
 
+            mescouillesfix = mescouillesfix <= 0 ? 0  : mescouillesfix - Time.deltaTime;
 
             if (!player)
             {
@@ -153,7 +155,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         agent.SetDestination(_pos);
     }
 
-    public void AttackCollide(List<Collider> colliders, Vector3 _knockback = default(Vector3), bool debugMode = true)
+    public void AttackCollide(List<Collider> colliders, bool _kb = false, bool debugMode = true)
     {
         if (debugMode)
         {
@@ -174,9 +176,21 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     if (col.gameObject.GetComponent<Hero>() != null)
                     {
-                        Attack(col.gameObject.GetComponent<IDamageable>());
-                        col.transform.position += _knockback;
+                        IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
+                        Attack(damageable);
+                        if (_kb)
+                        {
+                            Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
+                            if (knockbackable)
+                            {
+                                Vector3 damageablePos = (damageable as MonoBehaviour).transform.position;
+                                Vector3 force = new Vector3(damageablePos.x - transform.position.x, 0f, damageablePos.z - transform.position.z).normalized;
+                                knockbackable.GetKnockback(new Vector3(-force.z, 0, force.x) * stats.GetValue(Stat.KNOCKBACK_COEFF));
+                                FloatingTextGenerator.CreateActionText((damageable as MonoBehaviour).transform.position, "Pushed!");
+                            }
+                        }
 
+                        mescouillesfix = 0.2f;
                         break;
                     }
                 }
@@ -270,9 +284,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         dashTimer += Time.deltaTime * dashSpeed;
 
-        if (!triggerAOE)
+        if (!triggerAOE && mescouillesfix == 0)
         {
-            AttackCollide(attacks[(int)Attacks.DASH].data, new Vector3(-transform.forward.z, 0, transform.forward.x) * 5f);
+            AttackCollide(attacks[(int)Attacks.DASH].data, true);
         }
 
         if (!dashRetracting)
@@ -298,6 +312,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             else if (!triggerAOE)
             {
                 DisableHitboxes();
+
                 transform.position += transform.forward * dashRange.y;
                 AttackCollide(attacks[(int)Attacks.DASH + 1].data);
                 triggerAOE = true;
