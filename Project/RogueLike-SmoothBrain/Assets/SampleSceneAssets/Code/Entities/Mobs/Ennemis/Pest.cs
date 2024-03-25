@@ -135,6 +135,14 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
+
+        Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
+        if (knockbackable)
+        {
+            Vector3 force = ((damageable as MonoBehaviour).transform.position - transform.position).normalized;
+            knockbackable.GetKnockback(force * stats.GetValue(Stat.KNOCKBACK_COEFF));
+            FloatingTextGenerator.CreateActionText((damageable as MonoBehaviour).transform.position, "Pushed!");
+        }
     }
 
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)

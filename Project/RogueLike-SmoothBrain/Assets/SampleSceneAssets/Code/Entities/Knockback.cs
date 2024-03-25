@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(NavMeshAgent))]
 public class Knockback : MonoBehaviour
 {
     private Rigidbody rb;
@@ -28,7 +27,7 @@ public class Knockback : MonoBehaviour
     protected IEnumerator ApplyKnockback(Vector3 force)
     {
         yield return null;
-        agent.enabled = false;
+        if(agent != null) agent.enabled = false;
         rb.isKinematic = false;
         rb.AddForce(force, ForceMode.Impulse);
 
@@ -40,8 +39,11 @@ public class Knockback : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        agent.Warp(transform.position);
-        agent.enabled = true;
+        if (agent != null)
+        {
+            agent.Warp(transform.position);
+            agent.enabled = true;
+        }
 
         knockbackRoutine = null;
     }
