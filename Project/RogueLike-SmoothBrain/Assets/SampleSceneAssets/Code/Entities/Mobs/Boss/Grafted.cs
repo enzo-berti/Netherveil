@@ -10,7 +10,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
-    private List<Status> statusToApply = new List<Status>();
     public List<Status> StatusToApply => statusToApply;
 
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
@@ -30,11 +29,12 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     float thrustDurationTimer;
 
     [Header("Dash")]
-    [SerializeField] float maxDashRange;
+    [SerializeField, MinMaxSlider(0, 100)] Vector2 dashRange;
     [SerializeField] Transform dashPivot;
-    [SerializeField] float dashSpeed = 2f;
+    [SerializeField] float dashSpeed = 5f;
     float dashTimer = 0f;
-    float minDashSize = 2;
+    bool dashRetracting = false;
+    Vector3 originalPos;
 
     int thrustCounter = 0;
 
@@ -84,9 +84,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 }
 
                 // Move towards player
-
                 MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
-
 
                 // Attacks
                 if (attackCooldown > 0)
@@ -97,6 +95,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 }
                 else if (attackCooldown == 0)
                 {
+                    attackState = AttackState.CHARGING;
                     //currentAttack = (Attacks)Random.Range(0, 3);
                     currentAttack = Attacks.DASH;
                 }
@@ -126,10 +125,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         _damageable.ApplyDamage(damages);
     }
 
-    public void ApplyDamage(int _value,bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-        
+
         if (hasAnimation)
         {
             FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
@@ -152,7 +151,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         agent.SetDestination(_pos);
     }
 
-    public void AttackCollide(List<Collider> colliders, bool debugMode = true)
+    public void AttackCollide(List<Collider> colliders, Vector3 _knockback = default(Vector3), bool debugMode = true)
     {
         if (debugMode)
         {
@@ -164,9 +163,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         Vector3 rayOffset = Vector3.up / 2;
 
-        foreach (Collider spearCollider in colliders)
+        foreach (Collider attackCollider in colliders)
         {
-            Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(spearCollider, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
+            Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(attackCollider, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
             if (tab.Length > 0)
             {
                 foreach (Collider col in tab)
@@ -174,6 +173,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     if (col.gameObject.GetComponent<Hero>() != null)
                     {
                         Attack(col.gameObject.GetComponent<IDamageable>());
+                        col.transform.position += _knockback;
+
                         break;
                     }
                 }
@@ -199,8 +200,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void TripleThrust()
     {
-        Debug.Log(attackState);
-
         switch (attackState)
         {
             case AttackState.IDLE:
@@ -262,13 +261,50 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void Dash()
     {
-        currentAttack = Attacks.NONE;
-        attackState = AttackState.IDLE;
+        //dashRange.x : min
+        //dashRange.y : max
+
+        attackState = AttackState.ATTACKING;
 
         dashTimer += Time.deltaTime * dashSpeed;
-        if (minDashSize + dashTimer < maxDashRange)
+
+        AttackCollide(attacks[(int)Attacks.DASH].data, new Vector3(-transform.forward.z, 0, transform.forward.x) * 5f);
+        dashPivot.gameObject.SetActive(true);
+
+        if (!dashRetracting)
         {
-            dashPivot.localScale = new Vector3(1, 1, minDashSize + dashTimer);
+            if (dashRange.x + dashTimer < dashRange.y)
+            {
+                originalPos = dashPivot.localPosition;
+                dashPivot.localScale = new Vector3(1, 1, dashRange.x + dashTimer);
+            }
+            else
+            {
+                dashTimer = 0;
+                dashRetracting = true;
+            }
+        }
+        else
+        {
+            if (dashRange.y - dashTimer > dashRange.x)
+            {
+                dashPivot.localScale = new Vector3(1, 1, dashRange.y - dashTimer);
+                dashPivot.localPosition = originalPos + new Vector3(0, 0, dashTimer);
+            }
+            else
+            {
+                currentAttack = Attacks.NONE;
+                attackState = AttackState.IDLE;
+
+                dashRetracting = false;
+                dashTimer = 0;
+                dashPivot.localPosition = originalPos;
+                transform.position += transform.forward * dashRange.y;
+
+                attackCooldown = 0.5f;
+                DisableHitboxes();
+                dashPivot.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -289,9 +325,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         if (!Selection.Contains(gameObject))
             return;
 
-        DisplayVisionRange(visionAngle);
-        DisplayAttackRange(visionAngle);
-        DisplayInfos();
+        //DisplayVisionRange(visionAngle);
+        //DisplayAttackRange(visionAngle);
+        //DisplayInfos();
     }
 #endif
 }
