@@ -443,7 +443,7 @@ public class PlayerInput : MonoBehaviour
     {
         return (controller.hero.State == (int)Entity.EntityState.MOVE 
             || controller.hero.State == (int)Entity.EntityState.ATTACK)
-            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown;
+            && !triggerCooldownDash && !weapon.GetComponent<Spear>().IsThrown && !LaunchedChargedAttack;
     }
 
     private bool CanRetrieveSpear()
