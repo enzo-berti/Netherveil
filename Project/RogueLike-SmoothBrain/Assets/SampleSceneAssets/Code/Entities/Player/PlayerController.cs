@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;
     public List<VisualEffect> spearAttacksVFX;
-    public ParticleSystem dashVFX;
+    public VisualEffect dashVFX;
     public VisualEffect chargedAttackVFX;
 
     [Header("SFXs")]
@@ -72,10 +72,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        ApplyGravity();
-        Rotate();
-        Move();
-        DashMove();
+        if(hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        {
+            ApplyGravity();
+            Rotate();
+            Move();
+            DashMove();
+        }
     }
 
     private void Rotate()

@@ -139,7 +139,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
         if (knockbackable)
         {
-            Vector3 force = ((damageable as MonoBehaviour).transform.position - transform.position).normalized;
+            Vector3 damageablePos = (damageable as MonoBehaviour).transform.position;
+            Vector3 force = new Vector3(damageablePos.x - transform.position.x, 0f, damageablePos.z - transform.position.z).normalized;
             knockbackable.GetKnockback(force * stats.GetValue(Stat.KNOCKBACK_COEFF));
             FloatingTextGenerator.CreateActionText((damageable as MonoBehaviour).transform.position, "Pushed!");
         }
