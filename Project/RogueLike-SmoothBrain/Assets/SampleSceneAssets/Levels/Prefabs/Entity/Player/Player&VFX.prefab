@@ -1155,7 +1155,7 @@ MonoBehaviour:
   VFXWrapper: {fileID: 2553172325082090671}
   spearAttacksVFX:
   - {fileID: 6270312603214981742}
-  - {fileID: 6270312603214981742}
+  - {fileID: 3576489210391077963}
   - {fileID: 6270312603214981742}
   dashVFX: {fileID: 2934421512825703588}
   chargedAttackVFX: {fileID: 4339925852799118057}
@@ -1907,6 +1907,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1245907682919490663}
   - {fileID: 8914733057213266229}
   m_Father: {fileID: 200325822250048358}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2532,4 +2533,94 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2337261498203037678, guid: c888c8e7cbba85247825f6e330f0bbac,
     type: 3}
   m_PrefabInstance: {fileID: 6618286530181342939}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8520733049147121692
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4574402777992253921}
+    m_Modifications:
+    - target: {fileID: 4564985994579502899, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_Name
+      value: VFX_ArcAttack
+      objectReference: {fileID: 0}
+    - target: {fileID: 5160426351122498647, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_InitialEventName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5160426351122498647, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f339dd1d76966824ab9e8539af93fab9, type: 3}
+--- !u!4 &1245907682919490663 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7455115444735755387, guid: f339dd1d76966824ab9e8539af93fab9,
+    type: 3}
+  m_PrefabInstance: {fileID: 8520733049147121692}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &3576489210391077963 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 5160426351122498647, guid: f339dd1d76966824ab9e8539af93fab9,
+    type: 3}
+  m_PrefabInstance: {fileID: 8520733049147121692}
   m_PrefabAsset: {fileID: 0}
