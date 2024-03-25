@@ -341,7 +341,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.75, z: 0.75}
-  m_LocalScale: {x: 1, y: 1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3298921738939079264}
@@ -358,17 +358,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.0120003
+      value: -4.6056986
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.665
+      value: 12.575
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.0357941
+      value: 4.168133
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -409,7 +409,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 45be2d8ab4b258440a6ac857f2717ee0, type: 2}
+      objectReference: {fileID: 2100000, guid: f5bcdad645291394ab69ce589a7d3aa6, type: 2}
     - target: {fileID: 919132149155446097, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_Name
@@ -482,7 +482,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 523330043808040203}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.73
+  m_Radius: 0.6
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -491,7 +491,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1.77
+  m_Height: 1.85
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -513,7 +513,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 0
+      value: 1000
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -524,16 +524,6 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 1
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 7
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 20
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -553,7 +543,27 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 2
+      value: 4
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 7
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 20
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 3
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 20
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -563,18 +573,19 @@ MonoBehaviour:
   isAlly: 0
   State: 0
   visionAngle: 360
-  isTriggered: 1
   attacks:
   - data:
     - {fileID: 2217064026567559699}
   - data:
-    - {fileID: 7282033651682388259}
-  - data:
     - {fileID: 1136477032913775760}
+  - data:
+    - {fileID: 7282033651682388259}
   thrustCooldown: 0.1
   thrustCharge: 0.5
   thrustDuration: 0.2
-  maxDashRange: 5
+  dashRange: {x: 1, y: 10}
+  dashPivot: {fileID: 2673750351035000378}
+  dashSpeed: 5
 --- !u!4 &867203832160427953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,

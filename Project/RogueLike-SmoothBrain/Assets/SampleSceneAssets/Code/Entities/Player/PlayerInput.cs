@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using static UnityEditor.FilePathAttribute;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -211,7 +212,7 @@ public class PlayerInput : MonoBehaviour
                 (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
                 (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
             )
-                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
+                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack
            )
         {
             forceReturnToMove = true;
@@ -275,6 +276,18 @@ public class PlayerInput : MonoBehaviour
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                controller.MouseOrientation();
+            }
+            else if (controller.Direction.x != 0f || controller.Direction.y != 0f)
+            {
+                transform.rotation = Quaternion.LookRotation(new Vector3(controller.Direction.x, 0, controller.Direction.y));
+            }
+            else
+            {
+                transform.rotation = Quaternion.LookRotation(new Vector3(transform.forward.x, 0, transform.forward.y));
+            }
             yield return null;
         }
 
@@ -284,6 +297,23 @@ public class PlayerInput : MonoBehaviour
         chargedAttackMax = true;
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
         AudioManager.Instance.PlaySound(controller.chargedAttackMaxSFX);
+
+        while(true)
+        {
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                controller.MouseOrientation();
+            }
+            else if (controller.Direction.x != 0f || controller.Direction.y != 0f)
+            {
+                transform.rotation = Quaternion.LookRotation(new Vector3(controller.Direction.x, 0, controller.Direction.y));
+            }
+            else
+            {
+                transform.rotation = Quaternion.LookRotation(new Vector3(transform.forward.x, 0, transform.forward.y));
+            }
+            yield return null;
+        }
     }
 
     public void Attack(InputAction.CallbackContext ctx)
