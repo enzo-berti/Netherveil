@@ -7,13 +7,19 @@ public class Knockback : MonoBehaviour
 {
     private Rigidbody rb;
     private NavMeshAgent agent;
+    private CharacterController characterController;
     private Coroutine knockbackRoutine;
+    private Animator animator;
+    private Hero hero;
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        characterController = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
+        hero = GetComponent<Hero>();
     }
 
     public void GetKnockback(Vector3 force)
@@ -21,13 +27,21 @@ public class Knockback : MonoBehaviour
         if (knockbackRoutine != null)
             return;
 
-        knockbackRoutine = StartCoroutine(ApplyKnockback(force));
+        if(agent != null)
+        {
+            knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(force));
+        }
+        else if (characterController != null)
+        {
+            knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(force));
+        }
+       
     }
 
-    protected IEnumerator ApplyKnockback(Vector3 force)
+    protected IEnumerator ApplyKnockbackAgent(Vector3 force)
     {
         yield return null;
-        if(agent != null) agent.enabled = false;
+        agent.enabled = false;
         rb.isKinematic = false;
         rb.AddForce(force, ForceMode.Impulse);
 
@@ -39,11 +53,31 @@ public class Knockback : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        if (agent != null)
-        {
-            agent.Warp(transform.position);
-            agent.enabled = true;
-        }
+        agent.Warp(transform.position);
+        agent.enabled = true;
+
+        knockbackRoutine = null;
+    }
+
+    protected IEnumerator ApplyKnockbackCharacterController(Vector3 force)
+    {
+        yield return null;
+        characterController.enabled = false;
+        animator.SetBool("IsKnockback", true);
+        hero.State = (int)Hero.PlayerState.KNOCKBACK;
+        rb.isKinematic = false;
+        rb.AddForce(force, ForceMode.Impulse);
+
+        yield return new WaitForFixedUpdate();
+        yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        animator.SetBool("IsKnockback", false);
+        characterController.enabled = true;
+        hero.State = (int)Entity.EntityState.MOVE;
 
         knockbackRoutine = null;
     }
