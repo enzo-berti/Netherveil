@@ -64,6 +64,10 @@ public class WindowItemDatabase : EditorWindow
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Description = EditorGUILayout.TextArea(item.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
             item.icon = (Texture)EditorGUILayout.ObjectField("", item.icon, typeof(Texture), false, GUILayout.Width(SizeArea/3), GUILayout.ExpandWidth(true));
+            if(item.icon == null)
+            {
+                item.icon = Resources.Load<Texture>("EmojiOne");
+            }
             item.mat = (Material)EditorGUILayout.ObjectField("", item.mat, typeof(Material), false, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.mesh = (Mesh)EditorGUILayout.ObjectField("", item.mesh, typeof(Mesh), false, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             GUI.color = Color.red;
