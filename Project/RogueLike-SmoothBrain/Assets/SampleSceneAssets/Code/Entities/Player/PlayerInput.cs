@@ -198,16 +198,16 @@ public class PlayerInput : MonoBehaviour
         }
 
         //il est immonde mais la vérité je pouvais pas faire mieux
-        if ((
-                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
-                (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
-            )
-                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
-           )
-        {
-            forceReturnToMove = true;
-            controller.ResetValues();
-        }
+        //if ((
+        //        (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
+        //        (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
+        //    )
+        //        && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK
+        //   )
+        //{
+        //    forceReturnToMove = true;
+        //    controller.ResetValues();
+        //}
     }
 
     public void ChargedAttack(InputAction.CallbackContext ctx)
