@@ -33,8 +33,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField] Transform dashPivot;
     [SerializeField] float dashSpeed = 5f;
     float dashTimer = 0f;
+    [SerializeField] float AOEDuration;
+    float AOETimer = 0f;
     bool dashRetracting = false;
     Vector3 originalPos;
+    bool triggerAOE = false;
 
     int thrustCounter = 0;
 
@@ -97,7 +100,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     attackState = AttackState.CHARGING;
                     //currentAttack = (Attacks)Random.Range(0, 3);
-                    currentAttack = Attacks.DASH;
+                    currentAttack = Attacks.THRUST;
                 }
 
                 switch (currentAttack)
@@ -269,7 +272,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         dashTimer += Time.deltaTime * dashSpeed;
 
         AttackCollide(attacks[(int)Attacks.DASH].data, new Vector3(-transform.forward.z, 0, transform.forward.x) * 5f);
-        dashPivot.gameObject.SetActive(true);
 
         if (!dashRetracting)
         {
@@ -277,6 +279,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             {
                 originalPos = dashPivot.localPosition;
                 dashPivot.localScale = new Vector3(1, 1, dashRange.x + dashTimer);
+                dashPivot.gameObject.SetActive(true);
             }
             else
             {
@@ -291,19 +294,30 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 dashPivot.localScale = new Vector3(1, 1, dashRange.y - dashTimer);
                 dashPivot.localPosition = originalPos + new Vector3(0, 0, dashTimer);
             }
+            else if (!triggerAOE)
+            {
+                AttackCollide(attacks[(int)Attacks.DASH + 1].data);
+                dashPivot.gameObject.SetActive(false);
+                transform.position += transform.forward * dashRange.y;
+                triggerAOE = true;
+            }
             else
             {
-                currentAttack = Attacks.NONE;
-                attackState = AttackState.IDLE;
+                AOETimer += Time.deltaTime;
+                if (AOETimer >= AOEDuration)
+                {
+                    currentAttack = Attacks.NONE;
+                    attackState = AttackState.IDLE;
 
-                dashRetracting = false;
-                dashTimer = 0;
-                dashPivot.localPosition = originalPos;
-                transform.position += transform.forward * dashRange.y;
+                    dashRetracting = false;
+                    dashTimer = 0;
+                    triggerAOE = false;
+                    AOETimer = 0;
+                    dashPivot.localPosition = originalPos;
 
-                attackCooldown = 0.5f;
-                DisableHitboxes();
-                dashPivot.gameObject.SetActive(false);
+                    attackCooldown = 0.5f;
+                    DisableHitboxes();
+                }
             }
         }
     }
