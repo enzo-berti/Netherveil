@@ -285,13 +285,9 @@ public class PlayerInput : MonoBehaviour
             {
                 controller.MouseOrientation();
             }
-            else if (controller.Direction.x != 0f || controller.Direction.y != 0f)
-            {
-                transform.rotation = Quaternion.LookRotation(new Vector3(controller.Direction.x, 0, controller.Direction.y));
-            }
             else
             {
-                transform.rotation = Quaternion.LookRotation(new Vector3(transform.forward.x, 0, transform.forward.y));
+                controller.JoystickOrientation();
             }
             yield return null;
         }
@@ -308,13 +304,9 @@ public class PlayerInput : MonoBehaviour
             {
                 controller.MouseOrientation();
             }
-            else if (controller.Direction.x != 0f || controller.Direction.y != 0f)
-            {
-                transform.rotation = Quaternion.LookRotation(new Vector3(controller.Direction.x, 0, controller.Direction.y));
-            }
             else
             {
-                transform.rotation = Quaternion.LookRotation(new Vector3(transform.forward.x, 0, transform.forward.y));
+                controller.JoystickOrientation();
             }
             yield return null;
         }
@@ -433,6 +425,7 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
+                controller.JoystickOrientation();
                 controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
 
@@ -466,6 +459,7 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
+                controller.JoystickOrientation();
                 controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
             }
 

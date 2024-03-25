@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
         {
             ApplyGravity();
             Rotate();
@@ -133,6 +133,10 @@ public class PlayerController : MonoBehaviour
         {
             MouseOrientation();
         }
+        else
+        {
+            JoystickOrientation();
+        }
         OrientationErrorMargin();
 
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
@@ -149,7 +153,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (col.gameObject.GetComponent<IDamageable>() != null && !alreadyAttacked.Contains(col))
                     {
-                        if(applyVibrations && !playerInput.LaunchedChargedAttack)
+                        if (applyVibrations && !playerInput.LaunchedChargedAttack)
                         {
                             DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
                             applyVibrations = false;
@@ -177,6 +181,15 @@ public class PlayerController : MonoBehaviour
                 OffsetPlayerRotation(angle, true);
             }
         }
+    }
+
+    public void JoystickOrientation()
+    {
+        Vector2 dir = Direction != Vector2.zero ? Direction : new Vector2(transform.forward.x, transform.forward.z);
+
+        Quaternion rotation = Quaternion.LookRotation(new Vector3(dir.x, 0f, dir.y));
+        float rotationY = rotation.eulerAngles.y + Camera.main.transform.rotation.y;
+        OverridePlayerRotation(rotationY, true);
     }
 
     //will automatically redirect the player to face the closest enemy in his vision cone
