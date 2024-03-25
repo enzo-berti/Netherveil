@@ -38,7 +38,6 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     protected override void Start()
     {
         base.Start();
-
         // component initialization
         animator = GetComponentInChildren<Animator>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
