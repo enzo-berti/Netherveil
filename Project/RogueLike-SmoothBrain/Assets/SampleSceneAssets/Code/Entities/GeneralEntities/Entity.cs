@@ -2,36 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor;
+using UnityEditor.TerrainTools;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public abstract class Entity : MonoBehaviour
 {
-    static List<string> statusNameList = new List<string>();
-    [Header("Properties")]
+    
+    //[Header("Properties")]
     [SerializeField] protected Stats stats;
+    public List<string> statusNameToApply = new List<string>();
     public bool isAlly;
-
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
 
     public List<Status> AppliedStatusList = new();
-    protected List<Status> statusToApply = new();
+    [SerializeField] protected List<Status> statusToApply;
     [HideInInspector] public int State;
     private void Awake()
     {
-        if (statusNameList.Count == 0)
-        {
-            var typeList = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsSubclassOf(typeof(Status)));
-            foreach (Type status in typeList)
-            {
-                statusNameList.Add(status.Name);
-            }
-        }
+        
     }
     protected virtual void Start()
     {
-        Debug.Log("coucou " + this.gameObject.name);
         OnDeath += ctx => ClearStatus();
     }
 
@@ -99,3 +95,38 @@ public abstract class Entity : MonoBehaviour
         AppliedStatusList.Clear();
     }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(Entity), true), CanEditMultipleObjects]
+public class EntityDrawer : Editor
+{
+    SerializedProperty statProperty;
+    SerializedProperty statusNameListProperty;
+    SerializedProperty statusToApplyListProperty;
+    SerializedProperty ChosenToApplyListProperty;
+    int curIndex = 0;
+    List<string> statusNameList = new List<string>();
+    private void OnEnable()
+    {
+        statProperty = serializedObject.FindProperty("stats");
+        statusToApplyListProperty = serializedObject.FindProperty("statusToApply");
+        statusNameListProperty = serializedObject.FindProperty("statusNameToApply");
+        
+        if (statusNameList.Count == 0)
+        {
+            var typeList = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsSubclassOf(typeof(Status)));
+            foreach (Type status in typeList)
+            {
+                statusNameList.Add(status.Name);
+            }
+        }
+    }
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(statProperty);
+        curIndex = EditorGUILayout.Popup(curIndex, statusNameList.ToArray());
+        serializedObject.ApplyModifiedProperties();
+    }
+}
+#endif

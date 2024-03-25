@@ -595,27 +595,3 @@ public class Stats
     #endregion
 
 }
-
-#if UNITY_EDITOR
-///// Affichage carré dans l'éditeur /////
-
-[CustomPropertyDrawer(typeof(Stats))]
-public class StatsDrawerUIE : PropertyDrawer
-{
-    public override VisualElement CreatePropertyGUI(SerializedProperty property)
-    {
-        // Create property container element.
-        var container = new VisualElement();
-
-        // Create property fields.
-        var nameField = new PropertyField(property.FindPropertyRelative("name"), "Name");
-        var statsField = new PropertyField(property.FindPropertyRelative("stats"));
-
-        // Add fields to the container.
-        container.Add(nameField);
-        container.Add(statsField);
-
-        return container;
-    }
-}
-#endif

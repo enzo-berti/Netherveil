@@ -34,8 +34,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public List<Status> StatusToApply => statusToApply;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         animator = GetComponentInChildren<Animator>();
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();

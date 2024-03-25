@@ -50,6 +50,10 @@ public class StatInfo
 [CustomPropertyDrawer(typeof(StatInfo))]
 public class StatInfoDrawerUIE : PropertyDrawer
 {
+    public static readonly int statInfoExpendSize = 5;
+    public static readonly int minMaxExpendSize = 2;
+    public static readonly int coefExpendSize = 1;
+
     SerializedProperty statProperty;
     SerializedProperty valueProperty;
     SerializedProperty coeffProperty;
@@ -128,10 +132,10 @@ public class StatInfoDrawerUIE : PropertyDrawer
         int totalLine = 1;
         if (property.isExpanded)
         {
-            totalLine += 5;
-            if (property.FindPropertyRelative("hasMaxStat").boolValue) totalLine += 2;
-            if (property.FindPropertyRelative("hasMinStat").boolValue) totalLine += 2;
-            if (property.FindPropertyRelative("hasCoeff").boolValue) totalLine += 1;
+            totalLine += statInfoExpendSize;
+            if (property.FindPropertyRelative("hasMaxStat").boolValue) totalLine += minMaxExpendSize;
+            if (property.FindPropertyRelative("hasMinStat").boolValue) totalLine += minMaxExpendSize;
+            if (property.FindPropertyRelative("hasCoeff").boolValue) totalLine += coefExpendSize;
             
         }
         return EditorGUIUtility.singleLineHeight * totalLine;
