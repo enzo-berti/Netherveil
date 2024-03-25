@@ -298,6 +298,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    //dash VFX is played in dashBehaviour script if you wonder
     public void Dash(InputAction.CallbackContext ctx)
     {
         if (CanDash())
@@ -319,8 +320,6 @@ public class PlayerInput : MonoBehaviour
             animator.SetTrigger("Dash");
             triggerCooldownDash = true;
             dashCooldown = true;
-
-            controller.PlayVFX2(controller.dashVFX);
             AudioManager.Instance.PlaySound(controller.dashSFX);
         }
     }
