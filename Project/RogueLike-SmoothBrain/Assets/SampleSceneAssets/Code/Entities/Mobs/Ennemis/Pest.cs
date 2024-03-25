@@ -26,8 +26,8 @@ public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     // pest parameters
     [Header("Pest Parameters")]
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
-    [SerializeField] private float brainDelay = 2f;
-
+    [SerializeField] private float brainDelay = 1f;
+     
     // audio
     [Header("Pest audio")]
     [SerializeField] private EventReference deathSound;
