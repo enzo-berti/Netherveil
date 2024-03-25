@@ -5,13 +5,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Timeline.AnimationPlayableAsset;
 
 public class CustomEventTrigger : EventTrigger
 {
     public static EventReference buttonSelectSFX;
     public override void OnSelect(BaseEventData data)
     {
-        AudioManager.Instance.PlaySound(buttonSelectSFX);
+        AudioManager.Instance.buttonSFXInstances.Add(AudioManager.Instance.PlaySound(buttonSelectSFX));
     }
 }
 
@@ -46,6 +47,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private EventReference buttonSelect;
 
     private List<EventInstance> audioInstance = new List<EventInstance>();
+    public List<EventInstance> buttonSFXInstances = new List<EventInstance>();
 
     private Bus masterBus;
     private Bus musicsBus;
@@ -143,10 +145,10 @@ public class AudioManager : MonoBehaviour
 
     public void StopAllSounds(FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
     {
-        foreach (var audio in audioInstance)
+        for (int i = audioInstance.Count - 1; i >= 0; --i)
         {
-            audio.stop(stopMode);
-            audioInstance.Remove(audio);
+            audioInstance[i].stop(stopMode);
+            audioInstance.RemoveAt(i);
         }
     }
 
@@ -161,6 +163,12 @@ public class AudioManager : MonoBehaviour
 
     public void ButtonClickSFX()
     {
-        Instance.PlaySound(buttonClick);
+        for (int i = buttonSFXInstances.Count - 1; i >= 0; --i)
+        {
+            buttonSFXInstances[i].stop(FMOD.Studio.STOP_MODE.Immediate);
+            audioInstance.RemoveAt(i);
+        }
+
+        buttonSFXInstances.Add(Instance.PlaySound(buttonClick));
     }
 }
