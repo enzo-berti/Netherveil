@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class Entity : MonoBehaviour
 {
+    static List<string> statusNameList = new List<string>();
     [Header("Properties")]
     [SerializeField] protected Stats stats;
     public bool isAlly;
@@ -12,7 +16,19 @@ public abstract class Entity : MonoBehaviour
     public DeathDelegate OnDeath;
 
     public List<Status> AppliedStatusList = new();
+    protected List<Status> statusToApply = new();
     [HideInInspector] public int State;
+    private void Awake()
+    {
+        if (statusNameList.Count == 0)
+        {
+            var typeList = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsSubclassOf(typeof(Status)));
+            foreach (Type status in typeList)
+            {
+                statusNameList.Add(status.Name);
+            }
+        }
+    }
     private void Start()
     {
         OnDeath += ctx => ClearStatus();
@@ -48,7 +64,7 @@ public abstract class Entity : MonoBehaviour
     public void ApplyEffect(Status status)
     {
         status.target = this;
-        float chance = Random.value;
+        float chance = UnityEngine.Random.value;
         if(chance <= status.statusChance)
         {
             foreach (var item in AppliedStatusList)
