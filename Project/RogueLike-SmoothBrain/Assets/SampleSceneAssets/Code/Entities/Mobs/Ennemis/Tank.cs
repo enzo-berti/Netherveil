@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class Tank : Mobs, IAttacker, IDamageable, IMovable, IBlastable
+public class Tank : Mobs, ITank
 {
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
