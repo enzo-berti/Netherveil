@@ -14,7 +14,7 @@ public class Item : MonoBehaviour, IInterractable
 {
     public string idItemName;
     public string descriptionToDisplay;
-    ItemDatabase database;
+    [SerializeField] ItemDatabase database;
     [SerializeField] Mesh defaultMesh;
     [SerializeField] Material defaultMat;
     [SerializeField] Material outlineMaterial;
@@ -26,8 +26,8 @@ public class Item : MonoBehaviour, IInterractable
     bool isInItemZone = false;
     private void Awake()
     {
-        database = Resources.Load<ItemDatabase>("ItemDatabase");
-        RandomizeItem(this);
+        //database = Resources.Load<ItemDatabase>("ItemDatabase");
+        //RandomizeItem(this);
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
@@ -81,7 +81,7 @@ public class Item : MonoBehaviour, IInterractable
 
     ItemEffect LoadClass()
     {
-        return Assembly.GetExecutingAssembly().CreateInstance(idItemName) as ItemEffect;
+        return Assembly.GetExecutingAssembly().CreateInstance(idItemName.GetPascalCase()) as ItemEffect;
     }
 
     static public void RandomizeItem(Item item)
@@ -112,8 +112,12 @@ public class Item : MonoBehaviour, IInterractable
         descriptionToDisplay = database.GetItem(idItemName).Description;
         string[] splitDescription = descriptionToDisplay.Split(" ");
         string finalDescription = string.Empty;
-        FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-
+        FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        Debug.Log(itemToGive.GetType().Name);
+        foreach(var test in fieldOfItem)
+        {
+            Debug.Log(test.Name);
+        }
         for (int i = 0; i < splitDescription.Length; i++)
         {
             if (splitDescription[i][0] == '{')
@@ -145,12 +149,14 @@ public class ItemEditor : Editor
     SerializedProperty defaultMeshProperty;
     SerializedProperty defaultMatProperty;
     SerializedProperty outlineMatProperty;
+    SerializedProperty databaseProperty;
     private void OnEnable()
     {
         itemName = serializedObject.FindProperty("idItemName");
         defaultMeshProperty = serializedObject.FindProperty("defaultMesh");
         defaultMatProperty = serializedObject.FindProperty("defaultMat");
         outlineMatProperty = serializedObject.FindProperty("outlineMaterial");
+        databaseProperty = serializedObject.FindProperty("database");
         ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()
@@ -169,6 +175,10 @@ public class ItemEditor : Editor
             Item.RandomizeItem((Item)target);
             ChosenName = (target as Item).idItemName;
         }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(databaseProperty, new GUIContent("Database : "));
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
