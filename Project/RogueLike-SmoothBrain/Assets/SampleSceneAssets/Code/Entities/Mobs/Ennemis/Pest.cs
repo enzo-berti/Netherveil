@@ -2,14 +2,13 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using FMODUnity;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class Pest : Mobs, IAttacker, IDamageable, IMovable, IBlastable
+public class Pest : Mobs, IPest
 {
     // think useless
     private IAttacker.AttackDelegate onAttack;
