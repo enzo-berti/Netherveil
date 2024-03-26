@@ -16,6 +16,8 @@ public class Keybinding : MonoBehaviour
 
     private void OnDestroy()
     {
+        DeviceManager.OnChangedToKB -= SwitchBindings;
+        DeviceManager.OnChangedToGamepad -= SwitchBindings;
     }
 
     public void ResetBindings()

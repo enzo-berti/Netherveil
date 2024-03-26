@@ -7,10 +7,18 @@ public class HudHandler : MonoBehaviour
 {
     [SerializeField] private GameObject miniMap;
     [SerializeField] private GameObject bigMap;
+    [SerializeField] private GameObject miniMapFrame;
+    [SerializeField] private GameObject bigMapFrame;
     [SerializeField] private GameObject hud;
     [SerializeField] private Slider lifeJauge;
     [SerializeField] private TextMeshProUGUI lifeRatioText;
     [SerializeField] private PauseMenu pauseMenu;
+    Hero player;
+
+    private void Start()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+    }
 
     public void ToggleMap(InputAction.CallbackContext ctx)
     {
@@ -18,15 +26,19 @@ public class HudHandler : MonoBehaviour
         {
             miniMap.SetActive(false);
             bigMap.SetActive(true);
+            miniMapFrame.SetActive(false);
+            bigMapFrame.SetActive(true);
         }
         else
         {
             miniMap.SetActive(true);
             bigMap.SetActive(false);
+            miniMapFrame.SetActive(true);
+            bigMapFrame.SetActive(false);
         }
     }
 
-    public void TogglePause()
+    public void TogglePause(InputAction.CallbackContext ctx)
     {
         if (hud.activeSelf)
         {
@@ -42,6 +54,8 @@ public class HudHandler : MonoBehaviour
 
     private void Update()
     {
-        lifeRatioText.text = lifeJauge.value.ToString() + "\n----\n100";
+        lifeJauge.value = player.Stats.GetValue(Stat.HP);
+        lifeJauge.maxValue = player.Stats.GetMaxValue(Stat.HP);
+        lifeRatioText.text = lifeJauge.value.ToString() + " / " + player.Stats.GetMaxValue(Stat.HP);
     }
 }

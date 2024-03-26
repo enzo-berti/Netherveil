@@ -9,9 +9,8 @@ public abstract class Status
     public Status(float _duration)
     {
         this.duration = _duration;
-        this.stopTimes.Add(duration);
     }
-    public abstract Status ShallowCopy();
+    public abstract Status DeepCopy();
 
     #region Properties
     public Entity target;
@@ -29,7 +28,7 @@ public abstract class Status
     public bool isFinished = false;
     private float currentTime = 0;
 
-    readonly private List<float> stopTimes = new();
+    readonly public List<float> stopTimes = new();
     private bool isCoroutineOn = false;
     #endregion
 
@@ -44,12 +43,13 @@ public abstract class Status
     #endregion
     
     #region Stack
-    protected int stack = 0;
+    private int stack = 0;
     public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
         stack += nb;
-        stopTimes.Add(duration + currentTime);
+        for(int i  = 0; i < nb; i++)
+            stopTimes.Add(duration + currentTime);
     }
     public virtual void RemoveStack(int nb)
     {

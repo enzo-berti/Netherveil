@@ -50,6 +50,12 @@ public class Spike : MonoBehaviour
             {
                StartCoroutine(Disable());
             }
+            else
+            {
+                StopCoroutine(Active());
+                isOut = false;
+                StartCoroutine(WaitUntil());
+            }
         }
     }
 

@@ -25,8 +25,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
-    public static event Action OnTakeDamage; 
-    
+    public static event Action OnTakeDamage;
+
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public KillDelegate OnKill { get => onKill; set => onKill = value; }
@@ -50,26 +50,25 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     }
 
 
-    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool notEffectDamages = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
-       
+
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
-           if(hasAnimation)
+            if (notEffectDamages)
             {
-                if(!playerInput.LaunchedChargedAttack)
-                {
-                    //animator.ResetTrigger("Hit");
-                    //animator.SetTrigger("Hit");
-                    playerController.ResetValues(); //possible source de bugs
-                    animator.ResetTrigger("ChargedAttackRelease");
-                    animator.SetBool("ChargedAttackCasting", false);
-                    animator.ResetTrigger("BasicAttack");
-                }
+                //if(!playerInput.LaunchedChargedAttack)
+                //{
+                DeviceManager.Instance.ForceStopVibrations();
+                playerController.ResetValues(); //possible source de bugs
+                animator.ResetTrigger("ChargedAttackRelease");
+                animator.SetBool("ChargedAttackCasting", false);
+                animator.ResetTrigger("BasicAttack");
+                //}
                 AudioManager.Instance.PlaySound(playerController.hitSFX);
                 FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
-                //FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+                playerController.hitVFX.Play();
             }
 
             OnTakeDamage?.Invoke();
@@ -105,7 +104,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
         }
-        else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT -1)
+        else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT - 1)
         {
             damages += playerController.FINISHER_DAMAGES;
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);

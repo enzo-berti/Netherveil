@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-using static UnityEditor.FilePathAttribute;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -50,12 +49,17 @@ public class PlayerInput : MonoBehaviour
         hudHandler = FindObjectOfType<HudHandler>();
         animator = GetComponentInChildren<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
-        playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        EaseFuncsShitStorm();
-        InputSetup();
+        
+
         //MapUtilities.ExitEvents += (ref MapData FuckEnzo) => RetrieveSpear();
     }
 
+    private void Start()
+    {
+        playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        EaseFuncsShitStorm();
+        InputSetup();
+    }
     private void EaseFuncsShitStorm()
     {
         easeFuncs.Add(EasingFunctions.EaseInBack);
@@ -94,74 +98,112 @@ public class PlayerInput : MonoBehaviour
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
 
         kbMap["Movement"].performed += controller.ReadDirection;
-        kbMap["Movement"].started += ctx => ResetComboWhenMoving();
+        kbMap["Movement"].started += ResetComboWhenMoving;
         kbMap["Movement"].canceled += controller.ReadDirection;
         kbMap["BasicAttack"].performed += Attack;
         kbMap["Dash"].performed += Dash;
         kbMap["Interact"].performed += m_interaction.Interract;
-        kbMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
+        kbMap["Spear"].performed += ThrowOrRetrieveSpear;
         kbMap["ChargedAttack"].performed += ChargedAttack;
         kbMap["ChargedAttack"].canceled += ChargedAttackCanceled;
         if(hudHandler != null)
         {
             kbMap["ToggleMap"].performed += hudHandler.ToggleMap;
-            kbMap["Pause"].started += ctx => hudHandler.TogglePause();
+            kbMap["Pause"].started += hudHandler.TogglePause;
         }
 
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
 
         gamepadMap["Movement"].performed += controller.ReadDirection;
-        gamepadMap["Movement"].started += ctx => ResetComboWhenMoving();
+        gamepadMap["Movement"].started += ResetComboWhenMoving;
         gamepadMap["Movement"].canceled += controller.ReadDirection;
         gamepadMap["BasicAttack"].performed += Attack;
         gamepadMap["Dash"].performed += Dash;
         gamepadMap["Interact"].performed += m_interaction.Interract;
-        gamepadMap["Spear"].performed += ctx => ThrowOrRetrieveSpear();
+        gamepadMap["Spear"].performed += ThrowOrRetrieveSpear;
         gamepadMap["ChargedAttack"].performed += ChargedAttack;
         gamepadMap["ChargedAttack"].canceled += ChargedAttackCanceled;
         if (hudHandler != null)
         {
             gamepadMap["ToggleMap"].started += hudHandler.ToggleMap;
-            gamepadMap["Pause"].started += ctx => hudHandler.TogglePause();
+            gamepadMap["Pause"].started += hudHandler.TogglePause;
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
 
         kbMap["Movement"].performed -= controller.ReadDirection;
-        kbMap["Movement"].started -= ctx => ResetComboWhenMoving();
+        kbMap["Movement"].started -= ResetComboWhenMoving;
         kbMap["Movement"].canceled -= controller.ReadDirection;
         kbMap["BasicAttack"].performed -= Attack;
         kbMap["Dash"].performed -= Dash;
         kbMap["Interact"].performed -= m_interaction.Interract;
-        kbMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        kbMap["Spear"].performed -= ThrowOrRetrieveSpear;
         kbMap["ChargedAttack"].performed -= ChargedAttack;
         kbMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
         if (hudHandler != null)
         {
             kbMap["ToggleMap"].performed -= hudHandler.ToggleMap;
-            kbMap["Pause"].started -= ctx => hudHandler.TogglePause();
+            kbMap["Pause"].started -= hudHandler.TogglePause;
         }
 
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
 
         gamepadMap["Movement"].performed -= controller.ReadDirection;
-        gamepadMap["Movement"].started -= ctx => ResetComboWhenMoving();
+        gamepadMap["Movement"].started -= ResetComboWhenMoving;
         gamepadMap["Movement"].canceled -= controller.ReadDirection;
         gamepadMap["BasicAttack"].performed -= Attack;
         gamepadMap["Dash"].performed -= Dash;
         gamepadMap["Interact"].performed -= m_interaction.Interract;
-        gamepadMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        gamepadMap["Spear"].performed -= ThrowOrRetrieveSpear;
         gamepadMap["ChargedAttack"].performed -= ChargedAttack;
         gamepadMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
         if (hudHandler != null)
         {
             gamepadMap["ToggleMap"].started -= hudHandler.ToggleMap;
-            gamepadMap["Pause"].started -= ctx => hudHandler.TogglePause();
+            gamepadMap["Pause"].started -= hudHandler.TogglePause;
         }
-        playerInputMap.actions.Disable();
+        //playerInputMap.actions.Disable();
+    }
+
+    private void OnDisable()
+    {
+        //InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
+
+        //kbMap["Movement"].performed -= controller.ReadDirection;
+        //kbMap["Movement"].started -= ctx => ResetComboWhenMoving();
+        //kbMap["Movement"].canceled -= controller.ReadDirection;
+        //kbMap["BasicAttack"].performed -= Attack;
+        //kbMap["Dash"].performed -= Dash;
+        //kbMap["Interact"].performed -= m_interaction.Interract;
+        //kbMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        //kbMap["ChargedAttack"].performed -= ChargedAttack;
+        //kbMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
+        //if (hudHandler != null)
+        //{
+        //    kbMap["ToggleMap"].performed -= hudHandler.ToggleMap;
+        //    kbMap["Pause"].started -= ctx => hudHandler.TogglePause();
+        //}
+
+        //InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", true);
+
+        //gamepadMap["Movement"].performed -= controller.ReadDirection;
+        //gamepadMap["Movement"].started -= ctx => ResetComboWhenMoving();
+        //gamepadMap["Movement"].canceled -= controller.ReadDirection;
+        //gamepadMap["BasicAttack"].performed -= Attack;
+        //gamepadMap["Dash"].performed -= Dash;
+        //gamepadMap["Interact"].performed -= m_interaction.Interract;
+        //gamepadMap["Spear"].performed -= ctx => ThrowOrRetrieveSpear();
+        //gamepadMap["ChargedAttack"].performed -= ChargedAttack;
+        //gamepadMap["ChargedAttack"].canceled -= ChargedAttackCanceled;
+        //if (hudHandler != null)
+        //{
+        //    gamepadMap["ToggleMap"].started -= hudHandler.ToggleMap;
+        //    gamepadMap["Pause"].started -= ctx => hudHandler.TogglePause();
+        //}
+        //playerInputMap.actions.Disable();
     }
 
     void Update()
@@ -205,20 +247,7 @@ public class PlayerInput : MonoBehaviour
         //Test();
     }
 
-    private void ResetComboWhenMoving()
-    {
-        //il est immonde mais la vérité je pouvais pas faire mieux
-        if ((
-                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
-                (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
-            )
-                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack
-           )
-        {
-            forceReturnToMove = true;
-            controller.ResetValues();
-        }
-    }
+    #region Inputs
 
     public void ChargedAttack(InputAction.CallbackContext ctx)
     {
@@ -229,12 +258,6 @@ public class PlayerInput : MonoBehaviour
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedChargedAttack = true;
         }
-    }
-
-    public void StartChargedAttackCasting()
-    {
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
-        StartCoroutine(ChargedAttackCoroutine());
     }
 
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
@@ -331,7 +354,7 @@ public class PlayerInput : MonoBehaviour
         }
         else if (CanRetrieveSpear())
         {
-            ThrowOrRetrieveSpear();
+            ThrowOrRetrieveSpear(ctx);
         }
     }
 
@@ -340,7 +363,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (CanDash())
         {
-            ResetComboWhenMoving();
+            ResetComboWhenMoving(ctx);
 
             if (controller.Direction.x != 0f || controller.Direction.y != 0f)
             {
@@ -358,10 +381,84 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    public void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
+    {
+        if (controller.hero.State == (int)Entity.EntityState.MOVE)
+        {
+            //rotate the player to mouse's direction if playing KB/mouse
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                controller.MouseOrientation();
+            }
+            else
+            {
+                controller.JoystickOrientation();
+                controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+            }
+
+            Spear spear = weapon.GetComponent<Spear>();
+
+            // If spear is being thrown we can't recall this attack
+            if (spear.IsThrowing) return;
+            if (!spear.IsThrown)
+            {
+                spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+                AudioManager.Instance.PlaySound(controller.throwSpearSFX);
+            }
+            else
+            {
+                AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
+                spear.Return();
+            }
+        }
+    }
+
+    private void RetrieveSpear()
+    {
+        Spear spear = weapon.GetComponent<Spear>();
+        if (controller.hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown && !spear.IsThrowing)
+        {
+            //rotate the player to mouse's direction if playing KB/mouse
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                controller.MouseOrientation();
+            }
+            else
+            {
+                controller.JoystickOrientation();
+                controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
+            }
+
+            AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
+            spear.Return();
+        }
+    }
+    #endregion
+
+    #region AnimationEvents
+    public void StartChargedAttackCasting()
+    {
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
+        StartCoroutine(ChargedAttackCoroutine());
+    }
+
+    public void EndOfChargedAttack()
+    {
+        controller.ChangeState((int)Entity.EntityState.MOVE);
+    }
+
     //used as animation event
     public void EndOfSpecialAnimation() //triggers for dash and hit animation to reset state
     {
         controller.ChangeState((int)Entity.EntityState.MOVE);
+    }
+
+    public void StartOfBasicAttack()
+    {
+        controller.hero.OnAttack?.Invoke();
+        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data, false);
+        controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
+        AudioManager.Instance.PlaySound(controller.attacksSFX[controller.ComboCount]);
     }
 
     public void EndOfBasicAttack() //triggers on attack animations to reset combo
@@ -394,85 +491,9 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
+    #endregion
 
-    public void EndOfChargedAttack()
-    {
-        controller.ChangeState((int)Entity.EntityState.MOVE);
-    }
-
-    public void StartOfBasicAttack()
-    {
-        controller.hero.OnAttack?.Invoke();
-        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data, false);
-        controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
-        AudioManager.Instance.PlaySound(controller.attacksSFX[controller.ComboCount]);
-    }
-
-    public void ResetValuesInput()
-    {
-        attackQueue = false;
-        LaunchedChargedAttack = false;
-    }
-
-    public void ThrowOrRetrieveSpear()
-    {
-        if (controller.hero.State == (int)Entity.EntityState.MOVE)
-        {
-            //rotate the player to mouse's direction if playing KB/mouse
-            if (DeviceManager.Instance.IsPlayingKB())
-            {
-                controller.MouseOrientation();
-            }
-            else
-            {
-                controller.JoystickOrientation();
-                controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
-            }
-
-            Spear spear = weapon.GetComponent<Spear>();
-
-            // If spear is being thrown we can't recall this attack
-            if (spear.IsThrowing) return;
-            if (!spear.IsThrown)
-            {
-                spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
-                AudioManager.Instance.PlaySound(controller.throwSpearSFX);
-            }
-            else
-            {
-                AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
-                spear.Return();
-            }
-
-        }
-    }
-
-    private void RetrieveSpear()
-    {
-        Spear spear = weapon.GetComponent<Spear>();
-        if (controller.hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown && !spear.IsThrowing)
-        {
-            //rotate the player to mouse's direction if playing KB/mouse
-            if (DeviceManager.Instance.IsPlayingKB())
-            {
-                controller.MouseOrientation();
-            }
-            else
-            {
-                controller.JoystickOrientation();
-                controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
-            }
-
-            AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
-            spear.Return();
-        }
-    }
-
-    public void TriggerDashCooldown()
-    {
-        triggerCooldownDash = true;
-        dashCooldown = true;
-    }
+    #region InputConditions
 
     private bool CanAttack()
     {
@@ -498,4 +519,41 @@ public class PlayerInput : MonoBehaviour
         return (controller.hero.State == (int)Entity.EntityState.MOVE
             || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownAttack && !dashCooldown && !LaunchedChargedAttack;
     }
+    #endregion
+
+    #region Miscellaneous
+    private void ResetComboWhenMoving(InputAction.CallbackContext ctx)
+    {
+        //il est immonde mais la vérité je pouvais pas faire mieux
+        if (playerInputMap == null)
+        {
+            playerInputMap = gameObject.GetComponent<UnityEngine.InputSystem.PlayerInput>();
+            return;
+        }
+
+        if (((DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
+             (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic)))
+                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack
+           )
+        {
+            forceReturnToMove = true;
+            controller.ResetValues();
+        }
+    }
+
+    public void ResetValuesInput()
+    {
+        StopAllCoroutines();
+        attackQueue = false;
+        LaunchedChargedAttack = false;
+        chargedAttackMax = false;
+        chargedAttackTime = 0f;
+    }
+
+    public void TriggerDashCooldown()
+    {
+        triggerCooldownDash = true;
+        dashCooldown = true;
+    }
+    #endregion
 }

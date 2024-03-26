@@ -9,7 +9,7 @@ using UnityEditor.UIElements;
 
 [Serializable]
 public class Stats
-{ 
+{
     [SerializeField] List<StatInfo> stats = new();
     [SerializeField] private string name = "Default";
     public delegate void OnStatChangeDelegate(Stat stat);
@@ -109,7 +109,7 @@ public class Stats
         {
             if (stat.stat == info)
             {
-                if(stat.hasCoeff)
+                if (stat.hasCoeff)
                     return stat.coeff;
                 else
                     return 1.0f;
@@ -134,7 +134,7 @@ public class Stats
     public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue)
     {
         int index = stats.FindIndex(x => x.stat == info);
-        
+
 
         if (index != -1)
         {
@@ -151,7 +151,7 @@ public class Stats
                 Debug.LogWarning($"Missing max value of {info} in {name}");
                 return;
             }
-               
+
 
             else
             {
@@ -165,7 +165,7 @@ public class Stats
                         stats[index].value += realIncrease;
                     }
                 }
-                    
+
                 else
                     stats[index].value += increasingValue;
             }
@@ -230,7 +230,7 @@ public class Stats
                 Debug.LogWarning($"Missing min value of {info} in {name}");
                 return;
             }
-                
+
 
             else
                 stats[index].value -= decreasingValue;
@@ -276,7 +276,7 @@ public class Stats
         }
     }
 
-    public void MultiplyValue(Stat info, float multiplyingValue, bool clampToMaxValue) 
+    public void MultiplyValue(Stat info, float multiplyingValue, bool clampToMaxValue)
     {
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
@@ -401,7 +401,7 @@ public class Stats
             else
                 Debug.Log($"Missing max value of {info} in {name}");
         }
-            
+
         else
             Debug.LogWarning($"Can't find {info} in {name}");
     }
@@ -444,7 +444,7 @@ public class Stats
 
         if (indexIncrease != -1)
         {
-            if(stats[indexIncrease].value + increasingValue > stats[indexIncrease].maxValue)
+            if (stats[indexIncrease].value + increasingValue > stats[indexIncrease].maxValue)
             {
                 stats[indexIncrease].value = stats[indexIncrease].maxValue;
             }
@@ -453,8 +453,8 @@ public class Stats
                 stats[indexIncrease].value += increasingValue;
             }
         }
-           
-        else if(indexIncrease == -1)
+
+        else if (indexIncrease == -1)
         {
             Debug.LogWarning($"Can't find {statToIncrease} in {name}");
         }
@@ -540,7 +540,7 @@ public class Stats
                 realIncrease -= stats[indexIncrease].underload;
                 stats[indexIncrease].underload -= increasingValue;
             }
-            if(realIncrease > 0f)
+            if (realIncrease > 0f)
             {
                 stats[indexIncrease].underload = 0;
                 if (stats[indexIncrease].value + realIncrease > stats[indexIncrease].maxValue)
@@ -554,7 +554,7 @@ public class Stats
                     stats[indexIncrease].value += realIncrease;
                 }
             }
-            
+
         }
 
         else if (indexIncrease == -1)
