@@ -23,6 +23,8 @@ public class Item : MonoBehaviour, IInterractable
     PlayerInteractions playerInteractions;
     Hero hero;
 
+    GameObject meshObject;
+
     bool isInItemZone = false;
     private void Awake()
     {
@@ -30,14 +32,26 @@ public class Item : MonoBehaviour, IInterractable
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
-        this.GetComponent<MeshRenderer>().material = matToRender != null ? matToRender : defaultMat;
-        this.GetComponent<MeshFilter>().mesh = meshToRender != null ? meshToRender : defaultMesh;
+        this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : defaultMat;
+        this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : defaultMesh;
         InitDescription();
         playerInteractions = GameObject.FindWithTag("Player").GetComponent<PlayerInteractions>();
         hero = playerInteractions.gameObject.GetComponent<Hero>();
+
+        meshObject = this.GetComponentInChildren<MeshRenderer>().gameObject;
     }
 
     private void Update()
+    {
+        Interraction();
+
+        Vector3 updatePos = meshObject.transform.position;
+        updatePos.y += Mathf.Sin(Time.time) * 0.005f;
+        meshObject.transform.position = updatePos;
+        meshObject.transform.Rotate(new Vector3(0, 0.5f, 0));
+    }
+
+    private void Interraction()
     {
         Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 cameraRight = Camera.main.transform.right;
@@ -56,7 +70,7 @@ public class Item : MonoBehaviour, IInterractable
         {
             playerInteractions.interactablesInRange.Remove(this);
 
-            var meshRenderer = gameObject.GetComponent<MeshRenderer>();
+            var meshRenderer = this.GetComponentInChildren<MeshRenderer>();
             GetComponent<ItemDescription>().TogglePanel(false);
             if (meshRenderer.materials.Length > 1)
             {
@@ -68,6 +82,7 @@ public class Item : MonoBehaviour, IInterractable
             }
         }
     }
+
     public void Interract()
     {
         itemToGive.Name = idItemName;
@@ -112,7 +127,7 @@ public class Item : MonoBehaviour, IInterractable
         string finalDescription = string.Empty;
         FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
         Debug.Log(itemToGive.GetType().Name);
-        foreach(var test in fieldOfItem)
+        foreach (var test in fieldOfItem)
         {
             Debug.Log(test.Name);
         }
