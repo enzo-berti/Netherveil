@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum RoomType
 {
@@ -20,7 +22,7 @@ public struct GenerationParam
     public Dictionary<RoomType, int> nbRoom;
     public Dictionary<float, List<Door>> availableDoors;
 
-    public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0, int nbBoss = 0)
+    public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
     {
         nbRoom = new Dictionary<RoomType, int>
         {
@@ -30,7 +32,6 @@ public struct GenerationParam
             { RoomType.Merchant, nbMerchant },
             { RoomType.Secret, nbSecret },
             { RoomType.MiniBoss, nbMiniBoss },
-            { RoomType.Boss, nbBoss },
         };
 
         availableDoors = new Dictionary<float, List<Door>>
@@ -46,7 +47,7 @@ public struct GenerationParam
     {
         get 
         { 
-            return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss] + nbRoom[RoomType.Boss]; 
+            return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss]; 
         }
     }
 
@@ -74,7 +75,7 @@ public struct GenerationParam
         }
     }
 
-    public void AddDoorsGenerator(DoorsGenerator doorsGenerator)
+    public readonly void AddDoorsGenerator(DoorsGenerator doorsGenerator)
     {
         foreach (var door in doorsGenerator.doors)
         {
@@ -88,7 +89,39 @@ public struct GenerationParam
             }
         }
 
-        Object.Destroy(doorsGenerator); // destroy doorsGenerator
+        UnityEngine.Object.Destroy(doorsGenerator); // destroy doorsGenerator
+    }
+
+    public readonly Door GetFarestDoor()
+    {
+        Tuple<int, float> farestDoor = new Tuple<int, float>(-1, 0);
+        float key = 0f;
+
+        foreach (var doors in availableDoors)
+        {
+            for (int i = 0; i < doors.Value.Count; i++)
+            {
+                float distance = doors.Value[i].Position.magnitude;
+                if (distance > farestDoor.Item2)
+                {
+                    key = doors.Key;
+                    farestDoor = new Tuple<int, float>(i, distance);
+                }
+            }
+        }
+
+        return availableDoors[key][farestDoor.Item1];
+    }
+
+    public readonly void RemoveDoor(Door door)
+    {
+        foreach (var doors in availableDoors.Values)
+        {
+            if (doors.Remove(door))
+            {
+                return;
+            }
+        }
     }
 }
 
@@ -109,9 +142,6 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        if (Application.isEditor)
-            Application.runInBackground = true;
-
         GenerateMap(new GenerationParam(nbNormal: 20));
     }
 
@@ -149,23 +179,31 @@ public class MapGenerator : MonoBehaviour
         return false;
     }
 
-    void GenerateMap(GenerationParam genParam)
+    private void GenerateBossRoom(ref GenerationParam genParam)
+    {
+        Door door = genParam.GetFarestDoor();
+
+        genParam.RemoveDoor(door);
+    }
+
+    private void GenerateMap(GenerationParam genParam)
     {
         int nbRoom = genParam.TotalRoom;
         InstantiateLobby(ref genParam);
 
         for (int i = 0; i < nbRoom - 1; i++)
         {
-            //Debug.Log("JE GENERE : " + i);
             GenerateRoom(ref genParam);
         }
+
+        GenerateBossRoom(ref genParam);
 
         // TODO : spawn things to hides the holes
         foreach (var listDoors in genParam.availableDoors)
         {
             foreach (var door in listDoors.Value)
             {
-                GameObject go = Instantiate(obstructionsDoor[Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
+                GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
                 go.transform.Rotate(0, (door.Rotation + 180f) % 360, 0);
                 go.transform.parent = gameObject.transform;
             }
