@@ -82,6 +82,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    #region BasicMovements
+
     private void Rotate()
     {
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, CurrentTargetAngle, ref currentVelocity, smoothTime);
@@ -118,6 +120,10 @@ public class PlayerController : MonoBehaviour
     {
         Direction = ctx.ReadValue<Vector2>().normalized;
     }
+
+    #endregion
+
+    #region Attacks&Orientation
 
     public void AttackCollide(List<Collider> colliders, bool debugMode = true)
     {
@@ -213,6 +219,9 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Miscellaneous
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
     {
@@ -261,12 +270,6 @@ public class PlayerController : MonoBehaviour
         VFX.Play();
     }
 
-    public void PlayVFX2(ParticleSystem VFX)
-    {
-        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
-        VFX.Play();
-    }
-
     //used whenever you want to reset a lot of things when transitioning to another State
     public void ChangeState(int newState)
     {
@@ -293,6 +296,8 @@ public class PlayerController : MonoBehaviour
 
         playerInput.ResetValuesInput();
     }
+
+    #endregion
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
