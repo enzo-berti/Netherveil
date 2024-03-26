@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;
     public List<VisualEffect> spearAttacksVFX;
+    public VisualEffect hitVFX;
     public VisualEffect dashVFX;
     public VisualEffect chargedAttackVFX;
 

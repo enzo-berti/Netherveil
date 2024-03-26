@@ -13,6 +13,12 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private Slider lifeJauge;
     [SerializeField] private TextMeshProUGUI lifeRatioText;
     [SerializeField] private PauseMenu pauseMenu;
+    Hero player;
+
+    private void Start()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+    }
 
     public void ToggleMap(InputAction.CallbackContext ctx)
     {
@@ -48,6 +54,8 @@ public class HudHandler : MonoBehaviour
 
     private void Update()
     {
-        lifeRatioText.text = lifeJauge.value.ToString() + "\n----\n100";
+        lifeJauge.value = player.Stats.GetValue(Stat.HP);
+        lifeJauge.maxValue = player.Stats.GetMaxValue(Stat.HP);
+        lifeRatioText.text = lifeJauge.value.ToString() + "\n----\n" + player.Stats.GetMaxValue(Stat.HP);
     }
 }
