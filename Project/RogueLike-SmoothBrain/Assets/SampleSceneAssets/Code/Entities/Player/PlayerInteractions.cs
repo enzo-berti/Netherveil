@@ -22,17 +22,22 @@ public class PlayerInteractions : MonoBehaviour
         RetrievedConsommable();
         // TODO : Add UI to understand that we can press a button to take an object
 
+        SelectClosestItem();
+    }
+
+    private void SelectClosestItem()
+    {
         Vector3 tmp = (Camera.main.transform.forward * transform.position.z + Camera.main.transform.right * transform.position.x);
         Vector2 playerPos = new Vector2(tmp.x, tmp.z);
 
         IInterractable[] interactables = interactablesInRange.OrderBy(x =>
-            {
-                tmp = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
-                Camera.main.transform.right * (x as MonoBehaviour).transform.position.x;
-                Vector2 itemPos = new Vector2(tmp.x, tmp.z);
+        {
+            tmp = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
+            Camera.main.transform.right * (x as MonoBehaviour).transform.position.x;
+            Vector2 itemPos = new Vector2(tmp.x, tmp.z);
 
-                return Vector2.Distance(playerPos, itemPos);
-            }
+            return Vector2.Distance(playerPos, itemPos);
+        }
         ).ToArray();
 
         if (interactables.Length > 0)
@@ -40,7 +45,7 @@ public class PlayerInteractions : MonoBehaviour
             MeshRenderer meshRenderer;
             List<Material> finalMaterial;
 
-            for (int i = 1; i< interactables.Length;i++) 
+            for (int i = 1; i < interactables.Length; i++)
             {
                 meshRenderer = (interactables[i] as MonoBehaviour).gameObject.GetComponent<MeshRenderer>();
                 if (meshRenderer.materials.Length > 1)
