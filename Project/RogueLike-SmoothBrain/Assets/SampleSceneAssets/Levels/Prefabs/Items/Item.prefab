@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8664095369700492973}
   - component: {fileID: 8347348296634012442}
   - component: {fileID: 3770633158725574965}
+  - component: {fileID: 8145302689807495567}
+  - component: {fileID: 400658464502249309}
   m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
@@ -97,8 +99,57 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idItemName: BootOfSwiftness
+  descriptionToDisplay: 
   defaultMesh: {fileID: 2572310593437753612, guid: 62c40876fe4cc4046a4c27025fa6a466,
     type: 3}
   defaultMat: {fileID: 840229486357391384, guid: 5f01b9ba4c2dd23458410e005530c86f,
     type: 3}
   outlineMaterial: {fileID: 2100000, guid: 68bccb3434ef2c849aae648e9e9aef8f, type: 2}
+--- !u!65 &8145302689807495567
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5047629768900978217}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.12909828, y: 0.20806707, z: 0.12909882}
+  m_Center: {x: -0.00000023841858, y: 0.10403348, z: 0}
+--- !u!54 &400658464502249309
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5047629768900978217}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
