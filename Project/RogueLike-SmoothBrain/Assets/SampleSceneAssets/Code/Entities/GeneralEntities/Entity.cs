@@ -64,6 +64,38 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
+    public void ApplyKnockback(IDamageable damageable)
+    {
+        Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
+        if (knockbackable)
+        {
+            MonoBehaviour damageableGO = damageable as MonoBehaviour;
+            Vector3 damageablePos = damageableGO.transform.position;
+            Vector3 TargetToMeVec = (transform.position - damageablePos).normalized;
+
+            if (TargetToMeVec != Vector3.zero)
+            {
+                Quaternion rotation = Quaternion.LookRotation(new Vector3(TargetToMeVec.x, 0f, TargetToMeVec.z));
+                rotation *= Camera.main.transform.rotation;
+                float rotationY = rotation.eulerAngles.y;
+
+                if (damageableGO.TryGetComponent(out PlayerController controller))
+                {
+                    controller.OverridePlayerRotation(rotationY, true);
+                }
+                //else
+                //{
+                //    Quaternion appliedRotation = Quaternion.Euler(damageableGO.transform.eulerAngles.x, rotationY, damageableGO.transform.eulerAngles.z);
+                //    damageableGO.transform.rotation = appliedRotation;
+                //}
+            }
+
+            Vector3 force = new Vector3(damageablePos.x - transform.position.x, 0f, damageablePos.z - transform.position.z).normalized;
+            knockbackable.GetKnockback(force * stats.GetValue(Stat.KNOCKBACK_COEFF));
+            FloatingTextGenerator.CreateActionText(damageableGO.transform.position, "Pushed!");
+        }
+    }
+
     public void ApplyEffect(Status status)
     {
         status.target = this;
@@ -264,7 +296,7 @@ public class EntityDrawer : Editor
                 EditorGUILayout.LabelField("No GUI implemented for : " + fieldToDisplay);
                 EditorGUILayout.EndHorizontal();
             }
-            
+
         }
 
         serializedObject.ApplyModifiedProperties();
