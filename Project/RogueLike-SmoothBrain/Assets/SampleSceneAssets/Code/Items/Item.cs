@@ -26,7 +26,6 @@ public class Item : MonoBehaviour, IInterractable
     bool isInItemZone = false;
     private void Awake()
     {
-        //database = Resources.Load<ItemDatabase>("ItemDatabase");
         //RandomizeItem(this);
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
@@ -87,8 +86,7 @@ public class Item : MonoBehaviour, IInterractable
     static public void RandomizeItem(Item item)
     {
         List<string> allItems = new();
-        ItemDatabase db = Resources.Load<ItemDatabase>("ItemDatabase");
-        foreach (var itemInDb in db.datas)
+        foreach (var itemInDb in item.database.datas)
         {
             allItems.Add(itemInDb.idName);
         }
