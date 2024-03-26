@@ -7,11 +7,10 @@ public class ItemBar : MonoBehaviour
 {
     [SerializeField] private GameObject framePf;
     private List<GameObject> itemSlot = new List<GameObject>();
-    private ItemDatabase database;
+    [SerializeField] private ItemDatabase database;
 
     void Start()
     {
-        database = Resources.Load<ItemDatabase>("ItemDatabase");
         Item.onRetrieved += OnItemAdd;
         //subscribe event
     }

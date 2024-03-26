@@ -6,9 +6,9 @@ using UnityEngine;
 public class ItemDatabase : ScriptableObject
 {
     [HideInInspector]
-    public static List<ItemData> datas = new();
+    public List<ItemData> datas = new();
 
-    public static ItemData GetItem(string name)
+    public ItemData GetItem(string name)
     {
         return datas.Where(x => x.idName == name).FirstOrDefault();
     }
