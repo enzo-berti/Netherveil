@@ -7,6 +7,8 @@ public class HudHandler : MonoBehaviour
 {
     [SerializeField] private GameObject miniMap;
     [SerializeField] private GameObject bigMap;
+    [SerializeField] private GameObject miniMapFrame;
+    [SerializeField] private GameObject bigMapFrame;
     [SerializeField] private GameObject hud;
     [SerializeField] private Slider lifeJauge;
     [SerializeField] private TextMeshProUGUI lifeRatioText;
@@ -18,11 +20,15 @@ public class HudHandler : MonoBehaviour
         {
             miniMap.SetActive(false);
             bigMap.SetActive(true);
+            miniMapFrame.SetActive(false);
+            bigMapFrame.SetActive(true);
         }
         else
         {
             miniMap.SetActive(true);
             bigMap.SetActive(false);
+            miniMapFrame.SetActive(true);
+            bigMapFrame.SetActive(false);
         }
     }
 
