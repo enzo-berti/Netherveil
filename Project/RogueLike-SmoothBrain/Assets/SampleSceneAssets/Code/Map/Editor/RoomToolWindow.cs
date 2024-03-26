@@ -40,10 +40,10 @@ public class RoomToolWindow : EditorWindow
         GameObject room = Instantiate(roomObj);
         GameObject roomPrefab = new GameObject(prefabName == "" ? roomObj.name : prefabName);
 
-        GameObject skeleton = room.transform.GetChild(1).gameObject;
+        GameObject skeleton = room.transform.GetChild(1).transform.GetChild(0).gameObject;
         skeleton.gameObject.name = "Skeleton";
-        skeleton.layer = LayerMask.NameToLayer("Map");
         skeleton.transform.parent = roomPrefab.transform;
+        skeleton.layer = LayerMask.NameToLayer("Map");
         BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
         boxCollider.isTrigger = true;
         MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
@@ -54,6 +54,10 @@ public class RoomToolWindow : EditorWindow
         arrows.transform.parent = skeleton.transform;
         DoorsGenerator generator = arrows.AddComponent<DoorsGenerator>();
         generator.GeneratePrefab();
+
+        GameObject staticProps = room.transform.GetChild(1).gameObject;
+        staticProps.gameObject.name = "StaticProps";
+        staticProps.transform.parent = skeleton.transform;
 
         GameObject roomGenerator = new GameObject("RoomGenerator");
         roomGenerator.transform.parent = roomPrefab.transform;
