@@ -27,7 +27,7 @@ public class Item : MonoBehaviour, IInterractable
     private void Awake()
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
-        RandomizeItem(this);
+        //RandomizeItem(this);
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
@@ -111,8 +111,12 @@ public class Item : MonoBehaviour, IInterractable
         descriptionToDisplay = database.GetItem(idItemName).Description;
         string[] splitDescription = descriptionToDisplay.Split(" ");
         string finalDescription = string.Empty;
-        FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-
+        FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+        Debug.Log(itemToGive.GetType().Name);
+        foreach(var test in fieldOfItem)
+        {
+            Debug.Log(test.Name);
+        }
         for (int i = 0; i < splitDescription.Length; i++)
         {
             if (splitDescription[i][0] == '{')
