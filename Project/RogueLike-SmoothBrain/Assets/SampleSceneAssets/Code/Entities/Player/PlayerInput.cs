@@ -205,20 +205,7 @@ public class PlayerInput : MonoBehaviour
         //Test();
     }
 
-    private void ResetComboWhenMoving()
-    {
-        //il est immonde mais la vérité je pouvais pas faire mieux
-        if ((
-                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
-                (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
-            )
-                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack
-           )
-        {
-            forceReturnToMove = true;
-            controller.ResetValues();
-        }
-    }
+    #region Inputs
 
     public void ChargedAttack(InputAction.CallbackContext ctx)
     {
@@ -229,12 +216,6 @@ public class PlayerInput : MonoBehaviour
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedChargedAttack = true;
         }
-    }
-
-    public void StartChargedAttackCasting()
-    {
-        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
-        StartCoroutine(ChargedAttackCoroutine());
     }
 
     public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
@@ -358,62 +339,6 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    //used as animation event
-    public void EndOfSpecialAnimation() //triggers for dash and hit animation to reset state
-    {
-        controller.ChangeState((int)Entity.EntityState.MOVE);
-    }
-
-    public void EndOfBasicAttack() //triggers on attack animations to reset combo
-    {
-        animator.ResetTrigger("BasicAttack");
-
-        if (!attackQueue)
-        {
-            if (!LaunchedChargedAttack)
-            {
-                controller.ChangeState((int)Entity.EntityState.MOVE);
-            }
-            controller.ComboCount = 0;
-        }
-        else
-        {
-            
-            animator.SetTrigger("BasicAttack");
-            controller.hero.State = (int)Entity.EntityState.ATTACK;
-            controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
-        }
-
-        attackQueue = false;
-
-        foreach (NestedList<Collider> spearColliders in controller.spearAttacks)
-        {
-            foreach (Collider spearCollider in spearColliders.data)
-            {
-                spearCollider.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    public void EndOfChargedAttack()
-    {
-        controller.ChangeState((int)Entity.EntityState.MOVE);
-    }
-
-    public void StartOfBasicAttack()
-    {
-        controller.hero.OnAttack?.Invoke();
-        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data, false);
-        controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
-        AudioManager.Instance.PlaySound(controller.attacksSFX[controller.ComboCount]);
-    }
-
-    public void ResetValuesInput()
-    {
-        attackQueue = false;
-        LaunchedChargedAttack = false;
-    }
-
     public void ThrowOrRetrieveSpear()
     {
         if (controller.hero.State == (int)Entity.EntityState.MOVE)
@@ -467,12 +392,67 @@ public class PlayerInput : MonoBehaviour
             spear.Return();
         }
     }
+    #endregion
 
-    public void TriggerDashCooldown()
+    #region AnimationEvents
+    public void StartChargedAttackCasting()
     {
-        triggerCooldownDash = true;
-        dashCooldown = true;
+        cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
+        StartCoroutine(ChargedAttackCoroutine());
     }
+
+    public void EndOfChargedAttack()
+    {
+        controller.ChangeState((int)Entity.EntityState.MOVE);
+    }
+
+    //used as animation event
+    public void EndOfSpecialAnimation() //triggers for dash and hit animation to reset state
+    {
+        controller.ChangeState((int)Entity.EntityState.MOVE);
+    }
+
+    public void StartOfBasicAttack()
+    {
+        controller.hero.OnAttack?.Invoke();
+        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data, false);
+        controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
+        AudioManager.Instance.PlaySound(controller.attacksSFX[controller.ComboCount]);
+    }
+
+    public void EndOfBasicAttack() //triggers on attack animations to reset combo
+    {
+        animator.ResetTrigger("BasicAttack");
+
+        if (!attackQueue)
+        {
+            if (!LaunchedChargedAttack)
+            {
+                controller.ChangeState((int)Entity.EntityState.MOVE);
+            }
+            controller.ComboCount = 0;
+        }
+        else
+        {
+            
+            animator.SetTrigger("BasicAttack");
+            controller.hero.State = (int)Entity.EntityState.ATTACK;
+            controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
+        }
+
+        attackQueue = false;
+
+        foreach (NestedList<Collider> spearColliders in controller.spearAttacks)
+        {
+            foreach (Collider spearCollider in spearColliders.data)
+            {
+                spearCollider.gameObject.SetActive(false);
+            }
+        }
+    }
+    #endregion
+
+    #region InputConditions
 
     private bool CanAttack()
     {
@@ -498,4 +478,37 @@ public class PlayerInput : MonoBehaviour
         return (controller.hero.State == (int)Entity.EntityState.MOVE
             || controller.hero.State == (int)Entity.EntityState.ATTACK) && !triggerCooldownAttack && !dashCooldown && !LaunchedChargedAttack;
     }
+    #endregion
+
+    #region Miscellaneous
+    private void ResetComboWhenMoving()
+    {
+        //il est immonde mais la vérité je pouvais pas faire mieux
+        if ((
+                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
+                (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
+            )
+                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack
+           )
+        {
+            forceReturnToMove = true;
+            controller.ResetValues();
+        }
+    }
+
+    public void ResetValuesInput()
+    {
+        StopAllCoroutines();
+        attackQueue = false;
+        LaunchedChargedAttack = false;
+        chargedAttackMax = false;
+        chargedAttackTime = 0f;
+    }
+
+    public void TriggerDashCooldown()
+    {
+        triggerCooldownDash = true;
+        dashCooldown = true;
+    }
+    #endregion
 }

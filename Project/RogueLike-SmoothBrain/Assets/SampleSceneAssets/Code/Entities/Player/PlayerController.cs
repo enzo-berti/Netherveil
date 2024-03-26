@@ -186,12 +186,13 @@ public class PlayerController : MonoBehaviour
 
     public void JoystickOrientation()
     {
-        Vector2 dir = Direction != Vector2.zero ? Direction : new Vector2(transform.forward.x, transform.forward.z);
-
-        Quaternion rotation = Quaternion.LookRotation(new Vector3(dir.x, 0f, dir.y));
-        rotation *= Camera.main.transform.rotation;
-        float rotationY = rotation.eulerAngles.y;
-        OverridePlayerRotation(rotationY, true);
+        if(Direction != Vector2.zero)
+        {
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(Direction.x, 0f, Direction.y));
+            rotation *= Camera.main.transform.rotation;
+            float rotationY = rotation.eulerAngles.y;
+            OverridePlayerRotation(rotationY, true);
+        }
     }
 
     //will automatically redirect the player to face the closest enemy in his vision cone
