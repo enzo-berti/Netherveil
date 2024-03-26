@@ -51,10 +51,6 @@ public class Pest : Mobs, IPest
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
     }
 
-    private void Update()
-    {
-    }
-
     protected override IEnumerator EntityDetection()
     {
         while (true)

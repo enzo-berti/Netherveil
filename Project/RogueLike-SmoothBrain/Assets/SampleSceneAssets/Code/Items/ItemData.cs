@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 [Serializable]
 public class ItemData
@@ -17,7 +16,8 @@ public class ItemData
     {
         PASSIVE,
         ACTIVE
-    }
+    } 
+
     public Rarity RarityTier;
     public ItemType Type;
     public string idName;

@@ -14,6 +14,7 @@ public class ItemDescription : MonoBehaviour
         factor = Time.deltaTime * 2f;
         item = GetComponent<Item>();
         nameText.text = item.idItemName.SeparateAllCase();
+        nameText.color = item.RarityColor;
         descriptionText.text = item.descriptionToDisplay;
     }
 

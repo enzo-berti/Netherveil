@@ -24,6 +24,7 @@ public class Item : MonoBehaviour, IInterractable
     Hero hero;
 
     GameObject meshObject;
+    public Color RarityColor { get; private set; }
 
     bool isInItemZone = false;
     private void Awake()
@@ -32,6 +33,7 @@ public class Item : MonoBehaviour, IInterractable
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
+        RarityColor = database.GetItemRarityColor(idItemName);
         this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : defaultMat;
         this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : defaultMesh;
         InitDescription();
@@ -126,11 +128,11 @@ public class Item : MonoBehaviour, IInterractable
         string[] splitDescription = descriptionToDisplay.Split(" ");
         string finalDescription = string.Empty;
         FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-        Debug.Log(itemToGive.GetType().Name);
-        foreach (var test in fieldOfItem)
-        {
-            Debug.Log(test.Name);
-        }
+        //Debug.Log(itemToGive.GetType().Name);
+        //foreach (var test in fieldOfItem)
+        //{
+        //    Debug.Log(test.Name);
+        //}
         for (int i = 0; i < splitDescription.Length; i++)
         {
             if (splitDescription[i][0] == '{')

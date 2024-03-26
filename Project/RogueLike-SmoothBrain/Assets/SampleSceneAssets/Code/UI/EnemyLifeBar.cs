@@ -18,7 +18,7 @@ public class EnemyLifeBar : MonoBehaviour
     public float maxValue => lifeBarSlider.maxValue;
     public float value => lifeBarSlider.value;
 
-    private void Start()
+    private void Awake()
     {
         barRect = GetComponent<RectTransform>();
     }
