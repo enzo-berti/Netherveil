@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 public abstract class Entity : MonoBehaviour
 {
 
-    //[Header("Properties")]
+    [Header("Properties")]
     [SerializeField] protected Stats stats;
     [SerializeField] List<string> statusNameToApply = new List<string>();
     [SerializeField] List<float> durationStatusToApply = new List<float>();

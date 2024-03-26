@@ -110,6 +110,11 @@ public class StatInfoDrawerUIE : PropertyDrawer
                 DrawMember(position, overloadProperty);
                 GUI.enabled = true;
                 EditorGUI.indentLevel--;
+
+                if(valueProperty.floatValue > maxStatProperty.floatValue)
+                {
+                    valueProperty.floatValue = maxStatProperty.floatValue;
+                }
             }
 
             DrawMember(position, hasMinStatProperty);
@@ -121,8 +126,12 @@ public class StatInfoDrawerUIE : PropertyDrawer
                 DrawMember(position, underloadProperty); 
                 GUI.enabled = true;
                 EditorGUI.indentLevel--;
-            }
 
+                if (valueProperty.floatValue < minStatProperty.floatValue)
+                {
+                    valueProperty.floatValue = minStatProperty.floatValue;
+                }
+            }
         }
         
         EditorGUI.EndProperty();
