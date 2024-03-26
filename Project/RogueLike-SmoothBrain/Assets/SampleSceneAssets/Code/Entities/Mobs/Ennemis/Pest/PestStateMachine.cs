@@ -34,7 +34,7 @@ public class PestStateMachine : Mobs, IPest
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     private float searchEntityDelay = 1.0f;
     private float delayBetweenMovement = 2.0f;
-    private float delayToAttack = 0.75f;
+    private float delayToAttack = 1.25f;
     private Coroutine dashRoutine = null;
 
     // animation hash
