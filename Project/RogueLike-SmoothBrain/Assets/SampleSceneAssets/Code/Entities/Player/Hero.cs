@@ -50,13 +50,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     }
 
 
-    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool notEffectDamages = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
        
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
-           if(hasAnimation)
+           if(notEffectDamages)
             {
                 if(!playerInput.LaunchedChargedAttack)
                 {
@@ -66,10 +66,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                     animator.ResetTrigger("BasicAttack");
                 }
                 AudioManager.Instance.PlaySound(playerController.hitSFX);
+                FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
                 playerController.hitVFX.Play();
             }
-
-            FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
+            
             OnTakeDamage?.Invoke();
         }
 
