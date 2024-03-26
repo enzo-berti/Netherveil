@@ -120,6 +120,11 @@ public class DeviceManager : MonoBehaviour
 
     void CallChangeEvents()
     {
+        if(instance != null)
+        {
+            StopAllCoroutines();
+        }
+
         if (CurrentDevice is Gamepad)
         {
             if (debugText != null)
@@ -159,6 +164,7 @@ public class DeviceManager : MonoBehaviour
 
     public void ApplyVibrations(float lowFrequency, float highFrequency, float duration)
     {
+        StopAllCoroutines();
         if (IsSupportingVibrations() && toggleVibrations)
         {
             lowFrequency = Mathf.Clamp(lowFrequency, 0f, 1f);
@@ -166,6 +172,26 @@ public class DeviceManager : MonoBehaviour
 
             (CurrentDevice as Gamepad).SetMotorSpeeds(lowFrequency, highFrequency);
             StartCoroutine(StopVibration(CurrentDevice as Gamepad, duration));
+        }
+    }
+
+    public void ApplyVibrationsInfinite(float lowFrequency, float highFrequency)
+    {
+        StopAllCoroutines();
+        if (IsSupportingVibrations() && toggleVibrations)
+        {
+            lowFrequency = Mathf.Clamp(lowFrequency, 0f, 1f);
+            highFrequency = Mathf.Clamp(highFrequency, 0f, 1f);
+            StartCoroutine(VibrationsInfiniteCoroutine(lowFrequency, highFrequency));
+        }
+    }
+
+    IEnumerator VibrationsInfiniteCoroutine(float lowFrequency, float highFrequency)
+    {
+        while(true)
+        {
+            (CurrentDevice as Gamepad).SetMotorSpeeds(lowFrequency, highFrequency);
+            yield return new WaitForSeconds(1f);
         }
     }
 

@@ -299,7 +299,7 @@ public class PlayerInput : MonoBehaviour
 
     public IEnumerator ChargedAttackCoroutine()
     {
-        DeviceManager.Instance.ApplyVibrations(0f, 0.005f, float.MaxValue);
+        DeviceManager.Instance.ApplyVibrationsInfinite(0f, 0.005f);
         
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
@@ -315,7 +315,7 @@ public class PlayerInput : MonoBehaviour
             yield return null;
         }
 
-        DeviceManager.Instance.ApplyVibrations(0.005f, 0.005f, float.MaxValue);
+        DeviceManager.Instance.ApplyVibrationsInfinite(0.005f, 0.005f);
         chargedAttackMax = true;
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
         AudioManager.Instance.PlaySound(controller.chargedAttackMaxSFX);
