@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HealPotion : MonoBehaviour, IConsommable
+public class HealPotion : MonoBehaviour, IConsumable
 {
     [SerializeField] float healValue;
     [SerializeField] float price;
