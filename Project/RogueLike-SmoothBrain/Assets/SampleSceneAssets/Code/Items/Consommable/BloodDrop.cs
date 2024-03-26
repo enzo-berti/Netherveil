@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BloodDrop : MonoBehaviour, IConsommable
+public class BloodDrop : MonoBehaviour, IConsumable
 {
     public float Price => price;
 
