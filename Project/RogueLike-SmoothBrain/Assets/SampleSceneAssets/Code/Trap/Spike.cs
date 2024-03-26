@@ -1,6 +1,7 @@
 using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Spike : MonoBehaviour
@@ -12,6 +13,7 @@ public class Spike : MonoBehaviour
     private bool isOut;
     [SerializeField] GameObject spikesToMove;
     private int damage;
+    private float waitUntilTimer;
     List<IDamageable> entitiesToDealDamage;
 
     private void Awake()
@@ -19,7 +21,9 @@ public class Spike : MonoBehaviour
         startPosY = spikesToMove.transform.position.y;
         endPosY = spikesToMove.transform.position.y + 1.5f;
         entitiesToDealDamage = new List<IDamageable>();
+        waitUntilTimer = 3f;
         damage = 10;
+        isOut = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -27,9 +31,9 @@ public class Spike : MonoBehaviour
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
+            entitiesToDealDamage.Add(other.gameObject.GetComponent<IDamageable>());
             if (!isOut)
             {
-                entitiesToDealDamage.Add(other.gameObject.GetComponent<IDamageable>());
                 StartCoroutine(Active());
             }
         }
@@ -40,9 +44,10 @@ public class Spike : MonoBehaviour
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
+            entitiesToDealDamage.Remove(other.gameObject.GetComponent<IDamageable>());
+            waitUntilTimer = 2f;
             if (isOut)
             {
-               entitiesToDealDamage.Remove(other.gameObject.GetComponent<IDamageable>());
                StartCoroutine(Disable());
             }
         }
@@ -50,8 +55,7 @@ public class Spike : MonoBehaviour
 
     IEnumerator Active()
     {
-        yield return new WaitForSeconds(0.3f);
-        isOut = true;
+        yield return new WaitForSeconds(0.15f);
         AudioManager.Instance.PlaySound(spikesUpSFX);
         while (spikesToMove.transform.position.y != endPosY)
         {
@@ -62,7 +66,7 @@ public class Spike : MonoBehaviour
             }
             yield return new WaitForSeconds(0.003f);
         }
-
+        isOut = true;
         entitiesToDealDamage.ForEach(actualEntity => { actualEntity.ApplyDamage(damage); });
         
 
@@ -71,7 +75,7 @@ public class Spike : MonoBehaviour
 
     IEnumerator WaitUntil()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(waitUntilTimer);
         if (isOut)
         {
             StartCoroutine(Disable());
@@ -81,7 +85,7 @@ public class Spike : MonoBehaviour
     IEnumerator Disable()
     {
         AudioManager.Instance.PlaySound(spikesDownSFX);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.15f);
         while (spikesToMove.transform.position.y != startPosY)
         {
             spikesToMove.transform.position -= Vector3.up / 20;
