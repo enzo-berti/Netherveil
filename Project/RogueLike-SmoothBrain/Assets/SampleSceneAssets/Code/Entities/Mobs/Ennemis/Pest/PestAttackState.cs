@@ -47,6 +47,12 @@ public class PestAttackState : BaseState<PestStateMachine>
     {
         Context.Animator.ResetTrigger(Context.ChargeOutHash);
         Context.Animator.SetTrigger(Context.ChargeOutHash);
+
+        if (Context.DashRoutine != null)
+        {
+            Context.StopCoroutine(Context.DashRoutine);
+            Context.DashRoutine = null;
+        }
     }
 
     // This method will be call every frame.
