@@ -58,6 +58,7 @@ public class Item : MonoBehaviour, IInterractable
             playerInteractions.interactablesInRange.Remove(this);
 
             var meshRenderer = gameObject.GetComponent<MeshRenderer>();
+            GetComponent<ItemDescription>().TogglePanel(false);
             if (meshRenderer.materials.Length > 1)
             {
                 List<Material> finalMaterial = new()
