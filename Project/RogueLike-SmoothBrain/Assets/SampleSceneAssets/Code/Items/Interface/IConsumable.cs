@@ -1,4 +1,4 @@
-public interface IConsommable
+public interface IConsumable
 {
     public float Price
     {
