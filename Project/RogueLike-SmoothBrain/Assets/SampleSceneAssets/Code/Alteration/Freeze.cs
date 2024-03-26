@@ -15,15 +15,16 @@ public class Freeze : Status
             target.AddStatus(this);
     }
 
+    public override Status DeepCopy()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnFinished()
     {
         throw new System.NotImplementedException();
     }
 
-    public override Status ShallowCopy()
-    {
-        return (Freeze)this.MemberwiseClone();
-    }
 
     protected override void Effect()
     {

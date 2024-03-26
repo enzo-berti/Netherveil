@@ -64,25 +64,28 @@ public class Knockback : MonoBehaviour
     protected IEnumerator ApplyKnockbackCharacterController(Vector3 force)
     {
         yield return null;
-        characterController.enabled = false;
-        col.enabled = true;
-        animator.SetBool("IsKnockback", true);
-        hero.State = (int)Hero.PlayerState.KNOCKBACK;
-        rb.isKinematic = false;
-        rb.AddForce(force, ForceMode.Impulse);
+        if(characterController != null) 
+        {
+            characterController.enabled = false;
+            col.enabled = true;
+            animator.SetBool("IsKnockback", true);
+            hero.State = (int)Hero.PlayerState.KNOCKBACK;
+            rb.isKinematic = false;
+            rb.AddForce(force, ForceMode.Impulse);
 
-        yield return new WaitForFixedUpdate();
-        yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
+            yield return new WaitForFixedUpdate();
+            yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
 
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
 
-        animator.SetBool("IsKnockback", false);
-        characterController.enabled = true;
-        col.enabled = false;
-        hero.State = (int)Entity.EntityState.MOVE;
+            animator.SetBool("IsKnockback", false);
+            characterController.enabled = true;
+            col.enabled = false;
+            hero.State = (int)Entity.EntityState.MOVE;
 
-        knockbackRoutine = null;
+            knockbackRoutine = null;
+        }
     }
 }

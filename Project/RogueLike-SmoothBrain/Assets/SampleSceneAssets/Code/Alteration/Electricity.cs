@@ -15,14 +15,14 @@ public class Electricity : Status
             entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
     }
 
+    public override Status DeepCopy()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnFinished()
     {
        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
-    }
-
-    public override Status ShallowCopy()
-    {
-        return (Electricity)this.MemberwiseClone();
     }
 
     protected override void Effect()
