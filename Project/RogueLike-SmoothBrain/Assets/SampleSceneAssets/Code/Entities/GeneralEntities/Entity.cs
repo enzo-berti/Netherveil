@@ -151,14 +151,22 @@ public class EntityDrawer : Editor
             durationList.Add(statusDurationListProperty.GetArrayElementAtIndex(i).floatValue);
         }
 
-        FieldInfo[] infos = target.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        // Get all infos
+        FieldInfo[] infos = target.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        // Get entity infos only
+        FieldInfo[] entityInfo = typeof(Entity).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
         foreach (var field in infos)
         {
+            if (entityInfo.FirstOrDefault(x => x.Name == field.Name) != null) continue;
             if ((field.IsPublic && field.GetCustomAttribute(typeof(HideInInspector)) == null) || field.GetCustomAttribute(typeof(SerializeField)) != null)
             {
                 classField.Add(field.Name);
             }
         }
+        // If I don't reverse, last class values will be written in first
+        classField.Reverse();
     }
 
     public override void OnInspectorGUI()
@@ -245,7 +253,17 @@ public class EntityDrawer : Editor
 
         foreach (string fieldToDisplay in classField)
         {
-            EditorGUILayout.PropertyField(serializedObject.FindProperty(fieldToDisplay));
+            try
+            {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(fieldToDisplay));
+            }
+            catch
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("No GUI implemented for : " + fieldToDisplay);
+                EditorGUILayout.EndHorizontal();
+            }
+            
         }
 
         serializedObject.ApplyModifiedProperties();
