@@ -48,6 +48,7 @@ public class PlayerInteractions : MonoBehaviour
             for (int i = 1; i < interactables.Length; i++)
             {
                 meshRenderer = (interactables[i] as MonoBehaviour).gameObject.GetComponent<MeshRenderer>();
+                (interactables[0] as MonoBehaviour).gameObject.GetComponent<ItemDescription>().TogglePanel(false);
                 if (meshRenderer.materials.Length > 1)
                 {
                     finalMaterial = new()
@@ -59,6 +60,7 @@ public class PlayerInteractions : MonoBehaviour
             }
 
             meshRenderer = (interactables[0] as MonoBehaviour).gameObject.GetComponent<MeshRenderer>();
+            (interactables[0] as MonoBehaviour).gameObject.GetComponent<ItemDescription>().TogglePanel(true);
             finalMaterial = new()
                 {
                     meshRenderer.material,

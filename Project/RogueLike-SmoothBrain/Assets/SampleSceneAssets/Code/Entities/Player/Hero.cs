@@ -60,18 +60,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 if(!playerInput.LaunchedChargedAttack)
                 {
-                    //animator.ResetTrigger("Hit");
-                    //animator.SetTrigger("Hit");
                     playerController.ResetValues(); //possible source de bugs
                     animator.ResetTrigger("ChargedAttackRelease");
                     animator.SetBool("ChargedAttackCasting", false);
                     animator.ResetTrigger("BasicAttack");
                 }
                 AudioManager.Instance.PlaySound(playerController.hitSFX);
-                FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
-                //FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+                playerController.hitVFX.Play();
             }
 
+            FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
             OnTakeDamage?.Invoke();
         }
 

@@ -16,6 +16,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     [Header("Boss parameters")]
     Hero player = null;
+    bool playerHit = false;
 
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
@@ -38,7 +39,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     bool dashRetracting = false;
     Vector3 originalPos;
     bool triggerAOE = false;
-    float mescouillesfix = 0f;
 
     int thrustCounter = 0;
 
@@ -69,8 +69,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         while (true)
         {
             yield return null;
-
-            mescouillesfix = mescouillesfix <= 0 ? 0  : mescouillesfix - Time.deltaTime;
 
             if (!player)
             {
@@ -190,7 +188,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                             }
                         }
 
-                        mescouillesfix = 0.2f;
+                        playerHit = true;
                         break;
                     }
                 }
@@ -284,7 +282,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         dashTimer += Time.deltaTime * dashSpeed;
 
-        if (!triggerAOE && mescouillesfix == 0)
+        if (!triggerAOE && !playerHit)
         {
             AttackCollide(attacks[(int)Attacks.DASH].data, true);
         }
@@ -324,6 +322,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
+                    playerHit = false;
 
                     dashRetracting = false;
                     dashTimer = 0;
