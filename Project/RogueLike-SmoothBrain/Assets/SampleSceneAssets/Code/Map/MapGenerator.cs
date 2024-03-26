@@ -204,7 +204,7 @@ public class MapGenerator : MonoBehaviour
             foreach (var door in listDoors.Value)
             {
                 GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
-                go.transform.Rotate(0, (door.Rotation + 180f) % 360, 0);
+                go.transform.Rotate(0, door.Rotation % 360, 0);
                 go.transform.parent = gameObject.transform;
             }
         }

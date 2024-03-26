@@ -1,23 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Unity.VisualScripting;
+using UnityEngine;
 
 namespace StateMachine
 {
     public class StateFactory<T>
     {
-        Dictionary<Type, BaseState<T>> states = new Dictionary<Type, BaseState<T>>();
+        private Dictionary<Type, Func<BaseState<T>>> stateFactories = new Dictionary<Type, Func<BaseState<T>>>();
 
         public StateFactory(T context)
         {
-            Type stateType = typeof(BaseState<T>);
-            Type[] allValidTypes = Assembly.GetAssembly(stateType).GetTypes();
+            Type[] allValidTypes = typeof(T).Assembly.GetTypes();
             foreach (Type type in allValidTypes)
             {
-                ConstructorInfo constructor = type.GetConstructor(new[] { typeof(T), typeof(StateFactory<T>) });
-                if (constructor != null && type != typeof(BaseState<T>))
+                if (typeof(BaseState<T>).IsAssignableFrom(type) && !type.IsAbstract && type != typeof(BaseState<T>))
                 {
-                    states[type] = (BaseState<T>)constructor.Invoke(new object[] { context, this });
+                    stateFactories[type] = () => (BaseState<T>)Activator.CreateInstance(type, context, this);
                 }
             }
         }
@@ -29,10 +29,15 @@ namespace StateMachine
 
         public BaseState<T> GetState(Type stateType)
         {
-            if (states.ContainsKey(stateType))
-                return states[stateType];
+            if (stateFactories.ContainsKey(stateType))
+            {
+                return stateFactories[stateType]();
+            }
             else
+            {
                 throw new ArgumentException($"{stateType.Name} is not a valid state Type.");
+            }
         }
     }
+
 }
