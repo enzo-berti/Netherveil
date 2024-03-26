@@ -25,8 +25,6 @@ public class PlayerInteractions : MonoBehaviour
         Vector3 tmp = (Camera.main.transform.forward * transform.position.z + Camera.main.transform.right * transform.position.x);
         Vector2 playerPos = new Vector2(tmp.x, tmp.z);
 
-        Debug.Log(interactablesInRange.Count);
-
         IInterractable[] interactables = interactablesInRange.OrderBy(x =>
             {
                 tmp = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
