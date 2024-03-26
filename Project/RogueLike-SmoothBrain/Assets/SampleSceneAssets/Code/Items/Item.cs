@@ -20,6 +20,8 @@ public class Item : MonoBehaviour, IInterractable
     [SerializeField] Material outlineMaterial;
     ItemEffect itemToGive;
     public static event Action<ItemEffect> onRetrieved;
+    PlayerInteractions playerInteractions;
+    Hero hero;
 
     bool isInItemZone = false;
     private void Awake()
@@ -32,43 +34,37 @@ public class Item : MonoBehaviour, IInterractable
         this.GetComponent<MeshRenderer>().material = matToRender != null ? matToRender : defaultMat;
         this.GetComponent<MeshFilter>().mesh = meshToRender != null ? meshToRender : defaultMesh;
         InitDescription();
-        
+        playerInteractions = GameObject.FindWithTag("Player").GetComponent<PlayerInteractions>();
+        hero = playerInteractions.gameObject.GetComponent<Hero>();
     }
+
     private void Update()
     {
-        GameObject player = GameObject.FindWithTag("Player");
         Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 cameraRight = Camera.main.transform.right;
-        Vector3 playerPos = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
-        Vector3 itemPos = (cameraForward * this.transform.position.z + cameraRight * this.transform.position.x) ;
-        
-        if (Vector2.Distance(playerPos, itemPos) < 3)
+        Vector3 tmp = (cameraForward * playerInteractions.transform.position.z + cameraRight * playerInteractions.transform.position.x);
+        Vector2 playerPos = new Vector2(tmp.x, tmp.z);
+        tmp = (cameraForward * this.transform.position.z + cameraRight * this.transform.position.x);
+        Vector2 itemPos = new Vector2(tmp.x, tmp.z);
+
+        bool isInRange = Vector2.Distance(playerPos, itemPos) <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
+
+        if (isInRange && !playerInteractions.interactablesInRange.Contains(this))
         {
-            if(!isInItemZone)
-            {
-                var meshRenderer = this.GetComponent<MeshRenderer>();
-                List<Material> finalMaterial = new()
-                {
-                    meshRenderer.material,
-                    outlineMaterial
-                };
-                meshRenderer.SetMaterials(finalMaterial);
-                isInItemZone = true;
-            }
-            if(Input.GetKey(KeyCode.E))
-                Interract();
+            playerInteractions.interactablesInRange.Add(this);
         }
-        else
+        else if (!isInRange && playerInteractions.interactablesInRange.Contains(this))
         {
-            if(isInItemZone)
+            playerInteractions.interactablesInRange.Remove(this);
+
+            var meshRenderer = gameObject.GetComponent<MeshRenderer>();
+            if (meshRenderer.materials.Length > 1)
             {
-                var meshRenderer = this.GetComponent<MeshRenderer>();
                 List<Material> finalMaterial = new()
-                {
-                    meshRenderer.material
-                };
+                    {
+                        meshRenderer.material
+                    };
                 meshRenderer.SetMaterials(finalMaterial);
-                isInItemZone = false;
             }
         }
     }
@@ -78,7 +74,7 @@ public class Item : MonoBehaviour, IInterractable
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
         Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
         Destroy(this.gameObject);
-
+        playerInteractions.interactablesInRange.Remove(this);
         onRetrieved?.Invoke(itemToGive);
     }
 
@@ -166,7 +162,7 @@ public class ItemEditor : Editor
         {
             EditorWindow.GetWindow<ResearchItemWindow>("Select Item");
         }
-        
+
         if (GUILayout.Button("Randomize item"))
         {
             Item.RandomizeItem((Item)target);

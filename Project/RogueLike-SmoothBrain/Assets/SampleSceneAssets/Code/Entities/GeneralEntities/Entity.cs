@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 public abstract class Entity : MonoBehaviour
 {
 
-    //[Header("Properties")]
+    [Header("Properties")]
     [SerializeField] protected Stats stats;
     [SerializeField] List<string> statusNameToApply = new List<string>();
     [SerializeField] List<float> durationStatusToApply = new List<float>();
@@ -22,7 +22,7 @@ public abstract class Entity : MonoBehaviour
     [HideInInspector] public int State;
     private void Awake()
     {
-        for(int i = 0;  i < statusNameToApply.Count; i++)
+        for (int i = 0; i < statusNameToApply.Count; i++)
         {
             Type statusType = Assembly.GetExecutingAssembly().GetType(statusNameToApply[i]);
             ConstructorInfo constructor = statusType.GetConstructor(new[] { typeof(float) });
@@ -107,14 +107,25 @@ public abstract class Entity : MonoBehaviour
 public class EntityDrawer : Editor
 {
     SerializedProperty statProperty;
+
+    // Status name list in the entity ( required to instantiate with the reflection )
     SerializedProperty statusNameListProperty;
+
+    // Duration of each status in the entity ( required to instantiate with the reflection )
     SerializedProperty statusDurationListProperty;
+
     SerializedProperty isAllyProperty;
+
+    // Index of each status ( in the name list )
     List<int> allIndex = new();
     bool isStatusExpended = false;
-    int nbStats = 0;
+    int nbStatus = 0;
+
+    // Local lists that we will use to update properties
     List<string> statusNameList = new List<string>();
     List<float> durationList = new();
+
+    List<string> classField = new List<string>();
     private void OnEnable()
     {
         statProperty = serializedObject.FindProperty("stats");
@@ -122,7 +133,7 @@ public class EntityDrawer : Editor
         statusDurationListProperty = serializedObject.FindProperty("durationStatusToApply");
         isAllyProperty = serializedObject.FindProperty("isAlly");
 
-
+        // Add existing Status name in a list
         if (statusNameList.Count == 0)
         {
             var typeList = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsSubclassOf(typeof(Status)));
@@ -132,44 +143,73 @@ public class EntityDrawer : Editor
             }
         }
 
+        // Update local lists with the entity lists
         for (int i = 0; i < statusNameListProperty.arraySize; i++)
         {
-            nbStats++;
+            nbStatus++;
             allIndex.Add(statusNameList.IndexOf(statusNameListProperty.GetArrayElementAtIndex(i).stringValue));
             durationList.Add(statusDurationListProperty.GetArrayElementAtIndex(i).floatValue);
         }
+
+        // Get all infos
+        FieldInfo[] infos = target.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        // Get entity infos only
+        FieldInfo[] entityInfo = typeof(Entity).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        foreach (var field in infos)
+        {
+            if (entityInfo.FirstOrDefault(x => x.Name == field.Name) != null) continue;
+            if ((field.IsPublic && field.GetCustomAttribute(typeof(HideInInspector)) == null) || field.GetCustomAttribute(typeof(SerializeField)) != null)
+            {
+                classField.Add(field.Name);
+            }
+        }
+        // If I don't reverse, last class values will be written in first
+        classField.Reverse();
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
+        DrawScript();
         EditorGUILayout.PropertyField(statProperty);
+
         EditorGUILayout.BeginHorizontal();
-        isStatusExpended = EditorGUILayout.Foldout(isStatusExpended, "Status :");
+        isStatusExpended = EditorGUILayout.Foldout(isStatusExpended, "Status");
         EditorGUILayout.EndHorizontal();
+
         if (isStatusExpended)
         {
-
-            for (int i = 0; i < nbStats; i++)
+            for (int i = 0; i < nbStatus; i++)
             {
                 EditorGUI.indentLevel++;
+                // If there is no index for the current status add it
                 if (allIndex.Count <= i)
                 {
                     allIndex.Add(0);
                 }
+
+                // For the current status, display a popup with all the status that exists
                 EditorGUILayout.BeginHorizontal();
+
+                // popup to choose the index of the status in the name List
                 allIndex[i] = EditorGUILayout.Popup(allIndex[i], statusNameList.ToArray());
-                if(durationList.Count <= i)
+
+                // If there is no duration for the current status add it
+                if (durationList.Count <= i)
                 {
                     durationList.Add(0);
                 }
+                // Then, field to choose the duration of the status
                 durationList[i] = EditorGUILayout.FloatField(durationList[i]);
-                if(statusDurationListProperty.arraySize <= i)
+                // If there is no value in the entity duration list, for the current status, add it
+                if (statusDurationListProperty.arraySize <= i)
                 {
                     statusDurationListProperty.InsertArrayElementAtIndex(i);
                 }
-                
+
+                // Button to remove a status
                 GUI.color = Color.red;
                 if (GUILayout.Button("X"))
                 {
@@ -177,37 +217,82 @@ public class EntityDrawer : Editor
                     durationList.RemoveAt(i);
                     statusNameListProperty.DeleteArrayElementAtIndex(i);
                     statusDurationListProperty.DeleteArrayElementAtIndex(i);
-                    nbStats--;
+                    nbStatus--;
                     serializedObject.ApplyModifiedProperties();
                     return;
                 }
-
                 GUI.color = Color.white;
+
                 EditorGUILayout.EndHorizontal();
+
+                // Update properties
                 statusNameListProperty.GetArrayElementAtIndex(i).stringValue = statusNameList[allIndex[i]];
                 statusDurationListProperty.GetArrayElementAtIndex(i).doubleValue = durationList[i];
+
                 EditorGUI.indentLevel--;
 
             }
 
+            // Button to add a new status in the list
             GUI.color = Color.green;
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("+"))
             {
-                statusNameListProperty.InsertArrayElementAtIndex(nbStats);
-                statusDurationListProperty.InsertArrayElementAtIndex(nbStats);
+                statusNameListProperty.InsertArrayElementAtIndex(nbStatus);
+                statusDurationListProperty.InsertArrayElementAtIndex(nbStatus);
                 allIndex.Add(0);
                 durationList.Add(0);
-                nbStats++;
+                nbStatus++;
             }
             EditorGUILayout.EndHorizontal();
-
             GUI.color = Color.white;
 
 
         }
         EditorGUILayout.PropertyField(isAllyProperty);
+
+        foreach (string fieldToDisplay in classField)
+        {
+            try
+            {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(fieldToDisplay));
+            }
+            catch
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("No GUI implemented for : " + fieldToDisplay);
+                EditorGUILayout.EndHorizontal();
+            }
+            
+        }
+
         serializedObject.ApplyModifiedProperties();
+
+    }
+    void DrawScript()
+    {
+        EditorGUILayout.BeginHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        MonoScript script = MonoScript.FromMonoBehaviour((Entity)target);
+        EditorGUILayout.ObjectField("Script", script, typeof(MonoScript), false);
+        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.EndHorizontal();
+    }
+    public static bool HasAttribute(Type t)
+    {
+        // Get instance of the attribute.
+        SerializeField MyAttribute =
+            (SerializeField)Attribute.GetCustomAttribute(t, typeof(SerializeField));
+
+        if (MyAttribute == null)
+        {
+            Console.WriteLine("The attribute was not found.");
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }
 #endif
