@@ -20,16 +20,8 @@ public class ItemDescription : MonoBehaviour
 
     public void TogglePanel(bool toggle)
     {
-        if(toggle)
-        {
-            StopAllCoroutines();
-            StartCoroutine(UpScaleCoroutine());
-        }
-        else
-        {
-            StopAllCoroutines();
-            StartCoroutine(DownScaleCoroutine());
-        }
+        StopAllCoroutines();
+        StartCoroutine(toggle ? UpScaleCoroutine() : DownScaleCoroutine());
     }
 
     IEnumerator UpScaleCoroutine()
