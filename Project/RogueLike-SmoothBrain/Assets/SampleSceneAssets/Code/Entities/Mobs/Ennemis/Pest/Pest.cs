@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using FMODUnity;
+using UnityEditor.Rendering.LookDev;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -115,7 +116,7 @@ public class Pest : Mobs, IPest
                     avoidPos += (pest.transform.position - transform.position).normalized * (1 - Vector3.Distance(transform.position, pest.transform.position)) * Random.Range(0.5f, 1.5f);
                 }
                 avoidPos /= pests.Count();
-                 
+                
                 MoveTo(averagePos + avoidPos);
             }
             else

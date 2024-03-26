@@ -37,7 +37,7 @@ public abstract class Entity : MonoBehaviour
         OnDeath += ctx => ClearStatus();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (AppliedStatusList.Count > 0)
         {

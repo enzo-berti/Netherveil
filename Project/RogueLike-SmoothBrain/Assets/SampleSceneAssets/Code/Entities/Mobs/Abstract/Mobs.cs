@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
-using System.Runtime.CompilerServices;
 
 #if UNITY_EDITOR
 using UnityEditor;
