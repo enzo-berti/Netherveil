@@ -38,7 +38,7 @@ public class HudHandler : MonoBehaviour
         }
     }
 
-    public void TogglePause()
+    public void TogglePause(InputAction.CallbackContext ctx)
     {
         if (hud.activeSelf)
         {
