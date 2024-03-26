@@ -189,7 +189,8 @@ public class PlayerController : MonoBehaviour
         Vector2 dir = Direction != Vector2.zero ? Direction : new Vector2(transform.forward.x, transform.forward.z);
 
         Quaternion rotation = Quaternion.LookRotation(new Vector3(dir.x, 0f, dir.y));
-        float rotationY = rotation.eulerAngles.y + Camera.main.transform.rotation.y;
+        rotation *= Camera.main.transform.rotation;
+        float rotationY = rotation.eulerAngles.y;
         OverridePlayerRotation(rotationY, true);
     }
 
