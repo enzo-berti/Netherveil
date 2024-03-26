@@ -1,3 +1,5 @@
+using System;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class Fire : Status
@@ -15,26 +17,29 @@ public class Fire : Status
     {
         if (target.gameObject.TryGetComponent<IDamageable>(out _))
         {
-            this.stack++;
+
+            AddStack(1);
             target.AddStatus(this);
         }
     }
 
     public override void OnFinished()
     {
-    }
-
-    public override Status ShallowCopy()
-    {
-        return (Fire)this.MemberwiseClone();
+        Debug.Log("Fini");
     }
 
     protected override void Effect()
     {
         if (target != null)
         {
-            FloatingTextGenerator.CreateEffectDamageText(damage * stack, target.transform.position, fireColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * stack, false, false);
+            FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, fireColor);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, false, false);
         }
+    }
+
+    public override Status DeepCopy()
+    {
+        Fire fire = (Fire)this.MemberwiseClone();
+        return fire;
     }
 }
