@@ -1,3 +1,4 @@
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class RoomEvents : MonoBehaviour
@@ -5,16 +6,18 @@ public class RoomEvents : MonoBehaviour
     public delegate void Enter(ref MapData mapData);
     public delegate void Exit(ref MapData mapData);
 
-    MapData mapData = new MapData();
+    private MapData mapData = new MapData();
 
     private void EnterEvents()
     {
+        GetComponent<NavMeshSurface>().enabled = true;
         transform.parent.Find("RoomGenerator").gameObject.SetActive(true);
     }
 
     private void ExitEvents()
     {
-        transform.parent.Find("RoomGenerator").gameObject.SetActive(true);
+        GetComponent<NavMeshSurface>().enabled = false;
+        transform.parent.Find("RoomGenerator").gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
