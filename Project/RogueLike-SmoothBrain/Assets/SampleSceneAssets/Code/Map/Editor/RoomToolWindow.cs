@@ -1,3 +1,4 @@
+using System.IO;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
@@ -82,7 +83,11 @@ public class RoomToolWindow : EditorWindow
         GameObject treasures = new GameObject("Treasures");
         treasures.transform.parent = roomSeed1.transform;
 
-        AssetDatabase.CreateFolder("Assets/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString(), prefabName);
+        string folderPath = "Assets/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString();
+        if (!Directory.Exists(folderPath))
+        {
+            AssetDatabase.CreateFolder(folderPath, prefabName);
+        }
         PrefabUtility.SaveAsPrefabAsset(roomPrefab, UnityEngine.Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString() + "/" + prefabName + "/" + prefabName + ".prefab");
 
         // destroy garbage in scene
