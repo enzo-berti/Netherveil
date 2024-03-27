@@ -165,7 +165,7 @@ public class AudioManager : MonoBehaviour
         for (int i = buttonSFXInstances.Count - 1; i >= 0; --i)
         {
             buttonSFXInstances[i].stop(FMOD.Studio.STOP_MODE.Immediate);
-            audioInstance.RemoveAt(i);
+            buttonSFXInstances.RemoveAt(i);
         }
 
         buttonSFXInstances.Add(Instance.PlaySound(buttonClick));
