@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -5,88 +6,99 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Rigidbody))]
 public class Knockback : MonoBehaviour
 {
-    private Rigidbody rb;
     private NavMeshAgent agent;
     private CharacterController characterController;
     private Coroutine knockbackRoutine;
-    private Animator animator;
-    private Hero hero;
-    private Collider col;
+    public Action onObstacleCollide;
 
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         characterController = GetComponent<CharacterController>();
-        animator = GetComponentInChildren<Animator>();
-        hero = GetComponent<Hero>();
-        col = GetComponent<CapsuleCollider>();
     }
 
-    public void GetKnockback(Vector3 force)
+    public void GetKnockback(Vector3 direction, float distance, float speed)
     {
         if (knockbackRoutine != null)
             return;
 
         if(agent != null)
         {
-            knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(force));
+            knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(direction, distance, speed));
         }
         else if (characterController != null)
         {
-            knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(force));
+            knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(direction, distance, speed));
         }
        
     }
 
-    protected IEnumerator ApplyKnockbackAgent(Vector3 force)
+    private IEnumerator ApplyKnockbackAgent(Vector3 direction, float distance, float speed)
     {
-        yield return null;
-        agent.enabled = false;
-        rb.isKinematic = false;
-        rb.AddForce(force, ForceMode.Impulse);
+        float timeElapsed = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = transform.position + direction * distance;
 
-        yield return new WaitForFixedUpdate();
-        yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
-        yield return new WaitForSeconds(0.25f);
+        float duration = distance / speed;
+        bool isOnNavMesh = true;
 
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true;
+        while (timeElapsed < duration && isOnNavMesh)
+        {
+            timeElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(timeElapsed / duration);
 
-        agent.Warp(transform.position);
-        agent.enabled = true;
+            Vector3 warpPosition = Vector3.Lerp(startPosition, targetPosition, t);
 
+            if (isOnNavMesh = NavMesh.SamplePosition(warpPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position);
+            }
+            else
+            {
+                onObstacleCollide?.Invoke();
+            }
+
+            yield return null;
+        }
+
+        agent.Warp(targetPosition);
         knockbackRoutine = null;
     }
 
-    protected IEnumerator ApplyKnockbackCharacterController(Vector3 force)
+    protected IEnumerator ApplyKnockbackCharacterController(Vector3 direction, float distance, float speed)
     {
-        yield return null;
-        if(characterController != null) 
+        characterController.enabled = false;
+
+        float timeElapsed = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = transform.position + direction * distance;
+
+        float duration = distance / speed;
+        bool isOnNavMesh = true;
+
+        while (timeElapsed < duration && isOnNavMesh)
         {
-            characterController.enabled = false;
-            col.enabled = true;
-            animator.SetBool("IsKnockback", true);
-            hero.State = (int)Hero.PlayerState.KNOCKBACK;
-            rb.isKinematic = false;
-            rb.AddForce(force, ForceMode.Impulse);
+            timeElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(timeElapsed / duration);
 
-            yield return new WaitForFixedUpdate();
-            yield return new WaitUntil(() => rb.velocity.magnitude < StillThreshold);
+            Vector3 warpPosition = Vector3.Lerp(startPosition, targetPosition, t);
 
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
+            if (isOnNavMesh = NavMesh.SamplePosition(warpPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position);
+            }
+            else
+            {
+                onObstacleCollide?.Invoke();
+            }
 
-            animator.SetBool("IsKnockback", false);
-            characterController.enabled = true;
-            col.enabled = false;
-            hero.State = (int)Entity.EntityState.MOVE;
-
-            knockbackRoutine = null;
+            yield return null;
         }
+
+        transform.position = targetPosition;
+        characterController.enabled = true;
+        knockbackRoutine = null;
     }
 }
