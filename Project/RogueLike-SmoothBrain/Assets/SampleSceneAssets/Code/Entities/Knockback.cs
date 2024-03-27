@@ -9,7 +9,11 @@ public class Knockback : MonoBehaviour
     private NavMeshAgent agent;
     private CharacterController characterController;
     private Coroutine knockbackRoutine;
-    public Action onObstacleCollide;
+    /// <summary>
+    /// int _value, bool isCrit = false, bool notEffectDamages = true
+    /// </summary>
+    public Action<int, bool, bool> onObstacleCollide;
+    [SerializeField] private int damageTakeOnObstacleCollide = 10;
 
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
 
@@ -24,7 +28,7 @@ public class Knockback : MonoBehaviour
         if (knockbackRoutine != null)
             return;
 
-        if(agent != null)
+        if (agent != null)
         {
             knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(direction, distance, speed));
         }
@@ -32,7 +36,7 @@ public class Knockback : MonoBehaviour
         {
             knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(direction, distance, speed));
         }
-       
+
     }
 
     private IEnumerator ApplyKnockbackAgent(Vector3 direction, float distance, float speed)
@@ -57,13 +61,12 @@ public class Knockback : MonoBehaviour
             }
             else
             {
-                onObstacleCollide?.Invoke();
+                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
             }
 
             yield return null;
         }
 
-        agent.Warp(targetPosition);
         knockbackRoutine = null;
     }
 
@@ -73,27 +76,15 @@ public class Knockback : MonoBehaviour
 
         float timeElapsed = 0f;
         Vector3 startPosition = transform.position;
-        Vector3 targetPosition = transform.position + direction * distance;
+        Vector3 targetPosition = direction * distance;
 
         float duration = distance / speed;
-        bool isOnNavMesh = true;
 
-        while (timeElapsed < duration && isOnNavMesh)
+        while (timeElapsed < duration)
         {
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
-
-            Vector3 warpPosition = Vector3.Lerp(startPosition, targetPosition, t);
-
-            if (isOnNavMesh = NavMesh.SamplePosition(warpPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-            {
-                agent.Warp(hit.position);
-            }
-            else
-            {
-                onObstacleCollide?.Invoke();
-            }
-
+            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
             yield return null;
         }
 
@@ -102,3 +93,4 @@ public class Knockback : MonoBehaviour
         knockbackRoutine = null;
     }
 }
+
