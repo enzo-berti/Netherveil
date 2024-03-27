@@ -9,18 +9,18 @@ public class PestRegroupState : BaseState<PestStateMachine>
         : base(currentContext, currentFactory) { }
 
     private float elapsedTimeMovement = 0.0f;
-        
+    private float delayBetweenMovement = 2.0f;
+
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        Entity[] entitiesInVision = Context.NearbyEntities;
-        if (entitiesInVision.FirstOrDefault(x => x.GetComponent<PlayerController>()))
+        if (Context.NearbyEntities.FirstOrDefault(x => x.GetComponent<PlayerController>()))
         {
-            SwitchState(Factory.GetState<PestAttackState>());
+            SwitchState(Factory.GetState<PestFollowTargetState>());
         }
-        else if (!entitiesInVision.FirstOrDefault(x => x is IPest))
+        else if (!Context.NearbyEntities.FirstOrDefault(x => x is IPest))
         {
-            SwitchState(Factory.GetState<PestIdleState>());
+            SwitchState(Factory.GetState<PestPatrolState>());
         }
     }
 
@@ -38,7 +38,7 @@ public class PestRegroupState : BaseState<PestStateMachine>
     protected override void UpdateState()
     {
         // Delay
-        if (Time.time - elapsedTimeMovement < Context.DelayBetweenMovement)
+        if (Time.time - elapsedTimeMovement < delayBetweenMovement)
             return;
 
         elapsedTimeMovement = Time.time;

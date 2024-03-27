@@ -1,7 +1,6 @@
 using StateMachine; // include all script about stateMachine
 using System.Collections;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class PestAttackState : BaseState<PestStateMachine>
@@ -9,89 +8,136 @@ public class PestAttackState : BaseState<PestStateMachine>
     public PestAttackState(PestStateMachine currentContext, StateFactory<PestStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    private float elapsedTimeAttack;
+    private enum State
+    {
+        Start,
+        Charge,
+        Dash,
+        Recharge
+    }
 
-    private float dashDuration = 0.25f;
-    private float dashDistance = 8.0f;
+    private Transform target;
+
+    private State curState = State.Start;
+    private float elapsedTimeState = 0.0f;
+
+    private float chargeDuration = 1.0f;
+    private float rechargeDuration = 0.25f;
+
+    private float dashSpeed = 24.0f;
+    private float dashDistance = 0.0f;
+
+    private Coroutine dashRoutine;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        Entity[] entitiesInVision = Context.NearbyEntities;
-        if (!entitiesInVision.FirstOrDefault(x => x.GetComponent<PlayerController>()))
+        if (Vector3.Distance(Context.transform.position, target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
         {
-            if (entitiesInVision.FirstOrDefault(x => x is IPest))
-            {
-                SwitchState(Factory.GetState<PestRegroupState>());
-            }
-            else
-            {
-                SwitchState(Factory.GetState<PestIdleState>());
-            }
+            SwitchState(Factory.GetState<PestFollowTargetState>());
         }
     }
 
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        elapsedTimeAttack = Time.time;
+        curState = State.Start;
+        elapsedTimeState = 0.0f;
 
-        Context.Animator.ResetTrigger(Context.ChargeInHash);
-        Context.Animator.SetTrigger(Context.ChargeInHash);
-
-        LookAtPlayer();
+        target = Context.NearbyEntities.FirstOrDefault(x => x.GetComponent<PlayerController>()).transform;
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
-    {
+    { 
+        if (dashRoutine != null)
+        {
+            Context.StopCoroutine(dashRoutine);
+            dashRoutine = null;
+        }
         Context.Animator.ResetTrigger(Context.ChargeOutHash);
         Context.Animator.SetTrigger(Context.ChargeOutHash);
-
-        if (Context.DashRoutine != null)
-        {
-            Context.StopCoroutine(Context.DashRoutine);
-            Context.DashRoutine = null;
-        }
     }
 
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        // Delay
-        if (Time.time - elapsedTimeAttack < Context.DelayToAttack || Context.DashRoutine != null)
-            return;
+        if (curState == State.Start)
+        {
+            Vector3 positionToLookAt = new Vector3(target.position.x, Context.transform.position.y, target.position.z);
+            dashDistance = Vector3.Distance(target.position, Context.transform.position);
+            Context.transform.LookAt(positionToLookAt);
+            curState = State.Charge;
 
-        // Animations
-        Context.Animator.ResetTrigger(Context.ChargeOutHash);
-        Context.Animator.SetTrigger(Context.ChargeOutHash);
+            Context.Animator.ResetTrigger(Context.ChargeInHash);
+            Context.Animator.SetTrigger(Context.ChargeInHash);
+        }
+        else if (curState == State.Charge)
+        {
+            elapsedTimeState += Time.deltaTime;
+            if (elapsedTimeState >= chargeDuration)
+            {
+                elapsedTimeState = 0.0f;
+                curState = State.Dash;
 
-        // Dash
-        Vector3 dashTarget = Context.transform.position + Context.transform.forward * dashDistance;
+                Vector3 curScale = Context.AttackCollider.transform.localScale;
+                curScale.z = dashDistance;
+                Context.AttackCollider.transform.localScale = curScale;
 
-        Context.DashRoutine = Context.StartCoroutine(DashCoroutine(dashTarget, dashDuration));
+                Vector3 curPos = Context.AttackCollider.transform.localPosition;
+                curPos.z = dashDistance / 2.0f;
+                Context.AttackCollider.transform.localPosition = curPos;
+
+                dashRoutine = Context.StartCoroutine(DashCoroutine(dashDistance, dashSpeed));
+
+                Context.Animator.ResetTrigger(Context.ChargeOutHash);
+                Context.Animator.SetTrigger(Context.ChargeOutHash);
+            }
+        }
+        else if (curState == State.Dash)
+        {
+            if (dashRoutine != null)
+            {
+                curState = State.Recharge;
+            }
+        }
+        else if (curState == State.Recharge)
+        {
+            elapsedTimeState += Time.deltaTime;
+            if (elapsedTimeState >= rechargeDuration)
+            {
+                elapsedTimeState = 0.0f;
+                curState = State.Start;
+            }
+        }
     }
 
-    private IEnumerator DashCoroutine(Vector3 targetPosition, float duration)
+    private IEnumerator DashCoroutine(float distance, float speed)
     {
-        Context.Agent.enabled = false;
         float timeElapsed = 0f;
         Vector3 startPosition = Context.transform.position;
+        Vector3 dashTarget = Context.transform.position + Context.transform.forward * distance;
+
+        IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(Context.AttackCollider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
+                                              .Select(x => x.GetComponent<IDamageable>())
+                                              .Where(x => x != null)
+                                              .FirstOrDefault();
+
+        if (player != null)
+            player.ApplyDamage((int)Context.Stats.GetValue(Stat.ATK));
+
+        float duration = distance / speed;
 
         while (timeElapsed < duration)
         {
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
-            Context.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            Context.Agent.Warp(Vector3.Lerp(startPosition, dashTarget, t));
             yield return null;
         }
 
-        LookAtPlayer();
-
-        Context.transform.position = targetPosition;
-        Context.Agent.enabled = true;
-        Context.DashRoutine = null;
-        elapsedTimeAttack = Time.time;
+        Context.Agent.Warp(dashTarget);
+        dashRoutine = null;
     }
 
     // This method will be call on state changement.
@@ -100,11 +146,5 @@ public class PestAttackState : BaseState<PestStateMachine>
     {
         base.SwitchState(newState);
         Context.CurrentState = newState;
-    }
-
-    private void LookAtPlayer()
-    {
-        Transform plyTransform = Context.NearbyEntities.FirstOrDefault(x => x.GetComponent<PlayerController>()).transform;
-        Context.transform.LookAt(new Vector3(plyTransform.position.x, Context.transform.position.y, plyTransform.position.z));
     }
 }
