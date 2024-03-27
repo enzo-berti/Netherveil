@@ -167,7 +167,7 @@ Transform:
   m_GameObject: {fileID: 7946285657065441543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 20}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageTakeOnObstacleCollide: 10
   StillThreshold: 0.1
 --- !u!114 &3489243241304618130
 MonoBehaviour:
@@ -309,7 +310,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 5
+      value: 20
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -320,6 +321,16 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 5
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 2
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 1
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -434,6 +445,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 0b3b51edbdcb0594f92b82b4ca3f3cae, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 3cef15511d92d3b4ea784e81cd96c0f6,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

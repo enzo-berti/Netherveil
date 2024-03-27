@@ -22,7 +22,6 @@ public class PestAttackState : BaseState<PestStateMachine>
     private float chargeDuration = 1.0f;
     private float rechargeDuration = 0.25f;
 
-    private float dashSpeed = 24.0f;
     private float dashDistance = 0.0f;
 
     private Coroutine dashRoutine;
@@ -84,7 +83,7 @@ public class PestAttackState : BaseState<PestStateMachine>
                 curPos.z = dashDistance / 2.0f;
                 Context.AttackCollider.transform.localPosition = curPos;
 
-                dashRoutine = Context.StartCoroutine(DashCoroutine(dashDistance, dashSpeed));
+                dashRoutine = Context.StartCoroutine(DashCoroutine(dashDistance, Context.DashSpeed));
 
                 Context.Animator.ResetTrigger(Context.ChargeOutHash);
                 Context.Animator.SetTrigger(Context.ChargeOutHash);

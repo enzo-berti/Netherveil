@@ -133,11 +133,27 @@ public class AudioManager : MonoBehaviour
         return result;
     }
 
+    public EventInstance PlaySound(string path, Vector3 worldPosition)
+    {
+        EventInstance result = PlaySound(path);
+        result.set3DAttributes(worldPosition.To3DAttributes());
+
+        return result;
+    }
+
     public EventInstance PlaySound(EventReference reference)
     {
         EventInstance result = RuntimeManager.CreateInstance(reference);
         result.start();
         audioInstance.Add(result);
+
+        return result;
+    }
+
+    public EventInstance PlaySound(EventReference reference, Vector3 worldPosition)
+    {
+        EventInstance result = PlaySound(reference);
+        result.set3DAttributes(worldPosition.To3DAttributes());
 
         return result;
     }
