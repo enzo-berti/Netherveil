@@ -1,4 +1,4 @@
 public interface IProjectile
 {
-    void Move();
+    void Move(Vector3Extensions _direction);
 }
