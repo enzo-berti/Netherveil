@@ -8,6 +8,8 @@ public class Spike : MonoBehaviour
 {
     [SerializeField] EventReference spikesUpSFX;
     [SerializeField] EventReference spikesDownSFX;
+    private FMOD.Studio.EventInstance spikesUpEvent;
+    private FMOD.Studio.EventInstance spikesDownEvent;
     private float startPosY;
     private float endPosY;
     private bool isOut;
@@ -24,6 +26,8 @@ public class Spike : MonoBehaviour
         waitUntilTimer = 3f;
         damage = 10;
         isOut = false;
+        spikesUpEvent = RuntimeManager.CreateInstance(spikesUpSFX);
+        spikesDownEvent = RuntimeManager.CreateInstance(spikesDownSFX);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -62,6 +66,7 @@ public class Spike : MonoBehaviour
     IEnumerator Active()
     {
         yield return new WaitForSeconds(0.15f);
+        AudioManager.Instance.StopSound(spikesDownEvent, FMOD.Studio.STOP_MODE.Immediate);
         AudioManager.Instance.PlaySound(spikesUpSFX);
         while (spikesToMove.transform.position.y != endPosY)
         {
@@ -90,6 +95,7 @@ public class Spike : MonoBehaviour
 
     IEnumerator Disable()
     {
+        AudioManager.Instance.StopSound(spikesUpEvent, FMOD.Studio.STOP_MODE.Immediate);
         AudioManager.Instance.PlaySound(spikesDownSFX);
         yield return new WaitForSeconds(0.15f);
         while (spikesToMove.transform.position.y != startPosY)

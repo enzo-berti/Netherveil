@@ -1,9 +1,17 @@
+using FMODUnity;
 using UnityEngine;
 
 public class ProjectileLuchTrap : MonoBehaviour , IActivableTrap
 {
     [SerializeField] GameObject itemToInstanciate;
+    [SerializeField] EventReference throwProjectilSFX;
+    private FMOD.Studio.EventInstance throwProjectilEvent;
     Vector3 launchPos;
+
+    private void Awake()
+    {
+        throwProjectilEvent = RuntimeManager.CreateInstance(throwProjectilSFX);
+    }
 
     private void Start()
     {
@@ -12,6 +20,8 @@ public class ProjectileLuchTrap : MonoBehaviour , IActivableTrap
 
     public void Active()
     {
+        AudioManager.Instance.StopSound(throwProjectilEvent, FMOD.Studio.STOP_MODE.IMMEDIATE);
+        AudioManager.Instance.PlaySound(throwProjectilSFX);
         Instantiate(itemToInstanciate, launchPos, transform.rotation);
     }
 }
