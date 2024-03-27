@@ -67,7 +67,6 @@ public class Knockback : MonoBehaviour
             yield return null;
         }
 
-        agent.Warp(targetPosition);
         knockbackRoutine = null;
     }
 
