@@ -451,6 +451,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 923103177}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &923103179 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 968553973604642444, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
+    type: 3}
+  m_PrefabInstance: {fileID: 923103177}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &923103180 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4207052254101384882, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
+    type: 3}
+  m_PrefabInstance: {fileID: 923103177}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1172905397
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,25 +905,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4698072993601050955, guid: 3b3a02f7c28018f40941312e4fbd9767,
-        type: 3}
-      propertyPath: m_SlopeLimit
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4698072993601050955, guid: 3b3a02f7c28018f40941312e4fbd9767,
-        type: 3}
-      propertyPath: m_StepOffset
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4731884866316630644, guid: 3b3a02f7c28018f40941312e4fbd9767,
         type: 3}
       propertyPath: m_Name
       value: Player&VFX
       objectReference: {fileID: 0}
-    - target: {fileID: 4788295515176652854, guid: 3b3a02f7c28018f40941312e4fbd9767,
+    - target: {fileID: 8524448187533866682, guid: 3b3a02f7c28018f40941312e4fbd9767,
         type: 3}
-      propertyPath: m_Constraints
-      value: 80
+      propertyPath: stats.stats.Array.data[6].value
+      value: 24
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1146,6 +1148,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5447718579550349416, guid: 059499b2cd72808418feb2d5e576d0ef,
+        type: 3}
+      propertyPath: bigmapCam
+      value: 
+      objectReference: {fileID: 923103179}
+    - target: {fileID: 5447718579550349416, guid: 059499b2cd72808418feb2d5e576d0ef,
+        type: 3}
+      propertyPath: minimapCam
+      value: 
+      objectReference: {fileID: 923103180}
     - target: {fileID: 6390968503796633718, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1243,8 +1255,8 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1328264846}
   - {fileID: 165144576}
   - {fileID: 1456546881}
   - {fileID: 285256409}
   - {fileID: 1710675469}
-  - {fileID: 1328264846}

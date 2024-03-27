@@ -16,6 +16,9 @@ public class PestStateMachine : Mobs, IPest
     private class PestSounds
     {
         public EventReference deathSound;
+        public EventReference takeDamageSound;
+        public EventReference hitSound;
+        public EventReference moveSound;
     }
 
     // state machine variables
@@ -126,6 +129,10 @@ public class PestStateMachine : Mobs, IPest
         {
             Death();
         }
+        else
+        {
+            AudioManager.Instance.PlaySound(pestSounds.takeDamageSound);
+        }
     }
 
     public void Attack(IDamageable damageable)
@@ -134,6 +141,7 @@ public class PestStateMachine : Mobs, IPest
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
         ApplyKnockback(damageable);
+        AudioManager.Instance.PlaySound(pestSounds.hitSound);
     }
 
     public void Death()
@@ -150,6 +158,7 @@ public class PestStateMachine : Mobs, IPest
             return;
 
         agent.SetDestination(posToMove);
+        AudioManager.Instance.PlaySound(pestSounds.moveSound);
     }
     #endregion
 

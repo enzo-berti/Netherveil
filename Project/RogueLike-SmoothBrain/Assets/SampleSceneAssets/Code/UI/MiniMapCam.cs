@@ -6,19 +6,17 @@ public class MiniMapCam : MonoBehaviour
 
     void Start()
     {
-        if (player == null)
-            player = FindObjectOfType<PlayerController>().transform;
+        player = GameObject.FindWithTag("Player").transform;
     }
 
     void LateUpdate()
     {
-        if (player)
-            SetPosition();
+        SetPosition();
     }
 
     private void SetPosition()
     {
-        var newPos = player.position;
+        Vector3 newPos = player.position;
         newPos.y = transform.position.y;
         transform.position = newPos;
     }
