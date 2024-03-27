@@ -309,7 +309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2673750351035000378
 Transform:
   m_ObjectHideFlags: 0
@@ -569,7 +569,19 @@ MonoBehaviour:
       minValue: 0
       overload: 0
       underload: 0
+    - stat: 14
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 100
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
     name: Grafted
+  statusNameToApply: []
+  durationStatusToApply: []
   isAlly: 0
   State: 0
   visionAngle: 360
@@ -587,6 +599,7 @@ MonoBehaviour:
   dashPivot: {fileID: 2673750351035000378}
   dashSpeed: 10
   AOEDuration: 0.5
+  projectilePrefab: {fileID: 0}
 --- !u!4 &867203832160427953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
