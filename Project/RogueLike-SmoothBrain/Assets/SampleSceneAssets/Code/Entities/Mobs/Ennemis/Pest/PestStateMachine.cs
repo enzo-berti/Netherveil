@@ -108,7 +108,12 @@ public class PestStateMachine : Mobs, IPest
 
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
+        // Some times, this method is call when entity is dead ??
+        if (stats.GetValue(Stat.HP) <= 0)
+            return;
+
         Stats.IncreaseValue(Stat.HP, -_value, false);
+        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (hasAnimation)
         {
@@ -120,10 +125,6 @@ public class PestStateMachine : Mobs, IPest
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
-        }
-        else
-        {
-            lifeBar.ValueChanged(stats.GetValue(Stat.HP));
         }
     }
 

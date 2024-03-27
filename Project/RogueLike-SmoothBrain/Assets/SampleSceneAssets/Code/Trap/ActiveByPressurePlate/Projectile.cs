@@ -4,8 +4,8 @@ public class Projectile : MonoBehaviour, IProjectile
 {
     public DamageState elementalDamage;
     int damage = 5;
-    float speed = 20f;
-    float lifetime = 10f;
+    float speed = 30f;
+    float lifetime = 5f;
     float startTime;
 
     public enum DamageState
