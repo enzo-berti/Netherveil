@@ -41,6 +41,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
 
+        GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
+
         //statusToApply.Add(new Fire(3f));
 
         if (this is IAttacker attacker)

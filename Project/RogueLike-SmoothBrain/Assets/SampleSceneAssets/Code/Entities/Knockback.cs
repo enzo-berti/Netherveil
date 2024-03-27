@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Knockback : MonoBehaviour
@@ -9,7 +10,11 @@ public class Knockback : MonoBehaviour
     private NavMeshAgent agent;
     private CharacterController characterController;
     private Coroutine knockbackRoutine;
-    public Action onObstacleCollide;
+    /// <summary>
+    /// int _value, bool isCrit = false, bool notEffectDamages = true
+    /// </summary>
+    public Action<int, bool, bool> onObstacleCollide;
+    [SerializeField] private int damageTakeOnObstacleCollide = 10;
 
     [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
 
@@ -57,7 +62,7 @@ public class Knockback : MonoBehaviour
             }
             else
             {
-                onObstacleCollide?.Invoke();
+                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
             }
 
             yield return null;
@@ -91,7 +96,7 @@ public class Knockback : MonoBehaviour
             }
             else
             {
-                onObstacleCollide?.Invoke();
+                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
             }
 
             yield return null;

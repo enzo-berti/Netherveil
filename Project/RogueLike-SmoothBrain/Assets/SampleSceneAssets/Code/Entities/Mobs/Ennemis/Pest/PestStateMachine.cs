@@ -69,6 +69,7 @@ public class PestStateMachine : Mobs, IPest
 
         // common initialization
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+        GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
 
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
