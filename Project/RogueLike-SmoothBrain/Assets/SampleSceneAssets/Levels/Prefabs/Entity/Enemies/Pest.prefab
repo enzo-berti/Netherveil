@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageTakeOnObstacleCollide: 10
   StillThreshold: 0.1
 --- !u!114 &3489243241304618130
 MonoBehaviour:
@@ -434,6 +435,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 0b3b51edbdcb0594f92b82b4ca3f3cae, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 3cef15511d92d3b4ea784e81cd96c0f6,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
