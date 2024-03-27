@@ -1,5 +1,142 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4043230366547309803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1652587678702306358}
+  - component: {fileID: 3962659396631540513}
+  - component: {fileID: 669724163456565055}
+  - component: {fileID: 5433158596567157123}
+  m_Layer: 3
+  m_Name: PestAttack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1652587678702306358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4043230366547309803}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 5}
+  m_LocalScale: {x: 0.8, y: 1, z: 10}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2023448527380647107}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3962659396631540513
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4043230366547309803}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &669724163456565055
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4043230366547309803}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: f67cceb1853c68c418917ebaa99cafd7, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5433158596567157123
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4043230366547309803}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6299691669833596919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2023448527380647107}
+  m_Layer: 3
+  m_Name: Attacks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2023448527380647107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6299691669833596919}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1652587678702306358}
+  m_Father: {fileID: 1749096857048287986}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7946285657065441543
 GameObject:
   m_ObjectHideFlags: 0
@@ -12,8 +149,8 @@ GameObject:
   - component: {fileID: 6406154243714290038}
   - component: {fileID: 2049373169672691703}
   - component: {fileID: 2320395733695838959}
-  - component: {fileID: 685760080216938473}
   - component: {fileID: 1395338572117502349}
+  - component: {fileID: 3489243241304618130}
   m_Layer: 3
   m_Name: Pest
   m_TagString: Enemy
@@ -36,6 +173,7 @@ Transform:
   m_Children:
   - {fileID: 5105494237783227887}
   - {fileID: 7904333292077390013}
+  - {fileID: 2023448527380647107}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &6406154243714290038
@@ -102,7 +240,7 @@ NavMeshAgent:
   m_Acceleration: 32
   avoidancePriority: 50
   m_AngularSpeed: 240
-  m_StoppingDistance: 1
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -110,7 +248,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &685760080216938473
+--- !u!114 &1395338572117502349
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,7 +257,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 7946285657065441543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f1184d1e6365a74b8b4a7828db0b214, type: 3}
+  m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StillThreshold: 0.05
+--- !u!114 &3489243241304618130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7946285657065441543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d70fcfe3623e046956dbd1bf70c402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
@@ -128,43 +279,23 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 25
+      value: 50
       coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 1
+    - stat: 7
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 5
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 2
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 1
+      value: 10
       coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
       underload: 0
     - stat: 3
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 1
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 4
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
@@ -184,53 +315,31 @@ MonoBehaviour:
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 7
+    - stat: 1
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 10
+      value: 5
       coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 14
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 100
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    name: Pest
+    name: Default
   statusNameToApply: []
   durationStatusToApply: []
   isAlly: 0
   State: 0
-  angle: 320
-  brainDelay: 1
-  deathSound:
-    Guid:
-      Data1: 47670446
-      Data2: 1242984026
-      Data3: 521774752
-      Data4: 1157363826
-    Path: event:/Enemy/EnemyDeath
---- !u!114 &1395338572117502349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7946285657065441543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  StillThreshold: 0.05
+  pestSounds:
+    deathSound:
+      Guid:
+        Data1: 47670446
+        Data2: 1242984026
+        Data3: 521774752
+        Data4: 1157363826
+      Path: event:/Enemy/EnemyDeath
+  angle: 280
+  attackCollider: {fileID: 5433158596567157123}
 --- !u!1001 &4706510688428890628
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -416,22 +525,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.90190923
+      value: -0.90603584
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.22798994
+      value: -0.22764304
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.35566428
+      value: -0.34600598
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0899069
+      value: 0.086934574
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
