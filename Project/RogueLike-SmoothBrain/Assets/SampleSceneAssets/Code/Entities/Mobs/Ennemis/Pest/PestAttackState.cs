@@ -24,25 +24,17 @@ public class PestAttackState : BaseState<PestStateMachine>
     private float chargeDuration = 1.0f;
     private float rechargeDuration = 0.25f;
 
-    private float dashDuration = 0.25f;
-    private float dashDistance = 10.0f;
+    private float dashSpeed = 24.0f;
+    private float dashDistance = 0.0f;
 
     private Coroutine dashRoutine;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        Entity[] entitiesInVision = Context.NearbyEntities;
-        if (!entitiesInVision.FirstOrDefault(x => x.GetComponent<PlayerController>()))
+        if (Vector3.Distance(Context.transform.position, target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
         {
-            if (entitiesInVision.FirstOrDefault(x => x is IPest))
-            {
-                SwitchState(Factory.GetState<PestRegroupState>());
-            }
-            else
-            {
-                SwitchState(Factory.GetState<PestIdleState>());
-            }
+            SwitchState(Factory.GetState<PestFollowTargetState>());
         }
     }
 
@@ -61,8 +53,6 @@ public class PestAttackState : BaseState<PestStateMachine>
         if (dashRoutine != null)
         {
             Context.StopCoroutine(dashRoutine);
-            Context.Agent.enabled = true;
-            Context.GetComponent<Collider>().enabled = true;
             dashRoutine = null;
         }
         Context.Animator.ResetTrigger(Context.ChargeOutHash);
@@ -75,6 +65,7 @@ public class PestAttackState : BaseState<PestStateMachine>
         if (curState == State.Start)
         {
             Vector3 positionToLookAt = new Vector3(target.position.x, Context.transform.position.y, target.position.z);
+            dashDistance = Vector3.Distance(target.position, Context.transform.position);
             Context.transform.LookAt(positionToLookAt);
             curState = State.Charge;
 
@@ -89,8 +80,15 @@ public class PestAttackState : BaseState<PestStateMachine>
                 elapsedTimeState = 0.0f;
                 curState = State.Dash;
 
-                Vector3 dashTarget = Context.transform.position + Context.transform.forward * dashDistance;
-                dashRoutine = Context.StartCoroutine(DashCoroutine(dashTarget, dashDuration));
+                Vector3 curScale = Context.AttackCollider.transform.localScale;
+                curScale.z = dashDistance;
+                Context.AttackCollider.transform.localScale = curScale;
+
+                Vector3 curPos = Context.AttackCollider.transform.localPosition;
+                curPos.z = dashDistance / 2.0f;
+                Context.AttackCollider.transform.localPosition = curPos;
+
+                dashRoutine = Context.StartCoroutine(DashCoroutine(dashDistance, dashSpeed));
 
                 Context.Animator.ResetTrigger(Context.ChargeOutHash);
                 Context.Animator.SetTrigger(Context.ChargeOutHash);
@@ -114,13 +112,11 @@ public class PestAttackState : BaseState<PestStateMachine>
         }
     }
 
-    private IEnumerator DashCoroutine(Vector3 targetPosition, float duration)
+    private IEnumerator DashCoroutine(float distance, float speed)
     {
-        Context.Agent.enabled = false;
-        Context.GetComponent<Collider>().enabled = false;
-
         float timeElapsed = 0f;
         Vector3 startPosition = Context.transform.position;
+        Vector3 dashTarget = Context.transform.position + Context.transform.forward * distance;
 
         IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(Context.AttackCollider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
                                               .Select(x => x.GetComponent<IDamageable>())
@@ -130,17 +126,17 @@ public class PestAttackState : BaseState<PestStateMachine>
         if (player != null)
             player.ApplyDamage((int)Context.Stats.GetValue(Stat.ATK));
 
+        float duration = distance / speed;
+
         while (timeElapsed < duration)
         {
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
-            Context.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            Context.Agent.Warp(Vector3.Lerp(startPosition, dashTarget, t));
             yield return null;
         }
 
-        Context.transform.position = targetPosition;
-        Context.Agent.enabled = true;
-        Context.GetComponent<Collider>().enabled = true;
+        Context.Agent.Warp(dashTarget);
         dashRoutine = null;
     }
 

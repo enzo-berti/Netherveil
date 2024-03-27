@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace StateMachine
 {
     public abstract class BaseState<T>
@@ -34,6 +32,11 @@ namespace StateMachine
 
             // new state enters state
             newState.EnterState();
+        }
+
+        public override string ToString()
+        {
+            return GetType().Name;
         }
     }
 }
