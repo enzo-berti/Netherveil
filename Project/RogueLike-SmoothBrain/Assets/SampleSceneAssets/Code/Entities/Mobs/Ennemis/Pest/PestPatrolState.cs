@@ -9,7 +9,6 @@ public class PestPatrolState : BaseState<PestStateMachine>
 
     private float elapsedTimeMovement = 0.0f;
     private float delayBetweenMovement = 1.0f;
-    private float force = 2.5f;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -43,7 +42,7 @@ public class PestPatrolState : BaseState<PestStateMachine>
 
         Vector3 direction = Random.insideUnitCircle.normalized;
 
-        Context.MoveTo(Context.transform.position + direction * force);
+        Context.MoveTo(Context.transform.position + direction * Context.NormalSpeed);
     }
 
     // This method will be call on state changement.
