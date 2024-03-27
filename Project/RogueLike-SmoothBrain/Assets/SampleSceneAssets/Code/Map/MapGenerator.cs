@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public enum RoomType
 {
@@ -181,9 +181,24 @@ public class MapGenerator : MonoBehaviour
 
     private void GenerateBossRoom(ref GenerationParam genParam)
     {
-        Door door = genParam.GetFarestDoor();
+        Door exitDoor = genParam.GetFarestDoor();
+        GameObject roomBossGO = Instantiate(roomBoss[0]);
+        DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
 
-        genParam.RemoveDoor(door);
+        Door door = new Door();
+        for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
+        {
+            door = doorsGenerator.doors[i];
+
+            if (((door.Rotation + 180f) % 360f) == exitDoor.Rotation)
+            {
+                break;
+            }
+        }
+
+        roomBossGO.transform.position = door.parentSkeleton.transform.parent.transform.position - door.Position + exitDoor.Position;
+
+        genParam.RemoveDoor(exitDoor);
     }
 
     private void GenerateMap(GenerationParam genParam)
@@ -257,6 +272,7 @@ public class MapGenerator : MonoBehaviour
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
             roomGO.transform.Find("RoomGenerator").gameObject.SetActive(false);
+            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
             roomGO.transform.parent = gameObject.transform;
             hasGenerated = true;
         }

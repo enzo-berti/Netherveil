@@ -3,9 +3,9 @@ using UnityEngine;
 public class Projectile : MonoBehaviour, IProjectile
 {
     public DamageState elementalDamage;
-    int damage = 5;
-    float speed = 30f;
-    float lifetime = 5f;
+    [SerializeField] int damage = 5;
+    [SerializeField] float speed = 30f;
+    [SerializeField] float lifeTime = 5f;
     float startTime;
 
     public enum DamageState
@@ -21,22 +21,22 @@ public class Projectile : MonoBehaviour, IProjectile
         startTime = Time.time;
     }
 
-    public void Move()
+    public void Move(Vector3 _direction)
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(_direction.normalized * speed * Time.deltaTime);
     }
 
-    void Update()
+    protected virtual void Update()
     {
-        Move();
+        Move(Vector3.forward);
 
-        if (Time.time - startTime > lifetime)
+        if (Time.time - startTime > lifeTime)
         {
             Destroy(gameObject);
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
         {
@@ -54,13 +54,13 @@ public class Projectile : MonoBehaviour, IProjectile
                 switch (elementalDamage)
                 {
                     case DamageState.FIRE:
-                        entity.ApplyEffect(new Fire(10));
+                        entity.ApplyEffect(new Fire(2));
                         break;
                     case DamageState.ICE:
-                        entity.ApplyEffect(new Freeze(10));
+                        entity.ApplyEffect(new Freeze(2));
                         break;
                     case DamageState.ELECTRICITY:
-                        entity.ApplyEffect(new Electricity(10));
+                        entity.ApplyEffect(new Electricity(2));
                         break;
                 }
                 // apply elementalState

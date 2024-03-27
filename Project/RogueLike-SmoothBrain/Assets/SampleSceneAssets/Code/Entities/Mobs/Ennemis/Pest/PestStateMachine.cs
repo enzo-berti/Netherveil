@@ -55,6 +55,8 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
     public Transform Target { get => target; set => target = value; }
+    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED); }
+    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
 
     protected override void Start()
     {
@@ -69,6 +71,7 @@ public class PestStateMachine : Mobs, IPest
 
         // common initialization
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+        GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
 
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
@@ -131,7 +134,7 @@ public class PestStateMachine : Mobs, IPest
         }
         else
         {
-            AudioManager.Instance.PlaySound(pestSounds.takeDamageSound);
+            AudioManager.Instance.PlaySound(pestSounds.takeDamageSound, transform.position);
         }
     }
 
@@ -141,7 +144,7 @@ public class PestStateMachine : Mobs, IPest
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
         ApplyKnockback(damageable);
-        AudioManager.Instance.PlaySound(pestSounds.hitSound);
+        AudioManager.Instance.PlaySound(pestSounds.hitSound, transform.position);
     }
 
     public void Death()
@@ -149,7 +152,7 @@ public class PestStateMachine : Mobs, IPest
         OnDeath?.Invoke(transform.position);
         Destroy(gameObject);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
-        AudioManager.Instance.PlaySound(pestSounds.deathSound);
+        AudioManager.Instance.PlaySound(pestSounds.deathSound, transform.position);
     }
 
     public void MoveTo(Vector3 posToMove)
@@ -158,7 +161,7 @@ public class PestStateMachine : Mobs, IPest
             return;
 
         agent.SetDestination(posToMove);
-        AudioManager.Instance.PlaySound(pestSounds.moveSound);
+        AudioManager.Instance.PlaySound(pestSounds.moveSound, transform.position);
     }
     #endregion
 
