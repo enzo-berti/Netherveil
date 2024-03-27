@@ -42,11 +42,13 @@ public class HudHandler : MonoBehaviour
     {
         if (hud.activeSelf)
         {
+            Time.timeScale = 1f;
             hud.SetActive(false);
             pauseMenu.gameObject.SetActive(true);
         }
         else
         {
+            Time.timeScale = 0f;
             hud.SetActive(true);
             pauseMenu.gameObject.SetActive(false);
         }
