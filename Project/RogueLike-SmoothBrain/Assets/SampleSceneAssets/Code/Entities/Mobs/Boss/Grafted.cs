@@ -354,9 +354,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         if (!Selection.Contains(gameObject))
             return;
 
-        //DisplayVisionRange(visionAngle);
-        //DisplayAttackRange(visionAngle);
-        //DisplayInfos();
+        DisplayVisionRange(visionAngle);
+        DisplayAttackRange(visionAngle);
+        DisplayInfos();
     }
 #endif
 }

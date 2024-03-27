@@ -44,7 +44,8 @@ public class PestRegroupState : BaseState<PestStateMachine>
         elapsedTimeMovement = Time.time;
 
         // Movement
-        IPest[] pests = Context.NearbyEntities.Select(x => x.GetComponent<IPest>())
+        IPest[] pests = Context.NearbyEntities.Where(x => x != null)
+                                              .Select(x => x.GetComponent<IPest>())
                                               .Where(x => x != null)
                                               .ToArray();
         
