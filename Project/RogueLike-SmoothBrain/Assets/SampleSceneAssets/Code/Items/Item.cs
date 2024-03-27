@@ -25,11 +25,9 @@ public class Item : MonoBehaviour, IInterractable
 
     GameObject meshObject;
     public Color RarityColor { get; private set; }
-
-    bool isInItemZone = false;
     private void Awake()
     {
-        //RandomizeItem(this);
+        RandomizeItem(this);
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
@@ -48,7 +46,7 @@ public class Item : MonoBehaviour, IInterractable
         Interraction();
 
         Vector3 updatePos = meshObject.transform.position;
-        updatePos.y += Mathf.Sin(Time.time) * 0.005f;
+        updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
         meshObject.transform.position = updatePos;
         meshObject.transform.Rotate(new Vector3(0, 0.5f, 0));
     }
