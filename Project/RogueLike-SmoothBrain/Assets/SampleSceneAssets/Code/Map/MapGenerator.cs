@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -257,6 +258,7 @@ public class MapGenerator : MonoBehaviour
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
             roomGO.transform.Find("RoomGenerator").gameObject.SetActive(false);
+            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
             roomGO.transform.parent = gameObject.transform;
             hasGenerated = true;
         }
