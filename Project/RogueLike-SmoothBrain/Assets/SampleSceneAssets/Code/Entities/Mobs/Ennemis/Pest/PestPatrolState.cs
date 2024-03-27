@@ -1,20 +1,24 @@
 using StateMachine; // include all script about stateMachine
 using System.Linq;
+using UnityEngine;
 
-public class PestIdleState : BaseState<PestStateMachine>
+public class PestPatrolState : BaseState<PestStateMachine>
 {
-    public PestIdleState(PestStateMachine currentContext, StateFactory<PestStateMachine> currentFactory)
+    public PestPatrolState(PestStateMachine currentContext, StateFactory<PestStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
-        
+
+    private float elapsedTimeMovement = 0.0f;
+    private float delayBetweenMovement = 1.0f;
+    private float force = 2.5f;
+
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        Entity[] entitiesInVision = Context.NearbyEntities;
-        if (entitiesInVision.FirstOrDefault(x => x.GetComponent<PlayerController>()))
+        if (Context.NearbyEntities.FirstOrDefault(x => x.GetComponent<PlayerController>()))
         {
-            SwitchState(Factory.GetState<PestAttackState>());
+            SwitchState(Factory.GetState<PestFollowTargetState>());
         }
-        else if (entitiesInVision.FirstOrDefault(x => x is IPest))
+        else if (Context.NearbyEntities.FirstOrDefault(x => x is IPest))
         {
             SwitchState(Factory.GetState<PestRegroupState>());
         }
@@ -30,7 +34,17 @@ public class PestIdleState : BaseState<PestStateMachine>
 
     // This method will be call every frame.
     protected override void UpdateState()
-    { }
+    {
+        // Delay
+        if (Time.time - elapsedTimeMovement < delayBetweenMovement)
+            return;
+
+        elapsedTimeMovement = Time.time;
+
+        Vector3 direction = Random.insideUnitCircle.normalized;
+
+        Context.MoveTo(Context.transform.position + direction * force);
+    }
 
     // This method will be call on state changement.
     // No need to modify this method !

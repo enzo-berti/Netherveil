@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
-using TMPro;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -33,7 +32,6 @@ public class PestStateMachine : Mobs, IPest
     [SerializeField] private PestSounds pestSounds;
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     private float searchEntityDelay = 1.0f;
-    private float delayBetweenMovement = 2.0f;
     [SerializeField] private BoxCollider attackCollider;
 
     // animation hash
@@ -46,7 +44,6 @@ public class PestStateMachine : Mobs, IPest
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public BaseState<PestStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
-    public float DelayBetweenMovement { get => delayBetweenMovement; }
     public Animator Animator { get => animator; }
     public NavMeshAgent Agent { get => agent; }
     public int ChargeInHash { get => chargeInHash; }
@@ -58,7 +55,7 @@ public class PestStateMachine : Mobs, IPest
         base.Start();
 
         factory = new StateFactory<PestStateMachine>(this);
-        currentState = factory.GetState<PestIdleState>();
+        currentState = factory.GetState<PestPatrolState>();
 
         // getter(s) reference
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
@@ -154,6 +151,24 @@ public class PestStateMachine : Mobs, IPest
         DisplayVisionRange(angle);
         DisplayAttackRange(angle);
         DisplayInfos();
+    }
+
+    protected override void DisplayInfos()
+    {
+        Handles.Label(
+        transform.position + transform.up,
+        stats.GetEntityName() +
+        "\n - Health : " + stats.GetValue(Stat.HP) +
+        "\n - Speed : " + stats.GetValue(Stat.SPEED) +
+        "\n - State : " + currentState?.ToString(),
+        new GUIStyle()
+        {
+            alignment = TextAnchor.MiddleLeft,
+            normal = new GUIStyleState()
+            {
+                textColor = Color.black
+            }
+        });
     }
 #endif
     #endregion
