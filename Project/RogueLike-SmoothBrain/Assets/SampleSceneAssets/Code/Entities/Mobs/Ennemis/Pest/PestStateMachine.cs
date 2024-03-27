@@ -34,8 +34,7 @@ public class PestStateMachine : Mobs, IPest
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     private float searchEntityDelay = 1.0f;
     private float delayBetweenMovement = 2.0f;
-    private float delayToAttack = 1.25f;
-    private Coroutine dashRoutine = null;
+    [SerializeField] private BoxCollider attackCollider;
 
     // animation hash
     private int chargeInHash;
@@ -48,12 +47,11 @@ public class PestStateMachine : Mobs, IPest
     public BaseState<PestStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public float DelayBetweenMovement { get => delayBetweenMovement; }
-    public float DelayToAttack { get => delayToAttack; }
     public Animator Animator { get => animator; }
     public NavMeshAgent Agent { get => agent; }
     public int ChargeInHash { get => chargeInHash; }
     public int ChargeOutHash { get => chargeOutHash; }
-    public Coroutine DashRoutine { get => dashRoutine; set => dashRoutine = value; }
+    public BoxCollider AttackCollider { get => attackCollider; }
 
     protected override void Start()
     {

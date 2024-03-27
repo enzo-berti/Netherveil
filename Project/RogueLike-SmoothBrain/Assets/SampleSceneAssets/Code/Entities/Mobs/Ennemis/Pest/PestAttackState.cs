@@ -1,7 +1,6 @@
 using StateMachine; // include all script about stateMachine
 using System.Collections;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class PestAttackState : BaseState<PestStateMachine>
@@ -9,10 +8,26 @@ public class PestAttackState : BaseState<PestStateMachine>
     public PestAttackState(PestStateMachine currentContext, StateFactory<PestStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    private float elapsedTimeAttack;
+    private enum State
+    {
+        Start,
+        Charge,
+        Dash,
+        Recharge
+    }
+
+    private Transform target;
+
+    private State curState = State.Start;
+    private float elapsedTimeState = 0.0f;
+
+    private float chargeDuration = 1.0f;
+    private float rechargeDuration = 0.25f;
 
     private float dashDuration = 0.25f;
-    private float dashDistance = 8.0f;
+    private float dashDistance = 10.0f;
+
+    private Coroutine dashRoutine;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -34,49 +49,86 @@ public class PestAttackState : BaseState<PestStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        elapsedTimeAttack = Time.time;
+        curState = State.Start;
+        elapsedTimeState = 0.0f;
 
-        Context.Animator.ResetTrigger(Context.ChargeInHash);
-        Context.Animator.SetTrigger(Context.ChargeInHash);
-
-        LookAtPlayer();
+        target = Context.NearbyEntities.FirstOrDefault(x => x.GetComponent<PlayerController>()).transform;
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
-    {
+    { 
+        if (dashRoutine != null)
+        {
+            Context.StopCoroutine(dashRoutine);
+            Context.Agent.enabled = true;
+            Context.GetComponent<Collider>().enabled = true;
+            dashRoutine = null;
+        }
         Context.Animator.ResetTrigger(Context.ChargeOutHash);
         Context.Animator.SetTrigger(Context.ChargeOutHash);
-
-        if (Context.DashRoutine != null)
-        {
-            Context.StopCoroutine(Context.DashRoutine);
-            Context.DashRoutine = null;
-        }
     }
 
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        // Delay
-        if (Time.time - elapsedTimeAttack < Context.DelayToAttack || Context.DashRoutine != null)
-            return;
+        if (curState == State.Start)
+        {
+            Vector3 positionToLookAt = new Vector3(target.position.x, Context.transform.position.y, target.position.z);
+            Context.transform.LookAt(positionToLookAt);
+            curState = State.Charge;
 
-        // Animations
-        Context.Animator.ResetTrigger(Context.ChargeOutHash);
-        Context.Animator.SetTrigger(Context.ChargeOutHash);
+            Context.Animator.ResetTrigger(Context.ChargeInHash);
+            Context.Animator.SetTrigger(Context.ChargeInHash);
+        }
+        else if (curState == State.Charge)
+        {
+            elapsedTimeState += Time.deltaTime;
+            if (elapsedTimeState >= chargeDuration)
+            {
+                elapsedTimeState = 0.0f;
+                curState = State.Dash;
 
-        // Dash
-        Vector3 dashTarget = Context.transform.position + Context.transform.forward * dashDistance;
+                Vector3 dashTarget = Context.transform.position + Context.transform.forward * dashDistance;
+                dashRoutine = Context.StartCoroutine(DashCoroutine(dashTarget, dashDuration));
 
-        Context.DashRoutine = Context.StartCoroutine(DashCoroutine(dashTarget, dashDuration));
+                Context.Animator.ResetTrigger(Context.ChargeOutHash);
+                Context.Animator.SetTrigger(Context.ChargeOutHash);
+            }
+        }
+        else if (curState == State.Dash)
+        {
+            if (dashRoutine != null)
+            {
+                curState = State.Recharge;
+            }
+        }
+        else if (curState == State.Recharge)
+        {
+            elapsedTimeState += Time.deltaTime;
+            if (elapsedTimeState >= rechargeDuration)
+            {
+                elapsedTimeState = 0.0f;
+                curState = State.Start;
+            }
+        }
     }
 
     private IEnumerator DashCoroutine(Vector3 targetPosition, float duration)
     {
         Context.Agent.enabled = false;
+        Context.GetComponent<Collider>().enabled = false;
+
         float timeElapsed = 0f;
         Vector3 startPosition = Context.transform.position;
+
+        IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(Context.AttackCollider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
+                                              .Select(x => x.GetComponent<IDamageable>())
+                                              .Where(x => x != null)
+                                              .FirstOrDefault();
+
+        if (player != null)
+            player.ApplyDamage((int)Context.Stats.GetValue(Stat.ATK));
 
         while (timeElapsed < duration)
         {
@@ -86,12 +138,10 @@ public class PestAttackState : BaseState<PestStateMachine>
             yield return null;
         }
 
-        LookAtPlayer();
-
         Context.transform.position = targetPosition;
         Context.Agent.enabled = true;
-        Context.DashRoutine = null;
-        elapsedTimeAttack = Time.time;
+        Context.GetComponent<Collider>().enabled = true;
+        dashRoutine = null;
     }
 
     // This method will be call on state changement.
@@ -100,11 +150,5 @@ public class PestAttackState : BaseState<PestStateMachine>
     {
         base.SwitchState(newState);
         Context.CurrentState = newState;
-    }
-
-    private void LookAtPlayer()
-    {
-        Transform plyTransform = Context.NearbyEntities.FirstOrDefault(x => x.GetComponent<PlayerController>()).transform;
-        Context.transform.LookAt(new Vector3(plyTransform.position.x, Context.transform.position.y, plyTransform.position.z));
     }
 }
