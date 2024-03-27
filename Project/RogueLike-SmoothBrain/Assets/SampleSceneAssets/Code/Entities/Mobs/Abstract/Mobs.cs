@@ -66,13 +66,8 @@ public abstract class Mobs : Entity
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)
     {
-        Entity[] entities = PhysicsExtensions.OverlapVisionCone(transform.position, _angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward)
-           .Select(x => x.GetComponent<Entity>())
-           .Where(x => x != null && x != this)
-           .ToArray();
-
         Handles.color = new Color(1, 0, 0, 0.25f);
-        if (entities.Length != 0)
+        if (nearbyEntities != null && nearbyEntities.Length != 0)
         {
             Handles.color = new Color(0, 1, 0, 0.25f);
         }

@@ -16,8 +16,6 @@ public class PestAttackState : BaseState<PestStateMachine>
         Recharge
     }
 
-    private Transform target;
-
     private State curState = State.Start;
     private float elapsedTimeState = 0.0f;
 
@@ -32,7 +30,7 @@ public class PestAttackState : BaseState<PestStateMachine>
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        if (Vector3.Distance(Context.transform.position, target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
+        if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
         {
             SwitchState(Factory.GetState<PestFollowTargetState>());
         }
@@ -43,8 +41,6 @@ public class PestAttackState : BaseState<PestStateMachine>
     {
         curState = State.Start;
         elapsedTimeState = 0.0f;
-
-        target = Context.NearbyEntities.FirstOrDefault(x => x.GetComponent<PlayerController>()).transform;
     }
 
     // This method will be call only one time after the last update.
@@ -64,8 +60,8 @@ public class PestAttackState : BaseState<PestStateMachine>
     {
         if (curState == State.Start)
         {
-            Vector3 positionToLookAt = new Vector3(target.position.x, Context.transform.position.y, target.position.z);
-            dashDistance = Vector3.Distance(target.position, Context.transform.position);
+            Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
+            dashDistance = Vector3.Distance(Context.Target.position, Context.transform.position);
             Context.transform.LookAt(positionToLookAt);
             curState = State.Charge;
 
