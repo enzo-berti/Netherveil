@@ -55,8 +55,8 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
     public Transform Target { get => target; set => target = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED); }
-    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
+    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) * 12.0f; }
+    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 24.0f; }
 
     protected override void Start()
     {
