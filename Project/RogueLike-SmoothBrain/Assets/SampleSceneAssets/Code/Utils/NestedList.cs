@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
+using UnityEngine;
+using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 using UnityEditor.UIElements;
@@ -17,14 +19,53 @@ public class NestedList<T>
 [CustomPropertyDrawer(typeof(NestedList<>))]
 public class NestedListDrawer : PropertyDrawer
 {
-    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+
+    SerializedProperty dataProperty;
+    int nbMember = 0;
+
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        var container = new VisualElement();
+        nbMember = 0;
+        EditorGUI.BeginProperty(position, label, property);
+        dataProperty = property.FindPropertyRelative("data");
 
-        var dataField = new PropertyField(property.FindPropertyRelative("data"));
-        container.Add(dataField);
+        Rect foldoutBox = new Rect(position.min.x, position.min.y, position.size.x, EditorGUIUtility.singleLineHeight);
+        property.isExpanded = EditorGUI.Foldout(foldoutBox, property.isExpanded, label);
+        if (property.isExpanded)
+        {
+            DrawMember(position, dataProperty);
+        }
 
-        return container;
+        EditorGUI.EndProperty();
+    }
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        int totalLine = 1;
+        dataProperty = property.FindPropertyRelative("data");
+        if (property.isExpanded)
+        {
+            totalLine += 1;
+            if(dataProperty.isExpanded)
+            {
+                totalLine += 2;
+                totalLine += dataProperty.arraySize;
+            }
+        }
+        return EditorGUIUtility.singleLineHeight * totalLine;
+    }
+
+    private void DrawMember(Rect position, SerializedProperty propertyToDraw)
+    {
+        nbMember++;
+        EditorGUI.indentLevel++;
+        float posX = position.min.x;
+        float posY = position.min.y + EditorGUIUtility.singleLineHeight * nbMember;
+        float width = position.size.x;
+        float height = EditorGUIUtility.singleLineHeight;
+
+        Rect drawArea = new Rect(posX, posY, width, height);
+        EditorGUI.PropertyField(drawArea, propertyToDraw);
+        EditorGUI.indentLevel--;
     }
 }
 #endif
