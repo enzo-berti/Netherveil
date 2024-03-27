@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Knockback : MonoBehaviour
@@ -29,7 +28,7 @@ public class Knockback : MonoBehaviour
         if (knockbackRoutine != null)
             return;
 
-        if(agent != null)
+        if (agent != null)
         {
             knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(direction, distance, speed));
         }
@@ -37,7 +36,7 @@ public class Knockback : MonoBehaviour
         {
             knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(direction, distance, speed));
         }
-       
+
     }
 
     private IEnumerator ApplyKnockbackAgent(Vector3 direction, float distance, float speed)
@@ -68,7 +67,6 @@ public class Knockback : MonoBehaviour
             yield return null;
         }
 
-        agent.Warp(targetPosition);
         knockbackRoutine = null;
     }
 
@@ -78,27 +76,15 @@ public class Knockback : MonoBehaviour
 
         float timeElapsed = 0f;
         Vector3 startPosition = transform.position;
-        Vector3 targetPosition = transform.position + direction * distance;
+        Vector3 targetPosition = direction * distance;
 
         float duration = distance / speed;
-        bool isOnNavMesh = true;
 
-        while (timeElapsed < duration && isOnNavMesh)
+        while (timeElapsed < duration)
         {
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
-
-            Vector3 warpPosition = Vector3.Lerp(startPosition, targetPosition, t);
-
-            if (isOnNavMesh = NavMesh.SamplePosition(warpPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-            {
-                agent.Warp(hit.position);
-            }
-            else
-            {
-                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
-            }
-
+            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
             yield return null;
         }
 
@@ -107,3 +93,4 @@ public class Knockback : MonoBehaviour
         knockbackRoutine = null;
     }
 }
+

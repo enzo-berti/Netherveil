@@ -90,6 +90,7 @@ public class Item : MonoBehaviour, IInterractable
         Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
         Destroy(this.gameObject);
         playerInteractions.interactablesInRange.Remove(this);
+        DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
         onRetrieved?.Invoke(itemToGive);
     }
 
