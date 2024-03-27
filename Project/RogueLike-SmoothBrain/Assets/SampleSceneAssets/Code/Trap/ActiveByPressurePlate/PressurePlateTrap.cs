@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PressurePlateTrap : MonoBehaviour
@@ -7,7 +8,8 @@ public class PressurePlateTrap : MonoBehaviour
     private float currentCooldownTime = 0;
     private bool canActive = true;
 
-    private void OnTriggerEnter(Collider other)
+
+    private void OnTriggerStay(Collider other)
     {
         if (canActive && other.CompareTag("Player"))
         {
