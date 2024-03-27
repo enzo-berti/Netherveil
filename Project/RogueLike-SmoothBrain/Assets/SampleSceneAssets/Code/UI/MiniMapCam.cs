@@ -19,7 +19,5 @@ public class MiniMapCam : MonoBehaviour
         Vector3 newPos = player.position;
         newPos.y = transform.position.y;
         transform.position = newPos;
-
-        Debug.Log(player.position);
     }
 }
