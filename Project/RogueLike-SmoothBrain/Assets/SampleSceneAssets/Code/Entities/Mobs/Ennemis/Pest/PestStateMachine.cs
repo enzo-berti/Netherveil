@@ -61,6 +61,9 @@ public class PestStateMachine : Mobs, IPest
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
         animator = GetComponentInChildren<Animator>();
 
+        // common initialization
+        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
         chargeOutHash = Animator.StringToHash("ChargeOut");
@@ -137,6 +140,9 @@ public class PestStateMachine : Mobs, IPest
 
     public void MoveTo(Vector3 posToMove)
     {
+        if (!agent.enabled)
+            return;
+
         agent.SetDestination(posToMove);
     }
     #endregion
