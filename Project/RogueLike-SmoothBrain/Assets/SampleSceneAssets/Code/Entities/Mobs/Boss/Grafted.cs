@@ -182,8 +182,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                             if (knockbackable)
                             {
                                 Vector3 damageablePos = (damageable as MonoBehaviour).transform.position;
-                                Vector3 force = new Vector3(damageablePos.x - transform.position.x, 0f, damageablePos.z - transform.position.z).normalized;
-                                knockbackable.GetKnockback(new Vector3(-force.z, 0, force.x) * stats.GetValue(Stat.KNOCKBACK_COEFF));
+                                Vector3 force = new Vector3(-(damageablePos.z - transform.position.z), 0.0f, damageablePos.x - transform.position.x).normalized;
+                                knockbackable.GetKnockback(force, 5.0f, stats.GetValue(Stat.KNOCKBACK_COEFF));
                                 FloatingTextGenerator.CreateActionText((damageable as MonoBehaviour).transform.position, "Pushed!");
                             }
                         }
