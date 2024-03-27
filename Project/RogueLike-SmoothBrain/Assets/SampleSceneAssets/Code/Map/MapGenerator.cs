@@ -256,6 +256,7 @@ public class MapGenerator : MonoBehaviour
             genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
 
             roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
+            roomGO.transform.Find("RoomGenerator").gameObject.SetActive(false);
             roomGO.transform.parent = gameObject.transform;
             hasGenerated = true;
         }
