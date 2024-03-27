@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class HudHandler : MonoBehaviour
 {
+    [SerializeField] private GameObject minimapCam;
+    [SerializeField] private GameObject bigmapCam;
     [SerializeField] private GameObject miniMap;
     [SerializeField] private GameObject bigMap;
     [SerializeField] private GameObject miniMapFrame;
@@ -24,6 +26,8 @@ public class HudHandler : MonoBehaviour
     {
         if (miniMap.activeSelf)
         {
+            minimapCam.SetActive(false);
+            bigmapCam.SetActive(true);
             miniMap.SetActive(false);
             bigMap.SetActive(true);
             miniMapFrame.SetActive(false);
@@ -31,6 +35,8 @@ public class HudHandler : MonoBehaviour
         }
         else
         {
+            minimapCam.SetActive(true);
+            bigmapCam.SetActive(false);
             miniMap.SetActive(true);
             bigMap.SetActive(false);
             miniMapFrame.SetActive(true);
