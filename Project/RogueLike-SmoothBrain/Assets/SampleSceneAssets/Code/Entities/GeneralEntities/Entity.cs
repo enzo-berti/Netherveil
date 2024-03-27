@@ -4,10 +4,10 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public abstract class Entity : MonoBehaviour
 {
+    public static int entitySpawn = 0;
 
     [Header("Properties")]
     [SerializeField] protected Stats stats;
@@ -35,6 +35,8 @@ public abstract class Entity : MonoBehaviour
     protected virtual void Start()
     {
         OnDeath += ctx => ClearStatus();
+
+        entitySpawn++;
     }
 
     protected virtual void Update()
