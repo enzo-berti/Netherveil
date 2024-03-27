@@ -31,8 +31,10 @@ public class PestStateMachine : Mobs, IPest
     private IAttacker.HitDelegate onHit;
     [SerializeField] private PestSounds pestSounds;
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
-    private float searchEntityDelay = 1.0f;
     [SerializeField] private BoxCollider attackCollider;
+    private Transform target;
+    private int frameToUpdate;
+    private int maxFrameUpdate = 500;
 
     // animation hash
     private int chargeInHash;
@@ -49,6 +51,7 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeInHash { get => chargeInHash; }
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
+    public Transform Target { get => target; set => target = value; }
 
     protected override void Start()
     {
@@ -61,9 +64,15 @@ public class PestStateMachine : Mobs, IPest
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
         animator = GetComponentInChildren<Animator>();
 
+        // common initialization
+        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
         chargeOutHash = Animator.StringToHash("ChargeOut");
+
+        // opti variables
+        frameToUpdate = entitySpawn % maxFrameUpdate;
     }
 
     protected override void Update()
@@ -89,14 +98,17 @@ public class PestStateMachine : Mobs, IPest
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
 
-            yield return new WaitForSeconds(searchEntityDelay);
+            Entity targetE = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
+            if (targetE != null)
+                target = targetE.transform;
+
+            yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
 
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (hasAnimation)
         {
@@ -108,6 +120,10 @@ public class PestStateMachine : Mobs, IPest
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
+        }
+        else
+        {
+            lifeBar.ValueChanged(stats.GetValue(Stat.HP));
         }
     }
 
@@ -137,6 +153,9 @@ public class PestStateMachine : Mobs, IPest
 
     public void MoveTo(Vector3 posToMove)
     {
+        if (!agent.enabled)
+            return;
+
         agent.SetDestination(posToMove);
     }
     #endregion

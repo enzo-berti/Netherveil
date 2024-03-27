@@ -7,9 +7,14 @@ public class RoomEvents : MonoBehaviour
 
     MapData mapData = new MapData();
 
-    private void Start()
+    private void EnterEvents()
     {
-        // TODO : Create mapData here
+        transform.parent.Find("RoomGenerator").gameObject.SetActive(true);
+    }
+
+    private void ExitEvents()
+    {
+        transform.parent.Find("RoomGenerator").gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -17,6 +22,7 @@ public class RoomEvents : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             MapUtilities.EnterEvents?.Invoke(ref mapData);
+            EnterEvents();
         }
     }
 
@@ -25,6 +31,7 @@ public class RoomEvents : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             MapUtilities.ExitEvents?.Invoke(ref mapData);
+            ExitEvents();
         }
     }
 }
