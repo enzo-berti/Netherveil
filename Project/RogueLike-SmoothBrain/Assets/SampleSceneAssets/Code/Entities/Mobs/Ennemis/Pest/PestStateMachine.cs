@@ -33,6 +33,7 @@ public class PestStateMachine : Mobs, IPest
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     private float searchEntityDelay = 1.0f;
     [SerializeField] private BoxCollider attackCollider;
+    private Transform target;
 
     // animation hash
     private int chargeInHash;
@@ -49,6 +50,7 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeInHash { get => chargeInHash; }
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
+    public Transform Target { get => target; set => target = value; }
 
     protected override void Start()
     {
@@ -91,6 +93,10 @@ public class PestStateMachine : Mobs, IPest
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
+
+            Entity targetE = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
+            if (targetE != null)
+                target = targetE.transform;
 
             yield return new WaitForSeconds(searchEntityDelay);
         }
