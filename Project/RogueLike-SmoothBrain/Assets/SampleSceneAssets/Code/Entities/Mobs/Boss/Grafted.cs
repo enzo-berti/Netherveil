@@ -63,10 +63,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         IDLE
     }
 
-    Attacks currentAttack = Attacks.NONE;
+    //Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
     AttackState attackState = AttackState.IDLE;
-    float attackCooldown = 0;
-    bool hasProjectile = true;
+    //float attackCooldown = 0; // Commenter par Dorian -> WARNING
+    bool hasProjectile = true; 
 
     protected override IEnumerator Brain()
     {
@@ -217,14 +217,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     void ThrowProjectile()
     {
         hasProjectile = false;
-        currentAttack = Attacks.NONE;
+        //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
         attackState = AttackState.IDLE;
     }
 
     void RetrieveProjectile()
     {
         hasProjectile = true;
-        currentAttack = Attacks.NONE;
+        //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
         attackState = AttackState.IDLE;
     }
 
@@ -281,9 +281,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     thrustCDTimer = 0;
                     thrustCounter = 0;
-                    currentAttack = Attacks.NONE;
+                    //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
                     attackState = AttackState.IDLE;
-                    attackCooldown = 2f;
+                    //attackCooldown = 2f; // Commenter par Dorian -> WARNING
                 }
                 break;
         }
@@ -336,7 +336,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 AOETimer += Time.deltaTime;
                 if (AOETimer >= AOEDuration)
                 {
-                    currentAttack = Attacks.NONE;
+                    //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
                     attackState = AttackState.IDLE;
                     playerHit = false;
 
@@ -346,7 +346,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     AOETimer = 0;
                     dashPivot.localPosition = originalPos;
 
-                    attackCooldown = 0.5f;
+                    //attackCooldown = 0.5f; // Commenter par Dorian -> WARNING
                     DisableHitboxes();
                 }
             }
