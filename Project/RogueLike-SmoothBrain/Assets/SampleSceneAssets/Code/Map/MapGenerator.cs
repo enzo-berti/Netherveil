@@ -198,6 +198,10 @@ public class MapGenerator : MonoBehaviour
 
         roomBossGO.transform.position = door.parentSkeleton.transform.parent.transform.position - door.Position + exitDoor.Position;
 
+        roomBossGO.transform.Find("RoomGenerator").gameObject.SetActive(false);
+        roomBossGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
+        roomBossGO.transform.parent = gameObject.transform;
+
         genParam.RemoveDoor(exitDoor);
     }
 
