@@ -4,8 +4,14 @@ public class RuneOfPride : ItemEffect, IPassiveItem
 {
     [SerializeField] private int maxBoost = 5;
     [SerializeField] private int boostValue = 5;
+    private readonly int MAX_BOOST;
     private int nbBoost = 0;
     
+    public RuneOfPride()
+    {
+        MAX_BOOST = maxBoost * boostValue;
+    }
+
     public void OnRemove()
     {
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();

@@ -10,6 +10,8 @@ public class RoomEvents : MonoBehaviour
     private GameObject traps;
     private NavMeshSurface navMeshSurface;
 
+    private bool allEnemiesDeadCalled = false;
+
     private void Start()
     {
         // find room go's
@@ -20,29 +22,55 @@ public class RoomEvents : MonoBehaviour
 
         enemies.SetActive(false);
 
+        // set bool to true to not call the events in the room
+        allEnemiesDeadCalled = (enemies.transform.childCount == 0);
+
         // create data of the map
         mapData = new RoomData(enemies);
     }
 
     private void EnterEvents()
     {
+        // global events
+        RoomUtilities.roomData = mapData;
+        RoomUtilities.EnterEvents?.Invoke(ref mapData);
+
+        // local events
         navMeshSurface.enabled = true;
         enemies.SetActive(true);
     }
 
     private void ExitEvents()
     {
+        // global events
+        RoomUtilities.ExitEvents?.Invoke(ref mapData);
+
+        // local events
         navMeshSurface.enabled = false;
         enemies.SetActive(false);
+    }
+
+    private void AllEnemiesEvents()
+    {
+        // global events
+        RoomUtilities.allEnemiesDeadEvents?.Invoke(ref mapData);
+
+        // local events
+        allEnemiesDeadCalled = true;
+    }
+
+    private void FixedUpdate()
+    {
+        if (enemies.transform.childCount == 0 && !allEnemiesDeadCalled)
+        {
+            AllEnemiesEvents();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            RoomUtilities.roomData = mapData;
-            Debug.Log(RoomUtilities.roomData.NumEnemies);
-            RoomUtilities.EnterEvents?.Invoke(ref mapData);
             EnterEvents();
         }
     }
@@ -51,7 +79,6 @@ public class RoomEvents : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            RoomUtilities.ExitEvents?.Invoke(ref mapData);
             ExitEvents();
         }
     }

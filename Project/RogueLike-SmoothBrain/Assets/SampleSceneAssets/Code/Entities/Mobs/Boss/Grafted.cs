@@ -12,41 +12,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public List<Status> StatusToApply => statusToApply;
 
-    [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
-
-    [Header("Boss parameters")]
-    Hero player = null;
-    bool playerHit = false;
-    float height;
-
-    [Header("Boss Attack Hitboxes")]
-    [SerializeField] List<NestedList<Collider>> attacks;
-
-    [Header("Thrust")]
-    [SerializeField] float thrustCooldown = 0.5f;
-    float thrustCDTimer;
-    [SerializeField] float thrustCharge = 1f;
-    float thrustChargeTimer;
-    [SerializeField] float thrustDuration = 1f;
-    float thrustDurationTimer;
-    int thrustCounter = 0;
-
-    [Header("Dash")]
-    [SerializeField, MinMaxSlider(0, 100)] Vector2 dashRange;
-    [SerializeField] Transform dashPivot;
-    [SerializeField] float dashSpeed = 5f;
-    float dashTimer = 0f;
-    [SerializeField] float AOEDuration;
-    float AOETimer = 0f;
-    bool dashRetracting = false;
-    Vector3 originalPos;
-    bool triggerAOE = false;
-
-    [Header("Range")]
-    [SerializeField] GameObject projectilePrefab;
-    GraftedProjectile projectile;
-
-
     enum Attacks
     {
         THRUST,
@@ -64,10 +29,43 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         IDLE
     }
 
-    Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+    Attacks currentAttack = Attacks.NONE;
     AttackState attackState = AttackState.IDLE;
-    float attackCooldown = 0; // Commenter par Dorian -> WARNING
+    float attackCooldown = 0;
     bool hasProjectile = true;
+    Hero player = null;
+    bool playerHit = false;
+    float height;
+
+    [SerializeField] float thrustCooldown = 0.5f;
+    float thrustCDTimer;
+    [SerializeField] float thrustCharge = 1f;
+    float thrustChargeTimer;
+    [Header("Thrust")]
+    [SerializeField] float thrustDuration = 1f;
+    float thrustDurationTimer;
+    int thrustCounter = 0;
+
+    [SerializeField] float AOEDuration;
+    [SerializeField] Transform dashPivot;
+    [SerializeField] float dashSpeed = 5f;
+    float dashTimer = 0f;
+    [Header("Dash")]
+    [SerializeField, MinMaxSlider(0, 100)] Vector2 dashRange;
+    float AOETimer = 0f;
+    bool dashRetracting = false;
+    Vector3 originalPos;
+    bool triggerAOE = false;
+
+    [Header("Range")]
+    [SerializeField] GameObject projectilePrefab;
+    GraftedProjectile projectile;
+
+
+    [Header("Boss Attack Hitboxes")]
+    [SerializeField] List<NestedList<Collider>> attacks;
+
+    [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
 
     protected override void Start()
     {
@@ -101,17 +99,22 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
 
                 // Attacks
-                if (attackCooldown > 0)
-                {
-                    attackState = AttackState.IDLE;
-                    attackCooldown -= Time.deltaTime;
-                    if (attackCooldown < 0) attackCooldown = 0;
-                }
-                else if (attackCooldown == 0)
-                {
-                    //currentAttack = (Attacks)Random.Range(0, 3);
-                    currentAttack = Attacks.RANGE;
-                }
+                //if (attackCooldown > 0)
+                //{
+                //    attackState = AttackState.IDLE;
+                //    attackCooldown -= Time.deltaTime;
+                //    if (attackCooldown < 0) attackCooldown = 0;
+                //}
+                //else if (attackCooldown == 0)
+                //{
+                //    //currentAttack = (Attacks)Random.Range(0, 3);
+                //    currentAttack = Attacks.RANGE;
+                //}
+
+                // DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
+                if (Input.GetKeyDown(KeyCode.Alpha1)) currentAttack = Attacks.THRUST;
+                else if (Input.GetKeyDown(KeyCode.Alpha2)) currentAttack = Attacks.DASH;
+                else if (Input.GetKeyDown(KeyCode.Alpha3)) currentAttack = Attacks.RANGE;
 
                 switch (currentAttack)
                 {
@@ -187,17 +190,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     {
                         IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
                         Attack(damageable);
-                        //if (_kb)
-                        //{
-                        //    Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
-                        //    if (knockbackable)
-                        //    {
-                        //        Vector3 damageablePos = (damageable as MonoBehaviour).transform.position;
-                        //        Vector3 force = new Vector3(-(damageablePos.z - transform.position.z), 0.0f, damageablePos.x - transform.position.x).normalized;
-                        //        knockbackable.GetKnockback(force, 5.0f, stats.GetValue(Stat.KNOCKBACK_COEFF));
-                        //        FloatingTextGenerator.CreateActionText((damageable as MonoBehaviour).transform.position, "Pushed!");
-                        //    }
-                        //}
+
+                        if (_kb)
+                        {
+                            ApplyKnockback(damageable, new Vector3(-transform.forward.z, 0, transform.forward.x).normalized);
+                        }
 
                         playerHit = true;
                         break;
@@ -212,7 +209,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     void ThrowProjectile()
     {
         projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 4f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
-        projectile.Initialize(player.transform.position - transform.position);
+        projectile.Initialize(this);
+        projectile.SetDirection(player.transform.position - transform.position);
 
         hasProjectile = false;
         currentAttack = Attacks.NONE;
@@ -224,15 +222,21 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         if (projectile.onTarget)
         {
-            projectile.Initialize(transform.position + new Vector3(0, height / 4f, 0) - projectile.transform.position);
+            projectile.SetDirection(transform.position + new Vector3(0, height / 4f, 0) - projectile.transform.position);
+            projectile.SetCollisionImmune(true);
             projectile.onTarget = false;
+        }
+        else if (!projectile.OnLauncher(transform.position + new Vector3(0, height / 4f, 0)))
+        {
+            MoveTo(transform.position);
         }
         else
         {
-            //attackCooldown = 2f;
-            //hasProjectile = true;
-            //currentAttack = Attacks.NONE;
-            //attackState = AttackState.IDLE;
+            Destroy(projectile.gameObject);
+            attackCooldown = 2f;
+            hasProjectile = true;
+            currentAttack = Attacks.NONE;
+            attackState = AttackState.IDLE;
         }
     }
 
