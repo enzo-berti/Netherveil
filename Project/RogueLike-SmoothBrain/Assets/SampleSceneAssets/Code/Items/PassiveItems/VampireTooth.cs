@@ -20,8 +20,9 @@ public class VampireTooth : ItemEffect, IPassiveItem
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         //life steal is a pourcentage that's incresed by items
-        float lifeIncreasedValue = (int)(player.Stats.GetValue(Stat.LIFE_STEAL) * (player.Stats.GetValue(Stat.ATK) * player.Stats.GetCoeff(Stat.ATK)));
-        lifeIncreasedValue *= player.Stats.GetValue(Stat.HEAL_COEFF);
+        int lifeIncreasedValue = (int)(player.Stats.GetValue(Stat.LIFE_STEAL) * player.Stats.GetValue(Stat.ATK));
+        lifeIncreasedValue = (int)(lifeIncreasedValue * player.Stats.GetValue(Stat.HEAL_COEFF));
+        FloatingTextGenerator.CreateHealText(lifeIncreasedValue, player.transform.position);
         player.Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
     }
 
