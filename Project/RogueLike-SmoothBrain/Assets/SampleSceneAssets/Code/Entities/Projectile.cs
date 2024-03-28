@@ -26,9 +26,6 @@ public abstract class Projectile : MonoBehaviour, IProjectile
     {
         _direction.Normalize();
         transform.Translate(_direction * speed * Time.deltaTime);
-        //transform.localRotation = Quaternion.LookRotation(_direction);
-
-        Debug.Log(_direction);
     }
 
     protected virtual void Update()
