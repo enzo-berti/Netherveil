@@ -33,11 +33,11 @@ public abstract class Projectile : MonoBehaviour, IProjectile
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
+        if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
         {
-            //print("destroy by map");
-            //Destroy(gameObject);
-            //return;
+            print("destroy by map");
+            Destroy(gameObject);
+            return;
         }
 
         IDamageable damageableObject = other.GetComponent<IDamageable>();
