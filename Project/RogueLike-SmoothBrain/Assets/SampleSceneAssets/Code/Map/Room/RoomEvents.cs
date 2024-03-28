@@ -3,28 +3,43 @@ using UnityEngine;
 
 public class RoomEvents : MonoBehaviour
 {
-    public delegate void Enter(ref MapData mapData);
-    public delegate void Exit(ref MapData mapData);
+    private RoomData mapData;
 
-    private MapData mapData = new MapData();
+    private GameObject enemies;
+    private GameObject traps;
+    private NavMeshSurface navMeshSurface;
+
+    private void Start()
+    {
+        Transform roomGenerator = transform.parent.Find("RoomGenerator");
+
+        // find room go's
+        enemies = roomGenerator.transform.GetChild(0).Find("Enemies").gameObject;
+        traps = roomGenerator.transform.GetChild(0).Find("Traps").gameObject;
+        navMeshSurface = GetComponent<NavMeshSurface>();
+
+        // create data of the map
+        mapData = new RoomData();
+    }
 
     private void EnterEvents()
     {
-        GetComponent<NavMeshSurface>().enabled = true;
-        transform.parent.Find("RoomGenerator").gameObject.SetActive(true);
+        navMeshSurface.enabled = true;
+        enemies.SetActive(true);
     }
 
     private void ExitEvents()
     {
-        GetComponent<NavMeshSurface>().enabled = false;
-        transform.parent.Find("RoomGenerator").gameObject.SetActive(false);
+        navMeshSurface.enabled = false;
+        enemies.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            MapUtilities.EnterEvents?.Invoke(ref mapData);
+            RoomUtilities.roomData = mapData;
+            RoomUtilities.EnterEvents?.Invoke(ref mapData);
             EnterEvents();
         }
     }
@@ -33,7 +48,7 @@ public class RoomEvents : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            MapUtilities.ExitEvents?.Invoke(ref mapData);
+            RoomUtilities.ExitEvents?.Invoke(ref mapData);
             ExitEvents();
         }
     }

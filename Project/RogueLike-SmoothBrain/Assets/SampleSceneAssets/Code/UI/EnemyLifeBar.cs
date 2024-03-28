@@ -5,9 +5,12 @@ using UnityEngine.UI;
 public class EnemyLifeBar : MonoBehaviour
 {
     [Header("Gameobjects & Components")]
-    [SerializeField] private Slider lifeBarSlider;
-    [SerializeField] private Slider damageBarSlider;
+    [SerializeField] private Image lifeBarSlider;
+    [SerializeField] private Image damageBarSlider;
     private RectTransform barRect;
+
+    private float maxValue;
+    private float value;
 
     [Header("Parameters")]
     [SerializeField, MinMaxSlider(20.0f, 500.0f)] private Vector2 barSizeClamp = new Vector2(100.0f, 300.0f);
@@ -15,8 +18,9 @@ public class EnemyLifeBar : MonoBehaviour
     private Coroutine damageRoutine = null;
 
     // getter and setters
-    public float maxValue => lifeBarSlider.maxValue;
-    public float value => lifeBarSlider.value;
+    public float MaxValue => maxValue;
+    public float Value => value;
+    private float FactorValue => value / maxValue;
 
     private void Awake()
     {
@@ -25,13 +29,7 @@ public class EnemyLifeBar : MonoBehaviour
 
     public void SetMaxValue(float value)
     {
-        // set max value in sliders
-        lifeBarSlider.maxValue = value;
-        damageBarSlider.maxValue = value;
-
-        // set value by the max
-        lifeBarSlider.value = maxValue;
-        damageBarSlider.value = maxValue;
+        maxValue = value;
 
         // update size life bar
         ResizeLifeBar();
@@ -40,7 +38,8 @@ public class EnemyLifeBar : MonoBehaviour
     public void ValueChanged(float value)
     {
         // update life bar
-        lifeBarSlider.value = value;
+        this.value = value;
+        lifeBarSlider.fillAmount = FactorValue;
 
         // stop damage update if is running
         if (damageRoutine != null)
@@ -65,11 +64,11 @@ public class EnemyLifeBar : MonoBehaviour
     private IEnumerator DamageBarCoroutine()
     {
         yield return new WaitForSeconds(damageDisplayTime);
-        float barDiff = damageBarSlider.value - lifeBarSlider.value;
+        float barDiff = damageBarSlider.fillAmount - lifeBarSlider.fillAmount;
 
-        while (lifeBarSlider.value < damageBarSlider.value)
+        while (lifeBarSlider.fillAmount < damageBarSlider.fillAmount)
         {
-            damageBarSlider.value -= Time.deltaTime * barDiff;
+            damageBarSlider.fillAmount -= Time.deltaTime * barDiff;
             yield return null;
         }
 
