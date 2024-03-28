@@ -3,42 +3,53 @@ using UnityEngine;
 
 public class Outline : MonoBehaviour
 {
-    [SerializeField] private Renderer mRenderer;
-    [SerializeField] private Material mOutlineMaterial;
-    [SerializeField] private Color outlineColor;
+    private Renderer[] mRenderer;
+    private Material mOutlineMaterial;
+    [SerializeField] private Color outlineColor = Color.white;
     [SerializeField, Range(0.01f, 0.5f)] private float outlineThickness = 0.02f;
 
-    private Material[] mMaterials;
+    private List<Material[]> mMaterials = new List<Material[]>();
 
     void Start()
     {
-        mMaterials = mRenderer.materials;
+        mOutlineMaterial = Resources.Load("OutlineShaderMat") as Material;
+        mRenderer = GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in mRenderer)
+        {
+            mMaterials.Add(renderer.materials);
+        }
     }
 
     public void EnableOutline()
     {
-        if (!ArrayContainsMaterial(mMaterials, mOutlineMaterial))
+        for (int i = 0; i < mRenderer.Length; i++)
         {
-            Material[] newMaterials = new Material[mMaterials.Length + 1];
-
-            for (int i = 0; i < mMaterials.Length; i++)
+            if (!ArrayContainsMaterial(mMaterials[i], mOutlineMaterial))
             {
-                newMaterials[i] = mMaterials[i];
+                Material[] newMaterials = new Material[mMaterials[i].Length + 1];
+
+                for (int j = 0; j < mMaterials[i].Length; j++)
+                {
+                    newMaterials[j] = mMaterials[i][j];
+                }
+
+                newMaterials[mMaterials[i].Length] = mOutlineMaterial;
+                newMaterials[mMaterials[i].Length].SetColor("_Outline_Color", outlineColor);
+                newMaterials[mMaterials[i].Length].SetFloat("_Outline_thickness", outlineThickness);
+
+                mRenderer[i].materials = newMaterials;
             }
-
-            newMaterials[mMaterials.Length] = mOutlineMaterial;
-            newMaterials[mMaterials.Length].SetColor("_Outline_Color", outlineColor);
-            newMaterials[mMaterials.Length].SetFloat("_Outline_thickness", outlineThickness);
-
-            mRenderer.materials = newMaterials;
         }
     }
 
     public void DisableOutline()
     {
-        mMaterials = ArrayRemoveMaterial(mMaterials, mOutlineMaterial);
-
-        mRenderer.materials = mMaterials;
+        for (int i = 0; i < mRenderer.Length; i++)
+        {
+            mMaterials[i] = ArrayRemoveMaterial(mMaterials[i], mOutlineMaterial);
+            mRenderer[i].materials = mMaterials[i];
+        }
     }
 
     private bool ArrayContainsMaterial(Material[] materials, Material material)

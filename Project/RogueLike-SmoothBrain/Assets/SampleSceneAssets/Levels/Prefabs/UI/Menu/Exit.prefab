@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 2295303386544765742}
   - component: {fileID: 7150133603250691490}
   - component: {fileID: 6029912366680553375}
+  - component: {fileID: 2542089109992818254}
   m_Layer: 0
   m_Name: Exit
   m_TagString: Untagged
@@ -347,10 +348,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onHoverEnter:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2542089109992818254}
+        m_TargetAssemblyTypeName: Outline, Assembly-CSharp
+        m_MethodName: EnableOutline
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onHoverExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2542089109992818254}
+        m_TargetAssemblyTypeName: Outline, Assembly-CSharp
+        m_MethodName: DisableOutline
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onPress:
     m_PersistentCalls:
       m_Calls:
@@ -369,6 +394,20 @@ MonoBehaviour:
   onRelease:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2542089109992818254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8104584863427538714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b1642e408d9dea4cb780918edce67dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineThickness: 0.02
 --- !u!1 &9120083591768037947
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,7 +559,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c0ce8cc1d7107464ca212e01b43e804b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c0ce8cc1d7107464ca212e01b43e804b,
         type: 3}
