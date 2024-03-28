@@ -52,7 +52,7 @@ public class GraftedProjectile : Projectile
         }
 
         IDamageable damageableObject = other.GetComponent<IDamageable>();
-        if (damageableObject != null && !onTarget)
+        if (damageableObject != null && !onTarget && other.CompareTag("Player"))
         {
             damageableObject.ApplyDamage(damage);
             if (!ignoreCollisions)

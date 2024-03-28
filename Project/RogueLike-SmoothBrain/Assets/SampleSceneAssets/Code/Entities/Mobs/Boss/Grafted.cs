@@ -67,6 +67,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
 
+    void OnEnable()
+    {
+        // jouer l'anim de début de combat
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -143,16 +148,27 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
-        Stats.DecreaseValue(Stat.HP, _value, false);
+        // Some times, this method is call when entity is dead ??
+        if (stats.GetValue(Stat.HP) <= 0)
+            return;
+
+        Stats.IncreaseValue(Stat.HP, -_value, false);
+        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (hasAnimation)
         {
-            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             //add SFX here
+            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            StartCoroutine(HitRoutine());
         }
+
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
+        }
+        else
+        {
+            //AudioManager.Instance.PlaySound();
         }
     }
 
@@ -193,7 +209,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                         if (_kb)
                         {
-                            ApplyKnockback(damageable, new Vector3(-transform.forward.z, 0, transform.forward.x).normalized);
+                            Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
+
+                            if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
+                            {
+                                knockbackDirection = -knockbackDirection;
+                            }
+
+                            ApplyKnockback(damageable, knockbackDirection.normalized);
                         }
 
                         playerHit = true;
@@ -204,8 +227,18 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         }
     }
 
-    ///////////////////////////////// ATTACKS
+    void DisableHitboxes()
+    {
+        foreach (NestedList<Collider> attackColliders in attacks)
+        {
+            foreach (Collider attackCollider in attackColliders.data)
+            {
+                attackCollider.gameObject.SetActive(false);
+            }
+        }
+    }
 
+    #region Attacks
     void ThrowProjectile()
     {
         projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 4f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
@@ -364,17 +397,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
         }
     }
-
-    void DisableHitboxes()
-    {
-        foreach (NestedList<Collider> attackColliders in attacks)
-        {
-            foreach (Collider attackCollider in attackColliders.data)
-            {
-                attackCollider.gameObject.SetActive(false);
-            }
-        }
-    }
+    #endregion
 
 #if UNITY_EDITOR
     //private void OnDrawGizmos()
