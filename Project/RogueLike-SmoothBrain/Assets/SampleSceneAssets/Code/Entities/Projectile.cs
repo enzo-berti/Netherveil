@@ -26,10 +26,7 @@ public abstract class Projectile : MonoBehaviour, IProjectile
         transform.Translate(_direction * speed * Time.deltaTime);
     }
 
-    protected virtual void Update()
-    {
-        Move(default);
-    }
+    protected abstract void Update();
 
     protected virtual void OnTriggerEnter(Collider other)
     {

@@ -63,10 +63,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         IDLE
     }
 
-    //Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+    Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
     AttackState attackState = AttackState.IDLE;
-    //float attackCooldown = 0; // Commenter par Dorian -> WARNING
-    bool hasProjectile = true; 
+    float attackCooldown = 0; // Commenter par Dorian -> WARNING
+    bool hasProjectile = true;
 
     protected override IEnumerator Brain()
     {
@@ -80,58 +80,50 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
             else
             {
-                //// Face player
-                //if (attackState != AttackState.ATTACKING)
-                //{
-                //    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-                //    lookRotation.x = 0;
-                //    lookRotation.z = 0;
-
-                //    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
-                //}
-
-                //// Move towards player
-                //MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
-
-                //// Attacks
-                //if (attackCooldown > 0)
-                //{
-                //    attackState = AttackState.IDLE;
-                //    attackCooldown -= Time.deltaTime;
-                //    if (attackCooldown < 0) attackCooldown = 0;
-                //}
-                //else if (attackCooldown == 0)
-                //{
-                //    //currentAttack = (Attacks)Random.Range(0, 3);
-                //    currentAttack = Attacks.DASH;
-                //}
-
-                //switch (currentAttack)
-                //{
-                //    case Attacks.RANGE:
-                //        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
-                //        break;
-
-                //    case Attacks.THRUST:
-                //        TripleThrust();
-                //        break;
-
-                //    case Attacks.DASH:
-                //        Dash();
-                //        break;
-                //}
-
-                //if (hasProjectile)
+                // Face player
+                if (attackState != AttackState.ATTACKING)
                 {
-                    projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<GraftedProjectile>();
-                    projectile.Initialize(player.transform.position - transform.position);
-                    hasProjectile = false;
+                    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                    lookRotation.x = 0;
+                    lookRotation.z = 0;
+
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
                 }
-                //else if (projectile.onTarget)
-                //{
-                //    Destroy(projectile.gameObject);
-                //    hasProjectile = true;
-                //}
+
+                // Move towards player
+                MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
+
+                // Attacks
+                if (attackCooldown > 0)
+                {
+                    attackState = AttackState.IDLE;
+                    attackCooldown -= Time.deltaTime;
+                    if (attackCooldown < 0) attackCooldown = 0;
+                }
+                else if (attackCooldown == 0)
+                {
+                    //currentAttack = (Attacks)Random.Range(0, 3);
+                    currentAttack = Attacks.DASH;
+                }
+
+                switch (currentAttack)
+                {
+                    case Attacks.RANGE:
+                        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
+                        break;
+
+                    case Attacks.THRUST:
+                        TripleThrust();
+                        break;
+
+                    case Attacks.DASH:
+                        Dash();
+                        break;
+                }
+
+                //projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<GraftedProjectile>();
+                //projectile.Initialize(player.transform.position - transform.position);
+                //hasProjectile = false;
             }
         }
     }
@@ -217,14 +209,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     void ThrowProjectile()
     {
         hasProjectile = false;
-        //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+        currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
     }
 
     void RetrieveProjectile()
     {
         hasProjectile = true;
-        //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+        currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
     }
 
@@ -281,9 +273,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     thrustCDTimer = 0;
                     thrustCounter = 0;
-                    //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+                    currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
-                    //attackCooldown = 2f; // Commenter par Dorian -> WARNING
+                    attackCooldown = 2f;
                 }
                 break;
         }
@@ -336,7 +328,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 AOETimer += Time.deltaTime;
                 if (AOETimer >= AOEDuration)
                 {
-                    //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+                    currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
                     playerHit = false;
 
@@ -346,7 +338,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     AOETimer = 0;
                     dashPivot.localPosition = originalPos;
 
-                    //attackCooldown = 0.5f; // Commenter par Dorian -> WARNING
+                    attackCooldown = 0.5f;
                     DisableHitboxes();
                 }
             }

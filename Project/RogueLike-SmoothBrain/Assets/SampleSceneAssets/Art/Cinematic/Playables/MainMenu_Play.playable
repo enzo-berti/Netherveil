@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Tracks:
   - {fileID: 1066619847602393551}
   - {fileID: 6931502765210394429}
-  - {fileID: 3029130364462319624}
+  - {fileID: 4020919648611296844}
   - {fileID: -3786479339982797341}
   - {fileID: -3121492678217507932}
   m_FixedDuration: 0
@@ -506,7 +506,7 @@ MonoBehaviour:
     m_DisplayName: Door vc IN
   m_Markers:
     m_Objects: []
---- !u!114 &1700185180488921589
+--- !u!114 &2088861653505003449
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -515,39 +515,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 488c20dddec813547afc71a1f46c10dd, type: 3}
-  m_Name: VisualEffectControlClip
+  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
+  m_Name: ActivationPlayableAsset
   m_EditorClassIdentifier: 
-  scrubbing: 1
-  startSeed: 0
-  reinit: 3
-  prewarm:
-    enable: 0
-    stepCount: 20
-    deltaTime: 0.05
-    eventName:
-      m_Name: OnPlay
-  clipEvents:
-  - editorColor: {r: 0.48235294, g: 0.61960787, b: 0.019607844, a: 1}
-    enter:
-      time: 0
-      timeSpace: 0
-      name:
-        m_Name: OnPlay
-      eventAttributes:
-        content: []
-    exit:
-      time: 0
-      timeSpace: 1
-      name:
-        m_Name: OnStop
-      eventAttributes:
-        content: []
-  singleEvents: []
-  references:
-    version: 2
-    RefIds: []
---- !u!114 &3029130364462319624
+--- !u!114 &3851254451612838208
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -556,8 +527,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06feb0f61bc2b4a42bb1ffdb00b4aa3b, type: 3}
-  m_Name: Visual Effect Control Track
+  m_Script: {fileID: 11500000, guid: 030f85c3f73729f4f976f66ffb23b875, type: 3}
+  m_Name: AnimationPlayableAsset
+  m_EditorClassIdentifier: 
+  m_Clip: {fileID: 7400000, guid: 9267b7831d84cc54387889be60c858f2, type: 2}
+  m_Position: {x: 0, y: 0, z: 0}
+  m_EulerAngles: {x: 0, y: 0, z: 0}
+  m_UseTrackMatchFields: 1
+  m_MatchTargetFields: 63
+  m_RemoveStartOffset: 1
+  m_ApplyFootIK: 1
+  m_Loop: 0
+  m_Version: 1
+  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &4020919648611296844
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21bf7f712d84d26478ebe6a299f21738, type: 3}
+  m_Name: Activation Track
   m_EditorClassIdentifier: 
   m_Version: 3
   m_AnimClip: {fileID: 0}
@@ -569,12 +562,12 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 3.5937974353631343
+    m_Start: 3.593797435363134
     m_ClipIn: 0
-    m_Asset: {fileID: 1700185180488921589}
-    m_Duration: 3.572869231303532
+    m_Asset: {fileID: 2088861653505003449}
+    m_Duration: 3.5728692313035326
     m_TimeScale: 1
-    m_ParentTrack: {fileID: 3029130364462319624}
+    m_ParentTrack: {fileID: 4020919648611296844}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: 0
@@ -636,33 +629,10 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: ' '
+    m_DisplayName: Active
   m_Markers:
     m_Objects: []
-  m_VFXVersion: 1
-  reinit: 3
---- !u!114 &3851254451612838208
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 030f85c3f73729f4f976f66ffb23b875, type: 3}
-  m_Name: AnimationPlayableAsset
-  m_EditorClassIdentifier: 
-  m_Clip: {fileID: 7400000, guid: 9267b7831d84cc54387889be60c858f2, type: 2}
-  m_Position: {x: 0, y: 0, z: 0}
-  m_EulerAngles: {x: 0, y: 0, z: 0}
-  m_UseTrackMatchFields: 1
-  m_MatchTargetFields: 63
-  m_RemoveStartOffset: 1
-  m_ApplyFootIK: 1
-  m_Loop: 0
-  m_Version: 1
-  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+  m_PostPlaybackState: 3
 --- !u!114 &4165283246083876106
 MonoBehaviour:
   m_ObjectHideFlags: 1
