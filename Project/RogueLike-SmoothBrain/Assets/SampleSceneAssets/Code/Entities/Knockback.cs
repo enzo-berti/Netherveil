@@ -33,6 +33,7 @@ public class Knockback : MonoBehaviour
         }
         else if (characterController != null)
         {
+            characterController.gameObject.GetComponentInChildren<Animator>().SetBool("IsKnockback", true);
             knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(direction, distance, speed));
         }
 
@@ -102,6 +103,7 @@ public class Knockback : MonoBehaviour
         }
 
         characterController.enabled = true;
+        characterController.gameObject.GetComponentInChildren<Animator>().SetBool("IsKnockback", false);
         knockbackRoutine = null;
     }
 }
