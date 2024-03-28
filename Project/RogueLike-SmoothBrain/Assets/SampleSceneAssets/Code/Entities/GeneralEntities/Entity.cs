@@ -110,7 +110,6 @@ public abstract class Entity : MonoBehaviour
             {
                 if (item.GetType() == status.GetType())
                 {
-                    Debug.Log("Add Stack to : " + item.GetType().Name);
                     item.AddStack(1);
                     return;
                 }

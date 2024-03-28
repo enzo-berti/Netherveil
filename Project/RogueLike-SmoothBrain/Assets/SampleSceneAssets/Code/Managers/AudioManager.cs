@@ -11,7 +11,7 @@ public class CustomEventTrigger : EventTrigger
     public static EventReference buttonSelectSFX;
     public override void OnSelect(BaseEventData data)
     {
-        AudioManager.Instance.buttonSFXInstances.Add(AudioManager.Instance.PlaySound(buttonSelectSFX));
+        //AudioManager.Instance.buttonSFXInstances.Add(AudioManager.Instance.PlaySound(buttonSelectSFX));
     }
 }
 
