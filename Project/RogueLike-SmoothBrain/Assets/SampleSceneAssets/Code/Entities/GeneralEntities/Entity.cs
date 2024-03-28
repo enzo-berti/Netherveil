@@ -90,6 +90,14 @@ public abstract class Entity : MonoBehaviour
         ApplyKnockback(damageable, direction, distance, speed);
     }
 
+    public void ApplyKnockback(IDamageable damageable, float distance, float speed)
+    {
+        Vector3 temp = (damageable as MonoBehaviour).transform.position - transform.position;
+        Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
+
+        ApplyKnockback(damageable, direction, distance, speed);
+    }
+
     public void ApplyKnockback(IDamageable damageable, Vector3 direction)
     {
         float distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
