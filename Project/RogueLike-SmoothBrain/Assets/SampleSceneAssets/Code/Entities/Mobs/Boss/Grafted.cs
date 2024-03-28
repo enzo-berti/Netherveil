@@ -17,6 +17,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("Boss parameters")]
     Hero player = null;
     bool playerHit = false;
+    Attacks currentAttack;
+    float attackCooldown;
 
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
@@ -66,7 +68,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     //Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
     AttackState attackState = AttackState.IDLE;
     //float attackCooldown = 0; // Commenter par Dorian -> WARNING
-    bool hasProjectile = true; 
+    bool hasProjectile = true;
 
     protected override IEnumerator Brain()
     {
@@ -80,58 +82,50 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
             else
             {
-                //// Face player
-                //if (attackState != AttackState.ATTACKING)
-                //{
-                //    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-                //    lookRotation.x = 0;
-                //    lookRotation.z = 0;
-
-                //    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
-                //}
-
-                //// Move towards player
-                //MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
-
-                //// Attacks
-                //if (attackCooldown > 0)
-                //{
-                //    attackState = AttackState.IDLE;
-                //    attackCooldown -= Time.deltaTime;
-                //    if (attackCooldown < 0) attackCooldown = 0;
-                //}
-                //else if (attackCooldown == 0)
-                //{
-                //    //currentAttack = (Attacks)Random.Range(0, 3);
-                //    currentAttack = Attacks.DASH;
-                //}
-
-                //switch (currentAttack)
-                //{
-                //    case Attacks.RANGE:
-                //        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
-                //        break;
-
-                //    case Attacks.THRUST:
-                //        TripleThrust();
-                //        break;
-
-                //    case Attacks.DASH:
-                //        Dash();
-                //        break;
-                //}
-
-                //if (hasProjectile)
+                // Face player
+                if (attackState != AttackState.ATTACKING)
                 {
-                    projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<GraftedProjectile>();
-                    projectile.Initialize(player.transform.position - transform.position);
-                    hasProjectile = false;
+                    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                    lookRotation.x = 0;
+                    lookRotation.z = 0;
+
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
                 }
-                //else if (projectile.onTarget)
-                //{
-                //    Destroy(projectile.gameObject);
-                //    hasProjectile = true;
-                //}
+
+                // Move towards player
+                MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
+
+                // Attacks
+                if (attackCooldown > 0)
+                {
+                    attackState = AttackState.IDLE;
+                    attackCooldown -= Time.deltaTime;
+                    if (attackCooldown < 0) attackCooldown = 0;
+                }
+                else if (attackCooldown == 0)
+                {
+                    //currentAttack = (Attacks)Random.Range(0, 3);
+                    currentAttack = Attacks.DASH;
+                }
+
+                switch (currentAttack)
+                {
+                    case Attacks.RANGE:
+                        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
+                        break;
+
+                    case Attacks.THRUST:
+                        TripleThrust();
+                        break;
+
+                    case Attacks.DASH:
+                        Dash();
+                        break;
+                }
+
+                //projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<GraftedProjectile>();
+                //projectile.Initialize(player.transform.position - transform.position);
+                //hasProjectile = false;
             }
         }
     }

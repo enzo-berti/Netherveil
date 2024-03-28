@@ -8,7 +8,7 @@ public class GraftedProjectile : Projectile
 
     protected override void Awake()
     {
-        lifeTime = 0.2f;
+        lifeTime = 1f;
         base.Awake();
     }
 

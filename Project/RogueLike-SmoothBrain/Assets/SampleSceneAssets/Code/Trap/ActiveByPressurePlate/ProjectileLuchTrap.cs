@@ -15,13 +15,13 @@ public class ProjectileLuchTrap : MonoBehaviour , IActivableTrap
 
     private void Start()
     {
-        launchPos = GetComponentInChildren<Transform>().position;
+        launchPos = transform.GetChild(0).position;
     }
 
     public void Active()
     {
         AudioManager.Instance.StopSound(throwProjectilEvent, FMOD.Studio.STOP_MODE.IMMEDIATE);
         AudioManager.Instance.PlaySound(throwProjectilSFX);
-        Instantiate(itemToInstanciate, launchPos + GetComponentInChildren<Transform>().forward * 3, GetComponentInChildren<Transform>().rotation);
+        Instantiate(itemToInstanciate, launchPos, GetComponentInChildren<Transform>().rotation);
     }
 }

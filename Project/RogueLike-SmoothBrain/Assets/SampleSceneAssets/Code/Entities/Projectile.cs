@@ -26,15 +26,13 @@ public abstract class Projectile : MonoBehaviour, IProjectile
         transform.Translate(_direction * speed * Time.deltaTime);
     }
 
-    protected virtual void Update()
-    {
-        Move(default);
-    }
+    protected abstract void Update();
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
+        if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
         {
+            print("destroy by map");
             Destroy(gameObject);
             return;
         }
