@@ -39,7 +39,6 @@ public class Range : Mobs, IRange
     private float FleeingRange => (int)stats.GetValue(Stat.ATK_RANGE) / 2f;
 
     Animator animator;
-    EnemyLifeBar lifeBar;
 
     public List<Status> StatusToApply { get => statusToApply; }
     protected override void Start()
@@ -47,11 +46,7 @@ public class Range : Mobs, IRange
         base.Start();
 
         // getter(s) reference
-        lifeBar = GetComponentInChildren<EnemyLifeBar>();
         animator = GetComponentInChildren<Animator>();
-
-        // common initialization
-        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
     }
 
     protected override IEnumerator EntityDetection()
@@ -125,13 +120,13 @@ public class Range : Mobs, IRange
                 {
                     if(distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE)/2f)
                     {
-                        CloseRangeAttack(player.transform.position);
-                        canAttack = false;
+                        //CloseRangeAttack(player.transform.position);
+                        //canAttack = false;
                     }
                     else
                     {
                         LongRangeAttack(player.transform.position);
-                        
+                        canAttack = false;
                     }
                     
                 }
@@ -161,7 +156,12 @@ public class Range : Mobs, IRange
 
     private void LongRangeAttack(Vector3 positionToReach)
     {
-        
+        GameObject bomb = Instantiate(pfBomb, this.transform.position, Quaternion.identity);
+        ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
+        float timeToThrow = 0.8f;
+        StartCoroutine(exploBomb.ThrowToPos(positionToReach, timeToThrow));
+        exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
+        exploBomb.Activate();
     }
 
     private void CloseRangeAttack(Vector3 positionToReach)
