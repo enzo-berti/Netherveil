@@ -9,8 +9,7 @@ public class PlayerInteractions : MonoBehaviour
 {
     private Hero hero;
     [SerializeField] Material outlineMaterial;
-    public List<IInterractable> interactablesInRange { get; private set; } = new List<IInterractable>();
-
+    public List<IInterractable> InteractablesInRange { get; private set; } = new List<IInterractable>();
 
     private void Start()
     {
@@ -20,35 +19,32 @@ public class PlayerInteractions : MonoBehaviour
     void Update()
     {
         RetrievedConsommable();
-        // TODO : Add UI to understand that we can press a button to take an object
-
         SelectClosestItem();
     }
 
     private void SelectClosestItem()
     {
         Vector3 tmp = (Camera.main.transform.forward * transform.position.z + Camera.main.transform.right * transform.position.x);
-        Vector2 playerPos = new Vector2(tmp.x, tmp.z);
+        Vector2 playerPos = new(tmp.x, tmp.z);
 
-        IInterractable[] interactables = interactablesInRange.OrderBy(x =>
+        InteractablesInRange = InteractablesInRange.OrderBy(x =>
         {
             tmp = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
             Camera.main.transform.right * (x as MonoBehaviour).transform.position.x;
-            Vector2 itemPos = new Vector2(tmp.x, tmp.z);
+            Vector2 itemPos = new(tmp.x, tmp.z);
 
             return Vector2.Distance(playerPos, itemPos);
         }
-        ).ToArray();
+        ).ToList();
 
-        if (interactables.Length > 0)
+        if (InteractablesInRange.Count > 0)
         {
             MeshRenderer meshRenderer;
             List<Material> finalMaterial;
 
-            for (int i = 1; i < interactables.Length; i++)
+            for (int i = 1; i < InteractablesInRange.Count; i++)
             {
-                meshRenderer = (interactables[i] as MonoBehaviour).gameObject.GetComponentInChildren<MeshRenderer>();
-                (interactables[0] as MonoBehaviour).gameObject.GetComponent<ItemDescription>().TogglePanel(false);
+                meshRenderer = (InteractablesInRange[i] as MonoBehaviour).gameObject.GetComponentInChildren<MeshRenderer>();
                 if (meshRenderer.materials.Length > 1)
                 {
                     finalMaterial = new()
@@ -59,8 +55,8 @@ public class PlayerInteractions : MonoBehaviour
                 }
             }
 
-            meshRenderer = (interactables[0] as MonoBehaviour).gameObject.GetComponentInChildren<MeshRenderer>();
-            (interactables[0] as MonoBehaviour).gameObject.GetComponent<ItemDescription>().TogglePanel(true);
+            meshRenderer = (InteractablesInRange[0] as MonoBehaviour).gameObject.GetComponentInChildren<MeshRenderer>();
+            (InteractablesInRange[0] as MonoBehaviour).gameObject.GetComponent<ItemDescription>().TogglePanel(true);
             finalMaterial = new()
                 {
                     meshRenderer.material,
@@ -73,7 +69,7 @@ public class PlayerInteractions : MonoBehaviour
     public void Interract(InputAction.CallbackContext ctx)
     {
         Vector3 playerPos = (Camera.main.transform.forward * transform.position.z + Camera.main.transform.right * transform.position.x);
-        IInterractable closestInteractable = interactablesInRange.OrderBy(x =>
+        IInterractable closestInteractable = InteractablesInRange.OrderBy(x =>
         {
             Vector3 itemPos = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
             Camera.main.transform.right * (x as MonoBehaviour).transform.position.x;
@@ -99,10 +95,5 @@ public class PlayerInteractions : MonoBehaviour
         {
             consumable.OnRetrieved();
         }
-    }
-    private void OnDrawGizmos()
-    {
-        //Handles.color = new Color(1, 1, 0, 0.25f);
-        //Handles.DrawSolidDisc(transform.position, Vector3.up, hero.Stats.GetValueStat(Stat.CATCH_RADIUS));
     }
 }

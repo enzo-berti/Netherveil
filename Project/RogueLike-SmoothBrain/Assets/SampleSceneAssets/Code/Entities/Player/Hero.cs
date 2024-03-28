@@ -14,8 +14,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     Animator animator;
     PlayerInput playerInput;
     PlayerController playerController;
-    Inventory inventory = new Inventory();
-    public Inventory Inventory { get { return inventory; } }
+    public Inventory Inventory { get; private set; } = new Inventory();
 
     public delegate void KillDelegate(IDamageable damageable);
     private KillDelegate onKill;
@@ -40,10 +39,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         animator = GetComponentInChildren<Animator>();
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
-
         GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
-
-        //statusToApply.Add(new Fire(3f));
 
         if (this is IAttacker attacker)
         {
@@ -60,14 +56,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             if (notEffectDamages)
             {
-                //if(!playerInput.LaunchedChargedAttack)
-                //{
                 DeviceManager.Instance.ForceStopVibrations();
-                playerController.ResetValues(); //possible source de bugs
+                playerController.ResetValues();
                 animator.ResetTrigger("ChargedAttackRelease");
                 animator.SetBool("ChargedAttackCasting", false);
                 animator.ResetTrigger("BasicAttack");
-                //}
                 AudioManager.Instance.PlaySound(playerController.hitSFX);
                 FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
                 playerController.hitVFX.Play();

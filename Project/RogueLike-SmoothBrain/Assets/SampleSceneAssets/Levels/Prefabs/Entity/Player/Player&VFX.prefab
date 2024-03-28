@@ -875,7 +875,7 @@ VisualEffect:
       - m_Value: {x: -0, y: 270, z: 262.20792}
         m_Name: New Transform_angles
         m_Overridden: 1
-      - m_Value: {x: 0, y: 1.031296, z: 0.008640403}
+      - m_Value: {x: 0.3, y: 1.031296, z: -2.5713596}
         m_Name: New Transform_position
         m_Overridden: 1
       - m_Value: {x: 1, y: 1, z: 1}
@@ -982,8 +982,6 @@ GameObject:
   - component: {fileID: 5979827630346455854}
   - component: {fileID: 4698072993601050955}
   - component: {fileID: 2000081675053181033}
-  - component: {fileID: 4788295515176652854}
-  - component: {fileID: 8785184544791651111}
   - component: {fileID: 4491413966762970475}
   - component: {fileID: 8524448187533866682}
   - component: {fileID: 1911203549151711130}
@@ -1135,56 +1133,6 @@ MonoBehaviour:
   m_DefaultActionMap: Keyboard
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!54 &4788295515176652854
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854569171507519650}
-  serializedVersion: 4
-  m_Mass: 5
-  m_Drag: 5
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 1
---- !u!136 &8785184544791651111
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854569171507519650}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4491413966762970475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1429,7 +1377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fb2c83ec8697ac4a8b816480020ac2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 802356439152402610}
+  spear: {fileID: 0}
   easeUnzoom: 17
   easeZoom: 17
   easeShake: 17
@@ -2165,12 +2113,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a045e4ba946a6d4f867572633accf4f, type: 3}
---- !u!1 &802356439152402610 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1573508383475529653, guid: 4a045e4ba946a6d4f867572633accf4f,
-    type: 3}
-  m_PrefabInstance: {fileID: 2230604972880647943}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4230472663556933098 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2612399077291889389, guid: 4a045e4ba946a6d4f867572633accf4f,
@@ -2895,13 +2837,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
         type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
+        type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.y
       value: 1.031296
       objectReference: {fileID: 0}
     - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.z
-      value: 0.008640403
+      value: -2.5713596
       objectReference: {fileID: 0}
     - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
         type: 3}

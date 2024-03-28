@@ -23,7 +23,7 @@ public class DashBehaviour : StateMachineBehaviour
     {
         GameObject player = GameObject.FindWithTag("Player");
         player.GetComponent<PlayerController>().dashVFX.Stop();
-        player.GetComponent<PlayerInput>().EndOfSpecialAnimation();
+        player.GetComponent<PlayerInput>().EndOfDashAnimation();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
