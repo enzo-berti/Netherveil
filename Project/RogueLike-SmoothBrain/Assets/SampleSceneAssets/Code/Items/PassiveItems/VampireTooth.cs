@@ -25,9 +25,9 @@ public class VampireTooth : ItemEffect, IPassiveItem
         float lifeIncreasedValue = (int)(player.Stats.GetValue(Stat.LIFE_STEAL) * (player.Stats.GetValue(Stat.ATK) * player.Stats.GetValue(Stat.ATK_COEFF)));
         lifeIncreasedValue = lifeIncreasedValue * player.Stats.GetValue(Stat.HEAL_COEFF);
         player.Stats.IncreaseValue(Stat.HP, lifeIncreasedValue, false);
-        if (player.Stats.GetValue(Stat.HP) > player.Stats.GetValue(Stat.MAX_HP))
+        if (player.Stats.GetValue(Stat.HP) > player.Stats.GetMaxValue(Stat.HP))
         {
-            player.Stats.SetValue(Stat.HP, player.Stats.GetValue(Stat.MAX_HP));
+            player.Stats.SetValue(Stat.HP, player.Stats.GetMaxValue(Stat.HP));
         }
     }
 
