@@ -63,10 +63,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         IDLE
     }
 
-    Attacks currentAttack = Attacks.NONE;
+    //Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
     AttackState attackState = AttackState.IDLE;
-    float attackCooldown = 0;
-    bool hasProjectile = true;
+    //float attackCooldown = 0; // Commenter par Dorian -> WARNING
+    bool hasProjectile = true; 
 
     protected override IEnumerator Brain()
     {

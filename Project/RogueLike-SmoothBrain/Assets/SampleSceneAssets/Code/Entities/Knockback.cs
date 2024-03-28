@@ -15,7 +15,7 @@ public class Knockback : MonoBehaviour
     public Action<int, bool, bool> onObstacleCollide;
     [SerializeField] private int damageTakeOnObstacleCollide = 10;
 
-    [SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f;
+    //[SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f; // Commenter par Dorian -> WARNING
 
     private void Start()
     {
