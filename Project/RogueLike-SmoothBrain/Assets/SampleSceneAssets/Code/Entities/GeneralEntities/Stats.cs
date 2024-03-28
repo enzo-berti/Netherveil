@@ -435,6 +435,49 @@ public class Stats
         else
             Debug.LogWarning($"Can't find {info} in {name}");
     }
+
+    public void IncreaseCoeffValue(Stat info, float increasingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+        {
+            if (stats[index].hasCoeff)
+            {
+                stats[index].coeff += increasingValue;
+            }
+            else
+            {
+                Debug.LogWarning($"Can't find {info} coeff in {name}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {info} in {name}");
+        }
+    }
+
+    public void DecreaseCoeffValue(Stat info, float decreasingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+        {
+            if (stats[index].hasCoeff)
+            {
+                stats[index].coeff -= decreasingValue;
+            }
+            else
+            {
+                Debug.LogWarning($"Can't find {info} coeff in {name}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {info} in {name}");
+        }
+    }
+
     #endregion
 
     #region ClampMaths

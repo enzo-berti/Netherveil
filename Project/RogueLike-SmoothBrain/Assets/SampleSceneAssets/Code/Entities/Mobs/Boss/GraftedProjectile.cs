@@ -8,7 +8,7 @@ public class GraftedProjectile : Projectile
 
     protected override void Awake()
     {
-        lifeTime = 1f;
+        lifeTime = 5f;
         base.Awake();
     }
 
@@ -34,9 +34,9 @@ public class GraftedProjectile : Projectile
         }
 
         IDamageable damageableObject = other.GetComponent<IDamageable>();
-        if (damageableObject != null)
+        if (damageableObject != null && !onTarget)
         {
-            //damageableObject.ApplyDamage(damage);
+            damageableObject.ApplyDamage(damage);
             direction = -Vector3.up;
         }
     }

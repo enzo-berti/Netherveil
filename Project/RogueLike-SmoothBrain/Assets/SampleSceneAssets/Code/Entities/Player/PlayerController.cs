@@ -8,8 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     Transform cameraTransform;
     [Header("Mechanics")]
-    [Range(0f, 100f), SerializeField]
-    float dashSpeed;
+    readonly float dashCoef = 3f;
 
     public Plane PlaneOfDoom { get; private set; }
     public List<NestedList<Collider>> spearAttacks;
@@ -123,7 +122,7 @@ public class PlayerController : MonoBehaviour
     {
         if (hero.State == (int)Hero.PlayerState.DASH)
         {
-            characterController.Move(dashSpeed * Time.deltaTime * DashDir);
+            characterController.Move(dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * DashDir);
         }
     }
 
@@ -275,13 +274,6 @@ public class PlayerController : MonoBehaviour
     {
         VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
         VFX.Play();
-    }
-
-    //used whenever you want to reset a lot of things when transitioning to another State
-    public void ChangeState(int newState)
-    {
-        hero.State = newState;
-        ResetValues();
     }
 
     public void ResetValues()
