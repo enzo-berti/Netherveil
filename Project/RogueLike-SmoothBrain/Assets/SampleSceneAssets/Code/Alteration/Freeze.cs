@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Freeze : Status
@@ -9,6 +7,9 @@ public class Freeze : Status
         isConst = true;
     }
 
+    private int damage = 10;
+    static Color freezeColor = new Color(0.11f, 0.78f, 0.87f, 1.0f);
+
     public override void ApplyEffect(Entity target)
     {
         if (target.Stats.HasStat(Stat.SPEED))
@@ -17,7 +18,8 @@ public class Freeze : Status
 
     public override Status DeepCopy()
     {
-        throw new System.NotImplementedException();
+        Freeze fire = (Freeze)MemberwiseClone();
+        return fire;
     }
 
     public override void OnFinished()
@@ -28,6 +30,10 @@ public class Freeze : Status
 
     protected override void Effect()
     {
-        throw new System.NotImplementedException();
+        if (target != null)
+        {
+            FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, freezeColor);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, false, false);
+        }
     }
 }

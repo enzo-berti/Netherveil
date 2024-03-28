@@ -3,7 +3,7 @@ using UnityEngine;
 public class Fire : Status
 {
     private int damage = 10;
-    static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1);
+    static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1.0f);
 
     public Fire(float _duration) : base(_duration)
     {
@@ -23,7 +23,7 @@ public class Fire : Status
 
     public override void OnFinished()
     {
-        Debug.Log("Fini");
+
     }
 
     protected override void Effect()

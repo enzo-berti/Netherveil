@@ -1,5 +1,3 @@
-using static UnityEngine.EventSystems.EventTrigger;
-
 public class Electricity : Status
 {
     private float entityBaseSpeed;

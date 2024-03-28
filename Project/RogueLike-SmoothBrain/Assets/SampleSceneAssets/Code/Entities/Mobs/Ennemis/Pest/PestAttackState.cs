@@ -119,7 +119,9 @@ public class PestAttackState : BaseState<PestStateMachine>
                                               .FirstOrDefault();
 
         if (player != null)
-            player.ApplyDamage((int)Context.Stats.GetValue(Stat.ATK));
+        {
+            Context.Attack(player);
+        }
 
         float duration = distance / speed;
 
