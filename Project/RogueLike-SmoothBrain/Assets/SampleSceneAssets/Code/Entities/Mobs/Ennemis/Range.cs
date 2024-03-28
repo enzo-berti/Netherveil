@@ -35,7 +35,6 @@ public class Range : Mobs, IRange
     private float staggerImmunity;
     private float staggerTimer;
 
-    private bool canAttack = true;
     private float FleeingRange => (int)stats.GetValue(Stat.ATK_RANGE) / 2f;
 
     Animator animator;
@@ -116,19 +115,11 @@ public class Range : Mobs, IRange
                     //MoveTo(fleeTarget);
                 }
                 // sinon si dans la zone d'attaque, attaquer
-                else if (distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE) && canAttack)
+                else if (distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE))
                 {
-                    if(distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE)/2f)
-                    {
-                        //CloseRangeAttack(player.transform.position);
-                        //canAttack = false;
-                    }
-                    else
-                    {
-                        LongRangeAttack(player.transform.position);
-                        canAttack = false;
-                    }
-                    
+                    LongRangeAttack(player.transform.position);
+                    yield return new WaitForSeconds(2f);
+
                 }
                 // sinon si pas en fuite, avancer vers le joueur
                 else if (!isFleeing)
@@ -164,14 +155,6 @@ public class Range : Mobs, IRange
         exploBomb.Activate();
     }
 
-    private void CloseRangeAttack(Vector3 positionToReach)
-    {
-        GameObject bomb = Instantiate(pfBomb, this.transform.position, Quaternion.identity);
-        ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
-        exploBomb.SetTimeToExplode(1f);
-        exploBomb.Activate();
-        StartCoroutine(exploBomb.RollingToPos(positionToReach));
-    }
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);

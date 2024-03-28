@@ -78,48 +78,33 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         Explode();
     }
 
-    public IEnumerator RollingToPos(Vector3 pos)
-    {
-        float timer = 0;
-        Vector3 basePos = this.transform.position;
-        while(timer < 1f)
-        {
-            yield return null;
-            this.transform.position = Vector3.Lerp(basePos, pos, timer);
-            timer += Time.deltaTime * 2;
-            timer = timer > 1 ? 1 : timer;
-        }
-    }
-
     public IEnumerator ThrowToPos(Vector3 pos, float throwTime)
     {
         float timer = 0;
-        float timerY = 0;
 
-        bool isGoingUp = true;
         Vector3 basePos = this.transform.position;
         Vector3 position3D;
 
+        float distance = Vector3.Distance(pos, basePos);
+
         float baseY = this.transform.position.y;
-        float height = baseY + 2f;
         while(timer < 1f)
         {
             yield return null;
             
             position3D = Vector3.Lerp(basePos, pos, timer);
-            position3D.y = isGoingUp ? Mathf.Lerp(baseY, height, timerY) : Mathf.Lerp(height, baseY, timerY);
+            position3D.y = BombSquareFunction(baseY, timer, distance);
             this.transform.position = position3D;
 
             timer += Time.deltaTime / throwTime;
-            timerY += Time.deltaTime * 2 / throwTime;
 
             timer = timer > 1 ? 1 : timer;
-            if(timerY > 1)
-            {
-                timerY = 0;
-                isGoingUp = false;
-            }
         }
+    }
+
+    private float BombSquareFunction(float y, float timer, float power)
+    {
+        return -16* timer * timer + 16 * timer + y;
     }
     void UpdateTimerExplosion()
     {

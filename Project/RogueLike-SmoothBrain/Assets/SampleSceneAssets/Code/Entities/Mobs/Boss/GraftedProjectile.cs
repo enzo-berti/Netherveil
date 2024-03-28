@@ -18,7 +18,7 @@ public class GraftedProjectile : Projectile
         Move(direction);
     }
 
-    void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
         {
