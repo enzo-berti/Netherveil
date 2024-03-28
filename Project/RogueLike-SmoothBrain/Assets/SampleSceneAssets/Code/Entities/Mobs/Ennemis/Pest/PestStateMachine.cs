@@ -55,7 +55,7 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
     public Transform Target { get => target; set => target = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED); }
+    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
 
     protected override void Start()
@@ -141,9 +141,11 @@ public class PestStateMachine : Mobs, IPest
     public void Attack(IDamageable damageable)
     {
         int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
+
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
         ApplyKnockback(damageable);
+
         AudioManager.Instance.PlaySound(pestSounds.hitSound, transform.position);
     }
 

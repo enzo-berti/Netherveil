@@ -3,10 +3,10 @@ using UnityEngine;
 public class Projectile : MonoBehaviour, IProjectile
 {
     public DamageState elementalDamage;
-    [SerializeField] int damage = 5;
-    [SerializeField] float speed = 30f;
-    [SerializeField] float lifeTime = 5f;
-    float startTime;
+    [SerializeField] protected int damage = 5;
+    [SerializeField] protected float speed = 30f;
+    [SerializeField] protected float lifeTime = 5f;
+    protected float startTime;
 
     public enum DamageState
     {
@@ -16,14 +16,15 @@ public class Projectile : MonoBehaviour, IProjectile
         ELECTRICITY
     }
 
-    void Start()
+    protected virtual void Start()
     {
         startTime = Time.time;
     }
 
     public void Move(Vector3 _direction)
     {
-        transform.Translate(_direction.normalized * speed * Time.deltaTime);
+        transform.Translate(_direction * speed * Time.deltaTime);
+        transform.rotation = Quaternion.LookRotation(_direction);
     }
 
     protected virtual void Update()
@@ -36,7 +37,7 @@ public class Projectile : MonoBehaviour, IProjectile
         }
     }
 
-    protected virtual void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
         {

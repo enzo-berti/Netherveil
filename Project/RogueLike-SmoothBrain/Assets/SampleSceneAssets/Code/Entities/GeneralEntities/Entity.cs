@@ -20,7 +20,8 @@ public abstract class Entity : MonoBehaviour
     public List<Status> AppliedStatusList = new();
     protected List<Status> statusToApply = new();
     [HideInInspector] public int State;
-    private void Awake()
+
+    protected virtual void Awake()
     {
         for (int i = 0; i < statusNameToApply.Count; i++)
         {
@@ -109,7 +110,6 @@ public abstract class Entity : MonoBehaviour
             {
                 if (item.GetType() == status.GetType())
                 {
-                    Debug.Log("Add Stack to : " + item.GetType().Name);
                     item.AddStack(1);
                     return;
                 }

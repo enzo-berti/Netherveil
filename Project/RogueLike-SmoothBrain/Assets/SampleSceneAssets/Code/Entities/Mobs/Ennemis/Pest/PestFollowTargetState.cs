@@ -8,7 +8,7 @@ public class PestFollowTargetState : BaseState<PestStateMachine>
         : base(currentContext, currentFactory) { }
 
     private float elapsedTimeMovement = 0.0f;
-    private float delayBetweenMovement = 0.5f;
+    private float delayBetweenMovement = 1.5f;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()

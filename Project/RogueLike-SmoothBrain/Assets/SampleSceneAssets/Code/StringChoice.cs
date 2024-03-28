@@ -21,7 +21,7 @@ public class StringChoice
 public class StringChoiceUIE : PropertyDrawer
 {
     int nbMember = 0;
-    int selectedIndex = 0;
+    //int selectedIndex = 0; // Commenter par Dorian -> WARNING
     SerializedProperty choiceProperty;
     SerializedProperty choicesProperty;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

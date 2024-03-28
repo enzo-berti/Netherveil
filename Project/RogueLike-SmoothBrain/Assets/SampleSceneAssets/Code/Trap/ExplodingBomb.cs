@@ -31,14 +31,22 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         startPosition = transform.position;
         endPosition = transform.position;
 
+        VFX.SetFloat("ExplosionTime", 1.0f);
+
         if (activateOnAwake)
             Activate();
+    }
+
+    public void SetTimeToExplode(float _timeToExplode)
+    {
+        timerBeforeExplode = _timeToExplode;
+        VFX.SetFloat("TimeToExplode", timerBeforeExplode);
     }
 
     void Update()
     {
         if (isActive)
-            UpdateTimerExplotion();
+            UpdateTimerExplosion();
     }
 
     public void ThrowTo(Vector3 endPosition, float totalTime = 1f)
@@ -70,7 +78,19 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         Explode();
     }
 
-    void UpdateTimerExplotion()
+    public IEnumerator RollingToPos(Vector3 pos)
+    {
+        float timer = 0;
+        Vector3 basePos = this.transform.position;
+        while(this.transform.position != pos)
+        {
+            yield return null;
+            this.transform.position = Vector3.Lerp(basePos, pos, timer);
+            timer += Time.deltaTime * 2;
+            timer = timer > 1 ? 1 : timer;
+        }
+    }
+    void UpdateTimerExplosion()
     {
         if (elapsedExplosionTime + timerBeforeExplode < Time.time)
             Explode();
@@ -80,6 +100,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
     {
         isActive = true;
         elapsedExplosionTime = Time.time;
+        VFX.Play();
     }
 
     public void Explode()
