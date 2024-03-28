@@ -35,8 +35,9 @@ public abstract class Projectile : MonoBehaviour, IProjectile
     {
         if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
         {
-            Destroy(gameObject);
-            return;
+            //print("destroy by map");
+            //Destroy(gameObject);
+            //return;
         }
 
         IDamageable damageableObject = other.GetComponent<IDamageable>();
