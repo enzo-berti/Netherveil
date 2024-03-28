@@ -17,15 +17,17 @@ public class GraftedProjectile : Projectile
         direction = _direction;
     }
 
-    // Update is called once per frame
     protected override void Update()
     {
-        Move(direction);
+        if (!onTarget)
+        {
+            Move(direction);
+        }
     }
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
+        if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
         {
             onTarget = true;
             return;
@@ -34,8 +36,8 @@ public class GraftedProjectile : Projectile
         IDamageable damageableObject = other.GetComponent<IDamageable>();
         if (damageableObject != null)
         {
-            damageableObject.ApplyDamage(damage);
-            //direction = transform.position - Vector3.up;
+            //damageableObject.ApplyDamage(damage);
+            direction = -Vector3.up;
         }
     }
 }
