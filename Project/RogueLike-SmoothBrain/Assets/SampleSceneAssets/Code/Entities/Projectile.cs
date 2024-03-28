@@ -35,7 +35,6 @@ public abstract class Projectile : MonoBehaviour, IProjectile
     {
         if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
         {
-            print("destroy by map");
             Destroy(gameObject);
             return;
         }
