@@ -13,5 +13,13 @@ public struct RoomData
         }
     }
 
+    public readonly int NumEnemies
+    {
+        get
+        {
+            return enemies.Count;
+        }
+    }
+
     public List<GameObject> enemies;
 }

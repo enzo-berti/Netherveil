@@ -21,7 +21,7 @@ public class RoomEvents : MonoBehaviour
         enemies.SetActive(false);
 
         // create data of the map
-        mapData = new RoomData();
+        mapData = new RoomData(enemies);
     }
 
     private void EnterEvents()
@@ -41,6 +41,7 @@ public class RoomEvents : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             RoomUtilities.roomData = mapData;
+            Debug.Log(RoomUtilities.roomData.NumEnemies);
             RoomUtilities.EnterEvents?.Invoke(ref mapData);
             EnterEvents();
         }
