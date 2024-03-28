@@ -79,15 +79,28 @@ public class Knockback : MonoBehaviour
 
         float duration = distance / speed;
 
-        while (timeElapsed < duration)
+        bool hitObstacle = false;
+
+        while (timeElapsed < duration && !hitObstacle)
         {
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
-            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+
+            Vector3 lastPos = transform.position;
+            Vector3 nextPos = Vector3.Lerp(startPosition, targetPosition, t);
+
+            if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos)))
+            {
+                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
+            }
+            else
+            {
+                transform.position = nextPos;
+            }
+
             yield return null;
         }
 
-        transform.position = targetPosition;
         characterController.enabled = true;
         knockbackRoutine = null;
     }
