@@ -62,8 +62,11 @@ public class HudHandler : MonoBehaviour
 
     private void Update()
     {
-        lifeJauge.value = player.Stats.GetValue(Stat.HP);
-        lifeJauge.maxValue = player.Stats.GetMaxValue(Stat.HP);
-        lifeRatioText.text = lifeJauge.value.ToString() + " / " + player.Stats.GetMaxValue(Stat.HP);
+        if(lifeJauge.value != player.Stats.GetValue(Stat.HP))
+        {
+            lifeJauge.value = player.Stats.GetValue(Stat.HP);
+            lifeJauge.maxValue = player.Stats.GetMaxValue(Stat.HP);
+            lifeRatioText.text = lifeJauge.value.ToString() + " / " + player.Stats.GetMaxValue(Stat.HP);
+        }
     }
 }

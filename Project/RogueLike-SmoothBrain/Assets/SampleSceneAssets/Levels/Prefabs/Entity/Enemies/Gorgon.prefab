@@ -291,9 +291,9 @@ MonoBehaviour:
     - stat: 1
       hasMaxStat: 0
       hasMinStat: 0
-      hasCoeff: 0
-      value: 5
-      coeff: 0
+      hasCoeff: 1
+      value: 0
+      coeff: 1
       maxValue: 0
       minValue: 0
       overload: 0
@@ -302,27 +302,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 1
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 3
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 30
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 7
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 15
+      value: 8
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -332,13 +312,23 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
+      value: 15
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 5
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
       value: 100
       coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 4
+    - stat: 3
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
@@ -362,7 +352,6 @@ MonoBehaviour:
   statusNameToApply: []
   durationStatusToApply: []
   isAlly: 0
-  State: 0
   pfBomb: {fileID: 3855923176943414352, guid: b420fdc9a271de84c879ad3ad4778e49, type: 3}
   staggerDuration: 0
 --- !u!114 &7709938691007895571
@@ -3335,8 +3324,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1650e3c43d860d040b8af14fc57fef5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeBarSlider: {fileID: 7909988351752971360}
-  damageBarSlider: {fileID: 8944186076051619884}
+  lifeBarSlider: {fileID: 0}
+  damageBarSlider: {fileID: 0}
   barSizeClamp: {x: 100, y: 300}
   damageDisplayTime: 0.3
 --- !u!224 &2442178805064352802 stripped
@@ -3345,27 +3334,3 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1596833659000805326}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7909988351752971360 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8929788961503048622, guid: 5c88c906649771a43bd23b9c1322fdf2,
-    type: 3}
-  m_PrefabInstance: {fileID: 1596833659000805326}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8944186076051619884 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7640697726734964706, guid: 5c88c906649771a43bd23b9c1322fdf2,
-    type: 3}
-  m_PrefabInstance: {fileID: 1596833659000805326}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

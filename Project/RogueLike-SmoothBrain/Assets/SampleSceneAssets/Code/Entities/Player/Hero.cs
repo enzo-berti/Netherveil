@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Projectile;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -94,7 +95,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void Attack(IDamageable damageable)
     {
-        int damages = (int)stats.GetValue(Stat.ATK);
+        int damages = (int)stats.GetValueWithoutCoeff(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {
             damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
@@ -116,7 +117,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         //    damages = (int)(damages * critDamageCoef);
         //}
 
-        damages = (int)(damages * stats.GetValue(Stat.ATK_COEFF));
+        damages = (int)(damages * stats.GetCoeff(Stat.ATK)); 
         damageable.ApplyDamage(damages/*, isCrit*/);
 
         onHit?.Invoke(damageable);

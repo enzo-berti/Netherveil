@@ -81,6 +81,25 @@ public abstract class Entity : MonoBehaviour
 
     public void ApplyKnockback(IDamageable damageable)
     {
+        Vector3 temp = (damageable as MonoBehaviour).transform.position - transform.position;
+        Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
+
+        float distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
+        float speed = stats.GetValue(Stat.KNOCKBACK_COEFF);
+
+        ApplyKnockback(damageable, direction, distance, speed);
+    }
+
+    public void ApplyKnockback(IDamageable damageable, Vector3 direction)
+    {
+        float distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
+        float speed = stats.GetValue(Stat.KNOCKBACK_COEFF);
+
+        ApplyKnockback(damageable, direction, distance, speed);
+    }
+
+    public void ApplyKnockback(IDamageable damageable, Vector3 direction, float distance, float speed)
+    {
         Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
         if (knockbackable)
         {
@@ -98,16 +117,9 @@ public abstract class Entity : MonoBehaviour
                 {
                     controller.OverridePlayerRotation(rotationY, true);
                 }
-                //else
-                //{
-                //    Quaternion appliedRotation = Quaternion.Euler(damageableGO.transform.eulerAngles.x, rotationY, damageableGO.transform.eulerAngles.z);
-                //    damageableGO.transform.rotation = appliedRotation;
-                //}
             }
 
-            Vector3 temp = damageablePos - transform.position;
-            Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
-            knockbackable.GetKnockback(direction, stats.GetValue(Stat.KNOCKBACK_DISTANCE), stats.GetValue(Stat.KNOCKBACK_COEFF));
+            knockbackable.GetKnockback(direction, distance, speed);
             FloatingTextGenerator.CreateActionText(damageableGO.transform.position, "Pushed!");
         }
     }

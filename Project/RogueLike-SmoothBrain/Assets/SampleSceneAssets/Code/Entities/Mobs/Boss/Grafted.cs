@@ -133,7 +133,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public void Attack(IDamageable _damageable)
     {
-        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
+        int damages = (int)stats.GetValue(Stat.ATK);
         onHit?.Invoke(_damageable);
         _damageable.ApplyDamage(damages);
     }

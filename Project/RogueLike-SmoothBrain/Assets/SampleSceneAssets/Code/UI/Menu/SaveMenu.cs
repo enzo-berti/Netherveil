@@ -4,7 +4,7 @@ using UnityEngine;
 public class SaveMenu : MenuHandler
 {
     [SerializeField] private MeshButton[] booksButton;
-    private Collider collider;
+    private new Collider collider;
     private MainMenu mainMenu;
     private bool isToggle = true;
 
