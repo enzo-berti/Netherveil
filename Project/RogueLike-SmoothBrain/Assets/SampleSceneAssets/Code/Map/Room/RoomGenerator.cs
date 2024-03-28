@@ -50,6 +50,6 @@ public class RoomGenerator : MonoBehaviour
             }
         }
 
-        rooms[keepRoomIndex].SetActive(true); // activate room
+        //rooms[keepRoomIndex].SetActive(true); // activate room
     }
 }

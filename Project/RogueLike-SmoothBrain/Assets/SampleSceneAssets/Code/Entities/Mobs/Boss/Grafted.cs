@@ -17,6 +17,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("Boss parameters")]
     Hero player = null;
     bool playerHit = false;
+    float height;
 
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
@@ -68,6 +69,12 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     float attackCooldown = 0; // Commenter par Dorian -> WARNING
     bool hasProjectile = true;
 
+    protected override void Start()
+    {
+        base.Start();
+        height = GetComponent<Renderer>().bounds.size.y;
+    }
+
     protected override IEnumerator Brain()
     {
         while (true)
@@ -78,53 +85,52 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             {
                 player = FindObjectOfType<Hero>();
             }
-            else
-            {
-                // Face player
-                if (attackState != AttackState.ATTACKING)
-                {
-                    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-                    lookRotation.x = 0;
-                    lookRotation.z = 0;
+            //else
+            //{
+            //    // Face player
+            //    if (attackState != AttackState.ATTACKING)
+            //    {
+            //        Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+            //        lookRotation.x = 0;
+            //        lookRotation.z = 0;
 
-                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
-                }
+            //        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+            //    }
 
-                // Move towards player
-                MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
+            //    // Move towards player
+            //    MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
 
-                // Attacks
-                if (attackCooldown > 0)
-                {
-                    attackState = AttackState.IDLE;
-                    attackCooldown -= Time.deltaTime;
-                    if (attackCooldown < 0) attackCooldown = 0;
-                }
-                else if (attackCooldown == 0)
-                {
-                    //currentAttack = (Attacks)Random.Range(0, 3);
-                    currentAttack = Attacks.DASH;
-                }
+            //    // Attacks
+            //    if (attackCooldown > 0)
+            //    {
+            //        attackState = AttackState.IDLE;
+            //        attackCooldown -= Time.deltaTime;
+            //        if (attackCooldown < 0) attackCooldown = 0;
+            //    }
+            //    else if (attackCooldown == 0)
+            //    {
+            //        //currentAttack = (Attacks)Random.Range(0, 3);
+            //        currentAttack = Attacks.DASH;
+            //    }
 
-                switch (currentAttack)
-                {
-                    case Attacks.RANGE:
-                        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
-                        break;
+            //    switch (currentAttack)
+            //    {
+            //        case Attacks.RANGE:
+            //            if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
+            //            break;
 
-                    case Attacks.THRUST:
-                        TripleThrust();
-                        break;
+            //        case Attacks.THRUST:
+            //            TripleThrust();
+            //            break;
 
-                    case Attacks.DASH:
-                        Dash();
-                        break;
-                }
-
-                //projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<GraftedProjectile>();
-                //projectile.Initialize(player.transform.position - transform.position);
-                //hasProjectile = false;
-            }
+            //        case Attacks.DASH:
+            //            Dash();
+            //            break;
+            //    }
+            //}
+            projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 2f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
+            projectile.Initialize(player.transform.position - transform.position);
+            hasProjectile = false;
         }
     }
 
@@ -357,14 +363,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (!Selection.Contains(gameObject))
-            return;
+    //private void OnDrawGizmos()
+    //{
+    //    if (!Selection.Contains(gameObject))
+    //        return;
 
-        DisplayVisionRange(visionAngle);
-        DisplayAttackRange(visionAngle);
-        DisplayInfos();
-    }
+    //    DisplayVisionRange(visionAngle);
+    //    DisplayAttackRange(visionAngle);
+    //    DisplayInfos();
+    //}
 #endif
 }
