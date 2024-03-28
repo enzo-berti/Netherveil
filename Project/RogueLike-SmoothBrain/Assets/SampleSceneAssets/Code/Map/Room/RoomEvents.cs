@@ -5,21 +5,23 @@ public class RoomEvents : MonoBehaviour
 {
     private RoomData mapData;
 
+    private GameObject room;
     private GameObject enemies;
     private GameObject traps;
     private NavMeshSurface navMeshSurface;
 
     private void Start()
     {
-        Transform roomGenerator = transform.parent.Find("RoomGenerator");
-
         // find room go's
-        enemies = roomGenerator.transform.GetChild(0).Find("Enemies").gameObject;
-        traps = roomGenerator.transform.GetChild(0).Find("Traps").gameObject;
+        room = transform.parent.Find("RoomGenerator").GetChild(0).gameObject;
+        enemies = room.transform.Find("Enemies").gameObject;
+        traps = room.transform.Find("Traps").gameObject;
         navMeshSurface = GetComponent<NavMeshSurface>();
 
+        enemies.SetActive(false);
+
         // create data of the map
-        mapData = new RoomData();
+        mapData = new RoomData(enemies);
     }
 
     private void EnterEvents()
@@ -39,6 +41,7 @@ public class RoomEvents : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             RoomUtilities.roomData = mapData;
+            Debug.Log(RoomUtilities.roomData.NumEnemies);
             RoomUtilities.EnterEvents?.Invoke(ref mapData);
             EnterEvents();
         }

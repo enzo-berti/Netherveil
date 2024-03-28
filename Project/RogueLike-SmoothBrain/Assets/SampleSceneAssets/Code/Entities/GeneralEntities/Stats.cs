@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.UIElements;
-#endif
 
 [Serializable]
 public class Stats
@@ -27,7 +22,9 @@ public class Stats
         return name;
     }
 
-    // Return a list with all stats used. Exemple return {ATK, HP, CATCH_RANGE}
+    /// <summary>
+    /// Return a list with all stats used. Exemple return {ATK, HP, CATCH_RANGE}
+    /// </summary>
     public List<Stat> StatsName
     {
         get
@@ -41,7 +38,12 @@ public class Stats
             return list;
         }
     }
-    // Get value of a stat, if there is a coeff, returns value * coeff
+
+    /// <summary>
+    /// Get value of a stat, if there is a coeff, returns value * coeff
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
     public float GetValue(Stat info)
     {
         foreach (StatInfo stat in stats)
@@ -57,7 +59,11 @@ public class Stats
         return -1.0f;
     }
 
-    // Returns straight value
+    /// <summary>
+    /// Returns straight value
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
     public float GetValueWithoutCoeff(Stat info)
     {
         foreach (StatInfo stat in stats)
@@ -72,7 +78,11 @@ public class Stats
         return -1.0f;
     }
 
-    // Get the maximum value of a stat
+    /// <summary>
+    /// Get the maximum value of a stat
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
     public float GetMaxValue(Stat info)
     {
         foreach (StatInfo stat in stats)
@@ -87,7 +97,11 @@ public class Stats
         return -1.0f;
     }
 
-    // Get the minimal value of a stat
+    /// <summary>
+    /// Get the minimal value of a stat
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
     public float GetMinValue(Stat info)
     {
         foreach (StatInfo stat in stats)
@@ -102,7 +116,11 @@ public class Stats
         return -1.0f;
     }
 
-    // If has coeff, returns coeff. Else, returns 1
+    /// <summary>
+    /// If has coeff, returns coeff. Else, returns 1
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
     public float GetCoeff(Stat info)
     {
         foreach (StatInfo stat in stats)
@@ -131,7 +149,7 @@ public class Stats
     #endregion
 
     #region Maths
-    public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue)
+    public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue = true)
     {
         int index = stats.FindIndex(x => x.stat == info);
 
@@ -212,7 +230,7 @@ public class Stats
         }
     }
 
-    public void DecreaseValue(Stat info, float decreasingValue, bool clampToMinValue)
+    public void DecreaseValue(Stat info, float decreasingValue, bool clampToMinValue = true)
     {
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
@@ -276,7 +294,7 @@ public class Stats
         }
     }
 
-    public void MultiplyValue(Stat info, float multiplyingValue, bool clampToMaxValue)
+    public void MultiplyValue(Stat info, float multiplyingValue, bool clampToMaxValue = true)
     {
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
@@ -329,7 +347,7 @@ public class Stats
         }
     }
 
-    public void DivideValue(Stat info, float dividingValue, bool clampToMinValue)
+    public void DivideValue(Stat info, float dividingValue, bool clampToMinValue = true)
     {
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
@@ -435,6 +453,49 @@ public class Stats
         else
             Debug.LogWarning($"Can't find {info} in {name}");
     }
+
+    public void IncreaseCoeffValue(Stat info, float increasingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+        {
+            if (stats[index].hasCoeff)
+            {
+                stats[index].coeff += increasingValue;
+            }
+            else
+            {
+                Debug.LogWarning($"Can't find {info} coeff in {name}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {info} in {name}");
+        }
+    }
+
+    public void DecreaseCoeffValue(Stat info, float decreasingValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+        {
+            if (stats[index].hasCoeff)
+            {
+                stats[index].coeff -= decreasingValue;
+            }
+            else
+            {
+                Debug.LogWarning($"Can't find {info} coeff in {name}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {info} in {name}");
+        }
+    }
+
     #endregion
 
     #region ClampMaths

@@ -875,7 +875,7 @@ VisualEffect:
       - m_Value: {x: -0, y: 270, z: 262.20792}
         m_Name: New Transform_angles
         m_Overridden: 1
-      - m_Value: {x: 0.3, y: 1.031296, z: -2.5713596}
+      - m_Value: {x: 0, y: 1.031296, z: 0.008640403}
         m_Name: New Transform_position
         m_Overridden: 1
       - m_Value: {x: 1, y: 1, z: 1}
@@ -1145,7 +1145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b316b3a27bc2747b3aaba9d80a4f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashSpeed: 22
   spearAttacks:
   - data:
     - {fileID: 8567801458383647344}
@@ -1253,7 +1252,7 @@ MonoBehaviour:
     - stat: 0
       hasMaxStat: 1
       hasMinStat: 0
-      hasCoeff: 1
+      hasCoeff: 0
       value: 300
       coeff: 1
       maxValue: 300
@@ -1263,34 +1262,14 @@ MonoBehaviour:
     - stat: 1
       hasMaxStat: 0
       hasMinStat: 0
-      hasCoeff: 0
+      hasCoeff: 1
       value: 5
-      coeff: 0
+      coeff: 1
       maxValue: 0
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 2
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 1
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 6
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 3
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 5
+    - stat: 4
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
@@ -1300,7 +1279,17 @@ MonoBehaviour:
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 7
+    - stat: 5
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 3
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 6
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
@@ -1310,7 +1299,7 @@ MonoBehaviour:
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 14
+    - stat: 12
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
@@ -1320,7 +1309,7 @@ MonoBehaviour:
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 15
+    - stat: 13
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
@@ -1330,7 +1319,7 @@ MonoBehaviour:
       minValue: 100
       overload: 0
       underload: 0
-    - stat: 3
+    - stat: 2
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
@@ -1340,11 +1329,21 @@ MonoBehaviour:
       minValue: 0
       overload: 0
       underload: 0
-    - stat: 8
+    - stat: 7
       hasMaxStat: 1
       hasMinStat: 0
       hasCoeff: 0
       value: 15
+      coeff: 0
+      maxValue: 100
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 8
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 150
       coeff: 0
       maxValue: 100
       minValue: 0
@@ -1360,11 +1359,20 @@ MonoBehaviour:
       minValue: 100
       overload: 0
       underload: 0
+    - stat: 11
+      hasMaxStat: 1
+      hasMinStat: 1
+      hasCoeff: 0
+      value: 0
+      coeff: 0
+      maxValue: 100
+      minValue: 0
+      overload: 0
+      underload: 0
     name: Player
   statusNameToApply: []
   durationStatusToApply: []
   isAlly: 1
-  State: 0
 --- !u!114 &1911203549151711130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2850,7 +2858,7 @@ PrefabInstance:
     - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
-      value: 0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
         type: 3}
@@ -2860,7 +2868,7 @@ PrefabInstance:
     - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.z
-      value: -2.5713596
+      value: 0.008640403
       objectReference: {fileID: 0}
     - target: {fileID: 3729173983827180341, guid: d8097989fe63fc240a15185a5bf517d1,
         type: 3}

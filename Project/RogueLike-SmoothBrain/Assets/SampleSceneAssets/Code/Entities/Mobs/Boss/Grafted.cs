@@ -85,58 +85,55 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             {
                 player = FindObjectOfType<Hero>();
             }
-            //else
-            //{
-            //    // Face player
-            //    if (attackState != AttackState.ATTACKING)
-            //    {
-            //        Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-            //        lookRotation.x = 0;
-            //        lookRotation.z = 0;
+            else
+            {
+                // Face player
+                if (attackState != AttackState.ATTACKING)
+                {
+                    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                    lookRotation.x = 0;
+                    lookRotation.z = 0;
 
-            //        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
-            //    }
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+                }
 
-            //    // Move towards player
-            //    MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
+                // Move towards player
+                MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
 
-            //    // Attacks
-            //    if (attackCooldown > 0)
-            //    {
-            //        attackState = AttackState.IDLE;
-            //        attackCooldown -= Time.deltaTime;
-            //        if (attackCooldown < 0) attackCooldown = 0;
-            //    }
-            //    else if (attackCooldown == 0)
-            //    {
-            //        //currentAttack = (Attacks)Random.Range(0, 3);
-            //        currentAttack = Attacks.DASH;
-            //    }
+                // Attacks
+                if (attackCooldown > 0)
+                {
+                    attackState = AttackState.IDLE;
+                    attackCooldown -= Time.deltaTime;
+                    if (attackCooldown < 0) attackCooldown = 0;
+                }
+                else if (attackCooldown == 0)
+                {
+                    //currentAttack = (Attacks)Random.Range(0, 3);
+                    currentAttack = Attacks.RANGE;
+                }
 
-            //    switch (currentAttack)
-            //    {
-            //        case Attacks.RANGE:
-            //            if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
-            //            break;
+                switch (currentAttack)
+                {
+                    case Attacks.RANGE:
+                        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
+                        break;
 
-            //        case Attacks.THRUST:
-            //            TripleThrust();
-            //            break;
+                    case Attacks.THRUST:
+                        TripleThrust();
+                        break;
 
-            //        case Attacks.DASH:
-            //            Dash();
-            //            break;
-            //    }
-            //}
-            projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 2f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
-            projectile.Initialize(player.transform.position - transform.position);
-            hasProjectile = false;
+                    case Attacks.DASH:
+                        Dash();
+                        break;
+                }
+            }
         }
     }
 
     public void Attack(IDamageable _damageable)
     {
-        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
+        int damages = (int)stats.GetValue(Stat.ATK);
         onHit?.Invoke(_damageable);
         _damageable.ApplyDamage(damages);
     }
@@ -214,16 +211,29 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void ThrowProjectile()
     {
+        projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 4f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
+        projectile.Initialize(player.transform.position - transform.position);
+
         hasProjectile = false;
         currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
+        attackCooldown = 2f;
     }
 
     void RetrieveProjectile()
     {
-        hasProjectile = true;
-        currentAttack = Attacks.NONE;
-        attackState = AttackState.IDLE;
+        if (projectile.onTarget)
+        {
+            projectile.Initialize(transform.position + new Vector3(0, height / 4f, 0) - projectile.transform.position);
+            projectile.onTarget = false;
+        }
+        else
+        {
+            //attackCooldown = 2f;
+            //hasProjectile = true;
+            //currentAttack = Attacks.NONE;
+            //attackState = AttackState.IDLE;
+        }
     }
 
     void TripleThrust()

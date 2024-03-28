@@ -1,5 +1,30 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8953498943227561478
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0fc6f5187a81dc47999eefade6f0935, type: 3}
+  m_Name: Portal
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 1
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children:
+  - {fileID: -3786479339982797341}
+  - {fileID: 4020919648611296844}
+  m_Clips: []
+  m_Markers:
+    m_Objects: []
 --- !u!114 &-3786479339982797341
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18,7 +43,7 @@ MonoBehaviour:
   m_Muted: 0
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
+  m_Parent: {fileID: -8953498943227561478}
   m_Children: []
   m_Clips:
   - m_Version: 1
@@ -252,9 +277,8 @@ MonoBehaviour:
   m_Tracks:
   - {fileID: 1066619847602393551}
   - {fileID: 6931502765210394429}
-  - {fileID: 4020919648611296844}
-  - {fileID: -3786479339982797341}
   - {fileID: -3121492678217507932}
+  - {fileID: -8953498943227561478}
   m_FixedDuration: 0
   m_EditorSettings:
     m_Framerate: 60
@@ -558,7 +582,7 @@ MonoBehaviour:
   m_Muted: 0
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
+  m_Parent: {fileID: -8953498943227561478}
   m_Children: []
   m_Clips:
   - m_Version: 1

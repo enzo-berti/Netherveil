@@ -31,7 +31,7 @@ public class Tank : Mobs, ITank
 
     public void Attack(IDamageable damageable)
     {
-        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF) * 3);
+        int damages = (int)(stats.GetValue(Stat.ATK) * 3);
 
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
@@ -40,7 +40,7 @@ public class Tank : Mobs, ITank
 
     public void BasicAttack(IDamageable damageable)
     {
-        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
+        int damages = (int)stats.GetValue(Stat.ATK);
 
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
