@@ -112,16 +112,22 @@ public class Tank : Mobs, ITank
 
             if (player != null)
             {
+                Vector3 cameraForward = Camera.main.transform.forward;
+                Vector3 cameraRight = Camera.main.transform.right;
+                Vector3 tmp = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
+                Vector2 playerPos = new Vector2(tmp.x, tmp.z);
+                tmp = (cameraForward * transform.position.z + cameraRight * transform.position.x);
+                Vector2 tankPos = new Vector2(tmp.x, tmp.z);
+
+                bool isInRange = Vector2.Distance(playerPos, tankPos) <= shockwaveCollider.gameObject.transform.localScale.z;
+
                 // Player detect
-                if (Vector3.Distance(transform.position, player.transform.position) <= shockwaveCollider.gameObject.transform.localScale.z && !cooldownSpeAttack)
+                if (isInRange && !cooldownSpeAttack)
                 {
-                    agent.isStopped = true;
-                    yield return new WaitForSeconds(0.4f);
                     AttackCollide();
-                    agent.isStopped = false;
                     cooldownSpeAttack = true;
                 }
-                else if (agent.velocity.magnitude == 0f && Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && !cooldownBasicAttack)
+                else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
                 {
                     BasicAttack(player);
                     cooldownBasicAttack = true;
