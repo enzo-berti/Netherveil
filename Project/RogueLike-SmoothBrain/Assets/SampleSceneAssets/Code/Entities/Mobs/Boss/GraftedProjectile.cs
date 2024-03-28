@@ -22,7 +22,6 @@ public class GraftedProjectile : Projectile
         if (!onTarget)
         {
             Move(direction);
-            transform.LookAt(transform.position + direction);
         }
     }
 
@@ -37,7 +36,7 @@ public class GraftedProjectile : Projectile
         IDamageable damageableObject = other.GetComponent<IDamageable>();
         if (damageableObject != null && !onTarget)
         {
-            //damageableObject.ApplyDamage(damage);
+            damageableObject.ApplyDamage(damage);
             direction = -Vector3.up;
         }
     }
