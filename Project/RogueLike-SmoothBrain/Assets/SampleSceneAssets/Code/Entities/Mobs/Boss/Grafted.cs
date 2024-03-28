@@ -128,9 +128,18 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             //            break;
             //    }
             //}
-            projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 2f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
-            projectile.Initialize(player.transform.position - transform.position);
-            hasProjectile = false;
+            if (hasProjectile)
+            {
+                projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 4f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
+                projectile.Initialize(player.transform.position - transform.position);
+                hasProjectile = false;
+            }
+            else if (projectile.onTarget)
+            {
+                Destroy(projectile.gameObject);
+                projectile = null;
+                hasProjectile = true;
+            }
         }
     }
 
