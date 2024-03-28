@@ -13,12 +13,15 @@ public abstract class Mobs : Entity
     protected NavMeshAgent agent;
     protected SkinnedMeshRenderer skinnedMeshRenderer;
     protected Entity[] nearbyEntities;
+    protected EnemyLifeBar lifeBar;
 
     protected override void Start()
     {
         base.Start();
         agent = GetComponent<NavMeshAgent>();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        lifeBar = GetComponentInChildren<EnemyLifeBar>();
+        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
 
         nearbyEntities = null;
         ApplySpeed(Stat.SPEED);
