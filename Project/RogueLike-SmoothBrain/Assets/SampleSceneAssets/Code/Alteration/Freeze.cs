@@ -24,7 +24,7 @@ public class Freeze : Status
 
     public override void OnFinished()
     {
-        throw new System.NotImplementedException();
+
     }
 
 
