@@ -6,10 +6,15 @@ public class GraftedProjectile : Projectile
     public bool onTarget = false;
     Vector3 direction;
 
+    protected override void Awake()
+    {
+        lifeTime = 0.2f;
+        base.Awake();
+    }
+
     public void Initialize(Vector3 _direction)
     {
         direction = _direction;
-        direction.Normalize();
     }
 
     // Update is called once per frame

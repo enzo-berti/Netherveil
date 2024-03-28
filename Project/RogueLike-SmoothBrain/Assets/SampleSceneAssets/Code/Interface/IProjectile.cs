@@ -1,4 +1,6 @@
+using UnityEngine;
+
 public interface IProjectile
 {
-    void Move(UnityEngine.Vector3 _direction);
+    void Move(Vector3 _direction);
 }
