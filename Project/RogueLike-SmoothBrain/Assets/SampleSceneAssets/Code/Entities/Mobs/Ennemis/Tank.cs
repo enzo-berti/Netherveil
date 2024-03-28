@@ -18,6 +18,12 @@ public class Tank : Mobs, ITank
     [SerializeField, Range(0f, 360f)] private float angle = 120f;
     //[SerializeField] private float range = 5f;
 
+    protected override void Start()
+    {
+        base.Start();
+
+    }
+
     public void Attack(IDamageable damageable)
     {
         Destroy(gameObject); //wtf?
@@ -27,10 +33,11 @@ public class Tank : Mobs, ITank
         //damageable.ApplyDamage(damages);
     }
 
-    public void ApplyDamage(int _value,bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Stats.IncreaseValue(Stat.HP, -_value, false);
-        
+        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+
         if (hasAnimation)
         {
             FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
