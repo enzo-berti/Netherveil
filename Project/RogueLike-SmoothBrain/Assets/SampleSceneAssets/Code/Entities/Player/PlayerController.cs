@@ -51,11 +51,13 @@ public class PlayerController : MonoBehaviour
     public EventReference chargedAttackReleaseSFX;
     public EventReference[] attacksSFX;
 
-
+    private void Awake()
+    {
+        hero = GetComponent<Hero>();
+    }
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        hero = GetComponent<Hero>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInChildren<Animator>();
         cameraTransform = Camera.main.transform;

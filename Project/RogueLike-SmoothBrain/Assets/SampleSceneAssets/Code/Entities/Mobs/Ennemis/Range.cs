@@ -228,7 +228,7 @@ public class Range : Mobs, IRange
 
     public void Attack(IDamageable damageable)
     {
-        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
+        int damages = (int)stats.GetValue(Stat.ATK);
         onHit?.Invoke(damageable);
         damageable.ApplyDamage(damages);
     }

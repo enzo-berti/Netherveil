@@ -1,5 +1,7 @@
 using System;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 // Si vous ajoutez un truc, ajoutez le à la fin
@@ -7,7 +9,6 @@ public enum Stat
 {
     HP,
     ATK,
-    ATK_COEFF,
     ATK_RANGE,
     FIRE_RATE,
     SPEED,
@@ -15,7 +16,6 @@ public enum Stat
     VISION_RANGE,
     CRIT_RATE,
     CRIT_DAMAGE,
-    MAX_HP,
     CORRUPTION,
     LIFE_STEAL,
     HEAL_COEFF,
