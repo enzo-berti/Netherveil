@@ -57,7 +57,9 @@ public class PlayerInput : MonoBehaviour
         playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         EaseFuncsShitStorm();
         InputSetup();
+        controller.hero.OnChangeState += ResetForceReturnToMove;
     }
+
     private void EaseFuncsShitStorm()
     {
         easeFuncs.Add(EasingFunctions.EaseInBack);
@@ -139,6 +141,7 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDestroy()
     {
+        controller.hero.OnChangeState -= ResetForceReturnToMove;
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
         InputManagement(kbMap, unsubscribe: true);
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
@@ -166,11 +169,6 @@ public class PlayerInput : MonoBehaviour
                 dashCooldown = false;
                 timerDash = 0f;
             }
-        }
-
-        if (controller.hero.State == (int)Entity.EntityState.MOVE)
-        {
-            ForceReturnToMove = false;
         }
     }
 
@@ -206,7 +204,8 @@ public class PlayerInput : MonoBehaviour
         {
             StopAllCoroutines();
             DeviceManager.Instance.ForceStopVibrations();
-            controller.ChangeState((int)Entity.EntityState.MOVE);
+            controller.hero.State = (int)Entity.EntityState.MOVE;
+            controller.ResetValues();
         }
     }
 
@@ -361,12 +360,14 @@ public class PlayerInput : MonoBehaviour
 
     public void EndOfChargedAttack()
     {
-        controller.ChangeState((int)Entity.EntityState.MOVE);
+        controller.hero.State = (int)Entity.EntityState.MOVE;
+        controller.ResetValues();
     }
 
     public void EndOfDashAnimation() 
     {
-        controller.ChangeState((int)Entity.EntityState.MOVE);
+        controller.hero.State = (int)Entity.EntityState.MOVE;
+        controller.ResetValues();
     }
 
     public void StartOfBasicAttack()
@@ -385,7 +386,8 @@ public class PlayerInput : MonoBehaviour
         {
             if (!LaunchedChargedAttack)
             {
-                controller.ChangeState((int)Entity.EntityState.MOVE);
+                controller.hero.State = (int)Entity.EntityState.MOVE;
+                controller.ResetValues();
             }
             controller.ComboCount = 0;
         }
@@ -449,6 +451,13 @@ public class PlayerInput : MonoBehaviour
 
     #region Miscellaneous
 
+    private void ResetForceReturnToMove()
+    {
+        if (controller.hero.State == (int)Entity.EntityState.MOVE)
+        {
+            ForceReturnToMove = false;
+        }
+    }
     public void ResetValuesInput()
     {
         StopAllCoroutines();

@@ -16,10 +16,22 @@ public abstract class Entity : MonoBehaviour
     public bool isAlly;
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
+    public event Action OnChangeState;
 
     public List<Status> AppliedStatusList = new();
     protected List<Status> statusToApply = new();
-    [HideInInspector] public int State;
+
+    private int state = (int)EntityState.MOVE;
+    public int State 
+    { 
+        get { return state; }
+        set 
+        {
+            state = value;
+            OnChangeState?.Invoke();
+        } 
+    }
+    
 
     protected virtual void Awake()
     {
