@@ -410,10 +410,26 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f5bcdad645291394ab69ce589a7d3aa6, type: 2}
+    - target: {fileID: -5754084199372789682, guid: 137c6e1c84df844429af960facc8cc80,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 3380632504334681679, guid: 8b2665c13db92cc4094da86d0ba291a8,
+        type: 3}
     - target: {fileID: 919132149155446097, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_Name
       value: Grafted
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 137c6e1c84df844429af960facc8cc80,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 137c6e1c84df844429af960facc8cc80,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -547,7 +563,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 20
+      value: 3
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -567,7 +583,17 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 100
+      value: 20
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 13
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 2.5
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -577,7 +603,15 @@ MonoBehaviour:
   statusNameToApply: []
   durationStatusToApply: []
   isAlly: 0
-  visionAngle: 360
+  thrustCooldown: 0.1
+  thrustCharge: 0.3
+  thrustDuration: 0.2
+  AOEDuration: 0.5
+  dashPivot: {fileID: 2673750351035000378}
+  dashSpeed: 10
+  dashRange: {x: 1, y: 6}
+  projectilePrefab: {fileID: 7603897466420847472, guid: 7743d6f0624620946ba885b3ad0f8ba4,
+    type: 3}
   attacks:
   - data:
     - {fileID: 2217064026567559699}
@@ -585,15 +619,7 @@ MonoBehaviour:
     - {fileID: 67471078485800353}
   - data:
     - {fileID: 7282033651682388259}
-  thrustCooldown: 0.1
-  thrustCharge: 0.3
-  thrustDuration: 0.2
-  dashRange: {x: 1, y: 6}
-  dashPivot: {fileID: 2673750351035000378}
-  dashSpeed: 10
-  AOEDuration: 0.5
-  projectilePrefab: {fileID: 7603897466420847472, guid: 7743d6f0624620946ba885b3ad0f8ba4,
-    type: 3}
+  visionAngle: 360
 --- !u!4 &867203832160427953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
@@ -671,22 +697,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.34717223
+      value: -0.3478006
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.08956369
+      value: -0.08709173
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9039195
+      value: 0.9055556
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.23319373
+      value: -0.22675754
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
@@ -696,7 +722,7 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.65
+      value: 4.85
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
@@ -723,10 +749,30 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5662773921335967175, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7075550792627561980, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7228402893422998607, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7888483923736394403, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8209317438256755233, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8516402632445589524, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
