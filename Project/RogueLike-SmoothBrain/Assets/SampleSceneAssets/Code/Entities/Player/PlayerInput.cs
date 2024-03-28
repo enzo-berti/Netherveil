@@ -203,6 +203,7 @@ public class PlayerInput : MonoBehaviour
         else if (LaunchedChargedAttack && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= 0.2f)
         {
             StopAllCoroutines();
+            cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
             DeviceManager.Instance.ForceStopVibrations();
             controller.hero.State = (int)Entity.EntityState.MOVE;
             controller.ResetValues();
