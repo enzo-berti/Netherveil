@@ -4,6 +4,6 @@ public class TrapProjectile : Projectile
 {
     protected override void Update()
     {
-        Move(transform.forward);
+        Move(Vector3.forward);
     }
 }
