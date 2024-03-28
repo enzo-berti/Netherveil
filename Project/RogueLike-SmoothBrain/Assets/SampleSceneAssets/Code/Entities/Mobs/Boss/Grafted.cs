@@ -17,6 +17,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("Boss parameters")]
     Hero player = null;
     bool playerHit = false;
+    float height;
 
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
@@ -68,6 +69,12 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     float attackCooldown = 0; // Commenter par Dorian -> WARNING
     bool hasProjectile = true;
 
+    protected override void Start()
+    {
+        base.Start();
+        height = GetComponent<Renderer>().bounds.size.y;
+    }
+
     protected override IEnumerator Brain()
     {
         while (true)
@@ -103,7 +110,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 else if (attackCooldown == 0)
                 {
                     //currentAttack = (Attacks)Random.Range(0, 3);
-                    currentAttack = Attacks.DASH;
+                    currentAttack = Attacks.RANGE;
                 }
 
                 switch (currentAttack)
@@ -120,10 +127,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                         Dash();
                         break;
                 }
-
-                //projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<GraftedProjectile>();
-                //projectile.Initialize(player.transform.position - transform.position);
-                //hasProjectile = false;
             }
         }
     }
@@ -208,16 +211,29 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void ThrowProjectile()
     {
+        projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 4f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
+        projectile.Initialize(player.transform.position - transform.position);
+
         hasProjectile = false;
         currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
+        attackCooldown = 2f;
     }
 
     void RetrieveProjectile()
     {
-        hasProjectile = true;
-        currentAttack = Attacks.NONE;
-        attackState = AttackState.IDLE;
+        if (projectile.onTarget)
+        {
+            projectile.Initialize(transform.position + new Vector3(0, height / 4f, 0) - projectile.transform.position);
+            projectile.onTarget = false;
+        }
+        else
+        {
+            //attackCooldown = 2f;
+            //hasProjectile = true;
+            //currentAttack = Attacks.NONE;
+            //attackState = AttackState.IDLE;
+        }
     }
 
     void TripleThrust()
@@ -357,14 +373,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (!Selection.Contains(gameObject))
-            return;
+    //private void OnDrawGizmos()
+    //{
+    //    if (!Selection.Contains(gameObject))
+    //        return;
 
-        DisplayVisionRange(visionAngle);
-        DisplayAttackRange(visionAngle);
-        DisplayInfos();
-    }
+    //    DisplayVisionRange(visionAngle);
+    //    DisplayAttackRange(visionAngle);
+    //    DisplayInfos();
+    //}
 #endif
 }

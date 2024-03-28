@@ -45,9 +45,9 @@ public struct GenerationParam
 
     public readonly int TotalRoom
     {
-        get 
-        { 
-            return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss]; 
+        get
+        {
+            return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss];
         }
     }
 
@@ -145,6 +145,30 @@ public class MapGenerator : MonoBehaviour
         GenerateMap(new GenerationParam(nbNormal: 20));
     }
 
+    private void GenerateMap(GenerationParam genParam)
+    {
+        int nbRoom = genParam.TotalRoom;
+        GenerateLobbyRoom(ref genParam);
+
+        for (int i = 0; i < nbRoom - 1; i++)
+        {
+            GenerateRoom(ref genParam);
+        }
+
+        GenerateBossRoom(ref genParam);
+
+        // TODO : spawn things to hides the holes
+        foreach (var listDoors in genParam.availableDoors)
+        {
+            foreach (var door in listDoors.Value)
+            {
+                GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
+                go.transform.Rotate(0, door.Rotation % 360, 0);
+                go.transform.parent = gameObject.transform;
+            }
+        }
+    }
+
     bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
     {
         entranceDoor = new Door();
@@ -177,56 +201,6 @@ public class MapGenerator : MonoBehaviour
         }
 
         return false;
-    }
-
-    private void GenerateBossRoom(ref GenerationParam genParam)
-    {
-        Door exitDoor = genParam.GetFarestDoor();
-        GameObject roomBossGO = Instantiate(roomBoss[0]);
-        DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
-
-        Door door = new Door();
-        for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
-        {
-            door = doorsGenerator.doors[i];
-
-            if (((door.Rotation + 180f) % 360f) == exitDoor.Rotation)
-            {
-                break;
-            }
-        }
-
-        roomBossGO.transform.position = door.parentSkeleton.transform.parent.transform.position - door.Position + exitDoor.Position;
-
-        roomBossGO.transform.Find("RoomGenerator").gameObject.SetActive(false);
-        roomBossGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
-        roomBossGO.transform.parent = gameObject.transform;
-
-        genParam.RemoveDoor(exitDoor);
-    }
-
-    private void GenerateMap(GenerationParam genParam)
-    {
-        int nbRoom = genParam.TotalRoom;
-        InstantiateLobby(ref genParam);
-
-        for (int i = 0; i < nbRoom - 1; i++)
-        {
-            GenerateRoom(ref genParam);
-        }
-
-        GenerateBossRoom(ref genParam);
-
-        // TODO : spawn things to hides the holes
-        foreach (var listDoors in genParam.availableDoors)
-        {
-            foreach (var door in listDoors.Value)
-            {
-                GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
-                go.transform.Rotate(0, door.Rotation % 360, 0);
-                go.transform.parent = gameObject.transform;
-            }
-        }
     }
 
     void GenerateRoom(ref GenerationParam genParam)
@@ -266,7 +240,7 @@ public class MapGenerator : MonoBehaviour
 
             // Destroy used door
             genParam.availableDoors[exitDoor.Rotation].Remove(exitDoor);
-            // removed door
+            // Removed door
             doorsGenerator.RemoveDoor(entranceDoor);
 
             // Add the new doors from the new room into the possible candidates
@@ -274,15 +248,13 @@ public class MapGenerator : MonoBehaviour
 
             genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
 
-            roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
-            roomGO.transform.Find("RoomGenerator").gameObject.SetActive(false);
-            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
-            roomGO.transform.parent = gameObject.transform;
+            InitiateGoRoom(roomGO);
+
             hasGenerated = true;
         }
     }
 
-    private void InstantiateLobby(ref GenerationParam genParam)
+    private void GenerateLobbyRoom(ref GenerationParam genParam)
     {
         GameObject roomGO = Instantiate(roomLobby[GameAssets.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
 
@@ -293,6 +265,45 @@ public class MapGenerator : MonoBehaviour
         Destroy(doorsGenerator);
 
         genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
+        roomGO.transform.parent = gameObject.transform;
+    }
+
+    private void GenerateBossRoom(ref GenerationParam genParam)
+    {
+        Door exitDoor = genParam.GetFarestDoor();
+        GameObject roomBossGO = Instantiate(roomBoss[0]);
+        DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+
+        Door entranceDoor = new Door();
+        for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
+        {
+            entranceDoor = doorsGenerator.doors[i];
+
+            if (((entranceDoor.Rotation + 180f) % 360f) == exitDoor.Rotation)
+            {
+                break;
+            }
+        }
+
+        // set the roomGO position depanding on the door's position
+        roomBossGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position;
+
+        InitiateGoRoom(roomBossGO);
+
+        // delete exit door from genParam
+        genParam.RemoveDoor(exitDoor);
+    }
+
+    private void InitiateGoRoom(GameObject roomGO)
+    {
+        // Generate one of the seed room and delete the other's
+        roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
+
+        // SetActive object's of room
+        roomGO.transform.Find("RoomGenerator").GetChild(0).Find("Enemies").gameObject.SetActive(false);
+        roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
+
+        // Set parent go
         roomGO.transform.parent = gameObject.transform;
     }
 }

@@ -23,7 +23,8 @@ public abstract class Projectile : MonoBehaviour, IProjectile
     public void Move(Vector3 _direction)
     {
         _direction.Normalize();
-        transform.Translate(_direction * speed * Time.deltaTime);
+        transform.Translate(_direction * speed * Time.deltaTime, Space.World);
+        transform.rotation = Quaternion.LookRotation(_direction);
     }
 
     protected abstract void Update();

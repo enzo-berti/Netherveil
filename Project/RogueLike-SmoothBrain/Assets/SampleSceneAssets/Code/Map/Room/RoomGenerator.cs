@@ -22,8 +22,6 @@ public class RoomGenerator : MonoBehaviour
 
     public void Generate()
     {
-        // DEBUG GameManager.Instance.seed.Set(123456);
-
         GenerateRoomSeed();
     }
 
@@ -45,7 +43,7 @@ public class RoomGenerator : MonoBehaviour
             {
                 if (i != keepRoomIndex)
                 {
-                    Destroy(rooms[i]);
+                    DestroyImmediate(rooms[i]);
                 }
             }
         }

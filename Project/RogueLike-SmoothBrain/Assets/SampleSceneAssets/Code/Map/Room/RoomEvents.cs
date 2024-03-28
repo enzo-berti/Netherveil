@@ -3,28 +3,46 @@ using UnityEngine;
 
 public class RoomEvents : MonoBehaviour
 {
-    public delegate void Enter(ref MapData mapData);
-    public delegate void Exit(ref MapData mapData);
+    private RoomData mapData;
 
-    private MapData mapData = new MapData();
+    private GameObject room;
+    private GameObject enemies;
+    private GameObject traps;
+    private NavMeshSurface navMeshSurface;
+
+    private void Start()
+    {
+        // find room go's
+        room = transform.parent.Find("RoomGenerator").GetChild(0).gameObject;
+        enemies = room.transform.Find("Enemies").gameObject;
+        traps = room.transform.Find("Traps").gameObject;
+        navMeshSurface = GetComponent<NavMeshSurface>();
+
+        enemies.SetActive(false);
+
+        // create data of the map
+        mapData = new RoomData(enemies);
+    }
 
     private void EnterEvents()
     {
-        GetComponent<NavMeshSurface>().enabled = true;
-        transform.parent.Find("RoomGenerator").gameObject.SetActive(true);
+        navMeshSurface.enabled = true;
+        enemies.SetActive(true);
     }
 
     private void ExitEvents()
     {
-        GetComponent<NavMeshSurface>().enabled = false;
-        transform.parent.Find("RoomGenerator").gameObject.SetActive(false);
+        navMeshSurface.enabled = false;
+        enemies.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            MapUtilities.EnterEvents?.Invoke(ref mapData);
+            RoomUtilities.roomData = mapData;
+            Debug.Log(RoomUtilities.roomData.NumEnemies);
+            RoomUtilities.EnterEvents?.Invoke(ref mapData);
             EnterEvents();
         }
     }
@@ -33,7 +51,7 @@ public class RoomEvents : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            MapUtilities.ExitEvents?.Invoke(ref mapData);
+            RoomUtilities.ExitEvents?.Invoke(ref mapData);
             ExitEvents();
         }
     }
