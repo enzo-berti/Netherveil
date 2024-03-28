@@ -20,7 +20,8 @@ public abstract class Entity : MonoBehaviour
     public List<Status> AppliedStatusList = new();
     protected List<Status> statusToApply = new();
     [HideInInspector] public int State;
-    private void Awake()
+
+    protected virtual void Awake()
     {
         for (int i = 0; i < statusNameToApply.Count; i++)
         {
