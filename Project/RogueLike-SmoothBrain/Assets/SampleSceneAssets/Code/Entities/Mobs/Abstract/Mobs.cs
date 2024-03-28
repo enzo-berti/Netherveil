@@ -11,7 +11,7 @@ using UnityEditor;
 public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
-    protected SkinnedMeshRenderer skinnedMeshRenderer;
+    protected Renderer mRenderer;
     protected Entity[] nearbyEntities;
     protected EnemyLifeBar lifeBar;
 
@@ -19,7 +19,7 @@ public abstract class Mobs : Entity
     {
         base.Start();
         agent = GetComponent<NavMeshAgent>();
-        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        mRenderer = GetComponentInChildren<Renderer>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
 
@@ -57,13 +57,13 @@ public abstract class Mobs : Entity
 
     protected IEnumerator HitRoutine()
     {
-        skinnedMeshRenderer.material.SetInt("_isHit", 1);
+        mRenderer.material.SetInt("_isHit", 1);
         yield return new WaitForSeconds(0.05f);
-        skinnedMeshRenderer.material.SetInt("_isHit", 0);
+        mRenderer.material.SetInt("_isHit", 0);
         yield return new WaitForSeconds(0.05f);
-        skinnedMeshRenderer.material.SetInt("_isHit", 1);
+        mRenderer.material.SetInt("_isHit", 1);
         yield return new WaitForSeconds(0.05f);
-        skinnedMeshRenderer.material.SetInt("_isHit", 0);
+        mRenderer.material.SetInt("_isHit", 0);
     }
 
 #if UNITY_EDITOR

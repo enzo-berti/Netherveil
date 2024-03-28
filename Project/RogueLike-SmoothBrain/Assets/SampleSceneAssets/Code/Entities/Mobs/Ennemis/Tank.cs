@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.InputSystem;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,10 +15,14 @@ public class Tank : Mobs, ITank
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
+    [SerializeField] CapsuleCollider shockwaveCollider;
+    bool cooldownSpeAttack = false;
+    float specialAttackTimer = 0f;
+    readonly float SPECIAL_ATTACK_TIMER = 4f;
 
-    [Header("Tank Parameters")]
-    [SerializeField, Range(0f, 360f)] private float angle = 120f;
-    //[SerializeField] private float range = 5f;
+    bool cooldownBasicAttack = false;
+    float basicAttackTimer = 0f;
+    readonly float BASIC_ATTACK_TIMER = 0.75f;
 
     protected override void Start()
     {
@@ -26,23 +32,36 @@ public class Tank : Mobs, ITank
 
     public void Attack(IDamageable damageable)
     {
-        Destroy(gameObject); //wtf?
+        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF) * 3);
 
-        //int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
-        //onHit?.Invoke(damageable);
-        //damageable.ApplyDamage(damages);
+        onHit?.Invoke(damageable);
+        damageable.ApplyDamage(damages);
+        ApplyKnockback(damageable);
+    }
+
+    public void BasicAttack(IDamageable damageable)
+    {
+        int damages = (int)(stats.GetValue(Stat.ATK) * stats.GetValue(Stat.ATK_COEFF));
+
+        onHit?.Invoke(damageable);
+        damageable.ApplyDamage(damages);
     }
 
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
-        Stats.IncreaseValue(Stat.HP, -_value, false);
+        if (stats.GetValue(Stat.HP) <= 0)
+            return;
+
+        Stats.DecreaseValue(Stat.HP, _value, false);
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (hasAnimation)
         {
-            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             //add SFX here
+            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            StartCoroutine(HitRoutine());
         }
+
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
@@ -65,45 +84,75 @@ public class Tank : Mobs, ITank
         {
             yield return null;
 
-            //    Hero player = PhysicsExtensions.OverlapVisionCone(transform.position, angle, range, transform.forward)
-            //        .Select(x => x.GetComponent<Hero>())
-            //        .Where(x => x != null)
-            //        .FirstOrDefault();
+            Hero player = PhysicsExtensions.OverlapVisionCone(transform.position, 360, 10f, transform.forward)
+                .ToList()
+                .Select(x => x.GetComponent<Hero>())
+                .Where(x => x != null)
+                .FirstOrDefault();
 
-            //    if (player)
-            //    {
-            //        // Player detect
-            //        if (agent.velocity.magnitude == 0f && Vector3.Distance(transform.position, player.transform.position) < 2f)
-            //        {
-            //            // Do attack
-            //        }
-            //        else
-            //        {
-            //            MoveTo(player.transform.position);
-            //        }
-            //    }
+            if (cooldownSpeAttack)
+            {
+                specialAttackTimer += Time.deltaTime;
+                if (specialAttackTimer >= SPECIAL_ATTACK_TIMER)
+                {
+                    cooldownSpeAttack = false;
+                    specialAttackTimer = 0f;
+                }
+            }
+
+            if (cooldownBasicAttack)
+            {
+                basicAttackTimer += Time.deltaTime;
+                if (basicAttackTimer >= BASIC_ATTACK_TIMER)
+                {
+                    cooldownBasicAttack = false;
+                    basicAttackTimer = 0f;
+                }
+            }
+
+            if (player != null)
+            {
+                // Player detect
+                if (Vector3.Distance(transform.position, player.transform.position) <= shockwaveCollider.gameObject.transform.localScale.z && !cooldownSpeAttack)
+                {
+                    agent.isStopped = true;
+                    yield return new WaitForSeconds(0.4f);
+                    AttackCollide();
+                    agent.isStopped = false;
+                    cooldownSpeAttack = true;
+                }
+                else if (agent.velocity.magnitude == 0f && Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && !cooldownBasicAttack)
+                {
+                    BasicAttack(player);
+                    cooldownBasicAttack = true;
+                }
+                else
+                {
+                    MoveTo(player.transform.position);
+                }
+            }
         }
     }
 
-    protected override IEnumerator EntityDetection()
+    public void AttackCollide(bool debugMode = true)
     {
-        while (true)
+        if (debugMode)
         {
-            yield return null;
+            shockwaveCollider.gameObject.SetActive(true);
+        }
+
+        Collider[] tab = PhysicsExtensions.CapsuleOverlap(shockwaveCollider, LayerMask.GetMask("Entity"));
+        if (tab.Length > 0)
+        {
+            foreach (Collider col in tab)
+            {
+                if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != gameObject)
+                {
+                    Attack(col.gameObject.GetComponent<IDamageable>());
+                }
+            }
         }
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (Selection.activeGameObject != gameObject)
-            return;
-
-        DisplayVisionRange(angle);
-        DisplayAttackRange(angle);
-        DisplayInfos();
-    }
-#endif
 }
 
 // |--------------|
