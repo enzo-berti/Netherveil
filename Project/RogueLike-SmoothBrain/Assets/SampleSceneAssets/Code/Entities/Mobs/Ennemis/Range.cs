@@ -21,29 +21,48 @@ public class Range : Mobs, IRange
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
+    private float fleeTimer = 4;
+    [SerializeField] GameObject pfBomb;
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;
 
     private bool isFighting = false;
     //private RangeState state;
 
-    private float fleeTimer;
     private bool isFleeing;
     private Vector3 fleeTarget;
 
     private float staggerImmunity;
     private float staggerTimer;
 
+    private bool canAttack = true;
     private float FleeingRange => (int)stats.GetValue(Stat.ATK_RANGE) / 2f;
 
+    Animator animator;
+    EnemyLifeBar lifeBar;
+
     public List<Status> StatusToApply { get => statusToApply; }
+    protected override void Start()
+    {
+        base.Start();
+
+        // getter(s) reference
+        lifeBar = GetComponentInChildren<EnemyLifeBar>();
+        animator = GetComponentInChildren<Animator>();
+
+        // common initialization
+        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+    }
 
     protected override IEnumerator EntityDetection()
     {
         while (true)
         {
             if (!agent.enabled)
+            {
+                yield return null;
                 continue;
+            }
 
             nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, isFighting ? 360 : (int)stats.GetValue(Stat.CATCH_RADIUS), (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
@@ -64,6 +83,7 @@ public class Range : Mobs, IRange
             if (!agent.enabled)
                 continue;
 
+
             Hero player = null;
             Tank[] tanks = null;
             if (nearbyEntities.Length > 0)
@@ -82,7 +102,6 @@ public class Range : Mobs, IRange
 
             // Update timer fuite
             fleeTimer = fleeTimer > 0 ? fleeTimer -= Time.deltaTime : 0;
-
             if (player)
             {
                 isFighting = true;
@@ -94,28 +113,27 @@ public class Range : Mobs, IRange
                     isFleeing = true;
                     fleeTimer = 4f;
 
-                    // si tanks à proximité
-                    if (tanks.Any() && Vector3.Distance(player.transform.position, tanks.First().transform.position) + 2f < stats.GetValue(Stat.VISION_RANGE))
-                    {
-                        Vector3 playerToTankVector = tanks.First().transform.position - player.transform.position;
-                        playerToTankVector.Normalize();
+                    Vector3 playerToEnemyVector = transform.position - player.transform.position;
+                    playerToEnemyVector.Normalize();
 
-                        fleeTarget = tanks.First().transform.position + playerToTankVector * 2f;
+                    fleeTarget = player.transform.position + playerToEnemyVector * (int)stats.GetValue(Stat.ATK_RANGE);
+
+                    //MoveTo(fleeTarget);
+                }
+                // sinon si dans la zone d'attaque, attaquer
+                else if (distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE) && canAttack)
+                {
+                    if(distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE)/2f)
+                    {
+                        CloseRangeAttack(player.transform.position);
+                        canAttack = false;
                     }
                     else
                     {
-                        Vector3 playerToEnemyVector = transform.position - player.transform.position;
-                        playerToEnemyVector.Normalize();
-
-                        fleeTarget = player.transform.position + playerToEnemyVector * (int)stats.GetValue(Stat.ATK_RANGE);
+                        LongRangeAttack(player.transform.position);
+                        
                     }
-
-                    MoveTo(fleeTarget);
-                }
-                // sinon si dans la zone d'attaque, attaquer
-                else if (distanceFromPlayer < stats.GetValue(Stat.ATK_RANGE))
-                {
-                    // Attacker
+                    
                 }
                 // sinon si pas en fuite, avancer vers le joueur
                 else if (!isFleeing)
@@ -140,13 +158,28 @@ public class Range : Mobs, IRange
             //UpdateStates();
         }
     }
+
+    private void LongRangeAttack(Vector3 positionToReach)
+    {
+        
+    }
+
+    private void CloseRangeAttack(Vector3 positionToReach)
+    {
+        GameObject bomb = Instantiate(pfBomb, this.transform.position, Quaternion.identity);
+        ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
+        exploBomb.SetTimeToExplode(1f);
+        exploBomb.Activate();
+        StartCoroutine(exploBomb.RollingToPos(positionToReach));
+    }
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
-        Stats.IncreaseValue(Stat.HP, -_value, false);
-       
+        Stats.DecreaseValue(Stat.HP, _value, false);
+
+        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+        FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
         if (hasAnimation)
         {
-            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
             //add SFX here
         }
 
