@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HealPotion : MonoBehaviour, IConsumable
 {
-    [SerializeField] float healValue;
+    [SerializeField] int healValue;
     [SerializeField] float price;
     
     public bool canBeRetrieved = true;
@@ -17,8 +17,9 @@ public class HealPotion : MonoBehaviour, IConsumable
     }
     public void OnRetrieved()
     {
-        player.Stats.IncreaseValue(Stat.HP, healValue, true);
-        FloatingTextGenerator.CreateHealText((int)healValue, player.transform.position);
+        int realHealValue = (int)(healValue * player.Stats.GetValue(Stat.HEAL_COEFF));
+        player.Stats.IncreaseValue(Stat.HP, realHealValue, true);
+        FloatingTextGenerator.CreateHealText(realHealValue, player.transform.position);
         Destroy(this.gameObject);
     }
 }
