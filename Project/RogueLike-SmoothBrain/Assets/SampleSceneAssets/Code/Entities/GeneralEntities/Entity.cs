@@ -95,7 +95,7 @@ public abstract class Entity : MonoBehaviour
 
             Vector3 temp = damageablePos - transform.position;
             Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
-            knockbackable.GetKnockback(direction, 5.0f, stats.GetValue(Stat.KNOCKBACK_COEFF));
+            knockbackable.GetKnockback(direction, stats.GetValue(Stat.KNOCKBACK_DISTANCE), stats.GetValue(Stat.KNOCKBACK_COEFF));
             FloatingTextGenerator.CreateActionText(damageableGO.transform.position, "Pushed!");
         }
     }

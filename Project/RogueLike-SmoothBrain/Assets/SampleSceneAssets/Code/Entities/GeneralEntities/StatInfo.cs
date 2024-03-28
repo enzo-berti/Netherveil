@@ -20,6 +20,7 @@ public enum Stat
     LIFE_STEAL,
     HEAL_COEFF,
     KNOCKBACK_COEFF,
+    KNOCKBACK_DISTANCE,
     STAGGER_DURATION,
 }
 

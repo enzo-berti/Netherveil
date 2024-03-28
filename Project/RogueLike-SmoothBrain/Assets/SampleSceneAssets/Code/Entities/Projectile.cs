@@ -1,12 +1,11 @@
 using UnityEngine;
 
-public class Projectile : MonoBehaviour, IProjectile
+public abstract class Projectile : MonoBehaviour, IProjectile
 {
     public DamageState elementalDamage;
     [SerializeField] protected int damage = 5;
     [SerializeField] protected float speed = 30f;
     [SerializeField] protected float lifeTime = 5f;
-    protected float startTime;
 
     public enum DamageState
     {
@@ -16,28 +15,23 @@ public class Projectile : MonoBehaviour, IProjectile
         ELECTRICITY
     }
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
-        startTime = Time.time;
+        Destroy(gameObject, lifeTime);
     }
 
     public void Move(Vector3 _direction)
     {
+        _direction.Normalize();
         transform.Translate(_direction * speed * Time.deltaTime);
-        transform.rotation = Quaternion.LookRotation(_direction);
     }
 
     protected virtual void Update()
     {
-        Move(Vector3.forward);
-
-        if (Time.time - startTime > lifeTime)
-        {
-            Destroy(gameObject);
-        }
+        Move(default);
     }
 
-    void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
         {

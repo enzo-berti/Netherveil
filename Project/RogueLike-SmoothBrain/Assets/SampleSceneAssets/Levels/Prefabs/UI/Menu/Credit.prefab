@@ -399,6 +399,7 @@ GameObject:
   - component: {fileID: 7549545968144856389}
   - component: {fileID: 4146150307886383993}
   - component: {fileID: 8360648260877822104}
+  - component: {fileID: 7841403472103940408}
   m_Layer: 0
   m_Name: Credit
   m_TagString: Untagged
@@ -460,10 +461,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onHoverEnter:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7841403472103940408}
+        m_TargetAssemblyTypeName: Outline, Assembly-CSharp
+        m_MethodName: EnableOutline
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onHoverExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7841403472103940408}
+        m_TargetAssemblyTypeName: Outline, Assembly-CSharp
+        m_MethodName: DisableOutline
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onPress:
     m_PersistentCalls:
       m_Calls:
@@ -520,6 +545,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &7841403472103940408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4321114484831281630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b1642e408d9dea4cb780918edce67dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mRenderer: {fileID: 4735592823872617186}
+  mOutlineMaterial: {fileID: 2100000, guid: 68bccb3434ef2c849aae648e9e9aef8f, type: 2}
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineThickness: 0.02
 --- !u!1 &4801575342343415583
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,10 +691,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 188
+  m_fontSize: 144
   m_fontSizeBase: 188
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 144
   m_fontStyle: 0
@@ -1573,8 +1614,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
-        type: 2}
+      objectReference: {fileID: 2100000, guid: f89a228820db81641a79548229b4e151, type: 2}
     - target: {fileID: 5949455387492123879, guid: 9329aded41fb0ae4a8bfae6d3f79be2c,
         type: 3}
       propertyPath: m_enableAutoSizing

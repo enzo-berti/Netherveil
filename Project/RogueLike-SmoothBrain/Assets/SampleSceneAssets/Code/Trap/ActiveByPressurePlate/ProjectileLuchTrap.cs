@@ -22,6 +22,6 @@ public class ProjectileLuchTrap : MonoBehaviour , IActivableTrap
     {
         AudioManager.Instance.StopSound(throwProjectilEvent, FMOD.Studio.STOP_MODE.IMMEDIATE);
         AudioManager.Instance.PlaySound(throwProjectilSFX);
-        Instantiate(itemToInstanciate, launchPos, transform.rotation);
+        Instantiate(itemToInstanciate, launchPos + GetComponentInChildren<Transform>().forward * 3, GetComponentInChildren<Transform>().rotation);
     }
 }
