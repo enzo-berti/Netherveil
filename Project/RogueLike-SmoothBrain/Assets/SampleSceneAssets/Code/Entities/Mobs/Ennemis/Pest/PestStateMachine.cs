@@ -26,7 +26,6 @@ public class PestStateMachine : Mobs, IPest
     private StateFactory<PestStateMachine> factory;
 
     // declare reference variables
-    private EnemyLifeBar lifeBar;
     private Animator animator;
 
     // mobs variables
@@ -66,11 +65,9 @@ public class PestStateMachine : Mobs, IPest
         currentState = factory.GetState<PestPatrolState>();
 
         // getter(s) reference
-        lifeBar = GetComponentInChildren<EnemyLifeBar>();
         animator = GetComponentInChildren<Animator>();
 
         // common initialization
-        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
         GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
 
         // hashing animation
