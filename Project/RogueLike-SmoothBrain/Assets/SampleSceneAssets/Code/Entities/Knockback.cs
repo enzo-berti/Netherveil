@@ -76,7 +76,7 @@ public class Knockback : MonoBehaviour
 
         float timeElapsed = 0f;
         Vector3 startPosition = transform.position;
-        Vector3 targetPosition = direction * distance;
+        Vector3 targetPosition = transform.position + direction * distance;
 
         float duration = distance / speed;
 
