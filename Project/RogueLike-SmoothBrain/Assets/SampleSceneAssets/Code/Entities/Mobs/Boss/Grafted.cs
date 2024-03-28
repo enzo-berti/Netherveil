@@ -17,8 +17,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("Boss parameters")]
     Hero player = null;
     bool playerHit = false;
-    Attacks currentAttack;
-    float attackCooldown;
 
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
@@ -65,9 +63,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         IDLE
     }
 
-    //Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+    Attacks currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
     AttackState attackState = AttackState.IDLE;
-    //float attackCooldown = 0; // Commenter par Dorian -> WARNING
+    float attackCooldown = 0; // Commenter par Dorian -> WARNING
     bool hasProjectile = true;
 
     protected override IEnumerator Brain()
@@ -211,14 +209,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     void ThrowProjectile()
     {
         hasProjectile = false;
-        //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+        currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
     }
 
     void RetrieveProjectile()
     {
         hasProjectile = true;
-        //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+        currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
     }
 
@@ -275,9 +273,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     thrustCDTimer = 0;
                     thrustCounter = 0;
-                    //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+                    currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
-                    //attackCooldown = 2f; // Commenter par Dorian -> WARNING
+                    attackCooldown = 2f;
                 }
                 break;
         }
@@ -330,7 +328,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 AOETimer += Time.deltaTime;
                 if (AOETimer >= AOEDuration)
                 {
-                    //currentAttack = Attacks.NONE; // Commenter par Dorian -> WARNING
+                    currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
                     playerHit = false;
 
@@ -340,7 +338,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     AOETimer = 0;
                     dashPivot.localPosition = originalPos;
 
-                    //attackCooldown = 0.5f; // Commenter par Dorian -> WARNING
+                    attackCooldown = 0.5f;
                     DisableHitboxes();
                 }
             }
