@@ -15,7 +15,7 @@ public class ProjectileLuchTrap : MonoBehaviour , IActivableTrap
 
     private void Start()
     {
-        launchPos = GetComponentInChildren<Transform>().position;
+        launchPos = transform.GetChild(0).position;
     }
 
     public void Active()

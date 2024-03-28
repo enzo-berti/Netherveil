@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Rigidbody))]
 public class Knockback : MonoBehaviour
 {
     private NavMeshAgent agent;
@@ -72,26 +71,38 @@ public class Knockback : MonoBehaviour
 
     protected IEnumerator ApplyKnockbackCharacterController(Vector3 direction, float distance, float speed)
     {
-        //characterController.enabled = false;
+        characterController.enabled = false;
 
-        //float timeElapsed = 0f;
-        //Vector3 startPosition = transform.position;
-        //Vector3 targetPosition = transform.position + direction * distance;
+        float timeElapsed = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = transform.position + direction * distance;
 
-        //float duration = distance / speed;
+        float duration = distance / speed;
 
-        //while (timeElapsed < duration)
-        //{
-        //    timeElapsed += Time.deltaTime;
-        //    float t = Mathf.Clamp01(timeElapsed / duration);
-        //    transform.position = Vector3.Lerp(startPosition, targetPosition, t);
-        //    yield return null;
-        //}
+        bool hitObstacle = false;
 
-        //transform.position = targetPosition;
-        //characterController.enabled = true;
-        //knockbackRoutine = null;
-        yield return null;
+        while (timeElapsed < duration && !hitObstacle)
+        {
+            timeElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(timeElapsed / duration);
+
+            Vector3 lastPos = transform.position;
+            Vector3 nextPos = Vector3.Lerp(startPosition, targetPosition, t);
+
+            if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos)))
+            {
+                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
+            }
+            else
+            {
+                transform.position = nextPos;
+            }
+
+            yield return null;
+        }
+
+        characterController.enabled = true;
+        knockbackRoutine = null;
     }
 }
 
