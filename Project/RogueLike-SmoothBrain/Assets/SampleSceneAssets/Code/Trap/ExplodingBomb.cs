@@ -102,6 +102,8 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         }
     }
 
+    
+
     private float BombSquareFunction(float y, float timer, float power)
     {
         return -16* timer * timer + 16 * timer + y;
