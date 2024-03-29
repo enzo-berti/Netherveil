@@ -1,64 +1,70 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class LevelLoader
+public class LevelLoader : MonoBehaviour
 {
-    private static AsyncOperation asyncOperation;
-    private static Transition[] levelTransitions;
+    private AsyncOperation asyncOperation;
+    private List<Transition> levelTransitions = new List<Transition>();
 
-    static LevelLoader()
+    private void Awake()
     {
-        levelTransitions = Resources.LoadAll<Transition>("");
+        Transition[] levelTransitionsTemp = Resources.LoadAll<Transition>("");
+        foreach (var transition in levelTransitionsTemp)
+        {
+            levelTransitions.Add(Instantiate(transition, transform));
+            levelTransitions.Last().name = transition.name;
+        }
     }
 
-    public static async Task LoadScene(string sceneName, int transitionIndex)
+    public void LoadScene(string sceneName, int transitionIndex)
     {
         int sceneIndex = GetIndexSceneByName(sceneName);
 
-        await LoadScene(sceneIndex, transitionIndex);
+        LoadScene(sceneIndex, transitionIndex);
     }
 
-    public static async Task LoadScene(string sceneName, string transitionName)
+    public void LoadScene(string sceneName, string transitionName)
     {
         int sceneIndex = GetIndexSceneByName(sceneName);
         int transitionIndex = GetIndexTransitionByName(transitionName);
 
-        await LoadScene(sceneIndex, transitionIndex);
+        LoadScene(sceneIndex, transitionIndex);
     }
 
-    public static async Task LoadScene(int sceneIndex, string transitionName)
+    public void LoadScene(int sceneIndex, string transitionName)
     {
         int transitionIndex = GetIndexTransitionByName(transitionName);
 
-        await LoadScene(sceneIndex, transitionIndex);
+        LoadScene(sceneIndex, transitionIndex);
     }
 
-    public static async Task LoadScene(int sceneIndex, int transitionIndex)
+    public void LoadScene(int sceneIndex, int transitionIndex)
     {
-        if (transitionIndex < 0 || transitionIndex >= levelTransitions.Length)
+        if (transitionIndex < 0 || transitionIndex >= levelTransitions.Count)
         {
             Debug.LogWarning($"No transition with the index {transitionIndex} !");
             return;
         }
+        if (sceneIndex < 0 || sceneIndex >= SceneManager.sceneCountInBuildSettings)
+        {
+            Debug.LogError($"No scene with the index {sceneIndex} !");
+            return;
+        }
 
-        // Transition
-        Transition instance = GameObject.Instantiate(levelTransitions[transitionIndex]);
-        await instance.PlayTransitionAsync();
-
-        // Scene Loading
-        await LoadScene(sceneIndex);
+        StartCoroutine(LoadSceneRoutine(sceneIndex, transitionIndex));
     }
 
-    public static async Task LoadScene(string sceneName)
+    public void LoadScene(string sceneName)
     {
         int sceneIndex = GetIndexSceneByName(sceneName);
 
-        await LoadScene(sceneIndex);
+        LoadScene(sceneIndex);
     }
 
-    public static async Task LoadScene(int sceneIndex)
+    public void LoadScene(int sceneIndex)
     {
         if (sceneIndex < 0 || sceneIndex >= SceneManager.sceneCountInBuildSettings)
         {
@@ -66,23 +72,10 @@ public static class LevelLoader
             return;
         }
 
-        asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
-        asyncOperation.allowSceneActivation = false;
-
-        await WaitForSceneLoad();
-
-        asyncOperation.allowSceneActivation = true;
+        StartCoroutine(LoadSceneRoutine(sceneIndex));
     }
 
-    private static async Task WaitForSceneLoad()
-    {
-        while (asyncOperation.progress < 0.9f)
-        {
-            await Task.Delay(100);
-        }
-    }
-
-    private static int GetIndexSceneByName(string name)
+    private int GetIndexSceneByName(string name)
     {
         for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
         {
@@ -98,8 +91,26 @@ public static class LevelLoader
         return -1;
     }
 
-    private static int GetIndexTransitionByName(string name)
+    private int GetIndexTransitionByName(string name)
     {
-        return System.Array.IndexOf(levelTransitions.Select(x => x.name).ToArray(), name);
+        return levelTransitions.Select(x => x.name).ToList().IndexOf(name);
+    }
+
+    private IEnumerator LoadSceneRoutine(int sceneIndex)
+    {
+        asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
+    }
+
+    private IEnumerator LoadSceneRoutine(int sceneIndex, int transitionIndex)
+    {
+        asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        asyncOperation.allowSceneActivation = false;
+
+        yield return levelTransitions[transitionIndex].ToggleTransition(true);
+        yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
+
+        asyncOperation.allowSceneActivation = true;
+        levelTransitions[transitionIndex].ToggleTransition(false);
     }
 }
