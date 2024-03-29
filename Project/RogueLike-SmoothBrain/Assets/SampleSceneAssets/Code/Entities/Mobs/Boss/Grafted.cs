@@ -13,10 +13,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public List<Status> StatusToApply => statusToApply;
 
-    [Header("Sounds")]
-    [SerializeField] EventReference bossMusicSFX;
-    private FMOD.Studio.EventInstance bossMusicEvent;
-
     enum Attacks
     {
         THRUST,
@@ -33,6 +29,27 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         RECOVERING,
         IDLE
     }
+
+    [System.Serializable]
+    private class GraftedSounds
+    {
+        public EventReference deathSound;
+        public EventReference hitSound;
+        public EventReference plantInGroundSound;
+        public EventReference projectileLaunchedSound;
+        public EventReference projectileHitMapSound;
+        public EventReference projectileHitPlayerSound;
+        public EventReference thrustSound;
+        public EventReference introSound;
+        public EventReference retrievingProjectileLaunchedSound;
+        public EventReference spinAttackSound;
+        public EventReference stretchSound;
+        public EventReference weaponOutSound;
+        public EventReference weaponInSound;
+        public EventReference walkingSound;
+    }
+    [Header("Sounds")]
+    [SerializeField] private GraftedSounds bossSounds;
 
     Attacks currentAttack = Attacks.NONE;
     Attacks lastAttack = Attacks.NONE;
@@ -79,14 +96,16 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         // mettre la cam entre le joueur et le boss
 
-        //AudioManager.Instance.PlaySound(bossMusicSFX);
+        //AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         // stop la musique
 
         // remettre la camera au dessus du joueur
+
+        if (projectile) Destroy(projectile.gameObject);
     }
 
     protected override void Start()
