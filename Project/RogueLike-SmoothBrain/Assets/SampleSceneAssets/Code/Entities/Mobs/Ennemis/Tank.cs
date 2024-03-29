@@ -1,7 +1,7 @@
+using FMODUnity;
 using System.Collections;
-using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.VFX;
+using UnityEngine;
 
 public class Tank : Mobs, ITank
 {
@@ -21,6 +21,13 @@ public class Tank : Mobs, ITank
     float basicAttackTimer = 0f;
     readonly float BASIC_ATTACK_TIMER = 0.75f;
     Hero player;
+
+    
+    [SerializeField] EventReference shockwaveSFX;
+    [SerializeField] EventReference punchSFX;
+    [SerializeField] EventReference hitSFX;
+    [Header("SFXs")]
+    [SerializeField] EventReference deadSFX;
 
     protected override void Start()
     {
@@ -58,6 +65,7 @@ public class Tank : Mobs, ITank
         {
             //add SFX here
             FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            AudioManager.Instance.PlaySound(hitSFX);
             StartCoroutine(HitRoutine());
         }
 
@@ -69,6 +77,7 @@ public class Tank : Mobs, ITank
 
     public void Death()
     {
+        AudioManager.Instance.PlaySound(deadSFX);
         Destroy(gameObject);
     }
 
@@ -120,11 +129,13 @@ public class Tank : Mobs, ITank
                 AttackCollide();
                 cooldownSpeAttack = true;
                 vfxStopper.PlayVFX();
+                AudioManager.Instance.PlaySound(shockwaveSFX);
             }
             else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
             {
                 BasicAttack(player);
                 cooldownBasicAttack = true;
+                AudioManager.Instance.PlaySound(punchSFX);
             }
             else
             {
