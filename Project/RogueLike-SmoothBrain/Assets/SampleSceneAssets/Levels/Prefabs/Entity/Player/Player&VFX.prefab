@@ -1145,7 +1145,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b316b3a27bc2747b3aaba9d80a4f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spearAttacks:
+  ChargedAttack:
+  - {fileID: 3162097009205579242}
+  - {fileID: 4918555150882924578}
+  - {fileID: 1174136246685776134}
+  - {fileID: 5239971407784389308}
+  SpearAttacks:
   - data:
     - {fileID: 8567801458383647344}
   - data:
@@ -1153,70 +1158,64 @@ MonoBehaviour:
     - {fileID: 8299728062014594254}
   - data:
     - {fileID: 8567801458383647344}
-  chargedAttack:
-  - {fileID: 3162097009205579242}
-  - {fileID: 4918555150882924578}
-  - {fileID: 1174136246685776134}
-  - {fileID: 5239971407784389308}
-  hero: {fileID: 0}
   VFXWrapper: {fileID: 2553172325082090671}
-  spearAttacksVFX:
+  SpearAttacksVFX:
   - {fileID: 6270312603214981742}
   - {fileID: 3576489210391077963}
   - {fileID: 6270312603214981742}
-  hitVFX: {fileID: 5619644451371436711}
-  dashVFX: {fileID: 2934421512825703588}
-  chargedAttackVFX: {fileID: 4339925852799118057}
-  dashSFX:
+  HitVFX: {fileID: 5619644451371436711}
+  DashVFX: {fileID: 2934421512825703588}
+  ChargedAttackVFX: {fileID: 4339925852799118057}
+  DashSFX:
     Guid:
       Data1: 1298710530
       Data2: 1200650640
       Data3: -1147760464
       Data4: 1052327008
     Path: event:/Player/PlayerDash
-  hitSFX:
+  HitSFX:
     Guid:
       Data1: 1411913334
       Data2: 1298929135
       Data3: 1596140962
       Data4: 1747856450
     Path: event:/Player/PlayerHit
-  deadSFX:
+  DeadSFX:
     Guid:
       Data1: -1065008551
       Data2: 1240623093
       Data3: -148541528
       Data4: -499186190
     Path: event:/Player/PlayerDeath
-  throwSpearSFX:
+  ThrowSpearSFX:
     Guid:
       Data1: -194858840
       Data2: 1109465189
       Data3: -350840411
       Data4: -1209571899
     Path: event:/Player/ThrowSpear
-  retrieveSpearSFX:
+  RetrieveSpearSFX:
     Guid:
       Data1: 1486363685
       Data2: 1283774188
       Data3: -240864859
       Data4: -1646648715
     Path: event:/Player/RetrieveSpear
-  chargedAttackMaxSFX:
+  ChargedAttackMaxSFX:
     Guid:
       Data1: 1241253240
       Data2: 1150628473
       Data3: 732896916
       Data4: 1283348218
     Path: event:/Player/SpearSpinMax
-  chargedAttackReleaseSFX:
+  ChargedAttackReleaseSFX:
     Guid:
       Data1: -397771047
       Data2: 1152290493
       Data3: -1510668634
       Data4: -925195866
     Path: event:/Player/SpearSpinReleased
-  attacksSFX:
+  AttacksSFXs:
   - Guid:
       Data1: -479215713
       Data2: 1228942623
@@ -1284,16 +1283,6 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 3
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 6
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 15
       coeff: 0
       maxValue: 0
       minValue: 0

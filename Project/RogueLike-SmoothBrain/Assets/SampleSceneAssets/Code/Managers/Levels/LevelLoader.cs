@@ -11,11 +11,9 @@ public class LevelLoader : MonoBehaviour
 
     private void Awake()
     {
-        Transition[] levelTransitionsTemp = Resources.LoadAll<Transition>("");
-        foreach (var transition in levelTransitionsTemp)
+        foreach (Transform transition in transform)
         {
-            levelTransitions.Add(Instantiate(transition, transform));
-            levelTransitions.Last().name = transition.name;
+            levelTransitions.Add(transition.GetComponent<Transition>());
         }
     }
 
