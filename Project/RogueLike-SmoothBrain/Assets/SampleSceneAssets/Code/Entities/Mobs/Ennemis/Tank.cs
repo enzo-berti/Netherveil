@@ -38,10 +38,13 @@ public class Tank : Mobs, ITank
 
     public void Attack(IDamageable damageable)
     {
-        int damages = (int)(stats.GetValue(Stat.ATK) * 3);
+        if ((damageable as MonoBehaviour).CompareTag("Player"))
+        {
+            int damages = (int)(stats.GetValue(Stat.ATK) * 3);
 
-        onHit?.Invoke(damageable);
-        damageable.ApplyDamage(damages);
+            onHit?.Invoke(damageable);
+            damageable.ApplyDamage(damages);
+        }
         ApplyKnockback(damageable);
     }
 
