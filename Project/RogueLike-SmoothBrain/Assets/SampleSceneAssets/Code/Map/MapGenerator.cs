@@ -22,8 +22,10 @@ public struct GenerationParam
     public Dictionary<RoomType, int> nbRoom;
     public Dictionary<float, List<Door>> availableDoors;
 
+
     public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
     {
+
         nbRoom = new Dictionary<RoomType, int>
         {
             { RoomType.Normal, nbNormal },
@@ -139,10 +141,11 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
     [SerializeField] private List<GameObject> obstructionsDoor;
+    [SerializeField] int RoomNumber;
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: 0));
+        GenerateMap(new GenerationParam(nbNormal: RoomNumber));
     }
 
     private void GenerateMap(GenerationParam genParam)
@@ -211,6 +214,7 @@ public class MapGenerator : MonoBehaviour
             // instantiate room with first availableDoors transform then remove it
             int prefabIndex = GameAssets.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
             GameObject roomGO = Instantiate(roomNormal[prefabIndex]); // TODO : add random selection
+            roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Normal;
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(genParam);
@@ -258,6 +262,8 @@ public class MapGenerator : MonoBehaviour
     {
         GameObject roomGO = Instantiate(roomLobby[GameAssets.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
 
+        roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Lobby;
+
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(genParam);
 
@@ -273,6 +279,7 @@ public class MapGenerator : MonoBehaviour
         Door exitDoor = genParam.GetFarestDoor();
         GameObject roomBossGO = Instantiate(roomBoss[0]);
         DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+        roomBossGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Boss;
 
         Door entranceDoor = new Door();
         for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
