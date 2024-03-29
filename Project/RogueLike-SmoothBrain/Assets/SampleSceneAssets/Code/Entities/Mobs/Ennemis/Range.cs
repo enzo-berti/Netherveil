@@ -26,15 +26,10 @@ public class Range : Mobs, IRange
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;
 
-
-    private float staggerImmunity;
-    private float staggerTimer;
-
     private bool canAttack = true;
     private bool isFleeing = false;
     private bool isGoingOnPlayer = false;
     private bool isAttacking = false;
-    private bool atPosToAttack = false;
     private bool isSmoothCoroutineOn = false;
     private float DistanceToFlee
     {
@@ -96,7 +91,6 @@ public class Range : Mobs, IRange
             else if (!isGoingOnPlayer && !isFleeing && canAttack && !isAttacking)
             {
                 //Debug.Log("Go on player");
-                atPosToAttack = false;
                 isGoingOnPlayer = true;
                 Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 7);
                 Vector3 pointToReach3D = new Vector3(pointToReach2D.x, this.transform.position.y, pointToReach2D.y);
@@ -136,8 +130,6 @@ public class Range : Mobs, IRange
             yield return new WaitUntil(() => isSmoothCoroutineOn == false);
         }
         isGoingOnPlayer = false;
-        atPosToAttack = true;
-        Debug.Log("stop going on player");
     }
 
     private IEnumerator GoSmoothToPosition(Vector3 posToReach)
@@ -169,7 +161,6 @@ public class Range : Mobs, IRange
         StartCoroutine(exploBomb.ThrowToPos(positionToReach, timeToThrow));
         exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
         exploBomb.Activate();
-        atPosToAttack = false;
         yield return new WaitForSeconds(1f);
         isAttacking = false;
         yield return new WaitForSeconds(1f);
@@ -195,23 +186,35 @@ public class Range : Mobs, IRange
         }
     }
 
+    /// <summary>
+    /// Get a random path with multiple dashes to reach a point
+    /// </summary>
+    /// <param name="posToReach"></param>
+    /// <param name="nbDash"></param>
+    /// <returns></returns>
     public List<Vector3> GetDashesPath(Vector3 posToReach, int nbDash)
     {
         List<Vector3> path = new()
         {
             this.transform.position
         };
+
         float distance = Vector3.Distance(transform.position, posToReach);
+
         for (int i = 1; i < nbDash; i++)
         {
+            // We avoid y value because we only move in x and z
             Vector2 posToReach2D = new(posToReach.x, posToReach.z);
+
+            // Virtually get the "current" position of the dasher ( get the position he reached after his previous dash )
             Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
-            Vector2 PlayerEnemyVector = posToReach2D - curPos2D;
-            Vector2 posOnCone = GetPointOnCone(curPos2D, PlayerEnemyVector, distance/nbDash, 60);
+
+            Vector2 direction = posToReach2D - curPos2D;
+            Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance/nbDash, 60);
             path.Add(new Vector3(posOnCone.x, this.transform.position.y, posOnCone.y));
         }
+        // We finally add the position that we want to reach after every dash
         path.Add(posToReach);
-        Debug.Log(Vector3.Distance(posToReach, playerTransform.position));
         return path;
     }
     public Vector2 GetPointOnCircle(Vector2 center, float radius)
