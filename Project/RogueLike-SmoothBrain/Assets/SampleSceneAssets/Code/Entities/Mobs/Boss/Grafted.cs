@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -11,6 +12,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
+
+    [Header("Sounds")]
+    [SerializeField] EventReference bossMusicSFX;
+    private FMOD.Studio.EventInstance bossMusicEvent;
 
     enum Attacks
     {
@@ -70,6 +75,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     void OnEnable()
     {
         // jouer l'anim de début de combat
+
+        //AudioManager.Instance.PlaySound(bossMusicSFX);
     }
 
     protected override void Start()
@@ -104,22 +111,21 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
 
                 // Attacks
-                //if (attackCooldown > 0)
-                //{
-                //    attackState = AttackState.IDLE;
-                //    attackCooldown -= Time.deltaTime;
-                //    if (attackCooldown < 0) attackCooldown = 0;
-                //}
-                //else if (attackCooldown == 0)
-                //{
-                //    //currentAttack = (Attacks)Random.Range(0, 3);
-                //    currentAttack = Attacks.RANGE;
-                //}
+                if (attackCooldown > 0)
+                {
+                    attackState = AttackState.IDLE;
+                    attackCooldown -= Time.deltaTime;
+                    if (attackCooldown < 0) attackCooldown = 0;
+                }
+                else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
+                {
+                    currentAttack = ChooseAttack();
+                }
 
-                // DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
-                if (Input.GetKeyDown(KeyCode.Alpha1)) currentAttack = Attacks.THRUST;
-                else if (Input.GetKeyDown(KeyCode.Alpha2)) currentAttack = Attacks.DASH;
-                else if (Input.GetKeyDown(KeyCode.Alpha3)) currentAttack = Attacks.RANGE;
+                //// DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
+                //if (Input.GetKeyDown(KeyCode.Alpha1)) currentAttack = Attacks.THRUST;
+                //else if (Input.GetKeyDown(KeyCode.Alpha2)) currentAttack = Attacks.DASH;
+                //else if (Input.GetKeyDown(KeyCode.Alpha3)) currentAttack = Attacks.RANGE;
 
                 switch (currentAttack)
                 {
@@ -249,6 +255,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
         attackCooldown = 2f;
+        playerHit = false;
     }
 
     void RetrieveProjectile()
@@ -270,6 +277,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             hasProjectile = true;
             currentAttack = Attacks.NONE;
             attackState = AttackState.IDLE;
+            playerHit = false;
         }
     }
 
@@ -329,6 +337,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
                     attackCooldown = 2f;
+                    playerHit = false;
                 }
                 break;
         }
@@ -373,7 +382,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 DisableHitboxes();
 
                 transform.position += transform.forward * dashRange.y;
+                //stats.IncreaseCoeffValue(Stat.ATK, 1);
                 AttackCollide(attacks[(int)Attacks.DASH + 1].data);
+                //stats.DecreaseCoeffValue(Stat.ATK, 1);
                 triggerAOE = true;
             }
             else
@@ -399,15 +410,55 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     }
     #endregion
 
-#if UNITY_EDITOR
-    //private void OnDrawGizmos()
-    //{
-    //    if (!Selection.Contains(gameObject))
-    //        return;
+    Attacks ChooseAttack()
+    {
+        float[] attacksProba = new float[3];
+        Attacks[] availableAttacks = new Attacks[3];
 
-    //    DisplayVisionRange(visionAngle);
-    //    DisplayAttackRange(visionAngle);
-    //    DisplayInfos();
-    //}
+        availableAttacks[0] = Attacks.THRUST;
+        availableAttacks[1] = Attacks.DASH;
+        availableAttacks[2] = Attacks.RANGE;
+
+        for (int i = 0; i < attacksProba.Length; i++)
+        {
+            attacksProba[i] = 100f / attacksProba.Length;
+        }
+
+        if (Vector3.Distance(transform.position, player.transform.position) <= stats.GetValue(Stat.ATK_RANGE)) // proche
+        {
+            attacksProba[0] += 10f;
+            attacksProba[2] -= 10f;
+        }
+        else // loin
+        {
+            attacksProba[0] -= 10f;
+            attacksProba[2] += 10f;
+        }
+
+        float randomValue = Random.Range(0, 100f);
+        float probaCounter = 0;
+
+        for (int i = 0; i < attacksProba.Length; i++)
+        {
+            probaCounter += attacksProba[i];
+            if (probaCounter >= randomValue)
+            {
+                return availableAttacks[i];
+            }
+        }
+
+        return Attacks.NONE;
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (!Selection.Contains(gameObject))
+            return;
+
+        DisplayVisionRange(visionAngle);
+        DisplayAttackRange(visionAngle);
+        DisplayInfos();
+    }
 #endif
 }
