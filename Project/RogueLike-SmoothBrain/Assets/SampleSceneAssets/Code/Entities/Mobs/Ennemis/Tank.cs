@@ -83,6 +83,7 @@ public class Tank : Mobs, ITank
 
     public void Death()
     {
+        OnDeath?.Invoke(transform.position);
         AudioManager.Instance.PlaySound(deadSFX, transform.position);
         animator.ResetTrigger("Death");
         animator.SetTrigger("Death");
