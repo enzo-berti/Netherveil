@@ -125,10 +125,8 @@ public class Tank : Mobs, ITank
 
             bool isInRange = Vector2.Distance(playerPos, tankPos) <= shockwaveCollider.gameObject.transform.localScale.z/2f;
 
-            // Player detect
             if (isInRange && !cooldownSpeAttack)
             {
-                Debug.Log("AYA");
                 AttackCollide();
                 cooldownSpeAttack = true;
                 vfxStopper.PlayVFX();
