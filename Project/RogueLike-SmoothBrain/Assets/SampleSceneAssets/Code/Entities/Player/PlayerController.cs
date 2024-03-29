@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     {
         hero = GetComponent<Hero>();
     }
-    void Start()
+    private void Start()
     {
         characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
         OverridePlayerRotation(225f, true);
     }
 
-    void Update()
+    private void Update()
     {
         UpdateAnimator();
 
@@ -102,28 +102,28 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (hero.State != (int)Entity.EntityState.DEAD && hero.State != (int)Hero.PlayerState.DASH)
-        {
-            characterController.SimpleMove(Vector3.zero);
-        }
+        if (!CanApplyGravity())
+            return;
+
+        characterController.SimpleMove(Vector3.zero);
     }
 
-    void Move()
+    private void Move()
     {
-        if (hero.State == (int)Entity.EntityState.MOVE && playerInput.Direction != Vector2.zero)
-        {
-            CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
-            ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
-            characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * playerInput.Direction.y + camRight * playerInput.Direction.x).normalized);
-        }
+        if (!CanMove())
+            return;
+
+        CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
+        ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+        characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * playerInput.Direction.y + camRight * playerInput.Direction.x).normalized);
     }
 
-    void DashMove()
+    private void DashMove()
     {
-        if (hero.State == (int)Hero.PlayerState.DASH)
-        {
-            characterController.Move(dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * playerInput.DashDir);
-        }
+        if (hero.State != (int)Hero.PlayerState.DASH)
+            return;
+
+        characterController.Move(dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * playerInput.DashDir);
     }
 
     #endregion
@@ -208,7 +208,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void JoystickOrientation()
     {
-        if(playerInput.Direction != Vector2.zero)
+        if (playerInput.Direction != Vector2.zero)
         {
             Quaternion rotation = Quaternion.LookRotation(new Vector3(playerInput.Direction.x, 0f, playerInput.Direction.y));
             rotation *= Camera.main.transform.rotation;
@@ -238,6 +238,19 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Conditions
+    private bool CanMove()
+    {
+        return hero.State == (int)Entity.EntityState.MOVE && playerInput.Direction != Vector2.zero;
+    }
+
+    private bool CanApplyGravity()
+    {
+        return hero.State != (int)Entity.EntityState.DEAD && hero.State != (int)Hero.PlayerState.DASH;
+    }
+
     #endregion
 
     #region Miscellaneous
