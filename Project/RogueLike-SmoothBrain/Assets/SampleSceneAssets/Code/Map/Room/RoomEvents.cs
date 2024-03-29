@@ -33,7 +33,7 @@ public class RoomEvents : MonoBehaviour
     {
         // global events
         RoomUtilities.roomData = mapData;
-        RoomUtilities.EnterEvents?.Invoke(ref mapData);
+        RoomUtilities.EnterEvents?.Invoke();
 
         // local events
         navMeshSurface.enabled = true;
@@ -43,7 +43,7 @@ public class RoomEvents : MonoBehaviour
     private void ExitEvents()
     {
         // global events
-        RoomUtilities.ExitEvents?.Invoke(ref mapData);
+        RoomUtilities.ExitEvents?.Invoke();
 
         // local events
         navMeshSurface.enabled = false;
@@ -53,7 +53,7 @@ public class RoomEvents : MonoBehaviour
     private void AllEnemiesEvents()
     {
         // global events
-        RoomUtilities.allEnemiesDeadEvents?.Invoke(ref mapData);
+        RoomUtilities.allEnemiesDeadEvents?.Invoke();
 
         // local events
         allEnemiesDeadCalled = true;
