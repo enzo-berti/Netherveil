@@ -6,11 +6,11 @@ using UnityEngine.SceneManagement;
 public static class LevelLoader
 {
     private static AsyncOperation asyncOperation;
-    private static LevelTransition[] levelTransitions;
+    private static Transition[] levelTransitions;
 
     static LevelLoader()
     {
-        levelTransitions = Resources.LoadAll<LevelTransition>("");
+        levelTransitions = Resources.LoadAll<Transition>("");
     }
 
     public static async Task LoadScene(string sceneName, int transitionIndex)
@@ -44,8 +44,8 @@ public static class LevelLoader
         }
 
         // Transition
-        LevelTransition instance = GameObject.Instantiate(levelTransitions[transitionIndex]);
-        await instance.PlayTransition();
+        Transition instance = GameObject.Instantiate(levelTransitions[transitionIndex]);
+        await instance.PlayTransitionAsync();
 
         // Scene Loading
         await LoadScene(sceneIndex);

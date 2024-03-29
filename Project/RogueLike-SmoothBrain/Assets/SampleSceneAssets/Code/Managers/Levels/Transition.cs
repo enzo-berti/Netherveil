@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class LevelTransition : MonoBehaviour
+public class Transition : MonoBehaviour
 {
     private Animator animator;
 
@@ -11,7 +11,7 @@ public class LevelTransition : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public async Task PlayTransition()
+    public async Task PlayTransitionAsync()
     {
         animator.SetTrigger("Start");
         await Task.Delay((int)(animator.GetCurrentAnimatorStateInfo(0).length * 1100));
