@@ -34,6 +34,7 @@ public class Knockback : MonoBehaviour
         else if (characterController != null)
         {
             characterController.gameObject.GetComponentInChildren<Animator>().SetBool("IsKnockback", true);
+            GetComponent<Hero>().State = (int)Hero.PlayerState.KNOCKBACK;
             knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(direction, distance, speed));
         }
 
@@ -103,6 +104,7 @@ public class Knockback : MonoBehaviour
         }
 
         characterController.enabled = true;
+        GetComponent<Hero>().State = (int)Entity.EntityState.MOVE;
         characterController.gameObject.GetComponentInChildren<Animator>().SetBool("IsKnockback", false);
         knockbackRoutine = null;
     }
