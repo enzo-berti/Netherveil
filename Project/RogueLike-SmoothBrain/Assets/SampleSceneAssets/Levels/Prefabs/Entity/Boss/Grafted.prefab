@@ -363,7 +363,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.936
+      value: 14.78
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -487,12 +487,12 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.96559626
-  m_Height: 1.7502979
+  m_Radius: 1.3636913
+  m_Height: 4.700145
   m_Direction: 1
-  m_Center: {x: 0, y: 0.87514895, z: -0.027897254}
+  m_Center: {x: 0.14171827, y: 2.3599448, z: 0}
 --- !u!195 &1402752229391001589
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -533,7 +533,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 1000
+      value: 750
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -543,7 +543,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 1
-      value: 1
+      value: 15
       coeff: 1
       maxValue: 0
       minValue: 0
@@ -553,7 +553,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 4
+      value: 5
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -563,7 +563,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 3
+      value: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -573,7 +573,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 20
+      value: 9
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -603,12 +603,19 @@ MonoBehaviour:
   statusNameToApply: []
   durationStatusToApply: []
   isAlly: 0
+  bossMusicSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   thrustCooldown: 0.1
   thrustCharge: 0.3
   thrustDuration: 0.2
   AOEDuration: 0.5
   dashPivot: {fileID: 2673750351035000378}
-  dashSpeed: 10
+  dashSpeed: 20
   dashRange: {x: 1, y: 6}
   projectilePrefab: {fileID: 7603897466420847472, guid: 7743d6f0624620946ba885b3ad0f8ba4,
     type: 3}
@@ -619,7 +626,8 @@ MonoBehaviour:
     - {fileID: 67471078485800353}
   - data:
     - {fileID: 7282033651682388259}
-  visionAngle: 360
+  visionAngle: 0
+  rotationSpeed: 3
 --- !u!4 &867203832160427953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
@@ -697,22 +705,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.3478006
+      value: -0.347701
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.08709173
+      value: -0.08748821
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9055556
+      value: 0.90529644
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.22675754
+      value: -0.22778988
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

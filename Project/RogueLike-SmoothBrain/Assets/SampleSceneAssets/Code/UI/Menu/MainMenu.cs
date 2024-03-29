@@ -2,7 +2,6 @@ using System.Collections;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -11,7 +10,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("InGame");
+        FindObjectOfType<LevelLoader>().LoadScene("InGame");
     }
 
     public void Quit()

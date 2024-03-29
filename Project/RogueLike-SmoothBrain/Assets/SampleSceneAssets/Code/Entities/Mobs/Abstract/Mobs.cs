@@ -12,6 +12,7 @@ public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
     protected Renderer mRenderer;
+    private Material hitMaterial;
     protected Entity[] nearbyEntities;
     protected EnemyLifeBar lifeBar;
 
@@ -22,6 +23,14 @@ public abstract class Mobs : Entity
         mRenderer = GetComponentInChildren<Renderer>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+
+        foreach (Material mat in mRenderer.materials)
+        {
+            if (mat.HasInt("_isHit"))
+            {
+                hitMaterial = mat;
+            }
+        }
 
         nearbyEntities = null;
         ApplySpeed(Stat.SPEED);
@@ -57,13 +66,13 @@ public abstract class Mobs : Entity
 
     protected IEnumerator HitRoutine()
     {
-        mRenderer.material.SetInt("_isHit", 1);
+        hitMaterial.SetInt("_isHit", 1);
         yield return new WaitForSeconds(0.05f);
-        mRenderer.material.SetInt("_isHit", 0);
+        hitMaterial.SetInt("_isHit", 0);
         yield return new WaitForSeconds(0.05f);
-        mRenderer.material.SetInt("_isHit", 1);
+        hitMaterial.SetInt("_isHit", 1);
         yield return new WaitForSeconds(0.05f);
-        mRenderer.material.SetInt("_isHit", 0);
+        hitMaterial.SetInt("_isHit", 0);
     }
 
 #if UNITY_EDITOR

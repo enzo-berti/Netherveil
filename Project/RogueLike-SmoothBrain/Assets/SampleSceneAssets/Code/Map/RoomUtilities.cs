@@ -1,8 +1,8 @@
 static public class RoomUtilities
 {
-    public delegate void Enter(ref RoomData mapData);
-    public delegate void Exit(ref RoomData mapData);
-    public delegate void AllEnemiesDead(ref RoomData mapData);
+    public delegate void Enter();
+    public delegate void Exit();
+    public delegate void AllEnemiesDead();
 
     static public Enter EnterEvents;
     static public Exit ExitEvents;
