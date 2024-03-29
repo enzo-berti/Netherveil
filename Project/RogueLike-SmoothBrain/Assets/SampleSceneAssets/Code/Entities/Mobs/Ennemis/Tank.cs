@@ -65,7 +65,7 @@ public class Tank : Mobs, ITank
         {
             //add SFX here
             FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
-            AudioManager.Instance.PlaySound(hitSFX);
+            AudioManager.Instance.PlaySound(hitSFX, transform.position);
             StartCoroutine(HitRoutine());
         }
 
@@ -77,7 +77,7 @@ public class Tank : Mobs, ITank
 
     public void Death()
     {
-        AudioManager.Instance.PlaySound(deadSFX);
+        AudioManager.Instance.PlaySound(deadSFX, transform.position);
         Destroy(gameObject);
     }
 
@@ -129,13 +129,13 @@ public class Tank : Mobs, ITank
                 AttackCollide();
                 cooldownSpeAttack = true;
                 vfxStopper.PlayVFX();
-                AudioManager.Instance.PlaySound(shockwaveSFX);
+                AudioManager.Instance.PlaySound(shockwaveSFX, transform.position);
             }
             else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
             {
                 BasicAttack(player);
                 cooldownBasicAttack = true;
-                AudioManager.Instance.PlaySound(punchSFX);
+                AudioManager.Instance.PlaySound(punchSFX, transform.position);
             }
             else
             {
