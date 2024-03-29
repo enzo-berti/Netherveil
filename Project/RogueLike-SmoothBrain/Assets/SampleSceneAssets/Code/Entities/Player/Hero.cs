@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Projectile;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -62,9 +61,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 animator.ResetTrigger("ChargedAttackRelease");
                 animator.SetBool("ChargedAttackCasting", false);
                 animator.ResetTrigger("BasicAttack");
-                AudioManager.Instance.PlaySound(playerController.hitSFX);
+                AudioManager.Instance.PlaySound(playerController.HitSFX);
                 FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
-                playerController.hitVFX.Play();
+                playerController.HitVFX.Play();
             }
 
             OnTakeDamage?.Invoke();
@@ -73,7 +72,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
         {
             Death();
-            AudioManager.Instance.PlaySound(playerController.deadSFX);
+            AudioManager.Instance.PlaySound(playerController.DeadSFX);
         }
     }
     public void Death()
@@ -90,7 +89,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     IEnumerator DeathCoroutine()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3.5f);
         _ = LevelLoader.LoadScene(SceneManager.GetActiveScene().buildIndex, "FadeIn");
     }
 
