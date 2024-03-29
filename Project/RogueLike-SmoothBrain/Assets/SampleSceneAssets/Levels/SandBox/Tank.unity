@@ -2250,50 +2250,370 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1402752229391001589, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_Height
-      value: 4.75
+      propertyPath: pestSounds.hitSound.Path
+      value: event:/Enemy/Grafted/GraftedHit
       objectReference: {fileID: 0}
-    - target: {fileID: 1402752229391001589, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_Radius
-      value: 1.5054096
+      propertyPath: pestSounds.deathSound.Path
+      value: event:/Enemy/Grafted/GraftedDeath
       objectReference: {fileID: 0}
-    - target: {fileID: 1402752229391001589, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_BaseOffset
+      propertyPath: pestSounds.introSound.Path
+      value: event:/Enemy/Grafted/GraftedScream
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.thrustSound.Path
+      value: event:/Enemy/Grafted/GraftedPunch
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.stretchSound.Path
+      value: event:/Enemy/Grafted/GraftedStretch
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.walkingSound.Path
+      value: event:/Enemy/Grafted/GraftedWalk
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: statusNameToApply.Array.size
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1402752229391001589, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_AgentTypeID
-      value: -1372625422
+      propertyPath: pestSounds.weaponInSound.Path
+      value: event:/Enemy/Grafted/GraftedTuckWeapon
       objectReference: {fileID: 0}
-    - target: {fileID: 3180234459085398662, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.35990506
+      propertyPath: pestSounds.hitSound.Guid.Data1
+      value: -214694489
       objectReference: {fileID: 0}
-    - target: {fileID: 3180234459085398662, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.089452
+      propertyPath: pestSounds.hitSound.Guid.Data2
+      value: 1302972210
       objectReference: {fileID: 0}
-    - target: {fileID: 3180234459085398662, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.9012705
+      propertyPath: pestSounds.hitSound.Guid.Data3
+      value: -1715644025
       objectReference: {fileID: 0}
-    - target: {fileID: 3180234459085398662, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.2240048
+      propertyPath: pestSounds.hitSound.Guid.Data4
+      value: 1018888436
       objectReference: {fileID: 0}
-    - target: {fileID: 5276316506459116083, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
+      propertyPath: pestSounds.weaponOutSound.Path
+      value: event:/Enemy/Grafted/GraftedTakeWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.spinAttackSound.Path
+      value: event:/Enemy/Grafted/GraftedSpinAttack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: statusNameToApply.Array.data[0]
+      value: Electricity
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: durationStatusToApply.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.deathSound.Guid.Data1
+      value: 1654136484
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.deathSound.Guid.Data2
+      value: 1227055311
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.deathSound.Guid.Data3
+      value: -1530604631
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.deathSound.Guid.Data4
+      value: 685301962
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.introSound.Guid.Data1
+      value: 1083504436
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.introSound.Guid.Data2
+      value: 1316411749
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.introSound.Guid.Data3
+      value: 1353878919
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.introSound.Guid.Data4
+      value: -995448669
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.thrustSound.Guid.Data1
+      value: 2110755741
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.thrustSound.Guid.Data2
+      value: 1200378635
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.thrustSound.Guid.Data3
+      value: -1637998457
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.thrustSound.Guid.Data4
+      value: -1644813887
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.plantInGroundSound.Path
+      value: event:/Enemy/Grafted/GraftedHitMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.stretchSound.Guid.Data1
+      value: 1252271740
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.stretchSound.Guid.Data2
+      value: 1280728789
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.stretchSound.Guid.Data3
+      value: 1459667589
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.stretchSound.Guid.Data4
+      value: 1477004850
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.walkingSound.Guid.Data1
+      value: -1622528925
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.walkingSound.Guid.Data2
+      value: 1282462376
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.walkingSound.Guid.Data3
+      value: -492995948
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.walkingSound.Guid.Data4
+      value: 819532573
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponInSound.Guid.Data1
+      value: 1699441104
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponInSound.Guid.Data2
+      value: 1274732431
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponInSound.Guid.Data3
+      value: 1046733242
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponInSound.Guid.Data4
+      value: 1605154435
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponOutSound.Guid.Data1
+      value: -128107736
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponOutSound.Guid.Data2
+      value: 1193393712
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponOutSound.Guid.Data3
+      value: 1727045555
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.weaponOutSound.Guid.Data4
+      value: 2013680109
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitMapSound.Path
+      value: event:/Enemy/Grafted/GraftedProjectilHitMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.spinAttackSound.Guid.Data1
+      value: -741354411
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.spinAttackSound.Guid.Data2
+      value: 1298867554
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.spinAttackSound.Guid.Data3
+      value: -1299117894
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.spinAttackSound.Guid.Data4
+      value: -1535010658
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileLaunchedSound.Path
+      value: event:/Enemy/Grafted/GraftedLunchProjectil
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.plantInGroundSound.Guid.Data1
+      value: -627876059
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.plantInGroundSound.Guid.Data2
+      value: 1340345369
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.plantInGroundSound.Guid.Data3
+      value: -1131270236
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.plantInGroundSound.Guid.Data4
+      value: 1040081313
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitPlayerSound.Path
+      value: event:/Enemy/Grafted/GraftedProjectilHitPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitMapSound.Guid.Data1
+      value: 833271855
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitMapSound.Guid.Data2
+      value: 1203668861
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitMapSound.Guid.Data3
+      value: -1421776995
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitMapSound.Guid.Data4
+      value: -916089434
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileLaunchedSound.Guid.Data1
+      value: 200127847
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileLaunchedSound.Guid.Data2
+      value: 1172076505
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileLaunchedSound.Guid.Data3
+      value: -263263811
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileLaunchedSound.Guid.Data4
+      value: -1983943433
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitPlayerSound.Guid.Data1
+      value: 2035182190
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitPlayerSound.Guid.Data2
+      value: 1080904031
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitPlayerSound.Guid.Data3
+      value: -660865150
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.projectileHitPlayerSound.Guid.Data4
+      value: 524391268
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.retrievingProjectileLaunchedSound.Path
+      value: event:/Enemy/Grafted/GraftedSpellCast
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.retrievingProjectileLaunchedSound.Guid.Data1
+      value: 801531834
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.retrievingProjectileLaunchedSound.Guid.Data2
+      value: 1287258959
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.retrievingProjectileLaunchedSound.Guid.Data3
+      value: 1358326707
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200957238564618689, guid: 9b7cfc20c8b84a743884999e0b4a43f4,
+        type: 3}
+      propertyPath: pestSounds.retrievingProjectileLaunchedSound.Guid.Data4
+      value: 820297616
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -16,6 +16,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
     {
         public GamepadIconsSprites xbox;
         public GamepadIconsSprites ps4;
+        public KeyboardIconsSprites kb;
 
         protected void OnEnable()
         {
@@ -33,7 +34,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             if (string.IsNullOrEmpty(deviceLayoutName) || string.IsNullOrEmpty(controlPath))
                 return;
 
-            // Debug.Log(Keyboard.current.capsLockKey.displayName);
+            Debug.Log(Keyboard.current.capsLockKey.displayName);
             var icon = default(Sprite);
             
             //Debug.Log(deviceLayoutName + " version FR : " + bindingDisplayString + " version US : " + controlPath);
@@ -134,6 +135,25 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     case "leftStickPress": return leftStickPress;
                     case "rightStickPress": return rightStickPress;
                 }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public struct KeyboardIconsSprites
+
+        {
+            public Sprite buttonLong;
+            public Sprite buttonMedium;
+            public Sprite buttonSimple;
+            public Sprite buttonCorner;
+
+            public Sprite GetSprite(string controlPath)
+            {
+                // From the input system, we get the path of the control on device. So we can just
+                // map from that to the sprites we have for gamepads.
+
+                Debug.Log(controlPath);
                 return null;
             }
         }

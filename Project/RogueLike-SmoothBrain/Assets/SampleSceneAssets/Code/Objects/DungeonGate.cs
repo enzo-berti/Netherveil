@@ -10,7 +10,10 @@ public class DungeonGate : MonoBehaviour
     {
         // set value to default
         material.SetFloat("_Dissolve", 0f);
+    }
 
+    private void Start()
+    {
         RoomUtilities.EnterEvents += Close;
         RoomUtilities.allEnemiesDeadEvents += Open;
     }

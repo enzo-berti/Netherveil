@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.ProBuilder.Shapes;
 
 public enum RoomType
 {
@@ -141,11 +142,13 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
     [SerializeField] private List<GameObject> obstructionsDoor;
-    [SerializeField] int RoomNumber;
+    [SerializeField] private GameObject gate;
+
+    [SerializeField] int nbNormalRoom;
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: RoomNumber));
+        GenerateMap(new GenerationParam(nbNormal: nbNormalRoom));
     }
 
     private void GenerateMap(GenerationParam genParam)
@@ -166,7 +169,7 @@ public class MapGenerator : MonoBehaviour
             foreach (var door in listDoors.Value)
             {
                 GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
-                go.transform.Rotate(0, door.Rotation % 360, 0);
+                go.transform.Rotate(0, door.Rotation, 0);
                 go.transform.parent = gameObject.transform;
             }
         }
@@ -214,6 +217,7 @@ public class MapGenerator : MonoBehaviour
             // instantiate room with first availableDoors transform then remove it
             int prefabIndex = GameAssets.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
             GameObject roomGO = Instantiate(roomNormal[prefabIndex]); // TODO : add random selection
+            roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Normal;
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(genParam);
@@ -246,6 +250,11 @@ public class MapGenerator : MonoBehaviour
             // Removed door
             doorsGenerator.RemoveDoor(entranceDoor);
 
+            // Generate GATE
+            GameObject gateGO = Instantiate(gate, entranceDoor.Position, Quaternion.identity);
+            gateGO.transform.Rotate(0, entranceDoor.Rotation, 0);
+            gateGO.transform.parent = gameObject.transform;
+
             // Add the new doors from the new room into the possible candidates
             genParam.AddDoorsGenerator(doorsGenerator);
 
@@ -260,6 +269,8 @@ public class MapGenerator : MonoBehaviour
     private void GenerateLobbyRoom(ref GenerationParam genParam)
     {
         GameObject roomGO = Instantiate(roomLobby[GameAssets.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
+
+        roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Lobby;
 
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(genParam);
@@ -276,6 +287,7 @@ public class MapGenerator : MonoBehaviour
         Door exitDoor = genParam.GetFarestDoor();
         GameObject roomBossGO = Instantiate(roomBoss[0]);
         DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+        roomBossGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Boss;
 
         Door entranceDoor = new Door();
         for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
