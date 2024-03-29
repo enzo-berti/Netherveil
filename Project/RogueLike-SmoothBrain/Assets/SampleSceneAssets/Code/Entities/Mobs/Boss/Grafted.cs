@@ -67,7 +67,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField] GameObject projectilePrefab;
     GraftedProjectile projectile;
 
-
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
 
@@ -377,7 +376,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             AttackCollide(attacks[(int)Attacks.DASH].data, true);
             stats.IncreaseCoeffValue(Stat.ATK, 0.5f);
         }
-
 
         if (!dashRetracting)
         {
