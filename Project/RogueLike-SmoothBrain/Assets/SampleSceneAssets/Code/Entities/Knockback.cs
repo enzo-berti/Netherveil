@@ -10,6 +10,9 @@ public class Knockback : MonoBehaviour
     private Hero hero;
     private Animator animator;
     private Coroutine knockbackRoutine;
+
+    [SerializeField] private float mass = 1.0f;
+
     /// <summary>
     /// int _value, bool isCrit = false, bool notEffectDamages = true
     /// </summary>
@@ -50,7 +53,7 @@ public class Knockback : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = transform.position + direction * distance;
 
-        float duration = distance / speed;
+        float duration = (distance / speed) / mass;
         bool isOnNavMesh = true;
 
         while (timeElapsed < duration && isOnNavMesh)
@@ -83,7 +86,7 @@ public class Knockback : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = transform.position + direction * distance;
 
-        float duration = distance / speed;
+        float duration = (distance / speed) / mass;
 
         bool hitObstacle = false;
 
