@@ -21,12 +21,6 @@ public class PlayerInput : MonoBehaviour
     readonly float DASH_COOLDOWN_TIME = 0.5f;
     float timerDash = 0f;
 
-    //used to prevent that if you press both dash and attack button to do both at the same time
-    float keyCooldown = 0f;
-    bool attackTriggerCooldown = false;
-    bool dashTriggerCooldown = false;
-    readonly float KEY_COOLDOWN_TIME = 0.2f;
-
     bool attackQueue = false;
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
@@ -150,17 +144,6 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if (dashTriggerCooldown || attackTriggerCooldown)
-        {
-            keyCooldown += Time.deltaTime;
-            if (keyCooldown >= KEY_COOLDOWN_TIME)
-            {
-                dashTriggerCooldown = false;
-                attackTriggerCooldown = false;
-                keyCooldown = 0f;
-            }
-        }
-
         if (dashCooldown)
         {
             timerDash += Time.deltaTime;
@@ -184,7 +167,6 @@ public class PlayerInput : MonoBehaviour
         if (CanCastChargedAttack())
         {
             animator.SetBool("ChargedAttackCasting", true);
-            attackTriggerCooldown = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
             LaunchedChargedAttack = true;
         }
@@ -279,7 +261,6 @@ public class PlayerInput : MonoBehaviour
                 animator.ResetTrigger("BasicAttack");
                 animator.SetTrigger("BasicAttack");
             }
-            attackTriggerCooldown = true;
             controller.hero.State = (int)Entity.EntityState.ATTACK;
 
         }
@@ -418,25 +399,25 @@ public class PlayerInput : MonoBehaviour
     {
         return (controller.hero.State == (int)Entity.EntityState.MOVE ||
             (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-            && !dashTriggerCooldown && !spear.IsThrown;
+             && !spear.IsThrown;
     }
 
     private bool CanCastChargedAttack()
     {
         return (controller.hero.State == (int)Entity.EntityState.MOVE 
             || controller.hero.State == (int)Entity.EntityState.ATTACK)
-            && !dashTriggerCooldown && !spear.IsThrown && !LaunchedChargedAttack;
+            && !spear.IsThrown && !LaunchedChargedAttack;
     }
 
     private bool CanRetrieveSpear()
     {
-        return controller.hero.State == (int)Entity.EntityState.MOVE && !dashTriggerCooldown && spear.IsThrown;
+        return controller.hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown;
     }
 
     private bool CanDash()
     {
         return (controller.hero.State == (int)Entity.EntityState.MOVE
-            || controller.hero.State == (int)Entity.EntityState.ATTACK) && !attackTriggerCooldown && !dashCooldown && !LaunchedChargedAttack;
+            || controller.hero.State == (int)Entity.EntityState.ATTACK) && !dashCooldown && !LaunchedChargedAttack;
     }
 
     private bool CanResetCombo()
@@ -470,7 +451,6 @@ public class PlayerInput : MonoBehaviour
 
     public void TriggerDashCooldown()
     {
-        dashTriggerCooldown = true;
         dashCooldown = true;
     }
     #endregion

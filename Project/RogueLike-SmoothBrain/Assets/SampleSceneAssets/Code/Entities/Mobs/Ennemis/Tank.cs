@@ -1,10 +1,7 @@
+using FMODUnity;
 using System.Collections;
-using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using UnityEngine;
 
 public class Tank : Mobs, ITank
 {
@@ -15,18 +12,28 @@ public class Tank : Mobs, ITank
 
     public List<Status> StatusToApply => statusToApply;
     [SerializeField] CapsuleCollider shockwaveCollider;
+    VFXStopper vfxStopper;
     bool cooldownSpeAttack = false;
     float specialAttackTimer = 0f;
-    readonly float SPECIAL_ATTACK_TIMER = 4f;
+    readonly float SPECIAL_ATTACK_TIMER = 2.2f;
 
     bool cooldownBasicAttack = false;
     float basicAttackTimer = 0f;
     readonly float BASIC_ATTACK_TIMER = 0.75f;
+    Hero player;
+
+    
+    [SerializeField] EventReference shockwaveSFX;
+    [SerializeField] EventReference punchSFX;
+    [SerializeField] EventReference hitSFX;
+    [Header("SFXs")]
+    [SerializeField] EventReference deadSFX;
 
     protected override void Start()
     {
         base.Start();
-
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        vfxStopper = GetComponent<VFXStopper>();
     }
 
     public void Attack(IDamageable damageable)
@@ -58,6 +65,7 @@ public class Tank : Mobs, ITank
         {
             //add SFX here
             FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            AudioManager.Instance.PlaySound(hitSFX);
             StartCoroutine(HitRoutine());
         }
 
@@ -69,6 +77,7 @@ public class Tank : Mobs, ITank
 
     public void Death()
     {
+        AudioManager.Instance.PlaySound(deadSFX);
         Destroy(gameObject);
     }
 
@@ -82,12 +91,6 @@ public class Tank : Mobs, ITank
         while (true)
         {
             yield return null;
-
-            Hero player = PhysicsExtensions.OverlapVisionCone(transform.position, 360, 10f, transform.forward)
-                .ToList()
-                .Select(x => x.GetComponent<Hero>())
-                .Where(x => x != null)
-                .FirstOrDefault();
 
             if (cooldownSpeAttack)
             {
@@ -109,42 +112,45 @@ public class Tank : Mobs, ITank
                 }
             }
 
-            if (player != null)
+
+            Vector3 cameraForward = Camera.main.transform.forward;
+            Vector3 cameraRight = Camera.main.transform.right;
+            Vector3 tmp = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
+            Vector2 playerPos = new Vector2(tmp.x, tmp.z);
+            tmp = (cameraForward * transform.position.z + cameraRight * transform.position.x);
+            Vector2 tankPos = new Vector2(tmp.x, tmp.z);
+
+            bool isInRange = Vector2.Distance(playerPos, tankPos) <= shockwaveCollider.gameObject.transform.localScale.z/2f;
+
+            // Player detect
+            if (isInRange && !cooldownSpeAttack)
             {
-                Vector3 cameraForward = Camera.main.transform.forward;
-                Vector3 cameraRight = Camera.main.transform.right;
-                Vector3 tmp = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
-                Vector2 playerPos = new Vector2(tmp.x, tmp.z);
-                tmp = (cameraForward * transform.position.z + cameraRight * transform.position.x);
-                Vector2 tankPos = new Vector2(tmp.x, tmp.z);
-
-                bool isInRange = Vector2.Distance(playerPos, tankPos) <= shockwaveCollider.gameObject.transform.localScale.z;
-
-                // Player detect
-                if (isInRange && !cooldownSpeAttack)
-                {
-                    AttackCollide();
-                    cooldownSpeAttack = true;
-                }
-                else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
-                {
-                    BasicAttack(player);
-                    cooldownBasicAttack = true;
-                }
-                else
-                {
-                    MoveTo(player.transform.position);
-                }
+                Debug.Log("AYA");
+                AttackCollide();
+                cooldownSpeAttack = true;
+                vfxStopper.PlayVFX();
+                AudioManager.Instance.PlaySound(shockwaveSFX);
             }
+            else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
+            {
+                BasicAttack(player);
+                cooldownBasicAttack = true;
+                AudioManager.Instance.PlaySound(punchSFX);
+            }
+            else
+            {
+                MoveTo(player.transform.position);
+            }
+
         }
     }
 
     public void AttackCollide(bool debugMode = true)
     {
-        if (debugMode)
-        {
-            shockwaveCollider.gameObject.SetActive(true);
-        }
+        //if (debugMode)
+        //{
+        //    shockwaveCollider.gameObject.SetActive(true);
+        //}
 
         Collider[] tab = PhysicsExtensions.CapsuleOverlap(shockwaveCollider, LayerMask.GetMask("Entity"));
         if (tab.Length > 0)
