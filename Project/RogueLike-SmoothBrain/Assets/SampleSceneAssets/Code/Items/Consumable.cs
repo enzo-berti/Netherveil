@@ -40,11 +40,11 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         tmp = (cameraForward * transform.position.z + cameraRight * transform.position.x);
         Vector2 itemPos = new Vector2(tmp.x, tmp.z);
 
-        bool isInRange = Vector2.Distance(playerPos, itemPos) <= player.Stats.GetValue(Stat.CATCH_RADIUS);
-        if (isInRange)
+        float distance = Vector2.Distance(playerPos, itemPos);
+        if (distance <= player.Stats.GetValue(Stat.CATCH_RADIUS))
         {
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Time.deltaTime * 2);
-            if (Vector2.Distance(playerPos, itemPos) <= 0.3f)
+            if (distance <= 0.3f)
             {
                 OnRetrieved();
             }
