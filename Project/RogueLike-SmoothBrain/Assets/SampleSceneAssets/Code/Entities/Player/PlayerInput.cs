@@ -306,7 +306,8 @@ public class PlayerInput : MonoBehaviour
 
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
     {
-        if (hero.State != (int)Entity.EntityState.MOVE)
+        // If spear is being thrown we can't recall this attack
+        if (hero.State != (int)Entity.EntityState.MOVE || spear.IsThrowing)
             return;
 
         if (DeviceManager.Instance.IsPlayingKB())
@@ -318,9 +319,7 @@ public class PlayerInput : MonoBehaviour
             controller.JoystickOrientation();
             controller.OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
         }
-
-        // If spear is being thrown we can't recall this attack
-        if (spear.IsThrowing) return;
+     
         if (!spear.IsThrown)
         {
             spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE));
