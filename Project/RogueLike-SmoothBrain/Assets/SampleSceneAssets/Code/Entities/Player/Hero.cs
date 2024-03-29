@@ -79,6 +79,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void Death()
     {
         OnDeath?.Invoke(this.transform.position);
+        GetComponent<Knockback>().StopAllCoroutines();
         Destroy(GetComponent<CharacterController>());
         animator.applyRootMotion = true;
         State = (int)EntityState.DEAD;
