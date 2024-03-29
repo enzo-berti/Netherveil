@@ -35,6 +35,11 @@ public class DungeonGate : MonoBehaviour
         boxCollider.enabled = true;
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     IEnumerator SetDisolve(float desiredDisolve)
     {
         float disolveMat = material.GetFloat("_Dissolve");
