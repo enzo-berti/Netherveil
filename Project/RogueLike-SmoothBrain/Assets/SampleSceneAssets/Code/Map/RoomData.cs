@@ -11,6 +11,8 @@ public struct RoomData
         {
             enemies.Add(enemyTransform.gameObject);
         }
+
+        Type = RoomType.Lobby;
     }
 
     public readonly int NumEnemies
@@ -20,6 +22,8 @@ public struct RoomData
             return enemies.Count;
         }
     }
+
+    public RoomType Type { get; private set; }
 
     public List<GameObject> enemies;
 }
