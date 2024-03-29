@@ -91,7 +91,7 @@ public class Knockback : MonoBehaviour
             Vector3 lastPos = transform.position;
             Vector3 nextPos = Vector3.Lerp(startPosition, targetPosition, t);
 
-            if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos)))
+            if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos), ~LayerMask.GetMask("Entity")))
             {
                 onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
             }

@@ -38,10 +38,13 @@ public class Tank : Mobs, ITank
 
     public void Attack(IDamageable damageable)
     {
-        int damages = (int)(stats.GetValue(Stat.ATK) * 3);
+        if ((damageable as MonoBehaviour).CompareTag("Player"))
+        {
+            int damages = (int)(stats.GetValue(Stat.ATK) * 3);
 
-        onHit?.Invoke(damageable);
-        damageable.ApplyDamage(damages);
+            onHit?.Invoke(damageable);
+            damageable.ApplyDamage(damages);
+        }
         ApplyKnockback(damageable);
     }
 
@@ -65,7 +68,7 @@ public class Tank : Mobs, ITank
         {
             //add SFX here
             FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
-            AudioManager.Instance.PlaySound(hitSFX);
+            AudioManager.Instance.PlaySound(hitSFX, transform.position);
             StartCoroutine(HitRoutine());
         }
 
@@ -77,7 +80,7 @@ public class Tank : Mobs, ITank
 
     public void Death()
     {
-        AudioManager.Instance.PlaySound(deadSFX);
+        AudioManager.Instance.PlaySound(deadSFX, transform.position);
         Destroy(gameObject);
     }
 
@@ -122,20 +125,18 @@ public class Tank : Mobs, ITank
 
             bool isInRange = Vector2.Distance(playerPos, tankPos) <= shockwaveCollider.gameObject.transform.localScale.z/2f;
 
-            // Player detect
             if (isInRange && !cooldownSpeAttack)
             {
-                Debug.Log("AYA");
                 AttackCollide();
                 cooldownSpeAttack = true;
                 vfxStopper.PlayVFX();
-                AudioManager.Instance.PlaySound(shockwaveSFX);
+                AudioManager.Instance.PlaySound(shockwaveSFX, transform.position);
             }
             else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
             {
                 BasicAttack(player);
                 cooldownBasicAttack = true;
-                AudioManager.Instance.PlaySound(punchSFX);
+                AudioManager.Instance.PlaySound(punchSFX, transform.position);
             }
             else
             {

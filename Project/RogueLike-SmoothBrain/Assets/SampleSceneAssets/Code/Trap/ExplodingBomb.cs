@@ -138,7 +138,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
             });
 
         graphics.SetActive(false);
-        AudioManager.Instance.PlaySound(bombSFX);
+        AudioManager.Instance.PlaySound(bombSFX, transform.position);
         float timer = VFX.GetFloat("ExplosionTime");
 
         while (timer > 0f)
