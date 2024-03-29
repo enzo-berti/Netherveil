@@ -1,19 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(Hero))]
 public class PlayerInteractions : MonoBehaviour
 {
-    private Hero hero;
     [SerializeField] Material outlineMaterial;
     public List<IInterractable> InteractablesInRange { get; private set; } = new List<IInterractable>();
-
-    private void Start()
-    {
-        hero = GetComponent<Hero>();
-    }
 
     void Update()
     {
