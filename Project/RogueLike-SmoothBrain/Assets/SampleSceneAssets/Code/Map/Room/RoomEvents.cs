@@ -11,6 +11,8 @@ public class RoomEvents : MonoBehaviour
     private NavMeshSurface navMeshSurface;
 
     private bool allEnemiesDeadCalled = false;
+    private bool enterRoomCalled = false;
+    private bool exitRoomCalled = false;
 
     private void Start()
     {
@@ -26,11 +28,18 @@ public class RoomEvents : MonoBehaviour
         allEnemiesDeadCalled = (enemies.transform.childCount == 0);
 
         // create data of the map
-        mapData = new RoomData(enemies);
+        mapData = new RoomData(enemies, transform.parent.GetComponentInChildren<RoomGenerator>());
     }
 
     private void EnterEvents()
     {
+        if (enterRoomCalled)
+        {
+            return;
+        }
+
+        enterRoomCalled = true;
+
         // global events
         RoomUtilities.roomData = mapData;
         RoomUtilities.EnterEvents?.Invoke();
@@ -42,6 +51,13 @@ public class RoomEvents : MonoBehaviour
 
     private void ExitEvents()
     {
+        if (exitRoomCalled)
+        {
+            return;
+        }
+
+        exitRoomCalled = true;
+
         // global events
         RoomUtilities.ExitEvents?.Invoke();
 
