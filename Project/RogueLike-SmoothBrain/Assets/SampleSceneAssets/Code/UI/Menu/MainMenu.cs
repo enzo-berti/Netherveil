@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("InGame");
+        _ = LevelLoader.LoadScene("InGame", "FadeIn");
     }
 
     public void Quit()

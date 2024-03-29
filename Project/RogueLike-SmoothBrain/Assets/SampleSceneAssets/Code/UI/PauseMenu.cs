@@ -25,7 +25,7 @@ public class PauseMenu : MonoBehaviour
     public void Menu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        _ = LevelLoader.LoadScene("MainMenu", "FadeIn");
     }
 
     public void Quit()
