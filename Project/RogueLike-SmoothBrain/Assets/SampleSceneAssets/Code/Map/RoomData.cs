@@ -3,7 +3,7 @@ using UnityEngine;
 
 public struct RoomData
 {
-    public RoomData(GameObject enemiesContainer, GameObject room)
+    public RoomData(GameObject enemiesContainer, RoomGenerator roomGenerator)
     {
         enemies = new List<GameObject>();
 
@@ -12,7 +12,7 @@ public struct RoomData
             enemies.Add(enemyTransform.gameObject);
         }
 
-        Type = room.GetComponent<RoomGenerator>().type;
+        Type = roomGenerator.type;
     }
 
     public readonly int NumEnemies
