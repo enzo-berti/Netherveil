@@ -142,7 +142,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: 5));
+        GenerateMap(new GenerationParam(nbNormal: 20));
     }
 
     private void GenerateMap(GenerationParam genParam)
