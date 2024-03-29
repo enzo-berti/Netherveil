@@ -15,6 +15,7 @@ public abstract class Mobs : Entity
     private Material hitMaterial;
     protected Entity[] nearbyEntities;
     protected EnemyLifeBar lifeBar;
+    [SerializeField] protected Drop drop;
 
     protected override void Start()
     {
@@ -36,6 +37,7 @@ public abstract class Mobs : Entity
         ApplySpeed(Stat.SPEED);
         stats.onStatChange += ApplySpeed;
         OnDeath += cts => ClearStatus();
+        OnDeath += drop.DropLoot;
 
         if (this is IAttacker attacker)
         {

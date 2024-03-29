@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,6 +51,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     }
     [Header("Sounds")]
     [SerializeField] private GraftedSounds bossSounds;
+    EventInstance introSound;
 
     Attacks currentAttack = Attacks.NONE;
     Attacks lastAttack = Attacks.NONE;
@@ -96,7 +98,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         // mettre la cam entre le joueur et le boss
 
-        //AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
+        introSound = AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
     }
 
     private void OnDestroy()
@@ -138,6 +140,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                 // Move towards player
                 MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
+                if (agent.destination != transform.position)
+                {
+                    // son marche
+                }
 
                 // Attacks
                 if (attackCooldown > 0)
@@ -208,10 +214,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
+            AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
         }
         else
         {
-            //AudioManager.Instance.PlaySound();
+            AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position);
         }
     }
 
