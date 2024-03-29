@@ -21,6 +21,7 @@ public class Tank : Mobs, ITank
     float basicAttackTimer = 0f;
     readonly float BASIC_ATTACK_TIMER = 0.75f;
     Hero player;
+    Animator animator;
 
     
     [SerializeField] EventReference shockwaveSFX;
@@ -34,6 +35,7 @@ public class Tank : Mobs, ITank
         base.Start();
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         vfxStopper = GetComponent<VFXStopper>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     public void Attack(IDamageable damageable)
@@ -115,7 +117,6 @@ public class Tank : Mobs, ITank
                 }
             }
 
-
             Vector3 cameraForward = Camera.main.transform.forward;
             Vector3 cameraRight = Camera.main.transform.right;
             Vector3 tmp = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
@@ -131,12 +132,16 @@ public class Tank : Mobs, ITank
                 cooldownSpeAttack = true;
                 vfxStopper.PlayVFX();
                 AudioManager.Instance.PlaySound(shockwaveSFX, transform.position);
+                animator.ResetTrigger("Shockwave");
+                animator.SetTrigger("Shockwave");
             }
             else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
             {
                 BasicAttack(player);
                 cooldownBasicAttack = true;
                 AudioManager.Instance.PlaySound(punchSFX, transform.position);
+                animator.ResetTrigger("Punch");
+                animator.SetTrigger("Punch");
             }
             else
             {
