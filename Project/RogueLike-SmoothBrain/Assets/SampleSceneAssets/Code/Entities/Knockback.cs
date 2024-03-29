@@ -11,7 +11,7 @@ public class Knockback : MonoBehaviour
     private Animator animator;
     private Coroutine knockbackRoutine;
 
-    [SerializeField] private float distanceFactor = 0.2f;
+    [SerializeField] private float distanceFactor = 1f;
 
     /// <summary>
     /// int _value, bool isCrit = false, bool notEffectDamages = true
