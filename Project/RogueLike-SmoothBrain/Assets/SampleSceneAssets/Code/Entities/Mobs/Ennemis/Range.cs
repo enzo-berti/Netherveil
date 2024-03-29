@@ -135,8 +135,11 @@ public class Range : Mobs, IRange
     private IEnumerator GoSmoothToPosition(Vector3 posToReach)
     {
         isSmoothCoroutineOn = true;
+
         float timer = 0;
         Vector3 basePos = this.transform.position;
+
+        // Face to his next direction
         this.transform.forward = posToReach - basePos;
         while (timer < 1f)
         {
