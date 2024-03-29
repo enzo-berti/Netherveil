@@ -131,12 +131,12 @@ public class Range : Mobs, IRange
     private IEnumerator GoOnPlayer(List<Vector3> listDashes)
     {
         yield return null;
-        Debug.Log(listDashes.Count);
+        //Debug.Log(listDashes.Count);
         int index = 1;
         isGoingOnPlayer = true;
         while(index < listDashes.Count - 1)
         {
-            Debug.Log("coucou");
+            //Debug.Log("coucou");
             this.transform.position = listDashes[index];
             yield return new WaitForSeconds(1f);
         }

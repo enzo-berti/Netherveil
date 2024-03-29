@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        _ = LevelLoader.LoadScene("InGame", "FadeIn");
+        FindObjectOfType<LevelLoader>().LoadScene("InGame", "FadeIn");
     }
 
     public void Quit()
