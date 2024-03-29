@@ -83,12 +83,14 @@ public class RoomToolWindow : EditorWindow
         GameObject treasures = new GameObject("Treasures");
         treasures.transform.parent = roomSeed1.transform;
 
-        string folderPath = "Assets/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString();
-        if (!Directory.Exists(folderPath))
+        string typeRoomPath = "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString();
+        string roomFolderPath = typeRoomPath + "/" + prefabName;
+        string roomPrefabPath = roomFolderPath + "/" + prefabName + ".prefab";
+        if (!Directory.Exists(UnityEngine.Application.dataPath + roomFolderPath))
         {
-            AssetDatabase.CreateFolder(folderPath, prefabName);
+            AssetDatabase.CreateFolder("Assets" + typeRoomPath, prefabName);
         }
-        PrefabUtility.SaveAsPrefabAsset(roomPrefab, UnityEngine.Application.dataPath + "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString() + "/" + prefabName + "/" + prefabName + ".prefab");
+        PrefabUtility.SaveAsPrefabAsset(roomPrefab, UnityEngine.Application.dataPath + roomPrefabPath);
 
         // destroy garbage in scene
         DestroyImmediate(room);
