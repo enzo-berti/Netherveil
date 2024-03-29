@@ -83,7 +83,7 @@ public class Knockback : MonoBehaviour
         if (characterController == null)
         {
             knockbackRoutine = null;
-            return;
+            yield return null;
         }
 
         characterController.enabled = false;
