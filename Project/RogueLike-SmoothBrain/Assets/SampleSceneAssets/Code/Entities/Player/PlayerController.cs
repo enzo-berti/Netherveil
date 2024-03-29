@@ -2,6 +2,7 @@ using FMODUnity;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
@@ -76,6 +77,12 @@ public class PlayerController : MonoBehaviour
             Rotate();
             Move();
             DashMove();
+        }
+
+        //if player has fallen out of map
+        if(transform.position.y < -100f)
+        {
+            FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
