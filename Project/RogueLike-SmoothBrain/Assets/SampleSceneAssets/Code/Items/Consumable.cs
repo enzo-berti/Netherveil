@@ -43,7 +43,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         float distance = Vector2.Distance(playerPos, itemPos);
         if (distance <= player.Stats.GetValue(Stat.CATCH_RADIUS))
         {
-            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Time.deltaTime * 2);
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Time.deltaTime * 6);
             if (distance <= 0.3f)
             {
                 OnRetrieved();

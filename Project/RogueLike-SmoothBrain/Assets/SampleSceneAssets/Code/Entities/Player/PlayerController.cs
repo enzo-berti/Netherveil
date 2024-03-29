@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateAnimator();
 
-        if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        if (hero.State != (int)Hero.PlayerState.KNOCKBACK && characterController != null && characterController.enabled)
         {
             ApplyGravity();
             Rotate();
