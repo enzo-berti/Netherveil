@@ -26,7 +26,7 @@ public class RoomEvents : MonoBehaviour
         allEnemiesDeadCalled = (enemies.transform.childCount == 0);
 
         // create data of the map
-        mapData = new RoomData(enemies);
+        mapData = new RoomData(enemies, room);
     }
 
     private void EnterEvents()
