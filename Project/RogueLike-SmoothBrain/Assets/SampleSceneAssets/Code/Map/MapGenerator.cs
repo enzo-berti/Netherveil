@@ -214,6 +214,7 @@ public class MapGenerator : MonoBehaviour
             // instantiate room with first availableDoors transform then remove it
             int prefabIndex = GameAssets.Instance.seed.Range(0, roomNormal.Count, ref NoiseGenerator);
             GameObject roomGO = Instantiate(roomNormal[prefabIndex]); // TODO : add random selection
+            roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Normal;
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(genParam);
@@ -261,6 +262,8 @@ public class MapGenerator : MonoBehaviour
     {
         GameObject roomGO = Instantiate(roomLobby[GameAssets.Instance.seed.Range(0, roomLobby.Count, ref NoiseGenerator)]);
 
+        roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Lobby;
+
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(genParam);
 
@@ -276,6 +279,7 @@ public class MapGenerator : MonoBehaviour
         Door exitDoor = genParam.GetFarestDoor();
         GameObject roomBossGO = Instantiate(roomBoss[0]);
         DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+        roomBossGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Boss;
 
         Door entranceDoor = new Door();
         for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
