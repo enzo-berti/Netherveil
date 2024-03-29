@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Hero))]
 public class PlayerInteractions : MonoBehaviour
@@ -63,24 +62,6 @@ public class PlayerInteractions : MonoBehaviour
                     outlineMaterial
                 };
             meshRenderer.SetMaterials(finalMaterial);
-        }
-    }
-
-    public void Interract(InputAction.CallbackContext ctx)
-    {
-        Vector3 playerPos = (Camera.main.transform.forward * transform.position.z + Camera.main.transform.right * transform.position.x);
-        IInterractable closestInteractable = InteractablesInRange.OrderBy(x =>
-        {
-            Vector3 itemPos = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
-            Camera.main.transform.right * (x as MonoBehaviour).transform.position.x;
-            return Vector2.Distance(playerPos, itemPos);
-        }
-        )
-        .FirstOrDefault();
-
-        if (closestInteractable != null)
-        {
-            closestInteractable.Interract();
         }
     }
 
