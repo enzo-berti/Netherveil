@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (hero.State == (int)Entity.EntityState.MOVE && (playerInput.Direction.x != 0f || playerInput.Direction.y != 0f))
+        if (hero.State == (int)Entity.EntityState.MOVE && playerInput.Direction != Vector2.zero)
         {
             CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
             ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
