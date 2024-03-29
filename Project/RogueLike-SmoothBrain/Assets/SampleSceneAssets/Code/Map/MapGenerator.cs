@@ -22,8 +22,10 @@ public struct GenerationParam
     public Dictionary<RoomType, int> nbRoom;
     public Dictionary<float, List<Door>> availableDoors;
 
+
     public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
     {
+
         nbRoom = new Dictionary<RoomType, int>
         {
             { RoomType.Normal, nbNormal },
@@ -139,10 +141,11 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
     [SerializeField] private List<GameObject> obstructionsDoor;
+    [SerializeField] int RoomNumber;
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: 0));
+        GenerateMap(new GenerationParam(nbNormal: RoomNumber));
     }
 
     private void GenerateMap(GenerationParam genParam)
