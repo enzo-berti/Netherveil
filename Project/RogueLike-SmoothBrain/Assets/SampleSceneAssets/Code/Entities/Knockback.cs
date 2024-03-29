@@ -11,7 +11,7 @@ public class Knockback : MonoBehaviour
     private Animator animator;
     private Coroutine knockbackRoutine;
 
-    [SerializeField] private float mass = 1.0f;
+    [SerializeField] private float distanceFactor = 0.2f;
 
     /// <summary>
     /// int _value, bool isCrit = false, bool notEffectDamages = true
@@ -51,9 +51,9 @@ public class Knockback : MonoBehaviour
     {
         float timeElapsed = 0f;
         Vector3 startPosition = transform.position;
-        Vector3 targetPosition = transform.position + direction * distance;
+        Vector3 targetPosition = transform.position + direction * distance * distanceFactor;
 
-        float duration = (distance / speed) / mass;
+        float duration = distance * distanceFactor / speed;
         bool isOnNavMesh = true;
 
         while (timeElapsed < duration && isOnNavMesh)
@@ -84,10 +84,9 @@ public class Knockback : MonoBehaviour
 
         float timeElapsed = 0f;
         Vector3 startPosition = transform.position;
-        Vector3 targetPosition = transform.position + direction * distance;
+        Vector3 targetPosition = transform.position + direction * distance * distanceFactor;
 
-        float duration = (distance / speed) / mass;
-
+        float duration = distance * distanceFactor / speed;
         bool hitObstacle = false;
 
         while (timeElapsed < duration && !hitObstacle)
