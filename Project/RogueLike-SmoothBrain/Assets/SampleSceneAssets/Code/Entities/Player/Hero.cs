@@ -79,6 +79,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void Death()
     {
         OnDeath?.Invoke(this.transform.position);
+        GetComponent<Knockback>().StopAllCoroutines();
         Destroy(GetComponent<CharacterController>());
         animator.applyRootMotion = true;
         State = (int)EntityState.DEAD;
@@ -90,7 +91,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     IEnumerator DeathCoroutine()
     {
         yield return new WaitForSeconds(5f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        _ = LevelLoader.LoadScene(SceneManager.GetActiveScene().buildIndex, "FadeIn");
     }
 
     public void Attack(IDamageable damageable)
