@@ -48,7 +48,11 @@ public class Item : MonoBehaviour, IInterractable
     private void Update()
     {
         Interraction();
+        FloatingAnimation();
+    }
 
+    private void FloatingAnimation()
+    {
         Vector3 updatePos = meshObject.transform.position;
         updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
         meshObject.transform.position = updatePos;

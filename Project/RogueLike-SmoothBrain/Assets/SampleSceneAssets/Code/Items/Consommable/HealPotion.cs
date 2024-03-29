@@ -1,21 +1,22 @@
 using UnityEngine;
 
-public class HealPotion : MonoBehaviour, IConsumable
+public class HealPotion : Consumable
 {
     [SerializeField] int healValue;
-    [SerializeField] float price;
-    
-    public bool canBeRetrieved = true;
+    [SerializeField] int price;
 
-    public float Price => price;
-    public bool CanBeRetrieved => canBeRetrieved;
-
-    Hero player;
-    private void Start()
+    protected override void Start()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        base.Start();
+        Price = price;
     }
-    public void OnRetrieved()
+
+    protected override void Update()
+    {
+        base.Update();
+    }
+
+    public override void OnRetrieved()
     {
         int realHealValue = (int)(healValue * player.Stats.GetValue(Stat.HEAL_COEFF));
         player.Stats.IncreaseValue(Stat.HP, realHealValue, true);

@@ -17,7 +17,6 @@ public class PlayerInteractions : MonoBehaviour
 
     void Update()
     {
-        RetrievedConsommable();
         SelectClosestItem();
     }
 
@@ -62,19 +61,6 @@ public class PlayerInteractions : MonoBehaviour
                     outlineMaterial
                 };
             meshRenderer.SetMaterials(finalMaterial);
-        }
-    }
-
-    public void RetrievedConsommable()
-    {
-        IConsumable[] consumables = Physics.OverlapSphere(this.transform.position, hero.Stats.GetValue(Stat.CATCH_RADIUS))
-            .Where(x => x.gameObject.TryGetComponent<IConsumable>(out var consommable) && consommable.CanBeRetrieved)
-            .Select(x => x.gameObject.GetComponent<IConsumable>())
-            .ToArray();
-
-        foreach (IConsumable consumable in consumables)
-        {
-            consumable.OnRetrieved();
         }
     }
 }
