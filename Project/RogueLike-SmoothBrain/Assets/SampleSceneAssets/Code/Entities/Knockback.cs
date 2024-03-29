@@ -7,7 +7,12 @@ public class Knockback : MonoBehaviour
 {
     private NavMeshAgent agent;
     private CharacterController characterController;
+    private Hero hero;
+    private Animator animator;
     private Coroutine knockbackRoutine;
+
+    [SerializeField] private float mass = 1.0f;
+
     /// <summary>
     /// int _value, bool isCrit = false, bool notEffectDamages = true
     /// </summary>
@@ -20,6 +25,8 @@ public class Knockback : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         characterController = GetComponent<CharacterController>();
+        hero = GetComponent<Hero>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     public void GetKnockback(Vector3 direction, float distance, float speed)
@@ -33,8 +40,9 @@ public class Knockback : MonoBehaviour
         }
         else if (characterController != null)
         {
-            characterController.gameObject.GetComponentInChildren<Animator>().SetBool("IsKnockback", true);
-            knockbackRoutine = StartCoroutine(ApplyKnockbackCharacterController(direction, distance, speed));
+            animator.SetBool("IsKnockback", true);
+            hero.State = (int)Hero.PlayerState.KNOCKBACK;
+            knockbackRoutine = StartCoroutine(ApplyKnockbackPlayer(direction, distance, speed));
         }
 
     }
@@ -45,7 +53,7 @@ public class Knockback : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = transform.position + direction * distance;
 
-        float duration = distance / speed;
+        float duration = (distance / speed) / mass;
         bool isOnNavMesh = true;
 
         while (timeElapsed < duration && isOnNavMesh)
@@ -70,7 +78,7 @@ public class Knockback : MonoBehaviour
         knockbackRoutine = null;
     }
 
-    protected IEnumerator ApplyKnockbackCharacterController(Vector3 direction, float distance, float speed)
+    protected IEnumerator ApplyKnockbackPlayer(Vector3 direction, float distance, float speed)
     {
         characterController.enabled = false;
 
@@ -78,7 +86,7 @@ public class Knockback : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = transform.position + direction * distance;
 
-        float duration = distance / speed;
+        float duration = (distance / speed) / mass;
 
         bool hitObstacle = false;
 
@@ -90,7 +98,7 @@ public class Knockback : MonoBehaviour
             Vector3 lastPos = transform.position;
             Vector3 nextPos = Vector3.Lerp(startPosition, targetPosition, t);
 
-            if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos)))
+            if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos), ~LayerMask.GetMask("Entity")))
             {
                 onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
             }
@@ -103,7 +111,8 @@ public class Knockback : MonoBehaviour
         }
 
         characterController.enabled = true;
-        characterController.gameObject.GetComponentInChildren<Animator>().SetBool("IsKnockback", false);
+        hero.State = (int)Entity.EntityState.MOVE;
+        animator.SetBool("IsKnockback", false);
         knockbackRoutine = null;
     }
 }

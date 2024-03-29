@@ -6,69 +6,67 @@ using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
 {
+    Hero hero;
+    Animator animator;
+    PlayerInput playerInput;
     Transform cameraTransform;
+    CharacterController characterController;
+
     [Header("Mechanics")]
+    public List<Collider> ChargedAttack;
+    public List<NestedList<Collider>> SpearAttacks;
+    Plane mouseRaycastPlane;
     readonly float dashCoef = 3f;
 
-    public Plane PlaneOfDoom { get; private set; }
-    public List<NestedList<Collider>> spearAttacks;
-    public List<Collider> chargedAttack;
-
-    CharacterController characterController;
+    //rotate values
+    public float CurrentTargetAngle { get; set; } = 0f;
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
-    public float CurrentTargetAngle { get; set; } = 0f;
-    public Vector3 DashDir { get; set; } = Vector3.zero;
+
+    //used to auto-redirect on enemies in vision cone when attacking
+    public const float ATTACK_CONE_ANGLE = 45f;
+
+    //attack values
     public int ComboCount { get; set; } = 0;
-    public readonly int MAX_COMBO_COUNT = 3;
-
-    [HideInInspector] public Hero hero;
-    PlayerInput playerInput;
-    Animator animator;
-
-    //used for the error margin for attacks to auto-redirect on enemies in vision cone
-    public const float VISION_CONE_ANGLE = 45f;
-    public const float VISION_CONE_RANGE = 8f;
-
-    //attack damages
     public readonly int FINISHER_DAMAGES = 10;
     public readonly int CHARGED_ATTACK_DAMAGES = 20;
+    public readonly int MAX_COMBO_COUNT = 3;
 
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;
-    public List<VisualEffect> spearAttacksVFX;
-    public VisualEffect hitVFX;
-    public VisualEffect dashVFX;
-    public VisualEffect chargedAttackVFX;
+    public List<VisualEffect> SpearAttacksVFX;
+    public VisualEffect HitVFX;
+    public VisualEffect DashVFX;
+    public VisualEffect ChargedAttackVFX;
 
     [Header("SFXs")]
-    public EventReference dashSFX;
-    public EventReference hitSFX;
-    public EventReference deadSFX;
-    public EventReference throwSpearSFX;
-    public EventReference retrieveSpearSFX;
-    public EventReference chargedAttackMaxSFX;
-    public EventReference chargedAttackReleaseSFX;
-    public EventReference[] attacksSFX;
+    public EventReference DashSFX;
+    public EventReference HitSFX;
+    public EventReference DeadSFX;
+    public EventReference ThrowSpearSFX;
+    public EventReference RetrieveSpearSFX;
+    public EventReference ChargedAttackMaxSFX;
+    public EventReference ChargedAttackReleaseSFX;
+    public EventReference[] AttacksSFXs;
 
     private void Awake()
     {
         hero = GetComponent<Hero>();
     }
-    void Start()
+    private void Start()
     {
         characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInChildren<Animator>();
         cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;
-        PlaneOfDoom = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
+        mouseRaycastPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
 
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
     }
 
-    void Update()
+    private void Update()
     {
         UpdateAnimator();
 
@@ -104,34 +102,39 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (hero.State != (int)Entity.EntityState.DEAD && hero.State != (int)Hero.PlayerState.DASH)
-        {
-            characterController.SimpleMove(Vector3.zero);
-        }
+        if (!CanApplyGravity())
+            return;
+
+        characterController.SimpleMove(Vector3.zero);
     }
 
-    void Move()
+    private void Move()
     {
-        if (hero.State == (int)Entity.EntityState.MOVE && (playerInput.Direction.x != 0f || playerInput.Direction.y != 0f))
-        {
-            CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
-            ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
-            characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * playerInput.Direction.y + camRight * playerInput.Direction.x).normalized);
-        }
+        if (!CanMove())
+            return;
+
+        CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
+        ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+        characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * playerInput.Direction.y + camRight * playerInput.Direction.x).normalized);
     }
 
-    void DashMove()
+    private void DashMove()
     {
-        if (hero.State == (int)Hero.PlayerState.DASH)
-        {
-            characterController.Move(dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * DashDir);
-        }
+        if (hero.State != (int)Hero.PlayerState.DASH)
+            return;
+
+        characterController.Move(dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * playerInput.DashDir);
     }
 
     #endregion
 
     #region Attacks&Orientation
 
+    /// <summary>
+    /// Rotates player based on device, and check collision with attack colliders and inflict damages.
+    /// </summary>
+    /// <param name="colliders"></param>
+    /// <param name="debugMode"></param>
     public void AttackCollide(List<Collider> colliders, bool debugMode = true)
     {
         if (debugMode)
@@ -151,7 +154,7 @@ public class PlayerController : MonoBehaviour
         {
             JoystickOrientation();
         }
-        OrientationErrorMargin();
+        OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
 
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
         Vector3 rayOffset = Vector3.up / 2;
@@ -182,11 +185,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //orients the player to face the position of the mouse
+    /// <summary>
+    /// Rotates the player to face the position of the mouse in world space.
+    /// </summary>
     public void MouseOrientation()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (PlaneOfDoom.Raycast(ray, out float enter))
+        if (mouseRaycastPlane.Raycast(ray, out float enter))
         {
             Vector3 hitPoint = ray.GetPoint(enter);
 
@@ -198,9 +203,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rotates the player based on joystick direction.
+    /// </summary>
     public void JoystickOrientation()
     {
-        if(playerInput.Direction != Vector2.zero)
+        if (playerInput.Direction != Vector2.zero)
         {
             Quaternion rotation = Quaternion.LookRotation(new Vector3(playerInput.Direction.x, 0f, playerInput.Direction.y));
             rotation *= Camera.main.transform.rotation;
@@ -209,10 +217,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //will automatically redirect the player to face the closest enemy in his vision cone
-    public void OrientationErrorMargin(float visionConeRange = VISION_CONE_RANGE)
+    /// <summary>
+    /// Will automatically redirect the player to face the closest enemy in his vision cone.
+    /// </summary>
+    /// <param name="visionConeRange"></param>
+    public void OrientationErrorMargin(float visionConeRange)
     {
-        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, VISION_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
+        Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, ATTACK_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
         .Where(x => !x.CompareTag("Player") && x.GetComponent<Transform>() != null)
         .Select(x => x.GetComponent<Transform>())
         .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -220,13 +231,26 @@ public class PlayerController : MonoBehaviour
 
         if (targetTransform != null)
         {
-            float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, VISION_CONE_ANGLE);
+            float angle = transform.AngleOffsetToFaceTarget(targetTransform.position, ATTACK_CONE_ANGLE);
             if (angle != float.MaxValue)
             {
                 OffsetPlayerRotation(angle, true);
             }
         }
     }
+    #endregion
+
+    #region Conditions
+    private bool CanMove()
+    {
+        return hero.State == (int)Entity.EntityState.MOVE && playerInput.Direction != Vector2.zero;
+    }
+
+    private bool CanApplyGravity()
+    {
+        return hero.State != (int)Entity.EntityState.DEAD && hero.State != (int)Hero.PlayerState.DASH;
+    }
+
     #endregion
 
     #region Miscellaneous
@@ -282,12 +306,12 @@ public class PlayerController : MonoBehaviour
     {
         ComboCount = 0;
 
-        foreach (Collider collider in chargedAttack)
+        foreach (Collider collider in ChargedAttack)
         {
             collider.gameObject.SetActive(false);
         }
 
-        foreach (NestedList<Collider> colliders in spearAttacks)
+        foreach (NestedList<Collider> colliders in SpearAttacks)
         {
             foreach (Collider collider in colliders.data)
             {

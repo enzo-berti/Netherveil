@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -11,6 +12,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
+
+    [Header("Sounds")]
+    [SerializeField] EventReference bossMusicSFX;
+    private FMOD.Studio.EventInstance bossMusicEvent;
 
     enum Attacks
     {
@@ -30,6 +35,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     }
 
     Attacks currentAttack = Attacks.NONE;
+    Attacks lastAttack = Attacks.NONE;
     AttackState attackState = AttackState.IDLE;
     float attackCooldown = 0;
     bool hasProjectile = true;
@@ -65,11 +71,23 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
 
-    [SerializeField, Range(0f, 360f)] private float visionAngle = 360f;
+    [SerializeField, Range(0f, 360f)] float visionAngle = 360f;
+    [SerializeField] float rotationSpeed = 5f;
 
     void OnEnable()
     {
         // jouer l'anim de début de combat
+
+        // mettre la cam entre le joueur et le boss
+
+        //AudioManager.Instance.PlaySound(bossMusicSFX);
+    }
+
+    private void OnDisable()
+    {
+        // stop la musique
+
+        // remettre la camera au dessus du joueur
     }
 
     protected override void Start()
@@ -97,29 +115,29 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     lookRotation.x = 0;
                     lookRotation.z = 0;
 
-                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
                 }
 
                 // Move towards player
                 MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
 
                 // Attacks
-                //if (attackCooldown > 0)
-                //{
-                //    attackState = AttackState.IDLE;
-                //    attackCooldown -= Time.deltaTime;
-                //    if (attackCooldown < 0) attackCooldown = 0;
-                //}
-                //else if (attackCooldown == 0)
-                //{
-                //    //currentAttack = (Attacks)Random.Range(0, 3);
-                //    currentAttack = Attacks.RANGE;
-                //}
+                if (attackCooldown > 0)
+                {
+                    attackState = AttackState.IDLE;
+                    attackCooldown -= Time.deltaTime;
+                    if (attackCooldown < 0) attackCooldown = 0;
+                }
+                else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
+                {
+                    lastAttack = currentAttack;
+                    currentAttack = ChooseAttack();
+                }
 
-                // DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
-                if (Input.GetKeyDown(KeyCode.Alpha1)) currentAttack = Attacks.THRUST;
-                else if (Input.GetKeyDown(KeyCode.Alpha2)) currentAttack = Attacks.DASH;
-                else if (Input.GetKeyDown(KeyCode.Alpha3)) currentAttack = Attacks.RANGE;
+                //// DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
+                //if (Input.GetKeyDown(KeyCode.Alpha1)) currentAttack = Attacks.THRUST;
+                //else if (Input.GetKeyDown(KeyCode.Alpha2)) currentAttack = Attacks.DASH;
+                //else if (Input.GetKeyDown(KeyCode.Alpha3)) currentAttack = Attacks.RANGE;
 
                 switch (currentAttack)
                 {
@@ -142,6 +160,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public void Attack(IDamageable _damageable)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
+
         onHit?.Invoke(_damageable);
         _damageable.ApplyDamage(damages);
     }
@@ -152,8 +171,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         if (stats.GetValue(Stat.HP) <= 0)
             return;
 
+        if (Vector3.Dot(player.transform.position - transform.position, transform.forward) < 0 && !hasProjectile)
+        {
+            _value *= 2;
+        }
+
         Stats.IncreaseValue(Stat.HP, -_value, false);
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+
 
         if (hasAnimation)
         {
@@ -248,7 +273,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         hasProjectile = false;
         currentAttack = Attacks.NONE;
         attackState = AttackState.IDLE;
-        attackCooldown = 2f;
+        SetAtkCooldown(2f, 0.5f);
+        playerHit = false;
     }
 
     void RetrieveProjectile()
@@ -266,10 +292,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         else
         {
             Destroy(projectile.gameObject);
-            attackCooldown = 2f;
             hasProjectile = true;
             currentAttack = Attacks.NONE;
             attackState = AttackState.IDLE;
+            SetAtkCooldown(2f, 0.5f);
+            playerHit = false;
         }
     }
 
@@ -328,7 +355,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     thrustCounter = 0;
                     currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
-                    attackCooldown = 2f;
+                    SetAtkCooldown(2f, 0.5f);
+                    playerHit = false;
                 }
                 break;
         }
@@ -345,8 +373,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         if (!triggerAOE && !playerHit)
         {
+            stats.DecreaseCoeffValue(Stat.ATK, 0.5f);
             AttackCollide(attacks[(int)Attacks.DASH].data, true);
+            stats.IncreaseCoeffValue(Stat.ATK, 0.5f);
         }
+
 
         if (!dashRetracting)
         {
@@ -391,7 +422,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     AOETimer = 0;
                     dashPivot.localPosition = originalPos;
 
-                    attackCooldown = 0.5f;
+                    SetAtkCooldown(0.5f, 0.2f);
                     DisableHitboxes();
                 }
             }
@@ -399,15 +430,76 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     }
     #endregion
 
-#if UNITY_EDITOR
-    //private void OnDrawGizmos()
-    //{
-    //    if (!Selection.Contains(gameObject))
-    //        return;
+    Attacks ChooseAttack()
+    {
+        float[] attacksProba = new float[3];
+        Attacks[] availableAttacks = new Attacks[3];
 
-    //    DisplayVisionRange(visionAngle);
-    //    DisplayAttackRange(visionAngle);
-    //    DisplayInfos();
-    //}
+        availableAttacks[0] = Attacks.THRUST;
+        availableAttacks[1] = Attacks.DASH;
+        availableAttacks[2] = Attacks.RANGE;
+
+        for (int i = 0; i < attacksProba.Length; i++)
+        {
+            attacksProba[i] = 100f / attacksProba.Length;
+
+            // évite que le boss enchaine trop de fois la même attaque
+            if (lastAttack != Attacks.NONE)
+            {
+                if (availableAttacks[i] == lastAttack)
+                {
+                    attacksProba[i] -= 20f;
+                }
+                else
+                {
+                    attacksProba[i] += 20f / (attacksProba.Length - 1);
+                }
+            }
+        }
+
+        if (Vector3.Distance(transform.position, player.transform.position) <= stats.GetValue(Stat.ATK_RANGE)) // proche
+        {
+            attacksProba[0] += 10f;
+            attacksProba[2] -= 10f;
+        }
+        else // loin
+        {
+            attacksProba[0] -= 10f;
+            attacksProba[2] += 10f;
+        }
+
+        float randomValue = Random.Range(0, 100f);
+        float probaCounter = 0;
+
+        for (int i = 0; i < attacksProba.Length; i++)
+        {
+            if (attacksProba[i] < 0) attacksProba[i] = 0;
+
+            probaCounter += attacksProba[i];
+            if (probaCounter >= randomValue)
+            {
+                return availableAttacks[i];
+            }
+        }
+
+        return Attacks.NONE;
+    }
+
+    void SetAtkCooldown(float _time, float _randomMargin)
+    {
+        attackCooldown = _time;
+        attackCooldown += Random.Range(-_randomMargin, _randomMargin);
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (!Selection.Contains(gameObject))
+            return;
+
+        DisplayVisionRange(visionAngle);
+        DisplayAttackRange(visionAngle);
+        DisplayInfos();
+    }
 #endif
 }
