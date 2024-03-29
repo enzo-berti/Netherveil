@@ -8,19 +8,25 @@ using UnityEngine.InputSystem.Controls;
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-    UnityEngine.InputSystem.PlayerInput playerInputMap;
-    PlayerController controller;
-    PlayerInteractions m_interaction;
-    HudHandler hudHandler;
+    Hero hero;
     Animator animator;
-    [SerializeField] Spear spear;
+    HudHandler hudHandler;
+    PlayerController controller;
     CameraUtilities cameraUtilities;
-    public Vector2 Direction { get; private set; } = Vector2.zero;
+    PlayerInteractions playerInteractions;
+    UnityEngine.InputSystem.PlayerInput playerInputMap;
 
+    [SerializeField] Spear spear;
+
+    public Vector2 Direction { get; private set; } = Vector2.zero;
+    public Vector3 DashDir { get; private set; } = Vector3.zero;
+
+    //dash values
     bool dashCooldown = false;
     readonly float DASH_COOLDOWN_TIME = 0.5f;
     float timerDash = 0f;
 
+    //attack values
     bool attackQueue = false;
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
@@ -33,14 +39,16 @@ public class PlayerInput : MonoBehaviour
     //used to cancel queued attacks when pressing another button during attack sequence
     bool ForceReturnToMove = false;
 
+    [Header("Easing")]
+    [SerializeField] EasingFunctions.EaseName easeUnzoom;
+    [SerializeField] EasingFunctions.EaseName easeZoom;
+    [SerializeField] EasingFunctions.EaseName easeShake;
     readonly List<System.Func<float, float>> easeFuncs = new();
-    public EasingFunctions.EaseName easeUnzoom;
-    public EasingFunctions.EaseName easeZoom;
-    public EasingFunctions.EaseName easeShake;
+
     void Awake()
     {
         controller = GetComponent<PlayerController>();
-        m_interaction = GetComponent<PlayerInteractions>();
+        playerInteractions = GetComponent<PlayerInteractions>();
         hudHandler = FindObjectOfType<HudHandler>();
         animator = GetComponentInChildren<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
@@ -51,7 +59,8 @@ public class PlayerInput : MonoBehaviour
         playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         EaseFuncsShitStorm();
         InputSetup();
-        controller.hero.OnChangeState += ResetForceReturnToMove;
+        hero = GetComponent<Hero>();
+        hero.OnChangeState += ResetForceReturnToMove;
     }
 
     private void EaseFuncsShitStorm()
@@ -97,14 +106,14 @@ public class PlayerInput : MonoBehaviour
 
     void InputManagement(InputActionMap map, bool unsubscribe)
     {
-        if(unsubscribe)
+        if (unsubscribe)
         {
             map["Movement"].performed -= ReadDirection;
             map["Movement"].started -= ResetComboWhenMoving;
             map["Movement"].canceled -= ReadDirection;
             map["BasicAttack"].performed -= Attack;
             map["Dash"].performed -= Dash;
-            map["Interact"].performed -= m_interaction.Interract;
+            map["Interact"].performed -= Interract;
             map["Spear"].performed -= ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed -= ChargedAttack;
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
@@ -121,7 +130,7 @@ public class PlayerInput : MonoBehaviour
             map["Movement"].canceled += ReadDirection;
             map["BasicAttack"].performed += Attack;
             map["Dash"].performed += Dash;
-            map["Interact"].performed += m_interaction.Interract;
+            map["Interact"].performed += Interract;
             map["Spear"].performed += ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed += ChargedAttack;
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
@@ -135,7 +144,7 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDestroy()
     {
-        controller.hero.OnChangeState -= ResetForceReturnToMove;
+        hero.OnChangeState -= ResetForceReturnToMove;
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
         InputManagement(kbMap, unsubscribe: true);
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
@@ -157,37 +166,41 @@ public class PlayerInput : MonoBehaviour
 
     #region Inputs
 
-    public void ReadDirection(InputAction.CallbackContext ctx)
+    private void ReadDirection(InputAction.CallbackContext ctx)
     {
         Direction = ctx.ReadValue<Vector2>().normalized;
     }
 
-    public void ChargedAttack(InputAction.CallbackContext ctx)
+    private void ChargedAttack(InputAction.CallbackContext ctx)
     {
-        if (CanCastChargedAttack())
-        {
-            animator.SetBool("ChargedAttackCasting", true);
-            controller.hero.State = (int)Entity.EntityState.ATTACK;
-            LaunchedChargedAttack = true;
-        }
+        if (!CanCastChargedAttack())
+            return;
+
+        animator.SetBool("ChargedAttackCasting", true);
+        hero.State = (int)Entity.EntityState.ATTACK;
+        LaunchedChargedAttack = true;
     }
 
-    public void ChargedAttackCanceled(InputAction.CallbackContext ctx)
+    private void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
         animator.ResetTrigger("ChargedAttackRelease");
         animator.SetBool("ChargedAttackCasting", false);
-        if (LaunchedChargedAttack && (chargedAttackTime/ CHARGED_ATTACK_MAX_TIME) > 0.2f)
+
+        if (!LaunchedChargedAttack)
+            return;
+
+        if ((chargedAttackTime / CHARGED_ATTACK_MAX_TIME) > 0.2f)
         {
             StopAllCoroutines();
             controller.ComboCount = 0;
             animator.SetTrigger("ChargedAttackRelease");
         }
-        else if (LaunchedChargedAttack && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= 0.2f)
+        else
         {
             StopAllCoroutines();
             cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
             DeviceManager.Instance.ForceStopVibrations();
-            controller.hero.State = (int)Entity.EntityState.MOVE;
+            hero.State = (int)Entity.EntityState.MOVE;
             controller.ResetValues();
         }
     }
@@ -196,7 +209,7 @@ public class PlayerInput : MonoBehaviour
     {
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
 
-        controller.AttackCollide(controller.chargedAttack, false);
+        controller.AttackCollide(controller.ChargedAttack, false);
         chargedAttackMax = false;
         chargedAttackTime = 0f;
 
@@ -206,14 +219,14 @@ public class PlayerInput : MonoBehaviour
         cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
-        controller.PlayVFX(controller.chargedAttackVFX);
-        AudioManager.Instance.PlaySound(controller.chargedAttackReleaseSFX);
+        controller.PlayVFX(controller.ChargedAttackVFX);
+        AudioManager.Instance.PlaySound(controller.ChargedAttackReleaseSFX);
     }
 
-    public IEnumerator ChargedAttackCoroutine()
+    private IEnumerator ChargedAttackCoroutine()
     {
         DeviceManager.Instance.ApplyVibrationsInfinite(0f, 0.005f);
-        
+
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
@@ -231,10 +244,10 @@ public class PlayerInput : MonoBehaviour
         DeviceManager.Instance.ApplyVibrationsInfinite(0.005f, 0.005f);
         chargedAttackMax = true;
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
-        AudioManager.Instance.PlaySound(controller.chargedAttackMaxSFX);
+        AudioManager.Instance.PlaySound(controller.ChargedAttackMaxSFX);
         yield return null;
 
-        while(true)
+        while (true)
         {
             if (DeviceManager.Instance.IsPlayingKB())
             {
@@ -248,11 +261,11 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void Attack(InputAction.CallbackContext ctx)
+    private void Attack(InputAction.CallbackContext ctx)
     {
-        if (CanAttack() && !ForceReturnToMove)
+        if (CanAttack())
         {
-            if (controller.hero.State == (int)Entity.EntityState.ATTACK)
+            if (hero.State == (int)Entity.EntityState.ATTACK)
             {
                 attackQueue = true;
             }
@@ -261,8 +274,7 @@ public class PlayerInput : MonoBehaviour
                 animator.ResetTrigger("BasicAttack");
                 animator.SetTrigger("BasicAttack");
             }
-            controller.hero.State = (int)Entity.EntityState.ATTACK;
-
+            hero.State = (int)Entity.EntityState.ATTACK;
         }
         else if (CanRetrieveSpear())
         {
@@ -270,57 +282,69 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    //dash VFX is played in dashBehaviour script
-    public void Dash(InputAction.CallbackContext ctx)
+    private void Dash(InputAction.CallbackContext ctx)
     {
-        if (CanDash())
+        if (!CanDash())
+            return;
+
+        ResetComboWhenMoving(ctx);
+
+        if (Direction != Vector2.zero)
         {
-            ResetComboWhenMoving(ctx);
+            controller.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+            DashDir = (camForward * Direction.y + camRight * Direction.x).normalized;
+        }
+        else
+        {
+            DashDir = transform.forward;
+        }
+        controller.OverridePlayerRotation(Quaternion.LookRotation(DashDir).eulerAngles.y, true);
 
-            if (Direction != Vector2.zero)
-            {
-                controller.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
-                controller.DashDir = (camForward * Direction.y + camRight * Direction.x).normalized;
-            }
-            else
-            {
-                controller.DashDir = transform.forward;
-            }
-            controller.OverridePlayerRotation(Quaternion.LookRotation(controller.DashDir).eulerAngles.y, true);
+        animator.ResetTrigger("Dash");
+        animator.SetTrigger("Dash");
+    }
 
-            animator.ResetTrigger("Dash");
-            animator.SetTrigger("Dash");
+    private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
+    {
+        if (hero.State != (int)Entity.EntityState.MOVE)
+            return;
+
+        if (DeviceManager.Instance.IsPlayingKB())
+        {
+            controller.MouseOrientation();
+        }
+        else
+        {
+            controller.JoystickOrientation();
+            controller.OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
+        }
+
+        // If spear is being thrown we can't recall this attack
+        if (spear.IsThrowing) return;
+        if (!spear.IsThrown)
+        {
+            spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE));
+            AudioManager.Instance.PlaySound(controller.ThrowSpearSFX);
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(controller.RetrieveSpearSFX);
+            spear.Return();
         }
     }
 
-    public void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
+    private void Interract(InputAction.CallbackContext ctx)
     {
-        if (controller.hero.State == (int)Entity.EntityState.MOVE)
+        Vector3 playerPos = (Camera.main.transform.forward * transform.position.z + Camera.main.transform.right * transform.position.x);
+        IInterractable closestInteractable = playerInteractions.InteractablesInRange.OrderBy(x =>
         {
-            //rotate the player to mouse's direction if playing KB/mouse
-            if (DeviceManager.Instance.IsPlayingKB())
-            {
-                controller.MouseOrientation();
-            }
-            else
-            {
-                controller.JoystickOrientation();
-                controller.OrientationErrorMargin(controller.hero.Stats.GetValue(Stat.ATK_RANGE));
-            }
+            Vector3 itemPos = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
+            Camera.main.transform.right * (x as MonoBehaviour).transform.position.x;
+            return Vector2.Distance(playerPos, itemPos);
+        })
+        .FirstOrDefault();
 
-            // If spear is being thrown we can't recall this attack
-            if (spear.IsThrowing) return;
-            if (!spear.IsThrown)
-            {
-                spear.Throw(this.transform.position + this.transform.forward * controller.hero.Stats.GetValue(Stat.ATK_RANGE));
-                AudioManager.Instance.PlaySound(controller.throwSpearSFX);
-            }
-            else
-            {
-                AudioManager.Instance.PlaySound(controller.retrieveSpearSFX);
-                spear.Return();
-            }
-        }
+        closestInteractable?.Interract();
     }
 
     private void ResetComboWhenMoving(InputAction.CallbackContext ctx)
@@ -334,6 +358,21 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region AnimationEvents
+    public void StartOfDashAnimation()
+    {
+        controller.DashVFX.Play();
+        dashCooldown = true;
+        hero.State = (int)Hero.PlayerState.DASH;
+        AudioManager.Instance.PlaySound(controller.DashSFX);
+    }
+
+    public void EndOfDashAnimation()
+    {
+        controller.DashVFX.Stop();
+        hero.State = (int)Entity.EntityState.MOVE;
+        controller.ResetValues();
+    }
+
     public void StartChargedAttackCasting()
     {
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
@@ -342,25 +381,22 @@ public class PlayerInput : MonoBehaviour
 
     public void EndOfChargedAttack()
     {
-        controller.hero.State = (int)Entity.EntityState.MOVE;
-        controller.ResetValues();
-    }
-
-    public void EndOfDashAnimation() 
-    {
-        controller.hero.State = (int)Entity.EntityState.MOVE;
+        hero.State = (int)Entity.EntityState.MOVE;
         controller.ResetValues();
     }
 
     public void StartOfBasicAttack()
     {
-        controller.hero.OnAttack?.Invoke();
-        controller.AttackCollide(controller.spearAttacks[controller.ComboCount].data, false);
-        controller.PlayVFX(controller.spearAttacksVFX[controller.ComboCount]);
-        AudioManager.Instance.PlaySound(controller.attacksSFX[controller.ComboCount]);
+        hero.OnAttack?.Invoke();
+        controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, false);
+        controller.PlayVFX(controller.SpearAttacksVFX[controller.ComboCount]);
+        AudioManager.Instance.PlaySound(controller.AttacksSFXs[controller.ComboCount]);
     }
 
-    public void EndOfBasicAttack() //triggers on attack animations to reset combo
+    /// <summary>
+    /// Triggers on attack animations to reset combo.
+    /// </summary>
+    public void EndOfBasicAttack()
     {
         animator.ResetTrigger("BasicAttack");
 
@@ -368,22 +404,21 @@ public class PlayerInput : MonoBehaviour
         {
             if (!LaunchedChargedAttack)
             {
-                controller.hero.State = (int)Entity.EntityState.MOVE;
+                hero.State = (int)Entity.EntityState.MOVE;
                 controller.ResetValues();
             }
             controller.ComboCount = 0;
         }
         else
         {
-            
             animator.SetTrigger("BasicAttack");
-            controller.hero.State = (int)Entity.EntityState.ATTACK;
+            hero.State = (int)Entity.EntityState.ATTACK;
             controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
         }
 
         attackQueue = false;
 
-        foreach (NestedList<Collider> spearColliders in controller.spearAttacks)
+        foreach (NestedList<Collider> spearColliders in controller.SpearAttacks)
         {
             foreach (Collider spearCollider in spearColliders.data)
             {
@@ -397,36 +432,36 @@ public class PlayerInput : MonoBehaviour
 
     private bool CanAttack()
     {
-        return (controller.hero.State == (int)Entity.EntityState.MOVE ||
-            (controller.hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-             && !spear.IsThrown;
+        return (hero.State == (int)Entity.EntityState.MOVE ||
+            (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
+             && !spear.IsThrown && !ForceReturnToMove;
     }
 
     private bool CanCastChargedAttack()
     {
-        return (controller.hero.State == (int)Entity.EntityState.MOVE 
-            || controller.hero.State == (int)Entity.EntityState.ATTACK)
+        return (hero.State == (int)Entity.EntityState.MOVE
+            || hero.State == (int)Entity.EntityState.ATTACK)
             && !spear.IsThrown && !LaunchedChargedAttack;
     }
 
     private bool CanRetrieveSpear()
     {
-        return controller.hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown;
+        return hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown;
     }
 
     private bool CanDash()
     {
-        return (controller.hero.State == (int)Entity.EntityState.MOVE
-            || controller.hero.State == (int)Entity.EntityState.ATTACK) && !dashCooldown && !LaunchedChargedAttack;
+        return (hero.State == (int)Entity.EntityState.MOVE
+            || hero.State == (int)Entity.EntityState.ATTACK) && !dashCooldown && !LaunchedChargedAttack;
     }
 
     private bool CanResetCombo()
     {
         return (
-                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) || 
+                (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
                 (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
                )
-               && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && controller.hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack;
+               && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack;
     }
 
     #endregion
@@ -435,7 +470,7 @@ public class PlayerInput : MonoBehaviour
 
     private void ResetForceReturnToMove()
     {
-        if (controller.hero.State == (int)Entity.EntityState.MOVE)
+        if (hero.State == (int)Entity.EntityState.MOVE)
         {
             ForceReturnToMove = false;
         }
