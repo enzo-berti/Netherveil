@@ -14,6 +14,7 @@ public class Item : MonoBehaviour, IInterractable
 {
     public string idItemName;
     public string descriptionToDisplay;
+    [SerializeField] bool isRandomize = true;
     [SerializeField] ItemDatabase database;
     [SerializeField] Mesh defaultMesh;
     [SerializeField] Material defaultMat;
@@ -27,7 +28,10 @@ public class Item : MonoBehaviour, IInterractable
     public Color RarityColor { get; private set; }
     private void Awake()
     {
-        RandomizeItem(this);
+        if (isRandomize)
+        {
+            RandomizeItem(this);
+        }
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
@@ -164,6 +168,7 @@ public class ItemEditor : Editor
     SerializedProperty defaultMatProperty;
     SerializedProperty outlineMatProperty;
     SerializedProperty databaseProperty;
+    SerializedProperty isRandomizeProperty;
     private void OnEnable()
     {
         itemName = serializedObject.FindProperty("idItemName");
@@ -171,12 +176,16 @@ public class ItemEditor : Editor
         defaultMatProperty = serializedObject.FindProperty("defaultMat");
         outlineMatProperty = serializedObject.FindProperty("outlineMaterial");
         databaseProperty = serializedObject.FindProperty("database");
+        isRandomizeProperty = serializedObject.FindProperty("isRandomize");
         ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
         DrawScript();
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(isRandomizeProperty);
+        EditorGUILayout.EndHorizontal();
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("idName : ", EditorStyles.boldLabel, GUILayout.Width(80));
         if (GUILayout.Button(ChosenName))
