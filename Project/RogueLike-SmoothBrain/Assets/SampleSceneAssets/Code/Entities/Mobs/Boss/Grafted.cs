@@ -378,6 +378,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             stats.IncreaseCoeffValue(Stat.ATK, 0.5f);
         }
 
+
         if (!dashRetracting)
         {
             if (dashRange.x + dashTimer < dashRange.y)
