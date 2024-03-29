@@ -67,7 +67,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField] GameObject projectilePrefab;
     GraftedProjectile projectile;
 
-
     [Header("Boss Attack Hitboxes")]
     [SerializeField] List<NestedList<Collider>> attacks;
 
