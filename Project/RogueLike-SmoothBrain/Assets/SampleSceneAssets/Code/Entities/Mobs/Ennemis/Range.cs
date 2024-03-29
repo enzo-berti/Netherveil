@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -34,6 +35,7 @@ public class Range : Mobs, IRange
     private bool isGoingOnPlayer = false;
     private bool isAttacking = false;
     private bool atPosToAttack = false;
+    private bool isSmoothCoroutineOn = false;
     private float DistanceToFlee
     {
         get => stats.GetValue(Stat.ATK_RANGE) / 2f;
@@ -93,15 +95,17 @@ public class Range : Mobs, IRange
             // Si l'ennemi peut attaquer il va se deplacer à range du player
             else if (!isGoingOnPlayer && !isFleeing && canAttack && !isAttacking)
             {
+                //Debug.Log("Go on player");
                 atPosToAttack = false;
                 isGoingOnPlayer = true;
-                List<Vector3> listDashes = GetDashesPath(playerTransform.transform.position, 3);
+                Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 7);
+                Vector3 pointToReach3D = new Vector3(pointToReach2D.x, this.transform.position.y, pointToReach2D.y);
+                List<Vector3> listDashes = GetDashesPath(pointToReach3D, 4);
                 StartCoroutine(GoOnPlayer(listDashes));
             }
             // Flee
             else if (!isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
             {
-                Debug.Log("fleeing");
                 Vector2 playerPosXZ = new Vector2(playerTransform.position.x, playerTransform.position.z);
                 Vector2 Point2DToReach = GetPointOnCircle(playerPosXZ, stats.GetValue(Stat.ATK_RANGE) + 10);
                 Vector3 point3DToReach = new Vector3(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
@@ -110,17 +114,13 @@ public class Range : Mobs, IRange
                 MoveTo(point3DToReach);
                 isFleeing = true;
             }
-            
+
             if (!agent.hasPath)
             {
-                if(isFleeing)
+                if (isFleeing)
                 {
-                    isFleeing = false; 
+                    isFleeing = false;
                     this.transform.LookAt(playerTransform.transform.position);
-                }
-                if(isGoingOnPlayer)
-                {
-                    isGoingOnPlayer = false;
                 }
             }
 
@@ -130,18 +130,31 @@ public class Range : Mobs, IRange
 
     private IEnumerator GoOnPlayer(List<Vector3> listDashes)
     {
-        yield return null;
-        Debug.Log(listDashes.Count);
-        int index = 1;
-        isGoingOnPlayer = true;
-        while(index < listDashes.Count - 1)
+        for (int i = 1; i < listDashes.Count; i++)
         {
-            Debug.Log("coucou");
-            this.transform.position = listDashes[index];
-            yield return new WaitForSeconds(1f);
+            StartCoroutine(GoSmoothToPosition(listDashes[i]));
+            yield return new WaitUntil(() => isSmoothCoroutineOn == false);
         }
         isGoingOnPlayer = false;
         atPosToAttack = true;
+        Debug.Log("stop going on player");
+    }
+
+    private IEnumerator GoSmoothToPosition(Vector3 posToReach)
+    {
+        isSmoothCoroutineOn = true;
+        float timer = 0;
+        Vector3 basePos = this.transform.position;
+        this.transform.forward = posToReach - basePos;
+        while (timer < 1f)
+        {
+            this.transform.position = Vector3.Lerp(basePos, posToReach, timer);
+            timer += Time.deltaTime * 5;
+            timer = timer > 1 ? 1 : timer;
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.06f);
+        isSmoothCoroutineOn = false;
     }
     private IEnumerator LongRangeAttack(Transform player)
     {
@@ -156,13 +169,14 @@ public class Range : Mobs, IRange
         StartCoroutine(exploBomb.ThrowToPos(positionToReach, timeToThrow));
         exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
         exploBomb.Activate();
+        atPosToAttack = false;
         yield return new WaitForSeconds(1f);
         isAttacking = false;
         yield return new WaitForSeconds(1f);
         canAttack = true;
     }
 
-   
+
 
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
@@ -181,29 +195,23 @@ public class Range : Mobs, IRange
         }
     }
 
-    //void UpdateStates()
-    //{
-    //    if (isFighting)
-    //    {
-    //        state = RangeState.TRIGGERED;
-    //    }
-    //    else
-    //    {
-    //        state = RangeState.WANDERING;
-    //    }
-    //}
     public List<Vector3> GetDashesPath(Vector3 posToReach, int nbDash)
     {
-        List<Vector3> path = new List<Vector3>
+        List<Vector3> path = new()
         {
             this.transform.position
         };
-        for (int i = 1; i < nbDash; ++i)
+        float distance = Vector3.Distance(transform.position, posToReach);
+        for (int i = 1; i < nbDash; i++)
         {
-            Vector2 posOnCone = GetPointOnCone(path[i - 1], 3, 90);
-            path.Add(new Vector3(posOnCone.x, posToReach.y, posOnCone.y));
+            Vector2 posToReach2D = new(posToReach.x, posToReach.z);
+            Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
+            Vector2 PlayerEnemyVector = posToReach2D - curPos2D;
+            Vector2 posOnCone = GetPointOnCone(curPos2D, PlayerEnemyVector, distance/nbDash, 60);
+            path.Add(new Vector3(posOnCone.x, this.transform.position.y, posOnCone.y));
         }
         path.Add(posToReach);
+        Debug.Log(Vector3.Distance(posToReach, playerTransform.position));
         return path;
     }
     public Vector2 GetPointOnCircle(Vector2 center, float radius)
@@ -211,10 +219,24 @@ public class Range : Mobs, IRange
         float randomValue = Random.Range(0, 2 * Mathf.PI);
         return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
-    public Vector2 GetPointOnCone(Vector3 center, float radius, float angle)
+    public Vector2 GetPointOnCone(Vector2 center, Vector2 direction, float radius, float angle)
     {
-        float halfAngle = Mathf.Deg2Rad * angle / 2;
-        float randomValue = Random.Range(-halfAngle, halfAngle);
+        float c = Mathf.Acos(direction.x / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
+        float s = Mathf.Asin(direction.y / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
+        float cs;
+        float radAngle = angle * Mathf.Deg2Rad;
+        if (s < 0)
+        {
+            if (c < Mathf.PI / 2)
+                cs = s;
+            else
+                cs = Mathf.PI - s;
+        }
+        else
+        {
+            cs = c;
+        }
+        float randomValue = Random.Range(-radAngle + cs, radAngle + cs);
         return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
     public void Death()
