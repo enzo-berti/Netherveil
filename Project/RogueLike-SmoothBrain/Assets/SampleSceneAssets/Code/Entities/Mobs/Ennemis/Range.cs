@@ -174,13 +174,18 @@ public class Range : Mobs, IRange
 
     public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
-        Stats.DecreaseValue(Stat.HP, _value, false);
+        if (stats.GetValue(Stat.HP) <= 0)
+            return;
 
+        Stats.DecreaseValue(Stat.HP, _value, false);
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-        FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+
         if (hasAnimation)
         {
             //add SFX here
+            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            //AudioManager.Instance.PlaySound(hitSFX, transform.position);
+            StartCoroutine(HitRoutine());
         }
 
         if (stats.GetValue(Stat.HP) <= 0)
