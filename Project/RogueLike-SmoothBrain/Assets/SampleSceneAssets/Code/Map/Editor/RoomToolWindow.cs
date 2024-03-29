@@ -2,7 +2,6 @@ using System.IO;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class RoomToolWindow : EditorWindow 
 {
