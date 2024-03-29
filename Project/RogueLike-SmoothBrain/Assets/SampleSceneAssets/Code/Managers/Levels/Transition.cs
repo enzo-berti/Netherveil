@@ -11,9 +11,9 @@ public class Transition : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public async Task PlayTransitionAsync()
+    public WaitForSeconds ToggleTransition(bool toggle)
     {
-        animator.SetTrigger("Start");
-        await Task.Delay((int)(animator.GetCurrentAnimatorStateInfo(0).length * 1100));
+        animator.SetBool("IsStart", toggle);
+        return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
     }
 }
