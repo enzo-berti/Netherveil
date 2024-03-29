@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -44,18 +45,12 @@ public class Drop
 [CustomPropertyDrawer(typeof(Drop))]
 public class DropDrawerUIE : PropertyDrawer
 {
-    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    SerializedProperty dropProperty;
+    
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        // Create property container element.
-        var container = new VisualElement();
-
-        // Create property fields.
-        var nameField = new PropertyField(property.FindPropertyRelative("dropList"), "Drops");
-
-        // Add fields to the container.
-        container.Add(nameField);
-
-        return container;
+        dropProperty = property.FindPropertyRelative("dropList");
+        EditorGUILayout.PropertyField(dropProperty, label);
     }
 }
 #endif

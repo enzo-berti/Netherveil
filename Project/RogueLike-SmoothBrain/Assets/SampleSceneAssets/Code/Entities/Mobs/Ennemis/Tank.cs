@@ -20,6 +20,7 @@ public class Tank : Mobs, ITank
     bool cooldownBasicAttack = false;
     float basicAttackTimer = 0f;
     readonly float BASIC_ATTACK_TIMER = 0.75f;
+    bool isDying = false;
     Hero player;
     Animator animator;
 
@@ -83,7 +84,9 @@ public class Tank : Mobs, ITank
     public void Death()
     {
         AudioManager.Instance.PlaySound(deadSFX, transform.position);
-        Destroy(gameObject);
+        animator.ResetTrigger("Death");
+        animator.SetTrigger("Death");
+        isDying = true;
     }
 
     public void MoveTo(Vector3 posToMove)
@@ -93,7 +96,7 @@ public class Tank : Mobs, ITank
 
     protected override IEnumerator Brain()
     {
-        while (true)
+        while (!isDying)
         {
             yield return null;
 

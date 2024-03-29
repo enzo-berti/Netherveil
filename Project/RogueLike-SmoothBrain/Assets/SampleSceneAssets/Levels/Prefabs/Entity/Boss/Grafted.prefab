@@ -358,17 +358,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.6056986
+      value: -1.94
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 14.78
+      value: 15.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.168133
+      value: 2.39
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -407,9 +407,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 137c6e1c84df844429af960facc8cc80,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f5bcdad645291394ab69ce589a7d3aa6, type: 2}
+      objectReference: {fileID: 2100000, guid: a870429fb91c511448545ae57ad8baff, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 137c6e1c84df844429af960facc8cc80,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 58ed67b853adba54dadb6266e6faa1aa, type: 2}
     - target: {fileID: -5754084199372789682, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_Mesh
@@ -502,7 +512,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 523330043808040203}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.6
+  m_Radius: 1.5054096
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -511,7 +521,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1.85
+  m_Height: 4.75
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -603,13 +613,105 @@ MonoBehaviour:
   statusNameToApply: []
   durationStatusToApply: []
   isAlly: 0
-  bossMusicSFX:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+  bossSounds:
+    deathSound:
+      Guid:
+        Data1: 1654136484
+        Data2: 1227055311
+        Data3: -1530604631
+        Data4: 685301962
+      Path: event:/Enemy/Grafted/GraftedDeath
+    hitSound:
+      Guid:
+        Data1: -214694489
+        Data2: 1302972210
+        Data3: -1715644025
+        Data4: 1018888436
+      Path: event:/Enemy/Grafted/GraftedHit
+    plantInGroundSound:
+      Guid:
+        Data1: -627876059
+        Data2: 1340345369
+        Data3: -1131270236
+        Data4: 1040081313
+      Path: event:/Enemy/Grafted/GraftedHitMap
+    projectileLaunchedSound:
+      Guid:
+        Data1: 200127847
+        Data2: 1172076505
+        Data3: -263263811
+        Data4: -1983943433
+      Path: event:/Enemy/Grafted/GraftedLunchProjectil
+    projectileHitMapSound:
+      Guid:
+        Data1: 833271855
+        Data2: 1203668861
+        Data3: -1421776995
+        Data4: -916089434
+      Path: event:/Enemy/Grafted/GraftedProjectilHitMap
+    projectileHitPlayerSound:
+      Guid:
+        Data1: 2035182190
+        Data2: 1080904031
+        Data3: -660865150
+        Data4: 524391268
+      Path: event:/Enemy/Grafted/GraftedProjectilHitPlayer
+    thrustSound:
+      Guid:
+        Data1: 2110755741
+        Data2: 1200378635
+        Data3: -1637998457
+        Data4: -1644813887
+      Path: event:/Enemy/Grafted/GraftedPunch
+    introSound:
+      Guid:
+        Data1: 1083504436
+        Data2: 1316411749
+        Data3: 1353878919
+        Data4: -995448669
+      Path: event:/Enemy/Grafted/GraftedScream
+    retrievingProjectileLaunchedSound:
+      Guid:
+        Data1: 801531834
+        Data2: 1287258959
+        Data3: 1358326707
+        Data4: 820297616
+      Path: event:/Enemy/Grafted/GraftedSpellCast
+    spinAttackSound:
+      Guid:
+        Data1: -741354411
+        Data2: 1298867554
+        Data3: -1299117894
+        Data4: -1535010658
+      Path: event:/Enemy/Grafted/GraftedSpinAttack
+    stretchSound:
+      Guid:
+        Data1: 1252271740
+        Data2: 1280728789
+        Data3: 1459667589
+        Data4: 1477004850
+      Path: event:/Enemy/Grafted/GraftedStretch
+    weaponOutSound:
+      Guid:
+        Data1: -128107736
+        Data2: 1193393712
+        Data3: 1727045555
+        Data4: 2013680109
+      Path: event:/Enemy/Grafted/GraftedTakeWeapon
+    weaponInSound:
+      Guid:
+        Data1: 1699441104
+        Data2: 1274732431
+        Data3: 1046733242
+        Data4: 1605154435
+      Path: event:/Enemy/Grafted/GraftedTuckWeapon
+    walkingSound:
+      Guid:
+        Data1: -1622528925
+        Data2: 1282462376
+        Data3: -492995948
+        Data4: 819532573
+      Path: event:/Enemy/Grafted/GraftedWalk
   thrustCooldown: 0.1
   thrustCharge: 0.3
   thrustDuration: 0.2
@@ -705,22 +807,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.347701
+      value: -0.35990506
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.08748821
+      value: -0.089452
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.90529644
+      value: 0.9012705
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.22778988
+      value: -0.2240048
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

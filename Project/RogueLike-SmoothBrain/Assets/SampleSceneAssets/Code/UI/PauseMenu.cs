@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -25,7 +24,7 @@ public class PauseMenu : MonoBehaviour
     public void Menu()
     {
         Time.timeScale = 1f;
-        FindObjectOfType<LevelLoader>().LoadScene("MainMenu", "FadeIn");
+        FindObjectOfType<LevelLoader>().LoadScene("MainMenu", "Fade");
     }
 
     public void Quit()
