@@ -26,7 +26,6 @@ public class DungeonGate : MonoBehaviour
 
     private void Close()
     {
-        Debug.Log(RoomUtilities.roomData.Type);
         if (RoomUtilities.roomData.Type == RoomType.Lobby)
         {
             return;

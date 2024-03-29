@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.ProBuilder.Shapes;
 
 public enum RoomType
 {
@@ -141,11 +142,13 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
     [SerializeField] private List<GameObject> obstructionsDoor;
-    [SerializeField] int RoomNumber;
+    [SerializeField] private GameObject gate;
+
+    [SerializeField] int nbNormalRoom;
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: RoomNumber));
+        GenerateMap(new GenerationParam(nbNormal: nbNormalRoom));
     }
 
     private void GenerateMap(GenerationParam genParam)
@@ -166,7 +169,7 @@ public class MapGenerator : MonoBehaviour
             foreach (var door in listDoors.Value)
             {
                 GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
-                go.transform.Rotate(0, door.Rotation % 360, 0);
+                go.transform.Rotate(0, door.Rotation, 0);
                 go.transform.parent = gameObject.transform;
             }
         }
@@ -246,6 +249,11 @@ public class MapGenerator : MonoBehaviour
             genParam.availableDoors[exitDoor.Rotation].Remove(exitDoor);
             // Removed door
             doorsGenerator.RemoveDoor(entranceDoor);
+
+            // Generate GATE
+            GameObject gateGO = Instantiate(gate, entranceDoor.Position, Quaternion.identity);
+            gateGO.transform.Rotate(0, entranceDoor.Rotation, 0);
+            gateGO.transform.parent = gameObject.transform;
 
             // Add the new doors from the new room into the possible candidates
             genParam.AddDoorsGenerator(doorsGenerator);
