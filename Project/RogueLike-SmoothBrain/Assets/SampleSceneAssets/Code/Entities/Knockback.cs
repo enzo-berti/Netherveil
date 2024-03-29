@@ -80,6 +80,12 @@ public class Knockback : MonoBehaviour
 
     protected IEnumerator ApplyKnockbackPlayer(Vector3 direction, float distance, float speed)
     {
+        if (characterController == null)
+        {
+            knockbackRoutine = null;
+            return;
+        }
+
         characterController.enabled = false;
 
         float timeElapsed = 0f;
@@ -109,9 +115,12 @@ public class Knockback : MonoBehaviour
             yield return null;
         }
 
-        characterController.enabled = true;
-        hero.State = (int)Entity.EntityState.MOVE;
-        animator.SetBool("IsKnockback", false);
+        if (characterController != null)
+        {
+            characterController.enabled = true;
+            hero.State = (int)Entity.EntityState.MOVE;
+            animator.SetBool("IsKnockback", false);
+        }
         knockbackRoutine = null;
     }
 }

@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateAnimator();
 
-        if (hero.State != (int)Hero.PlayerState.KNOCKBACK && characterController != null && characterController.enabled)
+        if (CanUpdatePhysic())
         {
             ApplyGravity();
             Rotate();
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
             DashMove();
         }
 
-        //if player has fallen out of map
+        //if player has fallen out of map security
         if(transform.position.y < -100f)
         {
             FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -256,6 +256,11 @@ public class PlayerController : MonoBehaviour
     private bool CanApplyGravity()
     {
         return hero.State != (int)Entity.EntityState.DEAD && hero.State != (int)Hero.PlayerState.DASH;
+    }
+
+    private bool CanUpdatePhysic()
+    {
+        return hero.State != (int)Hero.PlayerState.KNOCKBACK && characterController != null && characterController.enabled;
     }
 
     #endregion
