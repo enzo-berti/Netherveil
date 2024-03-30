@@ -14,9 +14,10 @@ public class PlayerInput : MonoBehaviour
     PlayerController controller;
     CameraUtilities cameraUtilities;
     PlayerInteractions playerInteractions;
-    Coroutine chargedAttackCoroutine = null;
-    Coroutine dashCoroutine = null;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
+
+    Coroutine dashCoroutine = null;
+    Coroutine chargedAttackCoroutine = null;
 
     [SerializeField] Spear spear;
 
