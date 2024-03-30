@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerInteractions : MonoBehaviour
 {
     public List<Item> ItemsInRange { get; private set; } = new List<Item>();
-    Item lastClosestItem = null;
 
     void Update()
     {
@@ -14,7 +13,7 @@ public class PlayerInteractions : MonoBehaviour
 
     private void SelectClosestItem()
     {
-        if (ItemsInRange.Count == 0 || lastClosestItem == ItemsInRange[0])
+        if (ItemsInRange.Count == 0)
             return;
 
         Vector2 playerPos = transform.position.ToCameraOrientedVec2();
@@ -26,12 +25,13 @@ public class PlayerInteractions : MonoBehaviour
         ).ToList();
 
 
-        foreach (var item in ItemsInRange)
+        for (int i = 1; i< ItemsInRange.Count; ++i)
         {
-            item.GetComponent<Outline>().DisableOutline();
+            ItemsInRange[i].GetComponent<Outline>().DisableOutline();
+            ItemsInRange[i].GetComponent<ItemDescription>().TogglePanel(false);
         }
 
         ItemsInRange[0].GetComponent<Outline>().EnableOutline();
-        lastClosestItem = ItemsInRange[0];
+        ItemsInRange[0].GetComponent<ItemDescription>().TogglePanel(true);
     }
 }

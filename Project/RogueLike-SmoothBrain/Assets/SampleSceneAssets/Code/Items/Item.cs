@@ -26,6 +26,7 @@ public class Item : MonoBehaviour, IInterractable
     GameObject meshObject;
     ItemEffect itemToGive;
     PlayerInteractions playerInteractions;
+    ItemDescription itemDescription;
 
     private void Awake()
     {
@@ -48,6 +49,7 @@ public class Item : MonoBehaviour, IInterractable
         hero = playerInteractions.gameObject.GetComponent<Hero>();
         meshObject = this.GetComponentInChildren<MeshRenderer>().gameObject;
         outline = GetComponent<Outline>();
+        itemDescription = GetComponent<ItemDescription>();
     }
 
     private void Update()
@@ -77,6 +79,7 @@ public class Item : MonoBehaviour, IInterractable
         {
             playerInteractions.ItemsInRange.Remove(this);
             outline.DisableOutline();
+            itemDescription.TogglePanel(false);
         }
     }
 
@@ -157,19 +160,13 @@ public class ItemEditor : Editor
 {
     public static string ChosenName;
     SerializedProperty itemName;
-    SerializedProperty defaultMeshProperty;
-    SerializedProperty defaultMatProperty;
-    SerializedProperty outlineMatProperty;
     SerializedProperty databaseProperty;
-    SerializedProperty isRandomizeProperty;
+    SerializedProperty isRandomizedProperty;
     private void OnEnable()
     {
         itemName = serializedObject.FindProperty("idItemName");
-        defaultMeshProperty = serializedObject.FindProperty("defaultMesh");
-        defaultMatProperty = serializedObject.FindProperty("defaultMat");
-        outlineMatProperty = serializedObject.FindProperty("outlineMaterial");
         databaseProperty = serializedObject.FindProperty("database");
-        isRandomizeProperty = serializedObject.FindProperty("isRandomize");
+        isRandomizedProperty = serializedObject.FindProperty("isRandomized");
         ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()
@@ -177,7 +174,7 @@ public class ItemEditor : Editor
         serializedObject.Update();
         DrawScript();
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(isRandomizeProperty);
+        EditorGUILayout.PropertyField(isRandomizedProperty);
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("idName : ", EditorStyles.boldLabel, GUILayout.Width(80));
@@ -195,14 +192,6 @@ public class ItemEditor : Editor
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(databaseProperty, new GUIContent("Database : "));
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(defaultMeshProperty, new GUIContent("Default Mesh : "));
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(defaultMatProperty, new GUIContent("Default Material : "));
         EditorGUILayout.EndHorizontal();
 
         itemName.stringValue = ChosenName;
