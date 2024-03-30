@@ -14,6 +14,8 @@ public class PlayerInput : MonoBehaviour
     PlayerController controller;
     CameraUtilities cameraUtilities;
     PlayerInteractions playerInteractions;
+    Coroutine chargedAttackCoroutine = null;
+    Coroutine dashCoroutine = null;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
 
     [SerializeField] Spear spear;
@@ -23,8 +25,7 @@ public class PlayerInput : MonoBehaviour
 
     //dash values
     bool dashCooldown = false;
-    readonly float DASH_COOLDOWN_TIME = 0.5f;
-    float timerDash = 0f;
+    readonly float DASH_COOLDOWN_TIME = 1f;
 
     //attack values
     bool attackQueue = false;
@@ -151,19 +152,6 @@ public class PlayerInput : MonoBehaviour
         InputManagement(gamepadMap, unsubscribe: true);
     }
 
-    void Update()
-    {
-        if (dashCooldown)
-        {
-            timerDash += Time.deltaTime;
-            if (timerDash >= DASH_COOLDOWN_TIME)
-            {
-                dashCooldown = false;
-                timerDash = 0f;
-            }
-        }
-    }
-
     #region Inputs
 
     private void ReadDirection(InputAction.CallbackContext ctx)
@@ -191,13 +179,13 @@ public class PlayerInput : MonoBehaviour
 
         if ((chargedAttackTime / CHARGED_ATTACK_MAX_TIME) > 0.2f)
         {
-            StopAllCoroutines();
+            StopChargedAttackCoroutine();
             controller.ComboCount = 0;
             animator.SetTrigger("ChargedAttackRelease");
         }
         else
         {
-            StopAllCoroutines();
+            StopChargedAttackCoroutine();
             cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
             DeviceManager.Instance.ForceStopVibrations();
             hero.State = (int)Entity.EntityState.MOVE;
@@ -304,6 +292,14 @@ public class PlayerInput : MonoBehaviour
         animator.SetTrigger("Dash");
     }
 
+    private IEnumerator DashCoroutine()
+    {
+        dashCooldown = true;
+        yield return new WaitForSeconds(DASH_COOLDOWN_TIME);
+        dashCooldown = false;
+        dashCoroutine = null;
+    }
+
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
     {
         // If spear is being thrown we can't recall this attack
@@ -319,7 +315,7 @@ public class PlayerInput : MonoBehaviour
             controller.JoystickOrientation();
             controller.OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
         }
-     
+
         if (!spear.IsThrown)
         {
             spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE));
@@ -360,7 +356,7 @@ public class PlayerInput : MonoBehaviour
     public void StartOfDashAnimation()
     {
         controller.DashVFX.Play();
-        dashCooldown = true;
+        RestartDashCoroutine();
         hero.State = (int)Hero.PlayerState.DASH;
         AudioManager.Instance.PlaySound(controller.DashSFX);
     }
@@ -375,7 +371,7 @@ public class PlayerInput : MonoBehaviour
     public void StartChargedAttackCasting()
     {
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV + 0.2f, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeUnzoom]);
-        StartCoroutine(ChargedAttackCoroutine());
+        chargedAttackCoroutine = StartCoroutine(ChargedAttackCoroutine());
     }
 
     public void EndOfChargedAttack()
@@ -476,16 +472,29 @@ public class PlayerInput : MonoBehaviour
     }
     public void ResetValuesInput()
     {
-        StopAllCoroutines();
+        StopChargedAttackCoroutine();
         attackQueue = false;
         LaunchedChargedAttack = false;
         chargedAttackMax = false;
         chargedAttackTime = 0f;
     }
 
-    public void TriggerDashCooldown()
+    private void StopChargedAttackCoroutine()
     {
-        dashCooldown = true;
+        if (chargedAttackCoroutine != null)
+        {
+            StopCoroutine(chargedAttackCoroutine);
+            chargedAttackCoroutine = null;
+        }
+    }
+
+    private void RestartDashCoroutine()
+    {
+        if(dashCoroutine != null)
+        {
+            StopCoroutine(dashCoroutine);
+        }
+        dashCoroutine = StartCoroutine(DashCoroutine());
     }
     #endregion
 }
