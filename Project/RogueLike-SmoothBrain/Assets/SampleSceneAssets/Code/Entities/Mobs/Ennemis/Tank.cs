@@ -128,12 +128,13 @@ public class Tank : Mobs, ITank
 
             if (isInRange && !cooldownSpeAttack)
             {
+                animator.ResetTrigger("Shockwave");
+                animator.SetTrigger("Shockwave");
+                yield return new WaitForSeconds(0.4f);
                 AttackCollide();
                 cooldownSpeAttack = true;
                 vfxStopper.PlayVFX();
-                AudioManager.Instance.PlaySound(shockwaveSFX, transform.position);
-                animator.ResetTrigger("Shockwave");
-                animator.SetTrigger("Shockwave");
+                AudioManager.Instance.PlaySound(shockwaveSFX, transform.position);;
             }
             else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos2D, tankPos2D) <= agent.stoppingDistance && !cooldownBasicAttack)
             {
