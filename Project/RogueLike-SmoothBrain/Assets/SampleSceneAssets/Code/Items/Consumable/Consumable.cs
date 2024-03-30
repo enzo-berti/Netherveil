@@ -1,4 +1,3 @@
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public abstract class Consumable : MonoBehaviour, IConsumable
@@ -11,7 +10,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
 
     protected virtual void Start()
     {
-         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         model = GetComponentInChildren<MeshRenderer>().gameObject;
     }
 
