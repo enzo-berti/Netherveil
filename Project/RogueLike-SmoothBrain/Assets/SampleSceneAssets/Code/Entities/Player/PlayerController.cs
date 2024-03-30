@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
     public EventReference RetrieveSpearSFX;
     public EventReference ChargedAttackMaxSFX;
     public EventReference ChargedAttackReleaseSFX;
-    public EventReference[] AttacksSFXs;
+    public EventReference[] AttacksSFX;
 
     private void Awake()
     {

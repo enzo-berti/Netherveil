@@ -407,7 +407,7 @@ public class PlayerInput : MonoBehaviour
         }
 
         controller.PlayVFX(controller.SpearAttacksVFX[controller.ComboCount]);
-        AudioManager.Instance.PlaySound(controller.AttacksSFXs[controller.ComboCount]);
+        AudioManager.Instance.PlaySound(controller.AttacksSFX[controller.ComboCount]);
     }
 
     /// <summary>
