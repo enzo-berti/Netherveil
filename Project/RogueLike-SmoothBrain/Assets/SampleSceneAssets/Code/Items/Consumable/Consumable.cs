@@ -7,6 +7,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
     public bool CanBeRetrieved { get; protected set; } = true;
     protected Hero player;
     protected GameObject model;
+    float lerpTimer = 0f;
 
     protected virtual void Start()
     {
@@ -43,11 +44,16 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         float distance = Vector2.Distance(playerPos, itemPos);
         if (distance <= player.Stats.GetValue(Stat.CATCH_RADIUS))
         {
-            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Time.deltaTime * 6);
+            lerpTimer += Time.deltaTime / 10f;
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, lerpTimer);
             if (distance <= 0.3f)
             {
                 OnRetrieved();
             }
+        }
+        else
+        {
+            lerpTimer = 0f;
         }
     }
 
