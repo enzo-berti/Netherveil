@@ -26,8 +26,8 @@ public class PlayerInput : MonoBehaviour
     public Vector3 DashDir { get; private set; } = Vector3.zero;
 
     //dash values
-    bool dashCooldown = false;
-    readonly float DASH_COOLDOWN_TIME = 1f;
+    bool dashInCooldown = false;
+    readonly float DASH_COOLDOWN_TIME = 0.3f;
 
     //attack values
     bool attackQueue = false;
@@ -307,9 +307,9 @@ public class PlayerInput : MonoBehaviour
 
     private IEnumerator DashCoroutine()
     {
-        dashCooldown = true;
+        dashInCooldown = true;
         yield return new WaitForSeconds(DASH_COOLDOWN_TIME);
-        dashCooldown = false;
+        dashInCooldown = false;
         dashCoroutine = null;
     }
 
@@ -370,13 +370,13 @@ public class PlayerInput : MonoBehaviour
     public void StartOfDashAnimation()
     {
         controller.DashVFX.Play();
-        RestartDashCoroutine();
         hero.State = (int)Hero.PlayerState.DASH;
         AudioManager.Instance.PlaySound(controller.DashSFX);
     }
 
     public void EndOfDashAnimation()
     {
+        RestartDashCoroutine();
         controller.DashVFX.Stop();
         hero.State = (int)Entity.EntityState.MOVE;
         controller.ResetValues();
@@ -469,7 +469,7 @@ public class PlayerInput : MonoBehaviour
     private bool CanDash()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
-            || hero.State == (int)Entity.EntityState.ATTACK) && !dashCooldown && !LaunchedChargedAttack;
+            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack;
     }
 
     private bool CanResetCombo()
