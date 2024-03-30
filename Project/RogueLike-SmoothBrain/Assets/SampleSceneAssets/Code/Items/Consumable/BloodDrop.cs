@@ -1,25 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class BloodDrop : MonoBehaviour, IConsumable
+public class BloodDrop : Consumable
 {
-    public float Price => price;
-
-    public bool CanBeRetrieved => canBeRetrieved;
-    Hero player;
-    [SerializeField] private float price = 0;
-    private bool canBeRetrieved = true;
-
+    [SerializeField] private int price = 0;
     [SerializeField] int bloodQuantity = 0;
-    public void OnRetrieved()
+
+    protected override void Start()
     {
-        player.Inventory.Blood += bloodQuantity;
+        Price = price;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public override void OnRetrieved()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        player.Inventory.Blood += bloodQuantity;
     }
 }
