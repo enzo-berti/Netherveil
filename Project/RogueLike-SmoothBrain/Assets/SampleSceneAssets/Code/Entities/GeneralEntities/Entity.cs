@@ -181,8 +181,6 @@ public class EntityDrawer : Editor
     // Duration of each status in the entity ( required to instantiate with the reflection )
     SerializedProperty statusDurationListProperty;
 
-    SerializedProperty isAllyProperty;
-
     // Index of each status ( in the name list )
     List<int> allIndex = new();
     bool isStatusExpended = false;
@@ -198,7 +196,6 @@ public class EntityDrawer : Editor
         statProperty = serializedObject.FindProperty("stats");
         statusNameListProperty = serializedObject.FindProperty("statusNameToApply");
         statusDurationListProperty = serializedObject.FindProperty("durationStatusToApply");
-        isAllyProperty = serializedObject.FindProperty("isAlly");
 
         // Add existing Status name in a list
         if (statusNameList.Count == 0)
@@ -313,10 +310,7 @@ public class EntityDrawer : Editor
             }
             EditorGUILayout.EndHorizontal();
             GUI.color = Color.white;
-
-
         }
-        EditorGUILayout.PropertyField(isAllyProperty);
 
         foreach (string fieldToDisplay in classField)
         {
