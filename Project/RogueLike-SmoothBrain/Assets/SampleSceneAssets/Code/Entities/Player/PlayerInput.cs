@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
@@ -386,6 +387,13 @@ public class PlayerInput : MonoBehaviour
     {
         hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, false);
+
+        foreach(VisualEffect vfx in controller.SpearAttacksVFX)
+        {
+            vfx.Reinit();
+            vfx.Stop();
+        }
+
         controller.PlayVFX(controller.SpearAttacksVFX[controller.ComboCount]);
         AudioManager.Instance.PlaySound(controller.AttacksSFXs[controller.ComboCount]);
     }
