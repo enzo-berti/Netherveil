@@ -34,6 +34,8 @@ public class PlayerInput : MonoBehaviour
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
     readonly float CHARGED_ATTACK_MAX_TIME = 1f;
+    float chargedAttackScaleSize = 0f;
+    float chargedAttackVFXMaxSize = 0f;
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
 
@@ -64,6 +66,8 @@ public class PlayerInput : MonoBehaviour
         InputSetup();
         hero = GetComponent<Hero>();
         hero.OnChangeState += ResetForceReturnToMove;
+        chargedAttackScaleSize = controller.ChargedAttack.gameObject.transform.localScale.x;
+        chargedAttackVFXMaxSize = controller.ChargedAttackVFX.GetFloat("VFX Size");
     }
 
     private void EaseFuncsShitStorm()
@@ -198,6 +202,13 @@ public class PlayerInput : MonoBehaviour
     public void ChargedAttackRelease()
     {
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
+
+        //set up collider and vfx size based on maintained time of charged attack
+        Vector3 scale = controller.ChargedAttack.gameObject.transform.localScale;
+        scale.x = ChargedAttackCoef * chargedAttackScaleSize;
+        scale.z = ChargedAttackCoef * chargedAttackScaleSize;
+        controller.ChargedAttack.gameObject.transform.localScale = scale;
+        controller.ChargedAttackVFX.SetFloat("VFX Size", chargedAttackVFXMaxSize * 0.33f + ChargedAttackCoef * chargedAttackVFXMaxSize * 0.67f);
 
         controller.AttackCollide(controller.ChargedAttack, false);
         chargedAttackMax = false;

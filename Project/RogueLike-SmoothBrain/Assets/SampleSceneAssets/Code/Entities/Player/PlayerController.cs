@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     CharacterController characterController;
 
     [Header("Mechanics")]
-    public List<Collider> ChargedAttack;
+    public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 3f;
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //if player has fallen out of map security
-        if(transform.position.y < -100f)
+        if (transform.position.y < -100f)
         {
             FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -138,21 +138,73 @@ public class PlayerController : MonoBehaviour
     #region Attacks&Orientation
 
     /// <summary>
-    /// Rotates player based on device, and check collision with attack colliders and inflict damages.
+    ///  Check collision with attack colliders and inflict damages.
     /// </summary>
     /// <param name="colliders"></param>
     /// <param name="debugMode"></param>
     public void AttackCollide(List<Collider> colliders, bool debugMode = true)
     {
+        RotatePlayerToDeviceAndMargin();
+
+        List<Collider> alreadyAttacked = new();
+        bool applyVibrations = true;
+        foreach (Collider collider in colliders)
+        {
+            ApplyCollide(collider, alreadyAttacked, ref applyVibrations, debugMode);
+        }
+    }
+
+    /// <summary>
+    /// Check collision with attack collider and inflict damages.
+    /// </summary>
+    /// <param name="collider"></param>
+    /// <param name="debugMode"></param>
+    public void AttackCollide(Collider collider, bool debugMode = true)
+    {
+        RotatePlayerToDeviceAndMargin();
+        List<Collider> alreadyAttacked = new();
+        bool applyVibrations = true;
+        ApplyCollide(collider, alreadyAttacked, ref applyVibrations, debugMode);
+    }
+
+    private void ApplyCollide(Collider collider, List<Collider> alreadyAttacked, ref bool applyVibrations, bool debugMode = true)
+    {
         if (debugMode)
         {
-            foreach (Collider collider in colliders)
-            {
-                collider.gameObject.SetActive(true);
-            }
+            collider.gameObject.SetActive(true);
         }
 
-        //rotate the player to mouse's direction if playing KB/mouse
+        //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
+        Vector3 rayOffset = Vector3.up / 2;
+
+        Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(collider, transform.position + rayOffset, "Enemy", LayerMask.GetMask("Map"));
+
+        if (tab.Length > 0)
+        {
+            foreach (Collider col in tab)
+            {
+                if (col.gameObject.GetComponent<IDamageable>() != null && !alreadyAttacked.Contains(col))
+                {
+                    if (applyVibrations && !playerInput.LaunchedChargedAttack)
+                    {
+                        DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
+                        applyVibrations = false;
+                    }
+                    alreadyAttacked.Add(col);
+                    hero.Attack(col.gameObject.GetComponent<IDamageable>());
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// rotate the player to mouse's direction if playing KB/mouse
+    /// or to joystick direction if using gamepad
+    /// and orients automatically the player to an enemy if in the attack cone
+    /// </summary>
+    private void RotatePlayerToDeviceAndMargin()
+    {
+
         if (DeviceManager.Instance.IsPlayingKB())
         {
             MouseOrientation();
@@ -162,34 +214,6 @@ public class PlayerController : MonoBehaviour
             JoystickOrientation();
         }
         OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
-
-        //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
-        Vector3 rayOffset = Vector3.up / 2;
-
-        //used to apply vibrations only one time
-        bool applyVibrations = true;
-        List<Collider> alreadyAttacked = new List<Collider>();
-        foreach (Collider spearCollider in colliders)
-        {
-            Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(spearCollider, transform.position + rayOffset, "Enemy", LayerMask.GetMask("Map"));
-
-            if (tab.Length > 0)
-            {
-                foreach (Collider col in tab)
-                {
-                    if (col.gameObject.GetComponent<IDamageable>() != null && !alreadyAttacked.Contains(col))
-                    {
-                        if (applyVibrations && !playerInput.LaunchedChargedAttack)
-                        {
-                            DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
-                            applyVibrations = false;
-                        }
-                        alreadyAttacked.Add(col);
-                        hero.Attack(col.gameObject.GetComponent<IDamageable>());
-                    }
-                }
-            }
-        }
     }
 
     /// <summary>
@@ -317,11 +341,7 @@ public class PlayerController : MonoBehaviour
     public void ResetValues()
     {
         ComboCount = 0;
-
-        foreach (Collider collider in ChargedAttack)
-        {
-            collider.gameObject.SetActive(false);
-        }
+        ChargedAttack.gameObject.SetActive(false);
 
         foreach (NestedList<Collider> colliders in SpearAttacks)
         {
