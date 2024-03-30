@@ -11,7 +11,7 @@ public class ItemBar : MonoBehaviour
 
     void Start()
     {
-        Item.onRetrieved += OnItemAdd;
+        Item.OnRetrieved += OnItemAdd;
         //subscribe event
     }
 

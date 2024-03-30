@@ -12,37 +12,42 @@ using UnityEditor;
 [Serializable]
 public class Item : MonoBehaviour, IInterractable
 {
+    [SerializeField] bool isRandomized = true;
+    [SerializeField] ItemDatabase database;
+
+    public Color RarityColor { get; private set; }
     public string idItemName;
     public string descriptionToDisplay;
-    [SerializeField] bool isRandomize = true;
-    [SerializeField] ItemDatabase database;
-    [SerializeField] Mesh defaultMesh;
-    [SerializeField] Material defaultMat;
-    [SerializeField] Material outlineMaterial;
-    ItemEffect itemToGive;
-    public static event Action<ItemEffect> onRetrieved;
-    PlayerInteractions playerInteractions;
-    Hero hero;
 
+    public static event Action<ItemEffect> OnRetrieved;
+
+    Hero hero;
+    Outline outline;
     GameObject meshObject;
-    public Color RarityColor { get; private set; }
+    ItemEffect itemToGive;
+    PlayerInteractions playerInteractions;
+
     private void Awake()
     {
-        if (isRandomize)
+        if (isRandomized)
         {
             RandomizeItem(this);
         }
+
         itemToGive = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
         RarityColor = database.GetItemRarityColor(idItemName);
-        this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : defaultMat;
-        this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : defaultMesh;
+
+        this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : this.GetComponentInChildren<MeshRenderer>().material;
+        this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : this.GetComponentInChildren<MeshFilter>().mesh;
+
         InitDescription();
+
         playerInteractions = GameObject.FindWithTag("Player").GetComponent<PlayerInteractions>();
         hero = playerInteractions.gameObject.GetComponent<Hero>();
-
         meshObject = this.GetComponentInChildren<MeshRenderer>().gameObject;
+        outline = GetComponent<Outline>();
     }
 
     private void Update()
@@ -64,24 +69,14 @@ public class Item : MonoBehaviour, IInterractable
         bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2()) 
             <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
 
-        if (isInRange && !playerInteractions.InteractablesInRange.Contains(this))
+        if (isInRange && !playerInteractions.ItemsInRange.Contains(this))
         {
-            playerInteractions.InteractablesInRange.Add(this);
+            playerInteractions.ItemsInRange.Add(this);
         }
-        else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
+        else if (!isInRange && playerInteractions.ItemsInRange.Contains(this))
         {
-            playerInteractions.InteractablesInRange.Remove(this);
-
-            var meshRenderer = this.GetComponentInChildren<MeshRenderer>();
-            GetComponent<ItemDescription>().TogglePanel(false);
-            if (meshRenderer.materials.Length > 1)
-            {
-                List<Material> finalMaterial = new()
-                    {
-                        meshRenderer.material
-                    };
-                meshRenderer.SetMaterials(finalMaterial);
-            }
+            playerInteractions.ItemsInRange.Remove(this);
+            outline.DisableOutline();
         }
     }
 
@@ -91,9 +86,9 @@ public class Item : MonoBehaviour, IInterractable
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
         Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
         Destroy(this.gameObject);
-        playerInteractions.InteractablesInRange.Remove(this);
+        playerInteractions.ItemsInRange.Remove(this);
         DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
-        onRetrieved?.Invoke(itemToGive);
+        OnRetrieved?.Invoke(itemToGive);
     }
 
     ItemEffect LoadClass()
@@ -208,10 +203,6 @@ public class ItemEditor : Editor
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(defaultMatProperty, new GUIContent("Default Material : "));
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(outlineMatProperty, new GUIContent("Outline Material : "));
         EditorGUILayout.EndHorizontal();
 
         itemName.stringValue = ChosenName;

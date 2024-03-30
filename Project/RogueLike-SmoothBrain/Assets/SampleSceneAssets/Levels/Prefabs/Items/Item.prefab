@@ -308,6 +308,7 @@ GameObject:
   - component: {fileID: 8145302689807495567}
   - component: {fileID: 1312039710714292112}
   - component: {fileID: 400658464502249309}
+  - component: {fileID: 9003852147173479134}
   m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
@@ -346,6 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idItemName: Bramble
   descriptionToDisplay: 
+  isRandomize: 1
   database: {fileID: 11400000, guid: a25fead2382213b4eadf914d4354c856, type: 2}
   defaultMesh: {fileID: 2572310593437753612, guid: 62c40876fe4cc4046a4c27025fa6a466,
     type: 3}
@@ -415,6 +417,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &9003852147173479134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5047629768900978217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b1642e408d9dea4cb780918edce67dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineThickness: 0.02
 --- !u!1 &5645049553563488059
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerInteractions : MonoBehaviour
 {
-    [SerializeField] Material outlineMaterial;
-    public List<IInterractable> InteractablesInRange { get; private set; } = new List<IInterractable>();
+    public List<Item> ItemsInRange { get; private set; } = new List<Item>();
+    Item lastClosestItem = null;
 
     void Update()
     {
@@ -14,45 +14,24 @@ public class PlayerInteractions : MonoBehaviour
 
     private void SelectClosestItem()
     {
-        Vector3 tmp = (Camera.main.transform.forward * transform.position.z + Camera.main.transform.right * transform.position.x);
-        Vector2 playerPos = new(tmp.x, tmp.z);
+        if (ItemsInRange.Count == 0 || lastClosestItem == ItemsInRange[0])
+            return;
 
-        InteractablesInRange = InteractablesInRange.OrderBy(x =>
+        Vector2 playerPos = transform.position.ToCameraOrientedVec2();
+        ItemsInRange = ItemsInRange.OrderBy(item =>
         {
-            tmp = Camera.main.transform.forward * (x as MonoBehaviour).transform.position.z +
-            Camera.main.transform.right * (x as MonoBehaviour).transform.position.x;
-            Vector2 itemPos = new(tmp.x, tmp.z);
-
+            Vector2 itemPos = item.transform.position.ToCameraOrientedVec2();
             return Vector2.Distance(playerPos, itemPos);
         }
         ).ToList();
 
-        if (InteractablesInRange.Count > 0)
+
+        foreach (var item in ItemsInRange)
         {
-            MeshRenderer meshRenderer;
-            List<Material> finalMaterial;
-
-            for (int i = 1; i < InteractablesInRange.Count; i++)
-            {
-                meshRenderer = (InteractablesInRange[i] as MonoBehaviour).gameObject.GetComponentInChildren<MeshRenderer>();
-                if (meshRenderer.materials.Length > 1)
-                {
-                    finalMaterial = new()
-                    {
-                        meshRenderer.material
-                    };
-                    meshRenderer.SetMaterials(finalMaterial);
-                }
-            }
-
-            meshRenderer = (InteractablesInRange[0] as MonoBehaviour).gameObject.GetComponentInChildren<MeshRenderer>();
-            (InteractablesInRange[0] as MonoBehaviour).gameObject.GetComponent<ItemDescription>().TogglePanel(true);
-            finalMaterial = new()
-                {
-                    meshRenderer.material,
-                    outlineMaterial
-                };
-            meshRenderer.SetMaterials(finalMaterial);
+            item.GetComponent<Outline>().DisableOutline();
         }
+
+        ItemsInRange[0].GetComponent<Outline>().EnableOutline();
+        lastClosestItem = ItemsInRange[0];
     }
 }
