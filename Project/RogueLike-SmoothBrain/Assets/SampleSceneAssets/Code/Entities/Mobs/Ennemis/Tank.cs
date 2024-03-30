@@ -121,14 +121,10 @@ public class Tank : Mobs, ITank
                 }
             }
 
-            Vector3 cameraForward = Camera.main.transform.forward;
-            Vector3 cameraRight = Camera.main.transform.right;
-            Vector3 tmp = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
-            Vector2 playerPos = new Vector2(tmp.x, tmp.z);
-            tmp = (cameraForward * transform.position.z + cameraRight * transform.position.x);
-            Vector2 tankPos = new Vector2(tmp.x, tmp.z);
+            Vector2 playerPos2D = player.transform.position.ToCameraOrientedVec2();
+            Vector2 tankPos2D = transform.position.ToCameraOrientedVec2();
 
-            bool isInRange = Vector2.Distance(playerPos, tankPos) <= shockwaveCollider.gameObject.transform.localScale.z/2f;
+            bool isInRange = Vector2.Distance(playerPos2D, tankPos2D) <= shockwaveCollider.gameObject.transform.localScale.z/2f;
 
             if (isInRange && !cooldownSpeAttack)
             {
@@ -139,7 +135,7 @@ public class Tank : Mobs, ITank
                 animator.ResetTrigger("Shockwave");
                 animator.SetTrigger("Shockwave");
             }
-            else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos, tankPos) <= agent.stoppingDistance && !cooldownBasicAttack)
+            else if (agent.velocity.magnitude == 0f && Vector2.Distance(playerPos2D, tankPos2D) <= agent.stoppingDistance && !cooldownBasicAttack)
             {
                 BasicAttack(player);
                 cooldownBasicAttack = true;

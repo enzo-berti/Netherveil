@@ -61,14 +61,8 @@ public class Item : MonoBehaviour, IInterractable
 
     private void Interraction()
     {
-        Vector3 cameraForward = Camera.main.transform.forward;
-        Vector3 cameraRight = Camera.main.transform.right;
-        Vector3 tmp = (cameraForward * playerInteractions.transform.position.z + cameraRight * playerInteractions.transform.position.x);
-        Vector2 playerPos = new Vector2(tmp.x, tmp.z);
-        tmp = (cameraForward * this.transform.position.z + cameraRight * this.transform.position.x);
-        Vector2 itemPos = new Vector2(tmp.x, tmp.z);
-
-        bool isInRange = Vector2.Distance(playerPos, itemPos) <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
+        bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2()) 
+            <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
 
         if (isInRange && !playerInteractions.InteractablesInRange.Contains(this))
         {

@@ -34,14 +34,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         if (!CanBeRetrieved)
             return;
 
-        Vector3 cameraForward = Camera.main.transform.forward;
-        Vector3 cameraRight = Camera.main.transform.right;
-        Vector3 tmp = (cameraForward * player.transform.position.z + cameraRight * player.transform.position.x);
-        Vector2 playerPos = new Vector2(tmp.x, tmp.z);
-        tmp = (cameraForward * transform.position.z + cameraRight * transform.position.x);
-        Vector2 itemPos = new Vector2(tmp.x, tmp.z);
-
-        float distance = Vector2.Distance(playerPos, itemPos);
+        float distance = Vector2.Distance(player.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2());
         if (distance <= player.Stats.GetValue(Stat.CATCH_RADIUS))
         {
             lerpTimer += Time.deltaTime / 10f;

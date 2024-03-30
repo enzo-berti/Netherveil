@@ -13,6 +13,14 @@ public static class Vector3Extensions
         return new Vector3(Mathf.Abs(vector.x), Mathf.Abs(vector.y), Mathf.Abs(vector.z));
     }
 
+    /// <param name="vector"></param>
+    /// <returns>Vector2 that contains x and z which is based on camera's orientation.</returns>
+    public static Vector2 ToCameraOrientedVec2(this Vector3 vector)
+    {
+        Vector3 tmp = (Camera.main.transform.forward * vector.z + Camera.main.transform.right * vector.x);
+        return new Vector2(tmp.x, tmp.z);
+    }
+
 
     /// <param name="vector"></param>
     /// <param name="nbDigits"></param>
