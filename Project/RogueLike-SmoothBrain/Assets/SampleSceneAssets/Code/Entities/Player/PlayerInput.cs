@@ -388,6 +388,7 @@ public class PlayerInput : MonoBehaviour
         hero.OnAttack?.Invoke();
         controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, false);
 
+        //stop all VFX of the combo attacks to prevent them to overlap each other
         foreach(VisualEffect vfx in controller.SpearAttacksVFX)
         {
             vfx.Reinit();
