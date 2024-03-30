@@ -9,6 +9,15 @@ public abstract class Entity : MonoBehaviour
 {
     public static int entitySpawn = 0;
 
+    public enum EntityState : int
+    {
+        MOVE,
+        ATTACK,
+        HIT,
+        DEAD,
+        NB
+    }
+
     [Header("Properties")]
     [SerializeField] protected Stats stats;
     [SerializeField] List<string> statusNameToApply = new List<string>();
@@ -31,7 +40,14 @@ public abstract class Entity : MonoBehaviour
             OnChangeState?.Invoke();
         } 
     }
-    
+
+    public Stats Stats
+    {
+        get
+        {
+            return stats;
+        }
+    }
 
     protected virtual void Awake()
     {
@@ -69,14 +85,6 @@ public abstract class Entity : MonoBehaviour
             }
         }
 
-    }
-
-    public Stats Stats
-    {
-        get
-        {
-            return stats;
-        }
     }
 
     public void ApplyKnockback(IDamageable damageable)
@@ -149,14 +157,6 @@ public abstract class Entity : MonoBehaviour
             status.ApplyEffect(this);
         }
 
-    }
-    public enum EntityState : int
-    {
-        MOVE,
-        ATTACK,
-        HIT,
-        DEAD,
-        NB
     }
 
     public void AddStatus(Status status)
