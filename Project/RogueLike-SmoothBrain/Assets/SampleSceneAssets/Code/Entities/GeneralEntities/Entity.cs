@@ -22,7 +22,6 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected Stats stats;
     [SerializeField] List<string> statusNameToApply = new List<string>();
     [SerializeField] List<float> durationStatusToApply = new List<float>();
-    public bool isAlly;
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
     public event Action OnChangeState;
