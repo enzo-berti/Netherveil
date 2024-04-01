@@ -22,18 +22,21 @@ public class Range : Mobs, IRange
     public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
-    [SerializeField] GameObject pfBomb;
+    [SerializeField] private float timeBetweenAttack;
+    [SerializeField] private float timeBetweenFleeing;
+    [SerializeField] private GameObject pfBomb;
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;
 
     private bool canAttack = true;
+    private bool canFlee = true;
     private bool isFleeing = false;
     private bool isGoingOnPlayer = false;
     private bool isAttacking = false;
     private bool isSmoothCoroutineOn = false;
     private float DistanceToFlee
     {
-        get => stats.GetValue(Stat.ATK_RANGE) / 2f;
+        get => stats.GetValue(Stat.ATK_RANGE) / 1.5f;
     }
 
     Animator animator;
@@ -49,10 +52,6 @@ public class Range : Mobs, IRange
         playerTransform = GameObject.FindWithTag("Player").transform;
     }
 
-    private bool IsTurnToPlayer()
-    {
-        return false;
-    }
     protected override IEnumerator EntityDetection()
     {
         while (true)
@@ -81,6 +80,11 @@ public class Range : Mobs, IRange
             // S'il a atteint sa position et qu'il est toujours à range pour attaquer il va le faire
             if (!isGoingOnPlayer && !isFleeing && canAttack && distanceFromPlayer <= stats.GetValue(Stat.ATK_RANGE))
             {
+                if (agent.hasPath)
+                {
+                    Debug.Log("ResetPath");
+                    agent.ResetPath();
+                }
                 // Il se tourne vers le player pour l'attaquer
                 //StartCoroutine(FaceToPlayer(player.transform));
                 this.transform.LookAt(playerTransform.transform.position);
@@ -90,7 +94,6 @@ public class Range : Mobs, IRange
             // Si l'ennemi peut attaquer il va se deplacer à range du player
             else if (!isGoingOnPlayer && !isFleeing && canAttack && !isAttacking)
             {
-                //Debug.Log("Go on player");
                 isGoingOnPlayer = true;
                 Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 7);
                 Vector3 pointToReach3D = new Vector3(pointToReach2D.x, this.transform.position.y, pointToReach2D.y);
@@ -98,23 +101,25 @@ public class Range : Mobs, IRange
                 StartCoroutine(GoOnPlayer(listDashes));
             }
             // Flee
-            else if (!isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
+            else if (canFlee && !isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
             {
-                Vector2 playerPosXZ = new Vector2(playerTransform.position.x, playerTransform.position.z);
-                Vector2 Point2DToReach = GetPointOnCircle(playerPosXZ, stats.GetValue(Stat.ATK_RANGE) + 10);
-                Vector3 point3DToReach = new Vector3(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
+                Vector2 playerPosXZ = new(playerTransform.position.x, playerTransform.position.z);
+                Vector2 Point2DToReach = GetPointOnCircle(playerPosXZ, stats.GetValue(Stat.ATK_RANGE) + 5);
+                Vector3 point3DToReach = new(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
                 Vector3 direction = this.transform.position - point3DToReach;
                 this.transform.forward = direction;
                 MoveTo(point3DToReach);
                 isFleeing = true;
+                StartCoroutine(WaitToFleeAgain(timeBetweenFleeing));
             }
 
-            if (!agent.hasPath)
+            else if (!agent.hasPath)
             {
                 if (isFleeing)
                 {
                     isFleeing = false;
-                    this.transform.LookAt(playerTransform.transform.position);
+                    Vector3 direction = playerTransform.position - this.transform.position;
+                    this.transform.forward = direction;
                 }
             }
 
@@ -138,12 +143,15 @@ public class Range : Mobs, IRange
 
         float timer = 0;
         Vector3 basePos = this.transform.position;
+        Vector3 newPos;
 
         // Face to his next direction
         this.transform.forward = posToReach - basePos;
         while (timer < 1f)
         {
-            this.transform.position = Vector3.Lerp(basePos, posToReach, timer);
+
+            newPos = Vector3.Lerp(basePos, posToReach, timer);
+            agent.Warp(newPos);
             timer += Time.deltaTime * 5;
             timer = timer > 1 ? 1 : timer;
             yield return null;
@@ -151,6 +159,7 @@ public class Range : Mobs, IRange
         yield return new WaitForSeconds(0.06f);
         isSmoothCoroutineOn = false;
     }
+
     private IEnumerator LongRangeAttack(Transform player)
     {
         // Stop bomber's attack
@@ -166,7 +175,7 @@ public class Range : Mobs, IRange
         exploBomb.Activate();
         yield return new WaitForSeconds(1f);
         isAttacking = false;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(timeBetweenAttack);
         canAttack = true;
     }
 
@@ -218,7 +227,7 @@ public class Range : Mobs, IRange
             Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
 
             Vector2 direction = posToReach2D - curPos2D;
-            Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance/nbDash, 60);
+            Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
             path.Add(new Vector3(posOnCone.x, this.transform.position.y, posOnCone.y));
         }
         // We finally add the position that we want to reach after every dash
@@ -267,6 +276,13 @@ public class Range : Mobs, IRange
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
+    }
+
+    public IEnumerator WaitToFleeAgain(float delay)
+    {
+        canFlee = false;
+        yield return new WaitForSeconds(delay);
+        canFlee = true;
     }
 
 #if UNITY_EDITOR
