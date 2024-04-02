@@ -66,6 +66,7 @@ public class HudHandler : MonoBehaviour
     public void ActiveGameOver(Vector3 _playerPosDeath)
     {
         GameOver.SetActive(true);
+        hud.SetActive(false);
     }
 
     private void Update()
