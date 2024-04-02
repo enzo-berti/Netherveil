@@ -5,45 +5,90 @@ using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
-    [SerializeField] private Camera deathCam;
+    private Camera deathCam;
 
     [SerializeField] private Image panel;
-    [SerializeField] private Image resume;
-    [SerializeField] private TextMeshProUGUI resumeText;
+    [SerializeField] private Image reload;
+    [SerializeField] private TextMeshProUGUI reloadText;
     [SerializeField] private Image menu;
     [SerializeField] private TextMeshProUGUI menuText;
     [SerializeField] private Image quit;
     [SerializeField] private TextMeshProUGUI quitText;
     [SerializeField] private TextMeshProUGUI gameOverText;
 
-
-    private void Awake()
+    private void OnEnable()
     {
-        deathCam.backgroundColor = deathCam.backgroundColor * new Color(1, 1, 1, 0);
+        deathCam = GameObject.FindGameObjectWithTag("DeathCam").GetComponent<Camera>();
 
-        panel.color = panel.color * new Color(1, 1, 1, 0);
-        resume.color = resume.color * new Color(1, 1, 1, 0);
-        resumeText.color = resumeText.color * new Color(1, 1, 1, 0);
-        menu.color = menu.color * new Color(1, 1, 1, 0);
-        menuText.color = menuText.color * new Color(1, 1, 1, 0);
-        quit.color = quit.color * new Color(1, 1, 1, 0);
-        quitText.color = quitText.color * new Color(1, 1, 1, 0);
-        gameOverText.color = gameOverText.color * new Color(1, 1, 1, 0);
+        deathCam.depth = 1;
+        Color clearColor = new Color(1, 1, 1, 0);
+        deathCam.backgroundColor = deathCam.backgroundColor * clearColor;
+        panel.color *= clearColor;
+        reload.color *= clearColor;
+        reloadText.color *= clearColor;
+        menu.color *= clearColor;
+        menuText.color *= clearColor;
+        quit.color *= clearColor;
+        quitText.color *= clearColor;
+        gameOverText.color *= clearColor;
+
+        DisableAllMob();
+        StartCoroutine(IncreaseAlpha());
+    }
+
+    private void OnDisable()
+    {
+        deathCam.depth = -2;
     }
 
     private void DisableAllMob()
     {
-
+        foreach (GameObject enemy in RoomUtilities.roomData.enemies)
+        {
+            enemy.SetActive(false);
+        }
     }
 
-    IEnumerator IncreasedUIAlpha()
+    IEnumerator IncreaseAlpha()
     {
-        yield return null;
+        float targetAlpha = 1.0f;
+        float duration = 2.0f; 
+        float elapsedTime = 0f;
+        Color initialColor = deathCam.backgroundColor;
+        Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+            deathCam.backgroundColor = Color.Lerp(initialColor, targetColor, t);
+            yield return null;
+        }
+
+        StartCoroutine(IncreaseElementAlpha(panel));
+        StartCoroutine(IncreaseElementAlpha(reload));
+        StartCoroutine(IncreaseElementAlpha(reloadText));
+        StartCoroutine(IncreaseElementAlpha(menu));
+        StartCoroutine(IncreaseElementAlpha(menuText));
+        StartCoroutine(IncreaseElementAlpha(quit));
+        StartCoroutine(IncreaseElementAlpha(quitText));
+        StartCoroutine(IncreaseElementAlpha(gameOverText));
     }
 
-    private void OnEnable()
+    IEnumerator IncreaseElementAlpha(Graphic element)
     {
-        DisableAllMob();
-        StartCoroutine(IncreasedUIAlpha());
+        float targetAlpha = 1.0f;
+        float duration = 2.0f; 
+        float elapsedTime = 0f;
+        Color initialColor = element.color;
+        Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+            element.color = Color.Lerp(initialColor, targetColor, t);
+            yield return null;
+        }
     }
 }

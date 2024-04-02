@@ -14,7 +14,11 @@ public class PestRegroupState : BaseState<PestStateMachine>
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        if (Context.Target != null)
+        if (Context.IsDeath)
+        {
+            SwitchState(Factory.GetState<PestDeathState>());
+        }
+        else if (Context.Target != null)
         {
             SwitchState(Factory.GetState<PestFollowTargetState>());
         }

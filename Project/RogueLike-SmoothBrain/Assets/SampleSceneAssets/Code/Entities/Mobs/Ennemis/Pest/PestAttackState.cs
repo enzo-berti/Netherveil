@@ -29,7 +29,11 @@ public class PestAttackState : BaseState<PestStateMachine>
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
+        if (Context.IsDeath)
+        {
+            SwitchState(Factory.GetState<PestDeathState>());
+        }
+        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
         {
             SwitchState(Factory.GetState<PestFollowTargetState>());
         }

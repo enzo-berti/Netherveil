@@ -15,7 +15,7 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private GameObject GameOver;
     [SerializeField] private Slider lifeJauge;
     [SerializeField] private TextMeshProUGUI lifeRatioText;
-    [SerializeField] private PauseMenu pauseMenu;
+    [SerializeField] private GeneralMenu pauseMenu;
     
     Hero player;
 
@@ -66,6 +66,7 @@ public class HudHandler : MonoBehaviour
     public void ActiveGameOver(Vector3 _playerPosDeath)
     {
         GameOver.SetActive(true);
+        hud.SetActive(false);
     }
 
     private void Update()
