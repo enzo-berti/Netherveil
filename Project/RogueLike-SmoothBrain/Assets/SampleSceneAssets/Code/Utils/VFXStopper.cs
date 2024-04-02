@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -15,13 +16,21 @@ public class VFXStopper : MonoBehaviour
 
     public void PlayVFX()
     {
-        effect.Play();
-        StartCoroutine(StopVFXCoroutine());
+        if(gameObject.activeInHierarchy)
+        {
+            effect.Play();
+            StartCoroutine(StopVFXCoroutine());
+        }
     }
 
     IEnumerator StopVFXCoroutine()
     {
         yield return new WaitForSeconds(duration);
         effect.Stop();
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }
