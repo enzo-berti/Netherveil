@@ -331,13 +331,11 @@ public class PlayerInput : MonoBehaviour
 
         if (!spear.IsThrown)
         {
-            spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE));
-            AudioManager.Instance.PlaySound(controller.ThrowSpearSFX);
+            StartCoroutine(spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE)));
         }
         else
         {
-            AudioManager.Instance.PlaySound(controller.RetrieveSpearSFX);
-            spear.Return();
+            StartCoroutine(spear.Return());
         }
     }
 
