@@ -8,8 +8,8 @@ public class GameOver : MonoBehaviour
     private Camera deathCam;
 
     [SerializeField] private Image panel;
-    [SerializeField] private Image resume;
-    [SerializeField] private TextMeshProUGUI resumeText;
+    [SerializeField] private Image reload;
+    [SerializeField] private TextMeshProUGUI reloadText;
     [SerializeField] private Image menu;
     [SerializeField] private TextMeshProUGUI menuText;
     [SerializeField] private Image quit;
@@ -24,8 +24,8 @@ public class GameOver : MonoBehaviour
         Color clearColor = new Color(1, 1, 1, 0);
         deathCam.backgroundColor = deathCam.backgroundColor * clearColor;
         panel.color *= clearColor;
-        resume.color *= clearColor;
-        resumeText.color *= clearColor;
+        reload.color *= clearColor;
+        reloadText.color *= clearColor;
         menu.color *= clearColor;
         menuText.color *= clearColor;
         quit.color *= clearColor;
@@ -66,8 +66,8 @@ public class GameOver : MonoBehaviour
         }
 
         StartCoroutine(IncreaseElementAlpha(panel));
-        StartCoroutine(IncreaseElementAlpha(resume));
-        StartCoroutine(IncreaseElementAlpha(resumeText));
+        StartCoroutine(IncreaseElementAlpha(reload));
+        StartCoroutine(IncreaseElementAlpha(reloadText));
         StartCoroutine(IncreaseElementAlpha(menu));
         StartCoroutine(IncreaseElementAlpha(menuText));
         StartCoroutine(IncreaseElementAlpha(quit));
