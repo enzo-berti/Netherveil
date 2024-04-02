@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
 {
-    public RoomType type; 
+    [HideInInspector] public RoomType type;
     private static int RoomGenerated = 0; // rand noise
 
     private List<GameObject> Rooms 

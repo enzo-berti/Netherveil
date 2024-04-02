@@ -20,7 +20,7 @@ public class RoomEvents : MonoBehaviour
         room = transform.parent.Find("RoomGenerator").GetChild(0).gameObject;
         enemies = room.transform.Find("Enemies").gameObject;
         traps = room.transform.Find("Traps").gameObject;
-        navMeshSurface = GetComponent<NavMeshSurface>();
+        navMeshSurface = transform.parent.GetComponentInChildren<NavMeshSurface>();
 
         enemies.SetActive(false);
 
