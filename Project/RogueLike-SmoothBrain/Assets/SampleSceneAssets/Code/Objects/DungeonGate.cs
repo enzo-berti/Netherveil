@@ -22,8 +22,8 @@ public class DungeonGate : MonoBehaviour
 
     private void Open()
     {
+        DisolveGate();
         boxCollider.enabled = false;
-        SetDisolve(0f);
     }
 
     private void Close()
@@ -33,22 +33,35 @@ public class DungeonGate : MonoBehaviour
             return;
         }
 
-        SetDisolve(1f);
+        AppearGate();
         boxCollider.enabled = true;
     }
 
-    async void SetDisolve(float desiredDisolve)
+    async void AppearGate()
     {
         float disolveMat = material.GetFloat("_Dissolve");
-        while (disolveMat - desiredDisolve < 0.05f)
+        while ((disolveMat - 1f) < 0.05f)
         {
-            Debug.Log(disolveMat + " " + (disolveMat - desiredDisolve));
             disolveMat += Time.deltaTime;
             material.SetFloat("_Dissolve", disolveMat);
 
             await Task.Yield();
         }
 
-        material.SetFloat("_Dissolve", desiredDisolve);
+        material.SetFloat("_Dissolve", 1f);
+    }
+
+    async void DisolveGate()
+    {
+        float disolveMat = material.GetFloat("_Dissolve");
+        while (disolveMat > 0.05f)
+        {
+            disolveMat -= Time.deltaTime;
+            material.SetFloat("_Dissolve", disolveMat);
+
+            await Task.Yield();
+        }
+
+        material.SetFloat("_Dissolve", 0f);
     }
 }
