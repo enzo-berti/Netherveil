@@ -86,6 +86,7 @@ public class Spear : MonoBehaviour
 
         yield return new WaitForSeconds(SPEAR_WAIT_TIME);
 
+        AudioManager.Instance.PlaySound(player.GetComponent<PlayerController>().ThrowSpearSFX);
         meshRenderer.enabled = false;
         trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
         posToReach = _posToReach;
@@ -124,6 +125,7 @@ public class Spear : MonoBehaviour
 
         yield return new WaitForSeconds(SPEAR_WAIT_TIME);
 
+        AudioManager.Instance.PlaySound(player.GetComponent<PlayerController>().RetrieveSpearSFX);
         meshRenderer.enabled = false;
         trail = Instantiate(trailPf, posToReach, Quaternion.identity);
         // Spear position est la position où la lance était plantée avant de revenir vers le joueur
