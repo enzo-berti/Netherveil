@@ -15,7 +15,7 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private GameObject GameOver;
     [SerializeField] private Slider lifeJauge;
     [SerializeField] private TextMeshProUGUI lifeRatioText;
-    [SerializeField] private PauseMenu pauseMenu;
+    [SerializeField] private GeneralMenu pauseMenu;
     
     Hero player;
 

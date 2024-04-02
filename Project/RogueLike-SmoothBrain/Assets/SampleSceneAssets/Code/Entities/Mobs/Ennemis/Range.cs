@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.AI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -96,9 +97,11 @@ public class Range : Mobs, IRange
             {
                 isGoingOnPlayer = true;
                 Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 7);
-                Vector3 pointToReach3D = new Vector3(pointToReach2D.x, this.transform.position.y, pointToReach2D.y);
+                Vector3 pointToReach3D = new(pointToReach2D.x, this.transform.position.y, pointToReach2D.y);
+                NavMesh.SamplePosition(pointToReach3D, out NavMeshHit hit, float.PositiveInfinity, NavMesh.AllAreas);
+                pointToReach3D = hit.position;
                 List<Vector3> listDashes = GetDashesPath(pointToReach3D, 4);
-                StartCoroutine(GoOnPlayer(listDashes));
+                StartCoroutine(DashToPos(listDashes));
             }
             // Flee
             else if (canFlee && !isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
@@ -127,7 +130,7 @@ public class Range : Mobs, IRange
         }
     }
 
-    private IEnumerator GoOnPlayer(List<Vector3> listDashes)
+    private IEnumerator DashToPos(List<Vector3> listDashes)
     {
         for (int i = 1; i < listDashes.Count; i++)
         {
@@ -216,20 +219,33 @@ public class Range : Mobs, IRange
             this.transform.position
         };
 
+        NavMeshPath navPath = new();
+        NavMesh.CalculatePath(this.transform.position, posToReach, -1, navPath);
+
+        for (int i = 0; i < navPath.corners.Length; i++)
+        {
+            path.Add(navPath.corners[i]);
+        }
+
+        Debug.Log(navPath.corners.Length);
+
         float distance = Vector3.Distance(transform.position, posToReach);
 
-        for (int i = 1; i < nbDash; i++)
-        {
-            // We avoid y value because we only move in x and z
-            Vector2 posToReach2D = new(posToReach.x, posToReach.z);
+        //for (int i = 1; i < nbDash; i++)
+        //{
+        //    // We avoid y value because we only move in x and z
+        //    Vector2 posToReach2D = new(posToReach.x, posToReach.z);
 
-            // Virtually get the "current" position of the dasher ( get the position he reached after his previous dash )
-            Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
+        //    // Virtually get the "current" position of the dasher ( get the position he reached after his previous dash )
+        //    Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
 
-            Vector2 direction = posToReach2D - curPos2D;
-            Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
-            path.Add(new Vector3(posOnCone.x, this.transform.position.y, posOnCone.y));
-        }
+        //    Vector2 direction = posToReach2D - curPos2D;
+        //    Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
+        //    Vector3 posOnCone3D = new Vector3(posOnCone.x, this.transform.position.y, posOnCone.y);
+        //    NavMesh.SamplePosition(posOnCone3D, out var hit, float.PositiveInfinity, -1);
+        //    posOnCone3D = hit.position;
+        //    path.Add(posOnCone3D);
+        //}
         // We finally add the position that we want to reach after every dash
         path.Add(posToReach);
         return path;
