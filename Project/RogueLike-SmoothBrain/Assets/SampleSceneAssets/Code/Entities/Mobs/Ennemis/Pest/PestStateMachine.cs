@@ -37,6 +37,7 @@ public class PestStateMachine : Mobs, IPest
     private Transform target;
     private int frameToUpdate;
     private int maxFrameUpdate = 500;
+    private bool isDeath = false;
 
     // animation hash
     private int chargeInHash;
@@ -57,6 +58,7 @@ public class PestStateMachine : Mobs, IPest
     public Transform Target { get => target; set => target = value; }
     public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
+    public bool IsDeath { get => isDeath; }
 
     protected override void Start()
     {
@@ -154,6 +156,7 @@ public class PestStateMachine : Mobs, IPest
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
         AudioManager.Instance.PlaySound(pestSounds.deathSound, transform.position);
         animator.SetBool(deathHash, true);
+        isDeath = true;
 
         Destroy(gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }

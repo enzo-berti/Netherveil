@@ -38,7 +38,7 @@ public class Knockback : MonoBehaviour
         {
             knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(direction, distance, speed));
         }
-        else if (characterController != null)
+        else if (characterController != null && hero.State != (int)Entity.EntityState.DEAD)
         {
             animator.SetBool("IsKnockback", true);
             hero.State = (int)Hero.PlayerState.KNOCKBACK;

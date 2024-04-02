@@ -36,11 +36,6 @@ public class GameOver : MonoBehaviour
         StartCoroutine(IncreaseAlpha());
     }
 
-    private void OnDisable()
-    {
-        deathCam.depth = -2;
-    }
-
     private void DisableAllMob()
     {
         foreach (GameObject enemy in RoomUtilities.roomData.enemies)

@@ -14,6 +14,15 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public List<Status> StatusToApply => statusToApply;
 
+    private Animator animator;
+
+    int dyingHash;
+    int thrustHash;
+    int dashHash;
+    int throwingHash;
+    int retrievingHash;
+
+
     enum Attacks
     {
         THRUST,
@@ -48,10 +57,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         public EventReference weaponOutSound;
         public EventReference weaponInSound;
         public EventReference walkingSound;
+        public EventReference music;
     }
     [Header("Sounds")]
     [SerializeField] private GraftedSounds bossSounds;
-    EventInstance introSound;
+    //EventInstance introSound;
 
     Attacks currentAttack = Attacks.NONE;
     Attacks lastAttack = Attacks.NONE;
@@ -98,7 +108,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         // mettre la cam entre le joueur et le boss
 
-        introSound = AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
+        //introSound = AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
+        //AudioManager.Instance.PlaySound(bossSounds.music);
     }
 
     private void OnDestroy()
@@ -113,7 +124,16 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     protected override void Start()
     {
         base.Start();
-        height = GetComponent<Renderer>().bounds.size.y;
+        height = GetComponentInChildren<Renderer>().bounds.size.y;
+
+        animator = GetComponentInChildren<Animator>();
+
+        // hashing animation
+        dyingHash = Animator.StringToHash("Dying");
+        thrustHash = Animator.StringToHash("Thrust");
+        dashHash = Animator.StringToHash("Dash");
+        throwingHash = Animator.StringToHash("Throwing");
+        retrievingHash = Animator.StringToHash("Retrieving");
     }
 
     protected override IEnumerator Brain()
@@ -128,6 +148,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
             else
             {
+                Debug.Log(animator.GetCurrentAnimatorStateInfo(0));
+
                 // Face player
                 if (attackState != AttackState.ATTACKING)
                 {
@@ -156,6 +178,21 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     lastAttack = currentAttack;
                     currentAttack = ChooseAttack();
+
+                    switch (currentAttack)
+                    {
+                        case Attacks.RANGE:
+                            animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                            break;
+
+                        case Attacks.THRUST:
+                            animator.SetBool(thrustHash, true);
+                            break;
+
+                        case Attacks.DASH:
+                            animator.SetBool(dashHash, true);
+                            break;
+                    }
                 }
 
                 //// DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
@@ -203,7 +240,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         Stats.IncreaseValue(Stat.HP, -_value, false);
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
-
         if (hasAnimation)
         {
             //add SFX here
@@ -214,17 +250,18 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
-            AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
+            //AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
         }
         else
         {
-            AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position);
+            //AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position);
         }
     }
 
     public void Death()
     {
         Destroy(gameObject);
+        //AudioManager.Instance.PlaySound(bossSounds.deathSound);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
     }
 
@@ -300,6 +337,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         attackState = AttackState.IDLE;
         SetAtkCooldown(2f, 0.5f);
         playerHit = false;
+
+        animator.SetBool(throwingHash, false);
     }
 
     void RetrieveProjectile()
@@ -322,6 +361,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             attackState = AttackState.IDLE;
             SetAtkCooldown(2f, 0.5f);
             playerHit = false;
+            animator.SetBool(retrievingHash, false);
         }
     }
 
@@ -382,6 +422,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     attackState = AttackState.IDLE;
                     SetAtkCooldown(2f, 0.5f);
                     playerHit = false;
+                    animator.SetBool(thrustHash, false);
                 }
                 break;
         }
@@ -448,6 +489,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                     SetAtkCooldown(0.5f, 0.2f);
                     DisableHitboxes();
+
+                    animator.SetBool(dashHash, false);
                 }
             }
         }
