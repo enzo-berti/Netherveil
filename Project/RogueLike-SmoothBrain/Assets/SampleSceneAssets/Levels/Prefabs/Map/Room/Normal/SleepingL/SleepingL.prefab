@@ -41,7 +41,7 @@ Transform:
   - {fileID: 3826266712492954358}
   - {fileID: 7445948324375084352}
   - {fileID: 1333668356579409853}
-  m_Father: {fileID: 4512625657316152897}
+  m_Father: {fileID: 6725463203521122708}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2686840746279683852
 GameObject:
@@ -228,7 +228,6 @@ GameObject:
   - component: {fileID: 6725463203521122708}
   - component: {fileID: 1017824577751927846}
   - component: {fileID: 2513595301897248780}
-  - component: {fileID: 3458057974015561964}
   - component: {fileID: 523071040578512737}
   - component: {fileID: 458200275273072404}
   - component: {fileID: 1255208397700647979}
@@ -254,6 +253,7 @@ Transform:
   m_Children:
   - {fileID: 895098334654962692}
   - {fileID: 8093347135857265776}
+  - {fileID: 7764394932670661264}
   m_Father: {fileID: 4512625657316152897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1017824577751927846
@@ -308,37 +308,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4061198340311275407}
   m_Mesh: {fileID: 4300000, guid: f2c2c30956d266147bd21ad17c68dd71, type: 2}
---- !u!114 &3458057974015561964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4061198340311275407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 9f840d68fbe9a074facd1c45a20ef904, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!65 &523071040578512737
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -540,7 +509,6 @@ Transform:
   m_Children:
   - {fileID: 6725463203521122708}
   - {fileID: 8415569308243836088}
-  - {fileID: 7764394932670661264}
   - {fileID: 5609256944395554202}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -553,6 +521,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3876986029729548946}
+  - component: {fileID: 839923368893873598}
   m_Layer: 0
   m_Name: Room2
   m_TagString: Untagged
@@ -579,6 +548,37 @@ Transform:
   - {fileID: 5065908073520981306}
   m_Father: {fileID: 8415569308243836088}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &839923368893873598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7313945371388421582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: f92139df4579b9e4499fab6f32d0f8dd, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &7319893514196059461
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +619,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5792550737160008784}
+  - component: {fileID: 5341985619297259344}
   m_Layer: 0
   m_Name: Room1
   m_TagString: Untagged
@@ -645,6 +646,37 @@ Transform:
   - {fileID: 7345217414485939627}
   m_Father: {fileID: 8415569308243836088}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5341985619297259344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7832943889216909065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 0c522192b83088242bce8c2d2b2c6879, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &7843751060998395791
 GameObject:
   m_ObjectHideFlags: 0
