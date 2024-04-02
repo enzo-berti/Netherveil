@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Spear : MonoBehaviour
@@ -19,6 +20,8 @@ public class Spear : MonoBehaviour
     public bool IsThrowing { get; private set; } = false;
     Vector3 posToReach = new();
     MeshRenderer meshRenderer;
+    readonly float SPEAR_SPEED = 5000f;
+    readonly float SPEAR_WAIT_TIME = 0.15f;
 
     private void Start()
     {
@@ -75,14 +78,20 @@ public class Spear : MonoBehaviour
         }
     }
 
-    public void Throw(Vector3 _posToReach)
+    public IEnumerator Throw(Vector3 _posToReach)
     {
+        IsThrown = true;
+        IsThrowing = true;
+        hero.State = (int)Entity.EntityState.ATTACK;
+
+        yield return new WaitForSeconds(SPEAR_WAIT_TIME);
+
         meshRenderer.enabled = false;
         trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
         posToReach = _posToReach;
         Vector3 playerToPosToReachVec = (posToReach - this.transform.position);
 
-        trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * 5000, ForceMode.Force);
+        trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * SPEAR_SPEED, ForceMode.Force);
         DeviceManager.Instance.ApplyVibrations(0.001f, 0.005f, 0.1f);
 
         //check if colliding with obstacle to stop the spear on collide
@@ -105,20 +114,22 @@ public class Spear : MonoBehaviour
         // On set le parent que la lance avait ( la main du joueur ), puis on la retire tant qu'elle est lancée afin de la rendre indépendante 
         parent = this.transform.parent;
         this.transform.parent = null;
-
-        IsThrown = true;
-        IsThrowing = true;
-        hero.State = (int)Entity.EntityState.ATTACK;
     }
 
-    public void Return()
+    public IEnumerator Return()
     {
+        IsThrown = false;
+        IsThrowing = true;
+        hero.State = (int)Entity.EntityState.ATTACK;
+
+        yield return new WaitForSeconds(SPEAR_WAIT_TIME);
+
         meshRenderer.enabled = false;
         trail = Instantiate(trailPf, posToReach, Quaternion.identity);
         // Spear position est la position où la lance était plantée avant de revenir vers le joueur
         spearPosition = posToReach;
         posToReach = parent.transform.position;
-        trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * 5000, ForceMode.Force);
+        trail.GetComponent<Rigidbody>().AddForce((posToReach - trail.transform.position).normalized * SPEAR_SPEED, ForceMode.Force);
         DeviceManager.Instance.ApplyVibrations(0.005f, 0.001f, 0.1f);
 
         //orient player in front of spear
@@ -130,10 +141,6 @@ public class Spear : MonoBehaviour
 
         Vector3 playerToSpearVec = spearPosition - player.position;
         ApplyDamages(playerToSpearVec, debugMode: true);
-
-        IsThrown = false;
-        IsThrowing = true;
-        hero.State = (int)Entity.EntityState.ATTACK;
     }
 
     void ApplyDamages(Vector3 playerToTargetPos, bool debugMode)
