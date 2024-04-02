@@ -128,7 +128,7 @@ public abstract class Entity : MonoBehaviour
                 rotation *= Camera.main.transform.rotation;
                 float rotationY = rotation.eulerAngles.y;
 
-                if (damageableGO.TryGetComponent(out PlayerController controller))
+                if (damageableGO.TryGetComponent(out PlayerController controller) && damageableGO.GetComponent<Entity>().state != (int)EntityState.DEAD)
                 {
                     controller.OverridePlayerRotation(rotationY, true);
                 }
