@@ -21,7 +21,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     int dashHash;
     int throwingHash;
     int retrievingHash;
-
+    int fallHash;
 
     enum Attacks
     {
@@ -72,8 +72,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     bool playerHit = false;
     float height;
 
-    [SerializeField] float thrustCooldown = 0.5f;
-    float thrustCDTimer;
     [SerializeField] float thrustCharge = 1f;
     float thrustChargeTimer;
     [Header("Thrust")]
@@ -82,14 +80,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     int thrustCounter = 0;
 
     [SerializeField] float AOEDuration;
-    [SerializeField] Transform dashPivot;
     [SerializeField] float dashSpeed = 5f;
     float dashTimer = 0f;
     [Header("Dash")]
     [SerializeField, MinMaxSlider(0, 100)] Vector2 dashRange;
     float AOETimer = 0f;
-    bool dashRetracting = false;
-    Vector3 originalPos;
     bool triggerAOE = false;
 
     [Header("Range")]
@@ -119,6 +114,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         // remettre la camera au dessus du joueur
 
         if (projectile) Destroy(projectile.gameObject);
+
+        StopAllCoroutines();
     }
 
     protected override void Start()
@@ -134,6 +131,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         dashHash = Animator.StringToHash("Dash");
         throwingHash = Animator.StringToHash("Throwing");
         retrievingHash = Animator.StringToHash("Retrieving");
+        fallHash = Animator.StringToHash("Fall");
     }
 
     protected override IEnumerator Brain()
@@ -168,37 +166,49 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 }
 
                 // Attacks
-                if (attackCooldown > 0)
+                //if (attackCooldown > 0)
+                //{
+                //    attackState = AttackState.IDLE;
+                //    attackCooldown -= Time.deltaTime;
+                //    if (attackCooldown < 0) attackCooldown = 0;
+                //}
+                //else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
+                //{
+                //    lastAttack = currentAttack;
+                //    currentAttack = ChooseAttack();
+
+                //    switch (currentAttack)
+                //    {
+                //        case Attacks.RANGE:
+                //            animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                //            break;
+
+                //        case Attacks.THRUST:
+                //            animator.SetBool(thrustHash, true);
+                //            break;
+
+                //        case Attacks.DASH:
+                //            animator.SetBool(dashHash, true);
+                //            break;
+                //    }
+                //}
+
+                // DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
+                if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    attackState = AttackState.IDLE;
-                    attackCooldown -= Time.deltaTime;
-                    if (attackCooldown < 0) attackCooldown = 0;
+                    currentAttack = Attacks.THRUST;
+                    animator.SetBool(thrustHash, true);
                 }
-                else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    lastAttack = currentAttack;
-                    currentAttack = ChooseAttack();
-
-                    switch (currentAttack)
-                    {
-                        case Attacks.RANGE:
-                            animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
-                            break;
-
-                        case Attacks.THRUST:
-                            animator.SetBool(thrustHash, true);
-                            break;
-
-                        case Attacks.DASH:
-                            animator.SetBool(dashHash, true);
-                            break;
-                    }
+                    currentAttack = Attacks.DASH;
+                    animator.SetBool(dashHash, true);
                 }
-
-                //// DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
-                //if (Input.GetKeyDown(KeyCode.Alpha1)) currentAttack = Attacks.THRUST;
-                //else if (Input.GetKeyDown(KeyCode.Alpha2)) currentAttack = Attacks.DASH;
-                //else if (Input.GetKeyDown(KeyCode.Alpha3)) currentAttack = Attacks.RANGE;
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    currentAttack = Attacks.RANGE;
+                    animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                }
 
                 switch (currentAttack)
                 {
@@ -376,7 +386,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
             case AttackState.CHARGING:
 
-                if (thrustChargeTimer < thrustCharge)
+                if (thrustChargeTimer < (thrustCounter == 0 ? thrustCharge : 0.5f))
                 {
                     thrustChargeTimer += Time.deltaTime;
                 }
@@ -410,13 +420,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 {
                     attackState = AttackState.IDLE;
                 }
-                else if (thrustCDTimer < thrustCooldown)
-                {
-                    thrustCDTimer += Time.deltaTime;
-                }
                 else
                 {
-                    thrustCDTimer = 0;
                     thrustCounter = 0;
                     currentAttack = Attacks.NONE;
                     attackState = AttackState.IDLE;
@@ -444,54 +449,43 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             stats.IncreaseCoeffValue(Stat.ATK, 0.5f);
         }
 
-        if (!dashRetracting)
+        //// j'en ai rien à foutre
+        //if (dashRange.y - dashTimer > dashRange.x - 1)
+        //{
+        //    animator.SetBool(fallHash, true);
+        //}
+
+        if (dashRange.y - dashTimer > dashRange.x)
         {
-            if (dashRange.x + dashTimer < dashRange.y)
-            {
-                originalPos = dashPivot.localPosition;
-                dashPivot.localScale = new Vector3(1, 1, dashRange.x + dashTimer);
-            }
-            else
-            {
-                dashTimer = 0;
-                dashRetracting = true;
-            }
+            //dashPivot.localScale = new Vector3(1, 1, dashRange.y - dashTimer);
+            //dashPivot.localPosition = originalPos + new Vector3(0, 0, dashTimer);
+        }
+        else if (!triggerAOE)
+        {
+            DisableHitboxes();
+
+            AttackCollide(attacks[(int)Attacks.DASH + 1].data);
+            triggerAOE = true;
+            animator.SetBool(fallHash, true);
         }
         else
         {
-            if (dashRange.y - dashTimer > dashRange.x)
+            AOETimer += Time.deltaTime;
+            if (AOETimer >= AOEDuration)
             {
-                dashPivot.localScale = new Vector3(1, 1, dashRange.y - dashTimer);
-                dashPivot.localPosition = originalPos + new Vector3(0, 0, dashTimer);
-            }
-            else if (!triggerAOE)
-            {
+                currentAttack = Attacks.NONE;
+                attackState = AttackState.IDLE;
+                playerHit = false;
+
+                dashTimer = 0;
+                triggerAOE = false;
+                AOETimer = 0;
+
+                SetAtkCooldown(0.5f, 0.2f);
                 DisableHitboxes();
 
-                transform.position += transform.forward * dashRange.y;
-                AttackCollide(attacks[(int)Attacks.DASH + 1].data);
-                triggerAOE = true;
-            }
-            else
-            {
-                AOETimer += Time.deltaTime;
-                if (AOETimer >= AOEDuration)
-                {
-                    currentAttack = Attacks.NONE;
-                    attackState = AttackState.IDLE;
-                    playerHit = false;
-
-                    dashRetracting = false;
-                    dashTimer = 0;
-                    triggerAOE = false;
-                    AOETimer = 0;
-                    dashPivot.localPosition = originalPos;
-
-                    SetAtkCooldown(0.5f, 0.2f);
-                    DisableHitboxes();
-
-                    animator.SetBool(dashHash, false);
-                }
+                animator.SetBool(dashHash, false);
+                animator.SetBool(fallHash, false);
             }
         }
     }
