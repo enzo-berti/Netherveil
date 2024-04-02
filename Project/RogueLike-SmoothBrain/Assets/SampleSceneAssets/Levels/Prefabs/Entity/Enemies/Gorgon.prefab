@@ -179,7 +179,6 @@ MonoBehaviour:
     name: Gorgon
   statusNameToApply: []
   durationStatusToApply: []
-  isAlly: 0
   drop:
     dropList:
     - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
@@ -187,7 +186,10 @@ MonoBehaviour:
       chance: 1
       Quantity: 1
       isChanceShared: 0
+  timeBetweenAttack: 0
+  timeBetweenFleeing: 0
   pfBomb: {fileID: 3855923176943414352, guid: b420fdc9a271de84c879ad3ad4778e49, type: 3}
+  hand: {fileID: 9111015995907246164}
   staggerDuration: 0
 --- !u!114 &7709938691007895571
 MonoBehaviour:
@@ -294,6 +296,12 @@ PrefabInstance:
 --- !u!4 &627195802763732477 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d511acd616bb9e34a812b228721da91a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1098462964448772630}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9111015995907246164 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1058817630299731390, guid: d511acd616bb9e34a812b228721da91a,
     type: 3}
   m_PrefabInstance: {fileID: 1098462964448772630}
   m_PrefabAsset: {fileID: 0}

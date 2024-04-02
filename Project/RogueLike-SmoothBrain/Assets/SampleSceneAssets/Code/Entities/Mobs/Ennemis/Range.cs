@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEditor;
 #endif
 
+// Hate this mob
 public class Range : Mobs, IRange
 {
     private enum RangeState
@@ -26,6 +27,7 @@ public class Range : Mobs, IRange
     [SerializeField] private float timeBetweenAttack;
     [SerializeField] private float timeBetweenFleeing;
     [SerializeField] private GameObject pfBomb;
+    [SerializeField] private Transform hand;
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;
 
@@ -35,6 +37,10 @@ public class Range : Mobs, IRange
     private bool isGoingOnPlayer = false;
     private bool isAttacking = false;
     private bool isSmoothCoroutineOn = false;
+    private bool hasLaunchAnim = false;
+    private bool hasRemoveHead = false;
+    public bool HasLaunchAnim { get => hasLaunchAnim; set => hasLaunchAnim = value; }
+    public bool HasRemoveHead { get => hasRemoveHead; set => hasRemoveHead = value; }
     private float DistanceToFlee
     {
         get => stats.GetValue(Stat.ATK_RANGE) / 1.5f;
@@ -78,7 +84,7 @@ public class Range : Mobs, IRange
 
             float distanceFromPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
-            // S'il a atteint sa position et qu'il est toujours à range pour attaquer il va le faire
+            // if he can attack and he's at range then attack
             if (!isGoingOnPlayer && !isFleeing && canAttack && distanceFromPlayer <= stats.GetValue(Stat.ATK_RANGE))
             {
                 if (agent.hasPath)
@@ -87,34 +93,42 @@ public class Range : Mobs, IRange
                     agent.ResetPath();
                 }
                 // Il se tourne vers le player pour l'attaquer
-                //StartCoroutine(FaceToPlayer(player.transform));
                 this.transform.LookAt(playerTransform.transform.position);
+
                 // Quand il est tourné vers le player il lui envoie une bombe
-                StartCoroutine(LongRangeAttack(playerTransform.transform));
+                StartCoroutine(LongRangeAttack());
             }
-            // Si l'ennemi peut attaquer il va se deplacer à range du player
+
+            // If he can attack but he's not at range, dash to the player
             else if (!isGoingOnPlayer && !isFleeing && canAttack && !isAttacking)
             {
                 isGoingOnPlayer = true;
+
+                // Take a random point around the player pos in 2D then convert it in 3D
                 Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 7);
                 Vector3 pointToReach3D = new(pointToReach2D.x, this.transform.position.y, pointToReach2D.y);
+
+                // Replace the point on navMesh
                 NavMesh.SamplePosition(pointToReach3D, out NavMeshHit hit, float.PositiveInfinity, NavMesh.AllAreas);
                 pointToReach3D = hit.position;
+
                 List<Vector3> listDashes = GetDashesPath(pointToReach3D, 4);
                 StartCoroutine(DashToPos(listDashes));
             }
-            // Flee
-            else if (canFlee && !isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
-            {
-                Vector2 playerPosXZ = new(playerTransform.position.x, playerTransform.position.z);
-                Vector2 Point2DToReach = GetPointOnCircle(playerPosXZ, stats.GetValue(Stat.ATK_RANGE) + 5);
-                Vector3 point3DToReach = new(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
-                Vector3 direction = this.transform.position - point3DToReach;
-                this.transform.forward = direction;
-                MoveTo(point3DToReach);
-                isFleeing = true;
-                StartCoroutine(WaitToFleeAgain(timeBetweenFleeing));
-            }
+
+            // Flee if he can't attack
+            //else if (canFlee && !isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
+            //{
+            //    // TODO : Change this bad behaviour
+            //    Vector2 playerPosXZ = new(playerTransform.position.x, playerTransform.position.z);
+            //    Vector2 Point2DToReach = GetPointOnCircle(playerPosXZ, stats.GetValue(Stat.ATK_RANGE) + 5);
+            //    Vector3 point3DToReach = new(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
+            //    Vector3 direction = this.transform.position - point3DToReach;
+            //    this.transform.forward = direction;
+            //    MoveTo(point3DToReach);
+            //    isFleeing = true;
+            //    StartCoroutine(WaitToFleeAgain(timeBetweenFleeing));
+            //}
 
             else if (!agent.hasPath)
             {
@@ -147,7 +161,6 @@ public class Range : Mobs, IRange
         float timer = 0;
         Vector3 basePos = this.transform.position;
         Vector3 newPos;
-
         // Face to his next direction
         this.transform.forward = posToReach - basePos;
         while (timer < 1f)
@@ -163,19 +176,34 @@ public class Range : Mobs, IRange
         isSmoothCoroutineOn = false;
     }
 
-    private IEnumerator LongRangeAttack(Transform player)
+    private IEnumerator LongRangeAttack()
     {
         // Stop bomber's attack
         canAttack = false;
         isAttacking = true;
         // Wait to face player
-        GameObject bomb = Instantiate(pfBomb, this.transform.position, Quaternion.identity);
-        ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
+
+        animator.SetTrigger("Attack");
         float timeToThrow = 0.8f;
-        Vector3 positionToReach = player.position;
-        StartCoroutine(exploBomb.ThrowToPos(positionToReach, timeToThrow));
+        Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 1f);
+        Vector3 pointToReach3D = new(pointToReach2D.x, playerTransform.position.y, pointToReach2D.y);
+        if(NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
+        {
+            pointToReach3D = hit.position;
+        }
+
+        yield return new WaitWhile(() => HasRemoveHead == false);
+        GameObject bomb = Instantiate(pfBomb, hand);
+        yield return new WaitWhile(() => hasLaunchAnim == false);
+        bomb.transform.rotation = Quaternion.identity;
+        bomb.transform.parent = null;
+        
+        ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
+
+        StartCoroutine(exploBomb.ThrowToPos(pointToReach3D, timeToThrow));
         exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
         exploBomb.Activate();
+
         yield return new WaitForSeconds(1f);
         isAttacking = false;
         yield return new WaitForSeconds(timeBetweenAttack);
@@ -221,7 +249,6 @@ public class Range : Mobs, IRange
 
         NavMeshPath navPath = new();
         NavMesh.CalculatePath(this.transform.position, posToReach, -1, navPath);
-
         for (int i = 0; i < navPath.corners.Length; i++)
         {
             path.Add(navPath.corners[i]);
@@ -230,22 +257,28 @@ public class Range : Mobs, IRange
         Debug.Log(navPath.corners.Length);
 
         float distance = Vector3.Distance(transform.position, posToReach);
+        if(path.Count < nbDash)
+        {
+            for (int i = path.Count; i < nbDash; i++)
+            {
+                // We avoid y value because we only move in x and z
+                Vector2 posToReach2D = new(posToReach.x, posToReach.z);
 
-        //for (int i = 1; i < nbDash; i++)
-        //{
-        //    // We avoid y value because we only move in x and z
-        //    Vector2 posToReach2D = new(posToReach.x, posToReach.z);
+                // Virtually get the "current" position of the dasher ( get the position he reached after his previous dash )
+                Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
 
-        //    // Virtually get the "current" position of the dasher ( get the position he reached after his previous dash )
-        //    Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
-
-        //    Vector2 direction = posToReach2D - curPos2D;
-        //    Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
-        //    Vector3 posOnCone3D = new Vector3(posOnCone.x, this.transform.position.y, posOnCone.y);
-        //    NavMesh.SamplePosition(posOnCone3D, out var hit, float.PositiveInfinity, -1);
-        //    posOnCone3D = hit.position;
-        //    path.Add(posOnCone3D);
-        //}
+                Vector2 direction = posToReach2D - curPos2D;
+                Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
+                Vector3 posOnCone3D = new(posOnCone.x, this.transform.position.y, posOnCone.y);
+                if(NavMesh.SamplePosition(posOnCone3D, out var hit, 10, -1))
+                {
+                    posOnCone3D = hit.position;
+                    path.Add(posOnCone3D);
+                }
+                
+            }
+        }
+        
         // We finally add the position that we want to reach after every dash
         path.Add(posToReach);
         return path;
