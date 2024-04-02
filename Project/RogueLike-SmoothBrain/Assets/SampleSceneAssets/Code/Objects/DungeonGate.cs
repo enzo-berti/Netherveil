@@ -1,13 +1,15 @@
-using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class DungeonGate : MonoBehaviour
 {
-    [SerializeField] private Material material;
+    private Material material;
     [SerializeField] private BoxCollider boxCollider;
 
     private void Awake()
     {
+        material = GetComponent<MeshRenderer>().material;
+
         // set value to default
         material.SetFloat("_Dissolve", 0f);
     }
@@ -20,8 +22,8 @@ public class DungeonGate : MonoBehaviour
 
     private void Open()
     {
-        StartCoroutine(SetDisolve(0f));
         boxCollider.enabled = false;
+        SetDisolve(0f);
     }
 
     private void Close()
@@ -31,24 +33,20 @@ public class DungeonGate : MonoBehaviour
             return;
         }
 
-        StartCoroutine(SetDisolve(1f));
+        SetDisolve(1f);
         boxCollider.enabled = true;
     }
 
-    private void OnDestroy()
-    {
-        StopAllCoroutines();
-    }
-
-    IEnumerator SetDisolve(float desiredDisolve)
+    async void SetDisolve(float desiredDisolve)
     {
         float disolveMat = material.GetFloat("_Dissolve");
         while (disolveMat - desiredDisolve < 0.05f)
         {
+            Debug.Log(disolveMat + " " + (disolveMat - desiredDisolve));
             disolveMat += Time.deltaTime;
             material.SetFloat("_Dissolve", disolveMat);
 
-            yield return null;
+            await Task.Yield();
         }
 
         material.SetFloat("_Dissolve", desiredDisolve);
