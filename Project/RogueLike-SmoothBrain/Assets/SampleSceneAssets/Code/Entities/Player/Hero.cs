@@ -90,7 +90,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     IEnumerator DeathCoroutine()
     {
         yield return new WaitForSeconds(3.5f);
-        FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex, "Fade");
+        //FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex, "Fade");
     }
 
     public void Attack(IDamageable damageable)

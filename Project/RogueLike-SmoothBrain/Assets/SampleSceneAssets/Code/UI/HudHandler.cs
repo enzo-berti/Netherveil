@@ -12,14 +12,17 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private GameObject miniMapFrame;
     [SerializeField] private GameObject bigMapFrame;
     [SerializeField] private GameObject hud;
+    [SerializeField] private GameObject GameOver;
     [SerializeField] private Slider lifeJauge;
     [SerializeField] private TextMeshProUGUI lifeRatioText;
-    [SerializeField] private PauseMenu pauseMenu;
+    [SerializeField] private GeneralMenu pauseMenu;
+    
     Hero player;
 
     private void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        player.OnDeath += ActiveGameOver;
     }
 
     public void ToggleMap(InputAction.CallbackContext ctx)
@@ -60,6 +63,12 @@ public class HudHandler : MonoBehaviour
         }
     }
 
+    public void ActiveGameOver(Vector3 _playerPosDeath)
+    {
+        GameOver.SetActive(true);
+        hud.SetActive(false);
+    }
+
     private void Update()
     {
         if(lifeJauge.value != player.Stats.GetValue(Stat.HP))
@@ -68,5 +77,9 @@ public class HudHandler : MonoBehaviour
             lifeJauge.maxValue = player.Stats.GetMaxValue(Stat.HP);
             lifeRatioText.text = lifeJauge.value.ToString() + " / " + player.Stats.GetMaxValue(Stat.HP);
         }
+    }
+    private void OnDestroy()
+    {
+        player.OnDeath -= ActiveGameOver;
     }
 }
