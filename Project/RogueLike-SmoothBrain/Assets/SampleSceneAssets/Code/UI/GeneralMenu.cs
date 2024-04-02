@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class PauseMenu : MonoBehaviour
+public class GeneralMenu : MonoBehaviour
 {
     [SerializeField] GameObject hud;
 
@@ -14,6 +15,11 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         hud.SetActive(true);
         gameObject.SetActive(false);
+    }
+
+    public void ReloadGame()
+    {
+        FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex, "Fade");
     }
 
     public void Setting()
