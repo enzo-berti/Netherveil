@@ -441,7 +441,9 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -5754084199372789682, guid: 137c6e1c84df844429af960facc8cc80, type: 3}
+    - {fileID: -7511558181221131132, guid: 137c6e1c84df844429af960facc8cc80, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
@@ -460,6 +462,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3180234459085398662}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5450060368180123845}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -612,7 +618,8 @@ MonoBehaviour:
     name: Grafted
   statusNameToApply: []
   durationStatusToApply: []
-  isAlly: 0
+  drop:
+    dropList: []
   bossSounds:
     deathSound:
       Guid:
@@ -712,6 +719,13 @@ MonoBehaviour:
         Data3: -492995948
         Data4: 819532573
       Path: event:/Enemy/Grafted/GraftedWalk
+    music:
+      Guid:
+        Data1: 746641329
+        Data2: 1082185535
+        Data3: 1917933709
+        Data4: -1892361100
+      Path: event:/Musics/BossMusic1
   thrustCooldown: 0.1
   thrustCharge: 0.3
   thrustDuration: 0.2
@@ -899,4 +913,83 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
     type: 3}
   m_PrefabInstance: {fileID: 2012894678860820842}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5487698242713091886
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 867203832160427953}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_Name
+      value: SKE_BOSS
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 44b1841608b1b1140b2f620a7560a43f, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 702ed034f4819734981edbf3037ab64f, type: 3}
+--- !u!4 &5450060368180123845 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5487698242713091886}
   m_PrefabAsset: {fileID: 0}
