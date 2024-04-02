@@ -65,7 +65,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
 
                     if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
                         textMesh.text = bindingDisplayString;
-                    else
+                    else if (textMesh != null)
                         textMesh.text = string.Empty;
                 }
                 else
