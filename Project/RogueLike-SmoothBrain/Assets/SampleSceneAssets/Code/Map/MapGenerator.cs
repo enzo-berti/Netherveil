@@ -297,7 +297,7 @@ public class MapGenerator : MonoBehaviour
     {
         // Set position
         roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
-        Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
+        Physics.SyncTransforms(); // need to update physics before doing collision test in the same frame (bad)
 
         // Check collision
         if (IsRoomCollidingOtherRoom(roomGO, exitDoor))
