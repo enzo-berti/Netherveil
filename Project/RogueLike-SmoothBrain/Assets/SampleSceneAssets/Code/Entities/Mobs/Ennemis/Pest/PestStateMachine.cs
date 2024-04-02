@@ -41,6 +41,7 @@ public class PestStateMachine : Mobs, IPest
     // animation hash
     private int chargeInHash;
     private int chargeOutHash;
+    private int deathHash;
 
     // getters and setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -73,6 +74,7 @@ public class PestStateMachine : Mobs, IPest
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
         chargeOutHash = Animator.StringToHash("ChargeOut");
+        deathHash = Animator.StringToHash("IsDeath");
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
@@ -149,9 +151,11 @@ public class PestStateMachine : Mobs, IPest
     public void Death()
     {
         OnDeath?.Invoke(transform.position);
-        Destroy(gameObject);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
         AudioManager.Instance.PlaySound(pestSounds.deathSound, transform.position);
+        animator.SetBool(deathHash, true);
+
+        Destroy(gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
     public void MoveTo(Vector3 posToMove)
