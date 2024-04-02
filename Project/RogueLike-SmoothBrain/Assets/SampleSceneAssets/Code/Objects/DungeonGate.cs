@@ -48,8 +48,6 @@ public class DungeonGate : MonoBehaviour
             await Task.Yield();
         }
 
-        Debug.Log("fini");
-
         material.SetFloat("_Dissolve", 1f);
     }
 
