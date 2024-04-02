@@ -115,6 +115,18 @@ public struct GenerationParam
         return availableDoors[key][farestDoor.Item1];
     }
 
+    public readonly List<Door> GetFarestDoors()
+    {
+        List<Door> result = new List<Door>();
+        foreach (var doors in availableDoors)
+        {
+            result.AddRange(doors.Value);
+        }
+
+        result.Sort((a, b) => (int)(b.Position.magnitude - a.Position.magnitude));
+        return result;
+    }
+
     public readonly void RemoveDoor(Door door)
     {
         foreach (var doors in availableDoors.Values)
@@ -227,40 +239,12 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
 
-            // sortie.pos = entree.pos + (-entree.arrow.pos + sortie.arrow.pos) + forward * 0.1 (forward = pour avoir un offset)
-            roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position;
-            Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
-
-            // bon sinon j'évite la collide de la salle et la salle exit (forcément que les deux collides putaig)
-            BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
-            BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
-
-            Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => collider != roomCollider && collider != roomColliderExit).ToArray();
-            if (colliders.Length > 2) // more than the two meshCollider
+            if (!InitiateGoRoom(roomGO, ref genParam, entranceDoor, exitDoor))
             {
-                DestroyImmediate(roomGO);
-
-                // TODO : spawn a little cellule or something like this to hide the hole in the wall
-                continue;
+                continue; // fail to generate continue to next candidate
             }
 
-            // Destroy used door
-            genParam.availableDoors[exitDoor.Rotation].Remove(exitDoor);
-            // Removed door
-            doorsGenerator.RemoveDoor(entranceDoor);
-
-            // Generate GATE
-            GameObject gateGO = Instantiate(gate, entranceDoor.Position, Quaternion.identity);
-            gateGO.transform.Rotate(0, entranceDoor.Rotation, 0);
-            gateGO.transform.parent = gameObject.transform;
-
-            // Add the new doors from the new room into the possible candidates
-            genParam.AddDoorsGenerator(doorsGenerator);
-
             genParam.nbRoom[RoomType.Normal] -= doorsGenerator.doors.Count;
-
-            InitiateGoRoom(roomGO);
-
             hasGenerated = true;
         }
     }
@@ -283,33 +267,58 @@ public class MapGenerator : MonoBehaviour
 
     private void GenerateBossRoom(ref GenerationParam genParam)
     {
-        Door exitDoor = genParam.GetFarestDoor();
-        GameObject roomBossGO = Instantiate(roomBoss[0]);
-        DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
-        roomBossGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Boss;
-
-        Door entranceDoor = new Door();
-        for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
+        foreach (Door exitDoor in genParam.GetFarestDoors())
         {
-            entranceDoor = doorsGenerator.doors[i];
+            GameObject roomBossGO = Instantiate(roomBoss[0]);
+            DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+            roomBossGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Boss;
 
-            if (((entranceDoor.Rotation + 180f) % 360f) == exitDoor.Rotation)
+            Door entranceDoor = new Door();
+            for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
             {
-                break;
+                entranceDoor = doorsGenerator.doors[i];
+
+                if (((entranceDoor.Rotation + 180f) % 360f) == exitDoor.Rotation)
+                {
+                    break;
+                }
             }
+
+            if (InitiateGoRoom(roomBossGO, ref genParam, entranceDoor, exitDoor))
+            {
+                continue; // fail to generate continue to next candidate
+            }
+
+            break;
         }
-
-        // set the roomGO position depanding on the door's position
-        roomBossGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position;
-
-        InitiateGoRoom(roomBossGO);
-
-        // delete exit door from genParam
-        genParam.RemoveDoor(exitDoor);
     }
 
-    private void InitiateGoRoom(GameObject roomGO)
+    private bool InitiateGoRoom(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, Door exitDoor)
     {
+        // Set position
+        roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
+        Physics.SyncTransforms(); // need to update physics before doing testing in the same frame (bad)
+
+        // Check collision
+        if (IsRoomCollidingOtherRoom(roomGO, exitDoor))
+        {
+            DestroyImmediate(roomGO);
+            return false;
+        }
+
+        // Generate gate
+        GameObject gateGO = Instantiate(gate, entranceDoor.Position, Quaternion.identity);
+        gateGO.transform.Rotate(0, entranceDoor.Rotation, 0);
+        gateGO.transform.parent = gameObject.transform;
+
+        // Removed used door
+        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+        doorsGenerator.RemoveDoor(entranceDoor);
+        genParam.RemoveDoor(exitDoor);
+
+        // Add the new doors from the new room into the possible candidates
+        genParam.AddDoorsGenerator(doorsGenerator);
+
         // Generate one of the seed room and delete the other's
         roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
 
@@ -319,5 +328,17 @@ public class MapGenerator : MonoBehaviour
 
         // Set parent go
         roomGO.transform.parent = gameObject.transform;
+
+        return true;
+    }
+
+    static private bool IsRoomCollidingOtherRoom(GameObject roomGO, Door exitDoor)
+    {
+        BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
+        BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
+
+        Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => collider != roomCollider && collider != roomColliderExit).ToArray();
+
+        return colliders.Length > 2; // more than the two meshCollider
     }
 }
