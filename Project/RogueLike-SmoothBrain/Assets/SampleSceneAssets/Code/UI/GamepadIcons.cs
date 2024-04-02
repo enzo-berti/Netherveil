@@ -34,7 +34,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             if (string.IsNullOrEmpty(deviceLayoutName) || string.IsNullOrEmpty(controlPath))
                 return;
 
-            Debug.Log(Keyboard.current.capsLockKey.displayName);
+            //Debug.Log(Keyboard.current.capsLockKey.displayName);
             var icon = default(Sprite);
             
             //Debug.Log(deviceLayoutName + " version FR : " + bindingDisplayString + " version US : " + controlPath);
@@ -42,6 +42,8 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 icon = ps4.GetSprite(controlPath);
             else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Gamepad"))
                 icon = xbox.GetSprite(controlPath);
+            else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
+                icon = kb.GetSprite(controlPath);
 
 
             var textComponent = component.bindingText;
@@ -52,6 +54,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             if (imageGO != null)
             {
                 var imageComponent = imageGO.GetComponent<Image>();
+                var textMesh = imageComponent.GetComponentInChildren<TMP_Text>();
 
                 if (icon != null)
                 {
@@ -59,6 +62,11 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     imageComponent.sprite = icon;
                     imageComponent.gameObject.SetActive(true);
                     AddInteractionsToLabel(component);
+
+                    if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
+                        textMesh.text = bindingDisplayString;
+                    else
+                        textMesh.text = string.Empty;
                 }
                 else
                 {
@@ -153,8 +161,20 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 // From the input system, we get the path of the control on device. So we can just
                 // map from that to the sprites we have for gamepads.
 
-                Debug.Log(controlPath);
-                return null;
+                switch (controlPath)
+                {
+                    case "enter": return buttonCorner;
+                    case "escape": return buttonMedium;
+                    case "backspace": return buttonMedium;
+                    case "rightShift": return buttonMedium;
+                    case "leftShift": return buttonMedium;
+                    case "rightCtrl": return buttonMedium;
+                    case "leftCtrl": return buttonMedium;
+                    case "capsLock": return buttonMedium;
+                    case "tab": return buttonMedium;
+                    case "space": return buttonLong;
+                    default: return buttonSimple;
+                }
             }
         }
     }
