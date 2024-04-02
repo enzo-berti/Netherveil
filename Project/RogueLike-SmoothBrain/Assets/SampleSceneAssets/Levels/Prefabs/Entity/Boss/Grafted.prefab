@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 3298921738939079264}
   - component: {fileID: 6326843532258293541}
   - component: {fileID: 4912181708648093268}
+  - component: {fileID: 7041328143000012702}
   m_Layer: 3
   m_Name: Dash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3298921738939079264
 Transform:
   m_ObjectHideFlags: 0
@@ -27,11 +28,11 @@ Transform:
   m_GameObject: {fileID: 177426010162727039}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0257143, y: 0, z: 0.4942857}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2673750351035000378}
+  m_Father: {fileID: 867203832160427953}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6326843532258293541
 MeshFilter:
@@ -83,6 +84,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7041328143000012702
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177426010162727039}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6298279552371567863
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,60 +315,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &8799238004251145795
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2673750351035000378}
-  - component: {fileID: 67471078485800353}
-  m_Layer: 3
-  m_Name: PivotDash
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &2673750351035000378
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8799238004251145795}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: 0.75}
-  m_LocalScale: {x: 1, y: 1, z: 1.34}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3298921738939079264}
-  m_Father: {fileID: 867203832160427953}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &67471078485800353
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8799238004251145795}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0.5}
 --- !u!1001 &829317876949907546
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -457,7 +425,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2673750351035000378}
+      addedObject: {fileID: 3298921738939079264}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       insertIndex: -1
@@ -726,11 +694,9 @@ MonoBehaviour:
         Data3: 1917933709
         Data4: -1892361100
       Path: event:/Musics/BossMusic1
-  thrustCooldown: 0.1
-  thrustCharge: 0.3
-  thrustDuration: 0.2
+  thrustCharge: 1.4
+  thrustDuration: 0.1
   AOEDuration: 0.5
-  dashPivot: {fileID: 2673750351035000378}
   dashSpeed: 20
   dashRange: {x: 1, y: 6}
   projectilePrefab: {fileID: 7603897466420847472, guid: 7743d6f0624620946ba885b3ad0f8ba4,
@@ -739,7 +705,7 @@ MonoBehaviour:
   - data:
     - {fileID: 2217064026567559699}
   - data:
-    - {fileID: 67471078485800353}
+    - {fileID: 7041328143000012702}
   - data:
     - {fileID: 7282033651682388259}
   visionAngle: 0
@@ -977,6 +943,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SKE_BOSS
       objectReference: {fileID: 0}
+    - target: {fileID: 975610265630073045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 975610265630073045, guid: 702ed034f4819734981edbf3037ab64f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 58ed67b853adba54dadb6266e6faa1aa, type: 2}
     - target: {fileID: 5866666021909216657, guid: 702ed034f4819734981edbf3037ab64f,
         type: 3}
       propertyPath: m_Controller
