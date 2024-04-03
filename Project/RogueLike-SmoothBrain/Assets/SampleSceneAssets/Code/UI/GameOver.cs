@@ -40,7 +40,10 @@ public class GameOver : MonoBehaviour
     {
         foreach (GameObject enemy in RoomUtilities.roomData.enemies)
         {
-            enemy.SetActive(false);
+            if (enemy != null)
+            {
+                enemy.SetActive(false);
+            }
         }
     }
 

@@ -14,7 +14,9 @@ public enum RoomType
     Merchant,
     Secret,
     MiniBoss,
-    Boss
+    Boss,
+
+    COUNT
 }
 
 public struct GenerationParam
@@ -149,7 +151,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        GenerateMap(new GenerationParam(nbNormal: nbNormalRoom));
+        GenerateMap(new GenerationParam(nbNormal: nbNormalRoom, nbTreasure: 2));
     }
 
     private void GenerateMap(GenerationParam genParam)
@@ -170,13 +172,24 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0; i < nbRoom; i++)
         {
             // if not enough door are available, spawn a normal room by force
-            if (genParam.RoomAvailablesCount < 1)
+            if (genParam.RoomAvailablesCount <= 1)
             {
                 GenerateRoom(ref genParam, RoomType.Normal);
             }
             else
             {
-                GenerateRoom(ref genParam, RoomType.Normal);
+                bool sucess = false;
+                while(!sucess)
+                {
+                    RoomType type = (RoomType)UnityEngine.Random.Range(0, (int)RoomType.COUNT);
+
+                    if (genParam.nbRoom.ContainsKey(type) && genParam.nbRoom[type] > 0)
+                    {
+                        GenerateRoom(ref genParam, type);
+                        genParam.nbRoom[type]--;
+                        sucess = true;
+                    }
+                }
             }
         }
     }
@@ -359,7 +372,7 @@ public class MapGenerator : MonoBehaviour
             RoomType.Normal => roomNormal,
             RoomType.Treasure => roomTreasure,
             RoomType.Challenge => roomChallenge,
-            RoomType.Merchant => roomChallenge,
+            RoomType.Merchant => roomMerchant,
             RoomType.Secret => roomSecret,
             RoomType.MiniBoss => roomMiniBoss,
             RoomType.Boss => roomBoss,
