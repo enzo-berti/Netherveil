@@ -26,12 +26,6 @@ public class Fire : Status
             PlayVfx("VFX_Fire");
         }
     }
-
-    public override void OnFinished()
-    {
-        StopVfx();
-    }
-
     protected override void Effect()
     {
         if (target != null)
@@ -45,5 +39,10 @@ public class Fire : Status
     {
         Fire fire = (Fire)this.MemberwiseClone();
         return fire;
+    }
+
+    public override void OnFinished()
+    {
+        //throw new System.NotImplementedException();
     }
 }
