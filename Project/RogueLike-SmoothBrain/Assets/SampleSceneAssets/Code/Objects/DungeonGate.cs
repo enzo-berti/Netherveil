@@ -28,8 +28,8 @@ public class DungeonGate : MonoBehaviour
 
     private void Open()
     {
-        DisolveGate();
         boxCollider.enabled = false;
+        DisolveGate();
     }
 
     private void Close()
@@ -39,8 +39,8 @@ public class DungeonGate : MonoBehaviour
             return;
         }
 
-        AppearGate();
         boxCollider.enabled = true;
+        AppearGate();
     }
 
     async void AppearGate()

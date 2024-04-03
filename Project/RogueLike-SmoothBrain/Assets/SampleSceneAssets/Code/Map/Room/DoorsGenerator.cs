@@ -57,8 +57,18 @@ public struct Door
 
 public class DoorsGenerator : MonoBehaviour
 {
-    // planned for later
+    private static int noiseDoors = 0;
+
     public List<Door> doors = new List<Door>();
+    public Door RandomDoor
+    {
+        get
+        {
+            int index = GameAssets.Instance.seed.Range(0, doors.Count, ref noiseDoors);
+
+            return doors[index];
+        }
+    }
 
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 
