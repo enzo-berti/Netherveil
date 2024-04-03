@@ -47,6 +47,7 @@ public class AudioManager : MonoBehaviour
         {
             if (GetState() == PLAYBACK_STATE.STOPPED || restart)
             {
+                instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 instance = RuntimeManager.CreateInstance(reference);
             }
         }

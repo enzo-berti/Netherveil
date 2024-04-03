@@ -132,9 +132,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         throwingHash = Animator.StringToHash("Throwing");
         retrievingHash = Animator.StringToHash("Retrieving");
         fallHash = Animator.StringToHash("Fall");
-		
-		        this.transform.position = this.transform.parent.position;
-        this.transform.parent.position = Vector3.zero;
+
+        transform.position = transform.parent.position;
+        transform.parent.position = Vector3.zero;
     }
 
     protected override IEnumerator Brain()
@@ -142,7 +142,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         while (true)
         {
             yield return null;
-
 
             if (deathTimer <= 0)
             {
@@ -284,8 +283,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         }
         else
         {
-            AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position);
-            Debug.Log("sex");
+            AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position, true);
         }
     }
 
