@@ -46,14 +46,14 @@ public abstract class Status
     // Do something when status is removed from the target
     public abstract void OnFinished();
     #endregion
-    
+
     #region Stack
     private int stack = 0;
     public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
         stack += nb;
-        for(int i  = 0; i < nb; i++)
+        for (int i = 0; i < nb; i++)
             stopTimes.Add(duration + currentTime);
     }
     public virtual void RemoveStack(int nb)
@@ -88,13 +88,10 @@ public abstract class Status
 
     protected void PlayVfx(string vfxName)
     {
-        if (stack == 0)
-        {
-            vfx = GameObject.Instantiate(Resources.Load<GameObject>(vfxName)).GetComponent<VisualEffect>();
-            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
-            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
-            vfx.Play();
-        }
+        vfx = GameObject.Instantiate(Resources.Load<GameObject>(vfxName)).GetComponent<VisualEffect>();
+        vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
+        vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
+        vfx.Play();
     }
 
     protected void StopVfx()
@@ -106,7 +103,7 @@ public abstract class Status
     {
         isCoroutineOn = true;
         await Task.Delay((int)(frequency * 1000));
-        if(!isFinished)
+        if (!isFinished)
             Effect();
         isCoroutineOn = false;
     }
