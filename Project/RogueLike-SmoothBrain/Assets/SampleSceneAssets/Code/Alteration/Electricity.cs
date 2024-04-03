@@ -38,7 +38,6 @@ public class Electricity : Status
         Debug.Log("Coucou elec");
         if (target != null)
         {
-            
             target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
            //target.Stats.SetValue(Stat.SPEED, 0f);
         }

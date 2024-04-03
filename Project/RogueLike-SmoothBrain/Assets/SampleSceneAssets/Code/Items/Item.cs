@@ -134,6 +134,7 @@ public class Item : MonoBehaviour, IInterractable
         //}
         for (int i = 0; i < splitDescription.Length; i++)
         {
+            Debug.Log(splitDescription[i]);
             if (splitDescription[i][0] == '{')
             {
                 string[] splitCurrent = splitDescription[i].Split('{', '}', '.');
