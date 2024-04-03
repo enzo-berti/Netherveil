@@ -147,8 +147,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
             else
             {
-                Debug.Log(animator.GetCurrentAnimatorStateInfo(0));
-
                 // Face player
                 if (attackState != AttackState.ATTACKING)
                 {
@@ -308,14 +306,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                         if (_kb)
                         {
-                            Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
+                            //Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
 
-                            if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
-                            {
-                                knockbackDirection = -knockbackDirection;
-                            }
+                            //if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
+                            //{
+                            //    knockbackDirection = -knockbackDirection;
+                            //}
 
-                            ApplyKnockback(damageable, knockbackDirection.normalized);
+                            ApplyKnockback(damageable);
                         }
 
                         playerHit = true;
@@ -355,6 +353,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void RetrieveProjectile()
     {
+        projectile.SetTempSpeed(projectile.Speed * 0.25f);
+
         if (projectile.onTarget)
         {
             projectile.SetDirection(transform.position + new Vector3(0, height / 4f, 0) - projectile.transform.position);
@@ -364,6 +364,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         else if (!projectile.OnLauncher(transform.position + new Vector3(0, height / 4f, 0)))
         {
             MoveTo(transform.position);
+
         }
         else
         {
@@ -437,15 +438,16 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void Dash()
     {
-        attackState = AttackState.CHARGING;
+        attackState = AttackState.ATTACKING;
 
         if (dashChargeTimer <= 0.3f)
         {
             dashChargeTimer += Time.deltaTime;
+            attackState = AttackState.CHARGING;
         }
         else
         {
-            attackState = AttackState.ATTACKING;
+            animator.SetBool(fallHash, true);
         }
 
         if (attackState == AttackState.ATTACKING)
@@ -454,14 +456,12 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
             if (!triggerAOE && !playerHit)
             {
-                stats.DecreaseCoeffValue(Stat.ATK, 0.5f);
                 AttackCollide(attacks[(int)Attacks.DASH].data, true);
-                stats.IncreaseCoeffValue(Stat.ATK, 0.5f);
             }
 
             if (travelledDistance <= dashRange)
             {
-                transform.position += transform.forward * Time.deltaTime * dashSpeed;
+                agent.Warp(transform.position + transform.forward * Time.deltaTime * dashSpeed);
             }
             else if (!triggerAOE)
             {
@@ -469,16 +469,17 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                 playerHit = false;
                 triggerAOE = true;
-                animator.SetBool(fallHash, true);
             }
             else
             {
                 if (!playerHit)
                 {
-                    AttackCollide(attacks[(int)Attacks.DASH + 1].data);
+                    AttackCollide(attacks[(int)Attacks.DASH + 1].data, true);
                 }
 
                 AOETimer += Time.deltaTime;
+
+                agent.Warp(transform.position + transform.forward * Time.deltaTime * dashSpeed * 0.15f);
                 if (AOETimer >= AOEDuration)
                 {
                     currentAttack = Attacks.NONE;
