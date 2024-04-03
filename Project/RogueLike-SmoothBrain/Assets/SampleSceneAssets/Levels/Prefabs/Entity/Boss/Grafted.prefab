@@ -326,17 +326,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.94
+      value: -2.8080263
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15.4
+      value: 14.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.39
+      value: 8.291935
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -517,7 +517,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 750
+      value: 20
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -590,110 +590,140 @@ MonoBehaviour:
     dropList: []
   bossSounds:
     deathSound:
-      Guid:
-        Data1: 1654136484
-        Data2: 1227055311
-        Data3: -1530604631
-        Data4: 685301962
-      Path: event:/Enemy/Grafted/GraftedDeath
+      name: Death
+      reference:
+        Guid:
+          Data1: 1654136484
+          Data2: 1227055311
+          Data3: -1530604631
+          Data4: 685301962
+        Path: event:/Enemy/Grafted/GraftedDeath
     hitSound:
-      Guid:
-        Data1: -214694489
-        Data2: 1302972210
-        Data3: -1715644025
-        Data4: 1018888436
-      Path: event:/Enemy/Grafted/GraftedHit
+      name: Hit
+      reference:
+        Guid:
+          Data1: -214694489
+          Data2: 1302972210
+          Data3: -1715644025
+          Data4: 1018888436
+        Path: event:/Enemy/Grafted/GraftedHit
     plantInGroundSound:
-      Guid:
-        Data1: -627876059
-        Data2: 1340345369
-        Data3: -1131270236
-        Data4: 1040081313
-      Path: event:/Enemy/Grafted/GraftedHitMap
+      name: Plant in ground
+      reference:
+        Guid:
+          Data1: -627876059
+          Data2: 1340345369
+          Data3: -1131270236
+          Data4: 1040081313
+        Path: event:/Enemy/Grafted/GraftedHitMap
     projectileLaunchedSound:
-      Guid:
-        Data1: 200127847
-        Data2: 1172076505
-        Data3: -263263811
-        Data4: -1983943433
-      Path: event:/Enemy/Grafted/GraftedLunchProjectil
+      name: Projectile launched
+      reference:
+        Guid:
+          Data1: 200127847
+          Data2: 1172076505
+          Data3: -263263811
+          Data4: -1983943433
+        Path: event:/Enemy/Grafted/GraftedLunchProjectil
     projectileHitMapSound:
-      Guid:
-        Data1: 833271855
-        Data2: 1203668861
-        Data3: -1421776995
-        Data4: -916089434
-      Path: event:/Enemy/Grafted/GraftedProjectilHitMap
+      name: Projectile hit map
+      reference:
+        Guid:
+          Data1: 833271855
+          Data2: 1203668861
+          Data3: -1421776995
+          Data4: -916089434
+        Path: event:/Enemy/Grafted/GraftedProjectilHitMap
     projectileHitPlayerSound:
-      Guid:
-        Data1: 2035182190
-        Data2: 1080904031
-        Data3: -660865150
-        Data4: 524391268
-      Path: event:/Enemy/Grafted/GraftedProjectilHitPlayer
+      name: Projectile hit player
+      reference:
+        Guid:
+          Data1: 2035182190
+          Data2: 1080904031
+          Data3: -660865150
+          Data4: 524391268
+        Path: event:/Enemy/Grafted/GraftedProjectilHitPlayer
     thrustSound:
-      Guid:
-        Data1: 2110755741
-        Data2: 1200378635
-        Data3: -1637998457
-        Data4: -1644813887
-      Path: event:/Enemy/Grafted/GraftedPunch
+      name: Thrust
+      reference:
+        Guid:
+          Data1: 2110755741
+          Data2: 1200378635
+          Data3: -1637998457
+          Data4: -1644813887
+        Path: event:/Enemy/Grafted/GraftedPunch
     introSound:
-      Guid:
-        Data1: 1083504436
-        Data2: 1316411749
-        Data3: 1353878919
-        Data4: -995448669
-      Path: event:/Enemy/Grafted/GraftedScream
-    retrievingProjectileLaunchedSound:
-      Guid:
-        Data1: 801531834
-        Data2: 1287258959
-        Data3: 1358326707
-        Data4: 820297616
-      Path: event:/Enemy/Grafted/GraftedSpellCast
+      name: Intro
+      reference:
+        Guid:
+          Data1: 1083504436
+          Data2: 1316411749
+          Data3: 1353878919
+          Data4: -995448669
+        Path: event:/Enemy/Grafted/GraftedScream
+    retrievingProjectileSound:
+      name: Retrieving projectile
+      reference:
+        Guid:
+          Data1: 801531834
+          Data2: 1287258959
+          Data3: 1358326707
+          Data4: 820297616
+        Path: event:/Enemy/Grafted/GraftedSpellCast
     spinAttackSound:
-      Guid:
-        Data1: -741354411
-        Data2: 1298867554
-        Data3: -1299117894
-        Data4: -1535010658
-      Path: event:/Enemy/Grafted/GraftedSpinAttack
+      name: Fall
+      reference:
+        Guid:
+          Data1: -741354411
+          Data2: 1298867554
+          Data3: -1299117894
+          Data4: -1535010658
+        Path: event:/Enemy/Grafted/GraftedSpinAttack
     stretchSound:
-      Guid:
-        Data1: 1252271740
-        Data2: 1280728789
-        Data3: 1459667589
-        Data4: 1477004850
-      Path: event:/Enemy/Grafted/GraftedStretch
+      name: Dash
+      reference:
+        Guid:
+          Data1: 1252271740
+          Data2: 1280728789
+          Data3: 1459667589
+          Data4: 1477004850
+        Path: event:/Enemy/Grafted/GraftedStretch
     weaponOutSound:
-      Guid:
-        Data1: -128107736
-        Data2: 1193393712
-        Data3: 1727045555
-        Data4: 2013680109
-      Path: event:/Enemy/Grafted/GraftedTakeWeapon
+      name: WeaponOut
+      reference:
+        Guid:
+          Data1: -128107736
+          Data2: 1193393712
+          Data3: 1727045555
+          Data4: 2013680109
+        Path: event:/Enemy/Grafted/GraftedTakeWeapon
     weaponInSound:
-      Guid:
-        Data1: 1699441104
-        Data2: 1274732431
-        Data3: 1046733242
-        Data4: 1605154435
-      Path: event:/Enemy/Grafted/GraftedTuckWeapon
+      name: WeaponIn
+      reference:
+        Guid:
+          Data1: 1699441104
+          Data2: 1274732431
+          Data3: 1046733242
+          Data4: 1605154435
+        Path: event:/Enemy/Grafted/GraftedTuckWeapon
     walkingSound:
-      Guid:
-        Data1: -1622528925
-        Data2: 1282462376
-        Data3: -492995948
-        Data4: 819532573
-      Path: event:/Enemy/Grafted/GraftedWalk
+      name: Walk
+      reference:
+        Guid:
+          Data1: -1622528925
+          Data2: 1282462376
+          Data3: -492995948
+          Data4: 819532573
+        Path: event:/Enemy/Grafted/GraftedWalk
     music:
-      Guid:
-        Data1: 746641329
-        Data2: 1082185535
-        Data3: 1917933709
-        Data4: -1892361100
-      Path: event:/Musics/BossMusic1
+      name: Music
+      reference:
+        Guid:
+          Data1: 746641329
+          Data2: 1082185535
+          Data3: 1917933709
+          Data4: -1892361100
+        Path: event:/Musics/BossMusic1
   thrustCharge: 1.4
   thrustDuration: 0.1
   AOEDuration: 0.5
@@ -787,22 +817,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.36370927
+      value: -0.34304717
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.07094206
+      value: -0.08388081
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9116276
+      value: 0.9087922
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.17781442
+      value: -0.22221506
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
