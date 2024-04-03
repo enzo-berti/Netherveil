@@ -34,8 +34,8 @@ public class Outline : MonoBehaviour
     {
         foreach (Renderer renderer in mRenderer)
         {
-            List<Material> materials = new List<Material>(renderer.sharedMaterials);
-            materials.RemoveAll(mat => mat == mOutlineMaterial);
+            List<Material> materials = new List<Material>(renderer.materials);
+            materials.RemoveAll(mat => mat.shader == mOutlineMaterial.shader);
             renderer.SetMaterials(materials);
         }
     }
