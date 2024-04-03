@@ -1,6 +1,8 @@
 using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -32,10 +34,10 @@ public class Spike : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        IDamageable damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
+        
+        if (other.gameObject.TryGetComponent<IDamageable>(out var damageable))
         {
-            entitiesToDealDamage.Add(other.gameObject.GetComponent<IDamageable>());
+            entitiesToDealDamage.Add(damageable);
             if (!isOut)
             {
                 StartCoroutine(Active());
@@ -45,10 +47,9 @@ public class Spike : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        IDamageable damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
+        if (other.gameObject.TryGetComponent<IDamageable>(out var damageable))
         {
-            entitiesToDealDamage.Remove(other.gameObject.GetComponent<IDamageable>());
+            entitiesToDealDamage.Remove(damageable);
             waitUntilTimer = 2f;
             if (isOut)
             {
@@ -61,6 +62,11 @@ public class Spike : MonoBehaviour
                 StartCoroutine(WaitUntil());
             }
         }
+    }
+
+    private void Update()
+    {
+        entitiesToDealDamage.RemoveAll(x => (x as MonoBehaviour) == null);
     }
 
     IEnumerator Active()
@@ -78,8 +84,7 @@ public class Spike : MonoBehaviour
             yield return new WaitForSeconds(0.003f);
         }
         isOut = true;
-        entitiesToDealDamage.ForEach(actualEntity => { actualEntity.ApplyDamage(damage); });
-        
+        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage); });
 
         StartCoroutine(WaitUntil());
     }
