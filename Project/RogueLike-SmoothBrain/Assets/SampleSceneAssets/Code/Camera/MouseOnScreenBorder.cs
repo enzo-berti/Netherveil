@@ -1,14 +1,16 @@
 using Netherveil.Inputs;
 using UnityEngine;
+using static Entity;
 
 public class MouseOnScreenBorder : MonoBehaviour
 {
     private Vector3 targetPosition;
     private Vector3 currentVelocity = Vector3.zero;
-    private float smoothTime = 0.2f; 
+    private float smoothTime = 0.2f;
     private Transform playerTransform;
     private PlayerInput playerInput;
     private PlayerInputMap inputs;
+    private Hero player;
 
     private void OnEnable()
     {
@@ -29,12 +31,13 @@ public class MouseOnScreenBorder : MonoBehaviour
     void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         playerInput = playerTransform.gameObject.GetComponent<PlayerInput>();
     }
 
     void FixedUpdate()
     {
-        if (DeviceManager.Instance.IsPlayingKB()) 
+        if (DeviceManager.Instance.IsPlayingKB())
         {
             CollidMouseScreen();
         }
@@ -51,7 +54,7 @@ public class MouseOnScreenBorder : MonoBehaviour
         Vector2 mousepos = Input.mousePosition;
         Vector3 offsetX = Vector3.zero;
         Vector3 offsetY = Vector3.zero;
-        float offsetDistBorder = 10f; 
+        float offsetDistBorder = 10f;
         float offsetDistCam = 2f;
 
         if (mousepos.x > Screen.width - offsetDistBorder)
@@ -105,13 +108,13 @@ public class MouseOnScreenBorder : MonoBehaviour
 
     private void ChangeOffsetPos()
     {
-        if (targetPosition != playerTransform.position && playerInput.Direction == Vector2.zero)
+        if (targetPosition != playerTransform.position && playerInput.Direction == Vector2.zero && player.State != (int)EntityState.DEAD)
         {
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
         }
         else
         {
-            transform.position = Vector3.SmoothDamp(transform.position, playerTransform.position, ref currentVelocity, smoothTime/3);
+            transform.position = Vector3.SmoothDamp(transform.position, playerTransform.position, ref currentVelocity, smoothTime / 3);
         }
     }
 }

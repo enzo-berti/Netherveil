@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 ////TODO: have updateBindingUIEvent receive a control path string, too (in addition to the device layout name)
 
@@ -34,10 +35,8 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             if (string.IsNullOrEmpty(deviceLayoutName) || string.IsNullOrEmpty(controlPath))
                 return;
 
-            //Debug.Log(Keyboard.current.capsLockKey.displayName);
             var icon = default(Sprite);
             
-            //Debug.Log(deviceLayoutName + " version FR : " + bindingDisplayString + " version US : " + controlPath);
             if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "DualShockGamepad"))
                 icon = ps4.GetSprite(controlPath);
             else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Gamepad"))
