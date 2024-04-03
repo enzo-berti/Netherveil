@@ -13,7 +13,10 @@ public class Freeze : Status
     public override void ApplyEffect(Entity target)
     {
         if (target.Stats.HasStat(Stat.SPEED))
+        {
             target.AddStatus(this);
+            GameObject.Instantiate(Resources.Load<GameObject>("VFX_Frozen"), target.transform.parent);
+        }
     }
 
     public override Status DeepCopy()

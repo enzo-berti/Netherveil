@@ -45,26 +45,24 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     private class GraftedSounds
     {
         public AudioManager.Sound deathSound;
-        public AudioManager.Sound hitSound;
-        public AudioManager.Sound plantInGroundSound;
-        public AudioManager.Sound projectileLaunchedSound;
-        public AudioManager.Sound projectileHitMapSound;
-        public AudioManager.Sound projectileHitPlayerSound;
-        public AudioManager.Sound thrustSound;
-        public AudioManager.Sound introSound;
-        public AudioManager.Sound retrievingProjectileLaunchedSound;
-        public AudioManager.Sound spinAttackSound;
-        public AudioManager.Sound stretchSound;
-        public AudioManager.Sound weaponOutSound;
-        public AudioManager.Sound weaponInSound;
-        public AudioManager.Sound walkingSound;
-        public AudioManager.Sound music;
-        public AudioManager.Sound music2;
+        //public AudioManager.Sound hitSound;
+        //public AudioManager.Sound plantInGroundSound;
+        //public AudioManager.Sound projectileLaunchedSound;
+        //public AudioManager.Sound projectileHitMapSound;
+        //public AudioManager.Sound projectileHitPlayerSound;
+        //public AudioManager.Sound thrustSound;
+        //public AudioManager.Sound introSound;
+        //public AudioManager.Sound retrievingProjectileLaunchedSound;
+        //public AudioManager.Sound spinAttackSound;
+        //public AudioManager.Sound stretchSound;
+        //public AudioManager.Sound weaponOutSound;
+        //public AudioManager.Sound weaponInSound;
+        //public AudioManager.Sound walkingSound;
+        //public AudioManager.Sound music;
     }
 
     [Header("Sounds")]
     [SerializeField] private GraftedSounds bossSounds;
-    //EventInstance introSound;
 
     Attacks currentAttack = Attacks.NONE;
     Attacks lastAttack = Attacks.NONE;
@@ -136,6 +134,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         throwingHash = Animator.StringToHash("Throwing");
         retrievingHash = Animator.StringToHash("Retrieving");
         fallHash = Animator.StringToHash("Fall");
+
+        bossSounds.deathSound.CreateInstance();
     }
 
     protected override IEnumerator Brain()
@@ -234,13 +234,15 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 deathTimer -= Time.deltaTime;
                 if (deathTimer <= 0)
                 {
-                    Destroy(gameObject);
-                    GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
-                    AudioManager.Instance.PlaySound(bossSounds.deathSound.reference);
-
-                    Debug.Log(bossSounds.deathSound.reference);
+                    deathTimer = Time.deltaTime;
+                    if (bossSounds.deathSound.GetState() != PLAYBACK_STATE.PLAYING)
+                    {
+                        Destroy(gameObject);
+                        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+                    }
                 }
             }
+
         }
     }
 
@@ -290,7 +292,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         deathTimer = 0.5f;
         MoveTo(transform.position);
         animator.SetBool(dyingHash, true);
-        //AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
+        AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
     }
 
     public void MoveTo(Vector3 _pos)

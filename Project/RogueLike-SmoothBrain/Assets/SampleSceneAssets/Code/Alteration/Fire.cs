@@ -17,6 +17,7 @@ public class Fire : Status
         {
             AddStack(1);
             target.AddStatus(this);
+            GameObject.Instantiate(Resources.Load<GameObject>("VFX_Fire"), target.transform.parent);
         }
     }
 

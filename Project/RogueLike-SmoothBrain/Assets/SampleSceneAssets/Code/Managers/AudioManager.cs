@@ -25,9 +25,18 @@ public class AudioManager : MonoBehaviour
     public class Sound
     {
         public EventReference reference;
-        EventInstance instance;
+        public EventInstance instance;
 
-        public Sound()
+        public PLAYBACK_STATE GetState()
+        {
+            PLAYBACK_STATE state;
+
+            instance.getPlaybackState(out state);
+
+            return state;
+        }
+
+        public void CreateInstance()
         {
             instance = RuntimeManager.CreateInstance(reference);
         }
@@ -38,13 +47,13 @@ public class AudioManager : MonoBehaviour
     {
         int nbMember = 0;
         SerializedProperty referenceProperty;
-       
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             referenceProperty = property.FindPropertyRelative("reference");
             nbMember = 0;
             EditorGUI.BeginProperty(position, label, property);
-            DrawMember(position, referenceProperty);    
+            DrawMember(position, referenceProperty);
 
             EditorGUI.EndProperty();
         }
@@ -197,6 +206,14 @@ public class AudioManager : MonoBehaviour
         result.set3DAttributes(worldPosition.To3DAttributes());
 
         return result;
+    }
+    
+    public EventInstance PlaySound(Sound sound, Vector3 worldPosition)
+    {
+        sound.instance.start();
+        sound.instance.set3DAttributes(worldPosition.To3DAttributes());
+
+        return sound.instance;
     }
 
     public EventInstance PlaySound(EventReference reference)
