@@ -87,7 +87,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         Vector3 position3D = Vector3.zero;
         float a = -16, b = 16;
         float c = this.transform.position.y;
-        float timerToReach = Resolve2ndDegree(a, b, c, 0).Max();
+        float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, 0).Max();
         while (timer < timerToReach)
         {
             yield return null;
@@ -98,34 +98,13 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
 
                 position3D = Vector3.Lerp(basePos, pos, timer);
             }
-            position3D.y = SquareFunction(a, b, c, timer);
+            position3D.y = MathsExtension.SquareFunction(a, b, c, timer);
             this.transform.position = position3D;
             timer += Time.deltaTime / throwTime;
         }
     }
 
-    float[] Resolve2ndDegree(float a, float b, float c, float wantedY)
-    {
-        c -= wantedY;
-        float delta = b * b - 4 * a * c;
-        float[] results = new float[2];
-        if (delta >= 0)
-        {
-            results[0] = (float)(-b + Math.Sqrt(delta)) / (2 * a);
-            results[1] = (float)(-b - Math.Sqrt(delta)) / (2 * a);
-        }
-        else
-        {
-            Debug.LogWarning("No result in Real number");
-            return results;
-        }
-        return results;
-    }
-
-    private float SquareFunction(float a, float b, float c, float timer)
-    {
-        return a * timer * timer + b * timer + c;
-    }
+    
     void UpdateTimerExplosion()
     {
         if (elapsedExplosionTime + timerBeforeExplode < Time.time)
