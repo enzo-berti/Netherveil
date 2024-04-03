@@ -85,13 +85,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         State = (int)EntityState.DEAD;
         animator.ResetTrigger("Death");
         animator.SetTrigger("Death");
-        StartCoroutine(DeathCoroutine());
-    }
-
-    IEnumerator DeathCoroutine()
-    {
-        yield return new WaitForSeconds(3.5f);
-        //FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex, "Fade");
     }
 
     public void Attack(IDamageable damageable)

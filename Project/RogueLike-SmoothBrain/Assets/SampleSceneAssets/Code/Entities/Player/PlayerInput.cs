@@ -72,105 +72,6 @@ public class PlayerInput : MonoBehaviour
         HudHandler.OnUnpause += EnableGameplayInputs;
     }
 
-    private void EaseFuncsShitStorm()
-    {
-        easeFuncs.Add(EasingFunctions.EaseInBack);
-        easeFuncs.Add(EasingFunctions.EaseInBounce);
-        easeFuncs.Add(EasingFunctions.EaseInCirc);
-        easeFuncs.Add(EasingFunctions.EaseInCubic);
-        easeFuncs.Add(EasingFunctions.EaseInElastic);
-        easeFuncs.Add(EasingFunctions.EaseInExpo);
-        easeFuncs.Add(EasingFunctions.EaseInOutBack);
-        easeFuncs.Add(EasingFunctions.EaseInOutBounce);
-        easeFuncs.Add(EasingFunctions.EaseInOutCirc);
-        easeFuncs.Add(EasingFunctions.EaseInOutCubic);
-        easeFuncs.Add(EasingFunctions.EaseInOutElastic);
-        easeFuncs.Add(EasingFunctions.EaseInOutExpo);
-        easeFuncs.Add(EasingFunctions.EaseInOutQuad);
-        easeFuncs.Add(EasingFunctions.EaseInOutQuart);
-        easeFuncs.Add(EasingFunctions.EaseInOutQuint);
-        easeFuncs.Add(EasingFunctions.EaseInOutSin);
-        easeFuncs.Add(EasingFunctions.EaseInQuad);
-        easeFuncs.Add(EasingFunctions.EaseInQuint);
-        easeFuncs.Add(EasingFunctions.EaseInSin);
-        easeFuncs.Add(EasingFunctions.EaseOutBack);
-        easeFuncs.Add(EasingFunctions.EaseOutBounce);
-        easeFuncs.Add(EasingFunctions.EaseOutCirc);
-        easeFuncs.Add(EasingFunctions.EaseOutCubic);
-        easeFuncs.Add(EasingFunctions.EaseOutElastic);
-        easeFuncs.Add(EasingFunctions.EaseOutExpo);
-        easeFuncs.Add(EasingFunctions.EaseOutQuad);
-        easeFuncs.Add(EasingFunctions.EaseOutQuart);
-        easeFuncs.Add(EasingFunctions.EaseOutQuint);
-        easeFuncs.Add(EasingFunctions.EaseOutSin);
-    }
-
-    private void InputSetup()
-    {
-        InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
-        InputManagement(kbMap, unsubscribe: false);
-        InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
-        InputManagement(gamepadMap, unsubscribe: false);
-    }
-
-    void InputManagement(InputActionMap map, bool unsubscribe)
-    {
-        if (unsubscribe)
-        {
-            map["Movement"].performed -= ReadDirection;
-            map["Movement"].started -= ResetComboWhenMoving;
-            map["Movement"].canceled -= ReadDirection;
-            map["BasicAttack"].performed -= Attack;
-            map["Dash"].performed -= Dash;
-            map["Interact"].performed -= Interract;
-            map["Spear"].performed -= ThrowOrRetrieveSpear;
-            map["ChargedAttack"].performed -= ChargedAttack;
-            map["ChargedAttack"].canceled -= ChargedAttackCanceled;
-            if (hudHandler != null)
-            {
-                map["ToggleMap"].performed -= hudHandler.ToggleMap;
-                map["Pause"].started -= hudHandler.TogglePause;
-            }
-        }
-        else
-        {
-            map["Movement"].performed += ReadDirection;
-            map["Movement"].started += ResetComboWhenMoving;
-            map["Movement"].canceled += ReadDirection;
-            map["BasicAttack"].performed += Attack;
-            map["Dash"].performed += Dash;
-            map["Interact"].performed += Interract;
-            map["Spear"].performed += ThrowOrRetrieveSpear;
-            map["ChargedAttack"].performed += ChargedAttack;
-            map["ChargedAttack"].canceled += ChargedAttackCanceled;
-            if (hudHandler != null)
-            {
-                map["ToggleMap"].performed += hudHandler.ToggleMap;
-                map["Pause"].started += hudHandler.TogglePause;
-            }
-        }
-    }
-
-    private void DisableGameplayInputs()
-    {
-        playerInputMap.currentActionMap["Movement"].Disable();
-        playerInputMap.currentActionMap["BasicAttack"].Disable();
-        playerInputMap.currentActionMap["Dash"].Disable();
-        playerInputMap.currentActionMap["Interact"].Disable();
-        playerInputMap.currentActionMap["Spear"].Disable();
-        playerInputMap.currentActionMap["ChargedAttack"].Disable();
-    }
-
-    private void EnableGameplayInputs()
-    {
-        playerInputMap.currentActionMap["Movement"].Enable();
-        playerInputMap.currentActionMap["BasicAttack"].Enable();
-        playerInputMap.currentActionMap["Dash"].Enable();
-        playerInputMap.currentActionMap["Interact"].Enable();
-        playerInputMap.currentActionMap["Spear"].Enable();
-        playerInputMap.currentActionMap["ChargedAttack"].Enable();
-    }
-
     private void OnDestroy()
     {
         hero.OnChangeState -= ResetForceReturnToMove;
@@ -505,6 +406,105 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region Miscellaneous
+
+    private void EaseFuncsShitStorm()
+    {
+        easeFuncs.Add(EasingFunctions.EaseInBack);
+        easeFuncs.Add(EasingFunctions.EaseInBounce);
+        easeFuncs.Add(EasingFunctions.EaseInCirc);
+        easeFuncs.Add(EasingFunctions.EaseInCubic);
+        easeFuncs.Add(EasingFunctions.EaseInElastic);
+        easeFuncs.Add(EasingFunctions.EaseInExpo);
+        easeFuncs.Add(EasingFunctions.EaseInOutBack);
+        easeFuncs.Add(EasingFunctions.EaseInOutBounce);
+        easeFuncs.Add(EasingFunctions.EaseInOutCirc);
+        easeFuncs.Add(EasingFunctions.EaseInOutCubic);
+        easeFuncs.Add(EasingFunctions.EaseInOutElastic);
+        easeFuncs.Add(EasingFunctions.EaseInOutExpo);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuad);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuart);
+        easeFuncs.Add(EasingFunctions.EaseInOutQuint);
+        easeFuncs.Add(EasingFunctions.EaseInOutSin);
+        easeFuncs.Add(EasingFunctions.EaseInQuad);
+        easeFuncs.Add(EasingFunctions.EaseInQuint);
+        easeFuncs.Add(EasingFunctions.EaseInSin);
+        easeFuncs.Add(EasingFunctions.EaseOutBack);
+        easeFuncs.Add(EasingFunctions.EaseOutBounce);
+        easeFuncs.Add(EasingFunctions.EaseOutCirc);
+        easeFuncs.Add(EasingFunctions.EaseOutCubic);
+        easeFuncs.Add(EasingFunctions.EaseOutElastic);
+        easeFuncs.Add(EasingFunctions.EaseOutExpo);
+        easeFuncs.Add(EasingFunctions.EaseOutQuad);
+        easeFuncs.Add(EasingFunctions.EaseOutQuart);
+        easeFuncs.Add(EasingFunctions.EaseOutQuint);
+        easeFuncs.Add(EasingFunctions.EaseOutSin);
+    }
+
+    private void InputSetup()
+    {
+        InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
+        InputManagement(kbMap, unsubscribe: false);
+        InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
+        InputManagement(gamepadMap, unsubscribe: false);
+    }
+
+    void InputManagement(InputActionMap map, bool unsubscribe)
+    {
+        if (unsubscribe)
+        {
+            map["Movement"].performed -= ReadDirection;
+            map["Movement"].started -= ResetComboWhenMoving;
+            map["Movement"].canceled -= ReadDirection;
+            map["BasicAttack"].performed -= Attack;
+            map["Dash"].performed -= Dash;
+            map["Interact"].performed -= Interract;
+            map["Spear"].performed -= ThrowOrRetrieveSpear;
+            map["ChargedAttack"].performed -= ChargedAttack;
+            map["ChargedAttack"].canceled -= ChargedAttackCanceled;
+            if (hudHandler != null)
+            {
+                map["ToggleMap"].performed -= hudHandler.ToggleMap;
+                map["Pause"].started -= hudHandler.TogglePause;
+            }
+        }
+        else
+        {
+            map["Movement"].performed += ReadDirection;
+            map["Movement"].started += ResetComboWhenMoving;
+            map["Movement"].canceled += ReadDirection;
+            map["BasicAttack"].performed += Attack;
+            map["Dash"].performed += Dash;
+            map["Interact"].performed += Interract;
+            map["Spear"].performed += ThrowOrRetrieveSpear;
+            map["ChargedAttack"].performed += ChargedAttack;
+            map["ChargedAttack"].canceled += ChargedAttackCanceled;
+            if (hudHandler != null)
+            {
+                map["ToggleMap"].performed += hudHandler.ToggleMap;
+                map["Pause"].started += hudHandler.TogglePause;
+            }
+        }
+    }
+
+    private void DisableGameplayInputs()
+    {
+        playerInputMap.currentActionMap["Movement"].Disable();
+        playerInputMap.currentActionMap["BasicAttack"].Disable();
+        playerInputMap.currentActionMap["Dash"].Disable();
+        playerInputMap.currentActionMap["Interact"].Disable();
+        playerInputMap.currentActionMap["Spear"].Disable();
+        playerInputMap.currentActionMap["ChargedAttack"].Disable();
+    }
+
+    private void EnableGameplayInputs()
+    {
+        playerInputMap.currentActionMap["Movement"].Enable();
+        playerInputMap.currentActionMap["BasicAttack"].Enable();
+        playerInputMap.currentActionMap["Dash"].Enable();
+        playerInputMap.currentActionMap["Interact"].Enable();
+        playerInputMap.currentActionMap["Spear"].Enable();
+        playerInputMap.currentActionMap["ChargedAttack"].Enable();
+    }
 
     private void ResetForceReturnToMove()
     {
