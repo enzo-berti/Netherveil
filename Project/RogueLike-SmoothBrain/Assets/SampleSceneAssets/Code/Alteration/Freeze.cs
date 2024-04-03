@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.VFX;
 
 public class Freeze : Status
 {
+    float baseAgentSpeed;
     public Freeze(float duration) : base(duration)
     {
         isConst = true;
@@ -15,6 +17,7 @@ public class Freeze : Status
     {
         if (target.Stats.HasStat(Stat.SPEED))
         {
+            baseAgentSpeed = target.gameObject.GetComponent<NavMeshAgent>().speed;
             target.AddStatus(this);
             PlayVfx("VFX_Frozen");
         }
@@ -30,13 +33,12 @@ public class Freeze : Status
     {
         if (target != null)
         {
-            FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, freezeColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, false, false);
+            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
         }
     }
 
     public override void OnFinished()
     {
-        //throw new System.NotImplementedException();
+        target.gameObject.GetComponent<NavMeshAgent>().speed = baseAgentSpeed;
     }
 }
