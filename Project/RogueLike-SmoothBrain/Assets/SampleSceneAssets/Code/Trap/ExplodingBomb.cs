@@ -10,6 +10,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
 {
     [Header("Gameobjects & Components")]
     [SerializeField] private GameObject graphics;
+    [SerializeField] private GameObject VFXObject;
     [SerializeField] private VisualEffect VFX;
     [SerializeField] private EventReference bombSFX;
     [Header("Bomb Parameter")]
@@ -24,15 +25,11 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
     private float elapsedExplosionTime;
     private Coroutine throwRoutine;
     private Coroutine explosionRoutine;
-    private Vector3 startPosition;
-    private Vector3 endPosition;
 
     private void Start()
     {
-        startPosition = transform.position;
-        endPosition = transform.position;
-
         VFX.SetFloat("ExplosionTime", 1.0f);
+        VFX.SetFloat("ExplosionRadius", blastRadius);
 
         if (activateOnAwake)
             Activate();
@@ -50,43 +47,17 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
             UpdateTimerExplosion();
     }
 
-    public void ThrowTo(Vector3 endPosition, float totalTime = 1f)
+    private IEnumerator ThrowToPosCoroutine(Vector3 pos, float throwTime)
     {
-        if (throwRoutine != null)
-            return;
-
-        VFX.transform.parent = null;
-        VFX.transform.position = endPosition;
-        VFX.SetFloat("TimeToExplode", totalTime);
-        VFX.SetFloat("ExplosionRadius", blastRadius);
+        VFXObject.transform.parent = null;
+        VFXObject.transform.position = pos;
         VFX.Play();
-
-        this.endPosition = endPosition;
-        throwRoutine = StartCoroutine(LerpPositionUpdate(endPosition, totalTime));
-    }
-
-    private IEnumerator LerpPositionUpdate(Vector3 endPosition, float totalTime)
-    {
-        float elapsedTimePosition = 0f;
-
-        while (transform.position != endPosition)
-        {
-            elapsedTimePosition = Mathf.Clamp(elapsedTimePosition + Time.deltaTime, 0f, totalTime);
-            transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTimePosition / totalTime) + Vector3.up * Mathf.Lerp(0f, throwHeight, elapsedTimePosition / totalTime) * Mathf.Sin(elapsedTimePosition / totalTime * Mathf.PI);
-            yield return null;
-        }
-        transform.position = endPosition;
-        Explode();
-    }
-
-    public IEnumerator ThrowToPos(Vector3 pos, float throwTime)
-    {
+        
         float timer = 0;
-
-        Vector3 basePos = this.transform.position;
+        Vector3 basePos = graphics.transform.position;
         Vector3 position3D = Vector3.zero;
         float a = -16, b = 16;
-        float c = this.transform.position.y;
+        float c = graphics.transform.position.y;
         float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, 0).Max();
         while (timer < timerToReach)
         {
@@ -99,11 +70,15 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
                 position3D = Vector3.Lerp(basePos, pos, timer);
             }
             position3D.y = MathsExtension.SquareFunction(a, b, c, timer);
-            this.transform.position = position3D;
+            graphics.transform.position = position3D;
             timer += Time.deltaTime / throwTime;
         }
     }
 
+    public void ThrowToPos(Vector3 pos, float throwTime)
+    {
+        StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
+    }
     
     void UpdateTimerExplosion()
     {
@@ -115,7 +90,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
     {
         isActive = true;
         elapsedExplosionTime = Time.time;
-        VFX.Play();
+        
     }
 
     public void Explode()
@@ -126,7 +101,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
 
     private IEnumerator ExplodeRoutine()
     {
-        Physics.OverlapSphere(transform.position, blastRadius, damageLayer)
+        Physics.OverlapSphere(graphics.transform.position, blastRadius, damageLayer)
             .Select(entity => entity.GetComponent<IBlastable>())
             .Where(entity => entity != null)
             .ToList()
@@ -136,7 +111,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
             });
 
         graphics.SetActive(false);
-        AudioManager.Instance.PlaySound(bombSFX, transform.position);
+        AudioManager.Instance.PlaySound(bombSFX, graphics.transform.position);
         float timer = VFX.GetFloat("ExplosionTime");
 
         while (timer > 0f)
@@ -165,26 +140,26 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (isActive || isMoving)
-        {
-            Handles.color = new Color(1, 0, 0, 0.25f);
-            Handles.DrawWireDisc(endPosition, Vector3.up, blastRadius);
+    //private void OnDrawGizmos()
+    //{
+    //    if (isActive || isMoving)
+    //    {
+    //        Handles.color = new Color(1, 0, 0, 0.25f);
+    //        Handles.DrawWireDisc(endPosition, Vector3.up, blastRadius);
 
-            Handles.color = Color.white;
-            Handles.Label(transform.position + Vector3.up,
-                $"Bomb" +
-                $"\nActivate : {isActive}" +
-                $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
-        }
-        else
-        {
-            Handles.color = Color.white;
-            Handles.Label(transform.position + Vector3.up,
-                $"Bomb" +
-                $"\nActivate : {isActive}");
-        }
-    }
+    //        Handles.color = Color.white;
+    //        Handles.Label(transform.position + Vector3.up,
+    //            $"Bomb" +
+    //            $"\nActivate : {isActive}" +
+    //            $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
+    //    }
+    //    else
+    //    {
+    //        Handles.color = Color.white;
+    //        Handles.Label(transform.position + Vector3.up,
+    //            $"Bomb" +
+    //            $"\nActivate : {isActive}");
+    //    }
+    //}
 #endif
 }
