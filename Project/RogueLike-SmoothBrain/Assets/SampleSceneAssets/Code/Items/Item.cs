@@ -137,10 +137,6 @@ public class Item : MonoBehaviour, IInterractable
             if (splitDescription[i][0] == '{')
             {
                 string[] splitCurrent = splitDescription[i].Split('{', '}', '.');
-                foreach(var test in splitCurrent)
-                {
-                    Debug.Log(test);
-                }
                 string valueToFind = splitCurrent[1];
                 FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
                 if (valueInfo != null)

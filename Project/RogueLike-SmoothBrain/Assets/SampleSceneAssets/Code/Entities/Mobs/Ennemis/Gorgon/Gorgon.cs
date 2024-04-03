@@ -96,7 +96,6 @@ public class Gorgon : Mobs, IGorgon
             {
                 if (agent.hasPath)
                 {
-                    Debug.Log("ResetPath");
                     agent.ResetPath();
                 }
                 // Il se tourne vers le player pour l'attaquer
@@ -274,7 +273,6 @@ public class Gorgon : Mobs, IGorgon
         {
             for (int i = 1; i < nbDash; i++)
             {
-                Debug.Log("ConeDash");
                 // We avoid y value because we only move in x and z
                 Vector2 posToReach2D = new(posToReach.x, posToReach.z);
 
