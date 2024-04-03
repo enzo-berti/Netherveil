@@ -53,23 +53,26 @@ public class PestRegroupState : BaseState<PestStateMachine>
                                               .Where(x => x != null)
                                               .ToArray();
         
-        Vector3 averagePos = Vector3.zero;
-        foreach (IPest pest in pests)
+        if (pests.Any())
         {
-            averagePos += (pest as MonoBehaviour).transform.position * Random.Range(0.5f, 1.5f);
-        }
-        averagePos /= pests.Count();
+            Vector3 averagePos = Vector3.zero;
+            foreach (IPest pest in pests)
+            {
+                averagePos += (pest as MonoBehaviour).transform.position * Random.Range(0.5f, 1.5f);
+            }
+            averagePos /= pests.Count();
 
-        Vector3 avoidPos = Vector3.zero;
-        foreach (IPest pest in pests)
-        {
-            Vector3 direction = ((pest as MonoBehaviour).transform.position - Context.transform.position).normalized;
-            float distance = 1 - Vector3.Distance(Context.transform.position, (pest as MonoBehaviour).transform.position);
-            avoidPos += direction * distance * Random.Range(0.5f, 1.5f);
-        }
-        avoidPos /= pests.Count();
+            Vector3 avoidPos = Vector3.zero;
+            foreach (IPest pest in pests)
+            {
+                Vector3 direction = ((pest as MonoBehaviour).transform.position - Context.transform.position).normalized;
+                float distance = 1 - Vector3.Distance(Context.transform.position, (pest as MonoBehaviour).transform.position);
+                avoidPos += direction * distance * Random.Range(0.5f, 1.5f);
+            }
+            avoidPos /= pests.Count();
 
-        Context.MoveTo(averagePos + avoidPos);
+            Context.MoveTo(averagePos + avoidPos);
+        }
     }
 
     // This method will be call on state changement.
