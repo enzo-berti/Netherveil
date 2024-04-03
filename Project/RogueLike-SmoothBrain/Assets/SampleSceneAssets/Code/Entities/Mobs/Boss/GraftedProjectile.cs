@@ -8,8 +8,19 @@ public class GraftedProjectile : Projectile
     bool ignoreCollisions = false;
     Vector3 direction;
     Grafted grafted;
+    float tempSpeed = -1;
 
+    public float Speed
+    {
+        get { return speed; }
+    }
+    
     public void SetCollisionImmune(bool _state) { ignoreCollisions = _state; }
+
+    public void SetTempSpeed(float _speed)
+    {
+        tempSpeed = _speed;
+    }
 
     protected override void Awake()
     {
@@ -20,7 +31,7 @@ public class GraftedProjectile : Projectile
     {
         grafted = _grafted;
     }
-    
+
     public void SetDirection(Vector3 _direction)
     {
         direction = _direction;
@@ -28,10 +39,20 @@ public class GraftedProjectile : Projectile
 
     protected override void Update()
     {
+        float originalSpeed = speed;
+
+        if (tempSpeed != -1)
+        {
+            speed = tempSpeed;
+        }
+
         if (!onTarget)
         {
             Move(direction);
         }
+
+        speed = originalSpeed;
+        tempSpeed = -1;
     }
 
     public bool OnLauncher(Vector3 _launcher)
