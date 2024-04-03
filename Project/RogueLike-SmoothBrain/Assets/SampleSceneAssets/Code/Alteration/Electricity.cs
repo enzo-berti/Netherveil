@@ -6,8 +6,7 @@ public class Electricity : Status
 
     public Electricity(float duration = 1f) : base(duration)
     {
-        this.isConst = true;
-        //entityBaseSpeed = entity.Stats.GetValue(Stat.SPEED);
+        //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
     }
     public override void ApplyEffect(Entity target)
     {

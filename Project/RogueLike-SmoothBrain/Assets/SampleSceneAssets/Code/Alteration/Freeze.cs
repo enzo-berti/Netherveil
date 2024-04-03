@@ -15,7 +15,11 @@ public class Freeze : Status
         if (target.Stats.HasStat(Stat.SPEED))
         {
             if(target.gameObject.GetComponent<NavMeshAgent>().speed != 0)
+            {
                 baseAgentSpeed = target.gameObject.GetComponent<NavMeshAgent>().speed;
+                Debug.Log(baseAgentSpeed);
+            }
+                
             target.AddStatus(this);
             target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
             PlayVfx("VFX_Frozen");
