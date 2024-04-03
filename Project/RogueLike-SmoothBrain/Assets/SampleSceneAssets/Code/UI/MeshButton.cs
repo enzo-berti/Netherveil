@@ -2,67 +2,92 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(Collider))]
-public class MeshButton : MonoBehaviour
+namespace MeshUI
 {
-    private bool isHovered = false;
-    private bool isPressed = false;
-
-    [Header("Events"), Space]
-    [SerializeField] private UnityEvent onHoverEnter;
-    [SerializeField] private UnityEvent onHoverExit;
-    [SerializeField] private UnityEvent onPress;
-    [SerializeField] private UnityEvent onRelease;
-
-    void Update()
+    [RequireComponent(typeof(Collider))]
+    public class MeshButton : MonoBehaviour
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        [SerializeField] private MeshNavigation navigation;
+        public MeshNavigation Navigation => navigation;
 
-        if (Physics.Raycast(ray, out hit))
+        private bool isHovered = false;
+        private bool isPressed = false;
+
+        [Header("Events"), Space]
+        [SerializeField] private UnityEvent onHoverEnter;
+        [SerializeField] private UnityEvent onHoverExit;
+        [SerializeField] private UnityEvent onPress;
+        [SerializeField] private UnityEvent onRelease;
+
+        private void Update()
         {
-            if (hit.collider.gameObject == gameObject)
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (!isHovered)
+                if (hit.collider.gameObject == gameObject)
                 {
-                    onHoverEnter?.Invoke();
+                    if (!isHovered)
+                    {
+                        OnHover();
+                    }
+
+                    isHovered = true;
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        if (EventSystem.current.IsPointerOverGameObject())
+                            return;
+
+                        OnPress();
+                        isPressed = true;
+                    }
                 }
-
-                isHovered = true;
-
-                if (Input.GetMouseButtonDown(0))
+                else
                 {
-                    if (EventSystem.current.IsPointerOverGameObject())
-                        return;
+                    if (isHovered)
+                    {
+                        OnOut();
+                    }
 
-                    onPress?.Invoke();
-                    isPressed = true;
+                    isHovered = false;
                 }
             }
             else
             {
                 if (isHovered)
                 {
-                    onHoverExit?.Invoke();
+                    OnOut();
                 }
 
                 isHovered = false;
             }
-        }
-        else
-        {
-            if (isHovered)
+
+            if (Input.GetMouseButtonUp(0) && isPressed)
             {
-                onHoverExit?.Invoke();
+                OnRelease();
+                isPressed = false;
             }
-
-            isHovered = false;
         }
 
-        if (Input.GetMouseButtonUp(0) && isPressed)
+        public void OnHover()
+        {
+            onHoverEnter?.Invoke();
+        }
+
+        public void OnOut()
+        {
+            onHoverExit?.Invoke();
+        }
+
+        public void OnPress()
+        {
+            onPress?.Invoke();
+        }
+
+        public void OnRelease()
         {
             onRelease?.Invoke();
-            isPressed = false;
         }
     }
 }

@@ -90,8 +90,14 @@
 	<object class="MixerBusPanner" id="{6cabcfbc-af55-46f4-a33c-ed2fc1fedb9b}" />
 	<object class="SingleSound" id="{687423b2-8b28-4b1e-896a-f57fb81cd9f3}">
 		<property name="length">
-			<value>0.4179591836734694</value>
+			<value>0.19279501357193146</value>
 		</property>
+		<property name="timelockedOffset">
+			<value>0.12220498642806847</value>
+		</property>
+		<relationship name="fadeInCurve">
+			<destination>{e6c6e4f3-d3ef-46f1-a299-7f8694b647f0}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{c96a52f4-875b-449e-88ab-3170e15736b3}</destination>
 		</relationship>
@@ -121,6 +127,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{fab78e9e-8179-4f03-88f5-939e39792caa}" />
 	<object class="MixerBusFader" id="{0b17af7f-fbdb-48fe-89aa-5481a46cce9d}" />
+	<object class="FadeCurve" id="{e6c6e4f3-d3ef-46f1-a299-7f8694b647f0}">
+		<relationship name="startPoint">
+			<destination>{d0d1f091-1c0a-4819-8735-6da9011d6f91}</destination>
+		</relationship>
+		<relationship name="endPoint">
+			<destination>{229452d4-9cce-472e-9ed3-11a109d448de}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{fcf5cb48-a1f8-45f8-aacc-419b0a17774f}">
 		<relationship name="effects">
 			<destination>{038bb568-4286-48d7-a221-4b2ea5413988}</destination>
@@ -135,6 +149,25 @@
 		<relationship name="modulators">
 			<destination>{3a6a7876-21a4-4d90-9c99-fb3a244c33af}</destination>
 		</relationship>
+	</object>
+	<object class="AutomationPoint" id="{d0d1f091-1c0a-4819-8735-6da9011d6f91}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.0381960869</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{229452d4-9cce-472e-9ed3-11a109d448de}">
+		<property name="position">
+			<value>0.01</value>
+		</property>
+		<property name="value">
+			<value>1</value>
+		</property>
 	</object>
 	<object class="MixerBusFader" id="{038bb568-4286-48d7-a221-4b2ea5413988}" />
 	<object class="RandomizerModulator" id="{3a6a7876-21a4-4d90-9c99-fb3a244c33af}">

@@ -70,7 +70,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 10
   m_Acceleration: 99999
   avoidancePriority: 99
   m_AngularSpeed: 1000
@@ -176,10 +176,24 @@ MonoBehaviour:
       chance: 1
       Quantity: 1
       isChanceShared: 0
-  timeBetweenAttack: 5
-  timeBetweenFleeing: 3
+  timeBetweenAttack: 2
+  timeBetweenFleeing: 5
   pfBomb: {fileID: 3855923176943414352, guid: b420fdc9a271de84c879ad3ad4778e49, type: 3}
   hand: {fileID: 9111015995907246164}
+  hitSFX:
+    Guid:
+      Data1: 178491280
+      Data2: 1124786547
+      Data3: 532161973
+      Data4: -2002185684
+    Path: event:/Enemy/Bomber/BomberHit
+  deathSFX:
+    Guid:
+      Data1: -1697250076
+      Data2: 1281752529
+      Data3: 1596434062
+      Data4: 56683401
+    Path: event:/Enemy/Bomber/BomberDeath
   staggerDuration: 0
 --- !u!114 &7709938691007895571
 MonoBehaviour:
@@ -381,22 +395,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.90225595
+      value: -0.8921644
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.2076823
+      value: -0.20173162
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.368262
+      value: -0.39421025
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.08476695
+      value: 0.08913679
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
