@@ -19,10 +19,7 @@ public class Freeze : Status
         if (target.Stats.HasStat(Stat.SPEED))
         {
             target.AddStatus(this);
-            vfx = GameObject.Instantiate(Resources.Load<GameObject>("VFX_Fire")).GetComponent<VisualEffect>();
-            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
-            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
-            vfx.Play();
+            PlayVfx("VFX_Frozen");
         }
     }
 
@@ -34,7 +31,7 @@ public class Freeze : Status
 
     public override void OnFinished()
     {
-        GameObject.Destroy(vfx.gameObject);
+        StopVfx();
     }
 
 

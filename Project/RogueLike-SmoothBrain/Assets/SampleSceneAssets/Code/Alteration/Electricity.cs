@@ -19,10 +19,7 @@ public class Electricity : Status
         {
             target.AddStatus(this);
             entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
-            vfx = GameObject.Instantiate(Resources.Load<GameObject>("VFX_Fire")).GetComponent<VisualEffect>();
-            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
-            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
-            vfx.Play();
+            PlayVfx("VFX_Electricity");
         }
     }
 
