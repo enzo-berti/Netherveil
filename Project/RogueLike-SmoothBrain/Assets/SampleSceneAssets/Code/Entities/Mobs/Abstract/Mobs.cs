@@ -48,6 +48,15 @@ public abstract class Mobs : Entity
         StartCoroutine(Brain());
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        if(transform.position.y < -100f)
+        {
+            Destroy(transform.parent.gameObject);
+        }
+    }
+
     private void ApplySpeed(Stat speedStat)
     {
         if (!speedStat.HasFlag(Stat.SPEED))
