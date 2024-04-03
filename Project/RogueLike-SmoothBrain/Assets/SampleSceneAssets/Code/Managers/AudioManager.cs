@@ -3,13 +3,9 @@ using FMODUnity;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using System.Dynamic;
 
 public class CustomEventTrigger : EventTrigger
 {
@@ -53,6 +49,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(Sound))]
     public class SoundDrawerUIE : PropertyDrawer
     {
@@ -97,6 +94,7 @@ public class AudioManager : MonoBehaviour
             EditorGUI.indentLevel--;
         }
     }
+#endif
 
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
