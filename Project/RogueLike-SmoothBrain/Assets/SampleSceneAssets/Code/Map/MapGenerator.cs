@@ -188,6 +188,7 @@ public class MapGenerator : MonoBehaviour
                         break;
                     }
                 }
+                // pas censer arriver jusqu'ici mdr
             }
         }
     }
