@@ -231,12 +231,15 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
             else
             {
-                Debug.Log(bossSounds.deathSound.GetState());
                 deathTimer -= Time.deltaTime;
-                if (deathTimer <= 0 && bossSounds.deathSound.GetState() == PLAYBACK_STATE.STOPPED)
+                if (deathTimer <= 0)
                 {
-                    Destroy(gameObject);
-                    GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+                    deathTimer = Time.deltaTime;
+                    if (bossSounds.deathSound.GetState() != PLAYBACK_STATE.PLAYING)
+                    {
+                        Destroy(gameObject);
+                        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+                    }
                 }
             }
 
