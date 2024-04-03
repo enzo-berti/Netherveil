@@ -11,6 +11,13 @@ public class Electricity : Status
         statusChance = 1;
         //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
     }
+    public Electricity(float duration, float chance) : base(duration)
+    {
+        isStackable = false;
+        statusChance = 1;
+        statusChance = chance;
+        //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
+    }
     public override void ApplyEffect(Entity target)
     {
         Debug.Log("apply effect");
@@ -30,7 +37,7 @@ public class Electricity : Status
 
     public override void OnFinished()
     {
-        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
+        target.gameObject.GetComponent<NavMeshAgent>().speed = entityBaseSpeed;
     }
 
     protected override void Effect()
