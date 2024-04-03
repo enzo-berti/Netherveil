@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine.AI;
+using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -120,9 +121,9 @@ public class Gorgon : Mobs, IGorgon
             else if (canFlee && !isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
             {
                 // TODO : Change this bad behaviour
-                
+
                 Vector2 playerPosXZ = new(playerTransform.position.x, playerTransform.position.z);
-                
+
                 Vector3 direction = this.transform.position - playerTransform.position;
                 Vector2 Point2DToReach = GetPointOnCone(playerPosXZ, direction, 10, 90);
                 Vector3 point3DToReach = new(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
@@ -189,27 +190,31 @@ public class Gorgon : Mobs, IGorgon
         float timeToThrow = 0.8f;
         Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 1f);
         Vector3 pointToReach3D = new(pointToReach2D.x, playerTransform.position.y, pointToReach2D.y);
-        if(NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
+        if (NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
         {
             pointToReach3D = hit.position;
         }
 
         yield return new WaitWhile(() => HasRemoveHead == false);
-        GameObject bomb = Instantiate(pfBomb, hand);
-        yield return new WaitWhile(() => hasLaunchAnim == false);
-        bomb.transform.rotation = Quaternion.identity;
-        bomb.transform.parent = null;
-        
-        ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
+        if (this.gameObject != null)
+        {
+            GameObject bomb = Instantiate(pfBomb, hand);
+            yield return new WaitWhile(() => hasLaunchAnim == false);
+            bomb.transform.rotation = Quaternion.identity;
+            bomb.transform.parent = null;
 
-        StartCoroutine(exploBomb.ThrowToPos(pointToReach3D, timeToThrow));
-        exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
-        exploBomb.Activate();
+            ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
 
-        yield return new WaitForSeconds(1f);
-        isAttacking = false;
-        yield return new WaitForSeconds(timeBetweenAttack);
-        canAttack = true;
+            StartCoroutine(exploBomb.ThrowToPos(pointToReach3D, timeToThrow));
+            exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
+            exploBomb.Activate();
+
+            yield return new WaitForSeconds(0.5f);
+            isAttacking = false;
+            yield return new WaitForSeconds(timeBetweenAttack);
+            canAttack = true;
+        }
+
     }
 
 
@@ -257,7 +262,7 @@ public class Gorgon : Mobs, IGorgon
         }
 
         float distance = Vector3.Distance(transform.position, posToReach);
-        if(path.Count < nbDash)
+        if (path.Count == 0)
         {
             for (int i = path.Count; i < nbDash; i++)
             {
@@ -268,30 +273,42 @@ public class Gorgon : Mobs, IGorgon
                 Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
 
                 Vector2 direction = posToReach2D - curPos2D;
-                Vector2 posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
+
+                Vector2 posOnCone = this.transform.position;
+
+                if (direction != Vector2.zero)
+                    posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
+
                 Vector3 posOnCone3D = new(posOnCone.x, this.transform.position.y, posOnCone.y);
-                if(NavMesh.SamplePosition(posOnCone3D, out var hit, 10, -1))
+                if (NavMesh.SamplePosition(posOnCone3D, out var hit, 10, NavMesh.AllAreas))
                 {
                     posOnCone3D = hit.position;
                     path.Add(posOnCone3D);
                 }
-                
+
+
             }
         }
-        
+
         // We finally add the position that we want to reach after every dash
         path.Add(posToReach);
         return path;
     }
     public Vector2 GetPointOnCircle(Vector2 center, float radius)
     {
-        float randomValue = Random.Range(0, 2 * Mathf.PI);
+        float randomValue = UnityEngine.Random.Range(0, 2 * Mathf.PI);
         return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
     public Vector2 GetPointOnCone(Vector2 center, Vector2 direction, float radius, float angle)
     {
+        if(direction == Vector2.zero)
+        {
+            Debug.LogError("Impossible to find a point because direction is a vector zero");
+        }
         float c = Mathf.Acos(direction.x / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
+        Debug.Log("Cosinus => " + c);
         float s = Mathf.Asin(direction.y / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
+        Debug.Log("Sinus => " + s);
         float cs;
         float radAngle = angle * Mathf.Deg2Rad;
         if (s < 0)
@@ -305,7 +322,7 @@ public class Gorgon : Mobs, IGorgon
         {
             cs = c;
         }
-        float randomValue = Random.Range(-radAngle + cs, radAngle + cs);
+        float randomValue = UnityEngine.Random.Range(-radAngle + cs, radAngle + cs);
         return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
     public void Death()
