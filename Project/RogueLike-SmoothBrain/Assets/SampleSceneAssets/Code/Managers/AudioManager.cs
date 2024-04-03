@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using System.Dynamic;
 
 public class CustomEventTrigger : EventTrigger
 {
@@ -24,8 +25,14 @@ public class AudioManager : MonoBehaviour
     [Serializable]
     public class Sound
     {
+        public string name = "N/A";
         public EventReference reference;
         public EventInstance instance;
+
+        public Sound(string _name)
+        {
+            name = _name;
+        }
 
         public PLAYBACK_STATE GetState()
         {
@@ -36,9 +43,12 @@ public class AudioManager : MonoBehaviour
             return state;
         }
 
-        public void CreateInstance()
+        public void CreateInstance(bool restart = false)
         {
-            instance = RuntimeManager.CreateInstance(reference);
+            if (GetState() == PLAYBACK_STATE.STOPPED || restart)
+            {
+                instance = RuntimeManager.CreateInstance(reference);
+            }
         }
     }
 
@@ -47,13 +57,17 @@ public class AudioManager : MonoBehaviour
     {
         int nbMember = 0;
         SerializedProperty referenceProperty;
+        SerializedProperty nameProperty;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             referenceProperty = property.FindPropertyRelative("reference");
+            nameProperty = property.FindPropertyRelative("name");
             nbMember = 0;
+            string labelText = nameProperty.stringValue;
             EditorGUI.BeginProperty(position, label, property);
-            DrawMember(position, referenceProperty);
+
+            DrawMember(position, referenceProperty, labelText);
 
             EditorGUI.EndProperty();
         }
@@ -68,7 +82,7 @@ public class AudioManager : MonoBehaviour
             return EditorGUIUtility.singleLineHeight * totalLine;
         }
 
-        private void DrawMember(Rect position, SerializedProperty propertyToDraw)
+        private void DrawMember(Rect position, SerializedProperty propertyToDraw, string labelText)
         {
             nbMember++;
             EditorGUI.indentLevel++;
@@ -78,7 +92,7 @@ public class AudioManager : MonoBehaviour
             float height = EditorGUIUtility.singleLineHeight;
 
             Rect drawArea = new Rect(posX, posY, width, height);
-            EditorGUI.PropertyField(drawArea, propertyToDraw);
+            EditorGUI.PropertyField(drawArea, propertyToDraw, new GUIContent(labelText));
             EditorGUI.indentLevel--;
         }
     }
@@ -93,14 +107,14 @@ public class AudioManager : MonoBehaviour
     private static AudioManager instance = null;
     public static AudioManager Instance
     {
-        get 
-        { 
+        get
+        {
             if (instance == null)
             {
                 Instantiate(Resources.Load<GameObject>(nameof(AudioManager)));
             }
 
-            return instance; 
+            return instance;
         }
     }
 
@@ -153,7 +167,7 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        for(int i = audioInstance.Count - 1; i >= 0; --i)
+        for (int i = audioInstance.Count - 1; i >= 0; --i)
         {
             audioInstance[i].getPlaybackState(out PLAYBACK_STATE state);
             if (state == PLAYBACK_STATE.STOPPED)
@@ -207,13 +221,39 @@ public class AudioManager : MonoBehaviour
 
         return result;
     }
-    
-    public EventInstance PlaySound(Sound sound, Vector3 worldPosition)
+
+    public EventInstance PlaySound(Sound sound, Vector3 worldPosition, bool restart = false)
     {
-        sound.instance.start();
-        sound.instance.set3DAttributes(worldPosition.To3DAttributes());
+        sound.CreateInstance(restart);
+
+        if (sound.GetState() == PLAYBACK_STATE.STOPPED)
+        {
+            sound.instance.start();
+            sound.instance.set3DAttributes(worldPosition.To3DAttributes());
+        }
 
         return sound.instance;
+    }
+
+    public EventInstance PlaySound(Sound sound, bool restart = false)
+    {
+        sound.CreateInstance(restart);
+
+        if (sound.GetState() == PLAYBACK_STATE.STOPPED)
+        {
+            sound.instance.start();
+            audioInstance.Add(sound.instance);
+        }
+
+        return sound.instance;
+    }
+
+    public void StopSound(Sound sound, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
+    {
+        sound.instance.stop(stopMode);
+
+        if (audioInstance.Contains(sound.instance))
+            audioInstance.Remove(sound.instance);
     }
 
     public EventInstance PlaySound(EventReference reference)

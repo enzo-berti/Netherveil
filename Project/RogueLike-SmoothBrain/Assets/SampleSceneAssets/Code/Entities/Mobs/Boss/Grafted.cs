@@ -44,21 +44,21 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [System.Serializable]
     private class GraftedSounds
     {
-        public AudioManager.Sound deathSound;
-        //public AudioManager.Sound hitSound;
-        //public AudioManager.Sound plantInGroundSound;
-        //public AudioManager.Sound projectileLaunchedSound;
-        //public AudioManager.Sound projectileHitMapSound;
-        //public AudioManager.Sound projectileHitPlayerSound;
-        //public AudioManager.Sound thrustSound;
-        //public AudioManager.Sound introSound;
-        //public AudioManager.Sound retrievingProjectileLaunchedSound;
-        //public AudioManager.Sound spinAttackSound;
-        //public AudioManager.Sound stretchSound;
-        //public AudioManager.Sound weaponOutSound;
-        //public AudioManager.Sound weaponInSound;
-        //public AudioManager.Sound walkingSound;
-        //public AudioManager.Sound music;
+        public AudioManager.Sound deathSound = new("Death");
+        public AudioManager.Sound hitSound = new("Hit");
+        public AudioManager.Sound plantInGroundSound = new("Plant in ground");
+        public AudioManager.Sound projectileLaunchedSound = new("Projectile launched");
+        public AudioManager.Sound projectileHitMapSound = new("Projectile hit map");
+        public AudioManager.Sound projectileHitPlayerSound = new("Projectile hit player");
+        public AudioManager.Sound thrustSound = new("Thrust");
+        public AudioManager.Sound introSound = new("Intro");
+        public AudioManager.Sound retrievingProjectileSound = new("Retrieving projectile");
+        public AudioManager.Sound spinAttackSound = new("Fall");
+        public AudioManager.Sound stretchSound = new("Dash");
+        public AudioManager.Sound weaponOutSound = new("WeaponOut");
+        public AudioManager.Sound weaponInSound = new("WeaponIn");
+        public AudioManager.Sound walkingSound = new("Walk");
+        public AudioManager.Sound music = new("Music");
     }
 
     [Header("Sounds")]
@@ -106,13 +106,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         // mettre la cam entre le joueur et le boss
 
         //introSound = AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
-        //AudioManager.Instance.PlaySound(bossSounds.music);
+        AudioManager.Instance.PlaySound(bossSounds.music);
     }
 
     private void OnDestroy()
     {
-        // stop la musique
-
         // remettre la camera au dessus du joueur
 
         if (projectile) Destroy(projectile.gameObject);
@@ -134,8 +132,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         throwingHash = Animator.StringToHash("Throwing");
         retrievingHash = Animator.StringToHash("Retrieving");
         fallHash = Animator.StringToHash("Fall");
-
-        bossSounds.deathSound.CreateInstance();
+		
+		        this.transform.position = this.transform.parent.position;
+        this.transform.parent.position = Vector3.zero;
     }
 
     protected override IEnumerator Brain()
@@ -143,6 +142,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         while (true)
         {
             yield return null;
+
+
             if (deathTimer <= 0)
             {
                 if (!player)
@@ -163,9 +164,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                     // Move towards player
                     MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
-                    if (agent.destination != transform.position)
+                    if (attackState == AttackState.IDLE)
                     {
-                        // son marche
+                        AudioManager.Instance.PlaySound(bossSounds.walkingSound, transform.position);
                     }
 
                     // Attacks
@@ -239,6 +240,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     {
                         Destroy(gameObject);
                         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+                        AudioManager.Instance.StopSound(bossSounds.music);
                     }
                 }
             }
@@ -279,11 +281,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         if (stats.GetValue(Stat.HP) <= 0)
         {
             Death();
-            //AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
         }
         else
         {
-            //AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position);
+            AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position);
+            Debug.Log("sex");
         }
     }
 
@@ -441,7 +443,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                 if (thrustCounter < 3)
                 {
-                    attackState = AttackState.IDLE;
+                    attackState = AttackState.CHARGING;
                 }
                 else
                 {

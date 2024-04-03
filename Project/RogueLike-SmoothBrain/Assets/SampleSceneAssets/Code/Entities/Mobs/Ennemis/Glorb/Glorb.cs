@@ -37,6 +37,8 @@ public class Glorb : Mobs, IGlorb
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         vfxStopper = GetComponent<VFXStopper>();
         animator = GetComponentInChildren<Animator>();
+        this.transform.position = this.transform.parent.position;
+        this.transform.parent.position = Vector3.zero;
     }
 
     public void Attack(IDamageable damageable)
