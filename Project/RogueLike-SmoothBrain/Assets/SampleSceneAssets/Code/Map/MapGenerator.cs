@@ -50,7 +50,13 @@ public struct GenerationParam
     {
         get
         {
-            return nbRoom[RoomType.Normal] + nbRoom[RoomType.Treasure] + nbRoom[RoomType.Challenge] + nbRoom[RoomType.Merchant] + nbRoom[RoomType.Secret] + nbRoom[RoomType.MiniBoss];
+            int totalCount = 0;
+            foreach(int count in nbRoom.Values)
+            {
+                totalCount += count;
+            }
+
+            return totalCount;
         }
     }
 
@@ -175,6 +181,7 @@ public class MapGenerator : MonoBehaviour
             if (genParam.RoomAvailablesCount <= 1)
             {
                 GenerateRoom(ref genParam, RoomType.Normal);
+                genParam.nbRoom[RoomType.Normal]--;
             }
             else
             {

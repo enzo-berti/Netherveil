@@ -1,13 +1,30 @@
+using Netherveil.Inputs;
 using UnityEngine;
 
 public class MouseOnScreenBorder : MonoBehaviour
 {
     private Vector3 targetPosition;
     private Vector3 currentVelocity = Vector3.zero;
-    private float smoothTime = 0.5f; 
+    private float smoothTime = 0.2f; 
     private Transform playerTransform;
     private PlayerInput playerInput;
+    private PlayerInputMap inputs;
 
+    private void OnEnable()
+    {
+        inputs.Enable();
+    }
+
+
+    private void OnDisable()
+    {
+        inputs.Disable();
+    }
+
+    private void Awake()
+    {
+        inputs = new PlayerInputMap();
+    }
 
     void Start()
     {
@@ -17,7 +34,15 @@ public class MouseOnScreenBorder : MonoBehaviour
 
     void FixedUpdate()
     {
-        CollidMouseScreen();
+        if (DeviceManager.Instance.IsPlayingKB()) 
+        {
+            CollidMouseScreen();
+        }
+        else
+        {
+            CollideJoystickScreen();
+        }
+
         ChangeOffsetPos();
     }
 
@@ -50,6 +75,34 @@ public class MouseOnScreenBorder : MonoBehaviour
         targetPosition = playerTransform.position + offsetX + offsetY;
     }
 
+    private void CollideJoystickScreen()
+    {
+        Vector2 joyStickInput = inputs.Gamepad.CamLookAway.ReadValue<Vector2>();
+        Vector3 offsetX = Vector3.zero;
+        Vector3 offsetY = Vector3.zero;
+        float offsetDistCam = 2f;
+
+        if (joyStickInput.x > 0.5f)
+        {
+            offsetX = Camera.main.transform.right * offsetDistCam;
+        }
+        else if (joyStickInput.x < -0.5f)
+        {
+            offsetX = -Camera.main.transform.right * offsetDistCam;
+        }
+
+        if (joyStickInput.y > 0.5f)
+        {
+            offsetY = Camera.main.transform.up * offsetDistCam;
+        }
+        else if (joyStickInput.y < -0.5f)
+        {
+            offsetY = -Camera.main.transform.up * offsetDistCam;
+        }
+
+        targetPosition = playerTransform.position + offsetX + offsetY;
+    }
+
     private void ChangeOffsetPos()
     {
         if (targetPosition != playerTransform.position && playerInput.Direction == Vector2.zero)
@@ -58,7 +111,7 @@ public class MouseOnScreenBorder : MonoBehaviour
         }
         else
         {
-            transform.position = playerTransform.position;
+            transform.position = Vector3.SmoothDamp(transform.position, playerTransform.position, ref currentVelocity, smoothTime/3);
         }
     }
 }
