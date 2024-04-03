@@ -76,7 +76,7 @@ public class Spike : MonoBehaviour
         AudioManager.Instance.PlaySound(spikesUpSFX);
         while (spikesToMove.transform.position.y != endPosY)
         {
-            spikesToMove.transform.position += Vector3.up / 10;
+            spikesToMove.transform.position += Vector3.up * Time.deltaTime * 10;
             if (spikesToMove.transform.position.y > endPosY)
             {
                 spikesToMove.transform.position = new Vector3(spikesToMove.transform.position.x, endPosY, spikesToMove.transform.position.z);
@@ -105,7 +105,7 @@ public class Spike : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         while (spikesToMove.transform.position.y != startPosY)
         {
-            spikesToMove.transform.position -= Vector3.up / 15;
+            spikesToMove.transform.position -= Vector3.up * Time.deltaTime * 15;
             if (spikesToMove.transform.position.y < startPosY)
             {
                 spikesToMove.transform.position = new Vector3(spikesToMove.transform.position.x, startPosY, spikesToMove.transform.position.z);
