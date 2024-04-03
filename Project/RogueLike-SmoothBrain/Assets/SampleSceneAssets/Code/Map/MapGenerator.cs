@@ -320,6 +320,7 @@ public class MapGenerator : MonoBehaviour
 
             if (!TryInstantiateRoom(roomBossGO, ref genParam, entranceDoor, exitDoor))
             {
+                DestroyImmediate(roomBossGO);
                 continue; // fail to generate continue to next candidate
             }
 
