@@ -1,10 +1,14 @@
 using FMOD.Studio;
 using FMODUnity;
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.UIElements;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class CustomEventTrigger : EventTrigger
 {
@@ -17,6 +21,60 @@ public class CustomEventTrigger : EventTrigger
 
 public class AudioManager : MonoBehaviour
 {
+    [Serializable]
+    public class Sound
+    {
+        public EventReference reference;
+        EventInstance instance;
+
+        public Sound()
+        {
+            instance = RuntimeManager.CreateInstance(reference);
+        }
+    }
+
+    [CustomPropertyDrawer(typeof(Sound))]
+    public class SoundDrawerUIE : PropertyDrawer
+    {
+        int nbMember = 0;
+        SerializedProperty referenceProperty;
+       
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            referenceProperty = property.FindPropertyRelative("reference");
+            nbMember = 0;
+            EditorGUI.BeginProperty(position, label, property);
+            DrawMember(position, referenceProperty);    
+
+            EditorGUI.EndProperty();
+        }
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            int totalLine = 1;
+            if (property.isExpanded)
+            {
+                totalLine += 1;
+
+            }
+            return EditorGUIUtility.singleLineHeight * totalLine;
+        }
+
+        private void DrawMember(Rect position, SerializedProperty propertyToDraw)
+        {
+            nbMember++;
+            EditorGUI.indentLevel++;
+            float posX = position.min.x;
+            float posY = position.min.y + EditorGUIUtility.singleLineHeight * nbMember;
+            float width = position.size.x;
+            float height = EditorGUIUtility.singleLineHeight;
+
+            Rect drawArea = new Rect(posX, posY, width, height);
+            EditorGUI.PropertyField(drawArea, propertyToDraw);
+            EditorGUI.indentLevel--;
+        }
+    }
+
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadAudioManager()
     {
@@ -76,8 +134,8 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         CustomEventTrigger.buttonSelectSFX = buttonSelect;
-        Button[] buttons = FindObjectsOfType<Button>(true); // parameter makes it include inactive UI elements with buttons
-        foreach (Button b in buttons)
+        UnityEngine.UI.Button[] buttons = FindObjectsOfType<UnityEngine.UI.Button>(true); // parameter makes it include inactive UI elements with buttons
+        foreach (UnityEngine.UI.Button b in buttons)
         {
             b.onClick.AddListener(ButtonClickSFX);
             b.AddComponent<CustomEventTrigger>();

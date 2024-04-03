@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine.AI;
 using System;
 using FMODUnity;
+using UnityEngine.VFX;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -32,6 +33,7 @@ public class Gorgon : Mobs, IGorgon
     [SerializeField] private Transform hand;
     [SerializeField] private EventReference hitSFX;
     [SerializeField] private EventReference deathSFX;
+    public VisualEffect dashVFX;
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;
 
@@ -57,7 +59,8 @@ public class Gorgon : Mobs, IGorgon
     protected override void Start()
     {
         base.Start();
-
+        this.transform.position = this.transform.parent.position;
+        this.transform.parent.position = Vector3.zero;
         // getter(s) reference
         animator = GetComponentInChildren<Animator>();
         playerTransform = GameObject.FindWithTag("Player").transform;
@@ -116,7 +119,7 @@ public class Gorgon : Mobs, IGorgon
                 NavMesh.SamplePosition(pointToReach3D, out NavMeshHit hit, float.PositiveInfinity, NavMesh.AllAreas);
                 pointToReach3D = hit.position;
 
-                List<Vector3> listDashes = GetDashesPath(pointToReach3D, 4);
+                List<Vector3> listDashes = GetDashesPath(pointToReach3D, 3);
                 StartCoroutine(DashToPos(listDashes));
             }
 
@@ -155,6 +158,8 @@ public class Gorgon : Mobs, IGorgon
         for (int i = 1; i < listDashes.Count; i++)
         {
             StartCoroutine(GoSmoothToPosition(listDashes[i]));
+            animator.ResetTrigger("Dash");
+            animator.SetTrigger("Dash");
             yield return new WaitUntil(() => isSmoothCoroutineOn == false);
         }
         isGoingOnPlayer = false;
@@ -171,14 +176,13 @@ public class Gorgon : Mobs, IGorgon
         this.transform.forward = posToReach - basePos;
         while (timer < 1f)
         {
-
             newPos = Vector3.Lerp(basePos, posToReach, timer);
             agent.Warp(newPos);
             timer += Time.deltaTime * 5;
             timer = timer > 1 ? 1 : timer;
             yield return null;
         }
-        yield return new WaitForSeconds(0.06f);
+        yield return new WaitForSeconds(0.25f);
         isSmoothCoroutineOn = false;
     }
 
@@ -208,7 +212,7 @@ public class Gorgon : Mobs, IGorgon
 
             ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
 
-            StartCoroutine(exploBomb.ThrowToPos(pointToReach3D, timeToThrow));
+            exploBomb.ThrowToPos(pointToReach3D, timeToThrow);
             exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
             exploBomb.Activate();
 
@@ -256,18 +260,21 @@ public class Gorgon : Mobs, IGorgon
             this.transform.position
         };
 
+        
         NavMeshPath navPath = new();
         NavMesh.CalculatePath(this.transform.position, posToReach, -1, navPath);
-        for (int i = 0; i < navPath.corners.Length; i++)
+        // First corner is initPos and last is endPos
+        for (int i = 1; i < navPath.corners.Length - 1; i++)
         {
             path.Add(navPath.corners[i]);
         }
-
         float distance = Vector3.Distance(transform.position, posToReach);
-        if (path.Count == 0)
+        // If it's a straight line
+        if (path.Count == 1)
         {
-            for (int i = path.Count; i < nbDash; i++)
+            for (int i = 1; i < nbDash; i++)
             {
+                Debug.Log("ConeDash");
                 // We avoid y value because we only move in x and z
                 Vector2 posToReach2D = new(posToReach.x, posToReach.z);
 
@@ -290,6 +297,7 @@ public class Gorgon : Mobs, IGorgon
 
 
             }
+            //path.Add(posToReach);
         }
 
         // We finally add the position that we want to reach after every dash

@@ -72,14 +72,12 @@ public abstract class Status
                     isFinished = true;
                     this.OnFinished();
                 }
-
             }
             if (isConst) return;
             if (!isCoroutineOn)
             {
                 EffectAsync();
             }
-
         }
     }
 

@@ -15,6 +15,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     public List<Status> StatusToApply => statusToApply;
 
     private Animator animator;
+    float deathTimer = 0;
 
     int dyingHash;
     int thrustHash;
@@ -43,22 +44,24 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [System.Serializable]
     private class GraftedSounds
     {
-        public EventReference deathSound;
-        public EventReference hitSound;
-        public EventReference plantInGroundSound;
-        public EventReference projectileLaunchedSound;
-        public EventReference projectileHitMapSound;
-        public EventReference projectileHitPlayerSound;
-        public EventReference thrustSound;
-        public EventReference introSound;
-        public EventReference retrievingProjectileLaunchedSound;
-        public EventReference spinAttackSound;
-        public EventReference stretchSound;
-        public EventReference weaponOutSound;
-        public EventReference weaponInSound;
-        public EventReference walkingSound;
-        public EventReference music;
+        public AudioManager.Sound deathSound;
+        public AudioManager.Sound hitSound;
+        public AudioManager.Sound plantInGroundSound;
+        public AudioManager.Sound projectileLaunchedSound;
+        public AudioManager.Sound projectileHitMapSound;
+        public AudioManager.Sound projectileHitPlayerSound;
+        public AudioManager.Sound thrustSound;
+        public AudioManager.Sound introSound;
+        public AudioManager.Sound retrievingProjectileLaunchedSound;
+        public AudioManager.Sound spinAttackSound;
+        public AudioManager.Sound stretchSound;
+        public AudioManager.Sound weaponOutSound;
+        public AudioManager.Sound weaponInSound;
+        public AudioManager.Sound walkingSound;
+        public AudioManager.Sound music;
+        public AudioManager.Sound music2;
     }
+
     [Header("Sounds")]
     [SerializeField] private GraftedSounds bossSounds;
     //EventInstance introSound;
@@ -140,88 +143,102 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         while (true)
         {
             yield return null;
-
-            if (!player)
+            if (deathTimer <= 0)
             {
-                player = FindObjectOfType<Hero>();
-            }
-            else
-            {
-                // Face player
-                if (attackState != AttackState.ATTACKING)
+                if (!player)
                 {
-                    Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-                    lookRotation.x = 0;
-                    lookRotation.z = 0;
-
-                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+                    player = FindObjectOfType<Hero>();
                 }
+                else
+                {
+                    // Face player
+                    if (attackState != AttackState.ATTACKING)
+                    {
+                        Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+                        lookRotation.x = 0;
+                        lookRotation.z = 0;
 
-                // Move towards player
-                MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
-                if (agent.destination != transform.position)
-                {
-                    // son marche
-                }
+                        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+                    }
 
-                // Attacks
-                if (attackCooldown > 0)
-                {
-                    attackState = AttackState.IDLE;
-                    attackCooldown -= Time.deltaTime;
-                    if (attackCooldown < 0) attackCooldown = 0;
-                }
-                else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
-                {
-                    lastAttack = currentAttack;
-                    currentAttack = ChooseAttack();
+                    // Move towards player
+                    MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
+                    if (agent.destination != transform.position)
+                    {
+                        // son marche
+                    }
+
+                    // Attacks
+                    //if (attackCooldown > 0)
+                    //{
+                    //    attackState = AttackState.IDLE;
+                    //    attackCooldown -= Time.deltaTime;
+                    //    if (attackCooldown < 0) attackCooldown = 0;
+                    //}
+                    //else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
+                    //{
+                    //    lastAttack = currentAttack;
+                    //    currentAttack = ChooseAttack();
+
+                    //    switch (currentAttack)
+                    //    {
+                    //        case Attacks.RANGE:
+                    //            animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                    //            break;
+
+                    //        case Attacks.THRUST:
+                    //            animator.SetBool(thrustHash, true);
+                    //            break;
+
+                    //        case Attacks.DASH:
+                    //            animator.SetBool(dashHash, true);
+                    //            break;
+                    //    }
+                    //}
+
+                    // DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        currentAttack = Attacks.THRUST;
+                        animator.SetBool(thrustHash, true);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha2))
+                    {
+                        currentAttack = Attacks.DASH;
+                        animator.SetBool(dashHash, true);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha3))
+                    {
+                        currentAttack = Attacks.RANGE;
+                        animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                    }
 
                     switch (currentAttack)
                     {
                         case Attacks.RANGE:
-                            animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                            if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
                             break;
 
                         case Attacks.THRUST:
-                            animator.SetBool(thrustHash, true);
+                            TripleThrust();
                             break;
 
                         case Attacks.DASH:
-                            animator.SetBool(dashHash, true);
+                            Dash();
                             break;
                     }
                 }
-
-                //// DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
-                //if (Input.GetKeyDown(KeyCode.Alpha1))
-                //{
-                //    currentAttack = Attacks.THRUST;
-                //    animator.SetBool(thrustHash, true);
-                //}
-                //else if (Input.GetKeyDown(KeyCode.Alpha2))
-                //{
-                //    currentAttack = Attacks.DASH;
-                //    animator.SetBool(dashHash, true);
-                //}
-                //else if (Input.GetKeyDown(KeyCode.Alpha3))
-                //{
-                //    currentAttack = Attacks.RANGE;
-                //    animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
-                //}
-
-                switch (currentAttack)
+            }
+            else
+            {
+                deathTimer -= Time.deltaTime;
+                if (deathTimer <= 0)
                 {
-                    case Attacks.RANGE:
-                        if (hasProjectile) ThrowProjectile(); else RetrieveProjectile();
-                        break;
+                    Destroy(gameObject);
+                    GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+                    AudioManager.Instance.PlaySound(bossSounds.deathSound.reference);
 
-                    case Attacks.THRUST:
-                        TripleThrust();
-                        break;
-
-                    case Attacks.DASH:
-                        Dash();
-                        break;
+                    Debug.Log(bossSounds.deathSound.reference);
                 }
             }
         }
@@ -270,9 +287,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public void Death()
     {
-        Destroy(gameObject);
-        //AudioManager.Instance.PlaySound(bossSounds.deathSound);
-        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+        deathTimer = 0.5f;
+        MoveTo(transform.position);
+        animator.SetBool(dyingHash, true);
+        //AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
     }
 
     public void MoveTo(Vector3 _pos)
