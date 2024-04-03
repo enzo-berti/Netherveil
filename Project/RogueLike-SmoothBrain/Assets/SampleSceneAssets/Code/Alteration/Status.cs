@@ -12,6 +12,7 @@ public abstract class Status
     public Status(float _duration)
     {
         this.duration = _duration;
+        AddStack(1);
     }
     public abstract Status DeepCopy();
 
@@ -52,9 +53,9 @@ public abstract class Status
     public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
-        if(isStackable)
+        if(isStackable || stack < 1)
         {
-            stack += nb;
+            stack += isStackable ? nb : 1;
             for (int i = 0; i < nb; i++)
                 stopTimes.Add(duration + currentTime);
         }

@@ -7,6 +7,7 @@ public class Freeze : Status
     float baseAgentSpeed;
     public Freeze(float duration) : base(duration)
     {
+        isStackable = false;
     }
 
     public override void ApplyEffect(Entity target)

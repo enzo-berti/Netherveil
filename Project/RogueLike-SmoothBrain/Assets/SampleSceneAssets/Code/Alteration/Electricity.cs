@@ -7,10 +7,13 @@ public class Electricity : Status
 
     public Electricity(float duration = 1f) : base(duration)
     {
+        isStackable = false;
+        statusChance = 1;
         //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
     }
     public override void ApplyEffect(Entity target)
     {
+        Debug.Log("apply effect");
         if (target.Stats.HasStat(Stat.SPEED))
         {
             target.AddStatus(this);
@@ -32,8 +35,10 @@ public class Electricity : Status
 
     protected override void Effect()
     {
+        Debug.Log("Coucou elec");
         if (target != null)
         {
+            
             target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
            //target.Stats.SetValue(Stat.SPEED, 0f);
         }

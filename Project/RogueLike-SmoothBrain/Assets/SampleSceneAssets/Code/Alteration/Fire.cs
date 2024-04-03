@@ -7,11 +7,13 @@ public class Fire : Status
 
     public Fire(float _duration) : base(_duration)
     {
+        isStackable = true;
         statusChance = 1.0f;
         frequency = 0.5f;
     }
     public Fire(float _duration, float _statusChance) : base(_duration)
     {
+        isStackable = true;
         statusChance = _statusChance;
         frequency = 0.5f;
     }
@@ -20,9 +22,7 @@ public class Fire : Status
     {
         if (target.gameObject.TryGetComponent<IDamageable>(out _))
         {
-            AddStack(1);
             target.AddStatus(this);
-
             PlayVfx("VFX_Fire");
         }
     }
