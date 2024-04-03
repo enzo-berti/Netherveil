@@ -10,15 +10,13 @@ public class Freeze : Status
         isConst = true;
     }
 
-    private int damage = 10;
-    static Color freezeColor = new Color(0.11f, 0.78f, 0.87f, 1.0f);
-
     public override void ApplyEffect(Entity target)
     {
         if (target.Stats.HasStat(Stat.SPEED))
         {
             baseAgentSpeed = target.gameObject.GetComponent<NavMeshAgent>().speed;
             target.AddStatus(this);
+            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
             PlayVfx("VFX_Frozen");
         }
     }
@@ -31,10 +29,6 @@ public class Freeze : Status
 
     protected override void Effect()
     {
-        if (target != null)
-        {
-            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
-        }
     }
 
     public override void OnFinished()
