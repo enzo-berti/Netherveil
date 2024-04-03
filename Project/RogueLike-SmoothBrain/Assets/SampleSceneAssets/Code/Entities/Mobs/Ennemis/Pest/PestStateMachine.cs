@@ -81,7 +81,7 @@ public class PestStateMachine : Mobs, IPest
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
 
-        this.transform.position = this.transform.parent.position;
+        this.transform.localPosition = this.transform.parent.position;
         this.transform.parent.position = Vector3.zero;
     }
 

@@ -358,7 +358,7 @@ public class MapGenerator : MonoBehaviour
         // Generate gate
         GameObject gateGO = Instantiate(gatePrefab, entranceDoor.Position, Quaternion.identity);
         gateGO.transform.Rotate(0, entranceDoor.Rotation, 0);
-        gateGO.transform.parent = gameObject.transform;
+        gateGO.transform.parent = roomGO.transform.parent;
 
         // Removed used door
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();

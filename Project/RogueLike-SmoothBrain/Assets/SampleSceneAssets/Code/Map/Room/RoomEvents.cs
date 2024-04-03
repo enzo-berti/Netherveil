@@ -58,12 +58,12 @@ public class RoomEvents : MonoBehaviour
 
         exitRoomCalled = true;
 
-        // global events
-        RoomUtilities.ExitEvents?.Invoke();
-
         // local events
         navMeshSurface.enabled = false;
         enemies.SetActive(false);
+
+        // global events
+        RoomUtilities.ExitEvents?.Invoke();
     }
 
     private void AllEnemiesEvents()
