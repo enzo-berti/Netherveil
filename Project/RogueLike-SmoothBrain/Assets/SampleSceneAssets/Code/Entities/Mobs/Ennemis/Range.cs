@@ -32,7 +32,7 @@ public class Range : Mobs, IRange
     [SerializeField, Min(0)] private float staggerDuration;
 
     private bool canAttack = true;
-    private bool canFlee = true;
+    //private bool canFlee = true; // mis en com par Dorian
     private bool isFleeing = false;
     private bool isGoingOnPlayer = false;
     private bool isAttacking = false;
