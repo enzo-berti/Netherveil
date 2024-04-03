@@ -105,7 +105,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         // mettre la cam entre le joueur et le boss
 
-        StartCoroutine(Brain());
+        //StartCoroutine(Brain());
 
         AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
         AudioManager.Instance.PlaySound(bossSounds.music);
@@ -116,7 +116,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         AudioManager.Instance.StopSound(bossSounds.introSound);
         AudioManager.Instance.StopSound(bossSounds.music);
 
-        StopAllCoroutines();
+        //StopAllCoroutines();
     }
 
     private void OnDestroy()
