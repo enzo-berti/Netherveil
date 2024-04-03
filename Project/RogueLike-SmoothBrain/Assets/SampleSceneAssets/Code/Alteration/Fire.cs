@@ -1,9 +1,13 @@
+using System.Linq;
 using UnityEngine;
+using UnityEngine.VFX;
+using UnityEngine.VFX.Utility;
 
 public class Fire : Status
 {
     private int damage = 10;
     static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1.0f);
+    VisualEffect vfx;
 
     public Fire(float _duration) : base(_duration)
     {
@@ -17,13 +21,16 @@ public class Fire : Status
         {
             AddStack(1);
             target.AddStatus(this);
-            GameObject.Instantiate(Resources.Load<GameObject>("VFX_Fire"), target.transform.parent);
+            vfx = GameObject.Instantiate(Resources.Load<GameObject>("VFX_Fire")).GetComponent<VisualEffect>();
+            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
+            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
+            vfx.Play();
         }
     }
 
     public override void OnFinished()
     {
-
+        GameObject.Destroy(vfx.gameObject);
     }
 
     protected override void Effect()
