@@ -20,6 +20,12 @@ public class DungeonGate : MonoBehaviour
         RoomUtilities.allEnemiesDeadEvents += Open;
     }
 
+    private void OnDestroy()
+    {
+        RoomUtilities.EnterEvents -= Close;
+        RoomUtilities.allEnemiesDeadEvents -= Open;
+    }
+
     private void Open()
     {
         DisolveGate();
@@ -28,7 +34,7 @@ public class DungeonGate : MonoBehaviour
 
     private void Close()
     {
-        if (RoomUtilities.roomData.Type == RoomType.Lobby)
+        if (RoomUtilities.roomData.enemies.Count <= 0)
         {
             return;
         }
