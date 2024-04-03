@@ -329,9 +329,9 @@ public class Range : Mobs, IRange
 
     public IEnumerator WaitToFleeAgain(float delay)
     {
-        canFlee = false;
+        //canFlee = false;// mis en com par Dorian
         yield return new WaitForSeconds(delay);
-        canFlee = true;
+        //canFlee = true;// mis en com par Dorian
     }
 
 #if UNITY_EDITOR
