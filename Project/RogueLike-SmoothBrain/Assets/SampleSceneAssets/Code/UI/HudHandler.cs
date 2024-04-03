@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,6 +19,8 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private GeneralMenu pauseMenu;
     
     Hero player;
+    public static event Action OnPause;
+    public static event Action OnUnpause;
 
     private void Start()
     {
@@ -49,17 +52,19 @@ public class HudHandler : MonoBehaviour
 
     public void TogglePause(InputAction.CallbackContext ctx)
     {
-        if (hud.activeSelf)
+        if (hud.activeInHierarchy)
         {
             Time.timeScale = 0f;
             hud.SetActive(false);
             pauseMenu.gameObject.SetActive(true);
+            OnPause?.Invoke();
         }
         else
         {
             Time.timeScale = 1f;
             hud.SetActive(true);
             pauseMenu.gameObject.SetActive(false);
+            OnUnpause?.Invoke();
         }
     }
 
