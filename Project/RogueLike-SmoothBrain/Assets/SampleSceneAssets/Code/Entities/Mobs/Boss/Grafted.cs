@@ -136,6 +136,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         fallHash = Animator.StringToHash("Fall");
 
         bossSounds.deathSound.CreateInstance();
+
+        this.transform.position = this.transform.parent.position;
+        this.transform.parent.position = Vector3.zero;
     }
 
     protected override IEnumerator Brain()
