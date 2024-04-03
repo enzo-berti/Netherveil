@@ -3,18 +3,18 @@ using UnityEngine;
 
 public static class MathsExtension
 {
-    public static Vector2 GetPointOnCircle(Vector2 center, float radius)
+    public static UnityEngine.Vector2 GetPointOnCircle(UnityEngine.Vector2 center, float radius)
     {
         float randomValue = Random.Range(0, 2 * Mathf.PI);
-        return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
+        return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
 
-    public static Vector2 GetPointOnCone(Vector2 center, Vector2 direction, float radius, float angle)
+    public static UnityEngine.Vector2 GetPointOnCone(UnityEngine.Vector2 center, UnityEngine.Vector2 direction, float radius, float angle)
     {
-        if (direction == Vector2.zero)
+        if (direction == UnityEngine.Vector2.zero)
         {
             Debug.LogError("Impossible to find a point because direction is a vector zero");
-            return Vector2.zero;
+            return UnityEngine.Vector2.zero;
         }
         float c = Mathf.Acos(direction.x / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
         float s = Mathf.Asin(direction.y / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
@@ -32,7 +32,7 @@ public static class MathsExtension
             cs = c;
         }
         float randomValue = Random.Range(-radAngle + cs, radAngle + cs);
-        return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
+        return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
 
     public static float[] Resolve2ndDegree(float a, float b, float c, float wantedY)
@@ -47,7 +47,6 @@ public static class MathsExtension
         }
         else if(delta == 0)
         {
-
         }
         else
         {
