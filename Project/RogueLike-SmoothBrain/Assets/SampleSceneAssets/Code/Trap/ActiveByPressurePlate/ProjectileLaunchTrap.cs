@@ -1,27 +1,23 @@
 using FMODUnity;
 using UnityEngine;
 
-public class ProjectileLuchTrap : MonoBehaviour , IActivableTrap
+public class ProjectileLaunchTrap : MonoBehaviour , IActivableTrap
 {
-    [SerializeField] GameObject itemToInstanciate;
-    [SerializeField] EventReference throwProjectilSFX;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform launchTransform;
+    // FMOD
+    [SerializeField] private EventReference throwProjectilSFX;
     private FMOD.Studio.EventInstance throwProjectilEvent;
-    Vector3 launchPos;
 
     private void Awake()
     {
         throwProjectilEvent = RuntimeManager.CreateInstance(throwProjectilSFX);
     }
 
-    private void Start()
-    {
-        launchPos = transform.GetChild(0).position;
-    }
-
     public void Active()
     {
         AudioManager.Instance.StopSound(throwProjectilEvent, FMOD.Studio.STOP_MODE.IMMEDIATE);
         AudioManager.Instance.PlaySound(throwProjectilSFX);
-        Instantiate(itemToInstanciate, launchPos, GetComponentInChildren<Transform>().rotation);
+        Instantiate(projectilePrefab, launchTransform.position, transform.rotation);
     }
 }
