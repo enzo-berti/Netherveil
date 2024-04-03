@@ -9,7 +9,7 @@ public class Outline : MonoBehaviour
     [SerializeField] private Color outlineColor = Color.white;
     [SerializeField, Range(0.01f, 0.5f)] private float outlineThickness = 0.02f;
 
-    void Start()
+    void Awake()
     {
         mOutlineMaterial = Resources.Load("OutlineShaderMat") as Material;
         mRenderer = GetComponentsInChildren<Renderer>().Where(x => x.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast")).ToArray();
