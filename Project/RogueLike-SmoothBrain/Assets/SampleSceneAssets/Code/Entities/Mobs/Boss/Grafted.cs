@@ -81,9 +81,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     [SerializeField] float AOEDuration;
     [SerializeField] float dashSpeed = 5f;
-    float dashTimer = 0f;
+    float dashChargeTimer = 0f;
+    float travelledDistance = 0f;
     [Header("Dash")]
-    [SerializeField, MinMaxSlider(0, 100)] Vector2 dashRange;
+    [SerializeField] float dashRange;
     float AOETimer = 0f;
     bool triggerAOE = false;
 
@@ -242,7 +243,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         if (stats.GetValue(Stat.HP) <= 0)
             return;
 
-        if (Vector3.Dot(player.transform.position - transform.position, transform.forward) < 0 && !hasProjectile)
+        if ((Vector3.Dot(player.transform.position - transform.position, transform.forward) < 0 && !hasProjectile)
+            || currentAttack == Attacks.RANGE)
         {
             _value *= 2;
         }
@@ -435,57 +437,65 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void Dash()
     {
-        //dashRange.x : min
-        //dashRange.y : max
+        attackState = AttackState.CHARGING;
 
-        attackState = AttackState.ATTACKING;
-
-        dashTimer += Time.deltaTime * dashSpeed;
-
-        if (!triggerAOE && !playerHit)
+        if (dashChargeTimer <= 0.3f)
         {
-            stats.DecreaseCoeffValue(Stat.ATK, 0.5f);
-            AttackCollide(attacks[(int)Attacks.DASH].data, true);
-            stats.IncreaseCoeffValue(Stat.ATK, 0.5f);
-        }
-
-        //// j'en ai rien à foutre
-        //if (dashRange.y - dashTimer > dashRange.x - 1)
-        //{
-        //    animator.SetBool(fallHash, true);
-        //}
-
-        if (dashRange.y - dashTimer > dashRange.x)
-        {
-            //dashPivot.localScale = new Vector3(1, 1, dashRange.y - dashTimer);
-            //dashPivot.localPosition = originalPos + new Vector3(0, 0, dashTimer);
-        }
-        else if (!triggerAOE)
-        {
-            DisableHitboxes();
-
-            AttackCollide(attacks[(int)Attacks.DASH + 1].data);
-            triggerAOE = true;
-            animator.SetBool(fallHash, true);
+            dashChargeTimer += Time.deltaTime;
         }
         else
         {
-            AOETimer += Time.deltaTime;
-            if (AOETimer >= AOEDuration)
+            attackState = AttackState.ATTACKING;
+        }
+
+        if (attackState == AttackState.ATTACKING)
+        {
+            travelledDistance += Time.deltaTime * dashSpeed;
+
+            if (!triggerAOE && !playerHit)
             {
-                currentAttack = Attacks.NONE;
-                attackState = AttackState.IDLE;
-                playerHit = false;
+                stats.DecreaseCoeffValue(Stat.ATK, 0.5f);
+                AttackCollide(attacks[(int)Attacks.DASH].data, true);
+                stats.IncreaseCoeffValue(Stat.ATK, 0.5f);
+            }
 
-                dashTimer = 0;
-                triggerAOE = false;
-                AOETimer = 0;
-
-                SetAtkCooldown(0.5f, 0.2f);
+            if (travelledDistance <= dashRange)
+            {
+                transform.position += transform.forward * Time.deltaTime * dashSpeed;
+            }
+            else if (!triggerAOE)
+            {
                 DisableHitboxes();
 
-                animator.SetBool(dashHash, false);
-                animator.SetBool(fallHash, false);
+                playerHit = false;
+                triggerAOE = true;
+                animator.SetBool(fallHash, true);
+            }
+            else
+            {
+                if (!playerHit)
+                {
+                    AttackCollide(attacks[(int)Attacks.DASH + 1].data);
+                }
+
+                AOETimer += Time.deltaTime;
+                if (AOETimer >= AOEDuration)
+                {
+                    currentAttack = Attacks.NONE;
+                    attackState = AttackState.IDLE;
+                    playerHit = false;
+
+                    travelledDistance = 0;
+                    dashChargeTimer = 0;
+                    triggerAOE = false;
+                    AOETimer = 0;
+
+                    SetAtkCooldown(0.5f, 0.2f);
+                    DisableHitboxes();
+
+                    animator.SetBool(dashHash, false);
+                    animator.SetBool(fallHash, false);
+                }
             }
         }
     }
