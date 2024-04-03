@@ -14,7 +14,7 @@ public class GorgonLaunchBehaviour : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Debug.Log(stateInfo.normalizedTime);
+        //Debug.Log(stateInfo.normalizedTime); // mis en com par Dorian
         if (stateInfo.normalizedTime > 0.5f)
         {
             animator.transform.parent.GetComponent<Range>().HasRemoveHead = true;

@@ -2,6 +2,7 @@ using StateMachine; // include all script about stateMachine
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PestAttackState : BaseState<PestStateMachine>
 {
@@ -128,16 +129,22 @@ public class PestAttackState : BaseState<PestStateMachine>
         }
 
         float duration = distance / speed;
+        bool isOnNavMesh = true;
 
-        while (timeElapsed < duration)
+        while (timeElapsed < duration && isOnNavMesh)
         {
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
-            Context.Agent.Warp(Vector3.Lerp(startPosition, dashTarget, t));
+            Vector3 warpPosition = Vector3.Lerp(startPosition, dashTarget, t);
+
+            if (isOnNavMesh = NavMesh.SamplePosition(warpPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            {
+                Context.Agent.Warp(hit.position);
+            }
+
             yield return null;
         }
 
-        Context.Agent.Warp(dashTarget);
         dashRoutine = null;
     }
 
