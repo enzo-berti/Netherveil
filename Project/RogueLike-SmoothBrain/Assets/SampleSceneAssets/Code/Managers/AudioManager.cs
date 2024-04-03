@@ -3,13 +3,9 @@ using FMODUnity;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using System.Dynamic;
 
 public class CustomEventTrigger : EventTrigger
 {
@@ -53,6 +49,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(Sound))]
     public class SoundDrawerUIE : PropertyDrawer
     {
@@ -97,6 +94,7 @@ public class AudioManager : MonoBehaviour
             EditorGUI.indentLevel--;
         }
     }
+#endif
 
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -231,6 +229,7 @@ public class AudioManager : MonoBehaviour
         {
             sound.instance.start();
             sound.instance.set3DAttributes(worldPosition.To3DAttributes());
+            audioInstance.Add(sound.instance);
         }
 
         return sound.instance;
@@ -247,14 +246,6 @@ public class AudioManager : MonoBehaviour
         }
 
         return sound.instance;
-    }
-
-    public void StopSound(Sound sound, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
-    {
-        sound.instance.stop(stopMode);
-
-        if (audioInstance.Contains(sound.instance))
-            audioInstance.Remove(sound.instance);
     }
 
     public EventInstance PlaySound(EventReference reference)
@@ -290,6 +281,14 @@ public class AudioManager : MonoBehaviour
 
         eventInstance.stop(stopMode);
         audioInstance.Remove(eventInstance);
+    }
+    public void StopSound(Sound sound, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
+    {
+        if (!audioInstance.Contains(sound.instance))
+            return;
+
+        sound.instance.stop(stopMode);
+        audioInstance.Remove(sound.instance);
     }
 
     public void ButtonClickSFX()
