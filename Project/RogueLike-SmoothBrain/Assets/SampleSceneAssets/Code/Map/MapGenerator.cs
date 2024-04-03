@@ -185,6 +185,7 @@ public class MapGenerator : MonoBehaviour
                     {
                         GenerateRoom(ref genParam, type);
                         genParam.nbRoom[type]--;
+                        break;
                     }
                 }
             }
