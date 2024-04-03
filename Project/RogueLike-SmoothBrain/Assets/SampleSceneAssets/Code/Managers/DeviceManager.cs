@@ -20,6 +20,12 @@ public class DeviceManager : MonoBehaviour
     public static event Action OnChangedToKB;
     public bool toggleVibrations = true;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void Load()
+    {
+        _ = Instance;
+    }
+
     static public DeviceManager Instance
     {
         get
@@ -56,6 +62,7 @@ public class DeviceManager : MonoBehaviour
     {
         InputSystem.onEvent += OnInputSystemEvent;
         InputSystem.onDeviceChange += OnInputSystemDeviceChange;
+
         if (Gamepad.all.Count > 0)
         {
             CurrentDevice = Gamepad.all[0];
@@ -67,6 +74,11 @@ public class DeviceManager : MonoBehaviour
             {
                 lastUsedDevice = CurrentDevice;
             }
+        }
+        else
+        {
+            CurrentDevice = Keyboard.current;
+            lastUsedDevice = Keyboard.current;
         }
     }
 
@@ -96,13 +108,12 @@ public class DeviceManager : MonoBehaviour
 
     void OnInputSystemDeviceChange(InputDevice device, InputDeviceChange change)
     {
+        if (IsSameDevice(device))
+            return;
+
         if (change == InputDeviceChange.Removed || change == InputDeviceChange.Disconnected || change == InputDeviceChange.Disabled)
         {
             CurrentDevice = lastUsedDevice;
-        }
-        else if (IsSameDevice(device))
-        {
-            return;
         }
         else
         {

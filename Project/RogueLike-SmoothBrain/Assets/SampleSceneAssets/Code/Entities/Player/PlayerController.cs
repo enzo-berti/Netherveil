@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     public VisualEffect HitVFX;
     public VisualEffect DashVFX;
     public VisualEffect ChargedAttackVFX;
+    public VisualEffect spearLaunchVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;
