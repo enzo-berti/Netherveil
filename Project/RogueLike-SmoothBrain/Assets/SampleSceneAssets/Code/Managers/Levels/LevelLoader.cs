@@ -108,7 +108,7 @@ public class LevelLoader : MonoBehaviour
         //asyncOperation.allowSceneActivation = false;
 
         yield return levelTransitions[transitionIndex].ToggleTransition(true);
-        yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
+        //yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
 
         //asyncOperation.allowSceneActivation = true;
         SceneManager.LoadScene(sceneIndex);

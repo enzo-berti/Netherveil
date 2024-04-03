@@ -312,6 +312,15 @@ namespace Netherveil.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CamLookAway"",
+                    ""type"": ""Value"",
+                    ""id"": ""863d1bec-c2de-4858-887a-f608b6e4651b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -446,6 +455,61 @@ namespace Netherveil.Inputs
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""636e6a81-5efd-4e56-9b0d-f544867b579e"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CamLookAway"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""afe52d42-76e8-4f3a-878c-230b50d0eef3"",
+                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CamLookAway"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d65a6561-11b4-415d-ada8-cec0795882ca"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CamLookAway"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ad2debba-c69e-49b6-93cf-bb63ab74527d"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CamLookAway"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""cd6d3a2c-e76d-49c3-96c0-8963cd659c2d"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CamLookAway"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -494,6 +558,7 @@ namespace Netherveil.Inputs
             m_Gamepad_Interact = m_Gamepad.FindAction("Interact", throwIfNotFound: true);
             m_Gamepad_ToggleMap = m_Gamepad.FindAction("ToggleMap", throwIfNotFound: true);
             m_Gamepad_Pause = m_Gamepad.FindAction("Pause", throwIfNotFound: true);
+            m_Gamepad_CamLookAway = m_Gamepad.FindAction("CamLookAway", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -665,6 +730,7 @@ namespace Netherveil.Inputs
         private readonly InputAction m_Gamepad_Interact;
         private readonly InputAction m_Gamepad_ToggleMap;
         private readonly InputAction m_Gamepad_Pause;
+        private readonly InputAction m_Gamepad_CamLookAway;
         public struct GamepadActions
         {
             private @PlayerInputMap m_Wrapper;
@@ -677,6 +743,7 @@ namespace Netherveil.Inputs
             public InputAction @Interact => m_Wrapper.m_Gamepad_Interact;
             public InputAction @ToggleMap => m_Wrapper.m_Gamepad_ToggleMap;
             public InputAction @Pause => m_Wrapper.m_Gamepad_Pause;
+            public InputAction @CamLookAway => m_Wrapper.m_Gamepad_CamLookAway;
             public InputActionMap Get() { return m_Wrapper.m_Gamepad; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -710,6 +777,9 @@ namespace Netherveil.Inputs
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @CamLookAway.started += instance.OnCamLookAway;
+                @CamLookAway.performed += instance.OnCamLookAway;
+                @CamLookAway.canceled += instance.OnCamLookAway;
             }
 
             private void UnregisterCallbacks(IGamepadActions instance)
@@ -738,6 +808,9 @@ namespace Netherveil.Inputs
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
+                @CamLookAway.started -= instance.OnCamLookAway;
+                @CamLookAway.performed -= instance.OnCamLookAway;
+                @CamLookAway.canceled -= instance.OnCamLookAway;
             }
 
             public void RemoveCallbacks(IGamepadActions instance)
@@ -785,6 +858,7 @@ namespace Netherveil.Inputs
             void OnInteract(InputAction.CallbackContext context);
             void OnToggleMap(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
+            void OnCamLookAway(InputAction.CallbackContext context);
         }
     }
 }
