@@ -40,17 +40,17 @@ public static class MathsExtension
         c -= wantedY;
         float delta = b * b - 4 * a * c;
         float[] results = new float[2];
-        if (delta >= 0)
+        if (delta == 0)
+        {
+            results[0] = (float)-b / (2 * a);
+        }
+        else if (delta > 0)
         {
             results[0] = (float)(-b + Mathf.Sqrt(delta)) / (2 * a);
             results[1] = (float)(-b - Mathf.Sqrt(delta)) / (2 * a);
         }
-        else if(delta == 0)
-        {
-        }
         else
         {
-            Complex test = Complex.One;
             Debug.LogWarning("No result in Real number");
             return results;
         }
