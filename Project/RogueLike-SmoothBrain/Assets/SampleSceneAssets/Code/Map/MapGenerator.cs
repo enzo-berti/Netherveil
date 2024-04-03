@@ -23,7 +23,7 @@ public enum RoomType
 public struct GenerationParam
 {
     public Dictionary<RoomType, int> nbRoom;
-    public Dictionary<float, List<Door>> availableDoors;
+    public Dictionary<int, List<Door>> availableDoors;
 
     public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
     {
@@ -38,12 +38,12 @@ public struct GenerationParam
             { RoomType.MiniBoss, nbMiniBoss },
         };
 
-        availableDoors = new Dictionary<float, List<Door>>
+        availableDoors = new Dictionary<int, List<Door>>
         {
-            { 0f, new List<Door>() },
-            { 90f, new List<Door>() },
-            { 180f, new List<Door>() },
-            { 270f, new List<Door>() }
+            { 0, new List<Door>() },
+            { 90, new List<Door>() },
+            { 180, new List<Door>() },
+            { 270, new List<Door>() }
         };
     }
 
@@ -80,23 +80,24 @@ public struct GenerationParam
     {
         foreach (var door in doorsGenerator.doors)
         {
-            if (availableDoors.ContainsKey(door.Rotation))
+            int rotation = (int)Math.Round(door.Rotation);
+            if (availableDoors.ContainsKey(rotation))
             {
-                availableDoors[door.Rotation].Add(door);
+                availableDoors[rotation].Add(door);
             }
             else
             {
-                Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.Rotation);
+                Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.Rotation, doorsGenerator);
             }
         }
 
-        UnityEngine.Object.Destroy(doorsGenerator); // destroy doorsGenerator
+        //UnityEngine.Object.Destroy(doorsGenerator); // destroy doorsGenerator
     }
 
     public readonly Door GetFarestDoor()
     {
         Tuple<int, float> farestDoor = new Tuple<int, float>(-1, 0);
-        float key = 0f;
+        int key = 0;
 
         foreach (var doors in availableDoors)
         {
@@ -140,12 +141,12 @@ public struct GenerationParam
 
 public class MapGenerator : MonoBehaviour
 {
-    private static readonly List<float> availableRotations = new List<float>() { 0f, 90f, 180f, 270f };
-    private static List<float> RandAvailableRotations
+    private static readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
+    private static List<int> RandAvailableRotations
     {
         get
         {
-            List<float> result = new List<float>();
+            List<int> result = new List<int>();
 
             int iNoise = GameAssets.Instance.seed.Range(0, availableRotations.Count, ref NoiseGenerator);
             for (int i = 0; i < availableRotations.Count; i++)
@@ -277,7 +278,7 @@ public class MapGenerator : MonoBehaviour
             doorsGenerator.GenerateSeed(genParam);
 
             Door entranceDoor = new Door();
-            for (int i = 0; 0 < doorsGenerator.doors.Count; i++)
+            for (int i = 0; i < doorsGenerator.doors.Count; i++)
             {
                 entranceDoor = doorsGenerator.doors[i];
 
@@ -365,7 +366,7 @@ public class MapGenerator : MonoBehaviour
     static private bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
     {
         entranceDoor = doorsGenerator.RandomDoor;
-        foreach(float rotation in RandAvailableRotations)
+        foreach(int rotation in RandAvailableRotations)
         {
             if (!genParam.availableDoors[rotation].Any())
             {
