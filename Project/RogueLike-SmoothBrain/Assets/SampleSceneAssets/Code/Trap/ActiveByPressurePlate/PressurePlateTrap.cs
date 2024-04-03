@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PressurePlateTrap : MonoBehaviour
@@ -11,7 +10,8 @@ public class PressurePlateTrap : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (canActive && other.CompareTag("Player"))
+        IDamageable damageable = other.GetComponent<IDamageable>();
+        if (canActive && damageable != null)
         {
             ActivateTraps();
         }

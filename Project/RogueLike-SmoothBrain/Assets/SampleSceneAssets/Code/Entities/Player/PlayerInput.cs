@@ -68,6 +68,8 @@ public class PlayerInput : MonoBehaviour
         hero.OnChangeState += ResetForceReturnToMove;
         chargedAttackScaleSize = controller.ChargedAttack.gameObject.transform.localScale.x;
         chargedAttackVFXMaxSize = controller.ChargedAttackVFX.GetFloat("VFX Size");
+        HudHandler.OnPause += DisableGameplayInputs;
+        HudHandler.OnUnpause += EnableGameplayInputs;
     }
 
     private void EaseFuncsShitStorm()
@@ -147,6 +149,26 @@ public class PlayerInput : MonoBehaviour
                 map["Pause"].started += hudHandler.TogglePause;
             }
         }
+    }
+
+    private void DisableGameplayInputs()
+    {
+        playerInputMap.currentActionMap["Movement"].Disable();
+        playerInputMap.currentActionMap["BasicAttack"].Disable();
+        playerInputMap.currentActionMap["Dash"].Disable();
+        playerInputMap.currentActionMap["Interact"].Disable();
+        playerInputMap.currentActionMap["Spear"].Disable();
+        playerInputMap.currentActionMap["ChargedAttack"].Disable();
+    }
+
+    private void EnableGameplayInputs()
+    {
+        playerInputMap.currentActionMap["Movement"].Enable();
+        playerInputMap.currentActionMap["BasicAttack"].Enable();
+        playerInputMap.currentActionMap["Dash"].Enable();
+        playerInputMap.currentActionMap["Interact"].Enable();
+        playerInputMap.currentActionMap["Spear"].Enable();
+        playerInputMap.currentActionMap["ChargedAttack"].Enable();
     }
 
     private void OnDestroy()
@@ -399,7 +421,7 @@ public class PlayerInput : MonoBehaviour
         controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, false);
 
         //stop all VFX of the combo attacks to prevent them to overlap each other
-        foreach(VisualEffect vfx in controller.SpearAttacksVFX)
+        foreach (VisualEffect vfx in controller.SpearAttacksVFX)
         {
             vfx.Reinit();
             vfx.Stop();
@@ -511,7 +533,7 @@ public class PlayerInput : MonoBehaviour
 
     private void RestartDashCoroutine()
     {
-        if(dashCoroutine != null)
+        if (dashCoroutine != null)
         {
             StopCoroutine(dashCoroutine);
         }

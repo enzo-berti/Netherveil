@@ -178,18 +178,17 @@ public class MapGenerator : MonoBehaviour
             }
             else
             {
-                bool sucess = false;
-                while(!sucess)
+                for (int index = 0; index < genParam.nbRoom.Count; index++)
                 {
-                    RoomType type = (RoomType)UnityEngine.Random.Range(0, (int)RoomType.COUNT);
-
-                    if (genParam.nbRoom.ContainsKey(type) && genParam.nbRoom[type] > 0)
+                    RoomType type = genParam.nbRoom.Keys.ElementAt(index);
+                    if (genParam.nbRoom[type] > 0)
                     {
                         GenerateRoom(ref genParam, type);
                         genParam.nbRoom[type]--;
-                        sucess = true;
+                        break;
                     }
                 }
+                // pas censer arriver jusqu'ici mdr
             }
         }
     }
