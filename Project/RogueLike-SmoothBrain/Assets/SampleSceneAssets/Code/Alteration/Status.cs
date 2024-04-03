@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.VFX;
+using UnityEngine.VFX.Utility;
 
 [Serializable]
 public abstract class Status
 {
+    VisualEffect vfx;
+
     public Status(float _duration)
     {
         this.duration = _duration;
@@ -79,6 +84,22 @@ public abstract class Status
                 EffectAsync();
             }
         }
+    }
+
+    protected void PlayVfx(string vfxName)
+    {
+        if (stack == 0)
+        {
+            vfx = GameObject.Instantiate(Resources.Load<GameObject>(vfxName)).GetComponent<VisualEffect>();
+            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
+            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
+            vfx.Play();
+        }
+    }
+
+    protected void StopVfx()
+    {
+        GameObject.Destroy(vfx.gameObject);
     }
 
     private async void EffectAsync()
