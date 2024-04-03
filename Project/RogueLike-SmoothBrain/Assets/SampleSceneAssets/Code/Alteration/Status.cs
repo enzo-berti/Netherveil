@@ -96,9 +96,10 @@ public abstract class Status
         }
         else
         {
-            target.transform.parent.Find(vfxName).GetComponent<VFXStopper>().StopAllCoroutines();
-            target.transform.parent.Find(vfxName).GetComponent<VFXStopper>().PlayVFX();
-            target.transform.parent.Find(vfxName).GetComponent<VFXStopper>().Duration = duration;
+            VFXStopper vfxStopper = target.transform.parent.Find(vfxName).GetComponent<VFXStopper>();
+            vfxStopper.StopAllCoroutines();
+            vfxStopper.PlayVFX();
+            vfxStopper.Duration = duration;
         }
     }
 

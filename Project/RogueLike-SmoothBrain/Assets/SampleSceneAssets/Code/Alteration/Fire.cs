@@ -10,6 +10,11 @@ public class Fire : Status
         statusChance = 1.0f;
         frequency = 0.5f;
     }
+    public Fire(float _duration, float _statusChance) : base(_duration)
+    {
+        statusChance = _statusChance;
+        frequency = 0.5f;
+    }
 
     public override void ApplyEffect(Entity target)
     {
