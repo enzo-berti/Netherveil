@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine.AI;
 using System;
+using FMODUnity;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -29,6 +30,8 @@ public class Gorgon : Mobs, IGorgon
     [SerializeField] private float timeBetweenFleeing;
     [SerializeField] private GameObject pfBomb;
     [SerializeField] private Transform hand;
+    [SerializeField] private EventReference hitSFX;
+    [SerializeField] private EventReference deathSFX;
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;
 
@@ -106,7 +109,7 @@ public class Gorgon : Mobs, IGorgon
                 isGoingOnPlayer = true;
 
                 // Take a random point around the player pos in 2D then convert it in 3D
-                Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 7);
+                Vector2 pointToReach2D = MathsExtension.GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 7);
                 Vector3 pointToReach3D = new(pointToReach2D.x, this.transform.position.y, pointToReach2D.y);
 
                 // Replace the point on navMesh
@@ -125,7 +128,7 @@ public class Gorgon : Mobs, IGorgon
                 Vector2 playerPosXZ = new(playerTransform.position.x, playerTransform.position.z);
 
                 Vector3 direction = this.transform.position - playerTransform.position;
-                Vector2 Point2DToReach = GetPointOnCone(playerPosXZ, direction, 10, 90);
+                Vector2 Point2DToReach = MathsExtension.GetPointOnCone(playerPosXZ, direction, 10, 90);
                 Vector3 point3DToReach = new(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
                 //this.transform.forward = direction;
                 MoveTo(point3DToReach);
@@ -188,7 +191,7 @@ public class Gorgon : Mobs, IGorgon
 
         animator.SetTrigger("Attack");
         float timeToThrow = 0.8f;
-        Vector2 pointToReach2D = GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 1f);
+        Vector2 pointToReach2D = MathsExtension.GetPointOnCircle(new Vector2(playerTransform.position.x, playerTransform.position.z), 1f);
         Vector3 pointToReach3D = new(pointToReach2D.x, playerTransform.position.y, pointToReach2D.y);
         if (NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
         {
@@ -229,9 +232,8 @@ public class Gorgon : Mobs, IGorgon
 
         if (hasAnimation)
         {
-            //add SFX here
             FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
-            //AudioManager.Instance.PlaySound(hitSFX, transform.position);
+            AudioManager.Instance.PlaySound(hitSFX, transform.position);
             StartCoroutine(HitRoutine());
         }
 
@@ -277,7 +279,7 @@ public class Gorgon : Mobs, IGorgon
                 Vector2 posOnCone = this.transform.position;
 
                 if (direction != Vector2.zero)
-                    posOnCone = GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
+                    posOnCone = MathsExtension.GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
 
                 Vector3 posOnCone3D = new(posOnCone.x, this.transform.position.y, posOnCone.y);
                 if (NavMesh.SamplePosition(posOnCone3D, out var hit, 10, NavMesh.AllAreas))
@@ -294,39 +296,10 @@ public class Gorgon : Mobs, IGorgon
         path.Add(posToReach);
         return path;
     }
-    public Vector2 GetPointOnCircle(Vector2 center, float radius)
-    {
-        float randomValue = UnityEngine.Random.Range(0, 2 * Mathf.PI);
-        return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
-    }
-    public Vector2 GetPointOnCone(Vector2 center, Vector2 direction, float radius, float angle)
-    {
-        if(direction == Vector2.zero)
-        {
-            Debug.LogError("Impossible to find a point because direction is a vector zero");
-        }
-        float c = Mathf.Acos(direction.x / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
-        Debug.Log("Cosinus => " + c);
-        float s = Mathf.Asin(direction.y / Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y));
-        Debug.Log("Sinus => " + s);
-        float cs;
-        float radAngle = angle * Mathf.Deg2Rad;
-        if (s < 0)
-        {
-            if (c < Mathf.PI / 2)
-                cs = s;
-            else
-                cs = Mathf.PI - s;
-        }
-        else
-        {
-            cs = c;
-        }
-        float randomValue = UnityEngine.Random.Range(-radAngle + cs, radAngle + cs);
-        return new Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
-    }
+    
     public void Death()
     {
+        AudioManager.Instance.PlaySound(deathSFX, this.transform.position);
         OnDeath?.Invoke(transform.position);
         Destroy(gameObject);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
