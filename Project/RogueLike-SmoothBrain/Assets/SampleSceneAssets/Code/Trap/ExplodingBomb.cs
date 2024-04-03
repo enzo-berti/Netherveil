@@ -1,4 +1,5 @@
 using FMODUnity;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEditor;
@@ -83,30 +84,49 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         float timer = 0;
 
         Vector3 basePos = this.transform.position;
-        Vector3 position3D;
-
-        float distance = Vector3.Distance(pos, basePos);
-
-        float baseY = this.transform.position.y;
-        while(timer < 1f)
+        Vector3 position3D = Vector3.zero;
+        float a = -16, b = 16;
+        float c = this.transform.position.y;
+        float timerToReach = Resolve2ndDegree(a, b, c, 0);
+        Debug.Log(timerToReach);
+        while (timer < timerToReach)
         {
             yield return null;
-            
-            position3D = Vector3.Lerp(basePos, pos, timer);
-            position3D.y = BombSquareFunction(baseY, timer, distance);
+            timer = timer > timerToReach ? timerToReach : timer;
+            if (timer < 1.0f)
+            {
+                timer = timer > 1 ? 1 : timer;
+
+                position3D = Vector3.Lerp(basePos, pos, timer);
+            }
+            position3D.y = SquareFunction(a, b, c, timer);
             this.transform.position = position3D;
-
             timer += Time.deltaTime / throwTime;
-
-            timer = timer > 1 ? 1 : timer;
         }
     }
 
-    
-
-    private float BombSquareFunction(float y, float timer, float power)
+    float Resolve2ndDegree(float a, float b, float c, float wantedY)
     {
-        return -16* timer * timer + 16 * timer + y;
+        c -= wantedY;
+        float delta = b * b - 4 * a * c;
+        float result1;
+        float result2;
+        if (delta >= 0)
+        {
+            result1 = (float)(-b + Math.Sqrt(delta)) / (2 * a);
+            result2 = (float)(-b - Math.Sqrt(delta)) / (2 * a);
+        }
+        else
+        {
+            Debug.LogWarning("No result in Real number");
+            return float.PositiveInfinity;
+        }
+        return Mathf.Max(result1, result2);
+    }
+
+    private float SquareFunction(float a, float b, float c, float timer)
+    {
+        return a * timer * timer + b * timer + c;
     }
     void UpdateTimerExplosion()
     {
@@ -133,7 +153,8 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
             .Select(entity => entity.GetComponent<IBlastable>())
             .Where(entity => entity != null)
             .ToList()
-            .ForEach(currentEntity => {
+            .ForEach(currentEntity =>
+            {
                 currentEntity.ApplyDamage(blastDamage);
             });
 
@@ -156,7 +177,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         StopAllCoroutines();
     }
 
-    public void ApplyDamage(int _value,bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
     {
         Activate();
     }

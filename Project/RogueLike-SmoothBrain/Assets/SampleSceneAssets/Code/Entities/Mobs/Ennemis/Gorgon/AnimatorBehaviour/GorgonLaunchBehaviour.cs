@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GorgonLaunchBehaviour : StateMachineBehaviour
 {
-    
+    [SerializeField] float timeToRemoveHead = 0.6f;
+    [SerializeField] float timeToLaunchHead = 0.8f;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
@@ -15,11 +16,11 @@ public class GorgonLaunchBehaviour : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         //Debug.Log(stateInfo.normalizedTime); // mis en com par Dorian
-        if (stateInfo.normalizedTime > 0.5f)
+        if (stateInfo.normalizedTime > timeToRemoveHead)
         {
             animator.transform.parent.GetComponent<Gorgon>().HasRemoveHead = true;
         }
-        if (stateInfo.normalizedTime > 0.7f)
+        if (stateInfo.normalizedTime > timeToLaunchHead)
         {
             animator.transform.parent.GetComponent<Gorgon>().HasLaunchAnim = true;
         }
