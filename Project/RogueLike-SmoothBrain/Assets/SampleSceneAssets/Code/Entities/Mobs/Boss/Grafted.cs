@@ -54,7 +54,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         public AudioManager.Sound retrievingProjectileSound = new("Retrieving projectile"); //
         public AudioManager.Sound spinAttackSound = new("Fall"); //
         public AudioManager.Sound stretchSound = new("Dash"); //
-        public AudioManager.Sound weaponOutSound = new("WeaponOut");
+        public AudioManager.Sound weaponOutSound = new("WeaponOut"); //
         public AudioManager.Sound weaponInSound = new("WeaponIn");
         public AudioManager.Sound walkingSound = new("Walk"); //
         public AudioManager.Sound music = new("Music");
@@ -105,13 +105,25 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         // mettre la cam entre le joueur et le boss
 
-        //introSound = AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
-        //AudioManager.Instance.PlaySound(bossSounds.music);
+        StartCoroutine(Brain());
+
+        AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
+        AudioManager.Instance.PlaySound(bossSounds.music);
+    }
+
+    private void OnDisable()
+    {
+        AudioManager.Instance.StopSound(bossSounds.introSound);
+        AudioManager.Instance.StopSound(bossSounds.music);
+
+        StopAllCoroutines();
     }
 
     private void OnDestroy()
     {
         // remettre la camera au dessus du joueur
+
+        AudioManager.Instance.StopSound(bossSounds.music);
 
         if (projectile) Destroy(projectile.gameObject);
 
