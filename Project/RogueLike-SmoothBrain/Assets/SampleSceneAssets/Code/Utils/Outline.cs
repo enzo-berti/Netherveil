@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Outline : MonoBehaviour
@@ -8,68 +9,34 @@ public class Outline : MonoBehaviour
     [SerializeField] private Color outlineColor = Color.white;
     [SerializeField, Range(0.01f, 0.5f)] private float outlineThickness = 0.02f;
 
-    private List<Material[]> mMaterials = new List<Material[]>();
-
     void Start()
     {
         mOutlineMaterial = Resources.Load("OutlineShaderMat") as Material;
-        mRenderer = GetComponentsInChildren<Renderer>();
+        mRenderer = GetComponentsInChildren<Renderer>().Where(x => x.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast")).ToArray();
 
-        foreach (Renderer renderer in mRenderer)
-        {
-            mMaterials.Add(renderer.materials);
-        }
+        mOutlineMaterial.SetColor("_Outline_Color", outlineColor);
+        mOutlineMaterial.SetFloat("_Outline_thickness", outlineThickness);
     }
 
     public void EnableOutline()
     {
-        for (int i = 0; i < mRenderer.Length; i++)
+        foreach (Renderer renderer in mRenderer)
         {
-            if (!ArrayContainsMaterial(mMaterials[i], mOutlineMaterial))
+            List<Material> materials = new List<Material>(renderer.materials)
             {
-                Material[] newMaterials = new Material[mMaterials[i].Length + 1];
-
-                for (int j = 0; j < mMaterials[i].Length; j++)
-                {
-                    newMaterials[j] = mMaterials[i][j];
-                }
-
-                newMaterials[mMaterials[i].Length] = mOutlineMaterial;
-                newMaterials[mMaterials[i].Length].SetColor("_Outline_Color", outlineColor);
-                newMaterials[mMaterials[i].Length].SetFloat("_Outline_thickness", outlineThickness);
-
-                mRenderer[i].materials = newMaterials;
-            }
+                mOutlineMaterial
+            };
+            renderer.SetMaterials(materials);
         }
     }
 
     public void DisableOutline()
     {
-        for (int i = 0; i < mRenderer.Length; i++)
+        foreach (Renderer renderer in mRenderer)
         {
-            mMaterials[i] = ArrayRemoveMaterial(mMaterials[i], mOutlineMaterial);
-            mRenderer[i].materials = mMaterials[i];
+            List<Material> materials = new List<Material>(renderer.sharedMaterials);
+            materials.RemoveAll(mat => mat == mOutlineMaterial);
+            renderer.SetMaterials(materials);
         }
-    }
-
-    private bool ArrayContainsMaterial(Material[] materials, Material material)
-    {
-        foreach (Material mat in materials)
-        {
-            if (mat == material)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Material[] ArrayRemoveMaterial(Material[] materials, Material materialToRemove)
-    {
-        List<Material> resultList = new List<Material>(materials);
-
-        resultList.RemoveAll(mat => mat == materialToRemove);
-
-        return resultList.ToArray();
     }
 }
