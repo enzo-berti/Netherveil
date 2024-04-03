@@ -106,7 +106,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         // mettre la cam entre le joueur et le boss
 
         //introSound = AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
-        AudioManager.Instance.PlaySound(bossSounds.music);
+        //AudioManager.Instance.PlaySound(bossSounds.music);
     }
 
     private void OnDestroy()
@@ -358,9 +358,12 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     #region Attacks
     void ThrowProjectile()
     {
-        projectile = Instantiate(projectilePrefab, transform.position + new Vector3(0, height / 4f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
+        projectile = Instantiate(projectilePrefab, transform.position - new Vector3(0, height / 6f, 0), Quaternion.identity).GetComponent<GraftedProjectile>();
         projectile.Initialize(this);
-        projectile.SetDirection(player.transform.position - transform.position);
+
+        Vector3 direction = player.transform.position - transform.position;
+        direction.y = 0;
+        projectile.SetDirection(direction);
 
         hasProjectile = false;
         currentAttack = Attacks.NONE;
@@ -377,14 +380,13 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         if (projectile.onTarget)
         {
-            projectile.SetDirection(transform.position + new Vector3(0, height / 4f, 0) - projectile.transform.position);
+            projectile.SetDirection(transform.position - new Vector3(0, height / 6f, 0) - projectile.transform.position);
             projectile.SetCollisionImmune(true);
             projectile.onTarget = false;
         }
-        else if (!projectile.OnLauncher(transform.position + new Vector3(0, height / 4f, 0)))
+        else if (!projectile.OnLauncher(transform.position - new Vector3(0, height / 6f, 0)))
         {
             MoveTo(transform.position);
-
         }
         else
         {
