@@ -34,7 +34,7 @@ public class DungeonGate : MonoBehaviour
 
     private void Close()
     {
-        if (RoomUtilities.roomData.Type == RoomType.Lobby)
+        if (RoomUtilities.roomData.enemies.Count <= 0)
         {
             return;
         }

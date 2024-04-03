@@ -110,7 +110,7 @@ public class Spear : MonoBehaviour
             }
         }
 
-        ApplyDamages(playerToPosToReachVec, debugMode: true);
+        ApplyDamages(playerToPosToReachVec, debugMode: false);
 
         // On set le parent que la lance avait ( la main du joueur ), puis on la retire tant qu'elle est lancée afin de la rendre indépendante 
         parent = this.transform.parent;
@@ -142,7 +142,7 @@ public class Spear : MonoBehaviour
         }
 
         Vector3 playerToSpearVec = spearPosition - player.position;
-        ApplyDamages(playerToSpearVec, debugMode: true);
+        ApplyDamages(playerToSpearVec, debugMode: false);
     }
 
     void ApplyDamages(Vector3 playerToTargetPos, bool debugMode)

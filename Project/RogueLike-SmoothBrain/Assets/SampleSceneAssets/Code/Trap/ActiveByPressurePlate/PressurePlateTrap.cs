@@ -11,7 +11,9 @@ public class PressurePlateTrap : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (canActive && other.CompareTag("Player"))
+        IDamageable damageable = other.GetComponent<IDamageable>();
+        Debug.Log(damageable);
+        if (canActive && damageable != null)
         {
             ActivateTraps();
         }

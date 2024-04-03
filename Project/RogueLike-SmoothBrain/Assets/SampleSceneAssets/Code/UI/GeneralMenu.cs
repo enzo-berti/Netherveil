@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GeneralMenu : MonoBehaviour
 {
     [SerializeField] GameObject hud;
+    public static event Action OnPause;
+    public static event Action OnUnpause;
 
     public void Toggle(bool toggle)
     {

@@ -2,6 +2,7 @@ using FMODUnity;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 
@@ -64,6 +65,9 @@ public class PlayerController : MonoBehaviour
         cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;
         mouseRaycastPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
+
+        //divide by 5 because the vfx is based on plane scale size, and -0.2 is to make the arrow perfectly at the spear end pos
+        spearLaunchVFX.SetFloat("VFX Length", hero.Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
 
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
