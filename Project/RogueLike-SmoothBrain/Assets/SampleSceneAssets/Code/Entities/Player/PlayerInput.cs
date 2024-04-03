@@ -75,6 +75,8 @@ public class PlayerInput : MonoBehaviour
     private void OnDestroy()
     {
         hero.OnChangeState -= ResetForceReturnToMove;
+        HudHandler.OnPause -= DisableGameplayInputs;
+        HudHandler.OnUnpause -= EnableGameplayInputs;
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
         InputManagement(kbMap, unsubscribe: true);
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
