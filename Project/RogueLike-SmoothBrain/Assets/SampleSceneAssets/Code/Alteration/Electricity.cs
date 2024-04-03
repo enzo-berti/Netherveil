@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Electricity : Status
 {
     private float entityBaseSpeed;
@@ -9,8 +11,11 @@ public class Electricity : Status
     public override void ApplyEffect(Entity target)
     {
         if (target.Stats.HasStat(Stat.SPEED))
+        {
             target.AddStatus(this);
             entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
+            GameObject.Instantiate(Resources.Load<GameObject>("VFX_Electricity"), target.transform.parent);
+        }
     }
 
     public override Status DeepCopy()
@@ -20,7 +25,7 @@ public class Electricity : Status
 
     public override void OnFinished()
     {
-       target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
+        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
     }
 
     protected override void Effect()
