@@ -1,12 +1,8 @@
 using UnityEngine;
-using UnityEngine.VFX.Utility;
-using UnityEngine.VFX;
-using System.Linq;
 
 public class Electricity : Status
 {
     private float entityBaseSpeed;
-    VisualEffect vfx;
 
     public Electricity(float duration = 1f) : base(duration)
     {
@@ -31,7 +27,6 @@ public class Electricity : Status
     public override void OnFinished()
     {
         target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
-        GameObject.Destroy(vfx.gameObject);
     }
 
     protected override void Effect()

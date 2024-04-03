@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.VFX.Utility;
 using UnityEngine.VFX;
-using System.Linq;
 
 public class Freeze : Status
 {
@@ -29,12 +27,6 @@ public class Freeze : Status
         return fire;
     }
 
-    public override void OnFinished()
-    {
-        StopVfx();
-    }
-
-
     protected override void Effect()
     {
         if (target != null)
@@ -42,5 +34,10 @@ public class Freeze : Status
             FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, freezeColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, false, false);
         }
+    }
+
+    public override void OnFinished()
+    {
+        //throw new System.NotImplementedException();
     }
 }
