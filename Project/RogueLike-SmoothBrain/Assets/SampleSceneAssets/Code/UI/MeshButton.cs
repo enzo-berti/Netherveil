@@ -7,9 +7,6 @@ namespace MeshUI
     [RequireComponent(typeof(Collider))]
     public class MeshButton : MonoBehaviour
     {
-        [SerializeField] private MeshNavigation navigation;
-        public MeshNavigation Navigation => navigation;
-
         private bool isHovered = false;
         private bool isPressed = false;
 
