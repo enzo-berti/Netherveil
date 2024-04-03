@@ -4,15 +4,5 @@ using UnityEngine;
 
 public class VFXTarget : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //NE PAS SUPPRIMER CE SCRIPT,IL SERT A REPERER LE BONES TARGET POUR LES VFX
 }
