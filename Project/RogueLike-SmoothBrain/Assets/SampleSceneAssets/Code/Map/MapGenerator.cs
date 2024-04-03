@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.ProBuilder.Shapes;
 
@@ -24,6 +25,19 @@ public struct GenerationParam
 {
     public Dictionary<RoomType, int> nbRoom;
     public Dictionary<int, List<Door>> availableDoors;
+    public List<Door> GetRandAvailableDoors(int rotation)
+    {
+        List<Door> result = new List<Door>();
+
+        int iNoise = GameAssets.Instance.seed.Range(0, availableDoors[rotation].Count, ref MapGenerator.noiseGenerator);
+        for (int i = 0; i < availableDoors[rotation].Count; i++)
+        {
+            int index = (i + iNoise) % availableDoors[rotation].Count;
+            result.Add(availableDoors[rotation][index]);
+        }
+
+        return result;
+    }
 
     public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
     {
@@ -148,7 +162,7 @@ public class MapGenerator : MonoBehaviour
         {
             List<int> result = new List<int>();
 
-            int iNoise = GameAssets.Instance.seed.Range(0, availableRotations.Count, ref NoiseGenerator);
+            int iNoise = GameAssets.Instance.seed.Range(0, availableRotations.Count, ref noiseGenerator);
             for (int i = 0; i < availableRotations.Count; i++)
             {
                 int index = (i + iNoise) % availableRotations.Count;
@@ -159,7 +173,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    public static int NoiseGenerator = 0;
+    public static int noiseGenerator = 0;
 
     [SerializeField] private List<GameObject> roomLobby = new List<GameObject>();
     [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
@@ -173,10 +187,12 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> obstructionsDoor;
     [SerializeField] private GameObject gatePrefab;
 
+    [SerializeField] private int seed = 0;
+
     private void Awake()
     {
-        //UnityEngine.Random.InitState(123456);
-        GenerateMap(new GenerationParam(nbNormal: 20, nbTreasure: 2));
+        UnityEngine.Random.InitState(seed);
+        GenerateMap(new GenerationParam(nbNormal: 3, nbTreasure: 3));
     }
 
     private void GenerateMap(GenerationParam genParam)
@@ -235,18 +251,32 @@ public class MapGenerator : MonoBehaviour
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(genParam);
 
-            if (!GetDoorCandidates(ref genParam, doorsGenerator, out Door entranceDoor, out Door exitDoor))
+
+            foreach (Door entranceDoor in doorsGenerator.RandomDoors)
             {
-                DestroyImmediate(roomGO);
-                continue;
+                foreach (int rotation in RandAvailableRotations)
+                {
+                    if (!genParam.availableDoors[rotation].Any())
+                    {
+                        continue;
+                    }
+
+                    foreach(Door exitDoor in genParam.GetRandAvailableDoors(rotation))
+                    {
+                        doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation), 0f); // rotate gameObject exit to correspond the neededRotation
+
+                        if (!TryInstantiateRoom(roomGO, ref genParam, entranceDoor, exitDoor))
+                        {
+                            doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, 0f, 0f); // reset rotation
+                            continue; // fail to generate continue to next candidate
+                        }
+
+                        return true;
+                    }
+                }
             }
 
-            if (!TryInstantiateRoom(roomGO, ref genParam, entranceDoor, exitDoor))
-            {
-                continue; // fail to generate continue to next candidate
-            }
-
-            return true;
+            DestroyImmediate(roomGO); // didn't find any spawn
         }
 
         Debug.LogError("PUTAIN ELLE CHARGE PAS CETTE SALOPE DE MAP");
@@ -323,7 +353,6 @@ public class MapGenerator : MonoBehaviour
         // Check collision
         if (IsRoomCollidingOtherRoom(roomGO, exitDoor))
         {
-            DestroyImmediate(roomGO);
             return false;
         }
 
@@ -373,7 +402,7 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
 
-            int indexEntrance = GameAssets.Instance.seed.Range(0, genParam.availableDoors[rotation].Count, ref NoiseGenerator);
+            int indexEntrance = GameAssets.Instance.seed.Range(0, genParam.availableDoors[rotation].Count, ref noiseGenerator);
             exitDoor = genParam.availableDoors[rotation][indexEntrance];
 
             doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0, (int)(rotation - 180f - entranceDoor.Rotation), 0); // rotate gameObject exit to correspond the neededRotation
@@ -411,7 +440,7 @@ public class MapGenerator : MonoBehaviour
             return null;
         }
 
-        int randIndex = GameAssets.Instance.seed.Range(0, list.Count, ref NoiseGenerator);
+        int randIndex = GameAssets.Instance.seed.Range(0, list.Count, ref noiseGenerator);
         return list[randIndex];
     }
 
@@ -426,7 +455,7 @@ public class MapGenerator : MonoBehaviour
             return null;
         }
 
-        int iNoise = GameAssets.Instance.seed.Range(0, list.Count, ref NoiseGenerator);
+        int iNoise = GameAssets.Instance.seed.Range(0, list.Count, ref noiseGenerator);
         for (int i = 0; i < list.Count; i++)
         {
             int index = (i + iNoise) % list.Count;
