@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tank : Mobs, ITank
+public class Glorb : Mobs, ITank
 {
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;

@@ -17,19 +17,19 @@ public class GorgonLaunchBehaviour : StateMachineBehaviour
         //Debug.Log(stateInfo.normalizedTime); // mis en com par Dorian
         if (stateInfo.normalizedTime > 0.5f)
         {
-            animator.transform.parent.GetComponent<Range>().HasRemoveHead = true;
+            animator.transform.parent.GetComponent<Gorgon>().HasRemoveHead = true;
         }
         if (stateInfo.normalizedTime > 0.7f)
         {
-            animator.transform.parent.GetComponent<Range>().HasLaunchAnim = true;
+            animator.transform.parent.GetComponent<Gorgon>().HasLaunchAnim = true;
         }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.transform.parent.GetComponent<Range>().HasLaunchAnim = false;
-        animator.transform.parent.GetComponent<Range>().HasRemoveHead = false;
+        animator.transform.parent.GetComponent<Gorgon>().HasLaunchAnim = false;
+        animator.transform.parent.GetComponent<Gorgon>().HasRemoveHead = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

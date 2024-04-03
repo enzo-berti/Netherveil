@@ -9,7 +9,7 @@ using UnityEditor;
 #endif
 
 // Hate this mob
-public class Range : Mobs, IRange
+public class Gorgon : Mobs, IRange
 {
     private enum RangeState
     {
