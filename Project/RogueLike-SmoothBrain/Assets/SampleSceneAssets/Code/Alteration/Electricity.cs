@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Electricity : Status
 {
@@ -33,7 +34,8 @@ public class Electricity : Status
     {
         if (target != null)
         {
-            target.Stats.SetValue(Stat.SPEED, 0f);
+            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+           //target.Stats.SetValue(Stat.SPEED, 0f);
         }
     }
 }

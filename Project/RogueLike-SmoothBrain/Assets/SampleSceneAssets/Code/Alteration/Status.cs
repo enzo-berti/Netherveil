@@ -25,6 +25,8 @@ public abstract class Status
     public float statusChance = 0.3f;
     // Duration of one stack of the effect
     protected float duration = 1;
+
+    protected bool isStackable = false;
     #endregion
 
     #region Time
@@ -50,13 +52,18 @@ public abstract class Status
     public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
-        stack += nb;
-        for (int i = 0; i < nb; i++)
-            stopTimes.Add(duration + currentTime);
+        if(isStackable)
+        {
+            stack += nb;
+            for (int i = 0; i < nb; i++)
+                stopTimes.Add(duration + currentTime);
+        }
+        
     }
     public virtual void RemoveStack(int nb)
     {
-        stack -= nb;
+        if(isStackable)
+            stack -= nb;
     }
     #endregion
 

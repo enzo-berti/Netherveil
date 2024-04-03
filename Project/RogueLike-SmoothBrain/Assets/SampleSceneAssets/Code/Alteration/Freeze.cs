@@ -7,21 +7,14 @@ public class Freeze : Status
     float baseAgentSpeed;
     public Freeze(float duration) : base(duration)
     {
-        isConst = true;
     }
 
     public override void ApplyEffect(Entity target)
     {
         if (target.Stats.HasStat(Stat.SPEED))
         {
-            if(target.gameObject.GetComponent<NavMeshAgent>().speed != 0)
-            {
-                baseAgentSpeed = target.gameObject.GetComponent<NavMeshAgent>().speed;
-                Debug.Log(baseAgentSpeed);
-            }
-                
+            baseAgentSpeed = target.gameObject.GetComponent<NavMeshAgent>().speed;
             target.AddStatus(this);
-            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
             PlayVfx("VFX_Frozen");
         }
     }
@@ -34,6 +27,10 @@ public class Freeze : Status
 
     protected override void Effect()
     {
+        if(target != null)
+        { 
+            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+        }
     }
 
     public override void OnFinished()
