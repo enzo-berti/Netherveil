@@ -1,5 +1,6 @@
 using Netherveil.Inputs;
 using UnityEngine;
+using static Entity;
 
 public class MouseOnScreenBorder : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class MouseOnScreenBorder : MonoBehaviour
     private Transform playerTransform;
     private PlayerInput playerInput;
     private PlayerInputMap inputs;
+    private Hero player;
 
     private void OnEnable()
     {
@@ -29,21 +31,25 @@ public class MouseOnScreenBorder : MonoBehaviour
     void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         playerInput = playerTransform.gameObject.GetComponent<PlayerInput>();
     }
 
     void FixedUpdate()
     {
-        if (DeviceManager.Instance.IsPlayingKB()) 
+        if (player.State == (int)EntityState.DEAD)
         {
-            CollidMouseScreen();
-        }
-        else
-        {
-            CollideJoystickScreen();
-        }
+            if (DeviceManager.Instance.IsPlayingKB())
+            {
+                CollidMouseScreen();
+            }
+            else
+            {
+                CollideJoystickScreen();
+            }
 
-        ChangeOffsetPos();
+            ChangeOffsetPos();
+        }
     }
 
     private void CollidMouseScreen()
