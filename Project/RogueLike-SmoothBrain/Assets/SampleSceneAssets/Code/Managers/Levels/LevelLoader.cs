@@ -96,19 +96,22 @@ public class LevelLoader : MonoBehaviour
 
     private IEnumerator LoadSceneRoutine(int sceneIndex)
     {
-        asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
-        yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
+        //asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        //yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
+        SceneManager.LoadScene(sceneIndex);
+        yield return null;
     }
 
     private IEnumerator LoadSceneRoutine(int sceneIndex, int transitionIndex)
     {
-        asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
-        asyncOperation.allowSceneActivation = false;
+        //asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        //asyncOperation.allowSceneActivation = false;
 
         yield return levelTransitions[transitionIndex].ToggleTransition(true);
         yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
 
-        asyncOperation.allowSceneActivation = true;
+        //asyncOperation.allowSceneActivation = true;
+        SceneManager.LoadScene(sceneIndex);
         levelTransitions[transitionIndex].ToggleTransition(false);
     }
 }
