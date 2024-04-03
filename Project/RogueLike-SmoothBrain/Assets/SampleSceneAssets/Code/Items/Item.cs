@@ -141,10 +141,12 @@ public class Item : MonoBehaviour, IInterractable
                 FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
                 if (valueInfo != null)
                 {
-                    float memberValue = (float)valueInfo.GetValue(itemToGive);
+                    var memberValue = valueInfo.GetValue(itemToGive);
                     if (splitCurrent.Length > 2 && splitCurrent[2] == "%")
                     {
-                        memberValue *= 100;
+                        float memberFloat = (float)memberValue;
+                        memberFloat *= 100;
+                        memberValue = memberFloat;
                     }
                     splitDescription[i] = memberValue.ToString();
                     // CHANGE THAT HOLY
