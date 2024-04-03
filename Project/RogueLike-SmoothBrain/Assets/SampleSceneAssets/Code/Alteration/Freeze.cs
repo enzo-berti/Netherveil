@@ -3,7 +3,6 @@ using UnityEngine.VFX;
 
 public class Freeze : Status
 {
-    VisualEffect vfx;
     public Freeze(float duration) : base(duration)
     {
         isConst = true;
@@ -23,8 +22,8 @@ public class Freeze : Status
 
     public override Status DeepCopy()
     {
-        Freeze fire = (Freeze)MemberwiseClone();
-        return fire;
+        Freeze freeze = (Freeze)MemberwiseClone();
+        return freeze;
     }
 
     protected override void Effect()

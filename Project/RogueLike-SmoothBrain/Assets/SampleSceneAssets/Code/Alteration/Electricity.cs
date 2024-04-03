@@ -21,7 +21,8 @@ public class Electricity : Status
 
     public override Status DeepCopy()
     {
-        throw new System.NotImplementedException();
+        Electricity electricity = (Electricity)MemberwiseClone();
+        return electricity;
     }
 
     public override void OnFinished()
