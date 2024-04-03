@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 580465055758600543}
-  - component: {fileID: 6859691795820209584}
+  - component: {fileID: 6240104623999623813}
   m_Layer: 6
   m_Name: PREFAB_ClosedDoor02
   m_TagString: Untagged
@@ -46,27 +46,22 @@ Transform:
   - {fileID: 3325788842310063731}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6859691795820209584
-BoxCollider:
+--- !u!208 &6240104623999623813
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6449547905454529274}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9, y: 3, z: 1.600882}
-  m_Center: {x: 0, y: 1.5, z: -0.70870376}
+  m_Shape: 1
+  m_Extents: {x: 0.98143, y: 1.1737945, z: 0.625}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.070271134, y: 0.6737945, z: -0.61}
+  m_TimeToStationary: 0.5
 --- !u!1001 &949001831814799528
 PrefabInstance:
   m_ObjectHideFlags: 0
