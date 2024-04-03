@@ -132,6 +132,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         throwingHash = Animator.StringToHash("Throwing");
         retrievingHash = Animator.StringToHash("Retrieving");
         fallHash = Animator.StringToHash("Fall");
+		
+		        this.transform.position = this.transform.parent.position;
+        this.transform.parent.position = Vector3.zero;
     }
 
     protected override IEnumerator Brain()

@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.VFX.Utility;
+using UnityEngine.VFX;
+using System.Linq;
 
 public class Freeze : Status
 {
+    VisualEffect vfx;
     public Freeze(float duration) : base(duration)
     {
         isConst = true;
@@ -15,7 +19,10 @@ public class Freeze : Status
         if (target.Stats.HasStat(Stat.SPEED))
         {
             target.AddStatus(this);
-            GameObject.Instantiate(Resources.Load<GameObject>("VFX_Frozen"), target.transform.parent);
+            vfx = GameObject.Instantiate(Resources.Load<GameObject>("VFX_Fire")).GetComponent<VisualEffect>();
+            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
+            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
+            vfx.Play();
         }
     }
 
@@ -27,7 +34,7 @@ public class Freeze : Status
 
     public override void OnFinished()
     {
-
+        GameObject.Destroy(vfx.gameObject);
     }
 
 
