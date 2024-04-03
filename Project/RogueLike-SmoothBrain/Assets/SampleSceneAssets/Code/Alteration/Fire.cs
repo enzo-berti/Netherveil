@@ -15,7 +15,6 @@ public class Fire : Status
     {
         if (target.gameObject.TryGetComponent<IDamageable>(out _))
         {
-
             AddStack(1);
             target.AddStatus(this);
         }
