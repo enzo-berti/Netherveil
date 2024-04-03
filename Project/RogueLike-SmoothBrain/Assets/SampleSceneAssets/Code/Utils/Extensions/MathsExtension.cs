@@ -1,3 +1,4 @@
+using System.Numerics;
 using UnityEngine;
 
 public static class MathsExtension
@@ -44,8 +45,13 @@ public static class MathsExtension
             results[0] = (float)(-b + Mathf.Sqrt(delta)) / (2 * a);
             results[1] = (float)(-b - Mathf.Sqrt(delta)) / (2 * a);
         }
+        else if(delta == 0)
+        {
+
+        }
         else
         {
+            Complex test = Complex.One;
             Debug.LogWarning("No result in Real number");
             return results;
         }
