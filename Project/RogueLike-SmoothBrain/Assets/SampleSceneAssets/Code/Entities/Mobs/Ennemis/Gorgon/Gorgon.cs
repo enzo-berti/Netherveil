@@ -32,7 +32,7 @@ public class Gorgon : Mobs, IGorgon
     [SerializeField, Min(0)] private float staggerDuration;
 
     private bool canAttack = true;
-    //private bool canFlee = true; // mis en com par Dorian
+    private bool canFlee = true;
     private bool isFleeing = false;
     private bool isGoingOnPlayer = false;
     private bool isAttacking = false;
@@ -117,18 +117,20 @@ public class Gorgon : Mobs, IGorgon
             }
 
             // Flee if he can't attack
-            //else if (canFlee && !isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
-            //{
-            //    // TODO : Change this bad behaviour
-            //    Vector2 playerPosXZ = new(playerTransform.position.x, playerTransform.position.z);
-            //    Vector2 Point2DToReach = GetPointOnCircle(playerPosXZ, stats.GetValue(Stat.ATK_RANGE) + 5);
-            //    Vector3 point3DToReach = new(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
-            //    Vector3 direction = this.transform.position - point3DToReach;
-            //    this.transform.forward = direction;
-            //    MoveTo(point3DToReach);
-            //    isFleeing = true;
-            //    StartCoroutine(WaitToFleeAgain(timeBetweenFleeing));
-            //}
+            else if (canFlee && !isGoingOnPlayer && !isFleeing && !isAttacking && distanceFromPlayer <= DistanceToFlee)
+            {
+                // TODO : Change this bad behaviour
+                
+                Vector2 playerPosXZ = new(playerTransform.position.x, playerTransform.position.z);
+                
+                Vector3 direction = this.transform.position - playerTransform.position;
+                Vector2 Point2DToReach = GetPointOnCone(playerPosXZ, direction, 10, 90);
+                Vector3 point3DToReach = new(Point2DToReach.x, playerTransform.position.y, Point2DToReach.y);
+                //this.transform.forward = direction;
+                MoveTo(point3DToReach);
+                isFleeing = true;
+                StartCoroutine(WaitToFleeAgain(timeBetweenFleeing));
+            }
 
             else if (!agent.hasPath)
             {
@@ -254,8 +256,6 @@ public class Gorgon : Mobs, IGorgon
             path.Add(navPath.corners[i]);
         }
 
-        Debug.Log(navPath.corners.Length);
-
         float distance = Vector3.Distance(transform.position, posToReach);
         if(path.Count < nbDash)
         {
@@ -329,9 +329,9 @@ public class Gorgon : Mobs, IGorgon
 
     public IEnumerator WaitToFleeAgain(float delay)
     {
-        //canFlee = false;// mis en com par Dorian
+        canFlee = false;
         yield return new WaitForSeconds(delay);
-        //canFlee = true;// mis en com par Dorian
+        canFlee = true;
     }
 
 #if UNITY_EDITOR
