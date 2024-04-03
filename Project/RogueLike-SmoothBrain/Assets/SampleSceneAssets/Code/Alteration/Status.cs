@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.VFX;
+using UnityEngine.VFX.Utility;
 
 [Serializable]
 public abstract class Status
@@ -83,21 +86,20 @@ public abstract class Status
 
     protected void PlayVfx(string vfxName)
     {
-        //if(stack == 0)
-        //{
-        //    VisualEffect vfx = GameObject.Instantiate(Resources.Load<GameObject>(vfxName)).GetComponent<VisualEffect>();
-        //    vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
-        //    vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
-        //}
-    }
-
-    protected void StopVfx()
-    {
-        //GameObject go = target.transform.parent.GetComponentInChildren<VisualEffect>().gameObject;
-        //if (go != null)
-        //{
-        //    GameObject.Destroy(go);
-        //}
+        if (target.transform.parent.Find(vfxName) == null)
+        {
+            VisualEffect vfx = GameObject.Instantiate(Resources.Load<GameObject>(vfxName), target.transform.parent).GetComponent<VisualEffect>();
+            vfx.gameObject.GetComponent<VFXStopper>().Duration = duration;
+            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
+            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
+            vfx.gameObject.GetComponent<VFXStopper>().PlayVFX();
+        }
+        else
+        {
+            target.transform.parent.Find(vfxName).GetComponent<VFXStopper>().StopAllCoroutines();
+            target.transform.parent.Find(vfxName).GetComponent<VFXStopper>().PlayVFX();
+            target.transform.parent.Find(vfxName).GetComponent<VFXStopper>().Duration = duration;
+        }
     }
 
     private async void EffectAsync()

@@ -309,7 +309,7 @@ public class Gorgon : Mobs, IGorgon
     {
         AudioManager.Instance.PlaySound(deathSFX, this.transform.position);
         OnDeath?.Invoke(transform.position);
-        Destroy(gameObject);
+        Destroy(transform.parent.gameObject);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
     }
 
