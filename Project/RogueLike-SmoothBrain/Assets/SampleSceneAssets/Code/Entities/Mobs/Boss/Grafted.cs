@@ -144,8 +144,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     private void OnDestroy()
     {
         // remettre la camera au dessus du joueur
-
-        gameMusic.SetActive(true);
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(true);
+        }
+       
         AudioManager.Instance.StopSound(bossSounds.music);
 
         Destroy(AudioManager.Instance);
