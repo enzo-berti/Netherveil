@@ -5,14 +5,9 @@ using UnityEngine.VFX;
 public class Freeze : Status
 {
     float baseAgentSpeed;
-    public Freeze(float duration) : base(duration)
+    public Freeze(float duration, float chance) : base(duration, chance)
     {
         isStackable = false;
-    }
-    public Freeze(float duration, float chance) : base(duration)
-    {
-        isStackable = false;
-        statusChance = chance;
     }
 
     public override void ApplyEffect(Entity target)

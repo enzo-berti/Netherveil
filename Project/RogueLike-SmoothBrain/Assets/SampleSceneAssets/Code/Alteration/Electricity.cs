@@ -1,22 +1,17 @@
+using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Electricity : Status
 {
     private float entityBaseSpeed;
+    const float stunTime = 0.2f;
 
-    public Electricity(float duration = 1f) : base(duration)
+    public Electricity(float duration, float chance) : base(duration, chance)
     {
         isStackable = false;
-        statusChance = 1;
-        //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
-    }
-    public Electricity(float duration, float chance) : base(duration)
-    {
-        isStackable = false;
-        statusChance = 1;
-        statusChance = chance;
-        //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
+        frequency = 1f;
     }
     public override void ApplyEffect(Entity target)
     {
@@ -37,16 +32,21 @@ public class Electricity : Status
 
     public override void OnFinished()
     {
-        target.gameObject.GetComponent<NavMeshAgent>().speed = entityBaseSpeed;
+        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
     }
 
     protected override void Effect()
     {
-        Debug.Log("Coucou elec");
         if (target != null)
         {
-            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
-           //target.Stats.SetValue(Stat.SPEED, 0f);
+            Stun();
         }
+    }
+
+    private async void Stun()
+    {
+        target.Stats.SetValue(Stat.SPEED, 0);
+        await Task.Delay((int)(stunTime * 1000));
+        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
     }
 }
