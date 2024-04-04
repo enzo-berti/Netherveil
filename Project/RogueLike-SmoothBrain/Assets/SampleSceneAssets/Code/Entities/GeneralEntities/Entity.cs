@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public abstract class Entity : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected Stats stats;
     [SerializeField] List<string> statusNameToApply = new List<string>();
     [SerializeField] List<float> durationStatusToApply = new List<float>();
+    [SerializeField, Range(0,1)] List<float> chanceStatusToApply = new List<float>();
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
     public event Action OnChangeState;
@@ -53,10 +55,10 @@ public abstract class Entity : MonoBehaviour
         for (int i = 0; i < statusNameToApply.Count; i++)
         {
             Type statusType = Assembly.GetExecutingAssembly().GetType(statusNameToApply[i]);
-            ConstructorInfo constructor = statusType.GetConstructor(new[] { typeof(float) });
+            ConstructorInfo constructor = statusType.GetConstructor(new[] { typeof(float), typeof(float) });
             if (constructor != null)
             {
-                statusToApply.Add((Status)constructor.Invoke(new object[] { durationStatusToApply[i] }));
+                statusToApply.Add((Status)constructor.Invoke(new object[] { durationStatusToApply[i], chanceStatusToApply[i] }));
             }
         }
     }
@@ -181,6 +183,9 @@ public class EntityDrawer : Editor
     // Duration of each status in the entity ( required to instantiate with the reflection )
     SerializedProperty statusDurationListProperty;
 
+    // Duration of each status in the entity ( required to instantiate with the reflection )
+    SerializedProperty statusChanceListProperty;
+
     // Index of each status ( in the name list )
     List<int> allIndex = new();
     bool isStatusExpended = false;
@@ -189,6 +194,7 @@ public class EntityDrawer : Editor
     // Local lists that we will use to update properties
     List<string> statusNameList = new List<string>();
     List<float> durationList = new();
+    List<float> chanceList = new();
 
     List<string> classField = new List<string>();
     private void OnEnable()
@@ -196,6 +202,7 @@ public class EntityDrawer : Editor
         statProperty = serializedObject.FindProperty("stats");
         statusNameListProperty = serializedObject.FindProperty("statusNameToApply");
         statusDurationListProperty = serializedObject.FindProperty("durationStatusToApply");
+        statusChanceListProperty = serializedObject.FindProperty("chanceStatusToApply");
 
         // Add existing Status name in a list
         if (statusNameList.Count == 0)
@@ -223,6 +230,7 @@ public class EntityDrawer : Editor
 
         foreach (var field in infos)
         {
+            // Don't rewrite all the current entity info
             if (entityInfo.FirstOrDefault(x => x.Name == field.Name) != null) continue;
             if ((field.IsPublic && field.GetCustomAttribute(typeof(HideInInspector)) == null) || field.GetCustomAttribute(typeof(SerializeField)) != null)
             {
@@ -245,6 +253,13 @@ public class EntityDrawer : Editor
 
         if (isStatusExpended)
         {
+            EditorGUI.indentLevel+=4;
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Status" ,GUILayout.MaxWidth(180));
+            EditorGUILayout.LabelField("Duration", GUILayout.MaxWidth(180));
+            EditorGUILayout.LabelField("Chance", GUILayout.MaxWidth(130));
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel -= 4;
             for (int i = 0; i < nbStatus; i++)
             {
                 EditorGUI.indentLevel++;
@@ -265,12 +280,21 @@ public class EntityDrawer : Editor
                 {
                     durationList.Add(0);
                 }
+                if(chanceList.Count <= i)
+                {
+                    chanceList.Add(0);
+                }
                 // Then, field to choose the duration of the status
                 durationList[i] = EditorGUILayout.FloatField(durationList[i]);
+                chanceList[i] = EditorGUILayout.Slider(chanceList[i], 0, 1);
                 // If there is no value in the entity duration list, for the current status, add it
                 if (statusDurationListProperty.arraySize <= i)
                 {
                     statusDurationListProperty.InsertArrayElementAtIndex(i);
+                }
+                if (statusChanceListProperty.arraySize <= i)
+                {
+                    statusChanceListProperty.InsertArrayElementAtIndex(i);
                 }
 
                 // Button to remove a status
@@ -279,8 +303,10 @@ public class EntityDrawer : Editor
                 {
                     allIndex.RemoveAt(i);
                     durationList.RemoveAt(i);
+                    chanceList.RemoveAt(i);
                     statusNameListProperty.DeleteArrayElementAtIndex(i);
                     statusDurationListProperty.DeleteArrayElementAtIndex(i);
+                    statusChanceListProperty.DeleteArrayElementAtIndex(i);
                     nbStatus--;
                     serializedObject.ApplyModifiedProperties();
                     return;
@@ -292,6 +318,7 @@ public class EntityDrawer : Editor
                 // Update properties
                 statusNameListProperty.GetArrayElementAtIndex(i).stringValue = statusNameList[allIndex[i]];
                 statusDurationListProperty.GetArrayElementAtIndex(i).doubleValue = durationList[i];
+                statusChanceListProperty.GetArrayElementAtIndex(i).doubleValue = chanceList[i];
 
                 EditorGUI.indentLevel--;
 
@@ -304,8 +331,10 @@ public class EntityDrawer : Editor
             {
                 statusNameListProperty.InsertArrayElementAtIndex(nbStatus);
                 statusDurationListProperty.InsertArrayElementAtIndex(nbStatus);
+                statusChanceListProperty.InsertArrayElementAtIndex(nbStatus);
                 allIndex.Add(0);
                 durationList.Add(0);
+                chanceList.Add(0);
                 nbStatus++;
             }
             EditorGUILayout.EndHorizontal();

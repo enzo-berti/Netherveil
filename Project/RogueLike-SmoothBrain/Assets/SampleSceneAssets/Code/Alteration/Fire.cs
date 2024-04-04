@@ -5,16 +5,9 @@ public class Fire : Status
     private int damage = 10;
     static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1.0f);
 
-    public Fire(float _duration) : base(_duration)
+    public Fire(float _duration, float _statusChance) : base(_duration, _statusChance)
     {
         isStackable = true;
-        statusChance = 1.0f;
-        frequency = 0.5f;
-    }
-    public Fire(float _duration, float _statusChance) : base(_duration)
-    {
-        isStackable = true;
-        statusChance = _statusChance;
         frequency = 0.5f;
     }
 

@@ -9,17 +9,18 @@ using UnityEngine.VFX.Utility;
 [Serializable]
 public abstract class Status
 {
-    public Status(float _duration)
+
+    public Status(float _duration, float _chance)
     {
         this.duration = _duration;
+        this.statusChance = _chance;
         AddStack(1);
     }
+
     public abstract Status DeepCopy();
 
     #region Properties
     public Entity target;
-    // If an effect is not played cyclically
-    protected bool isConst = false;
     // If an effect is played cyclically, at which frequency ( in seconds )
     protected float frequency = 1f;
     // Chance to apply a status ( 0 -> 1 )
@@ -84,7 +85,6 @@ public abstract class Status
                     this.OnFinished();
                 }
             }
-            if (isConst) return;
             if (!isCoroutineOn)
             {
                 EffectAsync();
