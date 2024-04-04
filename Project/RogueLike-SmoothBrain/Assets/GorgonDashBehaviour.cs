@@ -9,9 +9,8 @@ public class GorgonDashBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         GameObject gorgon = animator.transform.parent.gameObject;
-
-        //animator.transform.parent.gameObject.GetComponent<Gorgon>().dashVFX.Play();
         VisualEffect vfx = GameObject.Instantiate(Resources.Load<GameObject>("VFX_Dash_Gorgon")).GetComponent<VisualEffect>();
+        vfx.gameObject.transform.position = Vector3.zero;
         vfx.gameObject.GetComponent<VFXStopper>().Duration = stateInfo.length * 3;
         vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", gorgon.GetComponentInChildren<SkinnedMeshRenderer>());
         vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = gorgon.GetComponentInChildren<VFXTarget>().transform;
@@ -25,10 +24,10 @@ public class GorgonDashBehaviour : StateMachineBehaviour
     //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        //animator.transform.parent.gameObject.GetComponent<Gorgon>().dashVFX.Stop();
-    }
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    //animator.transform.parent.gameObject.GetComponent<Gorgon>().dashVFX.Stop();
+    //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
