@@ -1,17 +1,20 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
 public class VFXStopper : MonoBehaviour
 {
     [SerializeField] VisualEffect effect;
-    float duration;
+    public float Duration { get; set; } = 0f;
+    [SerializeField] bool destroyOnStop = false;
 
 
     private void Start()
     {
-        duration = effect.GetFloat("Duration");
+        if(effect.HasFloat("Duration"))
+        {
+            Duration = effect.GetFloat("Duration");
+        }
     }
 
     public void PlayVFX()
@@ -25,8 +28,12 @@ public class VFXStopper : MonoBehaviour
 
     IEnumerator StopVFXCoroutine()
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(Duration);
         effect.Stop();
+        if(destroyOnStop)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnDisable()

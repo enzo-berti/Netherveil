@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 9163302866267911527}
   - component: {fileID: 6414693645173397773}
   - component: {fileID: 6909158046360889180}
-  - component: {fileID: 8565105460533495585}
+  - component: {fileID: 9183766844205953490}
+  - component: {fileID: 8682105655597930837}
   m_Layer: 0
   m_Name: VFX_Frozen
   m_TagString: Untagged
@@ -127,9 +128,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ExecuteInEditor: 1
   m_Bindings:
-  - {fileID: 8565105460533495585}
+  - {fileID: 9183766844205953490}
   m_VisualEffect: {fileID: 9163302866267911527}
---- !u!114 &8565105460533495585
+--- !u!114 &9183766844205953490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,9 +139,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 5830838088743020970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
+  m_Script: {fileID: 11500000, guid: f6c1ff4c49f866e4295696c4ba5a0455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Property:
     m_Name: New Transform
   Target: {fileID: 0}
+--- !u!114 &8682105655597930837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5830838088743020970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93677b87523a3ae448f869b9f85f39b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: 9163302866267911527}
+  destroyOnStop: 1

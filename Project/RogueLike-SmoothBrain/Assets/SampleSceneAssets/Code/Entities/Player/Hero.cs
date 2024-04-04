@@ -98,6 +98,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             damages += playerController.FINISHER_DAMAGES;
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+            ApplyKnockback(damageable);
         }
         else
         {
@@ -115,7 +116,5 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         damageable.ApplyDamage(damages/*, isCrit*/);
 
         onHit?.Invoke(damageable);
-
-        ApplyKnockback(damageable);
     }
 }

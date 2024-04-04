@@ -1,17 +1,20 @@
-using System.Linq;
 using UnityEngine;
-using UnityEngine.VFX;
-using UnityEngine.VFX.Utility;
 
 public class Fire : Status
 {
     private int damage = 10;
     static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1.0f);
-    VisualEffect vfx;
 
     public Fire(float _duration) : base(_duration)
     {
+        isStackable = true;
         statusChance = 1.0f;
+        frequency = 0.5f;
+    }
+    public Fire(float _duration, float _statusChance) : base(_duration)
+    {
+        isStackable = true;
+        statusChance = _statusChance;
         frequency = 0.5f;
     }
 
@@ -19,20 +22,10 @@ public class Fire : Status
     {
         if (target.gameObject.TryGetComponent<IDamageable>(out _))
         {
-            AddStack(1);
             target.AddStatus(this);
-            vfx = GameObject.Instantiate(Resources.Load<GameObject>("VFX_Fire")).GetComponent<VisualEffect>();
-            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
-            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
-            vfx.Play();
+            PlayVfx("VFX_Fire");
         }
     }
-
-    public override void OnFinished()
-    {
-        GameObject.Destroy(vfx.gameObject);
-    }
-
     protected override void Effect()
     {
         if (target != null)
@@ -46,5 +39,10 @@ public class Fire : Status
     {
         Fire fire = (Fire)this.MemberwiseClone();
         return fire;
+    }
+
+    public override void OnFinished()
+    {
+        //throw new System.NotImplementedException();
     }
 }

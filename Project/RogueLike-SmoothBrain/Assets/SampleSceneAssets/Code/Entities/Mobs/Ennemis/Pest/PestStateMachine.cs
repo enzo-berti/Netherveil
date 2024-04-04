@@ -80,6 +80,9 @@ public class PestStateMachine : Mobs, IPest
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
+
+        this.transform.localPosition = this.transform.parent.position;
+        this.transform.parent.position = Vector3.zero;
     }
 
     protected override void Update()
@@ -158,7 +161,7 @@ public class PestStateMachine : Mobs, IPest
         animator.SetBool(deathHash, true);
         isDeath = true;
 
-        Destroy(gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
     public void MoveTo(Vector3 posToMove)

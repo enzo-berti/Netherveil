@@ -59,7 +59,7 @@ public class Gorgon : Mobs, IGorgon
     protected override void Start()
     {
         base.Start();
-        this.transform.position = this.transform.parent.position;
+        this.transform.localPosition = this.transform.parent.position;
         this.transform.parent.position = Vector3.zero;
         // getter(s) reference
         animator = GetComponentInChildren<Animator>();
@@ -96,7 +96,6 @@ public class Gorgon : Mobs, IGorgon
             {
                 if (agent.hasPath)
                 {
-                    Debug.Log("ResetPath");
                     agent.ResetPath();
                 }
                 // Il se tourne vers le player pour l'attaquer
@@ -274,7 +273,6 @@ public class Gorgon : Mobs, IGorgon
         {
             for (int i = 1; i < nbDash; i++)
             {
-                Debug.Log("ConeDash");
                 // We avoid y value because we only move in x and z
                 Vector2 posToReach2D = new(posToReach.x, posToReach.z);
 
@@ -309,7 +307,7 @@ public class Gorgon : Mobs, IGorgon
     {
         AudioManager.Instance.PlaySound(deathSFX, this.transform.position);
         OnDeath?.Invoke(transform.position);
-        Destroy(gameObject);
+        Destroy(transform.parent.gameObject);
         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
     }
 

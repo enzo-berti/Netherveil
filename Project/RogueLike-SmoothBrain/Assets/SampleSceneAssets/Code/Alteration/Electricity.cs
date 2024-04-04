@@ -1,46 +1,52 @@
 using UnityEngine;
-using UnityEngine.VFX.Utility;
-using UnityEngine.VFX;
+using UnityEngine.AI;
 
 public class Electricity : Status
 {
     private float entityBaseSpeed;
-    VisualEffect vfx;
 
     public Electricity(float duration = 1f) : base(duration)
     {
-        this.isConst = true;
-        //entityBaseSpeed = entity.Stats.GetValue(Stat.SPEED);
+        isStackable = false;
+        statusChance = 1;
+        //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
+    }
+    public Electricity(float duration, float chance) : base(duration)
+    {
+        isStackable = false;
+        statusChance = 1;
+        statusChance = chance;
+        //entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
     }
     public override void ApplyEffect(Entity target)
     {
+        Debug.Log("apply effect");
         if (target.Stats.HasStat(Stat.SPEED))
         {
             target.AddStatus(this);
             entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
-            vfx = GameObject.Instantiate(Resources.Load<GameObject>("VFX_Electricity")).GetComponent<VisualEffect>();
-            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
-            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
-            vfx.Play();
+            PlayVfx("VFX_Electricity");
         }
     }
 
     public override Status DeepCopy()
     {
-        throw new System.NotImplementedException();
+        Electricity electricity = (Electricity)MemberwiseClone();
+        return electricity;
     }
 
     public override void OnFinished()
     {
-        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
-        GameObject.Destroy(vfx.gameObject);
+        target.gameObject.GetComponent<NavMeshAgent>().speed = entityBaseSpeed;
     }
 
     protected override void Effect()
     {
+        Debug.Log("Coucou elec");
         if (target != null)
         {
-            target.Stats.SetValue(Stat.SPEED, 0f);
+            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+           //target.Stats.SetValue(Stat.SPEED, 0f);
         }
     }
 }

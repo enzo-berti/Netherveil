@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.VFX;
+using UnityEngine.VFX.Utility;
 
 [Serializable]
 public abstract class Status
@@ -9,6 +12,7 @@ public abstract class Status
     public Status(float _duration)
     {
         this.duration = _duration;
+        AddStack(1);
     }
     public abstract Status DeepCopy();
 
@@ -22,6 +26,8 @@ public abstract class Status
     public float statusChance = 0.3f;
     // Duration of one stack of the effect
     protected float duration = 1;
+
+    protected bool isStackable = false;
     #endregion
 
     #region Time
@@ -41,19 +47,24 @@ public abstract class Status
     // Do something when status is removed from the target
     public abstract void OnFinished();
     #endregion
-    
+
     #region Stack
     private int stack = 0;
     public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
-        stack += nb;
-        for(int i  = 0; i < nb; i++)
-            stopTimes.Add(duration + currentTime);
+        if(isStackable || stack < 1)
+        {
+            stack += isStackable ? nb : 1;
+            for (int i = 0; i < nb; i++)
+                stopTimes.Add(duration + currentTime);
+        }
+        
     }
     public virtual void RemoveStack(int nb)
     {
-        stack -= nb;
+        if(isStackable)
+            stack -= nb;
     }
     #endregion
 
@@ -81,11 +92,30 @@ public abstract class Status
         }
     }
 
+    protected void PlayVfx(string vfxName)
+    {
+        if (target.transform.parent.Find(vfxName) == null)
+        {
+            VisualEffect vfx = GameObject.Instantiate(Resources.Load<GameObject>(vfxName), target.transform.parent).GetComponent<VisualEffect>();
+            vfx.gameObject.GetComponent<VFXStopper>().Duration = duration;
+            vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
+            vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
+            vfx.gameObject.GetComponent<VFXStopper>().PlayVFX();
+        }
+        else
+        {
+            VFXStopper vfxStopper = target.transform.parent.Find(vfxName).GetComponent<VFXStopper>();
+            vfxStopper.StopAllCoroutines();
+            vfxStopper.PlayVFX();
+            vfxStopper.Duration = duration;
+        }
+    }
+
     private async void EffectAsync()
     {
         isCoroutineOn = true;
         await Task.Delay((int)(frequency * 1000));
-        if(!isFinished)
+        if (!isFinished)
             Effect();
         isCoroutineOn = false;
     }
