@@ -7,6 +7,8 @@ using UnityEngine.AI;
 using System;
 using FMODUnity;
 using UnityEngine.VFX;
+using System.Xml.Linq;
+using UnityEngine.VFX.Utility;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

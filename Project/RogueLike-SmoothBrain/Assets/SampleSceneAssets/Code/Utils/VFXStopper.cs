@@ -7,6 +7,7 @@ public class VFXStopper : MonoBehaviour
     [SerializeField] VisualEffect effect;
     public float Duration { get; set; } = 0f;
     [SerializeField] bool destroyOnStop = false;
+    [SerializeField] float destroyDurationDelay = 0f;
 
 
     private void Start()
@@ -32,6 +33,7 @@ public class VFXStopper : MonoBehaviour
         effect.Stop();
         if(destroyOnStop)
         {
+            yield return new WaitForSeconds(destroyDurationDelay);
             Destroy(gameObject);
         }
     }
