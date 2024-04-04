@@ -59,8 +59,6 @@ public class Gorgon : Mobs, IGorgon
     protected override void Start()
     {
         base.Start();
-        this.transform.localPosition = this.transform.parent.position;
-        this.transform.parent.position = Vector3.zero;
         // getter(s) reference
         animator = GetComponentInChildren<Animator>();
         playerTransform = GameObject.FindWithTag("Player").transform;
