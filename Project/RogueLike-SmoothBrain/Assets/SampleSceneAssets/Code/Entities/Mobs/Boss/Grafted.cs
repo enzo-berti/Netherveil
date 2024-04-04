@@ -134,11 +134,17 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         StopAllCoroutines();
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+    }
+
     protected override void Start()
     {
         base.Start();
 
-        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+        
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
