@@ -150,8 +150,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             gameMusic.SetActive(true);
         }
-       
-        bossSounds.StopAllSounds();
 
         if (projectile) Destroy(projectile.gameObject);
 
@@ -285,7 +283,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     {
                         Destroy(gameObject);
                         GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
-                        AudioManager.Instance.StopSound(bossSounds.music);
+                        bossSounds.StopAllSounds();
                     }
                 }
             }
