@@ -12,7 +12,6 @@ public class ItemBar : MonoBehaviour
     void Start()
     {
         Item.OnRetrieved += OnItemAdd;
-        //subscribe event
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
@@ -23,6 +22,11 @@ public class ItemBar : MonoBehaviour
 
         if (transform.childCount > 5)
             DestroyImmediate(transform.GetChild(0).gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        Item.OnRetrieved -= OnItemAdd;
     }
 }
 
