@@ -145,7 +145,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         retrievingHash = Animator.StringToHash("Retrieving");
         fallHash = Animator.StringToHash("Fall");
 
-        transform.position = transform.parent.position;
+        transform.localPosition = transform.parent.position;
         transform.parent.position = Vector3.zero;
     }
 
