@@ -58,6 +58,25 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         public AudioManager.Sound weaponInSound = new("WeaponIn");
         public AudioManager.Sound walkingSound = new("Walk"); //
         public AudioManager.Sound music = new("Music");
+
+        public void StopAllSounds()
+        {
+            AudioManager am = AudioManager.Instance;
+            am.StopSound(deathSound);
+            am.StopSound(hitSound);
+            am.StopSound(projectileLaunchedSound);
+            am.StopSound(projectileHitMapSound);
+            am.StopSound(projectileHitPlayerSound);
+            am.StopSound(thrustSound);
+            am.StopSound(introSound);
+            am.StopSound(retrievingProjectileSound);
+            am.StopSound(spinAttackSound);
+            am.StopSound(stretchSound);
+            am.StopSound(weaponOutSound);
+            am.StopSound(weaponInSound);
+            am.StopSound(walkingSound);
+            am.StopSound(music);
+        }
     }
 
     GameObject gameMusic;
@@ -119,15 +138,23 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         AudioManager.Instance.StopSound(bossSounds.introSound);
         AudioManager.Instance.StopSound(bossSounds.music);
 
-        //StopAllCoroutines();
+        bossSounds.StopAllSounds();
+
+        StopAllCoroutines();
     }
 
     private void OnDestroy()
     {
         // remettre la camera au dessus du joueur
-
-        gameMusic.SetActive(true);
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(true);
+        }
+       
         AudioManager.Instance.StopSound(bossSounds.music);
+        bossSounds.StopAllSounds();
+
+        Destroy(AudioManager.Instance);
 
         if (projectile) Destroy(projectile.gameObject);
 
