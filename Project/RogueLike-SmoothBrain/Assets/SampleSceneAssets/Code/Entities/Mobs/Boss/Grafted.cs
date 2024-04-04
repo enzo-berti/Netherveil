@@ -60,6 +60,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         public AudioManager.Sound music = new("Music");
     }
 
+    GameObject gameMusic;
+
     [Header("Sounds")]
     [SerializeField] private GraftedSounds bossSounds;
 
@@ -106,13 +108,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         // mettre la cam entre le joueur et le boss
 
         //StartCoroutine(Brain());
-
+        gameMusic.SetActive(false);
         AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
         AudioManager.Instance.PlaySound(bossSounds.music);
     }
 
     private void OnDisable()
     {
+        gameMusic.SetActive(true);
         AudioManager.Instance.StopSound(bossSounds.introSound);
         AudioManager.Instance.StopSound(bossSounds.music);
 
@@ -123,6 +126,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         // remettre la camera au dessus du joueur
 
+        gameMusic.SetActive(true);
         AudioManager.Instance.StopSound(bossSounds.music);
 
         if (projectile) Destroy(projectile.gameObject);
@@ -130,9 +134,18 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         StopAllCoroutines();
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+    }
+
     protected override void Start()
     {
         base.Start();
+
+        
+
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
         animator = GetComponentInChildren<Animator>();
@@ -144,9 +157,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         throwingHash = Animator.StringToHash("Throwing");
         retrievingHash = Animator.StringToHash("Retrieving");
         fallHash = Animator.StringToHash("Fall");
-
-        transform.localPosition = transform.parent.position;
-        transform.parent.position = Vector3.zero;
     }
 
     protected override IEnumerator Brain()
@@ -305,7 +315,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         MoveTo(transform.position);
         animator.SetBool(dyingHash, true);
         AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
-        GameObject.FindGameObjectWithTag("WINSCREEN").gameObject.SetActive(true);
+        WinScreen.instance.gameObject.SetActive(true);
     }
 
     public void MoveTo(Vector3 _pos)
