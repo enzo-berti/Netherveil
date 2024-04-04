@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
-    readonly float dashCoef = 3f;
+    readonly float dashCoef = 2.25f;
 
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;

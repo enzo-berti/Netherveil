@@ -26,6 +26,7 @@ public class WinScreen : MonoBehaviour
     private void OnEnable()
     {
         Color clearColor = new Color(1, 1, 1, 0);
+        buttonPanel.color *= clearColor;
         blackPanel.color *= clearColor;
         menu.color *= clearColor;
         menuText.color *= clearColor;
@@ -53,39 +54,25 @@ public class WinScreen : MonoBehaviour
 
     void IncreaseAlpha()
     {
-        StartCoroutine(ModifyElementAlpha(blackPanel, 1f));
-                       
-        StartCoroutine(ModifyElementAlpha(EndText, 1f));
-        if (EndText.color.a == 1f)
-        {
-            StartCoroutine(ModifyElementAlpha(EndText, 0f));
-        }
-
-        StartCoroutine(ModifyElementAlpha(EndText2, 1f));
-        if (EndText2.color.a == 1f)
-        {
-            StartCoroutine(ModifyElementAlpha(EndText2, 0f));
-        }
-
-        StartCoroutine(ModifyElementAlpha(EndText3, 1f));
-        if (EndText3.color.a == 1f)
-        {
-            StartCoroutine(ModifyElementAlpha(EndText3, 0f));
-        }
-
-        StartCoroutine(ModifyElementAlpha(WinText, 1f));
-        if (WinText.color.a == 1f)
-        {
-            StartCoroutine(ModifyElementAlpha(buttonPanel, 1f));
-            StartCoroutine(ModifyElementAlpha(menu, 1f));
-            StartCoroutine(ModifyElementAlpha(menuText, 1f));
-            StartCoroutine(ModifyElementAlpha(quit, 1f));
-            StartCoroutine(ModifyElementAlpha(quitText, 1f));
-        }
+        StartCoroutine(ModifyElementAlpha(blackPanel,0f, 1f));
+        StartCoroutine(ModifyElementAlpha(EndText, 1.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(EndText, 3.5f, 0f));
+        StartCoroutine(ModifyElementAlpha(EndText2, 2.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(EndText2, 4.5f, 0f));
+        StartCoroutine(ModifyElementAlpha(EndText3, 3.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(EndText3, 5.5f, 0f));
+        StartCoroutine(ModifyElementAlpha(WinText, 6.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(menu, 7.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(menuText, 7.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(quit, 7.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(quitText, 7.5f, 1f));
+        StartCoroutine(ModifyElementAlpha(buttonPanel, 7.5f, 1f));
     }
 
-    IEnumerator ModifyElementAlpha(Graphic element, float targetAlpha)
+    IEnumerator ModifyElementAlpha(Graphic element, float timeToWait, float targetAlpha)
     {
+        yield return new WaitForSeconds(timeToWait);
+
         float duration = 2.0f;
         float elapsedTime = 0f;
         Color initialColor = element.color;
@@ -93,7 +80,7 @@ public class WinScreen : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.deltaTime * 1.5f;
             float t = Mathf.Clamp01(elapsedTime / duration);
             element.color = Color.Lerp(initialColor, targetColor, t);
             yield return null;

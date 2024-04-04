@@ -18,6 +18,7 @@ public class DebugForMilestone : MonoBehaviour
             {
                 enemy.GetComponentInChildren<IDamageable>().Death();
             }
+            RoomUtilities.roomData.enemies.Clear();
         }
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {

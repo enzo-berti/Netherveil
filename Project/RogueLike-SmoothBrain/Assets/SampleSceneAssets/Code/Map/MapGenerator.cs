@@ -190,7 +190,7 @@ public class MapGenerator : MonoBehaviour
     private void Awake()
     {
         UnityEngine.Random.InitState(seed);
-        GenerateMap(new GenerationParam(nbNormal: 3, nbTreasure: 3));
+        GenerateMap(new GenerationParam(nbNormal: 10, nbTreasure: 2));
     }
 
     private void GenerateMap(GenerationParam genParam)

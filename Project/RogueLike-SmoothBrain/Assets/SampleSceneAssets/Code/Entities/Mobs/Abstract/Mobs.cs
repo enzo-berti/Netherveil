@@ -49,6 +49,7 @@ public abstract class Mobs : Entity
 
         Vector3 pos = this.transform.parent.localPosition;
         this.transform.parent.position = Vector3.zero;
+        this.transform.parent.localPosition = Vector3.zero;
         this.transform.localPosition = pos;
     }
 
