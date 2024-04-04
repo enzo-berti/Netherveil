@@ -4,7 +4,6 @@ using UnityEngine;
 public class RoomGenerator : MonoBehaviour
 {
     [HideInInspector] public RoomType type;
-    private static int RoomGenerated = 0; // rand noise
 
     private List<GameObject> Rooms 
     {
@@ -38,8 +37,7 @@ public class RoomGenerator : MonoBehaviour
         int keepRoomIndex = 0;
         if (rooms.Count > 1)
         {
-            keepRoomIndex = GameAssets.Instance.seed.Range(0, rooms.Count, ref RoomGenerated);
-
+            keepRoomIndex = Seed.Range(0, rooms.Count);
             for (int i = 0; i < rooms.Count; i++)
             {
                 if (i != keepRoomIndex)

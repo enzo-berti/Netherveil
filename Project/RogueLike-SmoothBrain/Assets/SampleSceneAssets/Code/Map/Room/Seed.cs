@@ -1,52 +1,14 @@
-using UnityEngine;
-
-public class Seed
+static public class Seed
 {
-    private const int lenght = 6;
-    public float Value { private set; get; } = 0f;
+    static private System.Random randGen = new System.Random();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-    public float Set(float value)
+    static public void SetSeed(int seed)
     {
-        return Value = value;
-    }
-#endif
-
-    /// <summary>
-    /// Generate new seed value
-    /// </summary>
-    public float Generate()
-    {
-        Value = 0f;
-        for (int i = 0; i < lenght; i++)
-        {
-            Value = Value * 10 + Random.Range(1, 10);
-        }
-
-        return Value;
+        randGen = new System.Random(seed);
     }
 
-    public int Range(int minInclusive, int maxExclusive)
+    static public int Range(int minInclusive, int maxInclusive)
     {
-        return (int)(Value % (maxExclusive - minInclusive) + minInclusive);
-    }
-
-    public int Range(int minInclusive, int maxExclusive, ref int noise)
-    {
-        //noise += Mathf.Abs(maxExclusive) + 1;
-        //int seed = (int)Value + noise;
-        //
-        //return (seed % (maxExclusive - minInclusive)) + minInclusive;
-        return Random.Range(minInclusive, maxExclusive);
-    }
-
-    public float Range(float minInclusive, float maxExclusive)
-    {
-        return Value % (maxExclusive - minInclusive) + minInclusive;
-    }
-
-    public float Range(float minInclusive, float maxExclusive, ref float noise)
-    {
-        return Value % (maxExclusive - minInclusive) + minInclusive;
+        return randGen.Next(minInclusive, maxInclusive);
     }
 }

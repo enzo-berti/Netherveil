@@ -64,7 +64,7 @@ public class DoorsGenerator : MonoBehaviour
     {
         get
         {
-            int index = GameAssets.Instance.seed.Range(0, doors.Count, ref noiseDoors);
+            int index = Seed.Range(0, doors.Count);
 
             return doors[index];
         }
@@ -75,7 +75,7 @@ public class DoorsGenerator : MonoBehaviour
         {
             List<Door> result = new List<Door>();
 
-            int iNoise = GameAssets.Instance.seed.Range(0, doors.Count, ref noiseDoors);
+            int iNoise = Seed.Range(0, doors.Count);
             for (int i = 0; i < doors.Count; i++)
             {
                 int index = (i + iNoise) % doors.Count;

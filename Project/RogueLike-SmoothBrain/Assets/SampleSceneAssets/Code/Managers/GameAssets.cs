@@ -17,8 +17,6 @@ public class GameAssets : MonoBehaviour
         }
     }
 
-    public readonly Seed seed = new Seed();
-
     private void Awake()
     {
         if (instance == null)
@@ -31,7 +29,5 @@ public class GameAssets : MonoBehaviour
             Destroy(instance);
             return;
         }
-
-        seed.Generate();
     }
 }
