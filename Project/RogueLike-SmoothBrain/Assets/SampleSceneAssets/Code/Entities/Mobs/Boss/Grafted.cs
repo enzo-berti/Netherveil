@@ -60,6 +60,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         public AudioManager.Sound music = new("Music");
     }
 
+    GameObject gameMusic;
+
     [Header("Sounds")]
     [SerializeField] private GraftedSounds bossSounds;
 
@@ -106,13 +108,14 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         // mettre la cam entre le joueur et le boss
 
         //StartCoroutine(Brain());
-
+        gameMusic.SetActive(false);
         AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
         AudioManager.Instance.PlaySound(bossSounds.music);
     }
 
     private void OnDisable()
     {
+        gameMusic.SetActive(true);
         AudioManager.Instance.StopSound(bossSounds.introSound);
         AudioManager.Instance.StopSound(bossSounds.music);
 
@@ -123,6 +126,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         // remettre la camera au dessus du joueur
 
+        gameMusic.SetActive(true);
         AudioManager.Instance.StopSound(bossSounds.music);
 
         if (projectile) Destroy(projectile.gameObject);
@@ -133,6 +137,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     protected override void Start()
     {
         base.Start();
+
+        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
         animator = GetComponentInChildren<Animator>();
