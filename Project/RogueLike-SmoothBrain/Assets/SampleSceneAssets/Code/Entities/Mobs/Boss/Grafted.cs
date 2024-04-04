@@ -151,10 +151,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             gameMusic.SetActive(true);
         }
        
-        AudioManager.Instance.StopSound(bossSounds.music);
         bossSounds.StopAllSounds();
-
-        Destroy(AudioManager.Instance);
 
         if (projectile) Destroy(projectile.gameObject);
 
