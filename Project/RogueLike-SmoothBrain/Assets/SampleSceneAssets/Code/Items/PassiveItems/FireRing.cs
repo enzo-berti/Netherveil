@@ -1,6 +1,6 @@
 using UnityEngine; 
  
-public class FireAmulet : ItemEffect , IPassiveItem 
+public class FireRing : ItemEffect , IPassiveItem 
 {
     private float fireChance = 0.1f;
     private float fireDuration = 2.0f;
