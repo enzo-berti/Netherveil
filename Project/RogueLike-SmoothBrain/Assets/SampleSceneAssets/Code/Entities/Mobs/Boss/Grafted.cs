@@ -59,7 +59,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         public AudioManager.Sound walkingSound = new("Walk"); //
         public AudioManager.Sound music = new("Music");
 
-        void StopAllSounds()
+        public void StopAllSounds()
         {
             AudioManager am = AudioManager.Instance;
             am.StopSound(deathSound);
@@ -138,6 +138,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         AudioManager.Instance.StopSound(bossSounds.introSound);
         AudioManager.Instance.StopSound(bossSounds.music);
 
+        bossSounds.StopAllSounds();
+
         StopAllCoroutines();
     }
 
@@ -150,6 +152,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         }
        
         AudioManager.Instance.StopSound(bossSounds.music);
+        bossSounds.StopAllSounds();
 
         Destroy(AudioManager.Instance);
 
