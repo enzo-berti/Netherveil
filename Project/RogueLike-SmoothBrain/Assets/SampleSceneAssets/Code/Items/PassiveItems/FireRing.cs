@@ -2,7 +2,7 @@ using UnityEngine;
  
 public class FireRing : ItemEffect , IPassiveItem 
 {
-    private float fireChance = 0.1f;
+    private float fireChance = 0.3f;
     private float fireDuration = 2.0f;
     int indexInStatus = 0;
     public void OnRetrieved() 
