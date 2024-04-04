@@ -12,7 +12,7 @@ public class Outline : MonoBehaviour
     void Awake()
     {
         mOutlineMaterial = Resources.Load("OutlineShaderMat") as Material;
-        mRenderer = GetComponentsInChildren<Renderer>().Where(x => x.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast")).ToArray();
+        mRenderer = GetComponentsInChildren<Renderer>().Where(x => ((1 << x.gameObject.layer) & LayerMask.GetMask("Ignore Raycast")) == 0).ToArray();
 
         mOutlineMaterial.SetColor("_Outline_Color", outlineColor);
         mOutlineMaterial.SetFloat("_Outline_thickness", outlineThickness);
