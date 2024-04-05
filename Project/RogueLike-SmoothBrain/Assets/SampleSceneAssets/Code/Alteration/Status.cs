@@ -9,7 +9,6 @@ using UnityEngine.VFX.Utility;
 [Serializable]
 public abstract class Status
 {
-
     public Status(float _duration, float _chance)
     {
         this.duration = _duration;
