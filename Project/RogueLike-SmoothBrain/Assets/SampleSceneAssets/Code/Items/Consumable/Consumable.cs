@@ -8,9 +8,13 @@ public abstract class Consumable : MonoBehaviour, IConsumable
     protected GameObject model;
     float lerpTimer = 0f;
 
-    protected virtual void Start()
+    private void Awake()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+    }
+
+    protected virtual void Start()
+    {
         model = GetComponentInChildren<MeshRenderer>().gameObject;
     }
 
@@ -38,7 +42,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         {
             lerpTimer += Time.deltaTime / 10f;
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, lerpTimer);
-            if (distance <= 0.3f)
+            if (distance <= 1f)
             {
                 OnRetrieved();
             }

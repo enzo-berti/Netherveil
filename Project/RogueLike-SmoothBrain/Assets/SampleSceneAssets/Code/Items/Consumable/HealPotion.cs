@@ -12,11 +12,6 @@ public class HealPotion : Consumable
         Price = price;
     }
 
-    protected override void Update()
-    {
-        base.Update();
-    }
-
     public override void OnRetrieved()
     {
         AudioManager.Instance.PlaySound(player.GetComponent<PlayerController>().HealSFX, player.transform.position);
