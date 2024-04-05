@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     CharacterController characterController;
 
     [Header("Mechanics")]
+    public Spear Spear;
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     float currentVelocity = 0f;
 
     //used to auto-redirect on enemies in vision cone when attacking
-    public const float ATTACK_CONE_ANGLE = 45f;
+    const float ATTACK_CONE_ANGLE = 45f;
 
     //attack values
     public int ComboCount { get; set; } = 0;

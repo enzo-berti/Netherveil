@@ -20,8 +20,6 @@ public class PlayerInput : MonoBehaviour
     Coroutine dashCoroutine = null;
     Coroutine chargedAttackCoroutine = null;
 
-    [SerializeField] Spear spear;
-
     public Vector2 Direction { get; private set; } = Vector2.zero;
     public Vector3 DashDir { get; private set; } = Vector3.zero;
 
@@ -241,7 +239,7 @@ public class PlayerInput : MonoBehaviour
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
     {
         // If spear is being thrown we can't recall this attack
-        if (hero.State != (int)Entity.EntityState.MOVE || spear.IsThrowing)
+        if (hero.State != (int)Entity.EntityState.MOVE || controller.Spear.IsThrowing)
             return;
 
         if (DeviceManager.Instance.IsPlayingKB())
@@ -254,14 +252,14 @@ public class PlayerInput : MonoBehaviour
             controller.OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
         }
 
-        if (!spear.IsThrown)
+        if (!controller.Spear.IsThrown)
         {
-            StartCoroutine(spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE)));
+            StartCoroutine(controller.Spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE)));
             controller.PlayVFX(controller.spearLaunchVFX);
         }
         else
         {
-            StartCoroutine(spear.Return());
+            StartCoroutine(controller.Spear.Return());
         }
     }
 
@@ -375,19 +373,19 @@ public class PlayerInput : MonoBehaviour
     {
         return (hero.State == (int)Entity.EntityState.MOVE ||
             (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-             && !spear.IsThrown && !ForceReturnToMove;
+             && !controller.Spear.IsThrown && !ForceReturnToMove;
     }
 
     private bool CanCastChargedAttack()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
             || hero.State == (int)Entity.EntityState.ATTACK)
-            && !spear.IsThrown && !LaunchedChargedAttack;
+            && !controller.Spear.IsThrown && !LaunchedChargedAttack;
     }
 
     private bool CanRetrieveSpear()
     {
-        return hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown;
+        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown;
     }
 
     private bool CanDash()
@@ -408,11 +406,6 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region Miscellaneous
-
-    public Spear GetSpear()
-    {
-        return spear;
-    }
     private void EaseFuncsShitStorm()
     {
         easeFuncs.Add(EasingFunctions.EaseInBack);

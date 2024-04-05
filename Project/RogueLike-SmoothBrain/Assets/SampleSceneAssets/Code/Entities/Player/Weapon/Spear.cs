@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class Spear : MonoBehaviour
     Hero hero;
     Transform parent = null;
     Animator playerAnimator;
+    public static event Action OnPlacedInWorld;
 
     [SerializeField] GameObject trailPf;
     [SerializeField] BoxCollider spearThrowCollider;
@@ -54,16 +56,6 @@ public class Spear : MonoBehaviour
         }
     }
 
-    private bool CanPlaceSpearInHand()
-    {
-        return !IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude;
-    }
-
-    private bool CanPlaceSpearInWorld()
-    {
-        return IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude;
-    }
-
     private void PlaceSpearInPlayerHand()
     {
         this.transform.position = posToReach;
@@ -96,6 +88,8 @@ public class Spear : MonoBehaviour
             hero.State = (int)Entity.EntityState.MOVE;
         }
         spearThrowCollider.gameObject.SetActive(false);
+
+        OnPlacedInWorld?.Invoke();
     }
 
     public IEnumerator Throw(Vector3 _posToReach)
@@ -192,5 +186,15 @@ public class Spear : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool CanPlaceSpearInHand()
+    {
+        return !IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude;
+    }
+
+    private bool CanPlaceSpearInWorld()
+    {
+        return IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude;
     }
 }

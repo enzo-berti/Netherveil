@@ -101,7 +101,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
             ApplyKnockback(damageable, this);
         }
-        else if (playerInput.GetSpear().IsThrowing || playerInput.GetSpear().IsThrown)
+        else if (playerController.Spear.IsThrowing || playerController.Spear.IsThrown)
         {
             OnSpearAttack?.Invoke(damageable, this);
         }
