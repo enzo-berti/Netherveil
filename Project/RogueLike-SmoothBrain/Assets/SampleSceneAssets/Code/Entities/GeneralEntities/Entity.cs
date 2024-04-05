@@ -93,7 +93,7 @@ public abstract class Entity : MonoBehaviour
 
     }
 
-    public void ApplyKnockback(IDamageable damageable)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker)
     {
         Vector3 temp = (damageable as MonoBehaviour).transform.position - transform.position;
         Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
@@ -101,26 +101,26 @@ public abstract class Entity : MonoBehaviour
         float distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
         float speed = stats.GetValue(Stat.KNOCKBACK_COEFF);
 
-        ApplyKnockback(damageable, direction, distance, speed);
+        ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
 
-    public void ApplyKnockback(IDamageable damageable, float distance, float speed)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, float distance, float speed)
     {
         Vector3 temp = (damageable as MonoBehaviour).transform.position - transform.position;
         Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
 
-        ApplyKnockback(damageable, direction, distance, speed);
+        ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
 
-    public void ApplyKnockback(IDamageable damageable, Vector3 direction)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, Vector3 direction)
     {
         float distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
         float speed = stats.GetValue(Stat.KNOCKBACK_COEFF);
 
-        ApplyKnockback(damageable, direction, distance, speed);
+        ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
 
-    public void ApplyKnockback(IDamageable damageable, Vector3 direction, float distance, float speed)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, Vector3 direction, float distance, float speed)
     {
         Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
         if (knockbackable)
@@ -141,12 +141,12 @@ public abstract class Entity : MonoBehaviour
                 }
             }
 
-            knockbackable.GetKnockback(direction, distance, speed);
+            knockbackable.GetKnockback(attacker, direction, distance, speed);
             FloatingTextGenerator.CreateActionText(damageableGO.transform.position, "Pushed!");
         }
     }
 
-    public void ApplyEffect(Status status)
+    public void ApplyEffect(Status status, IAttacker launcher = null)
     {
         status.target = this;
         float chance = UnityEngine.Random.value;
@@ -160,7 +160,7 @@ public abstract class Entity : MonoBehaviour
                     return;
                 }
             }
-            status.ApplyEffect(this);
+            status.ApplyEffect(this, launcher);
         }
 
     }

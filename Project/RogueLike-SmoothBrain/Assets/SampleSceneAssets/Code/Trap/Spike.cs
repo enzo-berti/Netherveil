@@ -84,7 +84,7 @@ public class Spike : MonoBehaviour
             yield return new WaitForSeconds(0.003f);
         }
         isOut = true;
-        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage);});
+        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage, null);});
 
         StartCoroutine(WaitUntil());
     }
