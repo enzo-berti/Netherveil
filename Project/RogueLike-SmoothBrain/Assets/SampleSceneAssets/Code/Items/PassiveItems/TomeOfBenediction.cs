@@ -1,15 +1,14 @@
-using UnityEngine; 
- 
+
 public class TomeOfBenediction : ItemEffect , IPassiveItem 
-{ 
+{
+    readonly int value = 15;
     public void OnRetrieved() 
-    { 
-        throw new System.NotImplementedException(); 
+    {
+        PlayerController.Get().GetComponent<Hero>().Stats.DecreaseValue(Stat.CORRUPTION, value);
     } 
  
     public void OnRemove() 
-    { 
-        throw new System.NotImplementedException(); 
-    } 
- 
+    {
+        PlayerController.Get().GetComponent<Hero>().Stats.IncreaseValue(Stat.CORRUPTION, value);
+    }
 } 

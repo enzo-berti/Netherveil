@@ -1,15 +1,14 @@
-using UnityEngine; 
- 
+
 public class TomeOfCorruption : ItemEffect , IPassiveItem 
-{ 
-    public void OnRetrieved() 
-    { 
-        throw new System.NotImplementedException(); 
-    } 
- 
-    public void OnRemove() 
-    { 
-        throw new System.NotImplementedException(); 
-    } 
- 
+{
+    readonly int value = 15;
+    public void OnRetrieved()
+    {
+        PlayerController.Get().GetComponent<Hero>().Stats.IncreaseValue(Stat.CORRUPTION, value);
+    }
+
+    public void OnRemove()
+    {
+        PlayerController.Get().GetComponent<Hero>().Stats.DecreaseValue(Stat.CORRUPTION, value);
+    }
 } 
