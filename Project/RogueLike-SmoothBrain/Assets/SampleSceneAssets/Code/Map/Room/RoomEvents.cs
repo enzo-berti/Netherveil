@@ -14,6 +14,20 @@ public class RoomEvents : MonoBehaviour
     private bool enterRoomCalled = false;
     private bool exitRoomCalled = false;
 
+    private Collider triggerCollide = null;
+
+    private void Awake()
+    {
+        foreach (Collider collider in GetComponents<Collider>())
+        {
+            if (collider.isTrigger)
+            {
+                triggerCollide = collider;
+                break;
+            }
+        }
+    }
+
     private void Start()
     {
         // find room go's
@@ -37,7 +51,7 @@ public class RoomEvents : MonoBehaviour
         {
             return;
         }
-
+        Debug.Log("ENTER ROOM");
         enterRoomCalled = true;
 
         // global events
@@ -55,7 +69,7 @@ public class RoomEvents : MonoBehaviour
         {
             return;
         }
-
+        Debug.Log("EXIT ROOM");
         exitRoomCalled = true;
 
         // local events
@@ -83,11 +97,14 @@ public class RoomEvents : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            EnterEvents();
+            if (triggerCollide.bounds.Contains(other.bounds.max) && triggerCollide.bounds.Contains(other.bounds.min))
+            {
+                EnterEvents();
+            }
         }
     }
 
