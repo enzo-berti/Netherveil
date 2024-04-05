@@ -6,11 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+    public static LevelLoader current;
+
     private AsyncOperation asyncOperation;
     private List<Transition> levelTransitions = new List<Transition>();
 
     private void Awake()
     {
+        current = this;
+
         foreach (Transform transition in transform)
         {
             levelTransitions.Add(transition.GetComponent<Transition>());
