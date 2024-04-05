@@ -16,7 +16,7 @@ public class Knockback : MonoBehaviour
     /// <summary>
     /// int _value, bool isCrit = false, bool notEffectDamages = true
     /// </summary>
-    public Action<int, bool, bool> onObstacleCollide;
+    public Action<int, IAttacker, bool> onObstacleCollide;
     [SerializeField] private int damageTakeOnObstacleCollide = 10;
 
     //[SerializeField, Range(0.001f, 0.1f)] private float StillThreshold = 0.05f; // Commenter par Dorian -> WARNING
@@ -29,25 +29,25 @@ public class Knockback : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    public void GetKnockback(Vector3 direction, float distance, float speed)
+    public void GetKnockback(IAttacker attacker, Vector3 direction, float distance, float speed)
     {
         if (knockbackRoutine != null || !GetComponent<Entity>().IsKnockbackable)
             return;
 
         if (agent != null)
         {
-            knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(direction, distance, speed));
+            knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(attacker, direction, distance, speed));
         }
         else if (characterController != null && hero.State != (int)Entity.EntityState.DEAD)
         {
             animator.SetBool("IsKnockback", true);
             hero.State = (int)Hero.PlayerState.KNOCKBACK;
-            knockbackRoutine = StartCoroutine(ApplyKnockbackPlayer(direction, distance, speed));
+            knockbackRoutine = StartCoroutine(ApplyKnockbackPlayer(attacker, direction, distance, speed));
         }
 
     }
 
-    private IEnumerator ApplyKnockbackAgent(Vector3 direction, float distance, float speed)
+    private IEnumerator ApplyKnockbackAgent(IAttacker attacker, Vector3 direction, float distance, float speed)
     {
         float timeElapsed = 0f;
         Vector3 startPosition = transform.position;
@@ -69,7 +69,7 @@ public class Knockback : MonoBehaviour
             }
             else
             {
-                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
+                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);
             }
 
             yield return null;
@@ -78,7 +78,7 @@ public class Knockback : MonoBehaviour
         knockbackRoutine = null;
     }
 
-    protected IEnumerator ApplyKnockbackPlayer(Vector3 direction, float distance, float speed)
+    protected IEnumerator ApplyKnockbackPlayer(IAttacker attacker, Vector3 direction, float distance, float speed)
     {
         if (characterController == null)
         {
@@ -105,7 +105,7 @@ public class Knockback : MonoBehaviour
 
             if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos), ~LayerMask.GetMask("Entity")))
             {
-                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, false, true);
+                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);
             }
             else
             {

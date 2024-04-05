@@ -40,14 +40,14 @@ public abstract class Projectile : MonoBehaviour, IProjectile
         IDamageable damageableObject = other.GetComponent<IDamageable>();
         if (damageableObject != null)
         {
-            damageableObject.ApplyDamage(damage);
+            damageableObject.ApplyDamage(damage, null);
 
             if (elementalDamage != DamageState.NORMAL && TryGetComponent<Entity>(out var entity))
             {
                 switch (elementalDamage)
                 {
                     case DamageState.FIRE:
-                        entity.ApplyEffect(new Fire(2, 1.0f)) ;
+                        entity.ApplyEffect(new Fire(2, 1.0f));
                         break;
                     case DamageState.ICE:
                         entity.ApplyEffect(new Freeze(2, 1.0f));

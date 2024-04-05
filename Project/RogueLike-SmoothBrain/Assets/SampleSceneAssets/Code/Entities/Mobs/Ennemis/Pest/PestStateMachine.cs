@@ -113,7 +113,7 @@ public class PestStateMachine : Mobs, IPest
         }
     }
 
-    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
     {
         // Some times, this method is call when entity is dead ??
         if (stats.GetValue(Stat.HP) <= 0)
@@ -125,7 +125,7 @@ public class PestStateMachine : Mobs, IPest
         if (hasAnimation)
         {
             //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            FloatingTextGenerator.CreateDamageText(_value, transform.position);
             StartCoroutine(HitRoutine());
         }
 
@@ -143,9 +143,9 @@ public class PestStateMachine : Mobs, IPest
     {
         int damages = (int)stats.GetValue(Stat.ATK);
 
-        onHit?.Invoke(damageable);
-        damageable.ApplyDamage(damages);
-        ApplyKnockback(damageable);
+        onHit?.Invoke(damageable, this);
+        damageable.ApplyDamage(damages, this);
+        ApplyKnockback(damageable, this);
 
         AudioManager.Instance.PlaySound(pestSounds.hitSound, transform.position);
     }

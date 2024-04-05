@@ -10,7 +10,7 @@ public class Freeze : Status
         isStackable = false;
     }
 
-    public override void ApplyEffect(Entity target)
+    public override void ApplyEffect(Entity target, IAttacker attacker)
     {
         if (target.Stats.HasStat(Stat.SPEED))
         {

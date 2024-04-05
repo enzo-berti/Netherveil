@@ -16,7 +16,7 @@ public class VampireTooth : ItemEffect, IPassiveItem
         //    "<color=\"green\">Life Steal: +" + lifeStealPourcentage.ToString() + "%";
     }
 
-    public void LifeSteal(IDamageable damageable)
+    public void LifeSteal(IDamageable damageable, IAttacker attacker)
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         //life steal is a pourcentage that's incresed by items

@@ -18,7 +18,7 @@ public class DamageTakenUI : MonoBehaviour
         Hero.OnTakeDamage -= CallTakeDamageUICoroutine;
     }
 
-    private void CallTakeDamageUICoroutine()
+    private void CallTakeDamageUICoroutine(int damages, IAttacker attacker)
     {
         StartCoroutine(TakeDamageUI());
     }
