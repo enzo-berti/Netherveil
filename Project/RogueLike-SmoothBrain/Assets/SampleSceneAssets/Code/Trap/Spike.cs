@@ -1,3 +1,4 @@
+using FMOD;
 using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,8 +29,11 @@ public class Spike : MonoBehaviour
         waitUntilTimer = 3f;
         damage = 10;
         isOut = false;
+
         spikesUpEvent = RuntimeManager.CreateInstance(spikesUpSFX);
+        spikesUpEvent.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
         spikesDownEvent = RuntimeManager.CreateInstance(spikesDownSFX);
+        spikesDownEvent.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -100,9 +104,10 @@ public class Spike : MonoBehaviour
 
     IEnumerator Disable()
     {
+        
+        yield return new WaitForSeconds(0.15f);
         AudioManager.Instance.StopSound(spikesUpEvent, FMOD.Studio.STOP_MODE.Immediate);
         AudioManager.Instance.PlaySound(spikesDownSFX, transform.position);
-        yield return new WaitForSeconds(0.15f);
         while (spikesToMove.transform.position.y != startPosY)
         {
             spikesToMove.transform.position -= Vector3.up * Time.deltaTime * 15;

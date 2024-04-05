@@ -7,9 +7,9 @@ public struct RoomData
     {
         enemies = new List<GameObject>();
 
-        foreach (Transform enemyTransform in enemiesContainer.transform)
+        foreach (Mobs enemy in enemiesContainer.GetComponentsInChildren<Mobs>())
         {
-            enemies.Add(enemyTransform.gameObject);
+            enemies.Add(enemy.gameObject);
         }
 
         Type = roomGenerator.type;
