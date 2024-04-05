@@ -14,6 +14,8 @@ public class Outline : MonoBehaviour
 
         if (mRenderer == null)
             mRenderer = GetComponentsInChildren<Renderer>();
+        else if (mRenderer.Length == 0)
+            mRenderer = GetComponentsInChildren<Renderer>();
 
         mOutlineMaterial.SetColor("_Outline_Color", outlineColor);
         mOutlineMaterial.SetFloat("_Outline_thickness", outlineThickness);

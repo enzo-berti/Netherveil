@@ -18,6 +18,5 @@ public class DragonScale : ItemEffect , IPassiveItem
         hero.Stats.DecreaseCoeffValue(Stat.ATK, coefValue);
         hero.Stats.DecreaseMaxValue(Stat.HP, hpValue);
         hero.Stats.DecreaseValue(Stat.HP, hpValue);
-    } 
- 
+    }
 } 
