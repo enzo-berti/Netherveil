@@ -33,6 +33,7 @@ public abstract class Entity : MonoBehaviour
 
     public List<Status> AppliedStatusList = new();
     protected List<Status> statusToApply = new();
+    public bool IsKnockbackable = true;
 
     private int state = (int)EntityState.MOVE;
     public int State 
