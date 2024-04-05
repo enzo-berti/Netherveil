@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         hero = GetComponent<Hero>();
     }
+
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -299,6 +300,11 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Miscellaneous
+
+    public static GameObject Get()
+    {
+        return GameObject.FindWithTag("Player");
+    }
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
     {
