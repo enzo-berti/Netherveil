@@ -21,7 +21,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static event Action<int, IAttacker> OnTakeDamage;
     public static event Action<IDamageable, IAttacker> OnBasicAttack;
 
-    public delegate void OnBeforeApplyDamagesDelegate(ref int damages);
+    public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
     public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
 
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -87,7 +87,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void Attack(IDamageable damageable)
     {
         int damages = (int)stats.GetValueWithoutCoeff(Stat.ATK);
-        OnBeforeApplyDamages?.Invoke(ref damages);
 
         if (playerInput.LaunchedChargedAttack)
         {
@@ -107,6 +106,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             OnBasicAttack?.Invoke(damageable, this);
         }
 
+        OnBeforeApplyDamages?.Invoke(ref damages, damageable);
         damages = (int)(damages * stats.GetCoeff(Stat.ATK)); 
         damageable.ApplyDamage(damages, this);
 
