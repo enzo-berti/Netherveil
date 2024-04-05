@@ -20,6 +20,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private event IAttacker.HitDelegate onAttackHit;
     public static event Action<int, IAttacker> OnTakeDamage;
     public static event Action<IDamageable, IAttacker> OnBasicAttack;
+    public static event Action<IDamageable, IAttacker> OnSpearAttack;
 
     public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
     public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
@@ -91,7 +92,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (playerInput.LaunchedChargedAttack)
         {
             damages += (int)(PlayerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
-            ApplyKnockback(damageable, this,stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef, 
+            ApplyKnockback(damageable, this, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef,
                 stats.GetValue(Stat.KNOCKBACK_COEFF) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
         }
         else if (playerController.ComboCount == PlayerController.MAX_COMBO_COUNT - 1)
@@ -99,6 +100,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             damages += PlayerController.FINISHER_DAMAGES;
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
             ApplyKnockback(damageable, this);
+        }
+        else if (playerInput.GetSpear().IsThrowing || playerInput.GetSpear().IsThrown)
+        {
+            OnSpearAttack?.Invoke(damageable, this);
         }
         else
         {

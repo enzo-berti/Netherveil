@@ -409,6 +409,10 @@ public class PlayerInput : MonoBehaviour
 
     #region Miscellaneous
 
+    public Spear GetSpear()
+    {
+        return spear;
+    }
     private void EaseFuncsShitStorm()
     {
         easeFuncs.Add(EasingFunctions.EaseInBack);

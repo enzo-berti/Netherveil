@@ -44,38 +44,58 @@ public class Spear : MonoBehaviour
         }
 
 
-        if (IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
+        if (CanPlaceSpearInWorld())
         {
-            Destroy(trail);
-            meshRenderer.enabled = true;
-            // We set position at the exact place ( the spear doesn't move, just tp )
-            this.transform.position = posToReach;
-            this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90, 0, 0);
-            IsThrowing = false;
-            if(hero.State != (int)Hero.PlayerState.KNOCKBACK)
-            {
-                hero.State = (int)Entity.EntityState.MOVE;
-            }
-            spearThrowCollider.gameObject.SetActive(false);
+            PlaceSpearInWorld();
         }
-        else if (!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
+        else if (CanPlaceSpearInHand())
         {
-            this.transform.position = posToReach;
-            // On réatache la lance à la main
-            this.transform.SetParent(parent, true);
-            // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
-            this.transform.localPosition = initLocalPosition;
-            this.transform.localRotation = initLocalRotation;
-            parent = null;
-            meshRenderer.enabled = true;
-            IsThrowing = false;
-            Destroy(trail);
-            if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
-            {
-                hero.State = (int)Entity.EntityState.MOVE;
-            }
-            spearThrowCollider.gameObject.SetActive(false);
+            PlaceSpearInPlayerHand();
         }
+    }
+
+    private bool CanPlaceSpearInHand()
+    {
+        return !IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude;
+    }
+
+    private bool CanPlaceSpearInWorld()
+    {
+        return IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude;
+    }
+
+    private void PlaceSpearInPlayerHand()
+    {
+        this.transform.position = posToReach;
+        // On réatache la lance à la main
+        this.transform.SetParent(parent, true);
+        // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
+        this.transform.localPosition = initLocalPosition;
+        this.transform.localRotation = initLocalRotation;
+        parent = null;
+        meshRenderer.enabled = true;
+        IsThrowing = false;
+        Destroy(trail);
+        if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        {
+            hero.State = (int)Entity.EntityState.MOVE;
+        }
+        spearThrowCollider.gameObject.SetActive(false);
+    }
+
+    private void PlaceSpearInWorld()
+    {
+        Destroy(trail);
+        meshRenderer.enabled = true;
+        // We set position at the exact place ( the spear doesn't move, just tp )
+        this.transform.position = posToReach;
+        this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90, 0, 0);
+        IsThrowing = false;
+        if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        {
+            hero.State = (int)Entity.EntityState.MOVE;
+        }
+        spearThrowCollider.gameObject.SetActive(false);
     }
 
     public IEnumerator Throw(Vector3 _posToReach)
@@ -168,7 +188,7 @@ public class Spear : MonoBehaviour
             {
                 if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
                 {
-                    entity.ApplyDamage((int)hero.Stats.GetValue(Stat.ATK), hero);
+                    hero.Attack(entity);
                 }
             }
         }
