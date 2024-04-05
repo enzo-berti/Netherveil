@@ -376,7 +376,7 @@ public class EntityDrawer : Editor
 
         if (MyAttribute == null)
         {
-            Console.WriteLine("The attribute was not found.");
+            Console.WriteLine("The attribute has not be found.");
             return false;
         }
         else
