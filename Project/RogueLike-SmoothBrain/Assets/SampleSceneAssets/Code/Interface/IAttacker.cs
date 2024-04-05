@@ -11,7 +11,7 @@ public interface IAttacker
     }
 
     public delegate void HitDelegate(IDamageable damageable, IAttacker attacker);
-    public HitDelegate OnHit
+    public HitDelegate OnAttackHit
     {
         get;
         set;

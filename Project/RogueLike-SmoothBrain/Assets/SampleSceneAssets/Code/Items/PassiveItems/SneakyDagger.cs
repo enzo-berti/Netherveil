@@ -4,7 +4,7 @@ public class SneakyDagger : ItemEffect , IPassiveItem
 { 
     public void OnRetrieved() 
     { 
-        throw new System.NotImplementedException(); 
+       
     } 
  
     public void OnRemove() 
@@ -12,4 +12,9 @@ public class SneakyDagger : ItemEffect , IPassiveItem
         throw new System.NotImplementedException(); 
     } 
  
+
+    private void ExtraSneakyDamages()
+    {
+
+    }
 } 

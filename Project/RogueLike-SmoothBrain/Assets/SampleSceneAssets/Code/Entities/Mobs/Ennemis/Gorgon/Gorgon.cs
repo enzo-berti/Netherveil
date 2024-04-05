@@ -26,7 +26,7 @@ public class Gorgon : Mobs, IGorgon
 
     private IAttacker.HitDelegate onHit;
     private IAttacker.AttackDelegate onAttack;
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
     [SerializeField] private float timeBetweenAttack;
@@ -307,7 +307,7 @@ public class Gorgon : Mobs, IGorgon
         AudioManager.Instance.PlaySound(deathSFX, this.transform.position);
         OnDeath?.Invoke(transform.position);
         Destroy(transform.parent.gameObject);
-        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+        Hero.OnKill?.Invoke(this);
     }
 
     public void Attack(IDamageable damageable)

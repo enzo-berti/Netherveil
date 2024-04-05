@@ -10,7 +10,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -282,7 +282,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     if (bossSounds.deathSound.GetState() != PLAYBACK_STATE.PLAYING)
                     {
                         Destroy(gameObject);
-                        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+                        Hero.OnKill?.Invoke(this);
                         bossSounds.StopAllSounds();
                     }
                 }

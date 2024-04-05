@@ -14,14 +14,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     PlayerController playerController;
     public Inventory Inventory { get; private set; } = new Inventory();
 
-    public delegate void KillDelegate(IDamageable damageable);
-    private KillDelegate onKill;
+    private static event Action<IDamageable> onKill;
 
-    public delegate void ChangeRoomDelegate();
-    private ChangeRoomDelegate onChangeRoom;
-
-    private IAttacker.AttackDelegate onAttack;
-    private IAttacker.HitDelegate OnAttackHit;
+    private event IAttacker.AttackDelegate onAttack;
+    private event IAttacker.HitDelegate onAttackHit;
     public static event Action<int, IAttacker> OnTakeDamage;
     public static event Action<IDamageable, IAttacker> OnBasicAttack;
 
@@ -29,9 +25,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
 
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => OnAttackHit; set => OnAttackHit = value; }
-    public KillDelegate OnKill { get => onKill; set => onKill = value; }
-    public ChangeRoomDelegate OnChangeRoom { get => onChangeRoom; set => onChangeRoom = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onAttackHit; set => onAttackHit = value; }
+    public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -45,7 +40,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         if (this is IAttacker attacker)
         {
-            attacker.OnHit += attacker.ApplyStatus;
+            attacker.OnAttackHit += attacker.ApplyStatus;
         }
     }
 

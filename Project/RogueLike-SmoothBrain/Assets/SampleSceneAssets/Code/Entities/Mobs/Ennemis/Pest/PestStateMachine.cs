@@ -47,7 +47,7 @@ public class PestStateMachine : Mobs, IPest
     // getters and setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public BaseState<PestStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
@@ -153,7 +153,7 @@ public class PestStateMachine : Mobs, IPest
     public void Death()
     {
         OnDeath?.Invoke(transform.position);
-        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+        Hero.OnKill?.Invoke(this);
         AudioManager.Instance.PlaySound(pestSounds.deathSound, transform.position);
         animator.SetBool(deathHash, true);
         isDeath = true;

@@ -9,7 +9,7 @@ public class VampireTooth : ItemEffect, IPassiveItem
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat);
-        player.OnHit += LifeSteal;
+        player.OnAttackHit += LifeSteal;
         //RarityTier = Rarity.RARE;
         //Name = "<color=\"blue\">Vampire Tooth";
         //Description = "Provides lifesteal, allowing the player to recover a percentage of inflicted damage as health with each successful strike.\n" +
@@ -31,6 +31,6 @@ public class VampireTooth : ItemEffect, IPassiveItem
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.DecreaseValue(Stat.LIFE_STEAL, lifeStealStat);
-        player.OnHit -= LifeSteal;
+        player.OnAttackHit -= LifeSteal;
     }
 }

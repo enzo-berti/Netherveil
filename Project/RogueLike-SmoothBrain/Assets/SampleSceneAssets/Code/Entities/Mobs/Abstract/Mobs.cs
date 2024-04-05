@@ -41,7 +41,7 @@ public abstract class Mobs : Entity
 
         if (this is IAttacker attacker)
         {
-            attacker.OnHit += attacker.ApplyStatus;
+            attacker.OnAttackHit += attacker.ApplyStatus;
         }
 
         StartCoroutine(EntityDetection());
