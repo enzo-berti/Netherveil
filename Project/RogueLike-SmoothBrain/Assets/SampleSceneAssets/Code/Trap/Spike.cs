@@ -35,7 +35,7 @@ public class Spike : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         
-        if (other.gameObject.TryGetComponent<IDamageable>(out var damageable))
+        if (other.gameObject.TryGetComponent<IDamageable>(out var damageable) && (damageable as MonoBehaviour).GetComponent<Entity>().canTriggerTraps)
         {
             entitiesToDealDamage.Add(damageable);
             if (!isOut)
@@ -73,7 +73,7 @@ public class Spike : MonoBehaviour
     {
         yield return new WaitForSeconds(0.15f);
         AudioManager.Instance.StopSound(spikesDownEvent, FMOD.Studio.STOP_MODE.Immediate);
-        AudioManager.Instance.PlaySound(spikesUpSFX);
+        AudioManager.Instance.PlaySound(spikesUpSFX, transform.position);
         while (spikesToMove.transform.position.y != endPosY)
         {
             spikesToMove.transform.position += Vector3.up * Time.deltaTime * 10;
@@ -84,7 +84,7 @@ public class Spike : MonoBehaviour
             yield return new WaitForSeconds(0.003f);
         }
         isOut = true;
-        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage); });
+        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage, null);});
 
         StartCoroutine(WaitUntil());
     }
@@ -101,7 +101,7 @@ public class Spike : MonoBehaviour
     IEnumerator Disable()
     {
         AudioManager.Instance.StopSound(spikesUpEvent, FMOD.Studio.STOP_MODE.Immediate);
-        AudioManager.Instance.PlaySound(spikesDownSFX);
+        AudioManager.Instance.PlaySound(spikesDownSFX, transform.position);
         yield return new WaitForSeconds(0.15f);
         while (spikesToMove.transform.position.y != startPosY)
         {

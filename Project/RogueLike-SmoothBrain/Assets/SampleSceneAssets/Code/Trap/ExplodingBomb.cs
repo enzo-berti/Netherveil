@@ -5,8 +5,9 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
+using UnityEngine.WSA;
 
-public class ExplodingBomb : MonoBehaviour, IDamageable
+public class ExplodingBomb : MonoBehaviour
 {
     [Header("Gameobjects & Components")]
     [SerializeField] private GameObject graphics;
@@ -25,6 +26,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
     private float elapsedExplosionTime;
     private Coroutine throwRoutine;
     private Coroutine explosionRoutine;
+    IAttacker launcher = null;
 
     private void Start()
     {
@@ -75,8 +77,9 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
         }
     }
 
-    public void ThrowToPos(Vector3 pos, float throwTime)
+    public void ThrowToPos(IAttacker attacker, Vector3 pos, float throwTime)
     {
+        launcher = attacker;
         StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
     }
     
@@ -107,7 +110,7 @@ public class ExplodingBomb : MonoBehaviour, IDamageable
             .ToList()
             .ForEach(currentEntity =>
             {
-                currentEntity.ApplyDamage(blastDamage);
+                (currentEntity as IDamageable).ApplyDamage(blastDamage, launcher);
             });
 
         graphics.SetActive(false);

@@ -168,7 +168,7 @@ public class Spear : MonoBehaviour
             {
                 if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
                 {
-                    entity.ApplyDamage((int)hero.Stats.GetValue(Stat.ATK));
+                    entity.ApplyDamage((int)hero.Stats.GetValue(Stat.ATK), hero);
                 }
             }
         }

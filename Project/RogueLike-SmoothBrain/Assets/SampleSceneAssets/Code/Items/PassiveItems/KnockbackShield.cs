@@ -3,13 +3,13 @@ using UnityEngine;
 public class KnockbackShield : ItemEffect , IPassiveItem 
 { 
     public void OnRetrieved() 
-    { 
-        throw new System.NotImplementedException(); 
+    {
+        GameObject.FindWithTag("Player").GetComponent<Hero>().IsKnockbackable = false;
     } 
  
     public void OnRemove() 
-    { 
-        throw new System.NotImplementedException(); 
+    {
+        GameObject.FindWithTag("Player").GetComponent<Hero>().IsKnockbackable = true;
     } 
  
 } 
