@@ -23,19 +23,6 @@ public struct GenerationParam
 {
     public Dictionary<RoomType, int> nbRoom;
     public Dictionary<int, List<Door>> availableDoors;
-    public List<Door> GetRandAvailableDoors(int rotation)
-    {
-        List<Door> result = new List<Door>();
-
-        int iNoise = Seed.Range(0, availableDoors[rotation].Count);
-        for (int i = 0; i < availableDoors[rotation].Count; i++)
-        {
-            int index = (i + iNoise) % availableDoors[rotation].Count;
-            result.Add(availableDoors[rotation][index]);
-        }
-
-        return result;
-    }
 
     public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
     {
@@ -154,22 +141,6 @@ public struct GenerationParam
 public class MapGenerator : MonoBehaviour
 {
     private static readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
-    private static List<int> RandAvailableRotations
-    {
-        get
-        {
-            List<int> result = new List<int>();
-
-            int iNoise = Seed.Range(0, availableRotations.Count);
-            for (int i = 0; i < availableRotations.Count; i++)
-            {
-                int index = (i + iNoise) % availableRotations.Count;
-                result.Add(availableRotations[index]);
-            }
-
-            return result;
-        }
-    }
 
     [SerializeField] private List<GameObject> roomLobby = new List<GameObject>();
     [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
@@ -244,9 +215,9 @@ public class MapGenerator : MonoBehaviour
 
     private bool GenerateRoom(ref GenerationParam genParam, RoomType type)
     {
-        foreach (GameObject roomCandidate in GetRandRoomsGO(type))
+        foreach (GameObject roomCandidate in Seed.RandList(GetRoomsGO(type)))
         {
-            GameObject roomGO = Instantiate(roomCandidate); // TODO : add random selection
+            GameObject roomGO = Instantiate(roomCandidate);
             roomGO.GetComponentInChildren<RoomGenerator>().type = type;
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
@@ -254,14 +225,14 @@ public class MapGenerator : MonoBehaviour
 
             foreach (Door entranceDoor in doorsGenerator.RandomDoors)
             {
-                foreach (int rotation in RandAvailableRotations)
+                foreach (int rotation in Seed.RandList(availableRotations))
                 {
                     if (!genParam.availableDoors[rotation].Any())
                     {
                         continue;
                     }
 
-                    foreach(Door exitDoor in genParam.GetRandAvailableDoors(rotation))
+                    foreach(Door exitDoor in Seed.RandList(genParam.availableDoors[rotation]))
                     {
                         doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation), 0f); // rotate gameObject exit to correspond the neededRotation
 
@@ -393,28 +364,6 @@ public class MapGenerator : MonoBehaviour
         return colliders.Length > 2; // more than the two meshCollider
     }
 
-    static private bool GetDoorCandidates(ref GenerationParam genParam, DoorsGenerator doorsGenerator, out Door entranceDoor, out Door exitDoor)
-    {
-        entranceDoor = doorsGenerator.RandomDoor;
-        foreach(int rotation in RandAvailableRotations)
-        {
-            if (!genParam.availableDoors[rotation].Any())
-            {
-                continue;
-            }
-
-            int indexEntrance = Seed.Range(0, genParam.availableDoors[rotation].Count);
-            exitDoor = genParam.availableDoors[rotation][indexEntrance];
-
-            doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0, (int)(rotation - 180f - entranceDoor.Rotation), 0); // rotate gameObject exit to correspond the neededRotation
-
-            return true;
-        }
-
-        exitDoor = new Door();
-        return false;
-    }
-
     private List<GameObject> GetRoomsGO(RoomType type)
     {
         return type switch // define type of list
@@ -443,26 +392,5 @@ public class MapGenerator : MonoBehaviour
 
         int randIndex = Seed.Range(0, list.Count);
         return list[randIndex];
-    }
-
-    private List<GameObject> GetRandRoomsGO(RoomType type)
-    {
-        List<GameObject> list = GetRoomsGO(type);
-        List<GameObject> randList = new List<GameObject>(list.Count);
-
-        if (list == null || !list.Any())
-        {
-            Debug.LogWarning("Can't find candidate room for type : " + type, this);
-            return null;
-        }
-
-        int iNoise = Seed.Range(0, list.Count);
-        for (int i = 0; i < list.Count; i++)
-        {
-            int index = (i + iNoise) % list.Count;
-            randList.Add(list[index]);
-        }
-
-        return randList;
     }
 }

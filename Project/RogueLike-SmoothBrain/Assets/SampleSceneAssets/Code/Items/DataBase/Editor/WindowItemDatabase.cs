@@ -74,6 +74,8 @@ public class WindowItemDatabase : EditorWindow
             if (GUILayout.Button("X", GUILayout.Width(50)))
             {
                 DeleteInDatabase(item);
+                EditorUtility.SetDirty(database);
+                AssetDatabase.SaveAssetIfDirty(database);
             }
             GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
