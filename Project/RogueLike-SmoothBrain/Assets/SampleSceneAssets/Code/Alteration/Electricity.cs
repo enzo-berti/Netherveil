@@ -13,11 +13,12 @@ public class Electricity : Status
         isStackable = false;
         frequency = 1f;
     }
-    public override void ApplyEffect(Entity target)
+    public override void ApplyEffect(Entity target, IAttacker attacker)
     {
         Debug.Log("apply effect");
         if (target.Stats.HasStat(Stat.SPEED))
         {
+            launcher = attacker;
             target.AddStatus(this);
             entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
             PlayVfx("VFX_Electricity");

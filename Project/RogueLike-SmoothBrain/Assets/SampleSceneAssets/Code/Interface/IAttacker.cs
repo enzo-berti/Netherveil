@@ -10,7 +10,7 @@ public interface IAttacker
         set;
     }
 
-    public delegate void HitDelegate(IDamageable damageable);
+    public delegate void HitDelegate(IDamageable damageable, IAttacker attacker);
     public HitDelegate OnHit
     {
         get;
@@ -19,7 +19,7 @@ public interface IAttacker
 
     public void Attack(IDamageable damageable);
 
-    public void ApplyStatus(IDamageable damageable)
+    public void ApplyStatus(IDamageable damageable, IAttacker attacker)
     {
         Entity entity = damageable as Entity;
         if (entity == null) return;
