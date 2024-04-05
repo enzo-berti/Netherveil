@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Outline : MonoBehaviour
@@ -14,6 +13,8 @@ public class Outline : MonoBehaviour
         mOutlineMaterial = Resources.Load("OutlineShaderMat") as Material;
 
         if (mRenderer == null)
+            mRenderer = GetComponentsInChildren<Renderer>();
+        else if (mRenderer.Length == 0)
             mRenderer = GetComponentsInChildren<Renderer>();
 
         mOutlineMaterial.SetColor("_Outline_Color", outlineColor);
