@@ -15,6 +15,7 @@ public class GraftedProjectile : Projectile
     }
     
     public void SetCollisionImmune(bool _state) { ignoreCollisions = _state; }
+    public bool GetCollisionImmune() { return ignoreCollisions; }
 
     public void SetTempSpeed(float _speed)
     {
