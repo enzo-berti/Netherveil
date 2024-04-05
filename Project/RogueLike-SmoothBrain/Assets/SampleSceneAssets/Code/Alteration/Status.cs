@@ -9,7 +9,7 @@ using UnityEngine.VFX.Utility;
 [Serializable]
 public abstract class Status
 {
-
+    protected IAttacker launcher = null;
     public Status(float _duration, float _chance)
     {
         this.duration = _duration;
@@ -43,7 +43,7 @@ public abstract class Status
     protected abstract void Effect();
 
     // Apply effect only if entity is effectable by this. Exemple, you won't apply Fire if entity doesn't have Idamageable
-    public abstract void ApplyEffect(Entity target);
+    public abstract void ApplyEffect(Entity target, IAttacker attacker);
 
     // Do something when status is removed from the target
     public abstract void OnFinished();

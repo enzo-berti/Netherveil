@@ -211,7 +211,7 @@ public class Gorgon : Mobs, IGorgon
 
             ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
 
-            exploBomb.ThrowToPos(pointToReach3D, timeToThrow);
+            exploBomb.ThrowToPos(this, pointToReach3D, timeToThrow);
             exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
             exploBomb.Activate();
 
@@ -225,7 +225,7 @@ public class Gorgon : Mobs, IGorgon
 
 
 
-    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
     {
         if (stats.GetValue(Stat.HP) <= 0)
             return;
@@ -235,7 +235,7 @@ public class Gorgon : Mobs, IGorgon
 
         if (hasAnimation)
         {
-            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            FloatingTextGenerator.CreateDamageText(_value, transform.position);
             AudioManager.Instance.PlaySound(hitSFX, transform.position);
             StartCoroutine(HitRoutine());
         }
@@ -314,8 +314,8 @@ public class Gorgon : Mobs, IGorgon
     public void Attack(IDamageable damageable)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
-        onHit?.Invoke(damageable);
-        damageable.ApplyDamage(damages);
+        onHit?.Invoke(damageable, this);
+        damageable.ApplyDamage(damages, this);
     }
 
     public void MoveTo(Vector3 posToMove)

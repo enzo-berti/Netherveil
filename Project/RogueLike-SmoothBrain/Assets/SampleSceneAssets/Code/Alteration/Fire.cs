@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class Fire : Status
 {
@@ -11,10 +12,11 @@ public class Fire : Status
         frequency = 0.5f;
     }
 
-    public override void ApplyEffect(Entity target)
+    public override void ApplyEffect(Entity target, IAttacker attacker)
     {
         if (target.gameObject.TryGetComponent<IDamageable>(out _))
         {
+            launcher = attacker;
             target.AddStatus(this);
             PlayVfx("VFX_Fire");
         }
@@ -24,7 +26,7 @@ public class Fire : Status
         if (target != null)
         {
             FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, fireColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, false, false);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, launcher, false);
         }
     }
 

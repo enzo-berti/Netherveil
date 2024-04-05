@@ -940,7 +940,7 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1.9
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
@@ -1166,6 +1166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144b6e3df1e33da48b21c13ea28cb518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusNameToApply: []
+  durationStatusToApply: []
+  chanceStatusToApply: []
   stats:
     stats:
     - stat: 0
@@ -1289,8 +1292,8 @@ MonoBehaviour:
       overload: 0
       underload: 0
     name: Player
-  statusNameToApply: []
-  durationStatusToApply: []
+  IsKnockbackable: 1
+  canTriggerTraps: 1
 --- !u!114 &1911203549151711130
 MonoBehaviour:
   m_ObjectHideFlags: 0

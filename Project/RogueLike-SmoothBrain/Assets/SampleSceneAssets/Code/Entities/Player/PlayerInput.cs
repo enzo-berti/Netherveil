@@ -354,7 +354,7 @@ public class PlayerInput : MonoBehaviour
         {
             animator.SetTrigger("BasicAttack");
             hero.State = (int)Entity.EntityState.ATTACK;
-            controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
+            controller.ComboCount = (++controller.ComboCount) % PlayerController.MAX_COMBO_COUNT;
         }
 
         attackQueue = false;

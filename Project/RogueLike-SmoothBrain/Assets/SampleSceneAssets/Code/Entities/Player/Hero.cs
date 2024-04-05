@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -23,11 +21,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private ChangeRoomDelegate onChangeRoom;
 
     private IAttacker.AttackDelegate onAttack;
-    private IAttacker.HitDelegate onHit;
-    public static event Action OnTakeDamage;
+    private IAttacker.HitDelegate OnAttackHit;
+    public static event Action<int, IAttacker> OnTakeDamage;
+    public static event Action<IDamageable, IAttacker> OnBasicAttack;
+
+    public delegate void OnBeforeApplyDamagesDelegate(ref int damages);
+    public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
 
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnHit { get => OnAttackHit; set => OnAttackHit = value; }
     public KillDelegate OnKill { get => onKill; set => onKill = value; }
     public ChangeRoomDelegate OnChangeRoom { get => onChangeRoom; set => onChangeRoom = value; }
 
@@ -48,7 +50,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     }
 
 
-    public void ApplyDamage(int _value, bool isCrit = false, bool notEffectDamages = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {
         Stats.DecreaseValue(Stat.HP, _value, false);
 
@@ -66,7 +68,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 playerController.HitVFX.Play();
             }
 
-            OnTakeDamage?.Invoke();
+            OnTakeDamage?.Invoke(_value, attacker);
         }
 
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
@@ -90,31 +92,29 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public void Attack(IDamageable damageable)
     {
         int damages = (int)stats.GetValueWithoutCoeff(Stat.ATK);
+        OnBeforeApplyDamages?.Invoke(ref damages);
+
         if (playerInput.LaunchedChargedAttack)
         {
-            damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+            damages += (int)(PlayerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+            ApplyKnockback(damageable, this,stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef, 
+                stats.GetValue(Stat.KNOCKBACK_COEFF) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
         }
-        else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT - 1)
+        else if (playerController.ComboCount == PlayerController.MAX_COMBO_COUNT - 1)
         {
-            damages += playerController.FINISHER_DAMAGES;
+            damages += PlayerController.FINISHER_DAMAGES;
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
-            ApplyKnockback(damageable);
+            ApplyKnockback(damageable, this);
         }
         else
         {
             DeviceManager.Instance.ApplyVibrations(0f, 0.1f, 0.1f);
+            OnBasicAttack?.Invoke(damageable, this);
         }
 
-        //bool isCrit = UnityEngine.Random.Range(0, 101) <= stats.GetValue(Stat.CRIT_RATE);
-        //if (isCrit)
-        //{
-        //    float critDamageCoef = stats.GetValue(Stat.CRIT_DAMAGE)/100;
-        //    damages = (int)(damages * critDamageCoef);
-        //}
-
         damages = (int)(damages * stats.GetCoeff(Stat.ATK)); 
-        damageable.ApplyDamage(damages/*, isCrit*/);
+        damageable.ApplyDamage(damages, this);
 
-        onHit?.Invoke(damageable);
+        OnAttackHit?.Invoke(damageable, this);
     }
 }

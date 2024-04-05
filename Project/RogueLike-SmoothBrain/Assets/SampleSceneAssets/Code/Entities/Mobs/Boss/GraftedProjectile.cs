@@ -15,6 +15,7 @@ public class GraftedProjectile : Projectile
     }
     
     public void SetCollisionImmune(bool _state) { ignoreCollisions = _state; }
+    public bool GetCollisionImmune() { return ignoreCollisions; }
 
     public void SetTempSpeed(float _speed)
     {
@@ -73,14 +74,14 @@ public class GraftedProjectile : Projectile
         IDamageable damageableObject = other.GetComponent<IDamageable>();
         if (damageableObject != null && !onTarget && other.CompareTag("Player"))
         {
-            damageableObject.ApplyDamage(damage);
+            damageableObject.ApplyDamage(damage, grafted);
             if (!ignoreCollisions)
             {
                 direction = -Vector3.up;
             }
             else
             {
-                grafted.ApplyKnockback(damageableObject, new Vector3(-direction.z, 0, direction.x).normalized);
+                grafted.ApplyKnockback(damageableObject, grafted,new Vector3(-direction.z, 0, direction.x).normalized);
             }
         }
     }

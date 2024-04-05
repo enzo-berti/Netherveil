@@ -1,0 +1,15 @@
+using UnityEngine; 
+ 
+public class BloodFlask : ItemEffect , IPassiveItem 
+{ 
+    public void OnRetrieved() 
+    {
+        BloodDrop.BloodDropCoeff += 1.0f;
+    } 
+ 
+    public void OnRemove() 
+    { 
+        BloodDrop.BloodDropCoeff -= 1.0f;
+    } 
+ 
+} 

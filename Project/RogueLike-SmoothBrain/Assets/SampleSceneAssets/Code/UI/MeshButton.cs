@@ -33,9 +33,6 @@ namespace MeshUI
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        if (EventSystem.current.IsPointerOverGameObject())
-                            return;
-
                         OnPress();
                         isPressed = true;
                     }

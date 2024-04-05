@@ -16,7 +16,7 @@ public class DebugForMilestone : MonoBehaviour
         {
             foreach(var enemy in RoomUtilities.roomData.enemies)
             {
-                enemy.GetComponentInChildren<IDamageable>().Death();
+                enemy.GetComponent<IDamageable>().Death();
             }
             RoomUtilities.roomData.enemies.Clear();
         }

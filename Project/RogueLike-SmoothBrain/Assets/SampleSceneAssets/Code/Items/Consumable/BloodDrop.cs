@@ -2,16 +2,17 @@ using UnityEngine;
 
 public class BloodDrop : Consumable
 {
-    [SerializeField] private int price = 0;
+    public static float BloodDropCoeff = 1.0f;
     [SerializeField] int bloodQuantity = 0;
 
     protected override void Start()
     {
-        Price = price;
+        base.Start();
     }
 
     public override void OnRetrieved()
     {
-        player.Inventory.Blood += bloodQuantity;
+        player.Inventory.Blood += (int)(bloodQuantity * BloodDropCoeff);
+        Destroy(gameObject);
     }
 }

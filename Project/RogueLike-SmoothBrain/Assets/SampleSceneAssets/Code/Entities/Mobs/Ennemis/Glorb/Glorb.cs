@@ -45,21 +45,21 @@ public class Glorb : Mobs, IGlorb
         {
             int damages = (int)(stats.GetValue(Stat.ATK) * 3);
 
-            onHit?.Invoke(damageable);
-            damageable.ApplyDamage(damages);
+            onHit?.Invoke(damageable, this);
+            damageable.ApplyDamage(damages, this);
         }
-        ApplyKnockback(damageable);
+        ApplyKnockback(damageable, this);
     }
 
     public void BasicAttack(IDamageable damageable)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
 
-        onHit?.Invoke(damageable);
-        damageable.ApplyDamage(damages);
+        onHit?.Invoke(damageable, this);
+        damageable.ApplyDamage(damages, this);
     }
 
-    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
     {
         if (stats.GetValue(Stat.HP) <= 0)
             return;
@@ -70,7 +70,7 @@ public class Glorb : Mobs, IGlorb
         if (hasAnimation)
         {
             //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position, isCrit);
+            FloatingTextGenerator.CreateDamageText(_value, transform.position);
             AudioManager.Instance.PlaySound(hitSFX, transform.position);
             StartCoroutine(HitRoutine());
         }

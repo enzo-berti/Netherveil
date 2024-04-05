@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -18,18 +19,22 @@ public abstract class Entity : MonoBehaviour
         DEAD,
         NB
     }
+    // Only to save EditorChange
+    [SerializeField] List<string> statusNameToApply = new List<string>();
+    [SerializeField] List<float> durationStatusToApply = new List<float>();
+    [SerializeField] List<float> chanceStatusToApply = new List<float>();
 
     [Header("Properties")]
     [SerializeField] protected Stats stats;
-    [SerializeField] List<string> statusNameToApply = new List<string>();
-    [SerializeField] List<float> durationStatusToApply = new List<float>();
-    [SerializeField, Range(0,1)] List<float> chanceStatusToApply = new List<float>();
+    
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
     public event Action OnChangeState;
 
     public List<Status> AppliedStatusList = new();
     protected List<Status> statusToApply = new();
+    public bool IsKnockbackable = true;
+    public bool canTriggerTraps = true;
 
     private int state = (int)EntityState.MOVE;
     public int State 
@@ -88,7 +93,7 @@ public abstract class Entity : MonoBehaviour
 
     }
 
-    public void ApplyKnockback(IDamageable damageable)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker)
     {
         Vector3 temp = (damageable as MonoBehaviour).transform.position - transform.position;
         Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
@@ -96,26 +101,26 @@ public abstract class Entity : MonoBehaviour
         float distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
         float speed = stats.GetValue(Stat.KNOCKBACK_COEFF);
 
-        ApplyKnockback(damageable, direction, distance, speed);
+        ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
 
-    public void ApplyKnockback(IDamageable damageable, float distance, float speed)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, float distance, float speed)
     {
         Vector3 temp = (damageable as MonoBehaviour).transform.position - transform.position;
         Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
 
-        ApplyKnockback(damageable, direction, distance, speed);
+        ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
 
-    public void ApplyKnockback(IDamageable damageable, Vector3 direction)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, Vector3 direction)
     {
         float distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
         float speed = stats.GetValue(Stat.KNOCKBACK_COEFF);
 
-        ApplyKnockback(damageable, direction, distance, speed);
+        ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
 
-    public void ApplyKnockback(IDamageable damageable, Vector3 direction, float distance, float speed)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, Vector3 direction, float distance, float speed)
     {
         Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
         if (knockbackable)
@@ -136,12 +141,12 @@ public abstract class Entity : MonoBehaviour
                 }
             }
 
-            knockbackable.GetKnockback(direction, distance, speed);
+            knockbackable.GetKnockback(attacker, direction, distance, speed);
             FloatingTextGenerator.CreateActionText(damageableGO.transform.position, "Pushed!");
         }
     }
 
-    public void ApplyEffect(Status status)
+    public void ApplyEffect(Status status, IAttacker launcher = null)
     {
         status.target = this;
         float chance = UnityEngine.Random.value;
@@ -155,7 +160,7 @@ public abstract class Entity : MonoBehaviour
                     return;
                 }
             }
-            status.ApplyEffect(this);
+            status.ApplyEffect(this, launcher);
         }
 
     }
@@ -192,11 +197,12 @@ public class EntityDrawer : Editor
     int nbStatus = 0;
 
     // Local lists that we will use to update properties
-    List<string> statusNameList = new List<string>();
+    List<string> statusNameList = new();
     List<float> durationList = new();
     List<float> chanceList = new();
 
-    List<string> classField = new List<string>();
+    List<string> classField = new();
+    List<bool> foldoutList = new();
     private void OnEnable()
     {
         statProperty = serializedObject.FindProperty("stats");
@@ -253,41 +259,24 @@ public class EntityDrawer : Editor
 
         if (isStatusExpended)
         {
-            EditorGUI.indentLevel+=4;
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Status" ,GUILayout.MaxWidth(180));
-            EditorGUILayout.LabelField("Duration", GUILayout.MaxWidth(180));
-            EditorGUILayout.LabelField("Chance", GUILayout.MaxWidth(130));
-            EditorGUILayout.EndHorizontal();
-            EditorGUI.indentLevel -= 4;
             for (int i = 0; i < nbStatus; i++)
             {
-                EditorGUI.indentLevel++;
-                // If there is no index for the current status add it
+                if (foldoutList.Count <= i)
+                {
+                    foldoutList.Add(false);
+                }
                 if (allIndex.Count <= i)
                 {
                     allIndex.Add(0);
                 }
-
-                // For the current status, display a popup with all the status that exists
-                EditorGUILayout.BeginHorizontal();
-
-                // popup to choose the index of the status in the name List
-                allIndex[i] = EditorGUILayout.Popup(allIndex[i], statusNameList.ToArray());
-
-                // If there is no duration for the current status add it
                 if (durationList.Count <= i)
                 {
                     durationList.Add(0);
                 }
-                if(chanceList.Count <= i)
+                if (chanceList.Count <= i)
                 {
                     chanceList.Add(0);
                 }
-                // Then, field to choose the duration of the status
-                durationList[i] = EditorGUILayout.FloatField(durationList[i]);
-                chanceList[i] = EditorGUILayout.Slider(chanceList[i], 0, 1);
-                // If there is no value in the entity duration list, for the current status, add it
                 if (statusDurationListProperty.arraySize <= i)
                 {
                     statusDurationListProperty.InsertArrayElementAtIndex(i);
@@ -296,10 +285,11 @@ public class EntityDrawer : Editor
                 {
                     statusChanceListProperty.InsertArrayElementAtIndex(i);
                 }
-
-                // Button to remove a status
+                EditorGUI.indentLevel++;
+                EditorGUILayout.BeginHorizontal();
+                foldoutList[i] = EditorGUILayout.Foldout(foldoutList[i], statusNameList.ToArray()[allIndex[i]]);
                 GUI.color = Color.red;
-                if (GUILayout.Button("X"))
+                if (GUILayout.Button("X", GUILayout.MaxWidth(75)))
                 {
                     allIndex.RemoveAt(i);
                     durationList.RemoveAt(i);
@@ -312,14 +302,22 @@ public class EntityDrawer : Editor
                     return;
                 }
                 GUI.color = Color.white;
-
+               
                 EditorGUILayout.EndHorizontal();
 
-                // Update properties
+                if (foldoutList[i])
+                {
+                    // popup to choose the index of the status in the name List
+                    allIndex[i] = EditorGUILayout.Popup("Status",allIndex[i], statusNameList.ToArray());
+                    durationList[i] = EditorGUILayout.FloatField("Duration", durationList[i]);
+                    chanceList[i] = EditorGUILayout.Slider("Chance", chanceList[i], 0, 1);
+                    
+                    // Update properties
+                    
+                }
                 statusNameListProperty.GetArrayElementAtIndex(i).stringValue = statusNameList[allIndex[i]];
                 statusDurationListProperty.GetArrayElementAtIndex(i).doubleValue = durationList[i];
                 statusChanceListProperty.GetArrayElementAtIndex(i).doubleValue = chanceList[i];
-
                 EditorGUI.indentLevel--;
 
             }
@@ -376,7 +374,7 @@ public class EntityDrawer : Editor
 
         if (MyAttribute == null)
         {
-            Console.WriteLine("The attribute was not found.");
+            Console.WriteLine("The attribute has not be found.");
             return false;
         }
         else

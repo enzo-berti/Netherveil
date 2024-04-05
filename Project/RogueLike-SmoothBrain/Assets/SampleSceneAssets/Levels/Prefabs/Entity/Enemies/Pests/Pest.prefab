@@ -109,6 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d70fcfe3623e046956dbd1bf70c402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusNameToApply: []
+  durationStatusToApply: []
+  chanceStatusToApply: []
   stats:
     stats:
     - stat: 0
@@ -182,14 +185,19 @@ MonoBehaviour:
       overload: 0
       underload: 0
     name: Default
-  statusNameToApply: []
-  durationStatusToApply: []
+  IsKnockbackable: 1
+  canTriggerTraps: 1
   drop:
     dropList:
     - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
         type: 3}
       chance: 1
       Quantity: 1
+      isChanceShared: 0
+    - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
+        type: 3}
+      chance: 0.8
+      Quantity: 5
       isChanceShared: 0
   pestSounds:
     deathSound:
