@@ -21,11 +21,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private ChangeRoomDelegate onChangeRoom;
 
     private IAttacker.AttackDelegate onAttack;
-    private IAttacker.HitDelegate onHit;
+    private IAttacker.HitDelegate OnAttackHit;
     public static event Action OnTakeDamage;
+    public static event Action<IDamageable> OnBasicAttack;
 
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnHit { get => OnAttackHit; set => OnAttackHit = value; }
     public KillDelegate OnKill { get => onKill; set => onKill = value; }
     public ChangeRoomDelegate OnChangeRoom { get => onChangeRoom; set => onChangeRoom = value; }
 
@@ -103,6 +104,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         else
         {
             DeviceManager.Instance.ApplyVibrations(0f, 0.1f, 0.1f);
+            OnBasicAttack?.Invoke(damageable);
         }
 
         //bool isCrit = UnityEngine.Random.Range(0, 101) <= stats.GetValue(Stat.CRIT_RATE);
@@ -115,6 +117,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         damages = (int)(damages * stats.GetCoeff(Stat.ATK)); 
         damageable.ApplyDamage(damages/*, isCrit*/);
 
-        onHit?.Invoke(damageable);
+        OnAttackHit?.Invoke(damageable);
     }
 }

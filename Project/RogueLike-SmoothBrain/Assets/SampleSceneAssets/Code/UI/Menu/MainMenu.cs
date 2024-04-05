@@ -6,8 +6,15 @@ using MeshUI;
 
 public class MainMenu : MonoBehaviour
 {
+    public static MainMenu current;
+
     [SerializeField] private MeshButton[] meshButtons;
     [SerializeField] private TMP_Text[] floatingTexts;
+
+    private void Start()
+    {
+        current = this;
+    }
 
     public void StartGame()
     {
