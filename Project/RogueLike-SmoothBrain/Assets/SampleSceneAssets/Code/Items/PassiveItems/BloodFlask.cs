@@ -3,13 +3,13 @@ using UnityEngine;
 public class BloodFlask : ItemEffect , IPassiveItem 
 { 
     public void OnRetrieved() 
-    { 
-        throw new System.NotImplementedException(); 
+    {
+        BloodDrop.BloodDropCoeff += 1.0f;
     } 
  
     public void OnRemove() 
     { 
-        throw new System.NotImplementedException(); 
+        BloodDrop.BloodDropCoeff -= 1.0f;
     } 
  
 } 

@@ -31,7 +31,7 @@ public class Knockback : MonoBehaviour
 
     public void GetKnockback(Vector3 direction, float distance, float speed)
     {
-        if (knockbackRoutine != null)
+        if (knockbackRoutine != null || !GetComponent<Entity>().IsKnockbackable)
             return;
 
         if (agent != null)

@@ -49,8 +49,5 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         }
     }
 
-    public virtual void OnRetrieved()
-    {
-        throw new System.NotImplementedException();
-    }
+    public abstract void OnRetrieved();
 }

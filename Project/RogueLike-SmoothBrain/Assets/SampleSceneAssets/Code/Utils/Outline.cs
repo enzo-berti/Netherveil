@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Outline : MonoBehaviour
 {
-    private Renderer[] mRenderer;
+    [SerializeField] private Renderer[] mRenderer;
     private Material mOutlineMaterial;
     [SerializeField] private Color outlineColor = Color.white;
     [SerializeField, Range(0.01f, 0.5f)] private float outlineThickness = 0.02f;
@@ -12,7 +12,9 @@ public class Outline : MonoBehaviour
     void Awake()
     {
         mOutlineMaterial = Resources.Load("OutlineShaderMat") as Material;
-        mRenderer = GetComponentsInChildren<Renderer>().Where(x => ((1 << x.gameObject.layer) & LayerMask.GetMask("Ignore Raycast")) == 0).ToArray();
+
+        if (mRenderer == null)
+            mRenderer = GetComponentsInChildren<Renderer>();
 
         mOutlineMaterial.SetColor("_Outline_Color", outlineColor);
         mOutlineMaterial.SetFloat("_Outline_thickness", outlineThickness);

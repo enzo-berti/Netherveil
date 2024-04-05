@@ -35,7 +35,7 @@ public class Spike : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         
-        if (other.gameObject.TryGetComponent<IDamageable>(out var damageable))
+        if (other.gameObject.TryGetComponent<IDamageable>(out var damageable) && (damageable as MonoBehaviour).GetComponent<Entity>().canTriggerTraps)
         {
             entitiesToDealDamage.Add(damageable);
             if (!isOut)
@@ -84,7 +84,7 @@ public class Spike : MonoBehaviour
             yield return new WaitForSeconds(0.003f);
         }
         isOut = true;
-        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage); });
+        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage);});
 
         StartCoroutine(WaitUntil());
     }
