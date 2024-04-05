@@ -166,7 +166,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         base.Start();
 
-        
+
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
@@ -437,6 +437,13 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     void RetrieveProjectile()
     {
+        if (!projectile.onTarget && !projectile.GetCollisionImmune())
+        {
+            currentAttack = Attacks.NONE;
+            attackCooldown = 0;
+            return;
+        }
+
         attackState = AttackState.ATTACKING;
 
         projectile.SetTempSpeed(projectile.Speed * 0.25f);
