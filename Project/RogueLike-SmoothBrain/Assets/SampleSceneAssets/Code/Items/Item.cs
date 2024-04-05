@@ -106,7 +106,7 @@ public class Item : MonoBehaviour, IInterractable
         {
             allItems.Add(itemInDb.idName);
         }
-        int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
+        int indexRandom = Seed.Range(0, allItems.Count - 1);
         item.idItemName = allItems[indexRandom];
     }
 
