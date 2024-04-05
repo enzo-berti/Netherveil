@@ -16,8 +16,10 @@ public class SneakyDagger : ItemEffect , IPassiveItem
     private void ExtraSneakyDamages(ref int damages, IDamageable target)
     {
         Transform player = GameObject.FindWithTag("Player").transform;
+        Vector3 enemyToPlayerVec = (player.position - (target as MonoBehaviour).transform.position).normalized;
 
-        if(Vector3.Dot(player.position - (target as MonoBehaviour).transform.position, (target as MonoBehaviour).transform.forward) < 0)
+        //if the player is in the back of the enemy, and is in angle behind of 2 * (180 - (180 * 0.85)), it inflicts more damages
+        if (Vector3.Dot(enemyToPlayerVec, (target as MonoBehaviour).transform.forward) < -0.85f)
         {
             damages += attackValue;
         }
