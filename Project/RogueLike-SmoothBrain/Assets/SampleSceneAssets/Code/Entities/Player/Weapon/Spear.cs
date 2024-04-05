@@ -80,8 +80,8 @@ public class Spear : MonoBehaviour
         Destroy(trail);
         meshRenderer.enabled = true;
         // We set position at the exact place ( the spear doesn't move, just tp )
-        this.transform.position = posToReach;
-        this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90, 0, 0);
+        this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90f, 90f, 0);
+        this.transform.position = new Vector3(posToReach.x, player.position.y + GetComponent<BoxCollider>().bounds.size.z / 2f, posToReach.z);
         IsThrowing = false;
         if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
         {
@@ -117,7 +117,7 @@ public class Spear : MonoBehaviour
             {
                 if (((1 << hit.collider.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
                 {
-                    posToReach = hit.point;
+                    posToReach = new Vector3(hit.point.x, player.position.y, hit.point.z);
                     playerToPosToReachVec = (posToReach - this.transform.position);
                     break;
                 }

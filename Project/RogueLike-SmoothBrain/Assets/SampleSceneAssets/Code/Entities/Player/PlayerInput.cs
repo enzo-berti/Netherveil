@@ -254,7 +254,8 @@ public class PlayerInput : MonoBehaviour
 
         if (!controller.Spear.IsThrown)
         {
-            StartCoroutine(controller.Spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE)));
+            Vector3 forward = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
+            StartCoroutine(controller.Spear.Throw(this.transform.position + forward * hero.Stats.GetValue(Stat.ATK_RANGE)));
             controller.PlayVFX(controller.spearLaunchVFX);
         }
         else

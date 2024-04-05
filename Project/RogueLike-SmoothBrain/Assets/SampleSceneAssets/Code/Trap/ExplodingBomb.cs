@@ -1,11 +1,9 @@
 using FMODUnity;
-using System;
 using System.Collections;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
-using UnityEngine.WSA;
 
 public class ExplodingBomb : MonoBehaviour
 {
