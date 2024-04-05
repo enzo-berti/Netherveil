@@ -43,6 +43,11 @@ public class ExplodingBomb : MonoBehaviour
         VFX.SetFloat("TimeToExplode", timerBeforeExplode);
     }
 
+    public void SetBlastDamages(int damages)
+    {
+        blastDamage = damages;
+    }
+
     void Update()
     {
         if (isActive)
@@ -110,7 +115,7 @@ public class ExplodingBomb : MonoBehaviour
             .ToList()
             .ForEach(currentEntity =>
             {
-                (currentEntity as IDamageable).ApplyDamage(blastDamage, launcher);
+                currentEntity.ApplyDamage(blastDamage, launcher);
             });
 
         graphics.SetActive(false);

@@ -213,6 +213,7 @@ public class Gorgon : Mobs, IGorgon
 
             exploBomb.ThrowToPos(this, pointToReach3D, timeToThrow);
             exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
+            exploBomb.SetBlastDamages((int)stats.GetValue(Stat.ATK));
             exploBomb.Activate();
 
             yield return new WaitForSeconds(0.5f);
@@ -222,8 +223,6 @@ public class Gorgon : Mobs, IGorgon
         }
 
     }
-
-
 
     public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
     {
@@ -353,8 +352,3 @@ public class Gorgon : Mobs, IGorgon
     //}
 #endif
 }
-
-// quand le joueur est trop près, le range va se réfugier derrière le tank
-// quand le joueur est trop près, si aucun tank n'est à proximité il va fuir en ligne droite
-// il ne le fera pas en boucle, il aura un cd sur sa fuite
-// lorsqu'il est en cd, il va attaquer le joueur simplement -> TODO
