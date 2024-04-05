@@ -29,9 +29,10 @@ public class PlayerController : MonoBehaviour
 
     //attack values
     public int ComboCount { get; set; } = 0;
-    public readonly int FINISHER_DAMAGES = 10;
-    public readonly int CHARGED_ATTACK_DAMAGES = 20;
-    public readonly int MAX_COMBO_COUNT = 3;
+    public static readonly int FINISHER_DAMAGES = 10;
+    public static readonly int CHARGED_ATTACK_DAMAGES = 20;
+    public static readonly int MAX_COMBO_COUNT = 3;
+    public static readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
 
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;

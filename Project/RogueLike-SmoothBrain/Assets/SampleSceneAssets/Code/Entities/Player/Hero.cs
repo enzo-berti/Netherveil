@@ -92,11 +92,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         int damages = (int)stats.GetValueWithoutCoeff(Stat.ATK);
         if (playerInput.LaunchedChargedAttack)
         {
-            damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+            damages += (int)(PlayerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+            ApplyKnockback(damageable, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef, 
+                stats.GetValue(Stat.KNOCKBACK_COEFF) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
         }
-        else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT - 1)
+        else if (playerController.ComboCount == PlayerController.MAX_COMBO_COUNT - 1)
         {
-            damages += playerController.FINISHER_DAMAGES;
+            damages += PlayerController.FINISHER_DAMAGES;
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
             ApplyKnockback(damageable);
         }
