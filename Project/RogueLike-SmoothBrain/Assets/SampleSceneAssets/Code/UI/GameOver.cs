@@ -38,11 +38,14 @@ public class GameOver : MonoBehaviour
 
     private void DisableAllMob()
     {
-        foreach (GameObject enemy in RoomUtilities.roomData.enemies)
+        if (RoomUtilities.roomData.enemies != null)
         {
-            if (enemy != null)
+            foreach (GameObject enemy in RoomUtilities.roomData.enemies)
             {
-                enemy.SetActive(false);
+                if (enemy != null)
+                {
+                    enemy.SetActive(false);
+                }
             }
         }
     }
