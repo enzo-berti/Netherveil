@@ -24,7 +24,7 @@ public class Spike : MonoBehaviour
     private void Awake()
     {
         startPosY = spikesToMove.transform.position.y;
-        endPosY = spikesToMove.transform.position.y + 1.5f;
+        endPosY = spikesToMove.transform.position.y + Mathf.Abs(spikesToMove.transform.localPosition.y);
         entitiesToDealDamage = new List<IDamageable>();
         waitUntilTimer = 3f;
         damage = 10;
