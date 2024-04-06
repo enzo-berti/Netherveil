@@ -309,7 +309,7 @@ public class MapGenerator : MonoBehaviour
             {
                 GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
                 go.transform.Rotate(0, door.Rotation, 0);
-                go.transform.parent = door.parentSkeleton.transform.Find("Skeleton").Find("StaticProps");
+                go.transform.parent = door.parentSkeleton.transform.Find("StaticProps");
             }
         }
 
