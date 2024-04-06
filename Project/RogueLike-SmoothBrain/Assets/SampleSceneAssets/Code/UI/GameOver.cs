@@ -38,14 +38,11 @@ public class GameOver : MonoBehaviour
 
     private void DisableAllMob()
     {
-        if (RoomUtilities.roomData.enemies != null)
+        foreach (GameObject enemy in RoomUtilities.roomData.enemies)
         {
-            foreach (GameObject enemy in RoomUtilities.roomData.enemies)
+            if (enemy != null)
             {
-                if (enemy != null)
-                {
-                    enemy.SetActive(false);
-                }
+                enemy.SetActive(false);
             }
         }
     }
@@ -53,7 +50,7 @@ public class GameOver : MonoBehaviour
     IEnumerator IncreaseAlpha()
     {
         float targetAlpha = 1.0f;
-        float duration = 2.0f; 
+        float duration = 2.0f;
         float elapsedTime = 0f;
         Color initialColor = deathCam.backgroundColor;
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);
@@ -79,7 +76,7 @@ public class GameOver : MonoBehaviour
     IEnumerator IncreaseElementAlpha(Graphic element)
     {
         float targetAlpha = 1.0f;
-        float duration = 2.0f; 
+        float duration = 2.0f;
         float elapsedTime = 0f;
         Color initialColor = element.color;
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);
