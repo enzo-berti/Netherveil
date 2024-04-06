@@ -208,7 +208,6 @@ public class MapGenerator : MonoBehaviour
                         break;
                     }
                 }
-                // pas censer arriver jusqu'ici mdr
             }
         }
     }
@@ -239,6 +238,7 @@ public class MapGenerator : MonoBehaviour
                         if (!TryInstantiateRoom(roomGO, ref genParam, entranceDoor, exitDoor))
                         {
                             doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, 0f, 0f); // reset rotation
+                            Debug.Log("Find a candidate");
                             continue; // fail to generate continue to next candidate
                         }
 
@@ -250,7 +250,7 @@ public class MapGenerator : MonoBehaviour
             DestroyImmediate(roomGO); // didn't find any spawn for this candidate
         }
 
-        Debug.LogError("PUTAIN ELLE CHARGE PAS CETTE SALOPE DE MAP");
+        Debug.LogError("Can't find any candidate for map room");
         return false;
     }
 
