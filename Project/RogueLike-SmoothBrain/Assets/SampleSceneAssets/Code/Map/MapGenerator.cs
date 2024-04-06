@@ -164,7 +164,7 @@ public class MapGenerator : MonoBehaviour
             Seed.SetSeed(seed);
         }
 
-        GenerateMap(new GenerationParam(nbNormal: 10, nbTreasure: 2));
+        GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2));
     }
 
     private void GenerateMap(GenerationParam genParam)
@@ -247,7 +247,7 @@ public class MapGenerator : MonoBehaviour
                 }
             }
 
-            DestroyImmediate(roomGO); // didn't find any spawn
+            DestroyImmediate(roomGO); // didn't find any spawn for this candidate
         }
 
         Debug.LogError("PUTAIN ELLE CHARGE PAS CETTE SALOPE DE MAP");
@@ -309,7 +309,7 @@ public class MapGenerator : MonoBehaviour
             {
                 GameObject go = Instantiate(obstructionsDoor[UnityEngine.Random.Range(0, obstructionsDoor.Count)], door.Position, Quaternion.identity);
                 go.transform.Rotate(0, door.Rotation, 0);
-                go.transform.parent = gameObject.transform;
+                go.transform.parent = door.parentSkeleton.transform.Find("Skeleton").Find("StaticProps");
             }
         }
 
@@ -328,10 +328,13 @@ public class MapGenerator : MonoBehaviour
             return false;
         }
 
+        // Set parent room
+        roomGO.transform.parent = gameObject.transform;
+
         // Generate gate
         GameObject gateGO = Instantiate(gatePrefab, entranceDoor.Position, Quaternion.identity);
         gateGO.transform.Rotate(0, entranceDoor.Rotation, 0);
-        gateGO.transform.parent = roomGO.transform.parent;
+        gateGO.transform.parent = roomGO.transform.Find("Skeleton").Find("StaticProps");
 
         // Removed used door
         DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
@@ -347,9 +350,6 @@ public class MapGenerator : MonoBehaviour
         // SetActive object's of room
         roomGO.transform.Find("RoomGenerator").GetChild(0).Find("Enemies").gameObject.SetActive(false);
         roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
-
-        // Set parent go
-        roomGO.transform.parent = gameObject.transform;
 
         return true;
     }
