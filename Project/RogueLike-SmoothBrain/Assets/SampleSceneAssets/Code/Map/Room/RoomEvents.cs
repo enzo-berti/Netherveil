@@ -1,5 +1,3 @@
-using System.Drawing;
-using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -46,6 +44,10 @@ public class RoomEvents : MonoBehaviour
 
         // create data of the map
         mapData = new RoomData(enemies, transform.parent.GetComponentInChildren<RoomGenerator>());
+        if (mapData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
+        {
+            EnterEvents();
+        }
     }
 
     private void EnterEvents()
