@@ -9,6 +9,7 @@ public class Spear : MonoBehaviour
     Transform parent = null;
     Animator playerAnimator;
     public static event Action OnPlacedInWorld;
+    public static event Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
     [SerializeField] BoxCollider spearThrowCollider;
@@ -58,6 +59,7 @@ public class Spear : MonoBehaviour
 
     private void PlaceSpearInPlayerHand()
     {
+        OnPlacedInHand?.Invoke();
         this.transform.position = posToReach;
         // On réatache la lance à la main
         this.transform.SetParent(parent, true);

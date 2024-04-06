@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,9 @@ public class PlayerInput : MonoBehaviour
     CameraUtilities cameraUtilities;
     PlayerInteractions playerInteractions;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
+
+    public static event Action<Vector3> OnThrowSpear;
+    public static event Action OnRetrieveSpear;
 
     Coroutine dashCoroutine = null;
     Coroutine chargedAttackCoroutine = null;
@@ -254,12 +258,14 @@ public class PlayerInput : MonoBehaviour
 
         if (!controller.Spear.IsThrown)
         {
-            Vector3 forward = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
-            StartCoroutine(controller.Spear.Throw(this.transform.position + forward * hero.Stats.GetValue(Stat.ATK_RANGE)));
+            Vector3 posToReach = this.transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
+            OnThrowSpear?.Invoke(posToReach);          
+            StartCoroutine(controller.Spear.Throw(posToReach));
             controller.PlayVFX(controller.spearLaunchVFX);
         }
         else
         {
+            OnRetrieveSpear?.Invoke();
             StartCoroutine(controller.Spear.Return());
         }
     }
