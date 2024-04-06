@@ -126,14 +126,20 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         // mettre la cam entre le joueur et le boss
 
         //StartCoroutine(Brain());
-        gameMusic.SetActive(false);
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(false);
+        }
         AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
         AudioManager.Instance.PlaySound(bossSounds.music);
     }
 
     private void OnDisable()
     {
-        gameMusic.SetActive(true);
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(true);
+        }
         AudioManager.Instance.StopSound(bossSounds.introSound);
         AudioManager.Instance.StopSound(bossSounds.music);
 
