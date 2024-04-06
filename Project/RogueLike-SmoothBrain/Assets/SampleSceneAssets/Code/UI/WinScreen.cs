@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class WinScreen : MonoBehaviour
 {
-    public static WinScreen instance;
     [SerializeField] private Image blackPanel;
     [SerializeField] private Image buttonPanel;
     [SerializeField] private Image menu;
@@ -16,12 +15,6 @@ public class WinScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI EndText;
     [SerializeField] private TextMeshProUGUI EndText2;
     [SerializeField] private TextMeshProUGUI EndText3;
-
-    private void Awake()
-    {
-        instance = this;
-        gameObject.SetActive(false);
-    }
 
     private void OnEnable()
     {

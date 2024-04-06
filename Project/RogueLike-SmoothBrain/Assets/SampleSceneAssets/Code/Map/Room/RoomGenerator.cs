@@ -20,33 +20,32 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    public void Generate()
-    {
-        GenerateRoomSeed();
-    }
-
     /// <summary>
     /// Choose between all child "room seeds".
-    /// RoomSeeds contain ennemies, treasures and props. Each one have a
-    /// unique pattern.
+    /// A room seed contain ennemies, treasures and props. Each one have a unique pattern.
     /// </summary>
     public void GenerateRoomSeed()
     {
         List<GameObject> rooms = Rooms;
 
-        int keepRoomIndex = 0;
-        if (rooms.Count > 1)
+#if UNITY_EDITOR
+        if (rooms.Count <= 0)
         {
-            keepRoomIndex = Seed.Range(0, rooms.Count);
-            for (int i = 0; i < rooms.Count; i++)
+            Debug.LogError("Room doesn't have any seeds", gameObject);
+            return;
+        }
+#endif
+
+        int keepRoomIndex = Seed.Range(0, rooms.Count);
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (i != keepRoomIndex)
             {
-                if (i != keepRoomIndex)
-                {
-                    DestroyImmediate(rooms[i]);
-                }
+                DestroyImmediate(rooms[i]);
             }
         }
 
         rooms[keepRoomIndex].SetActive(true); // activate room
+        Destroy(this); // doesn't need component anymore
     }
 }

@@ -1,5 +1,4 @@
 using FMOD.Studio;
-using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -337,7 +336,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         MoveTo(transform.position);
         animator.SetBool(dyingHash, true);
         AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
-        WinScreen.instance.gameObject.SetActive(true);
     }
 
     public void MoveTo(Vector3 _pos)

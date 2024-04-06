@@ -119,16 +119,4 @@ public class RoomEvents : MonoBehaviour
             ExitEvents();
         }
     }
-
-    private void LeaveTrail(Vector3 point)
-    {
-        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-        go.transform.localScale = Vector3.one * 0.5f;
-        go.transform.position = point;
-
-        go.transform.GetComponent<Collider>().enabled = false;
-
-        Destroy(go, 4f);
-    }
 }

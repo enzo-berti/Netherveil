@@ -220,7 +220,7 @@ public class MapGenerator : MonoBehaviour
             GameObject roomGO = Instantiate(roomCandidate);
             roomGO.GetComponentInChildren<RoomGenerator>().type = type;
 
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(genParam);
 
             foreach (Door entranceDoor in doorsGenerator.RandomDoors)
@@ -259,7 +259,7 @@ public class MapGenerator : MonoBehaviour
         GameObject roomGO = Instantiate(GetRandRoomGO(RoomType.Lobby));
         roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Lobby;
 
-        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.GenerateSeed(genParam);
 
         genParam.AddDoorsGenerator(doorsGenerator);
@@ -275,7 +275,7 @@ public class MapGenerator : MonoBehaviour
             GameObject roomBossGO = Instantiate(GetRandRoomGO(RoomType.Boss));
             roomBossGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Boss;
 
-            DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = roomBossGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
             doorsGenerator.GenerateSeed(genParam);
 
             Door entranceDoor = new Door();
@@ -298,7 +298,7 @@ public class MapGenerator : MonoBehaviour
             return;
         }
 
-        Debug.LogError("PUTAIN ELLE CHARGE PAS CETTE SALOPE DE SALLE DE BOSS");
+        Debug.LogError("Can't find any candidate for boss room");
     }
 
     private void GenerateObstructionDoors(ref GenerationParam genParam)
@@ -334,7 +334,7 @@ public class MapGenerator : MonoBehaviour
         gateGO.transform.parent = roomGO.transform.parent;
 
         // Removed used door
-        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").transform.Find("Doors").GetComponent<DoorsGenerator>();
+        DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
         doorsGenerator.RemoveDoor(entranceDoor);
         genParam.RemoveDoor(exitDoor);
 
@@ -356,11 +356,12 @@ public class MapGenerator : MonoBehaviour
 
     static private bool IsRoomCollidingOtherRoom(GameObject roomGO, Door exitDoor)
     {
-        BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
+        BoxCollider roomColliderEnter = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
         BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
 
-        Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.UseGlobal).Where(collider => collider != roomCollider && collider != roomColliderExit && collider.isTrigger).ToArray();
-        return colliders.Any(); // more than the two meshCollider
+        // if we find another trigger with the "map" tag then we collide with another room
+        Collider[] colliders = roomColliderEnter.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.UseGlobal).Where(collider => collider != roomColliderEnter && collider != roomColliderExit && collider.isTrigger).ToArray();
+        return colliders.Any();
     }
 
     private List<GameObject> GetRoomsGO(RoomType type)
