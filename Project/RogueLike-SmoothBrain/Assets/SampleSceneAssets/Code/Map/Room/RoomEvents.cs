@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -15,14 +17,15 @@ public class RoomEvents : MonoBehaviour
     private bool exitRoomCalled = false;
 
     private Collider triggerCollide = null;
+    private Vector3 enterPos = Vector3.zero;
 
     private void Awake()
     {
-        foreach (Collider collider in GetComponents<Collider>())
+        foreach (Collider coll in GetComponents<Collider>())
         {
-            if (collider.isTrigger)
+            if (coll.isTrigger)
             {
-                triggerCollide = collider;
+                triggerCollide = coll;
                 break;
             }
         }
@@ -47,10 +50,6 @@ public class RoomEvents : MonoBehaviour
 
     private void EnterEvents()
     {
-        if (enterRoomCalled)
-        {
-            return;
-        }
         Debug.Log("ENTER ROOM");
         enterRoomCalled = true;
 
@@ -65,10 +64,6 @@ public class RoomEvents : MonoBehaviour
 
     private void ExitEvents()
     {
-        if (exitRoomCalled)
-        {
-            return;
-        }
         Debug.Log("EXIT ROOM");
         exitRoomCalled = true;
 
@@ -97,11 +92,20 @@ public class RoomEvents : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
+        {
+            enterPos = triggerCollide.ClosestPointOnBounds(other.bounds.center);
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
         {
-            if (triggerCollide.bounds.Contains(other.bounds.max) && triggerCollide.bounds.Contains(other.bounds.min))
+            Vector3 enterToPlayer = enterPos - other.bounds.center;
+            if (enterToPlayer.magnitude >= other.bounds.size.magnitude)
             {
                 EnterEvents();
             }
@@ -110,9 +114,21 @@ public class RoomEvents : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (!exitRoomCalled && other.gameObject.CompareTag("Player"))
         {
             ExitEvents();
         }
+    }
+
+    private void LeaveTrail(Vector3 point)
+    {
+        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+        go.transform.localScale = Vector3.one * 0.5f;
+        go.transform.position = point;
+
+        go.transform.GetComponent<Collider>().enabled = false;
+
+        Destroy(go, 4f);
     }
 }

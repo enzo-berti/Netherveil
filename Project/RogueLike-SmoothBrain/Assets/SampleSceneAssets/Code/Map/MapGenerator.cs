@@ -359,9 +359,8 @@ public class MapGenerator : MonoBehaviour
         BoxCollider roomCollider = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
         BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
 
-        Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.Collide).Where(collider => collider != roomCollider && collider != roomColliderExit).ToArray();
-
-        return colliders.Length > 2; // more than the two meshCollider
+        Collider[] colliders = roomCollider.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.UseGlobal).Where(collider => collider != roomCollider && collider != roomColliderExit && collider.isTrigger).ToArray();
+        return colliders.Any(); // more than the two meshCollider
     }
 
     private List<GameObject> GetRoomsGO(RoomType type)
