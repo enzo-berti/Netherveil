@@ -188,15 +188,11 @@ public class Spear : MonoBehaviour
 
         //offset so that the collide also takes the spear end spot
         float collideOffset = 0.2f;
-        //construct collider in scene so that we can debug it
+        //construct collider(visible also in scene so we can debug it)
         Vector3 scale = SpearThrowCollider.transform.localScale;
         scale.z = playerToTargetPos.magnitude;
         SpearThrowCollider.transform.localScale = scale;
         SpearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
-        //SpearThrowCollider.transform.LookAt(new Vector3(targetPos.x, playerToTargetPos.y, targetPos.z));
-        //Vector3 eulerAngles = SpearThrowCollider.transform.eulerAngles;
-        //eulerAngles.x = 0f;
-        //SpearThrowCollider.transform.eulerAngles = eulerAngles;
 
         Collider[] colliders = SpearThrowCollider.BoxOverlap();
 

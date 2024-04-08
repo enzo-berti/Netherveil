@@ -29,10 +29,11 @@ public static class Vector3Extensions
     /// <returns></returns>
     public static Vector3 RotatePointAroundYAxis(this Vector3 vector, float angleDegrees)
     {
-        // Convert angle from degrees to radians
         float angleRadians = angleDegrees * Mathf.Deg2Rad;
 
-        // Calculate the new X and Z coordinates
+        // using 2x2 rotation matrix to multiply with x,z vector
+        //[cos(teta), -sin(teta)] * [x]
+        //[sin(teta), cos(teta) ]   [z]
         float newX = vector.x * Mathf.Cos(angleRadians) - vector.z * Mathf.Sin(angleRadians);
         float newZ = vector.x * Mathf.Sin(angleRadians) + vector.z * Mathf.Cos(angleRadians);
 

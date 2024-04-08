@@ -38,19 +38,18 @@ public class SpearGhosts : ItemEffect , IPassiveItem
     private void ThrowSpearGhosts(Vector3 posToReach)
     {
         //if possible instantiate them with a different material to differentiate them from the original one
-        GameObject spear = GameObject.FindWithTag("Player").GetComponent<PlayerController>().Spear.gameObject;
-        for (int i = 0; i< 2; ++i)
-        {
-            ghostSpears.Add(GameObject.Instantiate(spear, spear.transform.position, spear.transform.rotation, spear.transform.parent));
-        }
-
         //need to take into consideration camera angles
-        for (int i = 0; i< ghostSpears.Count; ++i)
+        GameObject spear = GameObject.FindWithTag("Player").GetComponent<PlayerController>().Spear.gameObject;
+        for (int i = 0; i< spearThrowWrappers.Count; ++i)
         {
-            ghostSpears[i].GetComponent<Spear>().SpearThrowCollider = spearThrowWrappers[i].GetComponentInChildren<BoxCollider>(includeInactive: true);
+            GameObject ghostSpear = GameObject.Instantiate(spear, spear.transform.position, spear.transform.rotation, spear.transform.parent);
+            ghostSpears.Add(ghostSpear);
+
+            ghostSpear.GetComponent<Spear>().SpearThrowCollider = spearThrowWrappers[i].GetComponentInChildren<BoxCollider>(includeInactive: true);
             Vector3 newPosToReach = posToReach.RotatePointAroundYAxis(i != 0 ? 15f : -15f);
             spearThrowWrappers[i].transform.LookAt(newPosToReach);
-            ghostSpears[i].GetComponent<Spear>().Throw(newPosToReach);
+
+            ghostSpear.GetComponent<Spear>().Throw(newPosToReach);
         }
     }
 
