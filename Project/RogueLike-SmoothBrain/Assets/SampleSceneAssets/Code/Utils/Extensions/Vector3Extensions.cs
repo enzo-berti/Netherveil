@@ -37,7 +37,6 @@ public static class Vector3Extensions
         float newX = vector.x * Mathf.Cos(angleRadians) - vector.z * Mathf.Sin(angleRadians);
         float newZ = vector.x * Mathf.Sin(angleRadians) + vector.z * Mathf.Cos(angleRadians);
 
-        // Return the rotated vector
         return new Vector3(newX, vector.y, newZ);
     }
 
