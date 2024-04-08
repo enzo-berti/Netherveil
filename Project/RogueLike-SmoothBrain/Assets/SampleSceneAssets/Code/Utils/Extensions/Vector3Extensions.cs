@@ -45,6 +45,14 @@ public static class Vector3Extensions
         return camForward * vector.z + camRight * vector.x;
     }
 
+    /// <param name="vector"></param>
+    /// <returns>Vector3 based on camera's orientation.</returns>
+    public static Vector3 ToCameraOrientedVec3(this Vector2 vector)
+    {
+        ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+        return camForward * vector.y + camRight * vector.x;
+    }
+
     /// <summary>
     /// Function to rotate a 3D Point around the Y axis
     /// </summary>

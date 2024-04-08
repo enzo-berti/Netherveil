@@ -137,8 +137,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
-        Vector3Extensions.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
-        characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * playerInput.Direction.y + camRight * playerInput.Direction.x).normalized);
+        characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * playerInput.Direction.ToCameraOrientedVec3().normalized);
     }
 
     private void DashMove()
