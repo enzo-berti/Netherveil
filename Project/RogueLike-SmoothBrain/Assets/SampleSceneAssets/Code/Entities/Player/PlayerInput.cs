@@ -260,13 +260,13 @@ public class PlayerInput : MonoBehaviour
         {
             Vector3 posToReach = this.transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
             OnThrowSpear?.Invoke(posToReach);          
-            StartCoroutine(controller.Spear.Throw(posToReach));
+            controller.Spear.Throw(posToReach);
             controller.PlayVFX(controller.spearLaunchVFX);
         }
         else
         {
             OnRetrieveSpear?.Invoke();
-            StartCoroutine(controller.Spear.Return());
+            controller.Spear.Return();
         }
     }
 

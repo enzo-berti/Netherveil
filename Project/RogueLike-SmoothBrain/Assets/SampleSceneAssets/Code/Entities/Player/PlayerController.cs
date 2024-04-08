@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Mechanics")]
     public Spear Spear;
+    [SerializeField] BoxCollider spearThrowCollider;
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
@@ -301,6 +302,10 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Miscellaneous
+    public BoxCollider GetSpearThrowCollider()
+    {
+        return spearThrowCollider;
+    }
 
     public static GameObject Get()
     {

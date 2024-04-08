@@ -26,14 +26,24 @@ public class Spear : MonoBehaviour
     readonly float SPEAR_SPEED = 5000f;
     readonly float SPEAR_WAIT_TIME = 0.15f;
 
-    private void Start()
+    private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        if (spearThrowCollider == null)
+        {
+            spearThrowCollider = player.GetComponent<PlayerController>().GetSpearThrowCollider();
+        }
         hero = player.GetComponent<Hero>();
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
         playerAnimator = player.GetComponentInChildren<Animator>();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
+    }
+
+    private void OnDestroy()
+    {
+        if(trail) Destroy(trail);
+        StopAllCoroutines();
     }
 
     void Update()
@@ -79,6 +89,7 @@ public class Spear : MonoBehaviour
 
     private void PlaceSpearInWorld()
     {
+        Debug.Log("zoubi");
         Destroy(trail);
         meshRenderer.enabled = true;
         // We set position at the exact place ( the spear doesn't move, just tp )
@@ -94,7 +105,13 @@ public class Spear : MonoBehaviour
         OnPlacedInWorld?.Invoke();
     }
 
-    public IEnumerator Throw(Vector3 _posToReach)
+    public void Throw(Vector3 _posToReach)
+    {
+        StartCoroutine(ThrowCoroutine(_posToReach));
+    }
+
+
+    IEnumerator ThrowCoroutine(Vector3 _posToReach)
     {
         IsThrown = true;
         IsThrowing = true;
@@ -133,7 +150,12 @@ public class Spear : MonoBehaviour
         this.transform.parent = null;
     }
 
-    public IEnumerator Return()
+    public void Return()
+    {
+        StartCoroutine(ReturnCoroutine());
+    }
+
+    IEnumerator ReturnCoroutine()
     {
         IsThrown = false;
         IsThrowing = true;
