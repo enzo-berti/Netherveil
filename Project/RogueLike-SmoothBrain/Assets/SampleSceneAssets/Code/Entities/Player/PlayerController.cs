@@ -47,9 +47,6 @@ public class PlayerController : MonoBehaviour
     public VisualEffect DashVFX;
     public VisualEffect ChargedAttackVFX;
     public VisualEffect spearLaunchVFX;
-    public VisualEffect fireVFX;
-    public VisualEffect frozenVFX;
-    public VisualEffect electricityVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;

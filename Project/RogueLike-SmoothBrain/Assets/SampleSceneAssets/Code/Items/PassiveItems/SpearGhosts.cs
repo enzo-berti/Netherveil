@@ -1,19 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.VFX;
 
 public class SpearGhosts : ItemEffect , IPassiveItem 
 {
     readonly List<GameObject> ghostSpears = new();
     readonly List<GameObject> spearThrowWrappers = new();
+    readonly List<GameObject> spearVFXs = new();
     public void OnRetrieved() 
     {
         //used a wrapper instead of the object itself to make it rotate from player's position, not the middle of the collide
         GameObject spearThrowWrapper = GameObject.FindWithTag("Player").GetComponent<PlayerController>().SpearThrowWrapper;
+        GameObject spearVFX = GameObject.FindWithTag("Player").GetComponent<PlayerController>().spearLaunchVFX.gameObject;
 
         for(int i = 0; i< 2; ++i)
         {
             spearThrowWrappers.Add(GameObject.Instantiate(spearThrowWrapper, spearThrowWrapper.transform.position,
             spearThrowWrapper.transform.rotation, spearThrowWrapper.transform.parent));
+            spearVFXs.Add(GameObject.Instantiate(spearVFX, spearVFX.transform.position,
+            spearVFX.transform.rotation));
         }
 
         PlayerInput.OnThrowSpear += ThrowSpearGhosts;
@@ -23,12 +29,13 @@ public class SpearGhosts : ItemEffect , IPassiveItem
 
     public void OnRemove()
     {
-        //delete them in onRemove
-        foreach (GameObject wrappers in spearThrowWrappers)
+        for (int i = 0; i < spearThrowWrappers.Count; ++i)
         {
-            GameObject.Destroy(wrappers);
+            GameObject.Destroy(spearThrowWrappers[i]);
+            GameObject.Destroy(spearVFXs[i]);
         }
         spearThrowWrappers.Clear();
+        spearVFXs.Clear();
 
         PlayerInput.OnThrowSpear -= ThrowSpearGhosts;
         PlayerInput.OnRetrieveSpear -= RetrieveSpearGhosts;
@@ -38,8 +45,9 @@ public class SpearGhosts : ItemEffect , IPassiveItem
     private void ThrowSpearGhosts(Vector3 posToReach)
     {
         //if possible instantiate them with a different material to differentiate them from the original one
-        //need to take into consideration camera angles
         GameObject spear = GameObject.FindWithTag("Player").GetComponent<PlayerController>().Spear.gameObject;
+        PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+
         for (int i = 0; i< spearThrowWrappers.Count; ++i)
         {
             GameObject ghostSpear = GameObject.Instantiate(spear, spear.transform.position, spear.transform.rotation, spear.transform.parent);
@@ -48,6 +56,9 @@ public class SpearGhosts : ItemEffect , IPassiveItem
             ghostSpear.GetComponent<Spear>().SpearThrowCollider = spearThrowWrappers[i].GetComponentInChildren<BoxCollider>(includeInactive: true);
             Vector3 newPosToReach = posToReach.RotatePointAroundYAxis(i != 0 ? 15f : -15f);
             spearThrowWrappers[i].transform.LookAt(newPosToReach);
+            spearVFXs[i].transform.position = player.transform.position;
+            spearVFXs[i].transform.LookAt(newPosToReach);
+            spearVFXs[i].GetComponent<VisualEffect>().Play();
 
             ghostSpear.GetComponent<Spear>().Throw(newPosToReach);
         }

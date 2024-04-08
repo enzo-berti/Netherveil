@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Spear : MonoBehaviour
@@ -25,6 +26,7 @@ public class Spear : MonoBehaviour
     MeshRenderer meshRenderer;
     readonly float SPEAR_SPEED = 5000f;
     readonly float SPEAR_WAIT_TIME = 0.15f;
+    bool placedInWorld = false;
 
     private void Awake()
     {
@@ -48,11 +50,19 @@ public class Spear : MonoBehaviour
         playerAnimator.SetBool("SpearThrowing", IsThrowing);
         playerAnimator.SetBool("SpearThrown", IsThrown);
 
-        if (trail == null)
+
+        if (placedInWorld)
+        {
+            Vector3 updatePos = meshRenderer.transform.position;
+            updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
+            meshRenderer.transform.position = updatePos;
+            meshRenderer.transform.Rotate(new Vector3(0, 50f * Time.deltaTime, 0));
+        }
+
+            if (trail == null)
         {
             return;
         }
-
 
         if (CanPlaceSpearInWorld())
         {
@@ -90,13 +100,14 @@ public class Spear : MonoBehaviour
         meshRenderer.enabled = true;
         // We set position at the exact place ( the spear doesn't move, just tp )
         this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90f, 90f, 0);
-        this.transform.position = new Vector3(posToReach.x, player.position.y + GetComponent<BoxCollider>().bounds.size.z / 2f, posToReach.z);
+        this.transform.position = new Vector3(posToReach.x, posToReach.y + meshRenderer.bounds.size.y / 2f, posToReach.z);
         IsThrowing = false;
         if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
         {
             hero.State = (int)Entity.EntityState.MOVE;
         }
         SpearThrowCollider.gameObject.SetActive(false);
+        placedInWorld = true;
 
         OnPlacedInWorld?.Invoke();
     }
@@ -156,6 +167,7 @@ public class Spear : MonoBehaviour
         IsThrown = false;
         IsThrowing = true;
         hero.State = (int)Entity.EntityState.ATTACK;
+        placedInWorld = false;
 
         yield return new WaitForSeconds(SPEAR_WAIT_TIME);
 
