@@ -219,7 +219,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Direction != Vector2.zero)
         {
-            controller.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+            Vector3Extensions.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
             DashDir = (camForward * Direction.y + camRight * Direction.x).normalized;
         }
         else

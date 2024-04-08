@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
-        ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+        Vector3Extensions.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
         characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * playerInput.Direction.y + camRight * playerInput.Direction.x).normalized);
     }
 
@@ -336,21 +336,6 @@ public class PlayerController : MonoBehaviour
             transform.eulerAngles = eulerAngles;
         }
         CurrentTargetAngle = newAngle;
-    }
-
-    /// <summary>
-    /// Used to get the directions of camera without the y axis so that the player doesnt move on this axis and renormalize the vectors because of that modification
-    /// </summary>
-    /// <param name="camRight"></param>
-    /// <param name="camForward"></param>
-    public void ModifyCamVectors(out Vector3 camRight, out Vector3 camForward)
-    {
-        camForward = cameraTransform.forward;
-        camRight = cameraTransform.right;
-        camForward.y = 0f;
-        camRight.y = 0f;
-        camForward = camForward.normalized;
-        camRight = camRight.normalized;
     }
 
     public void PlayVFX(VisualEffect VFX)

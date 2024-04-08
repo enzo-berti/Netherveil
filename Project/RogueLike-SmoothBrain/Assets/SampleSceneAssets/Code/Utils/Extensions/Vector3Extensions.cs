@@ -13,12 +13,36 @@ public static class Vector3Extensions
         return new Vector3(Mathf.Abs(vector.x), Mathf.Abs(vector.y), Mathf.Abs(vector.z));
     }
 
+    /// <summary>
+    /// Used to get the directions of camera without the y axis so that the player doesnt move on this axis and renormalize the vectors because of that modification
+    /// </summary>
+    /// <param name="camRight"></param>
+    /// <param name="camForward"></param>
+    public static void ModifyCamVectors(out Vector3 camRight, out Vector3 camForward)
+    {
+        camForward = Camera.main.transform.forward;
+        camRight = Camera.main.transform.right;
+        camForward.y = 0f;
+        camRight.y = 0f;
+        camForward = camForward.normalized;
+        camRight = camRight.normalized;
+    }
+
     /// <param name="vector"></param>
     /// <returns>Vector2 that contains x and z which is based on camera's orientation.</returns>
     public static Vector2 ToCameraOrientedVec2(this Vector3 vector)
     {
-        Vector3 tmp = (Camera.main.transform.forward * vector.z + Camera.main.transform.right * vector.x);
+        ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+        Vector3 tmp = (camForward * vector.z + camRight * vector.x);
         return new Vector2(tmp.x, tmp.z);
+    }
+
+    /// <param name="vector"></param>
+    /// <returns>Vector3 based on camera's orientation.</returns>
+    public static Vector3 ToCameraOrientedVec3(this Vector3 vector)
+    {
+        ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
+        return camForward * vector.z + camRight * vector.x;
     }
 
     /// <summary>
