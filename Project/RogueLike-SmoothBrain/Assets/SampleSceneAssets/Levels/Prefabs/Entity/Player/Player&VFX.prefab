@@ -27,12 +27,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253587856463131276}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.05, y: 0, z: 9.01}
+  m_LocalScale: {x: 1, y: 1, z: 17.17}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5680085074375357738}
+  m_Father: {fileID: 7977011052506813495}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3095680117516551530
 MeshFilter:
@@ -99,7 +99,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
@@ -470,6 +470,38 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3817748583469982840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7977011052506813495}
+  m_Layer: 3
+  m_Name: SpearThrowPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7977011052506813495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3817748583469982840}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1993950241127163703}
+  m_Father: {fileID: 5680085074375357738}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4431445130192660959
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Spear: {fileID: 4165258733406781461}
+  spearThrowWrapper: {fileID: 3817748583469982840}
   spearThrowCollider: {fileID: 2138072598634563705}
   ChargedAttack: {fileID: 608064876135092859}
   SpearAttacks:
@@ -1698,8 +1731,8 @@ Transform:
   - {fileID: 1930754636944736266}
   - {fileID: 3770560300241984565}
   - {fileID: 3465642274164069325}
-  - {fileID: 1993950241127163703}
   - {fileID: 9078086196618446018}
+  - {fileID: 7977011052506813495}
   m_Father: {fileID: 5979827630346455854}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8663540108515972346

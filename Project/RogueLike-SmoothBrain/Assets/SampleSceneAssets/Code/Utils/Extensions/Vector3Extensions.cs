@@ -21,6 +21,25 @@ public static class Vector3Extensions
         return new Vector2(tmp.x, tmp.z);
     }
 
+    /// <summary>
+    /// Function to rotate a 3D Point around the Y axis
+    /// </summary>
+    /// <param name="vector"></param>
+    /// <param name="angleDegrees"></param>
+    /// <returns></returns>
+    public static Vector3 RotatePointAroundYAxis(this Vector3 vector, float angleDegrees)
+    {
+        // Convert angle from degrees to radians
+        float angleRadians = angleDegrees * Mathf.Deg2Rad;
+
+        // Calculate the new X and Z coordinates
+        float newX = vector.x * Mathf.Cos(angleRadians) - vector.z * Mathf.Sin(angleRadians);
+        float newZ = vector.x * Mathf.Sin(angleRadians) + vector.z * Mathf.Cos(angleRadians);
+
+        // Return the rotated vector
+        return new Vector3(newX, vector.y, newZ);
+    }
+
 
     /// <param name="vector"></param>
     /// <param name="nbDigits"></param>

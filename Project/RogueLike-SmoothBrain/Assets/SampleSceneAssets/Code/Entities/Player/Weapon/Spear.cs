@@ -12,7 +12,7 @@ public class Spear : MonoBehaviour
     public static event Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
-    [SerializeField] BoxCollider spearThrowCollider;
+    public BoxCollider SpearThrowCollider { get; set; } = null;
     GameObject trail;
 
     Quaternion initLocalRotation;
@@ -29,10 +29,7 @@ public class Spear : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        if (spearThrowCollider == null)
-        {
-            spearThrowCollider = player.GetComponent<PlayerController>().GetSpearThrowCollider();
-        }
+        SpearThrowCollider = player.GetComponent<PlayerController>().SpearThrowCollider;
         hero = player.GetComponent<Hero>();
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
@@ -42,7 +39,7 @@ public class Spear : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(trail) Destroy(trail);
+        if (trail) Destroy(trail);
         StopAllCoroutines();
     }
 
@@ -69,7 +66,6 @@ public class Spear : MonoBehaviour
 
     private void PlaceSpearInPlayerHand()
     {
-        OnPlacedInHand?.Invoke();
         this.transform.position = posToReach;
         // On réatache la lance à la main
         this.transform.SetParent(parent, true);
@@ -84,12 +80,12 @@ public class Spear : MonoBehaviour
         {
             hero.State = (int)Entity.EntityState.MOVE;
         }
-        spearThrowCollider.gameObject.SetActive(false);
+        SpearThrowCollider.gameObject.SetActive(false);
+        OnPlacedInHand?.Invoke();
     }
 
     private void PlaceSpearInWorld()
     {
-        Debug.Log("zoubi");
         Destroy(trail);
         meshRenderer.enabled = true;
         // We set position at the exact place ( the spear doesn't move, just tp )
@@ -100,7 +96,7 @@ public class Spear : MonoBehaviour
         {
             hero.State = (int)Entity.EntityState.MOVE;
         }
-        spearThrowCollider.gameObject.SetActive(false);
+        SpearThrowCollider.gameObject.SetActive(false);
 
         OnPlacedInWorld?.Invoke();
     }
@@ -143,7 +139,7 @@ public class Spear : MonoBehaviour
             }
         }
 
-        ApplyDamages(playerToPosToReachVec, debugMode: false);
+        ApplyDamages(playerToPosToReachVec, posToReach,debugMode: false);
 
         // On set le parent que la lance avait ( la main du joueur ), puis on la retire tant qu'elle est lancée afin de la rendre indépendante 
         parent = this.transform.parent;
@@ -180,25 +176,29 @@ public class Spear : MonoBehaviour
         }
 
         Vector3 playerToSpearVec = spearPosition - player.position;
-        ApplyDamages(playerToSpearVec, debugMode: false);
+        ApplyDamages(playerToSpearVec, spearPosition,debugMode: false);
     }
 
-    void ApplyDamages(Vector3 playerToTargetPos, bool debugMode)
+    void ApplyDamages(Vector3 playerToTargetPos, Vector3 targetPos,bool debugMode)
     {
-        if(debugMode)
+        if (debugMode)
         {
-            spearThrowCollider.gameObject.SetActive(true);
+            SpearThrowCollider.gameObject.SetActive(true);
         }
 
         //offset so that the collide also takes the spear end spot
         float collideOffset = 0.2f;
         //construct collider in scene so that we can debug it
-        Vector3 scale = spearThrowCollider.transform.localScale;
+        Vector3 scale = SpearThrowCollider.transform.localScale;
         scale.z = playerToTargetPos.magnitude;
-        spearThrowCollider.transform.localScale = scale;
-        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
+        SpearThrowCollider.transform.localScale = scale;
+        SpearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
+        //SpearThrowCollider.transform.LookAt(new Vector3(targetPos.x, playerToTargetPos.y, targetPos.z));
+        //Vector3 eulerAngles = SpearThrowCollider.transform.eulerAngles;
+        //eulerAngles.x = 0f;
+        //SpearThrowCollider.transform.eulerAngles = eulerAngles;
 
-        Collider[] colliders = spearThrowCollider.BoxOverlap();
+        Collider[] colliders = SpearThrowCollider.BoxOverlap();
 
         if (colliders.Length > 0)
         {

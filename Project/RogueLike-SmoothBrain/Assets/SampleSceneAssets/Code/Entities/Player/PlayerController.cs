@@ -15,11 +15,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Mechanics")]
     public Spear Spear;
+    [SerializeField] GameObject spearThrowWrapper;
     [SerializeField] BoxCollider spearThrowCollider;
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
+
+    public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
+    public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
 
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;
@@ -302,10 +306,6 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Miscellaneous
-    public BoxCollider GetSpearThrowCollider()
-    {
-        return spearThrowCollider;
-    }
 
     public static GameObject Get()
     {
