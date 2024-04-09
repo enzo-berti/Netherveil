@@ -48,7 +48,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {
-        if(IsInvincible)
+        if(IsInvincibleCount > 0)
         {
             return;
         }

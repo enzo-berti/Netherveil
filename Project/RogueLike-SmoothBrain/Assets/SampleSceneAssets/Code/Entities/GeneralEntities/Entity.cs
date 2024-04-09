@@ -33,7 +33,7 @@ public abstract class Entity : MonoBehaviour
     protected List<Status> statusToApply = new();
     public bool IsKnockbackable = true;
     public bool canTriggerTraps = true;
-    public bool IsInvincible = false;
+    public byte IsInvincibleCount = 0;
 
     private int state = (int)EntityState.MOVE;
     public int State 

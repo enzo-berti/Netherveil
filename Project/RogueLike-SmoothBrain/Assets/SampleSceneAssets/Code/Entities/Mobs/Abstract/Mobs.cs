@@ -95,7 +95,7 @@ public abstract class Mobs : Entity
     protected void ApplyDamagesMob(int _value, EventReference hitSound, Action deathMethod, bool notEffectDamage)
     {
         // Some times, this method is call when entity is dead ??
-        if (stats.GetValue(Stat.HP) <= 0 || IsInvincible)
+        if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
         Stats.DecreaseValue(Stat.HP, _value, false);

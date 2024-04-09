@@ -1,7 +1,7 @@
 using UnityEngine; 
  
 public class DashShield : ItemEffect , IPassiveItem 
-{ 
+{
     public void OnRetrieved() 
     {
         PlayerInput.OnStartDash += ApplyShield;
@@ -16,11 +16,13 @@ public class DashShield : ItemEffect , IPassiveItem
  
     private void ApplyShield()
     {
-        GameObject.FindWithTag("Player").GetComponent<Hero>().IsInvincible = true;
+        //enable Shield VFX
+        GameObject.FindWithTag("Player").GetComponent<Hero>().IsInvincibleCount++;
     }
 
     private void RemoveShield(Vector3 playerPos)
     {
-        GameObject.FindWithTag("Player").GetComponent<Hero>().IsInvincible = false;
+        //disable Shield VFX
+        GameObject.FindWithTag("Player").GetComponent<Hero>().IsInvincibleCount--;
     }
 } 
