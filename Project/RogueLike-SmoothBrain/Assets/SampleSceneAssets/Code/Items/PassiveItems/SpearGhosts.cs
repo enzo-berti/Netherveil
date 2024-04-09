@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.VFX;
 
 public class SpearGhosts : ItemEffect , IPassiveItem 
@@ -44,18 +43,19 @@ public class SpearGhosts : ItemEffect , IPassiveItem
  
     private void ThrowSpearGhosts(Vector3 posToReach)
     {
-        //if possible instantiate them with a different material to differentiate them from the original one
         GameObject spear = GameObject.FindWithTag("Player").GetComponent<PlayerController>().Spear.gameObject;
         PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
 
         for (int i = 0; i< spearThrowWrappers.Count; ++i)
         {
             GameObject ghostSpear = GameObject.Instantiate(spear, spear.transform.position, spear.transform.rotation, spear.transform.parent);
+            ghostSpear.GetComponentInChildren<MeshRenderer>().material = Resources.Load("FrozenMat") as Material;
             ghostSpears.Add(ghostSpear);
 
             ghostSpear.GetComponent<Spear>().SpearThrowCollider = spearThrowWrappers[i].GetComponentInChildren<BoxCollider>(includeInactive: true);
             Vector3 newPosToReach = Quaternion.Euler(0, i != 0 ? 15f : -15f, 0) * posToReach;
             spearThrowWrappers[i].transform.LookAt(newPosToReach);
+
             spearVFXs[i].transform.position = player.transform.position;
             spearVFXs[i].transform.LookAt(newPosToReach);
             spearVFXs[i].GetComponent<VisualEffect>().Play();
