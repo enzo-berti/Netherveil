@@ -33,6 +33,10 @@ public abstract class Entity : MonoBehaviour
     protected List<Status> statusToApply = new();
     public bool IsKnockbackable = true;
     public bool canTriggerTraps = true;
+
+    //not a bool because if you get multiple invincibility sources at the same time,
+    //if one would go away, he would put the bool at false but it would break the invincibility from other sources too,
+    //so it is a count that means the entity is invincible if this variable is over zero.
     public byte IsInvincibleCount = 0;
 
     private int state = (int)EntityState.MOVE;
