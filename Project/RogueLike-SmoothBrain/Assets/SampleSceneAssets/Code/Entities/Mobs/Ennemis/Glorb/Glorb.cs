@@ -39,11 +39,12 @@ public class Glorb : Mobs, IGlorb
         animator = GetComponentInChildren<Animator>();
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         if ((damageable as MonoBehaviour).CompareTag("Player"))
         {
             int damages = (int)(stats.GetValue(Stat.ATK) * 3);
+            damages += additionalDamages;
 
             onHit?.Invoke(damageable, this);
             damageable.ApplyDamage(damages, this);

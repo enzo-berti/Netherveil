@@ -139,9 +139,10 @@ public class PestStateMachine : Mobs, IPest
         }
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
 
         onHit?.Invoke(damageable, this);
         damageable.ApplyDamage(damages, this);

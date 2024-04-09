@@ -85,7 +85,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         animator.SetTrigger("Death");
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValueWithoutCoeff(Stat.ATK);
 
@@ -110,6 +110,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             DeviceManager.Instance.ApplyVibrations(0f, 0.1f, 0.1f);
             OnBasicAttack?.Invoke(damageable, this);
         }
+
+        damages += additionalDamages;
 
         OnBeforeApplyDamages?.Invoke(ref damages, damageable);
         damages = (int)(damages * stats.GetCoeff(Stat.ATK)); 

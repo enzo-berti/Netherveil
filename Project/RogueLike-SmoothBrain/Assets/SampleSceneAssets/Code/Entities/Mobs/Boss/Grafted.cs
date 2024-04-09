@@ -296,9 +296,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         }
     }
 
-    public void Attack(IDamageable _damageable)
+    public void Attack(IDamageable _damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
 
         onHit?.Invoke(_damageable, this);
         _damageable.ApplyDamage(damages, this);

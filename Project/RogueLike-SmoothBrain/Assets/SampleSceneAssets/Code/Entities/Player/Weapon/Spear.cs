@@ -9,7 +9,7 @@ public class Spear : MonoBehaviour
     Hero hero;
     Transform parent = null;
     Animator playerAnimator;
-    public static event Action OnPlacedInWorld;
+    public static event Action<Vector3> OnPlacedInWorld;
     public static event Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
@@ -109,7 +109,7 @@ public class Spear : MonoBehaviour
         SpearThrowCollider.gameObject.SetActive(false);
         placedInWorld = true;
 
-        OnPlacedInWorld?.Invoke();
+        OnPlacedInWorld?.Invoke(transform.position);
     }
 
     public void Throw(Vector3 _posToReach)

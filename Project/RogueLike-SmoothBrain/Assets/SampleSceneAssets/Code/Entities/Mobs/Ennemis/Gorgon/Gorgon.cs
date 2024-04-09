@@ -310,9 +310,10 @@ public class Gorgon : Mobs, IGorgon
         Hero.OnKill?.Invoke(this);
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
         onHit?.Invoke(damageable, this);
         damageable.ApplyDamage(damages, this);
     }

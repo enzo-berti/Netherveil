@@ -17,7 +17,7 @@ public interface IAttacker
         set;
     }
 
-    public void Attack(IDamageable damageable);
+    public void Attack(IDamageable damageable, int additionalDamages = 0);
 
     public void ApplyStatus(IDamageable damageable, IAttacker attacker)
     {
