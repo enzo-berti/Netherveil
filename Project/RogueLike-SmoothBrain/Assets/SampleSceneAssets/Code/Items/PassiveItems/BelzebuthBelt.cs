@@ -10,7 +10,7 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
 
     public BelzebuthBelt()
     {
-        displayValue = coefValue * 100f;
+        displayValue = (coefValue -1f) * 100f;
     }
 
     public void OnRetrieved()
