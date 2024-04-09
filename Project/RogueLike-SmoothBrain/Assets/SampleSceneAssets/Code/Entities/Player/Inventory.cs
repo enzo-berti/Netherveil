@@ -19,6 +19,7 @@ public class Inventory
         } 
     }
     public int Blood = 0;
+    public int Keys = 0;
 
     private void AddActiveItem(IActiveItem item)
     {
