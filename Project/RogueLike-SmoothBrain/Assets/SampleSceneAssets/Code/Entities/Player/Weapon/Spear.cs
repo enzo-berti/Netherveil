@@ -76,12 +76,11 @@ public class Spear : MonoBehaviour
 
     private void PlaceSpearInPlayerHand()
     {
-        this.transform.position = posToReach;
+        transform.position = posToReach;
         // On réatache la lance à la main
-        this.transform.SetParent(parent, true);
+        transform.SetParent(parent, true);
         // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
-        this.transform.localPosition = initLocalPosition;
-        this.transform.localRotation = initLocalRotation;
+        transform.SetLocalPositionAndRotation(initLocalPosition, initLocalRotation);
         parent = null;
         meshRenderer.enabled = true;
         IsThrowing = false;
@@ -99,8 +98,9 @@ public class Spear : MonoBehaviour
         Destroy(trail);
         meshRenderer.enabled = true;
         // We set position at the exact place ( the spear doesn't move, just tp )
-        this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90f, 90f, 0);
-        this.transform.position = new Vector3(posToReach.x, posToReach.y + meshRenderer.bounds.size.y / 2f, posToReach.z);
+        transform.SetPositionAndRotation(new Vector3(posToReach.x, posToReach.y + meshRenderer.bounds.size.y / 2f, posToReach.z), 
+            Quaternion.identity * Quaternion.Euler(-90f, 90f, 0));
+
         IsThrowing = false;
         if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
         {
@@ -128,15 +128,15 @@ public class Spear : MonoBehaviour
 
         AudioManager.Instance.PlaySound(player.GetComponent<PlayerController>().ThrowSpearSFX);
         meshRenderer.enabled = false;
-        trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
+        trail = Instantiate(trailPf, transform.position, Quaternion.identity);
         posToReach = _posToReach;
-        Vector3 playerToPosToReachVec = (posToReach - this.transform.position);
+        Vector3 playerToPosToReachVec = (posToReach - transform.position);
 
         trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * SPEAR_SPEED, ForceMode.Force);
         DeviceManager.Instance.ApplyVibrations(0.001f, 0.005f, 0.1f);
 
         //check if colliding with obstacle to stop the spear on collide
-        RaycastHit[] hits = Physics.RaycastAll(this.transform.position, (posToReach - this.transform.position), (posToReach - this.transform.position).magnitude);
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, playerToPosToReachVec, playerToPosToReachVec.magnitude);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
@@ -144,17 +144,17 @@ public class Spear : MonoBehaviour
                 if (((1 << hit.collider.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
                 {
                     posToReach = new Vector3(hit.point.x, player.position.y, hit.point.z);
-                    playerToPosToReachVec = (posToReach - this.transform.position);
+                    playerToPosToReachVec = (posToReach - transform.position);
                     break;
                 }
             }
         }
 
-        ApplyDamages(playerToPosToReachVec, posToReach,debugMode: false);
+        ApplyDamages(playerToPosToReachVec,debugMode: false);
 
         // On set le parent que la lance avait ( la main du joueur ), puis on la retire tant qu'elle est lancée afin de la rendre indépendante 
-        parent = this.transform.parent;
-        this.transform.parent = null;
+        parent = transform.parent;
+        transform.parent = null;
     }
 
     public void Return()
@@ -188,10 +188,10 @@ public class Spear : MonoBehaviour
         }
 
         Vector3 playerToSpearVec = spearPosition - player.position;
-        ApplyDamages(playerToSpearVec, spearPosition,debugMode: false);
+        ApplyDamages(playerToSpearVec,debugMode: false);
     }
 
-    void ApplyDamages(Vector3 playerToTargetPos, Vector3 targetPos,bool debugMode)
+    void ApplyDamages(Vector3 playerToTargetPos,bool debugMode)
     {
         if (debugMode)
         {
