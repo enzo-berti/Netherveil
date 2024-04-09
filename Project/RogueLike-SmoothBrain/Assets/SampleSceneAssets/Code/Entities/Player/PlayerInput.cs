@@ -20,6 +20,7 @@ public class PlayerInput : MonoBehaviour
 
     public static event Action<Vector3> OnThrowSpear;
     public static event Action OnRetrieveSpear;
+    public static event Action<Vector3> OnEndDash;
 
     Coroutine dashCoroutine = null;
     Coroutine chargedAttackCoroutine = null;
@@ -308,6 +309,7 @@ public class PlayerInput : MonoBehaviour
         controller.DashVFX.Stop();
         hero.State = (int)Entity.EntityState.MOVE;
         controller.ResetValues();
+        OnEndDash?.Invoke(transform.position);
     }
 
     public void StartChargedAttackCasting()
