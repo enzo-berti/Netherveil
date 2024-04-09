@@ -7,6 +7,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
     readonly List<GameObject> ghostSpears = new();
     readonly List<GameObject> spearThrowWrappers = new();
     readonly List<GameObject> spearVFXs = new();
+    readonly float DEGREE_OFFSET = 15f;
     public void OnRetrieved() 
     {
         //used a wrapper instead of the object itself to make it rotate from player's position, not the middle of the collide
@@ -53,7 +54,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
             ghostSpears.Add(ghostSpear);
 
             ghostSpear.GetComponent<Spear>().SpearThrowCollider = spearThrowWrappers[i].GetComponentInChildren<BoxCollider>(includeInactive: true);
-            Vector3 newPosToReach = Quaternion.Euler(0, i != 0 ? 15f : -15f, 0) * posToReach;
+            Vector3 newPosToReach = Quaternion.Euler(0f, i != 0 ? DEGREE_OFFSET : -DEGREE_OFFSET, 0f) * posToReach;
             spearThrowWrappers[i].transform.LookAt(newPosToReach);
 
             spearVFXs[i].transform.position = player.transform.position;

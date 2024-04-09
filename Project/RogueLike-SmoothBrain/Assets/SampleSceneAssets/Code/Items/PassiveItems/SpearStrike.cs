@@ -3,6 +3,8 @@ using UnityEngine.VFX;
 
 public class SpearStrike : ItemEffect , IPassiveItem 
 {
+    readonly int AOE_DAMAGES = 10;
+
     public void OnRetrieved() 
     {
         //instantiate the thunderstrike collider and vfx
@@ -35,7 +37,7 @@ public class SpearStrike : ItemEffect , IPassiveItem
             {
                 if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != hero.gameObject)
                 {
-                    hero.Attack(entity, 10);
+                    hero.Attack(entity, AOE_DAMAGES);
                 }
             }
         }
