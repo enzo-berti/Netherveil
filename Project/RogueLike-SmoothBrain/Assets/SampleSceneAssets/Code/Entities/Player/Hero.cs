@@ -108,6 +108,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
         else if (playerController.Spear.IsThrowing || playerController.Spear.IsThrown)
         {
+            damages += PlayerController.SPEAR_DAMAGES;
             OnSpearAttack?.Invoke(damageable, this);
         }
         else

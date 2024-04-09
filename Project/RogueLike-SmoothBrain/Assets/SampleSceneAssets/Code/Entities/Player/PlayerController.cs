@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     //attack values
     public int ComboCount { get; set; } = 0;
     public static readonly int FINISHER_DAMAGES = 10;
+    public static readonly int SPEAR_DAMAGES = 5;
     public static readonly int CHARGED_ATTACK_DAMAGES = 20;
     public static readonly int MAX_COMBO_COUNT = 3;
     public static readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
