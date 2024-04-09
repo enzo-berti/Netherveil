@@ -305,36 +305,15 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         _damageable.ApplyDamage(damages, this);
     }
 
-    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        // Some times, this method is call when entity is dead ??
-        if (stats.GetValue(Stat.HP) <= 0)
-            return;
-
         if ((Vector3.Dot(player.transform.position - transform.position, transform.forward) < 0 && !hasProjectile)
             || currentAttack == Attacks.RANGE)
         {
             _value *= 2;
         }
 
-        Stats.IncreaseValue(Stat.HP, -_value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-        if (hasAnimation)
-        {
-            //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
-            StartCoroutine(HitRoutine());
-        }
-
-        if (stats.GetValue(Stat.HP) <= 0)
-        {
-            Death();
-        }
-        else
-        {
-            AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position, true);
-        }
+        ApplyDamagesMob(_value, bossSounds.hitSound.reference, Death, notEffectDamage);
     }
 
     public void Death()

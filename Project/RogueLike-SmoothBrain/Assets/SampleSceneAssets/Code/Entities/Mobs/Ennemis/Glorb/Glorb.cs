@@ -60,26 +60,9 @@ public class Glorb : Mobs, IGlorb
         damageable.ApplyDamage(damages, this);
     }
 
-    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        if (stats.GetValue(Stat.HP) <= 0)
-            return;
-
-        Stats.DecreaseValue(Stat.HP, _value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-        if (hasAnimation)
-        {
-            //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
-            AudioManager.Instance.PlaySound(hitSFX, transform.position);
-            StartCoroutine(HitRoutine());
-        }
-
-        if (stats.GetValue(Stat.HP) <= 0)
-        {
-            Death();
-        }
+        ApplyDamagesMob(_value, hitSFX, Death, notEffectDamage);
     }
 
     public void Death()

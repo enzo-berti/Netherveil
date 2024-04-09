@@ -48,6 +48,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {
+        if(IsInvincible)
+        {
+            return;
+        }
+
         Stats.DecreaseValue(Stat.HP, _value, false);
 
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages

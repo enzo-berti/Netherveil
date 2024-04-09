@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public abstract class Entity : MonoBehaviour
 {
@@ -35,6 +33,7 @@ public abstract class Entity : MonoBehaviour
     protected List<Status> statusToApply = new();
     public bool IsKnockbackable = true;
     public bool canTriggerTraps = true;
+    public bool IsInvincible = false;
 
     private int state = (int)EntityState.MOVE;
     public int State 

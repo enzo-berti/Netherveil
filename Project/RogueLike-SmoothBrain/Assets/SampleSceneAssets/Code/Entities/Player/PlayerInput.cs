@@ -20,6 +20,7 @@ public class PlayerInput : MonoBehaviour
 
     public static event Action<Vector3> OnThrowSpear;
     public static event Action OnRetrieveSpear;
+    public static event Action OnStartDash;
     public static event Action<Vector3> OnEndDash;
 
     Coroutine dashCoroutine = null;
@@ -301,6 +302,7 @@ public class PlayerInput : MonoBehaviour
         controller.DashVFX.Play();
         hero.State = (int)Hero.PlayerState.DASH;
         AudioManager.Instance.PlaySound(controller.DashSFX);
+        OnStartDash?.Invoke();
     }
 
     public void EndOfDashAnimation()

@@ -113,30 +113,9 @@ public class PestStateMachine : Mobs, IPest
         }
     }
 
-    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        // Some times, this method is call when entity is dead ??
-        if (stats.GetValue(Stat.HP) <= 0)
-            return;
-
-        Stats.IncreaseValue(Stat.HP, -_value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-        if (hasAnimation)
-        {
-            //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
-            StartCoroutine(HitRoutine());
-        }
-
-        if (stats.GetValue(Stat.HP) <= 0)
-        {
-            Death();
-        }
-        else
-        {
-            AudioManager.Instance.PlaySound(pestSounds.takeDamageSound, transform.position);
-        }
+        ApplyDamagesMob(_value, pestSounds.hitSound, Death, notEffectDamage);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
