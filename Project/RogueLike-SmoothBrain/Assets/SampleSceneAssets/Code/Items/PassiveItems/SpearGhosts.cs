@@ -54,7 +54,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
             ghostSpears.Add(ghostSpear);
 
             ghostSpear.GetComponent<Spear>().SpearThrowCollider = spearThrowWrappers[i].GetComponentInChildren<BoxCollider>(includeInactive: true);
-            Vector3 newPosToReach = posToReach.RotatePointAroundYAxis(i != 0 ? 15f : -15f);
+            Vector3 newPosToReach = Quaternion.Euler(0, i != 0 ? 15f : -15f, 0) * posToReach;
             spearThrowWrappers[i].transform.LookAt(newPosToReach);
             spearVFXs[i].transform.position = player.transform.position;
             spearVFXs[i].transform.LookAt(newPosToReach);

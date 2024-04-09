@@ -59,19 +59,18 @@ public static class Vector3Extensions
     /// <param name="vector"></param>
     /// <param name="angleDegrees"></param>
     /// <returns></returns>
-    public static Vector3 RotatePointAroundYAxis(this Vector3 vector, float angleDegrees)
-    {
-        float angleRadians = angleDegrees * Mathf.Deg2Rad;
+    //public static Vector3 RotatePointAroundYAxis(this Vector3 vector, float angleDegrees)
+    //{
+    //    float angleRadians = angleDegrees * Mathf.Deg2Rad;
 
-        // using 2x2 rotation matrix to multiply with x,z vector
-        //[cos(teta), -sin(teta)] * [x]
-        //[sin(teta), cos(teta) ]   [z]
-        float newX = vector.x * Mathf.Cos(angleRadians) - vector.z * Mathf.Sin(angleRadians);
-        float newZ = vector.x * Mathf.Sin(angleRadians) + vector.z * Mathf.Cos(angleRadians);
+    //    // using 2x2 rotation matrix to multiply with x,z vector
+    //    //[cos(teta), -sin(teta)] * [x]
+    //    //[sin(teta), cos(teta) ]   [z]
+    //    float newX = vector.x * Mathf.Cos(angleRadians) - vector.z * Mathf.Sin(angleRadians);
+    //    float newZ = vector.x * Mathf.Sin(angleRadians) + vector.z * Mathf.Cos(angleRadians);
 
-        return new Vector3(newX, vector.y, newZ);
-    }
-
+    //    return new Vector3(newX, vector.y, newZ);
+    //}
 
     /// <param name="vector"></param>
     /// <param name="nbDigits"></param>
