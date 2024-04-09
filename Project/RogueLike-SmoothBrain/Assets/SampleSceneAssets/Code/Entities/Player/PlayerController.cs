@@ -304,11 +304,6 @@ public class PlayerController : MonoBehaviour
 
     #region Miscellaneous
 
-    public static GameObject Get()
-    {
-        return GameObject.FindWithTag("Player");
-    }
-
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
     {
         if (isImmediate)
