@@ -270,7 +270,8 @@ public class MapGenerator : MonoBehaviour
 
                 foreach (Door exitDoor in Seed.RandList(genParam.availableDoorsByRot[rotation]))
                 {
-                    doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation), 0f); // rotate gameObject exit to correspond the neededRotation
+                    // rotate gameObject entrance door to correspond the exit door
+                    doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation), 0f);
 
                     // Set position
                     roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + exitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
