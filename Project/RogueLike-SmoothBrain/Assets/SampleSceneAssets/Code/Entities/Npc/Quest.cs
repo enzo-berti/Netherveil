@@ -23,7 +23,7 @@ public abstract class Quest
             database = Resources.Load<QuestDatabase>("QuestDatabase");
         }
 
-        int indexRandom = Seed.Range(0, database.datas.Count - 1);
+        int indexRandom = Seed.Range(0, database.datas.Count);
         return database.datas[indexRandom].idName;
     }
 

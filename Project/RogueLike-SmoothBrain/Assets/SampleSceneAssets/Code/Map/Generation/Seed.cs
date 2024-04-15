@@ -1,31 +1,59 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 namespace Generation
 {
     static public class Seed
     {
-        static private System.Random randGen = new System.Random();
+        static private readonly int seedSize = 8;
+        static public string seed = "0";
+        static private System.Random random = new System.Random(0);
+
+        static public void RandomizeSeed()
+        {
+            System.Random tempRand = new System.Random();
+            seed = string.Empty;
+
+            for (int i = 0; i < seedSize; i++)
+            {
+                switch (tempRand.Next(0, 2))
+                {
+                    case 0:
+                        seed += (char)tempRand.Next(97, 123); // lower case letters
+                        break;
+                    case 1:
+                        seed += (char)tempRand.Next(48, 58); // numbers
+                        break;
+                }
+            }
+
+
+            UnityEngine.Debug.Log(seed);
+
+            random = new System.Random(SeedToInt());
+        }
 
         static public void Reset()
         {
-            randGen = new System.Random();
+            random = new System.Random(SeedToInt());
         }
 
-        static public void NewSeed(int seed)
+        static public void Set(string seed)
         {
-            randGen = new System.Random(seed);
+            Seed.seed = seed;
+            random = new System.Random(SeedToInt());
         }
 
-        static public int Range(int minInclusive, int maxInclusive)
+        static public int Range(int minInclusive, int maxExclusive)
         {
-            return randGen.Next(minInclusive, maxInclusive);
+            return random.Next(minInclusive, maxExclusive);
         }
 
         static public List<T> RandList<T>(List<T> list)
         {
             List<T> result = new List<T>();
 
-            int iNoise = Seed.Range(0, list.Count);
+            int iNoise = Range(0, list.Count);
             for (int i = 0; i < list.Count; i++)
             {
                 int index = (i + iNoise) % list.Count;
@@ -33,6 +61,17 @@ namespace Generation
             }
 
             return result;
+        }
+
+        static private int SeedToInt()
+        {
+            int seedToInt = 0;
+            for (int i = 0; i < seed.Length; i++)
+            {
+                seedToInt += seed[i] * (int)math.pow(10, i);
+            }
+
+            return seedToInt;
         }
     }
 }

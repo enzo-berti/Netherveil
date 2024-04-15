@@ -113,7 +113,7 @@ public class Item : MonoBehaviour, IInterractable
         {
             allItems.Add(itemInDb.idName);
         }
-        int indexRandom = Seed.Range(0, allItems.Count - 1);
+        int indexRandom = Seed.Range(0, allItems.Count);
         item.idItemName = allItems[indexRandom];
     }
 
