@@ -1,7 +1,7 @@
 // ---[ STATE ] ---
 // replace "#SCRIPTNAME#_STATEMACHINE" by your state machine class name.
 //
-// Here you can see an exemple of CheckSwitchStates method:
+// Here you can see an exemple of the CheckSwitchStates method:
 // protected override void CheckSwitchStates()
 // {
 //      if (isRunning)
@@ -10,38 +10,38 @@
 //      }
 // }
 
-using StateMachine; // include all script about stateMachine
+using StateMachine; // include all scripts about StateMachines
 
 public class #SCRIPTNAME# : BaseState<#SCRIPTNAME#_STATEMACHINE>
 {
     public #SCRIPTNAME#(#SCRIPTNAME#_STATEMACHINE currentContext, StateFactory<#SCRIPTNAME#_STATEMACHINE> currentFactory)
         : base(currentContext, currentFactory) { }
         
-    // This method will be call every Update to check and change a state.
+    // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
         throw new System.NotImplementedException();
     }
 
-    // This method will be call only one time before the update.
+    // This method will be called only once before the update.
     protected override void EnterState()
     {
         throw new System.NotImplementedException();
     }
 
-    // This method will be call only one time after the last update.
+    // This method will be called only once after the last update.
     protected override void ExitState()
     {
         throw new System.NotImplementedException();
     }
 
-    // This method will be call every frame.
+    // This method will be called every frame.
     protected override void UpdateState()
     {
         throw new System.NotImplementedException();
     }
 
-    // This method will be call on state changement.
+    // This method will be called on state switch.
     // No need to modify this method !
     protected override void SwitchState(BaseState<#SCRIPTNAME#_STATEMACHINE> newState)
     {
