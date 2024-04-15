@@ -24,13 +24,12 @@ public abstract class Quest
             database = Resources.Load<QuestDatabase>("QuestDatabase");
         }
 
-        List<string> allQuests = new();
-        foreach (var questInDB in database.datas)
-        {
-            allQuests.Add(questInDB.idName);
-        }
-        int indexRandom = Seed.Range(0, allQuests.Count - 1);
-        Debug.Log(allQuests[indexRandom]);
-        return allQuests[indexRandom];
+        int indexRandom = Seed.Range(0, database.datas.Count - 1);
+        return database.datas[indexRandom].idName;
+    }
+
+    protected void QuestFinished()
+    {
+        GameObject.FindWithTag("Player").GetComponent<Hero>().CurrentQuest = null;
     }
 }
