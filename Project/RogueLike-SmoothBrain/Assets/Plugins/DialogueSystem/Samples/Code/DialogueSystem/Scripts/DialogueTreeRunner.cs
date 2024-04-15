@@ -29,6 +29,7 @@ public class DialogueTreeRunner : MonoBehaviour
         this.tree = tree;
         this.tree.ResetTree();
         dialogueCanvas.gameObject.SetActive(true);
+        UpdateDialogue();
     }
 
     public void EndDialogue()
