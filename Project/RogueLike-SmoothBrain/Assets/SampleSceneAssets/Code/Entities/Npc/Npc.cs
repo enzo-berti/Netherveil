@@ -3,9 +3,11 @@ using UnityEngine.UI;
 
 public abstract class Npc : Entity, IInterractable
 {
-    public Image rangeImage;
+    [SerializeField] Image rangeImage;
+    public Image RangeImage { get => rangeImage; }
     PlayerInteractions playerInteractions;
     Hero hero;
+    float factor = 0f;
 
     public virtual void Interract()
     {
@@ -17,6 +19,7 @@ public abstract class Npc : Entity, IInterractable
         base.Start();
         playerInteractions = GameObject.FindWithTag("Player").GetComponent<PlayerInteractions>();
         hero = playerInteractions.GetComponent<Hero>();
+        factor = Time.deltaTime * 2f;
     }
 
     protected override void Update()
@@ -37,7 +40,13 @@ public abstract class Npc : Entity, IInterractable
         else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
         {
             playerInteractions.InteractablesInRange.Remove(this);
-            rangeImage.gameObject.SetActive(false);
+            ToggleRangeImage(false);
         }
+    }
+
+    public void ToggleRangeImage(bool toggle)
+    {
+        StopAllCoroutines();
+        StartCoroutine(toggle ? EasingFunctions.UpScaleCoroutine(rangeImage.gameObject, factor) : EasingFunctions.DownScaleCoroutine(rangeImage.gameObject, factor));
     }
 }

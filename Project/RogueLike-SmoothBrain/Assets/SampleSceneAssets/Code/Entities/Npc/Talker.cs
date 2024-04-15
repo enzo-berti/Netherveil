@@ -5,6 +5,13 @@ public class Talker : Npc
 {
     [Header("Talker parameters")]
     [SerializeField] private DialogueTree dialogue;
+    DialogueTreeRunner dialogueTreeRunner;
+
+    protected override void Start()
+    {
+        base.Start();
+        dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
+    }
 
     public override void Interract()
     {
@@ -13,6 +20,13 @@ public class Talker : Npc
 
     private void TriggerDialogue()
     {
-        FindObjectOfType<DialogueTreeRunner>().StartDialogue(dialogue);
+        if(dialogueTreeRunner.IsStarted)
+        {
+            dialogueTreeRunner.UpdateDialogue();
+        }
+        else
+        {
+            dialogueTreeRunner.StartDialogue(dialogue);
+        }
     }
 }

@@ -21,30 +21,6 @@ public class ItemDescription : MonoBehaviour
     public void TogglePanel(bool toggle)
     {
         StopAllCoroutines();
-        StartCoroutine(toggle ? UpScaleCoroutine() : DownScaleCoroutine());
-    }
-
-    IEnumerator UpScaleCoroutine()
-    {
-        while(panel.transform.localScale.x < 1f)
-        {
-            Vector3 scale = panel.transform.localScale;
-            scale += new Vector3(factor, factor, factor);
-            scale = new Vector3(Mathf.Min(scale.x, 1f), Mathf.Min(scale.y, 1f), Mathf.Min(scale.z, 1f));
-            panel.transform.localScale = scale;
-            yield return null;
-        }
-    }
-
-    IEnumerator DownScaleCoroutine()
-    {
-        while (panel.transform.localScale.x > 0f)
-        {
-            Vector3 scale = panel.transform.localScale;
-            scale -= new Vector3(factor, factor, factor);
-            scale = new Vector3(Mathf.Max(scale.x, 0f), Mathf.Max(scale.y, 0f), Mathf.Max(scale.z, 0f));
-            panel.transform.localScale = scale;
-            yield return null;
-        }
+        StartCoroutine(toggle ? EasingFunctions.UpScaleCoroutine(panel, factor) : EasingFunctions.DownScaleCoroutine(panel, factor));
     }
 }

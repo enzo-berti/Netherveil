@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using Map;
 using UnityEngine;
 
 public class DebugForMilestone : MonoBehaviour
 {
-
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Keypad1))
@@ -22,7 +19,7 @@ public class DebugForMilestone : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {
-                GameObject.FindWithTag("Player").GetComponent<Hero>().Death();
+            GameObject.FindWithTag("Player").GetComponent<Hero>().Death();
         }
     }
 }

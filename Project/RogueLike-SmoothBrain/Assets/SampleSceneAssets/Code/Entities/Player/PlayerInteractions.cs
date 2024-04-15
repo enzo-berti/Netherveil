@@ -32,7 +32,7 @@ public class PlayerInteractions : MonoBehaviour
             if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out ItemDescription itemDesc))
                 itemDesc.TogglePanel(false);
             if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out Npc npc))
-                npc.rangeImage.gameObject.SetActive(false);
+                npc.ToggleRangeImage(false);
         }
 
         if((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Outline outline))
@@ -42,6 +42,6 @@ public class PlayerInteractions : MonoBehaviour
             itemDescription.TogglePanel(true);
 
         if ((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Npc npc2))
-            npc2.rangeImage.gameObject.SetActive(true);
+            npc2.ToggleRangeImage(true);
     }
 }

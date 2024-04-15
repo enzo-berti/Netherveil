@@ -98,7 +98,7 @@ public class Spear : MonoBehaviour
         Destroy(trail);
         meshRenderer.enabled = true;
         // We set position at the exact place ( the spear doesn't move, just tp )
-        transform.SetPositionAndRotation(new Vector3(posToReach.x, posToReach.y + meshRenderer.bounds.size.y / 2f, posToReach.z), 
+        transform.SetPositionAndRotation(posToReach + Vector3.up, 
             Quaternion.identity * Quaternion.Euler(-90f, 90f, 0));
 
         IsThrowing = false;

@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     PlayerController controller;
     CameraUtilities cameraUtilities;
     PlayerInteractions playerInteractions;
+    DialogueTreeRunner dialogueTreeRunner;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
 
     public static event Action<Vector3> OnThrowSpear;
@@ -61,6 +62,7 @@ public class PlayerInput : MonoBehaviour
         hudHandler = FindObjectOfType<HudHandler>();
         animator = GetComponentInChildren<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+        dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
     }
 
     private void Start()
@@ -382,25 +384,25 @@ public class PlayerInput : MonoBehaviour
     {
         return (hero.State == (int)Entity.EntityState.MOVE ||
             (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-             && !controller.Spear.IsThrown && !ForceReturnToMove;
+             && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanCastChargedAttack()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
             || hero.State == (int)Entity.EntityState.ATTACK)
-            && !controller.Spear.IsThrown && !LaunchedChargedAttack;
+            && !controller.Spear.IsThrown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanRetrieveSpear()
     {
-        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown;
+        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanDash()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
-            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack;
+            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanResetCombo()
