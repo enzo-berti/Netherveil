@@ -7,24 +7,25 @@ public class Talker : Npc
     [SerializeField] private DialogueTree dialogue;
     DialogueTreeRunner dialogueTreeRunner;
     Quest quest;
+    Hero player;
 
     protected override void Start()
     {
         base.Start();
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
     }
 
     public override void Interract()
     {
         TriggerDialogue();
         quest = Quest.LoadClass(Quest.GetRandomQuestName());
-        //add to player and update UI
-        Debug.Log(quest.idItemName);
+        player.CurrentQuest = quest;
     }
 
     private void TriggerDialogue()
     {
-        if(dialogueTreeRunner.IsStarted)
+        if (dialogueTreeRunner.IsStarted)
         {
             dialogueTreeRunner.UpdateDialogue();
         }
