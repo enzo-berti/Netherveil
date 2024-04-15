@@ -6,7 +6,12 @@ namespace Generation
     {
         static private System.Random randGen = new System.Random();
 
-        static public void SetSeed(int seed)
+        static public void Reset()
+        {
+            randGen = new System.Random();
+        }
+
+        static public void NewSeed(int seed)
         {
             randGen = new System.Random(seed);
         }
