@@ -1,15 +1,8 @@
 using UnityEngine; 
  
-public class Test : ItemEffect, IPassiveItem, IActiveItem 
+public class Test : ItemEffect, IActiveItem 
 { 
-    public void  OnRetrieved()
-    {
-    }
-    public void  OnRemove()
-    {
-    }
-
-    public System.Single Cooldown { get; set; }
+    public System.Single Cooldown { get; set; } = 10;
 
     public void  OnActive()
     {

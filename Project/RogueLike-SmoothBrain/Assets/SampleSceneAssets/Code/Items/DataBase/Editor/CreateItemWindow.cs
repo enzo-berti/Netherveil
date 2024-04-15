@@ -24,12 +24,6 @@ public class CreateItemWindow : EditorWindow
         database = Resources.Load<ItemDatabase>("ItemDatabase");
         Debug.Log("coucou");
         MethodInfo coucou = typeof(IActiveItem).GetMethods()[1];
-
-        Debug.Log("Name : " + coucou.Name);
-        Debug.Log("Member Type : " + coucou.MemberType);
-        Debug.Log("Reflected Type : " + coucou.ReflectedType);
-        Debug.Log("Return Parameter : " + coucou.ReturnParameter);
-        Debug.Log("Return Type : " + coucou.ReturnType);
     }
 
     private void OnGUI()
@@ -81,7 +75,6 @@ public class CreateItemWindow : EditorWindow
     {
         string itemName = item.idName.GetPascalCase();
         string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + (item.Type == ItemData.ItemType.PASSIVE ? "PassiveItems" : "ActiveItems") + $"/{itemName}.cs";
-        Debug.Log(path);
         StreamReader sr = new StreamReader(path + "/../../ItemSample.txt");
         StreamWriter sw = new StreamWriter(path);
         List<Type> typeList = new List<Type>();
@@ -138,7 +131,7 @@ public class CreateItemWindow : EditorWindow
                                       method = typeList[i].GetMethods()[j];
                                     } while (method.Name.Split("_").Length > 1 && (method.Name.Split("_")[1] == name || method.Name.Split("_")[1] == name));
                                     j--;
-                                    methodToWrite += "}\n\n    ";
+                                    methodToWrite += "} = " + activeCooldown + ";\n\n    ";
                                 }
                                 else
                                 {
