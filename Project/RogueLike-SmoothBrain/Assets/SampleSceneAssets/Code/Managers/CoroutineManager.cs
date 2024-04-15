@@ -32,9 +32,9 @@ public class CoroutineManager : MonoBehaviour
         }
     }
 
-    public void StartCustom(Func<IEnumerator> _coroutine)
+    public void StartCustom(IEnumerator _coroutine)
     {
-        StartCoroutine(_coroutine());
+        StartCoroutine(_coroutine);
     }
 
     public void StopCustom(IEnumerator _coroutine)
