@@ -11,13 +11,18 @@ public class GeneralMenu : MonoBehaviour
     public void Toggle(bool toggle)
     {
         gameObject.SetActive(toggle);
+
+        if (toggle)
+            OnPause?.Invoke();
+        else
+            OnUnpause?.Invoke();
     }
 
     public void Resume()
     {
         Time.timeScale = 1f;
         hud.SetActive(true);
-        gameObject.SetActive(false);
+        Toggle(false);
     }
 
     public void ReloadGame()

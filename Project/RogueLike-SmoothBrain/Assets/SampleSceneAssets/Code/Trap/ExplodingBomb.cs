@@ -18,7 +18,7 @@ public class ExplodingBomb : MonoBehaviour
     [SerializeField] private float blastRadius;
     [SerializeField] private int blastDamage;
     [SerializeField] private LayerMask damageLayer;
-    [SerializeField] private float throwHeight = 5f;
+    //[SerializeField] private float throwHeight = 5f; -> Jamais utilisé, Dorian
     private bool isActive;
     private bool isMoving => throwRoutine != null;
     private float elapsedExplosionTime;
