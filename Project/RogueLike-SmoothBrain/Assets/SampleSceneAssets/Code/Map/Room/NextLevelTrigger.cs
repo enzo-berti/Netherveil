@@ -8,7 +8,7 @@ namespace Map
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                Debug.Log("NEXT LEVEL");
+                LevelLoader.current.LoadScene("InGame");
             }
         }
     }
