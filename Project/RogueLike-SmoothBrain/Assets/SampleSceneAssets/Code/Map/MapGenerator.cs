@@ -15,22 +15,22 @@ namespace Generation
         {
 
             nbRoomByType = new Dictionary<RoomType, int>
-        {
-            { RoomType.Normal, nbNormal },
-            { RoomType.Treasure, nbTreasure },
-            { RoomType.Challenge, nbChallenge },
-            { RoomType.Merchant, nbMerchant },
-            { RoomType.Secret, nbSecret },
-            { RoomType.MiniBoss, nbMiniBoss },
-        };
+            {
+                { RoomType.Normal, nbNormal },
+                { RoomType.Treasure, nbTreasure },
+                { RoomType.Challenge, nbChallenge },
+                { RoomType.Merchant, nbMerchant },
+                { RoomType.Secret, nbSecret },
+                { RoomType.MiniBoss, nbMiniBoss },
+            };
 
             availableDoorsByRot = new Dictionary<int, List<Door>>
-        {
-            { 0, new List<Door>() },
-            { 90, new List<Door>() },
-            { 180, new List<Door>() },
-            { 270, new List<Door>() }
-        };
+            {
+                { 0, new List<Door>() },
+                { 90, new List<Door>() },
+                { 180, new List<Door>() },
+                { 270, new List<Door>() }
+            };
         }
 
         public readonly int NbRoom
@@ -116,6 +116,9 @@ namespace Generation
     {
         private static readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
 
+        [SerializeField] private bool isRandom = true;
+        [SerializeField] private int seed = 0;
+
         [SerializeField] private List<GameObject> roomLobby = new List<GameObject>();
         [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
         [SerializeField] private List<GameObject> roomTreasure = new List<GameObject>();
@@ -126,10 +129,8 @@ namespace Generation
         [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
         [SerializeField] private List<GameObject> obstructionsDoor;
+        [SerializeField] private List<GameObject> stairsPrefab;
         [SerializeField] private GameObject gatePrefab;
-
-        [SerializeField] private bool isRandom = true;
-        [SerializeField] private int seed = 0;
 
         private void Awake()
         {
