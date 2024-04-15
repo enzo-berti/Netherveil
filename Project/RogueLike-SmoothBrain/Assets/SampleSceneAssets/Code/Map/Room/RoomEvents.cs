@@ -40,6 +40,7 @@ namespace Map
             navMeshSurface = transform.parent.GetComponentInChildren<NavMeshSurface>();
 
             enemies.SetActive(false);
+            gameObject.layer = LayerMask.NameToLayer("Default");
 
             // set bool to true to not call the events in the room
             allEnemiesDeadCalled = (enemies.transform.childCount == 0);
@@ -57,13 +58,14 @@ namespace Map
             Debug.Log("ENTER ROOM");
             enterRoomCalled = true;
 
-            // global events
-            RoomUtilities.roomData = mapData;
-            RoomUtilities.EnterEvents?.Invoke();
-
             // local events
+            gameObject.layer = LayerMask.NameToLayer("Map");
+            RoomUtilities.roomData = mapData;
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
+
+            // global events
+            RoomUtilities.EnterEvents?.Invoke();
         }
 
         private void ExitEvents()
