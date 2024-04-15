@@ -13,7 +13,8 @@ public class GlorbStateMachine : MonoBehaviour, IGlorb
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
 
-    public List<Status> StatusToApply => statusToApply;
+    public List<Status> StatusToApply => throw new System.NotImplementedException();
+	
     [SerializeField] CapsuleCollider shockwaveCollider;
     VFXStopper vfxStopper;
     bool cooldownSpeAttack = false;
@@ -39,5 +40,25 @@ public class GlorbStateMachine : MonoBehaviour, IGlorb
     void Update()
     {
         currentState.Update();
+    }
+
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void MoveTo(Vector3 posToMove)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Death()
+    {
+        throw new System.NotImplementedException();
     }
 }
