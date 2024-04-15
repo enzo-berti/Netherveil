@@ -13,7 +13,11 @@ public abstract class Quest
 
     static public Quest LoadClass(string name)
     {
-        return Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
+        QuestData data = Quest.database.GetQuest(name);
+        Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
+        quest.idItemName = data.idName;
+        quest.descriptionToDisplay = data.Description;
+        return quest;
     }
 
     static public string GetRandomQuestName()
@@ -29,6 +33,7 @@ public abstract class Quest
             allQuests.Add(questInDB.idName);
         }
         int indexRandom = Seed.Range(0, allQuests.Count - 1);
+        Debug.Log(allQuests[indexRandom]);
         return allQuests[indexRandom];
     }
 
