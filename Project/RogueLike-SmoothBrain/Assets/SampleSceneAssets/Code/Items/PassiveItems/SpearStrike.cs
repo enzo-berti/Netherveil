@@ -25,6 +25,7 @@ public class SpearStrike : ItemEffect , IPassiveItem
         thunderstrikeVFX.transform.position = spearPos;
         thunderstrikeCollider.transform.position = spearPos;
         thunderstrikeCollider.SetActive(true);
+        thunderstrikeVFX.GetComponent<VisualEffect>().Reinit();
         thunderstrikeVFX.GetComponent<VisualEffect>().Play();
 
         Collider[] colliders = thunderstrikeCollider.GetComponent<CapsuleCollider>().CapsuleOverlap();
