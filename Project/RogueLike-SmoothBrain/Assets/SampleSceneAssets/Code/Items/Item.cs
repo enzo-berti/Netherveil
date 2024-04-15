@@ -23,10 +23,16 @@ public class Item : MonoBehaviour, IInterractable
 
     Hero hero;
     Outline outline;
-    GameObject meshObject;
+
+    // Item to add in the inventory
     ItemEffect itemToGive;
     PlayerInteractions playerInteractions;
+
+    // Description displayed in the info box
     ItemDescription itemDescription;
+
+    // To move only mesh ( for the floating )
+    GameObject meshObject;
 
     private void Awake()
     {
@@ -87,7 +93,7 @@ public class Item : MonoBehaviour, IInterractable
     {
         itemToGive.Name = idItemName;
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
-        Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
+        Debug.Log($"Vous avez bien récupéré {itemToGive.Name}");
         Destroy(this.gameObject);
         playerInteractions.ItemsInRange.Remove(this);
         DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
@@ -127,11 +133,7 @@ public class Item : MonoBehaviour, IInterractable
         string[] splitDescription = descriptionToDisplay.Split(" ");
         string finalDescription = string.Empty;
         FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-        //Debug.Log(itemToGive.GetType().Name);
-        //foreach (var test in fieldOfItem)
-        //{
-        //    Debug.Log(test.Name);
-        //}
+
         for (int i = 0; i < splitDescription.Length; i++)
         {
             if (splitDescription[i].Length > 0 && splitDescription[i][0] == '{')
