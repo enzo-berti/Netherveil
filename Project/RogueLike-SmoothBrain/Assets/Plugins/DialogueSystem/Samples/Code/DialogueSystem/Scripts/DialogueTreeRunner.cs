@@ -36,7 +36,7 @@ public class DialogueTreeRunner : MonoBehaviour
         dialogueCanvas.gameObject.SetActive(false);
     }
 
-    public void UpdateDialogue(InputAction.CallbackContext ctx)
+    public void UpdateDialogue()
     {
         if(!IsStarted || tree == null)
             return;
@@ -68,7 +68,7 @@ public class DialogueTreeRunner : MonoBehaviour
                 newChoiceButton.onClick.AddListener(() =>
                 {
                     tree.Process(choiceData.child);
-                    UpdateDialogue(ctx);
+                    UpdateDialogue();
                 });
             });
         }

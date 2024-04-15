@@ -468,7 +468,6 @@ public class PlayerInput : MonoBehaviour
             map["BasicAttack"].performed -= Attack;
             map["Dash"].performed -= Dash;
             map["Interact"].performed -= Interract;
-            map["Interact"].performed -= dialogueTreeRunner.UpdateDialogue;
             map["Spear"].performed -= ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed -= ChargedAttack;
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
@@ -486,7 +485,6 @@ public class PlayerInput : MonoBehaviour
             map["BasicAttack"].performed += Attack;
             map["Dash"].performed += Dash;
             map["Interact"].performed += Interract;
-            map["Interact"].performed += dialogueTreeRunner.UpdateDialogue;
             map["Spear"].performed += ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed += ChargedAttack;
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
