@@ -20,7 +20,7 @@ public class Keybinding : MonoBehaviour
         DeviceManager.OnChangedToGamepad -= SwitchBindings;
     }
 
-    public void ResetBindings()
+    public void ResetCurrentBindings()
     {
         if(DeviceManager.Instance.IsPlayingKB())
         {
@@ -30,6 +30,16 @@ public class Keybinding : MonoBehaviour
         {
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).RemoveAllBindingOverrides();
         }
+    }
+
+    public void ResetKeyboardBindings()
+    {
+        playerInput.FindActionMap("Keyboard", throwIfNotFound: true).RemoveAllBindingOverrides();
+    }
+
+    public void ResetGamepadBindings()
+    {
+        playerInput.FindActionMap("Gamepad", throwIfNotFound: true).RemoveAllBindingOverrides();
     }
 
     private void SwitchBindings()

@@ -43,7 +43,7 @@ public class #SCRIPTNAME# : BaseState<#SCRIPTNAME#_STATEMACHINE>
 
     // This method will be call on state changement.
     // No need to modify this method !
-    protected override void SwitchState(BaseState<PestStateMachine> newState)
+    protected override void SwitchState(BaseState<#SCRIPTNAME#_STATEMACHINE> newState)
     {
         base.SwitchState(newState);
         Context.currentState = newState;

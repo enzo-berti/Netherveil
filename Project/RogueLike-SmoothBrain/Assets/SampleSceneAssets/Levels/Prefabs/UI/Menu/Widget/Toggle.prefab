@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5397334617604537889}
   - component: {fileID: 7454187136470064304}
+  - component: {fileID: 7086148338757137460}
   m_Layer: 0
   m_Name: Toggle
   m_TagString: Untagged
@@ -84,20 +85,22 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: ToggleVsync
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_IsOn: 1
+--- !u!114 &7086148338757137460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253445801883827910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd7328dcc762c824ab12c81be76cecb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggle: {fileID: 7454187136470064304}
+  toggleText: {fileID: 2368059205311585107}
 --- !u!1 &3429410177952225539
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,7 +112,7 @@ GameObject:
   - component: {fileID: 5074371644809791478}
   - component: {fileID: 8540151169788923917}
   - component: {fileID: 920077837488389520}
-  - component: {fileID: 5539602265567885303}
+  - component: {fileID: 6213524143904458847}
   m_Layer: 0
   m_Name: Checkmark
   m_TagString: Untagged
@@ -174,7 +177,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5539602265567885303
+--- !u!114 &6213524143904458847
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

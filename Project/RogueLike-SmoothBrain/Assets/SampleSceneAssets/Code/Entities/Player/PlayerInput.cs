@@ -259,7 +259,7 @@ public class PlayerInput : MonoBehaviour
 
         if (!controller.Spear.IsThrown)
         {
-            Vector3 posToReach = this.transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
+            Vector3 posToReach = transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
             OnThrowSpear?.Invoke(posToReach);          
             controller.Spear.Throw(posToReach);
             controller.PlayVFX(controller.spearLaunchVFX);
@@ -274,12 +274,11 @@ public class PlayerInput : MonoBehaviour
     private void Interract(InputAction.CallbackContext ctx)
     {
         Vector2 playerPos = transform.position.ToCameraOrientedVec2();
-        IInterractable closestInteractable = playerInteractions.ItemsInRange.OrderBy(interactable =>
+        IInterractable closestInteractable = playerInteractions.InteractablesInRange.OrderBy(interactable =>
         {
-            Vector2 itemPos = interactable.transform.position.ToCameraOrientedVec2();
+            Vector2 itemPos = (interactable as MonoBehaviour).transform.position.ToCameraOrientedVec2();
             return Vector2.Distance(playerPos, itemPos);
         })
-        .Select(interactable => interactable as IInterractable)
         .Where(interactable => interactable != null)
         .FirstOrDefault();
 
