@@ -1,10 +1,7 @@
-using FMOD;
 using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 public class Spike : MonoBehaviour
@@ -38,7 +35,6 @@ public class Spike : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
         if (other.gameObject.TryGetComponent<IDamageable>(out var damageable) && (damageable as MonoBehaviour).GetComponent<Entity>().canTriggerTraps)
         {
             entitiesToDealDamage.Add(damageable);
@@ -54,10 +50,11 @@ public class Spike : MonoBehaviour
         if (other.gameObject.TryGetComponent<IDamageable>(out var damageable))
         {
             entitiesToDealDamage.Remove(damageable);
+
             waitUntilTimer = 2f;
-            if (isOut)
+            if (isOut && !entitiesToDealDamage.Any())
             {
-               StartCoroutine(Disable());
+                StartCoroutine(Disable());
             }
             else
             {
@@ -88,7 +85,7 @@ public class Spike : MonoBehaviour
             yield return new WaitForSeconds(0.003f);
         }
         isOut = true;
-        entitiesToDealDamage.ForEach(actualEntity => {actualEntity.ApplyDamage(damage, null);});
+        entitiesToDealDamage.ForEach(actualEntity => { actualEntity.ApplyDamage(damage, null); });
 
         StartCoroutine(WaitUntil());
     }
@@ -104,7 +101,7 @@ public class Spike : MonoBehaviour
 
     IEnumerator Disable()
     {
-        
+
         yield return new WaitForSeconds(0.15f);
         AudioManager.Instance.StopSound(spikesUpEvent, FMOD.Studio.STOP_MODE.Immediate);
         AudioManager.Instance.PlaySound(spikesDownSFX, transform.position);
