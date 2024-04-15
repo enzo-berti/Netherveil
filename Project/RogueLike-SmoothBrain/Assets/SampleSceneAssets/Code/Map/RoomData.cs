@@ -1,9 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum RoomType
+{
+    None,
+    Lobby,
+    Normal,
+    Treasure,
+    Challenge,
+    Merchant,
+    Secret,
+    MiniBoss,
+    Boss,
+
+    COUNT
+}
+
 public struct RoomData
 {
-    public RoomData(GameObject enemiesContainer, RoomGenerator roomGenerator)
+    public RoomData(GameObject enemiesContainer, Generation.RoomGenerator roomGenerator)
     {
         enemies = new List<GameObject>();
 

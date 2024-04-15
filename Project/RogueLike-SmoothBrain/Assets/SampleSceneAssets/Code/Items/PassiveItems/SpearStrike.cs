@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -25,7 +26,8 @@ public class SpearStrike : ItemEffect , IPassiveItem
         thunderstrikeVFX.transform.position = spearPos;
         thunderstrikeCollider.transform.position = spearPos;
         thunderstrikeCollider.SetActive(true);
-        thunderstrikeVFX.GetComponent<VisualEffect>().Play();
+
+        CoroutineManager.Instance.StartCustom(PlayVFXLateUpdate(thunderstrikeVFX.GetComponent<VisualEffect>()));
 
         Collider[] colliders = thunderstrikeCollider.GetComponent<CapsuleCollider>().CapsuleOverlap();
 
@@ -42,5 +44,13 @@ public class SpearStrike : ItemEffect , IPassiveItem
 
         GameObject.Destroy(thunderstrikeCollider, 1f);
         GameObject.Destroy(thunderstrikeVFX, 1f);
+    }
+
+    private IEnumerator PlayVFXLateUpdate(VisualEffect thunderstrikeVFX)
+    {
+        Debug.Log("eyo");
+        yield return new WaitForSeconds(0.1f);
+        thunderstrikeVFX.Reinit();
+        thunderstrikeVFX.Play();
     }
 } 

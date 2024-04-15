@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     PlayerController controller;
     CameraUtilities cameraUtilities;
     PlayerInteractions playerInteractions;
+    DialogueTreeRunner dialogueTreeRunner;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
 
     public static event Action<Vector3> OnThrowSpear;
@@ -61,6 +62,7 @@ public class PlayerInput : MonoBehaviour
         hudHandler = FindObjectOfType<HudHandler>();
         animator = GetComponentInChildren<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+        dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
     }
 
     private void Start()
@@ -259,7 +261,7 @@ public class PlayerInput : MonoBehaviour
 
         if (!controller.Spear.IsThrown)
         {
-            Vector3 posToReach = this.transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
+            Vector3 posToReach = transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
             OnThrowSpear?.Invoke(posToReach);          
             controller.Spear.Throw(posToReach);
             controller.PlayVFX(controller.spearLaunchVFX);
@@ -274,12 +276,11 @@ public class PlayerInput : MonoBehaviour
     private void Interract(InputAction.CallbackContext ctx)
     {
         Vector2 playerPos = transform.position.ToCameraOrientedVec2();
-        IInterractable closestInteractable = playerInteractions.ItemsInRange.OrderBy(interactable =>
+        IInterractable closestInteractable = playerInteractions.InteractablesInRange.OrderBy(interactable =>
         {
-            Vector2 itemPos = interactable.transform.position.ToCameraOrientedVec2();
+            Vector2 itemPos = (interactable as MonoBehaviour).transform.position.ToCameraOrientedVec2();
             return Vector2.Distance(playerPos, itemPos);
         })
-        .Select(interactable => interactable as IInterractable)
         .Where(interactable => interactable != null)
         .FirstOrDefault();
 
@@ -383,25 +384,25 @@ public class PlayerInput : MonoBehaviour
     {
         return (hero.State == (int)Entity.EntityState.MOVE ||
             (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-             && !controller.Spear.IsThrown && !ForceReturnToMove;
+             && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanCastChargedAttack()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
             || hero.State == (int)Entity.EntityState.ATTACK)
-            && !controller.Spear.IsThrown && !LaunchedChargedAttack;
+            && !controller.Spear.IsThrown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanRetrieveSpear()
     {
-        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown;
+        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanDash()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
-            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack;
+            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanResetCombo()

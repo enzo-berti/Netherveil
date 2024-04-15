@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MenuHandler : MonoBehaviour
 {
-    [SerializeField] private List<MenuPart> menuItems = new List<MenuPart>();
+    [SerializeField] protected List<MenuPart> menuItems = new List<MenuPart>();
 
     private void Start()
     {
@@ -19,5 +19,11 @@ public class MenuHandler : MonoBehaviour
     {
         CloseAllMenus();
         item.OpenMenu();
+    }
+
+    public void OpenMenu(int index)
+    {
+        CloseAllMenus();
+        menuItems[index].OpenMenu();
     }
 }

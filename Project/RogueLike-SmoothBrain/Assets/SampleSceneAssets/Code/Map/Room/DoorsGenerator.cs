@@ -2,112 +2,115 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum DoorState : byte
+namespace Generation
 {
-    NONE = 0,
-    OPEN,
-    CLOSE
-}
-
-[Serializable]
-public struct Door
-{
-    public Door(Transform transform)
+    public enum DoorState : byte
     {
-        forward = transform.forward;
-        localPosition = transform.position;
-        localRotation = transform.rotation.eulerAngles.y;
-        parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
+        NONE = 0,
+        OPEN,
+        CLOSE
     }
 
-    public Vector3 forward;
-    [SerializeField] private Vector3 localPosition;
-    public float localRotation;
-    public GameObject parentSkeleton;
-
-    public Vector3 Forward
+    [Serializable]
+    public struct Door
     {
-        get
+        public Door(Transform transform)
         {
-            return Quaternion.Euler(0, parentSkeleton.transform.eulerAngles.y, 0) * forward;
+            forward = transform.forward;
+            localPosition = transform.position;
+            localRotation = transform.rotation.eulerAngles.y;
+            parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
+        }
+
+        public Vector3 forward;
+        [SerializeField] private Vector3 localPosition;
+        public float localRotation;
+        public GameObject parentSkeleton;
+
+        public Vector3 Forward
+        {
+            get
+            {
+                return Quaternion.Euler(0, parentSkeleton.transform.eulerAngles.y, 0) * forward;
+            }
+        }
+
+        public float Rotation
+        {
+            get
+            {
+                return (parentSkeleton.transform.eulerAngles.y + localRotation) % 360;
+            }
+        }
+
+        public Vector3 Position
+        {
+            get
+            {
+                Vector3 pos = localPosition + parentSkeleton.transform.position;
+                Vector3 dir = pos - parentSkeleton.transform.position;
+                dir = Quaternion.Euler(0, parentSkeleton.transform.eulerAngles.y, 0) * dir;
+                pos = dir + parentSkeleton.transform.position;
+
+                return pos;
+            }
         }
     }
 
-    public float Rotation
+    public class DoorsGenerator : MonoBehaviour
     {
-        get
+        public List<Door> doors = new List<Door>();
+
+        [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
+
+        private void OnDrawGizmos()
         {
-            return (parentSkeleton.transform.eulerAngles.y + localRotation) % 360;
+            Gizmos.color = Color.red;
+            foreach (var door in doors)
+            {
+                Gizmos.DrawSphere(door.Position, 0.25f);
+            }
         }
-    }
-
-    public Vector3 Position 
-    {
-        get 
-        {
-            Vector3 pos = localPosition + parentSkeleton.transform.position;
-            Vector3 dir = pos - parentSkeleton.transform.position;
-            dir = Quaternion.Euler(0, parentSkeleton.transform.eulerAngles.y, 0) * dir;
-            pos = dir + parentSkeleton.transform.position;
-
-            return pos;
-        }
-    }
-}
-
-public class DoorsGenerator : MonoBehaviour
-{
-    public List<Door> doors = new List<Door>();
-
-    [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        foreach (var door in doors)
-        {
-            Gizmos.DrawSphere(door.Position, 0.25f);
-        }
-    }
 
 #if UNITY_EDITOR
-    public void GeneratePrefab()
-    {
-        doors.Clear();
-
-        foreach (Transform child in transform)
+        public void GeneratePrefab()
         {
-            doors.Add(new Door(child));
-        }
+            doors.Clear();
 
-        for (int i = transform.childCount - 1; i >= 0; i--)
-        {
-            DestroyImmediate(transform.GetChild(i).gameObject);
+            foreach (Transform child in transform)
+            {
+                doors.Add(new Door(child));
+            }
+
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
         }
-    }
 #endif
 
-    /// <summary>
-    /// Generate the seed doors (destroy doors between min max range)
-    /// </summary>
-    /// <param name="generationParameters"></param>
-    public void GenerateSeed(GenerationParam generationParameters)
-    {
-        // get number of doors that can spawn depending on the number of rooms available by genParams
-
-    }
-
-    public void RemoveDoor(Door door)
-    {
-        if (!doors.Remove(door))
+        /// <summary>
+        /// Generate the seed doors (destroy doors between min max range)
+        /// </summary>
+        /// <param name="generationParameters"></param>
+        public void GenerateSeed(GenerationParam generationParameters)
         {
-            Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
-            return;
-        }
-    }
+            // get number of doors that can spawn depending on the number of rooms available by genParams
 
-    public void EmptyDoors()
-    {
-        doors.Clear();
+        }
+
+        public void RemoveDoor(Door door)
+        {
+            if (!doors.Remove(door))
+            {
+                Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+                return;
+            }
+        }
+
+        public void EmptyDoors()
+        {
+            doors.Clear();
+        }
     }
 }
