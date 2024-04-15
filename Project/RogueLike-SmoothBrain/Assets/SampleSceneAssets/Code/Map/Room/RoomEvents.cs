@@ -43,7 +43,7 @@ public class RoomEvents : MonoBehaviour
         allEnemiesDeadCalled = (enemies.transform.childCount == 0);
 
         // create data of the map
-        mapData = new RoomData(enemies, transform.parent.GetComponentInChildren<RoomGenerator>());
+        mapData = new RoomData(enemies, transform.parent.GetComponentInChildren<Generation.RoomGenerator>());
         if (mapData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
         {
             EnterEvents();
