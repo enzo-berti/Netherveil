@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     PlayerController controller;
     CameraUtilities cameraUtilities;
     PlayerInteractions playerInteractions;
+    DialogueTreeRunner dialogueTreeRunner;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
 
     public static event Action<Vector3> OnThrowSpear;
@@ -61,6 +62,7 @@ public class PlayerInput : MonoBehaviour
         hudHandler = FindObjectOfType<HudHandler>();
         animator = GetComponentInChildren<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+        dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
     }
 
     private void Start()
@@ -241,6 +243,14 @@ public class PlayerInput : MonoBehaviour
         dashCoroutine = null;
     }
 
+    private void ActiveIteamActivation(InputAction.CallbackContext ctx)
+    {
+        IActiveItem item = hero.Inventory.ActiveItem;
+        if (item != null && item.Cooldown < 10)
+        {
+            hero.Inventory.ActiveItem.Activate();
+        }
+    }
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
     {
         // If spear is being thrown we can't recall this attack
@@ -382,25 +392,25 @@ public class PlayerInput : MonoBehaviour
     {
         return (hero.State == (int)Entity.EntityState.MOVE ||
             (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-             && !controller.Spear.IsThrown && !ForceReturnToMove;
+             && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanCastChargedAttack()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
             || hero.State == (int)Entity.EntityState.ATTACK)
-            && !controller.Spear.IsThrown && !LaunchedChargedAttack;
+            && !controller.Spear.IsThrown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanRetrieveSpear()
     {
-        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown;
+        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanDash()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
-            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack;
+            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanResetCombo()
@@ -456,6 +466,7 @@ public class PlayerInput : MonoBehaviour
         InputManagement(gamepadMap, unsubscribe: false);
     }
 
+   
     void InputManagement(InputActionMap map, bool unsubscribe)
     {
         if (unsubscribe)
@@ -469,6 +480,7 @@ public class PlayerInput : MonoBehaviour
             map["Spear"].performed -= ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed -= ChargedAttack;
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
+            map["ActiveItem"].performed -= ActiveIteamActivation;
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed -= hudHandler.ToggleMap;
@@ -486,6 +498,7 @@ public class PlayerInput : MonoBehaviour
             map["Spear"].performed += ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed += ChargedAttack;
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
+            map["ActiveItem"].performed += ActiveIteamActivation;
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed += hudHandler.ToggleMap;

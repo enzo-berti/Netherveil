@@ -1,15 +1,11 @@
-using UnityEngine; 
- 
-public class HornOfBarbatos : ItemEffect , IActiveItem 
-{ 
-    public void OnRetrieved() 
-    { 
-        throw new System.NotImplementedException(); 
-    } 
- 
-    public void OnRemove() 
-    { 
-        throw new System.NotImplementedException(); 
-    } 
- 
+using UnityEngine;
+
+public class HornOfBarbatos : ItemEffect, IActiveItem
+{
+    public float Cooldown { get; set; } = 3f;
+
+    public void Activate()
+    {
+        Debug.Log("WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOH");
+    }
 } 

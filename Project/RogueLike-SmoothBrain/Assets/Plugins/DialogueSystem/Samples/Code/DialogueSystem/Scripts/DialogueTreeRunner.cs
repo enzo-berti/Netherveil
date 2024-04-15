@@ -2,6 +2,7 @@ using DialogueSystem.Runtime;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DialogueTreeRunner : MonoBehaviour
@@ -17,25 +18,18 @@ public class DialogueTreeRunner : MonoBehaviour
     private DialogueTree tree;
     [SerializeField, Range(0f, 1f)] private float letterDelay = 0.1f;
     [SerializeField] private Button choiceButtonPrefab;
-    private bool isStarted => dialogueCanvas.gameObject.activeSelf;
+    public bool IsStarted => dialogueCanvas.gameObject.activeSelf;
     private string lastDialogue;
-
-    private void Update()
-    {
-        if (isStarted && Input.GetKeyDown(KeyCode.E) && tree != null)
-        {
-            UpdateDialogue();
-        }
-    }
 
     public void StartDialogue(DialogueTree tree)
     {
-        if (isStarted)
+        if (IsStarted)
             return;
 
         this.tree = tree;
         this.tree.ResetTree();
         dialogueCanvas.gameObject.SetActive(true);
+        UpdateDialogue();
     }
 
     public void EndDialogue()
@@ -43,8 +37,11 @@ public class DialogueTreeRunner : MonoBehaviour
         dialogueCanvas.gameObject.SetActive(false);
     }
 
-    private void UpdateDialogue()
+    public void UpdateDialogue()
     {
+        if(!IsStarted || tree == null)
+            return;
+
         foreach (Transform child in choiceTab)
             Destroy(child.gameObject);
 

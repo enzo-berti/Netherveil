@@ -1,4 +1,5 @@
 using UnityEngine;
+using Map;
 
 public class RuneOfPride : ItemEffect, IPassiveItem
 {

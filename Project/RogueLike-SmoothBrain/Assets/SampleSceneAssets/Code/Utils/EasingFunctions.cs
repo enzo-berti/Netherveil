@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public static class EasingFunctions
 {
@@ -34,6 +37,31 @@ public static class EasingFunctions
         EaseOutQuint,
         EaseOutSin
     }
+
+    public static IEnumerator UpScaleCoroutine(GameObject go, float factor)
+    {
+        while (go.transform.localScale.x < 1f)
+        {
+            Vector3 scale = go.transform.localScale;
+            scale += new Vector3(factor, factor, factor);
+            scale = new Vector3(Mathf.Min(scale.x, 1f), Mathf.Min(scale.y, 1f), Mathf.Min(scale.z, 1f));
+            go.transform.localScale = scale;
+            yield return null;
+        }
+    }
+
+    public static IEnumerator DownScaleCoroutine(GameObject go, float factor)
+    {
+        while (go.transform.localScale.x > 0f)
+        {
+            Vector3 scale = go.transform.localScale;
+            scale -= new Vector3(factor, factor, factor);
+            scale = new Vector3(Mathf.Max(scale.x, 0f), Mathf.Max(scale.y, 0f), Mathf.Max(scale.z, 0f));
+            go.transform.localScale = scale;
+            yield return null;
+        }
+    }
+
     public static float EaseInQuad(float t)
     {
         return t * t;

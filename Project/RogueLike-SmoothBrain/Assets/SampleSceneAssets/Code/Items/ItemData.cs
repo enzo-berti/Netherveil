@@ -15,7 +15,8 @@ public class ItemData
     public enum ItemType
     {
         PASSIVE,
-        ACTIVE
+        ACTIVE,
+        PASSIVE_ACTIVE
     } 
 
     public Rarity RarityTier;
