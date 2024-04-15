@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     PlayerInput playerInput;
     Transform cameraTransform;
+    DialogueTreeRunner dialogueTreeRunner;
     CharacterController characterController;
 
     [Header("Mechanics")]
@@ -70,6 +71,7 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInChildren<Animator>();
+        dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
         cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;
         mouseRaycastPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
@@ -104,7 +106,7 @@ public class PlayerController : MonoBehaviour
     {
         //used so that you don't see the character running while in transition between the normal attack and the charged attack casting
         float magnitudeCoef = 10;
-        if (playerInput.LaunchedChargedAttack)
+        if (playerInput.LaunchedChargedAttack || dialogueTreeRunner.IsStarted)
         {
             magnitudeCoef = 0f;
         }
@@ -297,7 +299,7 @@ public class PlayerController : MonoBehaviour
 
     private bool CanUpdatePhysic()
     {
-        return hero.State != (int)Hero.PlayerState.KNOCKBACK && characterController != null && characterController.enabled;
+        return hero.State != (int)Hero.PlayerState.KNOCKBACK && characterController != null && characterController.enabled && !dialogueTreeRunner.IsStarted;
     }
 
     #endregion
