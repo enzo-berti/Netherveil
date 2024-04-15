@@ -6,7 +6,7 @@ public class Merchant : Npc, IInterractable
     [Header("Merchand parameters")]
     [SerializeField] private DialogueTree dialogue;
 
-    public void Interract()
+    public override void Interract()
     {
         TriggerDialogue();
     }
