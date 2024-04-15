@@ -12,9 +12,8 @@ public abstract class Quest
 
     static public Quest LoadClass(string name)
     {
-        QuestData data = database.GetQuest(name);
         Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
-        quest.Datas = data;
+        quest.Datas = database.GetQuest(name);
         return quest;
     }
 
