@@ -71,13 +71,13 @@ public class Item : MonoBehaviour, IInterractable
         bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2()) 
             <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
 
-        if (isInRange && !playerInteractions.ItemsInRange.Contains(this))
+        if (isInRange && !playerInteractions.InteractablesInRange.Contains(this))
         {
-            playerInteractions.ItemsInRange.Add(this);
+            playerInteractions.InteractablesInRange.Add(this);
         }
-        else if (!isInRange && playerInteractions.ItemsInRange.Contains(this))
+        else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
         {
-            playerInteractions.ItemsInRange.Remove(this);
+            playerInteractions.InteractablesInRange.Remove(this);
             outline.DisableOutline();
             itemDescription.TogglePanel(false);
         }
@@ -89,7 +89,7 @@ public class Item : MonoBehaviour, IInterractable
         GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
         Debug.Log($"Vous avez bien récupéré {itemToGive.GetType()}");
         Destroy(this.gameObject);
-        playerInteractions.ItemsInRange.Remove(this);
+        playerInteractions.InteractablesInRange.Remove(this);
         DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
         OnRetrieved?.Invoke(itemToGive);
     }

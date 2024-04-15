@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInteractions : MonoBehaviour
 {
-    public List<Item> ItemsInRange { get; private set; } = new List<Item>();
+    public List<IInterractable> InteractablesInRange { get; private set; } = new List<IInterractable>();
 
     void Update()
     {
@@ -13,25 +13,25 @@ public class PlayerInteractions : MonoBehaviour
 
     private void SelectClosestItem()
     {
-        if (ItemsInRange.Count == 0)
+        if (InteractablesInRange.Count == 0)
             return;
 
         Vector2 playerPos = transform.position.ToCameraOrientedVec2();
-        ItemsInRange = ItemsInRange.OrderBy(item =>
+        InteractablesInRange = InteractablesInRange.OrderBy(interactable =>
         {
-            Vector2 itemPos = item.transform.position.ToCameraOrientedVec2();
+            Vector2 itemPos = (interactable as MonoBehaviour).transform.position.ToCameraOrientedVec2();
             return Vector2.Distance(playerPos, itemPos);
         }
         ).ToList();
 
 
-        for (int i = 1; i< ItemsInRange.Count; ++i)
+        for (int i = 1; i< InteractablesInRange.Count; ++i)
         {
-            ItemsInRange[i].GetComponent<Outline>().DisableOutline();
-            ItemsInRange[i].GetComponent<ItemDescription>().TogglePanel(false);
+            (InteractablesInRange[i] as MonoBehaviour).GetComponent<Outline>().DisableOutline();
+            (InteractablesInRange[i] as MonoBehaviour).GetComponent<ItemDescription>().TogglePanel(false);
         }
 
-        ItemsInRange[0].GetComponent<Outline>().EnableOutline();
-        ItemsInRange[0].GetComponent<ItemDescription>().TogglePanel(true);
+        (InteractablesInRange[0] as MonoBehaviour).GetComponent<Outline>().EnableOutline();
+        (InteractablesInRange[0] as MonoBehaviour).GetComponent<ItemDescription>().TogglePanel(true);
     }
 }
