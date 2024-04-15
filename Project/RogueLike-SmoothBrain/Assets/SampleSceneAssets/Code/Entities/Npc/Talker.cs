@@ -6,6 +6,7 @@ public class Talker : Npc
     [Header("Talker parameters")]
     [SerializeField] private DialogueTree dialogue;
     DialogueTreeRunner dialogueTreeRunner;
+    Quest quest;
 
     protected override void Start()
     {
@@ -16,6 +17,9 @@ public class Talker : Npc
     public override void Interract()
     {
         TriggerDialogue();
+        quest = Quest.LoadClass(Quest.GetRandomQuestName());
+        //add to player and update UI
+        Debug.Log(quest.idItemName);
     }
 
     private void TriggerDialogue()

@@ -54,72 +54,75 @@ public class CreateQuestWindow : EditorWindow
 
     void CreateScript()
     {
-        string questName = quest.idName.GetPascalCase();
-        string path = Application.dataPath + "/SampleSceneAssets/Code/Entities/Npc/Quest/";
-        switch (quest.Type)
-        {
-            case QuestData.QuestType.RESTRICTIVE:
-                path += "Restrictive";
-                break;
-            case QuestData.QuestType.EXPLORATION:
-                path += "Restrictive";
-                break;
-            case QuestData.QuestType.FIGHTING:
-                path += "Fighting";
-                break;
-            case QuestData.QuestType.SURVIVABILITY:
-                path += "Survivability";
-                break;
-            default:
-                break;
-        }
+        //string questName = quest.idName.GetPascalCase();
+        //string path = Application.dataPath + "/SampleSceneAssets/Code/Entities/Npc/Quest/";
+        //switch (quest.Type)
+        //{
+        //    case QuestData.QuestType.RESTRICTIVE:
+        //        path += "Restrictive";
+        //        break;
+        //    case QuestData.QuestType.EXPLORATION:
+        //        path += "Restrictive";
+        //        break;
+        //    case QuestData.QuestType.FIGHTING:
+        //        path += "Fighting";
+        //        break;
+        //    case QuestData.QuestType.SURVIVABILITY:
+        //        path += "Survivability";
+        //        break;
+        //    default:
+        //        break;
+        //}
 
-        path += $"/{questName}.cs";
-        StreamReader sr = new StreamReader(path + "/../../QuestSample.txt");
-        StreamWriter sw = new StreamWriter(path);
-        List<Type> typeList = new List<Type>();
-        string line;
-        while ((line = sr.ReadLine()) != null)
-        {
-            List<string> splitLine = line.Split(' ').ToList();
+        //path += $"/{questName}.cs";
+        //StreamReader sr = new StreamReader(path + "/../../QuestSample.txt");
+        //StreamWriter sw = new StreamWriter(path);
+        //List<Type> typeList = new List<Type>()
+        //{
+        //    typeof(Quest)
+        //};
+        //string line;
+        //while ((line = sr.ReadLine()) != null)
+        //{
+        //    List<string> splitLine = line.Split(' ').ToList();
 
-            string finalLine = string.Empty;
-            foreach (var word in splitLine)
-            {
-                string wordToAdd = word;
-                switch (word)
-                {
-                    case "classSampleName":
-                        wordToAdd = questName;
-                        break;
-                    case "functionSample":
-                        wordToAdd = string.Empty;
-                        for (int i = 0; i < typeList.Count; i++)
-                        {
-                            string methodToWrite = "    ";
-                            for (int j = 0; j < typeList[i].GetMethods().Length; j++)
-                            {
-                                var method = typeList[i].GetMethods()[j];
-                                if (method.IsPublic) methodToWrite += "public ";
-                                else if (method.IsPrivate) methodToWrite += "private ";
-                                else methodToWrite += "protected ";
+        //    string finalLine = string.Empty;
+        //    foreach (var word in splitLine)
+        //    {
+        //        string wordToAdd = word;
+        //        switch (word)
+        //        {
+        //            case "classSampleName":
+        //                wordToAdd = questName;
+        //                break;
+        //            case "functionSample":
+        //                wordToAdd = string.Empty;
+        //                for (int i = 0; i < typeList.Count; i++)
+        //                {
+        //                    string methodToWrite = "    ";
+        //                    for (int j = 0; j < typeList[i].GetMethods().Length; j++)
+        //                    {
+        //                        var method = typeList[i].GetMethods()[j];
+        //                        if (method.IsPublic) methodToWrite += "public ";
+        //                        else if (method.IsPrivate) methodToWrite += "private ";
+        //                        else methodToWrite += "protected ";
 
-                                methodToWrite += method.ReturnParameter.ToString().ToLower() + " ";
-                                methodToWrite += method.Name + "(";
+        //                        methodToWrite += method.ReturnParameter.ToString().ToLower() + " ";
+        //                        methodToWrite += method.Name + "(";
 
-                                methodToWrite += ")\n    {\n    }\n    ";
-                            }
-                            sw.WriteLine(methodToWrite);
-                        }
-                        break;
-                }
-                finalLine += wordToAdd + ' ';
-            }
-            sw.WriteLine(finalLine);
-        }
-        sr.Close();
-        sw.Close();
+        //                        methodToWrite += ")\n    {\n    }\n    ";
+        //                    }
+        //                    sw.WriteLine(methodToWrite);
+        //                }
+        //                break;
+        //        }
+        //        finalLine += wordToAdd + ' ';
+        //    }
+        //    sw.WriteLine(finalLine);
+        //}
+        //sr.Close();
+        //sw.Close();
 
-        AssetDatabase.Refresh();
+        //AssetDatabase.Refresh();
     }
 }

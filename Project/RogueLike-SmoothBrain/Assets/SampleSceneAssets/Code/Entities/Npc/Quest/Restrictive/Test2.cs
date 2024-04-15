@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RealTest : Quest
+public class Test2 : Quest
 {
     public override void AcceptQuest()
     {
