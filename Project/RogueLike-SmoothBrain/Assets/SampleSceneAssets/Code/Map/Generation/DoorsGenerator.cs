@@ -72,7 +72,7 @@ namespace Generation
             }
         }
 
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         public void GeneratePrefab()
         {
             doors.Clear();
@@ -87,17 +87,7 @@ namespace Generation
                 DestroyImmediate(transform.GetChild(i).gameObject);
             }
         }
-#endif
-
-        /// <summary>
-        /// Generate the seed doors (destroy doors between min max range)
-        /// </summary>
-        /// <param name="generationParameters"></param>
-        public void GenerateSeed(GenerationParam generationParameters)
-        {
-            // get number of doors that can spawn depending on the number of rooms available by genParams
-
-        }
+        #endif
 
         public void RemoveDoor(Door door)
         {

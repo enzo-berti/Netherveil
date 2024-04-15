@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using Map;
 
 public class DungeonGate : MonoBehaviour
 {
