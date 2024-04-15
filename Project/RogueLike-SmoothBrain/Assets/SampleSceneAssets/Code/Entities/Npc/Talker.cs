@@ -1,12 +1,12 @@
 using DialogueSystem.Runtime;
 using UnityEngine;
 
-public class Talker : Npc, IInterractable
+public class Talker : Npc
 {
     [Header("Talker parameters")]
     [SerializeField] private DialogueTree dialogue;
 
-    public void Interract()
+    public override void Interract()
     {
         TriggerDialogue();
     }
