@@ -12,9 +12,9 @@
 
 using StateMachine; // include all script about stateMachine
 
-public class GlorbTriggeredState : BaseState<GlorbTriggeredState_STATEMACHINE>
+public class GlorbTriggeredState : BaseState<GlorbStateMachine>
 {
-    public GlorbTriggeredState(GlorbTriggeredState_STATEMACHINE currentContext, StateFactory<GlorbTriggeredState_STATEMACHINE> currentFactory)
+    public GlorbTriggeredState(GlorbStateMachine currentContext, StateFactory<GlorbStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
         
     // This method will be call every Update to check and change a state.
@@ -43,7 +43,7 @@ public class GlorbTriggeredState : BaseState<GlorbTriggeredState_STATEMACHINE>
 
     // This method will be call on state changement.
     // No need to modify this method !
-    protected override void SwitchState(BaseState<PestStateMachine> newState)
+    protected override void SwitchState(BaseState<GlorbStateMachine> newState)
     {
         base.SwitchState(newState);
         Context.currentState = newState;
