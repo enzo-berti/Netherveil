@@ -100,6 +100,15 @@ namespace Netherveil.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActiveItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""5fc5dc1c-aecc-4d80-913a-b1cbe96ddee5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -234,6 +243,17 @@ namespace Netherveil.Inputs
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a3db6f9-dc2d-42c7-8754-f7c3ab1c7d24"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActiveItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -321,6 +341,15 @@ namespace Netherveil.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ActiveItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""5cfb8626-e1aa-4ab9-bc79-838ee5891917"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -510,6 +539,17 @@ namespace Netherveil.Inputs
                     ""action"": ""CamLookAway"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4aba2001-1d9f-41db-a36b-9727145bd7dd"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActiveItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -548,6 +588,7 @@ namespace Netherveil.Inputs
             m_Keyboard_Interact = m_Keyboard.FindAction("Interact", throwIfNotFound: true);
             m_Keyboard_ToggleMap = m_Keyboard.FindAction("ToggleMap", throwIfNotFound: true);
             m_Keyboard_Pause = m_Keyboard.FindAction("Pause", throwIfNotFound: true);
+            m_Keyboard_ActiveItem = m_Keyboard.FindAction("ActiveItem", throwIfNotFound: true);
             // Gamepad
             m_Gamepad = asset.FindActionMap("Gamepad", throwIfNotFound: true);
             m_Gamepad_Movement = m_Gamepad.FindAction("Movement", throwIfNotFound: true);
@@ -559,6 +600,7 @@ namespace Netherveil.Inputs
             m_Gamepad_ToggleMap = m_Gamepad.FindAction("ToggleMap", throwIfNotFound: true);
             m_Gamepad_Pause = m_Gamepad.FindAction("Pause", throwIfNotFound: true);
             m_Gamepad_CamLookAway = m_Gamepad.FindAction("CamLookAway", throwIfNotFound: true);
+            m_Gamepad_ActiveItem = m_Gamepad.FindAction("ActiveItem", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -628,6 +670,7 @@ namespace Netherveil.Inputs
         private readonly InputAction m_Keyboard_Interact;
         private readonly InputAction m_Keyboard_ToggleMap;
         private readonly InputAction m_Keyboard_Pause;
+        private readonly InputAction m_Keyboard_ActiveItem;
         public struct KeyboardActions
         {
             private @PlayerInputMap m_Wrapper;
@@ -640,6 +683,7 @@ namespace Netherveil.Inputs
             public InputAction @Interact => m_Wrapper.m_Keyboard_Interact;
             public InputAction @ToggleMap => m_Wrapper.m_Keyboard_ToggleMap;
             public InputAction @Pause => m_Wrapper.m_Keyboard_Pause;
+            public InputAction @ActiveItem => m_Wrapper.m_Keyboard_ActiveItem;
             public InputActionMap Get() { return m_Wrapper.m_Keyboard; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -673,6 +717,9 @@ namespace Netherveil.Inputs
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @ActiveItem.started += instance.OnActiveItem;
+                @ActiveItem.performed += instance.OnActiveItem;
+                @ActiveItem.canceled += instance.OnActiveItem;
             }
 
             private void UnregisterCallbacks(IKeyboardActions instance)
@@ -701,6 +748,9 @@ namespace Netherveil.Inputs
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
+                @ActiveItem.started -= instance.OnActiveItem;
+                @ActiveItem.performed -= instance.OnActiveItem;
+                @ActiveItem.canceled -= instance.OnActiveItem;
             }
 
             public void RemoveCallbacks(IKeyboardActions instance)
@@ -731,6 +781,7 @@ namespace Netherveil.Inputs
         private readonly InputAction m_Gamepad_ToggleMap;
         private readonly InputAction m_Gamepad_Pause;
         private readonly InputAction m_Gamepad_CamLookAway;
+        private readonly InputAction m_Gamepad_ActiveItem;
         public struct GamepadActions
         {
             private @PlayerInputMap m_Wrapper;
@@ -744,6 +795,7 @@ namespace Netherveil.Inputs
             public InputAction @ToggleMap => m_Wrapper.m_Gamepad_ToggleMap;
             public InputAction @Pause => m_Wrapper.m_Gamepad_Pause;
             public InputAction @CamLookAway => m_Wrapper.m_Gamepad_CamLookAway;
+            public InputAction @ActiveItem => m_Wrapper.m_Gamepad_ActiveItem;
             public InputActionMap Get() { return m_Wrapper.m_Gamepad; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -780,6 +832,9 @@ namespace Netherveil.Inputs
                 @CamLookAway.started += instance.OnCamLookAway;
                 @CamLookAway.performed += instance.OnCamLookAway;
                 @CamLookAway.canceled += instance.OnCamLookAway;
+                @ActiveItem.started += instance.OnActiveItem;
+                @ActiveItem.performed += instance.OnActiveItem;
+                @ActiveItem.canceled += instance.OnActiveItem;
             }
 
             private void UnregisterCallbacks(IGamepadActions instance)
@@ -811,6 +866,9 @@ namespace Netherveil.Inputs
                 @CamLookAway.started -= instance.OnCamLookAway;
                 @CamLookAway.performed -= instance.OnCamLookAway;
                 @CamLookAway.canceled -= instance.OnCamLookAway;
+                @ActiveItem.started -= instance.OnActiveItem;
+                @ActiveItem.performed -= instance.OnActiveItem;
+                @ActiveItem.canceled -= instance.OnActiveItem;
             }
 
             public void RemoveCallbacks(IGamepadActions instance)
@@ -847,6 +905,7 @@ namespace Netherveil.Inputs
             void OnInteract(InputAction.CallbackContext context);
             void OnToggleMap(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
+            void OnActiveItem(InputAction.CallbackContext context);
         }
         public interface IGamepadActions
         {
@@ -859,6 +918,7 @@ namespace Netherveil.Inputs
             void OnToggleMap(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
             void OnCamLookAway(InputAction.CallbackContext context);
+            void OnActiveItem(InputAction.CallbackContext context);
         }
     }
 }

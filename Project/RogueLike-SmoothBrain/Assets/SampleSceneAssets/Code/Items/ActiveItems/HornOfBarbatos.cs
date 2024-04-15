@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class HornOfBarbatos : ItemEffect, IActiveItem
 {
-    public float Cooldown { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float Cooldown { get; set; } = 3f;
 
-    public void OnActive()
+    public void Activate()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOH");
     }
 } 

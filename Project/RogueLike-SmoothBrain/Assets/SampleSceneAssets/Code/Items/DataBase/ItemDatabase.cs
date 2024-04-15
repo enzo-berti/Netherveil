@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ItemDatabase")]
 public class ItemDatabase : ScriptableObject
 {
-    //[HideInInspector]
+    [HideInInspector]
     public List<ItemData> datas = new();
 
     public ItemData GetItem(string name)

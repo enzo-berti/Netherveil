@@ -243,6 +243,14 @@ public class PlayerInput : MonoBehaviour
         dashCoroutine = null;
     }
 
+    private void ActiveIteamActivation(InputAction.CallbackContext ctx)
+    {
+        IActiveItem item = hero.Inventory.ActiveItem;
+        if (item != null && item.Cooldown < 10)
+        {
+            hero.Inventory.ActiveItem.Activate();
+        }
+    }
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
     {
         // If spear is being thrown we can't recall this attack
@@ -458,6 +466,7 @@ public class PlayerInput : MonoBehaviour
         InputManagement(gamepadMap, unsubscribe: false);
     }
 
+   
     void InputManagement(InputActionMap map, bool unsubscribe)
     {
         if (unsubscribe)
@@ -471,6 +480,7 @@ public class PlayerInput : MonoBehaviour
             map["Spear"].performed -= ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed -= ChargedAttack;
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
+            map["ActiveItem"].performed -= ActiveIteamActivation;
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed -= hudHandler.ToggleMap;
@@ -488,6 +498,7 @@ public class PlayerInput : MonoBehaviour
             map["Spear"].performed += ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed += ChargedAttack;
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
+            map["ActiveItem"].performed += ActiveIteamActivation;
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed += hudHandler.ToggleMap;

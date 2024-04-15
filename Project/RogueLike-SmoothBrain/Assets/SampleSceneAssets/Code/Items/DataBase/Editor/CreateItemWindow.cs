@@ -1,10 +1,8 @@
-using NUnit.Compatibility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +11,6 @@ public class CreateItemWindow : EditorWindow
     ItemDatabase database;
     ItemData item = new ItemData();
     float activeCooldown = 0;
-    string Preview { get; set; }
     public static void OpenWindow()
     {
         GetWindow<CreateItemWindow>("CreateItem");
@@ -22,8 +19,6 @@ public class CreateItemWindow : EditorWindow
     private void OnEnable()
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
-        Debug.Log("coucou");
-        MethodInfo coucou = typeof(IActiveItem).GetMethods()[1];
     }
 
     private void OnGUI()
@@ -74,7 +69,22 @@ public class CreateItemWindow : EditorWindow
     void CreateScript()
     {
         string itemName = item.idName.GetPascalCase();
-        string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + (item.Type == ItemData.ItemType.PASSIVE ? "PassiveItems" : "ActiveItems") + $"/{itemName}.cs";
+        string itemType = string.Empty;
+        switch (item.Type)
+        {
+            case ItemData.ItemType.PASSIVE:
+                itemType = "PassiveItems";
+                break;
+            case ItemData.ItemType.ACTIVE:
+                itemType = "ActiveItems";
+                break;
+            case ItemData.ItemType.PASSIVE_ACTIVE:
+                itemType = "ActivePassiveItems";
+                break;
+            default:
+                break;
+        }
+        string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + itemType + $"/{itemName}.cs";
         StreamReader sr = new StreamReader(path + "/../../ItemSample.txt");
         StreamWriter sw = new StreamWriter(path);
         List<Type> typeList = new List<Type>();
@@ -142,7 +152,7 @@ public class CreateItemWindow : EditorWindow
                                     methodToWrite += method.ReturnParameter.ToString().ToLower() + " ";
                                     methodToWrite += method.Name + "(";
 
-                                    methodToWrite += ")\n    {\n    }\n    ";
+                                    methodToWrite += ")\n    {\n        throw new System.NotImplementedException();\n    }\n    ";
                                 }
                                 
                             }
