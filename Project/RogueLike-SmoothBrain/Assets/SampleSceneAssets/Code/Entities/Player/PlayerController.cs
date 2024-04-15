@@ -14,10 +14,16 @@ public class PlayerController : MonoBehaviour
     CharacterController characterController;
 
     [Header("Mechanics")]
+    public Spear Spear;
+    [SerializeField] GameObject spearThrowWrapper;
+    [SerializeField] BoxCollider spearThrowCollider;
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
+
+    public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
+    public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
 
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;
@@ -25,11 +31,12 @@ public class PlayerController : MonoBehaviour
     float currentVelocity = 0f;
 
     //used to auto-redirect on enemies in vision cone when attacking
-    public const float ATTACK_CONE_ANGLE = 45f;
+    const float ATTACK_CONE_ANGLE = 45f;
 
     //attack values
     public int ComboCount { get; set; } = 0;
     public static readonly int FINISHER_DAMAGES = 10;
+    public static readonly int SPEAR_DAMAGES = 5;
     public static readonly int CHARGED_ATTACK_DAMAGES = 20;
     public static readonly int MAX_COMBO_COUNT = 3;
     public static readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
@@ -41,9 +48,6 @@ public class PlayerController : MonoBehaviour
     public VisualEffect DashVFX;
     public VisualEffect ChargedAttackVFX;
     public VisualEffect spearLaunchVFX;
-    public VisualEffect fireVFX;
-    public VisualEffect frozenVFX;
-    public VisualEffect electricityVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;
@@ -131,8 +135,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
-        ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
-        characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * (camForward * playerInput.Direction.y + camRight * playerInput.Direction.x).normalized);
+        characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * playerInput.Direction.ToCameraOrientedVec3().normalized);
     }
 
     private void DashMove()
@@ -301,11 +304,6 @@ public class PlayerController : MonoBehaviour
 
     #region Miscellaneous
 
-    public static GameObject Get()
-    {
-        return GameObject.FindWithTag("Player");
-    }
-
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
     {
         if (isImmediate)
@@ -330,21 +328,6 @@ public class PlayerController : MonoBehaviour
             transform.eulerAngles = eulerAngles;
         }
         CurrentTargetAngle = newAngle;
-    }
-
-    /// <summary>
-    /// Used to get the directions of camera without the y axis so that the player doesnt move on this axis and renormalize the vectors because of that modification
-    /// </summary>
-    /// <param name="camRight"></param>
-    /// <param name="camForward"></param>
-    public void ModifyCamVectors(out Vector3 camRight, out Vector3 camForward)
-    {
-        camForward = cameraTransform.forward;
-        camRight = cameraTransform.right;
-        camForward.y = 0f;
-        camRight.y = 0f;
-        camForward = camForward.normalized;
-        camRight = camRight.normalized;
     }
 
     public void PlayVFX(VisualEffect VFX)

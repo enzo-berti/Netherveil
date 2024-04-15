@@ -57,34 +57,7 @@ public struct Door
 
 public class DoorsGenerator : MonoBehaviour
 {
-    private static int noiseDoors = 0;
-
     public List<Door> doors = new List<Door>();
-    public Door RandomDoor
-    {
-        get
-        {
-            int index = Seed.Range(0, doors.Count);
-
-            return doors[index];
-        }
-    }
-    public List<Door> RandomDoors
-    {
-        get
-        {
-            List<Door> result = new List<Door>();
-
-            int iNoise = Seed.Range(0, doors.Count);
-            for (int i = 0; i < doors.Count; i++)
-            {
-                int index = (i + iNoise) % doors.Count;
-                result.Add(doors[index]);
-            }
-
-            return result;
-        }
-    }
 
     [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
 

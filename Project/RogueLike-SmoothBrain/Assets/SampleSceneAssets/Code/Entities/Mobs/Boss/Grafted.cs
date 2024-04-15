@@ -1,5 +1,4 @@
 using FMOD.Studio;
-using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -10,7 +9,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -127,14 +126,20 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         // mettre la cam entre le joueur et le boss
 
         //StartCoroutine(Brain());
-        gameMusic.SetActive(false);
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(false);
+        }
         AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
         AudioManager.Instance.PlaySound(bossSounds.music);
     }
 
     private void OnDisable()
     {
-        gameMusic.SetActive(true);
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(true);
+        }
         AudioManager.Instance.StopSound(bossSounds.introSound);
         AudioManager.Instance.StopSound(bossSounds.music);
 
@@ -281,8 +286,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     deathTimer = Time.deltaTime;
                     if (bossSounds.deathSound.GetState() != PLAYBACK_STATE.PLAYING)
                     {
-                        Destroy(gameObject);
-                        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+                        Destroy(transform.parent.gameObject);
+                        Hero.OnKill?.Invoke(this);
                         bossSounds.StopAllSounds();
                     }
                 }
@@ -291,44 +296,24 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         }
     }
 
-    public void Attack(IDamageable _damageable)
+    public void Attack(IDamageable _damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
 
         onHit?.Invoke(_damageable, this);
         _damageable.ApplyDamage(damages, this);
     }
 
-    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        // Some times, this method is call when entity is dead ??
-        if (stats.GetValue(Stat.HP) <= 0)
-            return;
-
         if ((Vector3.Dot(player.transform.position - transform.position, transform.forward) < 0 && !hasProjectile)
             || currentAttack == Attacks.RANGE)
         {
             _value *= 2;
         }
 
-        Stats.IncreaseValue(Stat.HP, -_value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-        if (hasAnimation)
-        {
-            //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
-            StartCoroutine(HitRoutine());
-        }
-
-        if (stats.GetValue(Stat.HP) <= 0)
-        {
-            Death();
-        }
-        else
-        {
-            AudioManager.Instance.PlaySound(bossSounds.hitSound, transform.position, true);
-        }
+        ApplyDamagesMob(_value, bossSounds.hitSound.reference, Death, notEffectDamage);
     }
 
     public void Death()
@@ -337,7 +322,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         MoveTo(transform.position);
         animator.SetBool(dyingHash, true);
         AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
-        WinScreen.instance.gameObject.SetActive(true);
     }
 
     public void MoveTo(Vector3 _pos)

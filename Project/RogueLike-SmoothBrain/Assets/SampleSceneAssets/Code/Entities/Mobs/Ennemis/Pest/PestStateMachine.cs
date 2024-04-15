@@ -47,7 +47,7 @@ public class PestStateMachine : Mobs, IPest
     // getters and setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public BaseState<PestStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
@@ -113,35 +113,15 @@ public class PestStateMachine : Mobs, IPest
         }
     }
 
-    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        // Some times, this method is call when entity is dead ??
-        if (stats.GetValue(Stat.HP) <= 0)
-            return;
-
-        Stats.IncreaseValue(Stat.HP, -_value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-        if (hasAnimation)
-        {
-            //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
-            StartCoroutine(HitRoutine());
-        }
-
-        if (stats.GetValue(Stat.HP) <= 0)
-        {
-            Death();
-        }
-        else
-        {
-            AudioManager.Instance.PlaySound(pestSounds.takeDamageSound, transform.position);
-        }
+        ApplyDamagesMob(_value, pestSounds.hitSound, Death, notEffectDamage);
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
 
         onHit?.Invoke(damageable, this);
         damageable.ApplyDamage(damages, this);
@@ -153,7 +133,7 @@ public class PestStateMachine : Mobs, IPest
     public void Death()
     {
         OnDeath?.Invoke(transform.position);
-        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+        Hero.OnKill?.Invoke(this);
         AudioManager.Instance.PlaySound(pestSounds.deathSound, transform.position);
         animator.SetBool(deathHash, true);
         isDeath = true;

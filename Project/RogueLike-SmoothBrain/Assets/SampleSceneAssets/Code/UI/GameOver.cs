@@ -50,7 +50,7 @@ public class GameOver : MonoBehaviour
     IEnumerator IncreaseAlpha()
     {
         float targetAlpha = 1.0f;
-        float duration = 2.0f; 
+        float duration = 2.0f;
         float elapsedTime = 0f;
         Color initialColor = deathCam.backgroundColor;
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);
@@ -76,7 +76,7 @@ public class GameOver : MonoBehaviour
     IEnumerator IncreaseElementAlpha(Graphic element)
     {
         float targetAlpha = 1.0f;
-        float duration = 2.0f; 
+        float duration = 2.0f;
         float elapsedTime = 0f;
         Color initialColor = element.color;
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);

@@ -8,7 +8,7 @@ public class Glorb : Mobs, IGlorb
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
     [SerializeField] CapsuleCollider shockwaveCollider;
@@ -39,11 +39,12 @@ public class Glorb : Mobs, IGlorb
         animator = GetComponentInChildren<Animator>();
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         if ((damageable as MonoBehaviour).CompareTag("Player"))
         {
             int damages = (int)(stats.GetValue(Stat.ATK) * 3);
+            damages += additionalDamages;
 
             onHit?.Invoke(damageable, this);
             damageable.ApplyDamage(damages, this);
@@ -59,26 +60,9 @@ public class Glorb : Mobs, IGlorb
         damageable.ApplyDamage(damages, this);
     }
 
-    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        if (stats.GetValue(Stat.HP) <= 0)
-            return;
-
-        Stats.DecreaseValue(Stat.HP, _value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-        if (hasAnimation)
-        {
-            //add SFX here
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
-            AudioManager.Instance.PlaySound(hitSFX, transform.position);
-            StartCoroutine(HitRoutine());
-        }
-
-        if (stats.GetValue(Stat.HP) <= 0)
-        {
-            Death();
-        }
+        ApplyDamagesMob(_value, hitSFX, Death, notEffectDamage);
     }
 
     public void Death()

@@ -14,24 +14,20 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     PlayerController playerController;
     public Inventory Inventory { get; private set; } = new Inventory();
 
-    public delegate void KillDelegate(IDamageable damageable);
-    private KillDelegate onKill;
+    private static event Action<IDamageable> onKill;
 
-    public delegate void ChangeRoomDelegate();
-    private ChangeRoomDelegate onChangeRoom;
-
-    private IAttacker.AttackDelegate onAttack;
-    private IAttacker.HitDelegate OnAttackHit;
+    private event IAttacker.AttackDelegate onAttack;
+    private event IAttacker.HitDelegate onAttackHit;
     public static event Action<int, IAttacker> OnTakeDamage;
     public static event Action<IDamageable, IAttacker> OnBasicAttack;
+    public static event Action<IDamageable, IAttacker> OnSpearAttack;
 
-    public delegate void OnBeforeApplyDamagesDelegate(ref int damages);
+    public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
     public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
 
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    public IAttacker.HitDelegate OnHit { get => OnAttackHit; set => OnAttackHit = value; }
-    public KillDelegate OnKill { get => onKill; set => onKill = value; }
-    public ChangeRoomDelegate OnChangeRoom { get => onChangeRoom; set => onChangeRoom = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onAttackHit; set => onAttackHit = value; }
+    public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -45,13 +41,18 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         if (this is IAttacker attacker)
         {
-            attacker.OnHit += attacker.ApplyStatus;
+            attacker.OnAttackHit += attacker.ApplyStatus;
         }
     }
 
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {
+        if(IsInvincibleCount > 0)
+        {
+            return;
+        }
+
         Stats.DecreaseValue(Stat.HP, _value, false);
 
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
@@ -89,15 +90,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         animator.SetTrigger("Death");
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValueWithoutCoeff(Stat.ATK);
-        OnBeforeApplyDamages?.Invoke(ref damages);
 
         if (playerInput.LaunchedChargedAttack)
         {
             damages += (int)(PlayerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
-            ApplyKnockback(damageable, this,stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef, 
+            ApplyKnockback(damageable, this, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef,
                 stats.GetValue(Stat.KNOCKBACK_COEFF) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
         }
         else if (playerController.ComboCount == PlayerController.MAX_COMBO_COUNT - 1)
@@ -106,12 +106,20 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
             ApplyKnockback(damageable, this);
         }
+        else if (playerController.Spear.IsThrowing || playerController.Spear.IsThrown)
+        {
+            damages += PlayerController.SPEAR_DAMAGES;
+            OnSpearAttack?.Invoke(damageable, this);
+        }
         else
         {
             DeviceManager.Instance.ApplyVibrations(0f, 0.1f, 0.1f);
             OnBasicAttack?.Invoke(damageable, this);
         }
 
+        damages += additionalDamages;
+
+        OnBeforeApplyDamages?.Invoke(ref damages, damageable);
         damages = (int)(damages * stats.GetCoeff(Stat.ATK)); 
         damageable.ApplyDamage(damages, this);
 

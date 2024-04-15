@@ -5,6 +5,6 @@ public class TrapProjectile : Projectile
     protected override void Update()
     {
         Move(transform.forward);
-        transform.Rotate(30f * Time.deltaTime, 0f, 0f);
+        transform.Rotate(0f, 0f, 30f * Time.deltaTime);
     }
 }

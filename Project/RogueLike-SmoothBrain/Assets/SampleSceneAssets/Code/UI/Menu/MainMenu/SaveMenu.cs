@@ -4,7 +4,7 @@ using UnityEngine;
 public class SaveMenu : MonoBehaviour
 {
     [SerializeField] private MeshButton[] meshButtons;
-    private Collider collider;
+    private new Collider collider;
 
     private void Start()
     {

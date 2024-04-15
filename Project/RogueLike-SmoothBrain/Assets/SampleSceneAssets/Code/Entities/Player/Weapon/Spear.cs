@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Spear : MonoBehaviour
@@ -7,9 +9,11 @@ public class Spear : MonoBehaviour
     Hero hero;
     Transform parent = null;
     Animator playerAnimator;
+    public static event Action<Vector3> OnPlacedInWorld;
+    public static event Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
-    [SerializeField] BoxCollider spearThrowCollider;
+    public BoxCollider SpearThrowCollider { get; set; } = null;
     GameObject trail;
 
     Quaternion initLocalRotation;
@@ -22,10 +26,12 @@ public class Spear : MonoBehaviour
     MeshRenderer meshRenderer;
     readonly float SPEAR_SPEED = 5000f;
     readonly float SPEAR_WAIT_TIME = 0.15f;
+    bool placedInWorld = false;
 
-    private void Start()
+    private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        SpearThrowCollider = player.GetComponent<PlayerController>().SpearThrowCollider;
         hero = player.GetComponent<Hero>();
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
@@ -33,52 +39,86 @@ public class Spear : MonoBehaviour
         meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
+    private void OnDestroy()
+    {
+        if (trail) Destroy(trail);
+        StopAllCoroutines();
+    }
+
     void Update()
     {
         playerAnimator.SetBool("SpearThrowing", IsThrowing);
         playerAnimator.SetBool("SpearThrown", IsThrown);
 
-        if (trail == null)
+
+        if (placedInWorld)
+        {
+            Vector3 updatePos = meshRenderer.transform.position;
+            updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
+            meshRenderer.transform.position = updatePos;
+            meshRenderer.transform.Rotate(new Vector3(0, 50f * Time.deltaTime, 0));
+        }
+
+            if (trail == null)
         {
             return;
         }
 
-
-        if (IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude)
+        if (CanPlaceSpearInWorld())
         {
-            Destroy(trail);
-            meshRenderer.enabled = true;
-            // We set position at the exact place ( the spear doesn't move, just tp )
-            this.transform.position = posToReach;
-            this.transform.rotation = Quaternion.identity * Quaternion.Euler(-90, 0, 0);
-            IsThrowing = false;
-            if(hero.State != (int)Hero.PlayerState.KNOCKBACK)
-            {
-                hero.State = (int)Entity.EntityState.MOVE;
-            }
-            spearThrowCollider.gameObject.SetActive(false);
+            PlaceSpearInWorld();
         }
-        else if (!IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude)
+        else if (CanPlaceSpearInHand())
         {
-            this.transform.position = posToReach;
-            // On réatache la lance à la main
-            this.transform.SetParent(parent, true);
-            // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
-            this.transform.localPosition = initLocalPosition;
-            this.transform.localRotation = initLocalRotation;
-            parent = null;
-            meshRenderer.enabled = true;
-            IsThrowing = false;
-            Destroy(trail);
-            if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
-            {
-                hero.State = (int)Entity.EntityState.MOVE;
-            }
-            spearThrowCollider.gameObject.SetActive(false);
+            PlaceSpearInPlayerHand();
         }
     }
 
-    public IEnumerator Throw(Vector3 _posToReach)
+    private void PlaceSpearInPlayerHand()
+    {
+        transform.position = posToReach;
+        // On réatache la lance à la main
+        transform.SetParent(parent, true);
+        // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
+        transform.SetLocalPositionAndRotation(initLocalPosition, initLocalRotation);
+        parent = null;
+        meshRenderer.enabled = true;
+        IsThrowing = false;
+        Destroy(trail);
+        if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        {
+            hero.State = (int)Entity.EntityState.MOVE;
+        }
+        SpearThrowCollider.gameObject.SetActive(false);
+        OnPlacedInHand?.Invoke();
+    }
+
+    private void PlaceSpearInWorld()
+    {
+        Destroy(trail);
+        meshRenderer.enabled = true;
+        // We set position at the exact place ( the spear doesn't move, just tp )
+        transform.SetPositionAndRotation(new Vector3(posToReach.x, posToReach.y + meshRenderer.bounds.size.y / 2f, posToReach.z), 
+            Quaternion.identity * Quaternion.Euler(-90f, 90f, 0));
+
+        IsThrowing = false;
+        if (hero.State != (int)Hero.PlayerState.KNOCKBACK)
+        {
+            hero.State = (int)Entity.EntityState.MOVE;
+        }
+        SpearThrowCollider.gameObject.SetActive(false);
+        placedInWorld = true;
+
+        OnPlacedInWorld?.Invoke(transform.position);
+    }
+
+    public void Throw(Vector3 _posToReach)
+    {
+        StartCoroutine(ThrowCoroutine(_posToReach));
+    }
+
+
+    IEnumerator ThrowCoroutine(Vector3 _posToReach)
     {
         IsThrown = true;
         IsThrowing = true;
@@ -88,40 +128,46 @@ public class Spear : MonoBehaviour
 
         AudioManager.Instance.PlaySound(player.GetComponent<PlayerController>().ThrowSpearSFX);
         meshRenderer.enabled = false;
-        trail = Instantiate(trailPf, this.transform.position, Quaternion.identity);
+        trail = Instantiate(trailPf, transform.position, Quaternion.identity);
         posToReach = _posToReach;
-        Vector3 playerToPosToReachVec = (posToReach - this.transform.position);
+        Vector3 playerToPosToReachVec = (posToReach - transform.position);
 
         trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * SPEAR_SPEED, ForceMode.Force);
         DeviceManager.Instance.ApplyVibrations(0.001f, 0.005f, 0.1f);
 
         //check if colliding with obstacle to stop the spear on collide
-        RaycastHit[] hits = Physics.RaycastAll(this.transform.position, (posToReach - this.transform.position), (posToReach - this.transform.position).magnitude);
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, playerToPosToReachVec, playerToPosToReachVec.magnitude);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
             {
                 if (((1 << hit.collider.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
                 {
-                    posToReach = hit.point;
-                    playerToPosToReachVec = (posToReach - this.transform.position);
+                    posToReach = new Vector3(hit.point.x, player.position.y, hit.point.z);
+                    playerToPosToReachVec = (posToReach - transform.position);
                     break;
                 }
             }
         }
 
-        ApplyDamages(playerToPosToReachVec, debugMode: false);
+        ApplyDamages(playerToPosToReachVec,debugMode: false);
 
         // On set le parent que la lance avait ( la main du joueur ), puis on la retire tant qu'elle est lancée afin de la rendre indépendante 
-        parent = this.transform.parent;
-        this.transform.parent = null;
+        parent = transform.parent;
+        transform.parent = null;
     }
 
-    public IEnumerator Return()
+    public void Return()
+    {
+        StartCoroutine(ReturnCoroutine());
+    }
+
+    IEnumerator ReturnCoroutine()
     {
         IsThrown = false;
         IsThrowing = true;
         hero.State = (int)Entity.EntityState.ATTACK;
+        placedInWorld = false;
 
         yield return new WaitForSeconds(SPEAR_WAIT_TIME);
 
@@ -142,25 +188,25 @@ public class Spear : MonoBehaviour
         }
 
         Vector3 playerToSpearVec = spearPosition - player.position;
-        ApplyDamages(playerToSpearVec, debugMode: false);
+        ApplyDamages(playerToSpearVec,debugMode: false);
     }
 
-    void ApplyDamages(Vector3 playerToTargetPos, bool debugMode)
+    void ApplyDamages(Vector3 playerToTargetPos,bool debugMode)
     {
-        if(debugMode)
+        if (debugMode)
         {
-            spearThrowCollider.gameObject.SetActive(true);
+            SpearThrowCollider.gameObject.SetActive(true);
         }
 
         //offset so that the collide also takes the spear end spot
         float collideOffset = 0.2f;
-        //construct collider in scene so that we can debug it
-        Vector3 scale = spearThrowCollider.transform.localScale;
+        //construct collider(visible also in scene so we can debug it)
+        Vector3 scale = SpearThrowCollider.transform.localScale;
         scale.z = playerToTargetPos.magnitude;
-        spearThrowCollider.transform.localScale = scale;
-        spearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
+        SpearThrowCollider.transform.localScale = scale;
+        SpearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
 
-        Collider[] colliders = spearThrowCollider.BoxOverlap();
+        Collider[] colliders = SpearThrowCollider.BoxOverlap();
 
         if (colliders.Length > 0)
         {
@@ -168,9 +214,19 @@ public class Spear : MonoBehaviour
             {
                 if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
                 {
-                    entity.ApplyDamage((int)hero.Stats.GetValue(Stat.ATK), hero);
+                    hero.Attack(entity);
                 }
             }
         }
+    }
+
+    private bool CanPlaceSpearInHand()
+    {
+        return !IsThrown && parent != null && (spearPosition - posToReach).magnitude < (spearPosition - trail.transform.position).magnitude;
+    }
+
+    private bool CanPlaceSpearInWorld()
+    {
+        return IsThrown && (this.player.position - posToReach).magnitude < (this.player.position - trail.transform.position).magnitude;
     }
 }

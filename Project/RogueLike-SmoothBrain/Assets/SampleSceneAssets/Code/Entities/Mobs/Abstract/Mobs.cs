@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using System.Linq;
 using UnityEngine.AI;
+using FMODUnity;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -41,7 +42,7 @@ public abstract class Mobs : Entity
 
         if (this is IAttacker attacker)
         {
-            attacker.OnHit += attacker.ApplyStatus;
+            attacker.OnAttackHit += attacker.ApplyStatus;
         }
 
         StartCoroutine(EntityDetection());
@@ -89,6 +90,32 @@ public abstract class Mobs : Entity
         hitMaterial.SetInt("_isHit", 1);
         yield return new WaitForSeconds(0.05f);
         hitMaterial.SetInt("_isHit", 0);
+    }
+
+    protected void ApplyDamagesMob(int _value, EventReference hitSound, Action deathMethod, bool notEffectDamage)
+    {
+        // Some times, this method is call when entity is dead ??
+        if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
+            return;
+
+        Stats.DecreaseValue(Stat.HP, _value, false);
+        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+
+        if (notEffectDamage)
+        {
+            //add SFX here
+            FloatingTextGenerator.CreateDamageText(_value, transform.position);
+            StartCoroutine(HitRoutine());
+        }
+
+        if (stats.GetValue(Stat.HP) <= 0)
+        {
+            deathMethod();
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(hitSound, transform.position);
+        }
     }
 
 #if UNITY_EDITOR

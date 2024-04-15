@@ -1,11 +1,9 @@
 using FMODUnity;
-using System;
 using System.Collections;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
-using UnityEngine.WSA;
 
 public class ExplodingBomb : MonoBehaviour
 {
@@ -20,7 +18,7 @@ public class ExplodingBomb : MonoBehaviour
     [SerializeField] private float blastRadius;
     [SerializeField] private int blastDamage;
     [SerializeField] private LayerMask damageLayer;
-    [SerializeField] private float throwHeight = 5f;
+    //[SerializeField] private float throwHeight = 5f; -> Jamais utilisé, Dorian
     private bool isActive;
     private bool isMoving => throwRoutine != null;
     private float elapsedExplosionTime;
@@ -41,6 +39,11 @@ public class ExplodingBomb : MonoBehaviour
     {
         timerBeforeExplode = _timeToExplode;
         VFX.SetFloat("TimeToExplode", timerBeforeExplode);
+    }
+
+    public void SetBlastDamages(int damages)
+    {
+        blastDamage = damages;
     }
 
     void Update()
@@ -110,7 +113,7 @@ public class ExplodingBomb : MonoBehaviour
             .ToList()
             .ForEach(currentEntity =>
             {
-                (currentEntity as IDamageable).ApplyDamage(blastDamage, launcher);
+                currentEntity.ApplyDamage(blastDamage, launcher);
             });
 
         graphics.SetActive(false);

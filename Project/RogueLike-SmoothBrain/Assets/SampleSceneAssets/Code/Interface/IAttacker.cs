@@ -11,13 +11,13 @@ public interface IAttacker
     }
 
     public delegate void HitDelegate(IDamageable damageable, IAttacker attacker);
-    public HitDelegate OnHit
+    public HitDelegate OnAttackHit
     {
         get;
         set;
     }
 
-    public void Attack(IDamageable damageable);
+    public void Attack(IDamageable damageable, int additionalDamages = 0);
 
     public void ApplyStatus(IDamageable damageable, IAttacker attacker)
     {

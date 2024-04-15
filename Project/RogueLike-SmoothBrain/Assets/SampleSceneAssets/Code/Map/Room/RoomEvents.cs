@@ -14,6 +14,21 @@ public class RoomEvents : MonoBehaviour
     private bool enterRoomCalled = false;
     private bool exitRoomCalled = false;
 
+    private Collider triggerCollide = null;
+    private Vector3 enterPos = Vector3.zero;
+
+    private void Awake()
+    {
+        foreach (Collider coll in GetComponents<Collider>())
+        {
+            if (coll.isTrigger)
+            {
+                triggerCollide = coll;
+                break;
+            }
+        }
+    }
+
     private void Start()
     {
         // find room go's
@@ -29,15 +44,15 @@ public class RoomEvents : MonoBehaviour
 
         // create data of the map
         mapData = new RoomData(enemies, transform.parent.GetComponentInChildren<RoomGenerator>());
+        if (mapData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
+        {
+            EnterEvents();
+        }
     }
 
     private void EnterEvents()
     {
-        if (enterRoomCalled)
-        {
-            return;
-        }
-
+        Debug.Log("ENTER ROOM");
         enterRoomCalled = true;
 
         // global events
@@ -51,11 +66,7 @@ public class RoomEvents : MonoBehaviour
 
     private void ExitEvents()
     {
-        if (exitRoomCalled)
-        {
-            return;
-        }
-
+        Debug.Log("EXIT ROOM");
         exitRoomCalled = true;
 
         // local events
@@ -85,15 +96,27 @@ public class RoomEvents : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
         {
-            EnterEvents();
+            enterPos = triggerCollide.ClosestPointOnBounds(other.bounds.center);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
+        {
+            Vector3 enterToPlayer = enterPos - other.bounds.center;
+            if (enterToPlayer.magnitude >= other.bounds.size.magnitude)
+            {
+                EnterEvents();
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (!exitRoomCalled && other.gameObject.CompareTag("Player"))
         {
             ExitEvents();
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,13 @@ public class PlayerInput : MonoBehaviour
     PlayerInteractions playerInteractions;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
 
+    public static event Action<Vector3> OnThrowSpear;
+    public static event Action OnRetrieveSpear;
+    public static event Action OnStartDash;
+    public static event Action<Vector3> OnEndDash;
+
     Coroutine dashCoroutine = null;
     Coroutine chargedAttackCoroutine = null;
-
-    [SerializeField] Spear spear;
 
     public Vector2 Direction { get; private set; } = Vector2.zero;
     public Vector3 DashDir { get; private set; } = Vector3.zero;
@@ -217,8 +221,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Direction != Vector2.zero)
         {
-            controller.ModifyCamVectors(out Vector3 camRight, out Vector3 camForward);
-            DashDir = (camForward * Direction.y + camRight * Direction.x).normalized;
+            DashDir = Direction.ToCameraOrientedVec3().normalized;
         }
         else
         {
@@ -241,7 +244,7 @@ public class PlayerInput : MonoBehaviour
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
     {
         // If spear is being thrown we can't recall this attack
-        if (hero.State != (int)Entity.EntityState.MOVE || spear.IsThrowing)
+        if (hero.State != (int)Entity.EntityState.MOVE || controller.Spear.IsThrowing)
             return;
 
         if (DeviceManager.Instance.IsPlayingKB())
@@ -254,14 +257,17 @@ public class PlayerInput : MonoBehaviour
             controller.OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
         }
 
-        if (!spear.IsThrown)
+        if (!controller.Spear.IsThrown)
         {
-            StartCoroutine(spear.Throw(this.transform.position + this.transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE)));
+            Vector3 posToReach = this.transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
+            OnThrowSpear?.Invoke(posToReach);          
+            controller.Spear.Throw(posToReach);
             controller.PlayVFX(controller.spearLaunchVFX);
         }
         else
         {
-            StartCoroutine(spear.Return());
+            OnRetrieveSpear?.Invoke();
+            controller.Spear.Return();
         }
     }
 
@@ -296,6 +302,7 @@ public class PlayerInput : MonoBehaviour
         controller.DashVFX.Play();
         hero.State = (int)Hero.PlayerState.DASH;
         AudioManager.Instance.PlaySound(controller.DashSFX);
+        OnStartDash?.Invoke();
     }
 
     public void EndOfDashAnimation()
@@ -304,6 +311,7 @@ public class PlayerInput : MonoBehaviour
         controller.DashVFX.Stop();
         hero.State = (int)Entity.EntityState.MOVE;
         controller.ResetValues();
+        OnEndDash?.Invoke(transform.position);
     }
 
     public void StartChargedAttackCasting()
@@ -321,7 +329,7 @@ public class PlayerInput : MonoBehaviour
     public void StartOfBasicAttack()
     {
         hero.OnAttack?.Invoke();
-        controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, false);
+        controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, true);
 
         //stop all VFX of the combo attacks to prevent them to overlap each other
         foreach (VisualEffect vfx in controller.SpearAttacksVFX)
@@ -375,19 +383,19 @@ public class PlayerInput : MonoBehaviour
     {
         return (hero.State == (int)Entity.EntityState.MOVE ||
             (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-             && !spear.IsThrown && !ForceReturnToMove;
+             && !controller.Spear.IsThrown && !ForceReturnToMove;
     }
 
     private bool CanCastChargedAttack()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
             || hero.State == (int)Entity.EntityState.ATTACK)
-            && !spear.IsThrown && !LaunchedChargedAttack;
+            && !controller.Spear.IsThrown && !LaunchedChargedAttack;
     }
 
     private bool CanRetrieveSpear()
     {
-        return hero.State == (int)Entity.EntityState.MOVE && spear.IsThrown;
+        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown;
     }
 
     private bool CanDash()
@@ -408,7 +416,6 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region Miscellaneous
-
     private void EaseFuncsShitStorm()
     {
         easeFuncs.Add(EasingFunctions.EaseInBack);

@@ -14,7 +14,7 @@ public class UrnOfAvarice : ItemEffect , IPassiveItem
         Hero.OnBeforeApplyDamages -= AddBloodDamages;
     }
 
-    private void AddBloodDamages(ref int damages)
+    private void AddBloodDamages(ref int damages, IDamageable target)
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
         damages += (int)(hero.Inventory.Blood * bloodDamagesCoef);

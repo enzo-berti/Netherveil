@@ -26,7 +26,7 @@ public class Gorgon : Mobs, IGorgon
 
     private IAttacker.HitDelegate onHit;
     private IAttacker.AttackDelegate onAttack;
-    public IAttacker.HitDelegate OnHit { get => onHit; set => onHit = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
 
     [SerializeField] private float timeBetweenAttack;
@@ -213,6 +213,7 @@ public class Gorgon : Mobs, IGorgon
 
             exploBomb.ThrowToPos(this, pointToReach3D, timeToThrow);
             exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
+            exploBomb.SetBlastDamages((int)stats.GetValue(Stat.ATK));
             exploBomb.Activate();
 
             yield return new WaitForSeconds(0.5f);
@@ -223,27 +224,9 @@ public class Gorgon : Mobs, IGorgon
 
     }
 
-
-
-    public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        if (stats.GetValue(Stat.HP) <= 0)
-            return;
-
-        Stats.DecreaseValue(Stat.HP, _value, false);
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-        if (hasAnimation)
-        {
-            FloatingTextGenerator.CreateDamageText(_value, transform.position);
-            AudioManager.Instance.PlaySound(hitSFX, transform.position);
-            StartCoroutine(HitRoutine());
-        }
-
-        if (stats.GetValue(Stat.HP) <= 0)
-        {
-            Death();
-        }
+        ApplyDamagesMob(_value, hitSFX, Death, notEffectDamage);
     }
 
     /// <summary>
@@ -308,12 +291,13 @@ public class Gorgon : Mobs, IGorgon
         AudioManager.Instance.PlaySound(deathSFX, this.transform.position);
         OnDeath?.Invoke(transform.position);
         Destroy(transform.parent.gameObject);
-        GameObject.FindWithTag("Player").GetComponent<Hero>().OnKill?.Invoke(this);
+        Hero.OnKill?.Invoke(this);
     }
 
-    public void Attack(IDamageable damageable)
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
         onHit?.Invoke(damageable, this);
         damageable.ApplyDamage(damages, this);
     }
@@ -353,8 +337,3 @@ public class Gorgon : Mobs, IGorgon
     //}
 #endif
 }
-
-// quand le joueur est trop près, le range va se réfugier derrière le tank
-// quand le joueur est trop près, si aucun tank n'est à proximité il va fuir en ligne droite
-// il ne le fera pas en boucle, il aura un cd sur sa fuite
-// lorsqu'il est en cd, il va attaquer le joueur simplement -> TODO
