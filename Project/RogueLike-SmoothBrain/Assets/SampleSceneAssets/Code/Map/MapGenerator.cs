@@ -138,7 +138,7 @@ namespace Generation
                 Seed.SetSeed(seed);
             }
 
-            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2));
+            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1));
         }
 
         private void GenerateMap(GenerationParam genParam)
