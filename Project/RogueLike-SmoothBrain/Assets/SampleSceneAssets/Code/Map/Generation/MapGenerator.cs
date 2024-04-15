@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
+using Map;
 
 namespace Generation
 {
@@ -208,7 +209,6 @@ namespace Generation
             roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Lobby;
 
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
-            doorsGenerator.GenerateSeed(genParam);
 
             genParam.AddAvailableDoors(doorsGenerator);
             Destroy(doorsGenerator);
