@@ -27,11 +27,21 @@ public class PlayerInteractions : MonoBehaviour
 
         for (int i = 1; i< InteractablesInRange.Count; ++i)
         {
-            (InteractablesInRange[i] as MonoBehaviour).GetComponent<Outline>().DisableOutline();
-            (InteractablesInRange[i] as MonoBehaviour).GetComponent<ItemDescription>().TogglePanel(false);
+            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out Outline outlineItem))
+                outlineItem.DisableOutline();
+            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out ItemDescription itemDesc))
+                itemDesc.TogglePanel(false);
+            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out Npc npc))
+                npc.rangeImage.gameObject.SetActive(false);
         }
 
-        (InteractablesInRange[0] as MonoBehaviour).GetComponent<Outline>().EnableOutline();
-        (InteractablesInRange[0] as MonoBehaviour).GetComponent<ItemDescription>().TogglePanel(true);
+        if((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Outline outline))
+            outline.EnableOutline();
+
+        if ((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out ItemDescription itemDescription))
+            itemDescription.TogglePanel(true);
+
+        if ((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Npc npc2))
+            npc2.rangeImage.gameObject.SetActive(true);
     }
 }
