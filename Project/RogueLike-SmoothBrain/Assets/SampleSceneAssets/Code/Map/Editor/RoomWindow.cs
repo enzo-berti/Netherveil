@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Generation;
 using Map;
+using PrefabLightMapBaker;
 
 public class RoomWindow : EditorWindow 
 {
@@ -38,7 +39,6 @@ public class RoomWindow : EditorWindow
             GenerateRoomPrefab();
         }
 
-
         EditorGUILayout.EndVertical();
     }
 
@@ -46,6 +46,7 @@ public class RoomWindow : EditorWindow
     {
         GameObject room = Instantiate(roomObj);
         GameObject roomPrefab = new GameObject(prefabName == "" ? roomObj.name : prefabName);
+        roomPrefab.AddComponent<PrefabBaker>();
 
         GameObject skeleton = room.transform.GetChild(1).transform.GetChild(0).gameObject;
         skeleton.gameObject.name = "Skeleton";
