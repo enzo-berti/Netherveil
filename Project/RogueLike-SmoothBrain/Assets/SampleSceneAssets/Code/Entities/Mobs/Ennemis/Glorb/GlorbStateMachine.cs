@@ -13,7 +13,7 @@ using UnityEngine;
 public class GlorbStateMachine : Mobs, IGlorb
 {
     [Serializable]
-    class GlorbSounds
+    public class GlorbSounds
     {
         public Sound shockwaveSFX;
         public Sound punchSFX;
@@ -31,30 +31,43 @@ public class GlorbStateMachine : Mobs, IGlorb
     private IAttacker.HitDelegate onHit;
     [SerializeField] GlorbSounds glorbSounds;
     [SerializeField] CapsuleCollider shockwaveCollider;
+    [SerializeField] Collider[] attackColliders;
     [SerializeField] float defaultVisionAngle = 100f;
 
     VFXStopper vfxStopper;
     Animator animator;
     Hero player = null;
 
-    bool cooldownSpeAttack = false;
+    bool speAttackAvailable = true;
     float specialAttackTimer = 0f;
-    readonly float SPECIAL_ATTACK_TIMER = 2.2f;
+    readonly float SPECIAL_ATTACK_COOLDOWN = 3.5f;
 
-    bool cooldownBasicAttack = false;
+    bool basicAttackAvailable = true;
     float basicAttackTimer = 0f;
-    readonly float BASIC_ATTACK_TIMER = 0.75f;
+    readonly float BASIC_ATTACK_COOLDOWN = 1f;
 
     // animation Hash
     int deathHash;
+    int walkHash;
 
-    // Getters/Setters
+    #region Getters/Setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
+    public CapsuleCollider ShockwaveCollider { get => shockwaveCollider; }
+    public Collider[] AttackColliders { get => attackColliders; }
     public Hero Player { get => player; }
+    public VFXStopper VFX { get => vfxStopper; }
+    public Animator Animator { get => animator; }
+    public GlorbSounds Sounds { get => glorbSounds; }
     public float VisionAngle { get => (currentState is GlorbTriggeredState || currentState is GlorbAttackingState) && Player != null ? 360 : defaultVisionAngle; }
-    public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is GlorbTriggeredState || currentState is GlorbAttackingState ? 1.5f : 1f); }
+    public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is GlorbTriggeredState || currentState is GlorbAttackingState ? 1.25f : 1f); }
+    public bool IsSpeAttackAvailable { get => speAttackAvailable; }
+    public bool IsBasicAttackAvailable { get => basicAttackAvailable; }
+    public float AttackRange { get => speAttackAvailable ? shockwaveCollider.gameObject.transform.localScale.z / 2f : Stats.GetValue(Stat.ATK_RANGE); }
+    public float SpecialAttackTimer { get => specialAttackTimer; set => specialAttackTimer = value; }
+    public float BasicAttackTimer { get => basicAttackTimer; set => basicAttackTimer = value; }
+    #endregion
 
     protected override void Start()
     {
@@ -69,6 +82,7 @@ public class GlorbStateMachine : Mobs, IGlorb
 
         // animation Hash
         deathHash = Animator.StringToHash("Death");
+        walkHash = Animator.StringToHash("Walk");
 
         // opti variables
         maxFrameUpdate = 10;
@@ -77,6 +91,13 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     protected override void Update()
     {
+        animator.SetBool(walkHash, currentState is GlorbAttackingState ? false : agent.remainingDistance > agent.stoppingDistance);
+
+        if (!(currentState is GlorbWanderingState))
+        {
+            UpdateAttacksTimers();
+        }
+
         currentState.Update();
     }
 
@@ -92,7 +113,7 @@ public class GlorbStateMachine : Mobs, IGlorb
             }
 
             nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, VisionRange, transform.forward, LayerMask.GetMask("Entity"))
-                    .Select(x => x.GetComponent<Entity>())
+                    .Select(x => x.GetComponent<Hero>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
@@ -113,7 +134,6 @@ public class GlorbStateMachine : Mobs, IGlorb
             currentState = factory.GetState<GlorbTriggeredState>();
             player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         }
-
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
@@ -148,17 +168,59 @@ public class GlorbStateMachine : Mobs, IGlorb
         agent.SetDestination(posToMove);
         //AudioManager.Instance.PlaySound(glorbSounds.walkSFX, transform.position);
     }
+
+    public void AttackCollide(Collider _collider, bool debugMode = false)
+    {
+        if (debugMode)
+        {
+            _collider.gameObject.SetActive(true);
+        }
+
+        Collider[] tab = null;
+
+        if (_collider is CapsuleCollider)
+            tab = PhysicsExtensions.CapsuleOverlap(_collider as CapsuleCollider, LayerMask.GetMask("Entity"));
+        else if (_collider is BoxCollider)
+            tab = PhysicsExtensions.BoxOverlap(_collider as BoxCollider, LayerMask.GetMask("Entity"));
+        else
+            Debug.LogError("Type de collider non reconnu.");
+
+        if (tab != null)
+        {
+            if (tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != gameObject)
+                    {
+                        Attack(col.gameObject.GetComponent<IDamageable>());
+                    }
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Extra methods
+    void UpdateAttacksTimers()
+    {
+        if (!speAttackAvailable) specialAttackTimer += Time.deltaTime;
+        speAttackAvailable = specialAttackTimer >= SPECIAL_ATTACK_COOLDOWN;
+
+        if (!basicAttackAvailable) basicAttackTimer += Time.deltaTime;
+        basicAttackAvailable = basicAttackTimer >= BASIC_ATTACK_COOLDOWN;
+    }
     #endregion
 
     #region EDITOR
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
-        DisplayAttackRange(VisionAngle);
+        DisplayAttackRange(VisionAngle, AttackRange);
         DisplayInfos();
     }
 

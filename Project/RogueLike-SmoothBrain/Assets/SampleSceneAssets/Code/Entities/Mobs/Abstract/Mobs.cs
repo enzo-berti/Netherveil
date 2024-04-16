@@ -193,6 +193,16 @@ public abstract class Mobs : Entity
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValue(Stat.ATK_RANGE));
     }
+    
+    protected virtual void DisplayAttackRange(float _angle, float _range)
+    {
+        Handles.color = new Color(1, 1, 0.5f, 0.2f);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)_range);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)_range);
+
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, Vector3.up, (int)_range);
+    }
 
     protected virtual void DisplayInfos()
     {

@@ -28,7 +28,7 @@ public class GlorbTriggeredState : BaseState<GlorbStateMachine>
                 SwitchState(Factory.GetState<GlorbWanderingState>());
             }
         }
-        else if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+        else if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) <= Context.AttackRange)
         {
             SwitchState(Factory.GetState<GlorbAttackingState>());
         }

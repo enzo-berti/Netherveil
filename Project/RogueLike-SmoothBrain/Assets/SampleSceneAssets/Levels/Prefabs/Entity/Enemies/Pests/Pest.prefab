@@ -119,6 +119,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 50
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -129,6 +130,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 10
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -139,6 +141,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 20
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -149,6 +152,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 1
       value: 5
+      lastValue: 0
       coeff: 1
       maxValue: 0
       minValue: 0
@@ -159,6 +163,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 5
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -169,6 +174,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 20
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -179,12 +185,13 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 5
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
       overload: 0
       underload: 0
-    name: Default
+    name: Pest
   IsKnockbackable: 1
   canTriggerTraps: 1
   IsInvincibleCount: 0
@@ -202,7 +209,6 @@ MonoBehaviour:
       isChanceShared: 0
   pestSounds:
     deathSound:
-      name: 
       reference:
         Guid:
           Data1: -518515845
@@ -211,7 +217,6 @@ MonoBehaviour:
           Data4: 344521351
         Path: event:/Enemy/Pest/PestDeath
     takeDamageSound:
-      name: 
       reference:
         Guid:
           Data1: 2119710318
@@ -220,7 +225,6 @@ MonoBehaviour:
           Data4: -1029966753
         Path: event:/Enemy/Pest/PestHit
     attackHitSound:
-      name: Attack SFX
       reference:
         Guid:
           Data1: -1156276612
@@ -229,7 +233,6 @@ MonoBehaviour:
           Data4: 1343401324
         Path: event:/Enemy/Pest/PestAttack
     moveSound:
-      name: 
       reference:
         Guid:
           Data1: 270124610
@@ -479,22 +482,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8931477
+      value: -0.92695165
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.23630619
+      value: -0.19684757
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.36995393
+      value: -0.31242573
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09788123
+      value: 0.06634675
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

@@ -75,7 +75,6 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
 
         do
         {
-
             float randomX = Random.Range(-1f, 1f);
             float randomZ = Random.Range(-1f, 1f);
 
@@ -86,10 +85,12 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
                 continue;
             }
 
+            randomDirection.Normalize();
+
             // aide à éviter les murs
             RaycastHit hit;
 
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, out hit, Context.Stats.GetValue(Stat.VISION_RANGE)))
+            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, out hit, Context.Stats.GetValue(Stat.VISION_RANGE)/2f))
             {
                 if (!hit.transform.CompareTag("Player"))
                 {
@@ -99,7 +100,5 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
 
             validDirection = true;
         } while (!validDirection);
-
-        randomDirection.Normalize();
     }
 }

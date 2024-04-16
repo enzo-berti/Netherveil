@@ -30,6 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4312924939105346309}
+  - {fileID: 165167341685550816}
   m_Father: {fileID: 6583867547684713463}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2077170564847773805
@@ -75,9 +76,9 @@ GameObject:
   - component: {fileID: 6583867547684713463}
   - component: {fileID: 2011738782190174598}
   - component: {fileID: 2852106635850230140}
-  - component: {fileID: 4392004004134239762}
   - component: {fileID: 1282194086456528784}
   - component: {fileID: 2191641442306479398}
+  - component: {fileID: 4692543997195375639}
   m_Layer: 0
   m_Name: GlorbCharacter
   m_TagString: Enemy
@@ -149,140 +150,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4392004004134239762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2196822713475936795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 882332fa6a349824881df1169f2f98ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  statusNameToApply: []
-  durationStatusToApply: []
-  chanceStatusToApply: []
-  stats:
-    stats:
-    - stat: 0
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 80
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 4
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 1.5
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 2
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 5
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 6
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 2
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 12
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 36
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 1
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 1
-      value: 5
-      coeff: 1
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 13
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 6.75
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    name: Tank
-  IsKnockbackable: 1
-  canTriggerTraps: 1
-  IsInvincibleCount: 0
-  drop:
-    dropList:
-    - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
-        type: 3}
-      chance: 1
-      Quantity: 1
-      isChanceShared: 0
-    - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
-        type: 3}
-      chance: 0.8
-      Quantity: 5
-      isChanceShared: 0
-  hitSFX:
-    name: 
-    reference:
-      Guid:
-        Data1: -1115572954
-        Data2: 1318150160
-        Data3: 57613186
-        Data4: -1599309965
-      Path: event:/Enemy/Tank/TankHit
-  shockwaveSFX:
-    Guid:
-      Data1: -1931713802
-      Data2: 1310292887
-      Data3: 610484613
-      Data4: -2083252841
-    Path: event:/Enemy/Tank/TankBellyPunch
-  punchSFX:
-    Guid:
-      Data1: -496658094
-      Data2: 1146578242
-      Data3: -1085213788
-      Data4: -1537104640
-    Path: event:/Enemy/Tank/TankPunch
-  deadSFX:
-    Guid:
-      Data1: 686363957
-      Data2: 1298487654
-      Data3: -261839722
-      Data4: 1364696341
-    Path: event:/Enemy/Tank/TankDeath
-  shockwaveCollider: {fileID: 9178432390720270088}
 --- !u!114 &1282194086456528784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +179,144 @@ MonoBehaviour:
   effect: {fileID: 2428978948397444706}
   destroyOnStop: 0
   destroyDurationDelay: 0
+--- !u!114 &4692543997195375639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196822713475936795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4f60d2e64ebe6345884fe788767bdda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusNameToApply: []
+  durationStatusToApply: []
+  chanceStatusToApply: []
+  stats:
+    stats:
+    - stat: 0
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 80
+      lastValue: 0
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 1
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 5
+      lastValue: 0
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 4
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 1.5
+      lastValue: 0
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 6
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 10
+      lastValue: 0
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 2
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 3
+      lastValue: 0
+      coeff: 0
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 12
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 36
+      lastValue: 0
+      coeff: 1
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    - stat: 13
+      hasMaxStat: 0
+      hasMinStat: 0
+      hasCoeff: 0
+      value: 5
+      lastValue: 0
+      coeff: 1
+      maxValue: 0
+      minValue: 0
+      overload: 0
+      underload: 0
+    name: Glorb
+  IsKnockbackable: 1
+  canTriggerTraps: 1
+  IsInvincibleCount: 0
+  drop:
+    dropList: []
+  glorbSounds:
+    shockwaveSFX:
+      reference:
+        Guid:
+          Data1: -1931713802
+          Data2: 1310292887
+          Data3: 610484613
+          Data4: -2083252841
+        Path: event:/Enemy/Tank/TankBellyPunch
+    punchSFX:
+      reference:
+        Guid:
+          Data1: -496658094
+          Data2: 1146578242
+          Data3: -1085213788
+          Data4: -1537104640
+        Path: event:/Enemy/Tank/TankPunch
+    hitSFX:
+      reference:
+        Guid:
+          Data1: -1115572954
+          Data2: 1318150160
+          Data3: 57613186
+          Data4: -1599309965
+        Path: event:/Enemy/Tank/TankHit
+    deathSFX:
+      reference:
+        Guid:
+          Data1: 686363957
+          Data2: 1298487654
+          Data3: -261839722
+          Data4: 1364696341
+        Path: event:/Enemy/Tank/TankDeath
+  shockwaveCollider: {fileID: 9178432390720270088}
+  attackColliders:
+  - {fileID: 8662212702313579967}
+  - {fileID: 9178432390720270088}
+  defaultVisionAngle: 145
 --- !u!1 &8575146605120047771
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,6 +423,111 @@ CapsuleCollider:
   m_Radius: 0.57
   m_Height: 1.5
   m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &8877972114346452576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165167341685550816}
+  - component: {fileID: 2694732990127500554}
+  - component: {fileID: 5033680369773265237}
+  - component: {fileID: 8662212702313579967}
+  m_Layer: 3
+  m_Name: Punch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &165167341685550816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8877972114346452576}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1.633}
+  m_LocalScale: {x: 2, y: 0.75, z: 2.2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2016467794423141786}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &2694732990127500554
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8877972114346452576}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &5033680369773265237
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8877972114346452576}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: f67cceb1853c68c418917ebaa99cafd7, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8662212702313579967
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8877972114346452576}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &820008690067569518
 PrefabInstance:
@@ -946,22 +1056,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8939819
+      value: -0.903739
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.23313043
+      value: -0.20379086
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.37029946
+      value: -0.36724287
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09656577
+      value: 0.08281232
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

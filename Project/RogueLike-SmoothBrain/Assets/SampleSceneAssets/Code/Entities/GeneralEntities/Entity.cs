@@ -24,7 +24,7 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Properties")]
     [SerializeField] protected Stats stats;
-    
+
     public delegate void DeathDelegate(Vector3 vector);
     public DeathDelegate OnDeath;
     public event Action OnChangeState;
@@ -40,14 +40,14 @@ public abstract class Entity : MonoBehaviour
     public byte IsInvincibleCount = 0;
 
     private int state = (int)EntityState.MOVE;
-    public int State 
-    { 
+    public int State
+    {
         get { return state; }
-        set 
+        set
         {
             state = value;
             OnChangeState?.Invoke();
-        } 
+        }
     }
 
     public Stats Stats
@@ -125,27 +125,30 @@ public abstract class Entity : MonoBehaviour
 
     public void ApplyKnockback(IDamageable damageable, IAttacker attacker, Vector3 direction, float distance, float speed)
     {
-        Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
-        if (knockbackable)
+        if (distance > 0f)
         {
-            MonoBehaviour damageableGO = damageable as MonoBehaviour;
-            Vector3 damageablePos = damageableGO.transform.position;
-            Vector3 TargetToMeVec = (transform.position - damageablePos).normalized;
-
-            if (TargetToMeVec != Vector3.zero)
+            Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
+            if (knockbackable)
             {
-                Quaternion rotation = Quaternion.LookRotation(new Vector3(TargetToMeVec.x, 0f, TargetToMeVec.z));
-                rotation *= Camera.main.transform.rotation;
-                float rotationY = rotation.eulerAngles.y;
+                MonoBehaviour damageableGO = damageable as MonoBehaviour;
+                Vector3 damageablePos = damageableGO.transform.position;
+                Vector3 TargetToMeVec = (transform.position - damageablePos).normalized;
 
-                if (damageableGO.TryGetComponent(out PlayerController controller) && damageableGO.GetComponent<Entity>().state != (int)EntityState.DEAD)
+                if (TargetToMeVec != Vector3.zero)
                 {
-                    controller.OverridePlayerRotation(rotationY, true);
-                }
-            }
+                    Quaternion rotation = Quaternion.LookRotation(new Vector3(TargetToMeVec.x, 0f, TargetToMeVec.z));
+                    rotation *= Camera.main.transform.rotation;
+                    float rotationY = rotation.eulerAngles.y;
 
-            knockbackable.GetKnockback(attacker, direction, distance, speed);
-            FloatingTextGenerator.CreateActionText(damageableGO.transform.position, "Pushed!");
+                    if (damageableGO.TryGetComponent(out PlayerController controller) && damageableGO.GetComponent<Entity>().state != (int)EntityState.DEAD)
+                    {
+                        controller.OverridePlayerRotation(rotationY, true);
+                    }
+                }
+
+                knockbackable.GetKnockback(attacker, direction, distance, speed);
+                FloatingTextGenerator.CreateActionText(damageableGO.transform.position, "Pushed!");
+            }
         }
     }
 
@@ -238,7 +241,7 @@ public class EntityDrawer : Editor
         // Get entity infos only
         FieldInfo[] entityInfo = typeof(Entity).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         List<string> toSort = new List<string>();
-        for(int i = infos.Length - 1; i >= 0; i--)
+        for (int i = infos.Length - 1; i >= 0; i--)
         {
             if (entityInfo.FirstOrDefault(x => x.Name == infos[i].Name) != null) continue;
             if ((infos[i].IsPublic && infos[i].GetCustomAttribute(typeof(HideInInspector)) == null) || infos[i].GetCustomAttribute(typeof(SerializeField)) != null)
@@ -304,18 +307,18 @@ public class EntityDrawer : Editor
                     return;
                 }
                 GUI.color = Color.white;
-               
+
                 EditorGUILayout.EndHorizontal();
 
                 if (foldoutList[i])
                 {
                     // popup to choose the index of the status in the name List
-                    allIndex[i] = EditorGUILayout.Popup("Status",allIndex[i], statusNameList.ToArray());
+                    allIndex[i] = EditorGUILayout.Popup("Status", allIndex[i], statusNameList.ToArray());
                     durationList[i] = EditorGUILayout.FloatField("Duration", durationList[i]);
                     chanceList[i] = EditorGUILayout.Slider("Chance", chanceList[i], 0, 1);
-                    
+
                     // Update properties
-                    
+
                 }
                 statusNameListProperty.GetArrayElementAtIndex(i).stringValue = statusNameList[allIndex[i]];
                 statusDurationListProperty.GetArrayElementAtIndex(i).doubleValue = durationList[i];
