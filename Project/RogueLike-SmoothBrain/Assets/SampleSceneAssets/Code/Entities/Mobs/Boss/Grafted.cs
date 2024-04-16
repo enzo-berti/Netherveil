@@ -43,38 +43,38 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [System.Serializable]
     private class GraftedSounds
     {
-        public AudioManager.Sound deathSound;
-        public AudioManager.Sound hitSound;
-        public AudioManager.Sound projectileLaunchedSound;
-        public AudioManager.Sound projectileHitMapSound;
-        public AudioManager.Sound projectileHitPlayerSound;
-        public AudioManager.Sound thrustSound;
-        public AudioManager.Sound introSound;
-        public AudioManager.Sound retrievingProjectileSound;
-        public AudioManager.Sound spinAttackSound;
-        public AudioManager.Sound stretchSound;
-        public AudioManager.Sound weaponOutSound;
-        public AudioManager.Sound weaponInSound;
-        public AudioManager.Sound walkingSound;
-        public AudioManager.Sound music;
+        public Sound deathSound;
+        public Sound hitSound;
+        public Sound projectileLaunchedSound;
+        public Sound projectileHitMapSound;
+        public Sound projectileHitPlayerSound;
+        public Sound thrustSound;
+        public Sound introSound;
+        public Sound retrievingProjectileSound;
+        public Sound spinAttackSound;
+        public Sound stretchSound;
+        public Sound weaponOutSound;
+        public Sound weaponInSound;
+        public Sound walkingSound;
+        public Sound music;
 
         public void StopAllSounds()
         {
-            AudioManager am = AudioManager.Instance;
-            am.StopSound(deathSound);
-            am.StopSound(hitSound);
-            am.StopSound(projectileLaunchedSound);
-            am.StopSound(projectileHitMapSound);
-            am.StopSound(projectileHitPlayerSound);
-            am.StopSound(thrustSound);
-            am.StopSound(introSound);
-            am.StopSound(retrievingProjectileSound);
-            am.StopSound(spinAttackSound);
-            am.StopSound(stretchSound);
-            am.StopSound(weaponOutSound);
-            am.StopSound(weaponInSound);
-            am.StopSound(walkingSound);
-            am.StopSound(music);
+            deathSound.Stop();
+            deathSound.Stop();
+            hitSound.Stop();
+            projectileLaunchedSound.Stop();
+            projectileHitMapSound.Stop();
+            projectileHitPlayerSound.Stop();
+            thrustSound.Stop();
+            introSound.Stop();
+            retrievingProjectileSound.Stop();
+            spinAttackSound.Stop();
+            stretchSound.Stop();
+            weaponOutSound.Stop();
+            weaponInSound.Stop();
+            walkingSound.Stop();
+            music.Stop();
         }
     }
 
@@ -130,8 +130,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             gameMusic.SetActive(false);
         }
-        AudioManager.Instance.PlaySound(bossSounds.introSound, transform.position);
-        AudioManager.Instance.PlaySound(bossSounds.music);
+        bossSounds.introSound.Play(transform.position);
+        bossSounds.music.Play();
     }
 
     private void OnDisable()
@@ -140,8 +140,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             gameMusic.SetActive(true);
         }
-        AudioManager.Instance.StopSound(bossSounds.introSound);
-        AudioManager.Instance.StopSound(bossSounds.music);
+        bossSounds.introSound.Stop();
+        bossSounds.music.Stop();
 
         bossSounds.StopAllSounds();
 
@@ -214,7 +214,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     MoveTo(attackState == AttackState.IDLE ? player.transform.position - (player.transform.position - transform.position).normalized * 2f : transform.position);
                     if (attackState == AttackState.IDLE)
                     {
-                        AudioManager.Instance.PlaySound(bossSounds.walkingSound, transform.position);
+                        bossSounds.walkingSound.Play(transform.position);
                     }
 
                     // Attacks
@@ -322,7 +322,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         deathTimer = 0.5f;
         MoveTo(transform.position);
         animator.SetBool(dyingHash, true);
-        AudioManager.Instance.PlaySound(bossSounds.deathSound, transform.position);
+        bossSounds.deathSound.Play(transform.position);
     }
 
     public void MoveTo(Vector3 _pos)
@@ -392,7 +392,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         if (throwingTimer == 0)
         {
-            AudioManager.Instance.PlaySound(bossSounds.weaponOutSound, transform.position);
+            bossSounds.weaponOutSound.Play(transform.position);
         }
 
         throwingTimer += Time.deltaTime;
@@ -414,7 +414,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
             throwingTimer = 0;
 
-            AudioManager.Instance.PlaySound(bossSounds.projectileLaunchedSound, transform.position);
+            bossSounds.projectileLaunchedSound.Play(transform.position);
 
             animator.SetBool(throwingHash, false);
         }
@@ -433,7 +433,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
         projectile.SetTempSpeed(projectile.Speed * 0.25f);
 
-        AudioManager.Instance.PlaySound(bossSounds.retrievingProjectileSound, transform.position);
+        bossSounds.retrievingProjectileSound.Play(transform.position);
 
         if (projectile.onTarget)
         {
@@ -454,7 +454,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             SetAtkCooldown(2f, 0.5f);
             playerHit = false;
             animator.SetBool(retrievingHash, false);
-            AudioManager.Instance.StopSound(bossSounds.retrievingProjectileSound);
+            bossSounds.retrievingProjectileSound.Stop();
         }
     }
 
@@ -479,7 +479,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     thrustChargeTimer = 0;
                     attackState = AttackState.ATTACKING;
 
-                    AudioManager.Instance.PlaySound(bossSounds.thrustSound, transform.position, true);
+                    bossSounds.thrustSound.Play(transform.position, true);
                 }
                 break;
 
@@ -531,7 +531,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         {
             if (!animator.GetBool(fallHash))
             {
-                AudioManager.Instance.PlaySound(bossSounds.stretchSound, transform.position);
+                bossSounds.stretchSound.Play(transform.position);
             }
 
             animator.SetBool(fallHash, true);
@@ -554,7 +554,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             {
                 DisableHitboxes();
 
-                AudioManager.Instance.PlaySound(bossSounds.spinAttackSound, transform.position);
+                bossSounds.spinAttackSound.Play(transform.position);
 
                 playerHit = false;
                 triggerAOE = true;

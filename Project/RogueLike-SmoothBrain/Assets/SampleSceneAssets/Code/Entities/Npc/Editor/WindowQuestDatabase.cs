@@ -45,6 +45,7 @@ public class WindowQuestDatabase : EditorWindow
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Id_Name", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Type", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("CorruptionModifierValue", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Description", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.EndHorizontal();
 
@@ -57,6 +58,7 @@ public class WindowQuestDatabase : EditorWindow
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
             EditorGUILayout.LabelField(quest.idName.SeparateAllCase(), GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             quest.Type = (QuestData.QuestType)EditorGUILayout.EnumPopup(quest.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            quest.CorruptionModifierValue = EditorGUILayout.IntField(quest.CorruptionModifierValue, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             quest.Description = EditorGUILayout.TextArea(quest.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
             GUI.color = Color.red;
             if (GUILayout.Button("X", GUILayout.Width(50)))

@@ -15,4 +15,5 @@ public class QuestData
     public QuestType Type;
     public string idName;
     [Multiline] public string Description;
+    public int CorruptionModifierValue;
 }

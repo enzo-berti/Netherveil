@@ -11,7 +11,7 @@ public class Glorb : Mobs, IGlorb
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
-    [SerializeField] AudioManager.Sound hitSFX;
+    [SerializeField] Sound hitSFX;
     [SerializeField] EventReference shockwaveSFX;
     [SerializeField] EventReference punchSFX;
     [Header("SFXs")]

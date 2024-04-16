@@ -20,6 +20,16 @@ namespace Map
 
     public struct RoomData
     {
+        static public Dictionary<RoomType, int> nbRoomByType = new Dictionary<RoomType, int>
+        {
+            { RoomType.Normal, 0 },
+            { RoomType.Treasure, 0 },
+            { RoomType.Challenge, 0 },
+            { RoomType.Merchant, 0 },
+            { RoomType.Secret, 0 },
+            { RoomType.MiniBoss, 0 },
+        };
+
         public RoomData(GameObject enemiesContainer, Generation.RoomGenerator roomGenerator)
         {
             enemies = new List<GameObject>();

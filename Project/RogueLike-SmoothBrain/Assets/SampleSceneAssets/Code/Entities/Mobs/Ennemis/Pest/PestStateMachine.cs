@@ -15,10 +15,10 @@ public class PestStateMachine : Mobs, IPest
     [System.Serializable]
     private class PestSounds
     {
-        public AudioManager.Sound deathSound;
-        public AudioManager.Sound takeDamageSound;
-        public AudioManager.Sound attackHitSound;
-        public AudioManager.Sound moveSound;
+        public Sound deathSound;
+        public Sound takeDamageSound;
+        public Sound attackHitSound;
+        public Sound moveSound;
     }
 
     // state machine variables
@@ -125,14 +125,14 @@ public class PestStateMachine : Mobs, IPest
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        AudioManager.Instance.PlaySound(pestSounds.attackHitSound, transform.position);
+        pestSounds.attackHitSound.Play(transform.position);
     }
 
     public void Death()
     {
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
-        AudioManager.Instance.PlaySound(pestSounds.deathSound, transform.position);
+        pestSounds.deathSound.Play(transform.position);
         animator.SetBool(deathHash, true);
         isDeath = true;
 
@@ -145,7 +145,7 @@ public class PestStateMachine : Mobs, IPest
             return;
 
         agent.SetDestination(posToMove);
-        AudioManager.Instance.PlaySound(pestSounds.moveSound, transform.position);
+        pestSounds.moveSound.Play(transform.position);
     }
     #endregion
 

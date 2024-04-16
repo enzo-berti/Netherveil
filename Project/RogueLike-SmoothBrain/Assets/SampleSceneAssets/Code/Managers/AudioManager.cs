@@ -3,7 +3,6 @@ using FMODUnity;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,31 +17,6 @@ public class CustomEventTrigger : EventTrigger
 
 public class AudioManager : MonoBehaviour
 {
-    [Serializable]
-    public class Sound
-    {
-        public EventReference reference;
-        public EventInstance instance;
-
-        public PLAYBACK_STATE GetState()
-        {
-            PLAYBACK_STATE state;
-
-            instance.getPlaybackState(out state);
-
-            return state;
-        }
-
-        public void CreateInstance(bool restart = false)
-        {
-            if (GetState() == PLAYBACK_STATE.STOPPED || restart)
-            {
-                instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                instance = RuntimeManager.CreateInstance(reference);
-            }
-        }
-    }
-
 //#if UNITY_EDITOR
 //    [CustomPropertyDrawer(typeof(Sound))]
 //    public class SoundDrawerUIE : PropertyDrawer
@@ -90,7 +64,6 @@ public class AudioManager : MonoBehaviour
 //    }
 //#endif
 
-
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadAudioManager()
     {
@@ -119,8 +92,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private EventReference buttonClick;
     [SerializeField] private EventReference buttonSelect;
 
-    private List<EventInstance> audioInstance = new List<EventInstance>();
-    public List<EventInstance> buttonSFXInstances = new List<EventInstance>();
+    private readonly List<EventInstance> audioInstances = new List<EventInstance>();
+    public readonly List<EventInstance> buttonSFXInstances = new List<EventInstance>();
 
     private Bus masterBus;
     private Bus musicsBus;
@@ -160,11 +133,11 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        for (int i = audioInstance.Count - 1; i >= 0; --i)
+        for (int i = audioInstances.Count - 1; i >= 0; --i)
         {
-            audioInstance[i].getPlaybackState(out PLAYBACK_STATE state);
+            audioInstances[i].getPlaybackState(out PLAYBACK_STATE state);
             if (state == PLAYBACK_STATE.STOPPED)
-                audioInstance.Remove(audioInstance[i]);
+                audioInstances.Remove(audioInstances[i]);
         }
     }
 
@@ -198,11 +171,21 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void AddSound(ref EventInstance instance)
+    {
+        audioInstances.Add(instance);
+    }
+
+    public bool RemoveSound(ref EventInstance instance)
+    {
+        return audioInstances.Remove(instance);
+    }
+
     public EventInstance PlaySound(string path)
     {
         EventInstance result = RuntimeManager.CreateInstance(path);
         result.start();
-        audioInstance.Add(result);
+        audioInstances.Add(result);
 
         return result;
     }
@@ -211,42 +194,16 @@ public class AudioManager : MonoBehaviour
     {
         EventInstance result = PlaySound(path);
         result.set3DAttributes(worldPosition.To3DAttributes());
+        audioInstances.Add(result);
 
         return result;
-    }
-
-    public EventInstance PlaySound(Sound sound, Vector3 worldPosition, bool restart = false)
-    {
-        sound.CreateInstance(restart);
-
-        if (sound.GetState() == PLAYBACK_STATE.STOPPED)
-        {
-            sound.instance.start();
-            sound.instance.set3DAttributes(worldPosition.To3DAttributes());
-            audioInstance.Add(sound.instance);
-        }
-
-        return sound.instance;
-    }
-
-    public EventInstance PlaySound(Sound sound, bool restart = false)
-    {
-        sound.CreateInstance(restart);
-
-        if (sound.GetState() == PLAYBACK_STATE.STOPPED)
-        {
-            sound.instance.start();
-            audioInstance.Add(sound.instance);
-        }
-
-        return sound.instance;
     }
 
     public EventInstance PlaySound(EventReference reference)
     {
         EventInstance result = RuntimeManager.CreateInstance(reference);
         result.start();
-        audioInstance.Add(result);
+        audioInstances.Add(result);
 
         return result;
     }
@@ -255,44 +212,37 @@ public class AudioManager : MonoBehaviour
     {
         EventInstance result = PlaySound(reference);
         result.set3DAttributes(worldPosition.To3DAttributes());
-        audioInstance.Add(result);
+        audioInstances.Add(result);
 
         return result;
     }
 
     public void StopAllSounds(FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
     {
-        for (int i = audioInstance.Count - 1; i >= 0; --i)
+        foreach (var audioInstance in audioInstances)
         {
-            audioInstance[i].stop(stopMode);
-            audioInstance.RemoveAt(i);
+            audioInstance.stop(stopMode);
         }
+
+        audioInstances.Clear();
     }
 
     public void StopSound(EventInstance eventInstance, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
     {
-        if (!audioInstance.Contains(eventInstance))
+        if (!audioInstances.Contains(eventInstance))
             return;
 
         eventInstance.stop(stopMode);
-        audioInstance.Remove(eventInstance);
-    }
-    public void StopSound(Sound sound, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.Immediate)
-    {
-        if (!audioInstance.Contains(sound.instance))
-            return;
-
-        sound.instance.stop(stopMode);
-        audioInstance.Remove(sound.instance);
+        audioInstances.Remove(eventInstance);
     }
 
     public void ButtonClickSFX()
     {
-        for (int i = buttonSFXInstances.Count - 1; i >= 0; --i)
+        foreach (var buttonSFXInstance in buttonSFXInstances)
         {
-            buttonSFXInstances[i].stop(FMOD.Studio.STOP_MODE.Immediate);
-            buttonSFXInstances.RemoveAt(i);
+            buttonSFXInstance.stop(FMOD.Studio.STOP_MODE.Immediate);
         }
+        buttonSFXInstances.Clear();
 
         buttonSFXInstances.Add(Instance.PlaySound(buttonClick));
     }

@@ -8,24 +8,43 @@ public class Talker : Npc
     DialogueTreeRunner dialogueTreeRunner;
     Quest quest;
     Hero player;
+    public enum TalkerType
+    {
+        CLERIC,
+        SHAMAN
+    }
+
+    [SerializeField] TalkerType type;
 
     protected override void Start()
     {
         base.Start();
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        dialogueTreeRunner.EventManager.AddListener("GiveQuest", GiveQuest);
+    }
+
+    private void OnDestroy()
+    {
+        if (dialogueTreeRunner != null)
+        {
+            dialogueTreeRunner.EventManager.RemoveListener("GiveQuest");
+        }
     }
 
     public override void Interract()
     {
         TriggerDialogue();
-        GiveQuest();
+        //GiveQuest();
     }
 
     private void GiveQuest()
     {
-        quest = Quest.LoadClass(Quest.GetRandomQuestName());
-        player.CurrentQuest = quest;
+        if(dialogueTreeRunner.TalkerNPC == this)
+        {
+            quest = Quest.LoadClass(Quest.GetRandomQuestName(), type);
+            player.CurrentQuest = quest;
+        }
     }
 
     private void TriggerDialogue()
@@ -36,7 +55,7 @@ public class Talker : Npc
         }
         else
         {
-            dialogueTreeRunner.StartDialogue(dialogue);
+            dialogueTreeRunner.StartDialogue(dialogue, this);
         }
     }
 }

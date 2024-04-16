@@ -128,32 +128,39 @@ public class CreateItemWindow : EditorWindow
                             for(int j = 0; j < typeList[i].GetMethods().Length; j++)
                             {
                                 var method = typeList[i].GetMethods()[j];
-                                
-                                if (method.Name.Split("_")[0] == "get" || method.Name.Split("_")[0] == "set")
+                                if(!method.IsStatic)
                                 {
-                                    var name = method.Name.Split("_")[1];
-                                    var returnType = method.ReturnType;
-                                    methodToWrite += "public " + returnType + " " + name + " { ";
-                                    do
+                                    if (method.Name.Split("_")[0] == "get" || method.Name.Split("_")[0] == "set")
                                     {
-                                      methodToWrite += method.Name.Split("_")[0] + "; ";
-                                        j++;
-                                      method = typeList[i].GetMethods()[j];
-                                    } while (method.Name.Split("_").Length > 1 && (method.Name.Split("_")[1] == name || method.Name.Split("_")[1] == name));
-                                    j--;
-                                    methodToWrite += "} = " + activeCooldown + ";\n\n    ";
-                                }
-                                else
-                                {
-                                    if (method.IsPublic) methodToWrite += "public ";
-                                    else if (method.IsPrivate) methodToWrite += "private ";
-                                    else methodToWrite += "protected ";
+                                        var name = method.Name.Split("_")[1];
+                                        var returnType = method.ReturnType;
+                                        methodToWrite += "public " + returnType + " " + name + " { ";
+                                        do
+                                        {
+                                            methodToWrite += method.Name.Split("_")[0] + "; ";
+                                            j++;
+                                            method = typeList[i].GetMethods()[j];
+                                        } while (method.Name.Split("_").Length > 1 && (method.Name.Split("_")[1] == name || method.Name.Split("_")[1] == name));
+                                        j--;
+                                        methodToWrite += "} = " + activeCooldown + ";\n\n    ";
+                                    }
+                                    else
+                                    {
+                                        if (method.IsPublic) methodToWrite += "public ";
+                                        else if (method.IsPrivate) methodToWrite += "private ";
+                                        else methodToWrite += "protected ";
 
-                                    methodToWrite += method.ReturnParameter.ToString().ToLower() + " ";
-                                    methodToWrite += method.Name + "(";
-
-                                    methodToWrite += ")\n    {\n        throw new System.NotImplementedException();\n    }\n    ";
+                                        Type type = method.ReturnType;
+                                        string typeString = type.ToString() == "System.Void" ? "void" : type.ToString();
+                                        methodToWrite += typeString + " ";
+                                        methodToWrite += method.Name + "(";
+                                        if (method.IsAbstract)
+                                        {
+                                            methodToWrite += ")\n    {\n        throw new System.NotImplementedException();\n    }\n    ";
+                                        }
+                                    }
                                 }
+                                
                                 
                             }
                             sw.WriteLine(methodToWrite);
