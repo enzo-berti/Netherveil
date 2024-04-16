@@ -2,7 +2,7 @@
 public class VulcanHunter : Quest
 {
     int currentNumber = 0;
-    readonly int MAX_NUMBER = 15;
+    readonly int MAX_NUMBER = 5;
 
     public override void AcceptQuest()
     {
