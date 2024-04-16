@@ -27,21 +27,9 @@ public class PlayerInteractions : MonoBehaviour
 
         for (int i = 1; i< InteractablesInRange.Count; ++i)
         {
-            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out Outline outlineItem))
-                outlineItem.DisableOutline();
-            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out ItemDescription itemDesc))
-                itemDesc.TogglePanel(false);
-            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out Npc npc))
-                npc.ToggleRangeImage(false);
+            InteractablesInRange[i].Deselect();
         }
 
-        if((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Outline outline))
-            outline.EnableOutline();
-
-        if ((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out ItemDescription itemDescription))
-            itemDescription.TogglePanel(true);
-
-        if ((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Npc npc2))
-            npc2.ToggleRangeImage(true);
+        InteractablesInRange[0].Select();
     }
 }

@@ -17,6 +17,7 @@ public class Spike : MonoBehaviour
     private int damage;
     private float waitUntilTimer;
     List<IDamageable> entitiesToDealDamage;
+    private float timerCheckEntitiesList;
 
     private void Awake()
     {
@@ -45,6 +46,27 @@ public class Spike : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (timerCheckEntitiesList >= 2f)
+        {
+            timerCheckEntitiesList = 0f;
+
+            List<IDamageable> entitiesToKeep = new List<IDamageable>();
+
+            foreach (IDamageable entity in entitiesToDealDamage)
+            {
+                IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
+                if (damageable != null && entity == damageable)
+                {
+                    entitiesToKeep.Add(entity);
+                }
+            }
+
+            entitiesToDealDamage = entitiesToKeep;
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.TryGetComponent<IDamageable>(out var damageable))
@@ -68,6 +90,7 @@ public class Spike : MonoBehaviour
     private void Update()
     {
         entitiesToDealDamage.RemoveAll(x => (x as MonoBehaviour) == null);
+        timerCheckEntitiesList += Time.deltaTime;
     }
 
     IEnumerator Active()
