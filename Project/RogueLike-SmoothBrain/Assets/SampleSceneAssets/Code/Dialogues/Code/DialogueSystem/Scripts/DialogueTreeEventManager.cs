@@ -15,7 +15,7 @@ public class DialogueTreeEventManager : MonoBehaviour
         }
 
         public string tag;
-        public UnityEvent onCall;
+        public UnityEvent onCall = new();
     }
 
     [SerializeField] private List<DialogueEvent> dialogueEvent = new List<DialogueEvent>();
@@ -34,5 +34,10 @@ public class DialogueTreeEventManager : MonoBehaviour
         }
 
         dialogueEvent.Add(new DialogueEvent(tag, action));
+    }
+
+    public void RemoveListener(string tag)
+    {
+        dialogueEvent.Remove(dialogueEvent.First(x => x.tag == tag));
     }
 }

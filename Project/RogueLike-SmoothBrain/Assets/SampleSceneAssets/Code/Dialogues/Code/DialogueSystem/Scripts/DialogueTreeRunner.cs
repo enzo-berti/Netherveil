@@ -20,8 +20,15 @@ public class DialogueTreeRunner : MonoBehaviour
     public bool IsStarted => dialogueCanvas.gameObject.activeSelf;
     private string lastDialogue;
     DialogueTreeEventManager eventManager;
+    public DialogueTreeEventManager EventManager { get => eventManager; }
+    public Npc TalkerNPC { get; private set; }
 
-    public void StartDialogue(DialogueTree tree)
+    private void Awake()
+    {
+        eventManager = GetComponent<DialogueTreeEventManager>();
+    }
+
+    public void StartDialogue(DialogueTree tree, Npc talker)
     {
         if (IsStarted)
             return;
@@ -29,12 +36,14 @@ public class DialogueTreeRunner : MonoBehaviour
         this.tree = tree;
         this.tree.ResetTree();
         dialogueCanvas.gameObject.SetActive(true);
+        TalkerNPC = talker;
         UpdateDialogue();
     }
 
     public void EndDialogue()
     {
         dialogueCanvas.gameObject.SetActive(false);
+        TalkerNPC = null;
     }
 
     public void UpdateDialogue()

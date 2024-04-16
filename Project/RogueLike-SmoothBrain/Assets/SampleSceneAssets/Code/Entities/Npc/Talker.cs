@@ -30,7 +30,7 @@ public class Talker : Npc
 
     private void GiveQuest()
     {
-        if(dialogueTreeRunner.Talker == this)
+        if(dialogueTreeRunner.TalkerNPC == this)
         {
             quest = Quest.LoadClass(Quest.GetRandomQuestName());
             player.CurrentQuest = quest;
