@@ -39,16 +39,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         get => currentQuest;
         set
         {
+            currentQuest = value;
+
             if (value == null)
             {
                 OnQuestFinished?.Invoke();
             }
             else
             {
+                value.AcceptQuest();
                 OnQuestObtained?.Invoke();
             }
-
-            currentQuest = value;
         }
     }
 

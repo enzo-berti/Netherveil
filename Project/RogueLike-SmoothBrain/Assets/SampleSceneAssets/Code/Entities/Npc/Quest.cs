@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Quest
 {
     public QuestData Datas { get; protected set; }
+    public string progressText = string.Empty;
     static QuestDatabase database;
 
     public abstract void AcceptQuest();
