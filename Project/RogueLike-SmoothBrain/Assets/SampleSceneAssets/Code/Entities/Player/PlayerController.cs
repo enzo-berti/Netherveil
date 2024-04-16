@@ -482,6 +482,7 @@ public class PlayerController : MonoBehaviour
         animator.ResetTrigger("UpgradingStats");
         animator.SetTrigger("UpgradingStats");
         hero.State = (int)Hero.PlayerState.UPGRADING_STATS;
+        launchUpgradeAnim = false;
         //launch benediction or corruptionVFX
     }
 
