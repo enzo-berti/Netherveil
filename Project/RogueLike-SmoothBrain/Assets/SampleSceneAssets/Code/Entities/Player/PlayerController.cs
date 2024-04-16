@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     public float CurrentTargetAngle { get; set; } = 0f;
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
+    int currentStep = 0;
+    int lastStep = 0;
 
     //used to auto-redirect on enemies in vision cone when attacking
     const float ATTACK_CONE_ANGLE = 45f;
@@ -321,16 +323,69 @@ public class PlayerController : MonoBehaviour
 
         float corruptionStat = hero.Stats.GetValue(stat);
         float corruptionLastValue = hero.Stats.GetLastValue(stat);
-        int diff = Mathf.Abs((int)(corruptionStat - corruptionLastValue / 25f));
-        int offset = (corruptionStat - corruptionLastValue) > 0 ? 25 : -25;
+        float diff = corruptionStat - corruptionLastValue;
+        int stepDiff = Mathf.Abs((int)(diff / 25f));
+        int offset = diff > 0 ? 25 : -25;
         float currentValue = corruptionLastValue;
 
-        for(int i = 0; i< diff; i++)
+        if (Mathf.Abs(diff) <= 25f && (int)(corruptionStat/25f) > currentStep && diff > 0)
+        {
+            currentStep++;
+            if(corruptionStat >= 100f)
+            {
+                UltimateCorruptionUpgrade();
+            }
+            else
+            {
+                BasicCorruptionUpgrade();
+            }
+        }
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) <= 25f && (int)(corruptionStat / 25f) < currentStep && diff < 0)
+        {
+            currentStep--;
+            if (corruptionStat <= -100f)
+            {
+                UltimateBenedictionUpgrade();
+            }
+            else
+            {
+                BasicBenedictionUpgrade();
+            }
+        }
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) <= 25f && (int)(corruptionStat / 25f) > currentStep && corruptionStat < 0)
+        {
+            currentStep++;
+            if (corruptionLastValue <= -100f)
+            {
+                UltimateBenedictionDrawback();
+            }
+            else
+            {
+                BenedictionDrawback();
+            }
+        }
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) <= 25f && (int)(corruptionStat / 25f) < currentStep && corruptionStat > 0)
+        {
+            currentStep--;
+            if (corruptionLastValue >= 100f)
+            {
+                UltimateCorruptionDrawback();
+            }
+            else
+            {
+                CorruptionDrawback();
+            }
+        }
+
+
+
+        for (int i = 0; i< stepDiff; i++)
         {
             int diffValue2 = (int)(corruptionStat - currentValue);
 
             if (currentValue < 0 && diffValue2 > 0)
             {
+                currentStep++;
                 if (currentValue <= -100f)
                 {
                     UltimateBenedictionDrawback();
@@ -342,6 +397,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (currentValue < 0 && diffValue2 < 0)
             {
+                currentStep--;
                 if (currentValue <= -100f)
                 {
                     UltimateBenedictionUpgrade();
@@ -353,6 +409,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (currentValue > 0 && diffValue2 > 0)
             {
+                currentStep++;
                 if (currentValue >= 100f)
                 {
                     UltimateCorruptionUpgrade();
@@ -364,6 +421,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (currentValue > 0 && diffValue2 < 0)
             {
+                currentStep--;
                 if (currentValue >= 100f)
                 {
                     UltimateCorruptionDrawback();
