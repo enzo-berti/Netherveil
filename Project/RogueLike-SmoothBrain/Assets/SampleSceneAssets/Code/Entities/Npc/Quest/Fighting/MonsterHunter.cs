@@ -1,13 +1,12 @@
-using UnityEngine;
 
-public class RealTest : Quest
+public class MonsterHunter : Quest
 {
     int currentNumber = 0;
-    readonly int MAX_NUMBER = 1;
+    readonly int MAX_NUMBER = 15;
 
     public override void AcceptQuest()
     {
-        benedictionOrCorruptionValue = 30;
+        benedictionOrCorruptionValue = 20;
         progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
         Hero.OnKill += UpdateCount;
     }
@@ -24,9 +23,9 @@ public class RealTest : Quest
         progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
         QuestUpdated();
 
-        if(currentNumber >= MAX_NUMBER) 
+        if (currentNumber >= MAX_NUMBER)
         {
             QuestFinished();
         }
     }
-} 
+}
