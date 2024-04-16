@@ -54,8 +54,6 @@ namespace Generation
     {
         public List<Door> doors = new List<Door>();
 
-        [SerializeField, MinMaxSlider(1, 4)] private Vector2Int minMaxDoors;
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

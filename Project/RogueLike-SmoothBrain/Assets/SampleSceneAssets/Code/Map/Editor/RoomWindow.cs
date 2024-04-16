@@ -5,7 +5,7 @@ using UnityEngine;
 using Generation;
 using Map;
 
-public class RoomToolWindow : EditorWindow 
+public class RoomWindow : EditorWindow 
 {
     public enum TypeRoom
     {
@@ -21,7 +21,7 @@ public class RoomToolWindow : EditorWindow
     [UnityEditor.MenuItem("Tools/Room/Create")]
     public static void CreateRoom()
     {
-        EditorWindow.GetWindow(typeof(RoomToolWindow));
+        EditorWindow.GetWindow(typeof(RoomWindow));
     }
 
     void OnGUI()
@@ -51,7 +51,6 @@ public class RoomToolWindow : EditorWindow
         skeleton.gameObject.name = "Skeleton";
         skeleton.transform.parent = roomPrefab.transform;
         skeleton.layer = LayerMask.NameToLayer("Map");
-        skeleton.AddComponent<NavMeshSurface>();
         BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
         boxCollider.isTrigger = true;
         MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
@@ -67,14 +66,18 @@ public class RoomToolWindow : EditorWindow
         GameObject staticProps = room.transform.GetChild(1).gameObject;
         staticProps.gameObject.name = "StaticProps";
         staticProps.transform.parent = skeleton.transform;
-        
+
+        GameObject lights = new GameObject("Lights");
+        lights.transform.parent = skeleton.transform;
+
         GameObject roomGenerator = new GameObject("RoomGenerator");
         roomGenerator.transform.parent = roomPrefab.transform;
         roomGenerator.AddComponent<RoomGenerator>();
         
         GameObject roomSeed1 = new GameObject("Room1");
         roomSeed1.transform.parent = roomGenerator.transform;
-        
+        roomSeed1.AddComponent<NavMeshSurface>();
+
         GameObject traps = new GameObject("Traps");
         traps.transform.parent = roomSeed1.transform;
         GameObject enemies = new GameObject("Enemies");
@@ -83,6 +86,9 @@ public class RoomToolWindow : EditorWindow
         props.transform.parent = roomSeed1.transform;
         GameObject treasures = new GameObject("Treasures");
         treasures.transform.parent = roomSeed1.transform;
+        GameObject npcs = new GameObject("Npcs");
+        npcs.transform.parent = roomSeed1.transform;
+
 
         string typeRoomPath = "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString();
         string roomFolderPath = typeRoomPath + "/" + prefabName;
