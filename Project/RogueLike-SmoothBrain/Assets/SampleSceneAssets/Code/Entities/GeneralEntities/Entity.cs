@@ -237,17 +237,15 @@ public class EntityDrawer : Editor
 
         // Get entity infos only
         FieldInfo[] entityInfo = typeof(Entity).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-        foreach (var field in infos)
+        List<string> toSort = new List<string>();
+        for(int i = infos.Length - 1; i >= 0; i--)
         {
-            // Don't rewrite all the current entity info
-            if (entityInfo.FirstOrDefault(x => x.Name == field.Name) != null) continue;
-            if ((field.IsPublic && field.GetCustomAttribute(typeof(HideInInspector)) == null) || field.GetCustomAttribute(typeof(SerializeField)) != null)
+            if (entityInfo.FirstOrDefault(x => x.Name == infos[i].Name) != null) continue;
+            if ((infos[i].IsPublic && infos[i].GetCustomAttribute(typeof(HideInInspector)) == null) || infos[i].GetCustomAttribute(typeof(SerializeField)) != null)
             {
-                classField.Add(field.Name);
+                classField.Add(infos[i].Name);
             }
         }
-        // If I don't reverse, last class values will be written in first
         classField.Reverse();
     }
 
