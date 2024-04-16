@@ -32,9 +32,6 @@ public class Item : MonoBehaviour, IInterractable
     // Description displayed in the info box
     ItemDescription itemDescription;
 
-    // To move only mesh ( for the floating )
-    GameObject meshObject;
-
     private void Awake()
     {
         if (isRandomized)
@@ -54,7 +51,6 @@ public class Item : MonoBehaviour, IInterractable
 
         playerInteractions = GameObject.FindWithTag("Player").GetComponent<PlayerInteractions>();
         hero = playerInteractions.gameObject.GetComponent<Hero>();
-        meshObject = this.GetComponentInChildren<MeshRenderer>().gameObject;
         outline = GetComponent<Outline>();
         itemDescription = GetComponent<ItemDescription>();
     }
@@ -62,15 +58,6 @@ public class Item : MonoBehaviour, IInterractable
     private void Update()
     {
         Interraction();
-        FloatingAnimation();
-    }
-
-    private void FloatingAnimation()
-    {
-        Vector3 updatePos = meshObject.transform.position;
-        updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
-        meshObject.transform.position = updatePos;
-        meshObject.transform.Rotate(new Vector3(0, 0.5f, 0));
     }
 
     private void Interraction()

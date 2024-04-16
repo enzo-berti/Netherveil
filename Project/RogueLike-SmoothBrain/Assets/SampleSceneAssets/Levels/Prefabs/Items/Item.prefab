@@ -304,10 +304,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4038235964802879602}
-  - component: {fileID: 3770633158725574965}
   - component: {fileID: 8145302689807495567}
-  - component: {fileID: 1312039710714292112}
   - component: {fileID: 400658464502249309}
+  - component: {fileID: 2680565244982490138}
+  - component: {fileID: 3770633158725574965}
+  - component: {fileID: 1312039710714292112}
   - component: {fileID: 9003852147173479134}
   m_Layer: 0
   m_Name: Item
@@ -333,22 +334,6 @@ Transform:
   - {fileID: 6900712541171095009}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3770633158725574965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5047629768900978217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f985e2c8813d724438eb7ee5894ccc9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isRandomized: 1
-  database: {fileID: 11400000, guid: a25fead2382213b4eadf914d4354c856, type: 2}
-  idItemName: Bramble
-  descriptionToDisplay: 
 --- !u!65 &8145302689807495567
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -370,21 +355,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.12909828, y: 0.20806707, z: 0.12909882}
   m_Center: {x: -0.00000023841858, y: 0.10403348, z: 0}
---- !u!114 &1312039710714292112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5047629768900978217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a92bc3c0f8c142541a3b6beade536584, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panel: {fileID: 850074428349764950}
-  nameText: {fileID: 8439392379392209510}
-  descriptionText: {fileID: 8059532023584177424}
 --- !u!54 &400658464502249309
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -412,6 +382,58 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &2680565244982490138
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5047629768900978217}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d833a17993f364a47974dd885ec44dbb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3770633158725574965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5047629768900978217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f985e2c8813d724438eb7ee5894ccc9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRandomized: 1
+  database: {fileID: 11400000, guid: a25fead2382213b4eadf914d4354c856, type: 2}
+  idItemName: Bramble
+  descriptionToDisplay: 
+--- !u!114 &1312039710714292112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5047629768900978217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a92bc3c0f8c142541a3b6beade536584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 850074428349764950}
+  nameText: {fileID: 8439392379392209510}
+  descriptionText: {fileID: 8059532023584177424}
 --- !u!114 &9003852147173479134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,6 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b1642e408d9dea4cb780918edce67dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mRenderer: []
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineThickness: 0.02
 --- !u!1 &5645049553563488059
@@ -588,7 +611,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7619431732304047197}
-  m_LocalRotation: {x: -0.22684465, y: -0.3784758, z: 0.09622761, w: -0.89220953}
+  m_LocalRotation: {x: -0.23074381, y: -0.3708726, z: 0.09567407, w: -0.89445925}
   m_LocalPosition: {x: 0, y: 0, z: -0.2}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
