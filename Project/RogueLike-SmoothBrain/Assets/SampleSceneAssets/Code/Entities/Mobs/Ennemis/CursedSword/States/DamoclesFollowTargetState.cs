@@ -57,13 +57,11 @@ public class DamoclesFollowTargetState : BaseState<DamoclesStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        throw new System.NotImplementedException();
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-        throw new System.NotImplementedException();
     }
 
     // This method will be call every frame.

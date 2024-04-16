@@ -40,8 +40,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
     [SerializeField] private BoxCollider attack1Collider;
     [SerializeField] private BoxCollider attack2Collider;
     private Transform target;
-    private int frameToUpdate;
-    private int maxFrameUpdate = 500;
     private bool isDeath = false;
 
     // animation hash
@@ -69,13 +67,13 @@ public class DamoclesStateMachine : Mobs, IDamocles
     {
         factory = new StateFactory<DamoclesStateMachine>(this);
         // Set currentState here !
-        //currentState = factory.GetState<DamoclesPatrolState>();
+        currentState = factory.GetState<DamoclesIdle>();
 
         // getter(s) reference
         animator = GetComponentInChildren<Animator>();
 
         // common initialization
-        GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
+       
 
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");

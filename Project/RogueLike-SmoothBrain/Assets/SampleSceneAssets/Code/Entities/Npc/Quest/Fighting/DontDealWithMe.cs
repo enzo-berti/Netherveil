@@ -1,5 +1,5 @@
 
-public class VulcanHunter : Quest
+public class DontDealWithMe : Quest
 {
     int currentNumber = 0;
     readonly int MAX_NUMBER = 15;
@@ -18,16 +18,13 @@ public class VulcanHunter : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
-        if (damageable as IGorgon != null)
-        {
-            currentNumber++;
-            progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
-            QuestUpdated();
+        currentNumber++;
+        progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
+        QuestUpdated();
 
-            if (currentNumber >= MAX_NUMBER)
-            {
-                QuestFinished();
-            }
+        if (currentNumber >= MAX_NUMBER)
+        {
+            QuestFinished();
         }
     }
 }
