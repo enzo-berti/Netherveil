@@ -13,16 +13,17 @@ public class Item : MonoBehaviour
     [SerializeField] private bool isRandomized = true;
     [SerializeField] private ItemDatabase database;
 
-    private ItemEffect itemData;
+    private ItemEffect itemEffect;
     private Color rarityColor = Color.white;
     public string idItemName = string.Empty;
 
     private ItemDescription itemDescription;
 
     public Color RarityColor => rarityColor;
-    public ItemEffect ItemData => itemData;
+    public ItemEffect ItemData => itemEffect;
     public ItemDatabase Database => database;
 
+    public float Price { get; private set; } = 0;
     private void Start()
     {
         if (isRandomized)
@@ -30,9 +31,13 @@ public class Item : MonoBehaviour
             RandomizeItem(this);
         }
 
-        itemData = LoadClass();
-        Material matToRender = database.GetItem(idItemName).mat;
-        Mesh meshToRender = database.GetItem(idItemName).mesh;
+        itemEffect = LoadClass();
+
+        ItemData data = database.GetItem(idItemName);
+        Material matToRender = data.mat;
+        Mesh meshToRender = data.mesh;
+        Price = data.price;
+
         rarityColor = database.GetItemRarityColor(idItemName);
 
         this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : this.GetComponentInChildren<MeshRenderer>().material;
@@ -44,10 +49,7 @@ public class Item : MonoBehaviour
 
     public static void InvokeOnRetrieved(ItemEffect effect)
     {
-        if (OnRetrieved != null)
-        {
-            OnRetrieved(effect);
-        }
+        OnRetrieved?.Invoke(effect);
     }
 
     private ItemEffect LoadClass()
