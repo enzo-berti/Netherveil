@@ -1043,7 +1043,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &639551242
 Transform:
   m_ObjectHideFlags: 0
@@ -1288,7 +1288,7 @@ PrefabInstance:
     - target: {fileID: 107765564092292927, guid: b323268dc482ada4089ee168ee1fde78,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7777830987673953498, guid: b323268dc482ada4089ee168ee1fde78,
         type: 3}
@@ -1814,6 +1814,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DialogueSystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 6720119553042962705, guid: dddffc8932e084d42abca8b8b4baccb5,
+        type: 3}
+      propertyPath: dialogueEvent.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6720119553042962705, guid: dddffc8932e084d42abca8b8b4baccb5,
+        type: 3}
+      propertyPath: dialogueEvent.Array.data[0].tag
+      value: GiveQuest
+      objectReference: {fileID: 0}
+    - target: {fileID: 6720119553042962705, guid: dddffc8932e084d42abca8b8b4baccb5,
+        type: 3}
+      propertyPath: dialogueEvent.Array.data[0].onCall.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6720119553042962705, guid: dddffc8932e084d42abca8b8b4baccb5,
+        type: 3}
+      propertyPath: dialogueEvent.Array.data[0].onCall.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8740259206212183420, guid: dddffc8932e084d42abca8b8b4baccb5,
         type: 3}
