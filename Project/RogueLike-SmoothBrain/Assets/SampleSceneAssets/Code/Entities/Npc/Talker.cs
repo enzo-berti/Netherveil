@@ -21,14 +21,14 @@ public class Talker : Npc
         base.Start();
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        dialogueTreeRunner.EventManager.AddListener("GiveQuest", GiveQuest);
+        dialogueTreeRunner.EventManager.AddListener(nameof(GiveQuest), GiveQuest);
     }
 
     private void OnDestroy()
     {
         if (dialogueTreeRunner != null)
         {
-            dialogueTreeRunner.EventManager.RemoveListener("GiveQuest");
+            dialogueTreeRunner.EventManager.RemoveListener(nameof(GiveQuest));
         }
     }
 
