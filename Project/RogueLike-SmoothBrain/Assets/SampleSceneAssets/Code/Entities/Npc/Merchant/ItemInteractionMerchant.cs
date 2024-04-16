@@ -62,14 +62,16 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
 
     public void Interract()
     {
-        item.ItemData.Name = item.idItemName;
+        //item.ItemData.Name = item.idItemName;
 
-        hero.Inventory.AddItem(item.ItemData);
-        interactions.InteractablesInRange.Remove(this);
+        //hero.Inventory.AddItem(item.ItemData);
+        //interactions.InteractablesInRange.Remove(this);
 
-        Item.InvokeOnRetrieved(item.ItemData);
+        //Item.InvokeOnRetrieved(item.ItemData);
 
-        Destroy(this.gameObject);
-        DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+        //Destroy(this.gameObject);
+        //DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+
+        Debug.Log("Merchant Item to purchase.\nTODO : Player can purchase");
     }
 }
