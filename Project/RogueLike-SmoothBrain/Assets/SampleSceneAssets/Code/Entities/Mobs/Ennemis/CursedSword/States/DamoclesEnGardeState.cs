@@ -51,19 +51,19 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        throw new System.NotImplementedException();
+
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-        throw new System.NotImplementedException();
+
     }
 
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        throw new System.NotImplementedException();
+
     }
 
     // This method will be call on state changement.
