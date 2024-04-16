@@ -204,6 +204,7 @@ MonoBehaviour:
     name: Gorgon
   IsKnockbackable: 1
   canTriggerTraps: 1
+  IsInvincibleCount: 0
   drop:
     dropList:
     - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
@@ -221,19 +222,21 @@ MonoBehaviour:
   pfBomb: {fileID: 3855923176943414352, guid: b420fdc9a271de84c879ad3ad4778e49, type: 3}
   hand: {fileID: 9111015995907246164}
   hitSFX:
-    Guid:
-      Data1: 178491280
-      Data2: 1124786547
-      Data3: 532161973
-      Data4: -2002185684
-    Path: event:/Enemy/Bomber/BomberHit
+    reference:
+      Guid:
+        Data1: 178491280
+        Data2: 1124786547
+        Data3: 532161973
+        Data4: -2002185684
+      Path: event:/Enemy/Bomber/BomberHit
   deathSFX:
-    Guid:
-      Data1: -1697250076
-      Data2: 1281752529
-      Data3: 1596434062
-      Data4: 56683401
-    Path: event:/Enemy/Bomber/BomberDeath
+    reference:
+      Guid:
+        Data1: -1697250076
+        Data2: 1281752529
+        Data3: 1596434062
+        Data4: 56683401
+      Path: event:/Enemy/Bomber/BomberDeath
   dashVFX: {fileID: 0}
   staggerDuration: 0
 --- !u!114 &5061550714055684533

@@ -1,14 +1,8 @@
 using System.Collections;
-using System.Linq;
-using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.AI;
-using System;
-using FMODUnity;
 using UnityEngine.VFX;
-using System.Xml.Linq;
-using UnityEngine.VFX.Utility;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
