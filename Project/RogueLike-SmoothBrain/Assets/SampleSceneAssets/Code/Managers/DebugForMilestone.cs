@@ -39,7 +39,7 @@ public class DebugForMilestone : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Keypad8))
         {
-            GameObject.FindWithTag("Player").GetComponent<Hero>().Stats.DecreaseValue(Stat.CORRUPTION, 25);
+            GameObject.FindWithTag("Player").GetComponent<Hero>().Stats.DecreaseValue(Stat.CORRUPTION, 50);
         }
         if (Input.GetKeyDown(KeyCode.Keypad9))
         {

@@ -381,8 +381,12 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i< stepDiff; i++)
         {
+            bool test = (diff > 0 && currentValue > 0) || (diff < 0 && currentValue <= 0);
             int diffValue2 = (int)(corruptionStat - currentValue);
-            currentValue += offset;
+            if(test)
+            {
+                currentValue += offset;
+            }
 
             if (currentValue <= 0 && diffValue2 > 0)
             {
@@ -431,6 +435,11 @@ public class PlayerController : MonoBehaviour
                 {
                     CorruptionDrawback();
                 }
+            }
+
+            if(!test)
+            {
+                currentValue += offset;
             }
         }
 
