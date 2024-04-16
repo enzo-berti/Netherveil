@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 using Map;
+using Unity.VisualScripting;
 
 namespace Generation
 {
@@ -147,12 +148,19 @@ namespace Generation
 
         private void GenerateMap(GenerationParam genParam)
         {
-            RoomData.nbRoomByType = genParam.nbRoomByType;
+            RoomData.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
             RoomData.nbRoomByType[RoomType.Lobby] = 1;
             RoomData.nbRoomByType[RoomType.Boss] = 1;
 
             GenerateLobbyRoom(ref genParam);
             GenerateRooms(ref genParam);
+
+            // Generate boss rooms
+            if (!TryInstantiateRoom(GetRandRoomGO(RoomType.Boss), RoomType.Boss, ref genParam))
+            {
+                Debug.LogError("Can't find any candidate for boss room");
+            }
+
             GenerateObstructionDoors(ref genParam);
         }
 
@@ -167,7 +175,7 @@ namespace Generation
                 {
                     if (genParam.nbRoomByType[RoomType.Normal] <= 0 || !GenerateRoom(ref genParam, RoomType.Normal))
                     {
-                        Debug.LogError("Can't find any valid room");
+                        Debug.LogError("No doors left to spawn another room");
                         return false;
                     }
                     genParam.nbRoomByType[RoomType.Normal]--;
@@ -178,6 +186,7 @@ namespace Generation
                     for (int index = 0; index < genParam.nbRoomByType.Count; index++)
                     {
                         RoomType type = genParam.nbRoomByType.Keys.ElementAt(index);
+
                         if (genParam.nbRoomByType[type] > 0)
                         {
                             if (!GenerateRoom(ref genParam, type))
@@ -189,12 +198,6 @@ namespace Generation
                         }
                     }
                 }
-            }
-
-            if (!TryInstantiateRoom(GetRandRoomGO(RoomType.Boss), RoomType.Boss, ref genParam))
-            {
-                Debug.LogError("Can't find any candidate for boss room");
-                return false;
             }
 
             return true;
