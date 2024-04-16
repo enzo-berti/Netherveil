@@ -17,6 +17,8 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         item = GetComponent<Item>();
         hero = FindObjectOfType<Hero>();
         interactions = hero.GetComponent<PlayerInteractions>();
+
+        hero.Inventory.Blood = 60;
     }
 
     private void Update()
