@@ -59,6 +59,18 @@ public class Stats
         return -1.0f;
     }
 
+    public float GetLastValue(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.lastValue;
+            }
+        }
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
     /// <summary>
     /// Returns straight value
     /// </summary>
