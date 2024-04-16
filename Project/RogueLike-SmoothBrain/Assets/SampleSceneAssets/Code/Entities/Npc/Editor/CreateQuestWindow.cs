@@ -101,19 +101,25 @@ public class CreateQuestWindow : EditorWindow
                         for (int i = 0; i < typeList.Count; i++)
                         {
                             string methodToWrite = "    ";
-                            for (int j = 0; j < typeList[i].GetMethods().Length; j++)
+                            MethodInfo[] infos = typeList[i].GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly);
+                            
+                            for (int j = 0; j < infos.Length; j++)
                             {
-                                var method = typeList[i].GetMethods()[j];
-                                if (method.IsPublic) methodToWrite += "public ";
-                                else if (method.IsPrivate) methodToWrite += "private ";
-                                else methodToWrite += "protected ";
+                                var method = infos[j];
+                                if (method.Name.Split("_").Length < 2 && !method.IsStatic && (method.IsVirtual || method.IsAbstract))
+                                {
+                                    if (method.IsPublic) methodToWrite += "public ";
+                                    else if (method.IsPrivate) methodToWrite += "private ";
+                                    else methodToWrite += "protected ";
 
-                                if (method.IsVirtual || method.IsAbstract) methodToWrite += "override ";
-                                string typeString = method.ReturnType.ToString() == "System.Void" ? "void" : method.ReturnType.ToString();
-                                methodToWrite += typeString + " ";
-                                methodToWrite += method.Name + "(";
+                                    if (method.IsVirtual || method.IsAbstract) methodToWrite += "override ";
+                                    string typeString = method.ReturnType.ToString() == "System.Void" ? "void" : method.ReturnType.ToString();
+                                    methodToWrite += typeString + " ";
+                                    methodToWrite += method.Name + "(";
 
-                                methodToWrite += ")\n    {\n        throw new System.NotImplementedException();}\n    ";
+                                    methodToWrite += ")\n    {\n        throw new System.NotImplementedException();\n    }\n    ";
+                                }
+                                
                             }
                             sw.WriteLine(methodToWrite);
                         }

@@ -11,7 +11,10 @@
 // }
 
 using StateMachine; // include all script about stateMachine
+using System.Collections;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
 {
@@ -28,7 +31,8 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
     }
 
     private State curState = State.Start;
-    private float walkDistance = 0.0f;
+    private Coroutine slashRoutine;
+    private Vector3 previousPos;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -50,13 +54,18 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        throw new System.NotImplementedException();
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-        throw new System.NotImplementedException();
+        if (slashRoutine != null)
+        {
+            Context.StopCoroutine(slashRoutine);
+            slashRoutine = null;
+        }
+        //Context.Animator.ResetTrigger(Context.);
+        //Context.Animator.SetTrigger(Context.);
     }
 
     // This method will be call every frame.
@@ -65,36 +74,51 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
         if (curState == State.Start)
         {
             Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
-            walkDistance = Vector3.Distance(Context.Target.position, Context.transform.position) - 1;
             Context.transform.LookAt(positionToLookAt);
             curState = State.RunIn;
+            previousPos = Context.transform.position;
 
             //Context.Animator.ResetTrigger(Context.);
             //Context.Animator.SetTrigger(Context.);
         }
         else if (curState == State.RunIn)
         {
-            Context.MoveTo(Context.Target.position);
+            if (Vector3.Distance(Context.Target.position, Context.transform.position) > 1)
+            {
+                Context.MoveTo(Context.Target.position);
+            }
+            else
+            {
+                curState = State.Slash;
+            }
+
+            slashRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack1Collider));
 
             //Context.Animator.ResetTrigger(Context.);
             //Context.Animator.SetTrigger(Context.);
         }
-        /*else if (curState == State.Dash)
+        else if (curState == State.Slash)
         {
-            if (dashRoutine != null)
+            if (slashRoutine != null)
             {
-                curState = State.Recharge;
+                curState = State.BackSlash;
+                slashRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack1Collider)); //collider à changer
             }
         }
-        else if (curState == State.Recharge)
+        else if (curState == State.BackSlash)
         {
-            elapsedTimeState += Time.deltaTime;
-            if (elapsedTimeState >= rechargeDuration)
+            if (slashRoutine != null)
             {
-                elapsedTimeState = 0.0f;
-                curState = State.Start;
+                curState = State.Backward;
             }
-        }*/
+        }
+        else if (curState == State.Backward)
+        {
+            if (Vector3.Distance(Context.Target.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+            {
+                Context.MoveTo(previousPos);
+            }
+        }
     }
 
     // This method will be call on state changement.
@@ -104,4 +128,21 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
+    private IEnumerator SlashCoroutine(BoxCollider attackCollider)
+    {
+        IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(attackCollider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
+                                              .Select(x => x.GetComponent<IDamageable>())
+                                              .Where(x => x != null)
+                                              .FirstOrDefault();
+
+        if (player != null)
+        {
+            Context.Attack(player);
+        }
+
+        slashRoutine = null;
+        yield return null;
+    }
+
 }

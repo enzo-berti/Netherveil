@@ -29,6 +29,11 @@ public class CreateItemWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Price : ");
+        item.price = EditorGUILayout.IntField(item.price);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Description : ", GUILayout.Height(30));
         item.Description = EditorGUILayout.TextField(item.Description, GUILayout.Height(30));
         EditorGUILayout.EndHorizontal();

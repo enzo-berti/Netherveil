@@ -7,7 +7,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public enum PlayerState : int
     {
         DASH = EntityState.NB,
-        KNOCKBACK
+        KNOCKBACK,
+        UPGRADING_STATS
     }
     Animator animator;
     PlayerInput playerInput;
@@ -21,6 +22,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static event Action<int, IAttacker> OnTakeDamage;
     public static event Action<IDamageable, IAttacker> OnBasicAttack;
     public static event Action<IDamageable, IAttacker> OnSpearAttack;
+    public static event Action<IDamageable, IAttacker> OnChargedAttack;
+    public static event Action<IDamageable, IAttacker> OnFinisherAttack;
     public static event Action OnQuestObtained;
     public static event Action OnQuestFinished;
 
@@ -65,6 +68,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             attacker.OnAttackHit += attacker.ApplyStatus;
         }
+
+        stats.onStatChange += playerController.UpgradePlayerStats;
     }
 
 
@@ -121,12 +126,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             damages += (int)(PlayerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
             ApplyKnockback(damageable, this, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef,
                 stats.GetValue(Stat.KNOCKBACK_COEFF) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
+            OnChargedAttack?.Invoke(damageable, this);
         }
         else if (playerController.ComboCount == PlayerController.MAX_COMBO_COUNT - 1)
         {
             damages += PlayerController.FINISHER_DAMAGES;
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
             ApplyKnockback(damageable, this);
+            OnFinisherAttack?.Invoke(damageable, this);
         }
         else if (playerController.Spear.IsThrowing || playerController.Spear.IsThrown)
         {

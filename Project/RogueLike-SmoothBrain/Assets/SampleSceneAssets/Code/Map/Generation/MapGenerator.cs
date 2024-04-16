@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 using Map;
+using Unity.VisualScripting;
 
 namespace Generation
 {
@@ -14,15 +15,16 @@ namespace Generation
 
         public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
         {
-
             nbRoomByType = new Dictionary<RoomType, int>
             {
+                { RoomType.Lobby, 0 },
                 { RoomType.Normal, nbNormal },
                 { RoomType.Treasure, nbTreasure },
                 { RoomType.Challenge, nbChallenge },
                 { RoomType.Merchant, nbMerchant },
                 { RoomType.Secret, nbSecret },
                 { RoomType.MiniBoss, nbMiniBoss },
+                { RoomType.Boss, 0 },
             };
 
             availableDoorsByRot = new Dictionary<int, List<Door>>
@@ -146,16 +148,23 @@ namespace Generation
 
         private void GenerateMap(GenerationParam genParam)
         {
-            GenerateLobbyRoom(ref genParam);
+            RoomData.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
+            RoomData.nbRoomByType[RoomType.Lobby] = 1;
+            RoomData.nbRoomByType[RoomType.Boss] = 1;
 
+            GenerateLobbyRoom(ref genParam);
             GenerateRooms(ref genParam);
 
-            GenerateBossRoom(ref genParam);
+            // Generate boss rooms
+            if (!TryInstantiateRoom(GetRandRoomGO(RoomType.Boss), RoomType.Boss, ref genParam))
+            {
+                Debug.LogError("Can't find any candidate for boss room");
+            }
 
             GenerateObstructionDoors(ref genParam);
         }
 
-        private void GenerateRooms(ref GenerationParam genParam)
+        private bool GenerateRooms(ref GenerationParam genParam)
         {
             int nbRoom = genParam.NbRoom;
 
@@ -164,9 +173,10 @@ namespace Generation
                 // if not enough door are available, spawn a normal room by force
                 if (genParam.AvailableDoorsCount <= 1)
                 {
-                    if (!GenerateRoom(ref genParam, RoomType.Normal))
+                    if (genParam.nbRoomByType[RoomType.Normal] <= 0 || !GenerateRoom(ref genParam, RoomType.Normal))
                     {
-                        return;
+                        Debug.LogError("No doors left to spawn another room");
+                        return false;
                     }
                     genParam.nbRoomByType[RoomType.Normal]--;
                 }
@@ -176,11 +186,12 @@ namespace Generation
                     for (int index = 0; index < genParam.nbRoomByType.Count; index++)
                     {
                         RoomType type = genParam.nbRoomByType.Keys.ElementAt(index);
+
                         if (genParam.nbRoomByType[type] > 0)
                         {
                             if (!GenerateRoom(ref genParam, type))
                             {
-                                return;
+                                return false;
                             }
                             genParam.nbRoomByType[type]--;
                             break;
@@ -188,6 +199,8 @@ namespace Generation
                     }
                 }
             }
+
+            return true;
         }
 
         private bool GenerateRoom(ref GenerationParam genParam, RoomType type)
@@ -215,14 +228,6 @@ namespace Generation
             Destroy(doorsGenerator);
 
             roomGO.transform.parent = gameObject.transform;
-        }
-
-        private void GenerateBossRoom(ref GenerationParam genParam)
-        {
-            if (!TryInstantiateRoom(GetRandRoomGO(RoomType.Boss), RoomType.Boss, ref genParam))
-            {
-                Debug.LogError("Can't find any candidate for boss room");
-            }
         }
 
         private void GenerateObstructionDoors(ref GenerationParam genParam)
@@ -360,6 +365,14 @@ namespace Generation
 
             int randIndex = Seed.Range(0, list.Count);
             return list[randIndex];
+        }
+
+        private void ResetGeneration()
+        {
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
         }
     }
 }

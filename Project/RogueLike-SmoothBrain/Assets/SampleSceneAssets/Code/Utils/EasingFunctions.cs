@@ -38,26 +38,32 @@ public static class EasingFunctions
         EaseOutSin
     }
 
-    public static IEnumerator UpScaleCoroutine(GameObject go, float factor)
+    public static IEnumerator UpScaleCoroutine(GameObject go, float duration, float maxScale = 1.0f)
     {
-        while (go.transform.localScale.x < 1f)
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
         {
-            Vector3 scale = go.transform.localScale;
-            scale += new Vector3(factor, factor, factor);
-            scale = new Vector3(Mathf.Min(scale.x, 1f), Mathf.Min(scale.y, 1f), Mathf.Min(scale.z, 1f));
-            go.transform.localScale = scale;
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+
+            go.transform.localScale = Vector3.one * factor * maxScale;
+
             yield return null;
         }
     }
 
-    public static IEnumerator DownScaleCoroutine(GameObject go, float factor)
+    public static IEnumerator DownScaleCoroutine(GameObject go, float duration, float maxScale = 1.0f)
     {
-        while (go.transform.localScale.x > 0f)
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
         {
-            Vector3 scale = go.transform.localScale;
-            scale -= new Vector3(factor, factor, factor);
-            scale = new Vector3(Mathf.Max(scale.x, 0f), Mathf.Max(scale.y, 0f), Mathf.Max(scale.z, 0f));
-            go.transform.localScale = scale;
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = 1.0f - elapsed / duration;
+
+            go.transform.localScale = Vector3.one * factor * maxScale;
+
             yield return null;
         }
     }

@@ -1,4 +1,5 @@
 using FMODUnity;
+using Map;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
+    bool launchUpgradeAnim = false;
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
@@ -30,6 +32,8 @@ public class PlayerController : MonoBehaviour
     public float CurrentTargetAngle { get; set; } = 0f;
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
+    int currentStep = 0;
+    int lastStep = 0;
 
     //used to auto-redirect on enemies in vision cone when attacking
     const float ATTACK_CONE_ANGLE = 45f;
@@ -81,6 +85,12 @@ public class PlayerController : MonoBehaviour
 
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
+        RoomUtilities.allEnemiesDeadEvents += LaunchUpgradeAnim;
+    }
+
+    private void OnDestroy()
+    {
+        RoomUtilities.allEnemiesDeadEvents -= LaunchUpgradeAnim;
     }
 
     private void Update()
@@ -305,6 +315,206 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Miscellaneous
+
+    public void UpgradePlayerStats(Stat stat)
+    {
+        if (stat != Stat.CORRUPTION)
+            return;
+
+        float corruptionStat = hero.Stats.GetValue(stat);
+        float corruptionLastValue = hero.Stats.GetLastValue(stat);
+        float diff = corruptionStat - corruptionLastValue;
+        int stepDiff = Mathf.Abs((int)(diff / 25f));
+        int offset = diff > 0 ? 25 : -25;
+        float currentValue = corruptionLastValue;
+
+        if (Mathf.Abs(diff) < 25f && (int)(corruptionStat/25f) > currentStep && diff > 0)
+        {
+            currentStep++;
+            if(corruptionStat >= 100f)
+            {
+                UltimateCorruptionUpgrade();
+            }
+            else
+            {
+                BasicCorruptionUpgrade();
+            }
+        }
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) < currentStep && diff < 0)
+        {
+            currentStep--;
+            if (corruptionStat <= -100f)
+            {
+                UltimateBenedictionUpgrade();
+            }
+            else
+            {
+                BasicBenedictionUpgrade();
+            }
+        }
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) > currentStep && corruptionStat < 0)
+        {
+            currentStep++;
+            if (corruptionLastValue <= -100f)
+            {
+                UltimateBenedictionDrawback();
+            }
+            else
+            {
+                BenedictionDrawback();
+            }
+        }
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) < currentStep && corruptionStat > 0)
+        {
+            currentStep--;
+            if (corruptionLastValue >= 100f)
+            {
+                UltimateCorruptionDrawback();
+            }
+            else
+            {
+                CorruptionDrawback();
+            }
+        }
+
+
+
+        for (int i = 0; i< stepDiff; i++)
+        {
+            int diffValue2 = (int)(corruptionStat - currentValue);
+            currentValue += offset;
+
+            if (currentValue <= 0 && diffValue2 > 0)
+            {
+                currentStep++;
+                if (currentValue <= -100f)
+                {
+                    UltimateBenedictionDrawback();
+                }
+                else
+                {
+                    BenedictionDrawback();
+                }
+            }
+            else if (currentValue <= 0 && diffValue2 < 0)
+            {
+                currentStep--;
+                if (currentValue <= -100f)
+                {
+                    UltimateBenedictionUpgrade();
+                }
+                else
+                {
+                    BasicBenedictionUpgrade();
+                }
+            }
+            else if (currentValue >= 0 && diffValue2 > 0)
+            {
+                currentStep++;
+                if (currentValue >= 100f)
+                {
+                    UltimateCorruptionUpgrade();
+                }
+                else
+                {
+                    BasicCorruptionUpgrade();
+                }
+            }
+            else if (currentValue >= 0 && diffValue2 < 0)
+            {
+                currentStep--;
+                if (currentValue >= 100f)
+                {
+                    UltimateCorruptionDrawback();
+                }
+                else
+                {
+                    CorruptionDrawback();
+                }
+            }
+        }
+
+
+        //ensure that player doesn't die by stat upgrade
+        if (hero.Stats.GetValue(Stat.HP) <= 0f)
+        {
+            hero.Stats.SetValue(Stat.HP, 1f);
+        }
+
+    }
+
+    private void UltimateBenedictionDrawback()
+    {
+        //désactiver la capacité divine shield
+        //désactiver malus de possibilité de dédoublement des mobs
+        launchUpgradeAnim = true;
+    }
+
+    private void UltimateCorruptionDrawback()
+    {
+        hero.Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
+        //désactiver debuff impossibilité de se soigner via consommables
+        //désactiver nouvelle compétence
+        launchUpgradeAnim = true;
+    }
+
+    private void UltimateBenedictionUpgrade()
+    {
+        //ajout de la capacité divine shield
+        //ajout du malus de possibilité de dédoublement des mobs
+        launchUpgradeAnim = true;
+    }
+
+    private void UltimateCorruptionUpgrade()
+    {
+        hero.Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
+        launchUpgradeAnim = true;
+        //debuff impossibilité de se soigner via consommables
+        //ajout nouvelle compétence
+    }
+
+    private void BenedictionDrawback()
+    {
+        hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.DecreaseValue(Stat.HP, 15f);
+        hero.Stats.IncreaseValue(Stat.ATK, 5f);
+        launchUpgradeAnim = true;
+    }
+
+    private void CorruptionDrawback()
+    {
+        hero.Stats.DecreaseValue(Stat.ATK, 5f);
+        hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.IncreaseValue(Stat.HP, 15f);
+        launchUpgradeAnim = true;
+    }
+
+    private void BasicBenedictionUpgrade()
+    {
+        hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.IncreaseValue(Stat.HP, 15f);
+        hero.Stats.DecreaseValue(Stat.ATK, 5f);
+        launchUpgradeAnim = true;
+    }
+
+    private void BasicCorruptionUpgrade()
+    {
+        hero.Stats.IncreaseValue(Stat.ATK, 5f);
+        hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.DecreaseValue(Stat.HP, 15f);
+        launchUpgradeAnim = true;
+    }
+
+    private void LaunchUpgradeAnim()
+    {
+        if (!launchUpgradeAnim)
+            return;
+
+        animator.ResetTrigger("UpgradingStats");
+        animator.SetTrigger("UpgradingStats");
+        hero.State = (int)Hero.PlayerState.UPGRADING_STATS;
+        //launch benediction or corruptionVFX
+    }
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
     {

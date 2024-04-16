@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class WindowItemDatabase : EditorWindow
@@ -26,7 +27,7 @@ public class WindowItemDatabase : EditorWindow
     private void OnGUI()
     {
         SearchInDatabase();
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        
         // Search Field
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Search :", GUILayout.Width(60));
@@ -41,19 +42,21 @@ public class WindowItemDatabase : EditorWindow
         }
         GUI.color = Color.white;
         EditorGUILayout.EndHorizontal();
+        
         // Infos
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Id_Name", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Rarity", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Type", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Price", GUILayout.Width(SizeArea / 4), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Description", GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Icon", GUILayout.Width(SizeArea/3), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Material", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Mesh", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.EndHorizontal();
 
-        
-        
+
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
         for (int i = 0; i < searchItems.Count; i++)
         {
             ItemData item = searchItems[i];
@@ -62,6 +65,7 @@ public class WindowItemDatabase : EditorWindow
             EditorGUILayout.LabelField(item.idName.SeparateAllCase(), GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            item.price = EditorGUILayout.IntField(item.price, GUILayout.Width(SizeArea / 4), GUILayout.ExpandWidth(true));
             item.Description = EditorGUILayout.TextArea(item.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
             item.icon = (Texture)EditorGUILayout.ObjectField("", item.icon, typeof(Texture), false, GUILayout.Width(SizeArea/3), GUILayout.ExpandWidth(true));
             if(item.icon == null)
@@ -86,7 +90,20 @@ public class WindowItemDatabase : EditorWindow
     }
     void SearchInDatabase()
     {
-        searchItems = database.datas.Where(item => item.idName.SeparateAllCase().ToLower().Contains(search.ToLower()) || item.idName.SeparateAllCase().ToLower().Contains(search.ToLower())).ToList();
+        searchItems = database.datas.
+           Where(x =>
+           {
+               for (int i = 0; i < search.Length; i++)
+               {
+                   if (x.idName.ToLower()[i] != search[i])
+                   {
+                       return false;
+                   }
+               }
+               return true;
+           }
+           ).ToList();
+        searchItems.Sort();
     }
 
     void DeleteInDatabase(ItemData item)

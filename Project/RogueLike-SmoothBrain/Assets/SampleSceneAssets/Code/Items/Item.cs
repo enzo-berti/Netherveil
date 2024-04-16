@@ -1,118 +1,91 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Generation;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 // This class is the item that is rendered in the 3D world
 [Serializable]
-public class Item : MonoBehaviour, IInterractable
+public class Item : MonoBehaviour
 {
-    [SerializeField] bool isRandomized = true;
-    [SerializeField] ItemDatabase database;
-
-    public Color RarityColor { get; private set; }
-    public string idItemName;
-    public string descriptionToDisplay;
-
     public static event Action<ItemEffect> OnRetrieved;
+    public static float priceCoef = 1.0f;
 
-    Hero hero;
-    Outline outline;
+    [SerializeField] private bool isRandomized = true;
+    [SerializeField] private ItemDatabase database;
 
-    // Item to add in the inventory
-    ItemEffect itemToGive;
-    PlayerInteractions playerInteractions;
+    private ItemEffect itemEffect;
+    private Color rarityColor = Color.white;
+    public string idItemName = string.Empty;
+    private int price;
 
-    // Description displayed in the info box
-    ItemDescription itemDescription;
+    private ItemDescription itemDescription;
+    public Color RarityColor => rarityColor;
+    public ItemEffect ItemData => itemEffect;
+    public ItemDatabase Database => database;
+    public static List<ItemData> ItemPool;
+    public int Price => price;
 
-    private void Awake()
+    private void Start() 
     {
+        if(ItemPool == null)
+        {
+            ItemPool = new List<ItemData>();
+            foreach(var itemData in database.datas)
+            {
+                ItemPool.Add(itemData);
+            }
+        }
         if (isRandomized)
         {
             RandomizeItem(this);
         }
 
-        itemToGive = LoadClass();
-        Material matToRender = database.GetItem(idItemName).mat;
-        Mesh meshToRender = database.GetItem(idItemName).mesh;
-        RarityColor = database.GetItemRarityColor(idItemName);
+        itemEffect = LoadClass();
+
+        ItemData data = database.GetItem(idItemName);
+        Material matToRender = data.mat;
+        Mesh meshToRender = data.mesh;
+        price = data.price;
+
+        rarityColor = database.GetItemRarityColor(idItemName);
 
         this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : this.GetComponentInChildren<MeshRenderer>().material;
         this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : this.GetComponentInChildren<MeshFilter>().mesh;
 
-        InitDescription();
-
-        playerInteractions = GameObject.FindWithTag("Player").GetComponent<PlayerInteractions>();
-        hero = playerInteractions.gameObject.GetComponent<Hero>();
-        outline = GetComponent<Outline>();
         itemDescription = GetComponent<ItemDescription>();
+        itemDescription.SetDescription(idItemName);
     }
 
-    private void Update()
+    public static void InvokeOnRetrieved(ItemEffect effect)
     {
-        Interraction();
+        OnRetrieved?.Invoke(effect);
     }
 
-    public void Select()
-    {
-        outline.EnableOutline();
-        itemDescription.TogglePanel(true);
-    }
-
-    public void Deselect()
-    {
-        outline.DisableOutline();
-        itemDescription.TogglePanel(false);
-    }
-
-    private void Interraction()
-    {
-        bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2()) 
-            <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
-
-        if (isInRange && !playerInteractions.InteractablesInRange.Contains(this))
-        {
-            playerInteractions.InteractablesInRange.Add(this);
-        }
-        else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
-        {
-            playerInteractions.InteractablesInRange.Remove(this);
-            Deselect();
-        }
-    }
-
-    public void Interract()
-    {
-        itemToGive.Name = idItemName;
-        GameObject.FindWithTag("Player").GetComponent<Hero>().Inventory.AddItem(itemToGive);
-        Debug.Log($"Vous avez bien récupéré {itemToGive.Name}");
-        Destroy(this.gameObject);
-        playerInteractions.InteractablesInRange.Remove(this);
-        DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
-        OnRetrieved?.Invoke(itemToGive);
-    }
-
-    ItemEffect LoadClass()
+    private ItemEffect LoadClass()
     {
         return Assembly.GetExecutingAssembly().CreateInstance(idItemName.GetPascalCase()) as ItemEffect;
     }
 
     static public void RandomizeItem(Item item)
     {
-        List<string> allItems = new();
-        foreach (var itemInDb in item.database.datas)
+        if(ItemPool.Count > 0)
         {
-            allItems.Add(itemInDb.idName);
+            List<string> allItems = new();
+            foreach (var itemInPool in ItemPool)
+            {
+                allItems.Add(itemInPool.idName);
+            }
+            int indexRandom = Seed.Range(0, allItems.Count);
+            item.idItemName = allItems[indexRandom];
+            ItemPool.RemoveAt(indexRandom);
+
         }
-        int indexRandom = Seed.Range(0, allItems.Count);
-        item.idItemName = allItems[indexRandom];
+        else
+        {
+            item.idItemName = "MonsterHeart";
+        }
+        
     }
 
     public void RandomizeItem()
@@ -125,122 +98,4 @@ public class Item : MonoBehaviour, IInterractable
         int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
         idItemName = allItems[indexRandom];
     }
-
-    private void InitDescription()
-    {
-        descriptionToDisplay = database.GetItem(idItemName).Description;
-        string[] splitDescription = descriptionToDisplay.Split(" ");
-        string finalDescription = string.Empty;
-        FieldInfo[] fieldOfItem = itemToGive.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-
-        for (int i = 0; i < splitDescription.Length; i++)
-        {
-            if (splitDescription[i].Length > 0 && splitDescription[i][0] == '{')
-            {
-                string[] splitCurrent = splitDescription[i].Split('{', '}');
-                string valueToFind = splitCurrent[1];
-                FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
-                if (valueInfo != null)
-                {
-                    var memberValue = valueInfo.GetValue(itemToGive);
-                    splitDescription[i] = memberValue.ToString();
-                }
-                else
-                {
-                    splitDescription[i] = "N/A";
-                    Debug.LogWarning($"value : {valueToFind}, has not be found");
-                }
-                
-            }
-            finalDescription += splitDescription[i] + " ";
-        }
-        descriptionToDisplay = finalDescription;
-    }
 }
-
-#if UNITY_EDITOR
-[CustomEditor(typeof(Item))]
-public class ItemEditor : Editor
-{
-    public static string ChosenName;
-    SerializedProperty itemName;
-    SerializedProperty databaseProperty;
-    SerializedProperty isRandomizedProperty;
-    private void OnEnable()
-    {
-        itemName = serializedObject.FindProperty("idItemName");
-        databaseProperty = serializedObject.FindProperty("database");
-        isRandomizedProperty = serializedObject.FindProperty("isRandomized");
-        ChosenName = itemName.stringValue;
-    }
-    public override void OnInspectorGUI()
-    {
-        serializedObject.Update();
-        DrawScript();
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(isRandomizedProperty);
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("idName : ", EditorStyles.boldLabel, GUILayout.Width(80));
-        if (GUILayout.Button(ChosenName))
-        {
-            EditorWindow.GetWindow<ResearchItemWindow>("Select Item");
-        }
-
-        if (GUILayout.Button("Randomize item"))
-        {
-            Item.RandomizeItem((Item)target);
-            ChosenName = (target as Item).idItemName;
-        }
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(databaseProperty, new GUIContent("Database : "));
-        EditorGUILayout.EndHorizontal();
-
-        itemName.stringValue = ChosenName;
-        serializedObject.ApplyModifiedProperties();
-
-    }
-
-    void DrawScript()
-    {
-        EditorGUILayout.BeginHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        MonoScript script = MonoScript.FromMonoBehaviour((Item)target);
-        EditorGUILayout.ObjectField("Script", script, typeof(MonoScript), false);
-        EditorGUI.EndDisabledGroup();
-        EditorGUILayout.EndHorizontal();
-    }
-}
-
-public class ResearchItemWindow : EditorWindow
-{
-    ItemDatabase database;
-    string search;
-
-
-    private void OnEnable()
-    {
-        database = Resources.Load<ItemDatabase>("ItemDatabase");
-        search = string.Empty;
-    }
-
-    private void OnGUI()
-    {
-        EditorGUILayout.BeginHorizontal();
-        search = EditorGUILayout.TextField(search);
-        EditorGUILayout.EndHorizontal();
-        foreach (var item in database.datas.Select(x => x.idName).Where(x => x.ToLower().Contains(search)))
-        {
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button(item))
-            {
-                ItemEditor.ChosenName = item;
-                Close();
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-    }
-}
-#endif

@@ -59,6 +59,18 @@ public class Stats
         return -1.0f;
     }
 
+    public float GetLastValue(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.lastValue;
+            }
+        }
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
     /// <summary>
     /// Returns straight value
     /// </summary>
@@ -152,11 +164,10 @@ public class Stats
     public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue = true)
     {
         int index = stats.FindIndex(x => x.stat == info);
-
-
         if (index != -1)
         {
             float baseValue = stats[index].value;
+            stats[index].lastValue = baseValue;
 
             if (clampToMaxValue && stats[index].hasMaxStat)
                 IncreaseValueClamp(info, increasingValue);
@@ -169,8 +180,6 @@ public class Stats
                 Debug.LogWarning($"Missing max value of {info} in {name}");
                 return;
             }
-
-
             else
             {
                 if (stats[index].underload > 0)
@@ -236,6 +245,7 @@ public class Stats
         if (index != -1)
         {
             float baseValue = stats[index].value;
+            stats[index].lastValue = baseValue;
 
             if (clampToMinValue && stats[index].hasMinStat)
                 DecreaseValueClamp(info, decreasingValue);
@@ -299,14 +309,22 @@ public class Stats
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
         {
+            float baseValue = stats[index].value;
+            stats[index].lastValue = baseValue;
             if (clampToMaxValue && stats[index].hasMaxStat)
+            {
                 MultiplyValueClamp(info, multiplyingValue);
-
+            }
             else if (clampToMaxValue && !stats[index].hasMaxStat)
+            {
                 Debug.LogWarning($"Missing min value of {info} in {name}");
-
+            }
             else
+            {
                 stats[index].value *= multiplyingValue;
+            }
+            if (baseValue != stats[index].value) onStatChange?.Invoke(info);
+
         }
         else
             Debug.LogWarning($"Can't find {info} in {name}");
@@ -352,14 +370,23 @@ public class Stats
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
         {
+            float baseValue = stats[index].value;
+            stats[index].lastValue = baseValue;
             if (clampToMinValue && stats[index].hasMinStat)
+            {
                 DivideValueClamp(info, dividingValue);
+            }
 
             else if (clampToMinValue && !stats[index].hasMinStat)
+            {
                 Debug.LogWarning($"Missing min value of {info} in {name}");
+            }
 
             else
+            {
                 stats[index].value /= dividingValue;
+            }
+            if (baseValue != stats[index].value) onStatChange?.Invoke(info);
         }
         else
             Debug.LogWarning($"Can't find {info} in {name}");
@@ -406,13 +433,11 @@ public class Stats
         if (index != -1)
         {
             float baseValue = stats[index].value;
+            stats[index].lastValue = baseValue;
             stats[index].value = value;
-            if(baseValue != stats[index].value)
-            {
-                onStatChange?.Invoke(info);
-            }
+            if (baseValue != stats[index].value) onStatChange?.Invoke(info);
         }
-           
+
         else
             Debug.LogWarning($"Can't find {info} in {name}");
     }
