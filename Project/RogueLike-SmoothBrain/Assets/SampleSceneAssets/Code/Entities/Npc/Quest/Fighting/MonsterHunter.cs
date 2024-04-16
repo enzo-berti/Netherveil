@@ -6,7 +6,6 @@ public class MonsterHunter : Quest
 
     public override void AcceptQuest()
     {
-        benedictionOrCorruptionValue = 20;
         progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
         Hero.OnKill += UpdateCount;
     }
