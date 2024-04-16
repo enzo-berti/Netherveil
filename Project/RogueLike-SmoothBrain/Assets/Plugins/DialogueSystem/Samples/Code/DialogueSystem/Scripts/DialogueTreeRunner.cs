@@ -47,6 +47,7 @@ public class DialogueTreeRunner : MonoBehaviour
 
         SimpleDialogueNode simple = tree.currentNode as SimpleDialogueNode;
         ChoiceDialogueNode choice = tree.currentNode as ChoiceDialogueNode;
+        EventDialogueNode eventN = tree.currentNode as EventDialogueNode;
 
         if (simple)
         {
@@ -72,6 +73,14 @@ public class DialogueTreeRunner : MonoBehaviour
                     UpdateDialogue();
                 });
             });
+        }
+        else if (eventN)
+        {
+            SetIllustration(eventN.dialogueData.illustration);
+            SetName(eventN.dialogueData.name);
+            SetDialogue(eventN.dialogueData.dialogue);
+
+            tree.Process(eventN.child);
         }
         else if (tree.currentNode == null)
         {

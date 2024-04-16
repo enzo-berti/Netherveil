@@ -75,11 +75,37 @@ namespace DialogueSystem.Editor
                 }
 
                 {
-                    DialogueNodeView dialogueView = nodeView as DialogueNodeView;
+                    SimpleDialogueNodeView dialogueView = nodeView as SimpleDialogueNodeView;
                     if (dialogueView != null)
                     {
-                        DialogueNode dialogue = tree.CreateNode(nodeView.type) as DialogueNode;
-                        dialogue.dialogueData = (nodeView as DialogueNodeView).DialogueData;
+                        SimpleDialogueNode dialogue = tree.CreateNode(nodeView.type) as SimpleDialogueNode;
+                        dialogue.dialogueData = (nodeView as SimpleDialogueNodeView).DialogueData;
+                        dialogue.GUID = nodeView.GUID;
+                        dialogue.position = nodeView.GetPosition().position;
+                        continue;
+                    }
+                }
+
+                {
+                    ChoiceDialogueNodeView dialogueView = nodeView as ChoiceDialogueNodeView;
+                    if (dialogueView != null)
+                    {
+                        ChoiceDialogueNode dialogue = tree.CreateNode(nodeView.type) as ChoiceDialogueNode;
+                        dialogue.dialogueData = (nodeView as ChoiceDialogueNodeView).DialogueData;
+                        dialogue.GUID = nodeView.GUID;
+                        dialogue.position = nodeView.GetPosition().position;
+                        continue;
+                    }
+                }
+
+                {
+                    EventDialogueNodeView dialogueView = nodeView as EventDialogueNodeView;
+                    if (dialogueView != null)
+                    {
+                        EventDialogueNodeView eventNodeView = nodeView as EventDialogueNodeView;
+                        EventDialogueNode dialogue = tree.CreateNode(nodeView.type) as EventDialogueNode;
+                        dialogue.dialogueData = eventNodeView.DialogueData;
+                        dialogue.eventTag = eventNodeView.EventTag;
                         dialogue.GUID = nodeView.GUID;
                         dialogue.position = nodeView.GetPosition().position;
                         continue;
@@ -96,11 +122,21 @@ namespace DialogueSystem.Editor
                 Runtime.Node inputNode = tree.nodes.Find(x => x.GUID == inputNodeView.GUID);
 
                 if (outputNode is RootNode)
+                {
                     (outputNode as RootNode).child = inputNode;
+                }
                 if (outputNode is SimpleDialogueNode)
+                {
                     (outputNode as SimpleDialogueNode).child = inputNode;
+                }
+                if (outputNode is EventDialogueNode)
+                {
+                    (outputNode as EventDialogueNode).child = inputNode;
+                }
                 if (outputNode is ChoiceDialogueNode)
+                {
                     (outputNode as ChoiceDialogueNode).AddOption(edge.output.portName, inputNode);
+                }
             });
 
             return true;
@@ -127,6 +163,7 @@ namespace DialogueSystem.Editor
                 RootNode root = n as RootNode;
                 SimpleDialogueNode simple = n as SimpleDialogueNode;
                 ChoiceDialogueNode choice = n as ChoiceDialogueNode;
+                EventDialogueNode eventN = n as EventDialogueNode;
 
                 List<NodeView> nodesGraph = nodes.ToList().Cast<NodeView>().ToList();
 
@@ -155,6 +192,15 @@ namespace DialogueSystem.Editor
                             .ConnectTo(inputNodeView.inputContainer[0].Q<Port>());
                         targetGraphView.AddElement(edge);
                     }
+                }
+                else if (eventN != null && eventN.child != null)
+                {
+                    EventDialogueNodeView outputNodeView = nodesGraph.Find(x => x.GUID == eventN.GUID) as EventDialogueNodeView;
+                    NodeView inputNodeView = nodesGraph.Find(x => x.GUID == eventN.child.GUID);
+
+                    Edge edge = outputNodeView.outputContainer[0].Q<Port>()
+                        .ConnectTo(inputNodeView.inputContainer[0].Q<Port>());
+                    targetGraphView.AddElement(edge);
                 }
             });
         }

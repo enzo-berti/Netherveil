@@ -41,6 +41,12 @@ namespace DialogueSystem.Editor
                     userData = new ChoiceDialogueNodeView(graphView),
                     level = 2
                 },
+
+                new SearchTreeEntry(new GUIContent("Event Dialogue Node", indentationIcon))
+                {
+                    userData = new EventDialogueNodeView(graphView),
+                    level = 2
+                },
             };
             return tree;
         }
@@ -58,6 +64,9 @@ namespace DialogueSystem.Editor
                     return true;
                 case ChoiceDialogueNodeView:
                     graphView.CreateNode(typeof(ChoiceDialogueNodeView), localMousePosition);
+                    return true;
+                case EventDialogueNodeView:
+                    graphView.CreateNode(typeof(EventDialogueNodeView), localMousePosition);
                     return true;
                 default:
                     return false;
