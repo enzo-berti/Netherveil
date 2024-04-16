@@ -14,11 +14,12 @@ public class Item : MonoBehaviour
     public static event Action<ItemEffect> OnRetrieved;
 
     private ItemEffect itemData;
-    public string idItemName;
+    public string idItemName = string.Empty;
+    public Color rarityColor = Color.white;
 
     private ItemDescription itemDescription;
 
-    public Color RarityColor { get; private set; }
+    public Color RarityColor => rarityColor;
     public ItemEffect ItemData => itemData;
     public ItemDatabase Database => database;
 
@@ -32,7 +33,7 @@ public class Item : MonoBehaviour
         itemData = LoadClass();
         Material matToRender = database.GetItem(idItemName).mat;
         Mesh meshToRender = database.GetItem(idItemName).mesh;
-        RarityColor = database.GetItemRarityColor(idItemName);
+        rarityColor = database.GetItemRarityColor(idItemName);
 
         this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : this.GetComponentInChildren<MeshRenderer>().material;
         this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : this.GetComponentInChildren<MeshFilter>().mesh;
