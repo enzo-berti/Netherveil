@@ -26,7 +26,10 @@ public class Talker : Npc
 
     private void OnDestroy()
     {
-        dialogueTreeRunner.EventManager.RemoveListener("GiveQuest");
+        if (dialogueTreeRunner != null)
+        {
+            dialogueTreeRunner.EventManager.RemoveListener("GiveQuest");
+        }
     }
 
     public override void Interract()
