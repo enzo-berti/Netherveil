@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class PlayerInteractions : MonoBehaviour
 {
-    public List<IInterractable> InteractablesInRange { get; private set; } = new List<IInterractable>();
-
-    void Update()
+    private List<IInterractable> interactablesInRange = new List<IInterractable>();
+    public List<IInterractable> InteractablesInRange
     {
-        SelectClosestItem();
+        get
+        {
+            SelectClosestItem();
+            return interactablesInRange;
+        }
+        private set
+        {
+            interactablesInRange = value;
+        }
     }
 
     private void SelectClosestItem()
     {
-        if (InteractablesInRange.Count == 0)
+        if (interactablesInRange.Count == 0)
             return;
 
         Vector2 playerPos = transform.position.ToCameraOrientedVec2();
-        InteractablesInRange = InteractablesInRange.OrderBy(interactable =>
+        interactablesInRange = interactablesInRange.OrderBy(interactable =>
         {
             Vector2 itemPos = (interactable as MonoBehaviour).transform.position.ToCameraOrientedVec2();
             return Vector2.Distance(playerPos, itemPos);
@@ -25,23 +32,11 @@ public class PlayerInteractions : MonoBehaviour
         ).ToList();
 
 
-        for (int i = 1; i< InteractablesInRange.Count; ++i)
+        for (int i = 1; i< interactablesInRange.Count; ++i)
         {
-            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out Outline outlineItem))
-                outlineItem.DisableOutline();
-            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out ItemDescription itemDesc))
-                itemDesc.TogglePanel(false);
-            if ((InteractablesInRange[i] as MonoBehaviour).TryGetComponent(out Npc npc))
-                npc.ToggleRangeImage(false);
+            interactablesInRange[i].Deselect();
         }
 
-        if((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Outline outline))
-            outline.EnableOutline();
-
-        if ((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out ItemDescription itemDescription))
-            itemDescription.TogglePanel(true);
-
-        if ((InteractablesInRange[0] as MonoBehaviour).TryGetComponent(out Npc npc2))
-            npc2.ToggleRangeImage(true);
+        interactablesInRange[0].Select();
     }
 }

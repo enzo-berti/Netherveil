@@ -6,18 +6,21 @@ public class QuestUI : MonoBehaviour
     Hero player;
     [SerializeField] TMP_Text description;
     [SerializeField] TMP_Text title;
+    [SerializeField] TMP_Text progressText;
 
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         Hero.OnQuestObtained += UpdateUI;
         Hero.OnQuestFinished += UpdateUI;
+        Quest.OnQuestUpdated += UpdateUI;
     }
 
     private void OnDestroy()
     {
         Hero.OnQuestObtained -= UpdateUI;
         Hero.OnQuestFinished -= UpdateUI;
+        Quest.OnQuestUpdated -= UpdateUI;
     }
 
     private void UpdateUI()
@@ -32,6 +35,7 @@ public class QuestUI : MonoBehaviour
         {
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);
+            progressText.SetText(player.CurrentQuest.progressText);
         }
     }
 }
