@@ -15,7 +15,7 @@ public class ItemDescription : MonoBehaviour
     {
         item = GetComponent<Item>();
 
-        nameText.text = item.IdItem.SeparateAllCase();
+        nameText.text = item.idItemName.SeparateAllCase();
         nameText.color = item.RarityColor;
 
         ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;
