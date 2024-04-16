@@ -34,6 +34,8 @@ public class StatInfo
     public bool hasCoeff;
 
     public float value;
+    public float lastValue;
+
     public float coeff;
     public float maxValue;
     public float minValue;

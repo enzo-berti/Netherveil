@@ -69,7 +69,7 @@ public abstract class Mobs : Entity
 
     private void ApplySpeed(Stat speedStat)
     {
-        if (!speedStat.HasFlag(Stat.SPEED))
+        if (speedStat != Stat.SPEED)
             return;
 
         agent.speed = stats.GetValue(Stat.SPEED);
