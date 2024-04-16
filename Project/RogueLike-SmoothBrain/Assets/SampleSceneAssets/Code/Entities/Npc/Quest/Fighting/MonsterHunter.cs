@@ -6,7 +6,7 @@ public class MonsterHunter : Quest
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB MONSTERS KILLED : {currentNumber}/{MAX_NUMBER}";
         Hero.OnKill += UpdateCount;
     }
 
@@ -19,7 +19,7 @@ public class MonsterHunter : Quest
     private void UpdateCount(IDamageable damageable)
     {
         currentNumber++;
-        progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB MONSTERS KILLED : {currentNumber}/{MAX_NUMBER}";
         QuestUpdated();
 
         if (currentNumber >= MAX_NUMBER)

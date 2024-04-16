@@ -2,11 +2,11 @@
 public class VulcanHunter : Quest
 {
     int currentNumber = 0;
-    readonly int MAX_NUMBER = 15;
+    readonly int MAX_NUMBER = 5;
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
         Hero.OnKill += UpdateCount;
     }
 
@@ -21,7 +21,7 @@ public class VulcanHunter : Quest
         if (damageable as IGorgon != null)
         {
             currentNumber++;
-            progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
+            progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
 
             if (currentNumber >= MAX_NUMBER)

@@ -17,6 +17,8 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         item = GetComponent<Item>();
         hero = FindObjectOfType<Hero>();
         interactions = hero.GetComponent<PlayerInteractions>();
+
+        hero.Inventory.Blood = 60;
     }
 
     private void Update()
@@ -62,16 +64,20 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
 
     public void Interract()
     {
-        //item.ItemData.Name = item.idItemName;
+        int price = (int)(item.Price * Item.priceCoef);
 
-        //hero.Inventory.AddItem(item.ItemData);
-        //interactions.InteractablesInRange.Remove(this);
+        if (hero.Inventory.Blood < price)
+            return;
 
-        //Item.InvokeOnRetrieved(item.ItemData);
+        hero.Inventory.Blood -= price;
+        item.ItemData.Name = item.idItemName;
 
-        //Destroy(this.gameObject);
-        //DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+        hero.Inventory.AddItem(item.ItemData);
+        interactions.InteractablesInRange.Remove(this);
 
-        Debug.Log("Merchant Item to purchase.\nTODO : Player can purchase");
+        Item.InvokeOnRetrieved(item.ItemData);
+
+        Destroy(this.gameObject);
+        DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
     }
 }
