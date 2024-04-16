@@ -33,8 +33,8 @@ public class Gorgon : Mobs, IGorgon
     [SerializeField] private float timeBetweenFleeing;
     [SerializeField] private GameObject pfBomb;
     [SerializeField] private Transform hand;
-    [SerializeField] private AudioManager.Sound hitSFX;
-    [SerializeField] private AudioManager.Sound deathSFX;
+    [SerializeField] private Sound hitSFX;
+    [SerializeField] private Sound deathSFX;
     public VisualEffect dashVFX;
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;
@@ -288,7 +288,7 @@ public class Gorgon : Mobs, IGorgon
     
     public void Death()
     {
-        AudioManager.Instance.PlaySound(deathSFX, this.transform.position);
+        deathSFX.Play(this.transform.position);
         OnDeath?.Invoke(transform.position);
         Destroy(transform.parent.gameObject);
         Hero.OnKill?.Invoke(this);

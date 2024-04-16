@@ -16,10 +16,10 @@ public class DamoclesStateMachine : Mobs, IDamocles
     [System.Serializable]
     private class DamoclesSounds
     {
-        public AudioManager.Sound deathSound;
-        public AudioManager.Sound takeDamageSound;
-        public AudioManager.Sound hitSound;
-        public AudioManager.Sound moveSound;
+        public Sound deathSound;
+        public Sound takeDamageSound;
+        public Sound hitSound;
+        public Sound moveSound;
     }
 
     // state machine variables
@@ -126,14 +126,14 @@ public class DamoclesStateMachine : Mobs, IDamocles
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        AudioManager.Instance.PlaySound(damoclesSounds.hitSound, transform.position);
+        damoclesSounds.hitSound.Play(transform.position);
     }
 
     public void Death()
     {
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
-        AudioManager.Instance.PlaySound(damoclesSounds.deathSound, transform.position);
+        damoclesSounds.deathSound.Play(transform.position);
         animator.SetBool(deathHash, true);
         isDeath = true;
 
@@ -146,7 +146,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
             return;
 
         agent.SetDestination(posToMove);
-        AudioManager.Instance.PlaySound(damoclesSounds.moveSound, transform.position);
+        damoclesSounds.moveSound.Play(transform.position);
     }
     #endregion
 
