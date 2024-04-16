@@ -7,7 +7,6 @@ public abstract class Quest
 {
     public QuestData Datas { get; protected set; }
     public string progressText = string.Empty;
-    protected byte benedictionOrCorruptionValue = 0;
     static QuestDatabase database;
     public static event Action OnQuestUpdated;
     protected Hero player;
@@ -38,7 +37,7 @@ public abstract class Quest
     protected virtual void QuestFinished()
     {
         player.CurrentQuest = null;
-        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == Talker.TalkerType.CLERIC ? -benedictionOrCorruptionValue : benedictionOrCorruptionValue);
+        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == Talker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
     }
 
     protected void QuestUpdated()

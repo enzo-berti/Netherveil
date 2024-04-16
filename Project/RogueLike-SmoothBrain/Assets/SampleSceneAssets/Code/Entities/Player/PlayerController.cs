@@ -309,7 +309,8 @@ public class PlayerController : MonoBehaviour
 
     private bool CanUpdatePhysic()
     {
-        return hero.State != (int)Hero.PlayerState.KNOCKBACK && characterController != null && characterController.enabled && !dialogueTreeRunner.IsStarted;
+        return hero.State != (int)Hero.PlayerState.KNOCKBACK && hero.State != (int)Hero.PlayerState.UPGRADING_STATS
+            && characterController != null && characterController.enabled && !dialogueTreeRunner.IsStarted;
     }
 
     #endregion
