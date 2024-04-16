@@ -1,7 +1,7 @@
 // ---[ STATE ] ---
-// replace "DamoclesEnGardeState_STATEMACHINE" by your state machine class name.
+// replace "DamoclesVulnerableState_STATEMACHINE" by your state machine class name.
 //
-// Here you can see an exemple of CheckSwitchStates method:
+// Here you can see an exemple of the CheckSwitchStates method:
 // protected override void CheckSwitchStates()
 // {
 //      if (isRunning)
@@ -10,20 +10,17 @@
 //      }
 // }
 
-using StateMachine; // include all script about stateMachine
-using Unity.VisualScripting;
+using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
 
-public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
+public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
 {
-    public DamoclesEnGardeState(DamoclesStateMachine currentContext, StateFactory<DamoclesStateMachine> currentFactory)
+    public DamoclesVulnerableState(DamoclesStateMachine currentContext, StateFactory<DamoclesStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
-
-    private int nextState = 0;
-    // This method will be call every Update to check and change a state.
+        
+    // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-
         if (Context.IsDeath)
         {
             SwitchState(Factory.GetState<DamoclesDeathState>());
@@ -34,39 +31,29 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         }
         else
         {
-            nextState = Random.Range(0, 2);
-
-            switch (nextState)
-            {
-                case 0:
-                    SwitchState(Factory.GetState<DamoclesSlashAttackState>());
-                    break;
-                case 1:
-                    SwitchState(Factory.GetState<DamoclesJumpAttackState>());
-                    break;
-            }
+            SwitchState(Factory.GetState<DamoclesEnGardeState>());
         }
     }
 
-    // This method will be call only one time before the update.
+    // This method will be called only once before the update.
     protected override void EnterState()
     {
         throw new System.NotImplementedException();
     }
 
-    // This method will be call only one time after the last update.
+    // This method will be called only once after the last update.
     protected override void ExitState()
     {
         throw new System.NotImplementedException();
     }
 
-    // This method will be call every frame.
+    // This method will be called every frame.
     protected override void UpdateState()
     {
         throw new System.NotImplementedException();
     }
 
-    // This method will be call on state changement.
+    // This method will be called on state switch.
     // No need to modify this method !
     protected override void SwitchState(BaseState<DamoclesStateMachine> newState)
     {
