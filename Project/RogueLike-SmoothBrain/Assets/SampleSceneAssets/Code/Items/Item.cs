@@ -137,13 +137,18 @@ public class Item : MonoBehaviour, IInterractable
         {
             if (splitDescription[i].Length > 0 && splitDescription[i][0] == '{')
             {
-                string[] splitCurrent = splitDescription[i].Split('{', '}');
-                string valueToFind = splitCurrent[1];
+                char[] separator = { '{', '}' };
+                string[] splitCurrent = splitDescription[i].Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                string valueToFind = splitCurrent[0];
                 FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
                 if (valueInfo != null)
                 {
                     var memberValue = valueInfo.GetValue(itemToGive);
                     splitDescription[i] = memberValue.ToString();
+                    for(int j = 1; j < splitCurrent.Length; j++)
+                    {
+                        splitDescription[i] += splitCurrent[j];
+                    }
                 }
                 else
                 {
