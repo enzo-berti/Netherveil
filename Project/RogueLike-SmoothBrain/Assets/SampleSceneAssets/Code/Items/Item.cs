@@ -9,6 +9,7 @@ using Generation;
 public class Item : MonoBehaviour
 {
     public static event Action<ItemEffect> OnRetrieved;
+    public static float priceCoef = 1.0f;
 
     [SerializeField] private bool isRandomized = true;
     [SerializeField] private ItemDatabase database;
@@ -19,14 +20,22 @@ public class Item : MonoBehaviour
     private int price;
 
     private ItemDescription itemDescription;
-
     public Color RarityColor => rarityColor;
     public ItemEffect ItemData => itemEffect;
     public ItemDatabase Database => database;
+    public static List<ItemData> ItemPool;
     public int Price => price;
 
-    private void Start()
+    private void Start() 
     {
+        if(ItemPool == null)
+        {
+            ItemPool = new List<ItemData>();
+            foreach(var itemData in database.datas)
+            {
+                ItemPool.Add(itemData);
+            }
+        }
         if (isRandomized)
         {
             RandomizeItem(this);
@@ -60,13 +69,23 @@ public class Item : MonoBehaviour
 
     static public void RandomizeItem(Item item)
     {
-        List<string> allItems = new();
-        foreach (var itemInDb in item.database.datas)
+        if(ItemPool.Count > 0)
         {
-            allItems.Add(itemInDb.idName);
+            List<string> allItems = new();
+            foreach (var itemInPool in ItemPool)
+            {
+                allItems.Add(itemInPool.idName);
+            }
+            int indexRandom = Seed.Range(0, allItems.Count);
+            item.idItemName = allItems[indexRandom];
+            ItemPool.RemoveAt(indexRandom);
+
         }
-        int indexRandom = Seed.Range(0, allItems.Count);
-        item.idItemName = allItems[indexRandom];
+        else
+        {
+            item.idItemName = "MonsterHeart";
+        }
+        
     }
 
     public void RandomizeItem()

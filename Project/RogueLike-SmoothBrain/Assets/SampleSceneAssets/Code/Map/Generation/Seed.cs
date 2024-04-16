@@ -27,9 +27,6 @@ namespace Generation
                 }
             }
 
-
-            UnityEngine.Debug.Log(seed);
-
             random = new System.Random(SeedToInt());
         }
 

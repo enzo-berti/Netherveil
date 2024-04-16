@@ -11,10 +11,11 @@ public class Glorb : Mobs, IGlorb
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
 
     public List<Status> StatusToApply => statusToApply;
+    [SerializeField] CapsuleCollider shockwaveCollider;
+    [Header("SFXs")]
     [SerializeField] Sound hitSFX;
     [SerializeField] EventReference shockwaveSFX;
     [SerializeField] EventReference punchSFX;
-    [Header("SFXs")]
     [SerializeField] EventReference deadSFX;
     VFXStopper vfxStopper;
     bool cooldownSpeAttack = false;
@@ -27,7 +28,7 @@ public class Glorb : Mobs, IGlorb
     bool isDying = false;
     Hero player;
     Animator animator;
-    [SerializeField] CapsuleCollider shockwaveCollider;
+    
     
 
     protected override void Start()

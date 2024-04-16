@@ -27,17 +27,17 @@ public class DialogueTreeEventManager : MonoBehaviour
 
     public void AddListener(string tag, UnityAction action)
     {
-        if (dialogueEvent.FirstOrDefault(x => x.tag == tag) != null)
-        {
-            Debug.LogWarning($"The tag {tag} is already use for an event.");
-            return;
-        }
-
         dialogueEvent.Add(new DialogueEvent(tag, action));
     }
 
     public void RemoveListener(string tag)
     {
-        dialogueEvent.Remove(dialogueEvent.First(x => x.tag == tag));
+        if (dialogueEvent.FirstOrDefault(x => x.tag == tag) == null)
+            return;
+
+        dialogueEvent.Where(x => x.tag == tag).ToList().ForEach(x =>
+        {
+            dialogueEvent.Remove(x);
+        });
     }
 }
