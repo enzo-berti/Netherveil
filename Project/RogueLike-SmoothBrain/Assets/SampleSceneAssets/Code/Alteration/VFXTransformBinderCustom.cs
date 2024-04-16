@@ -4,6 +4,7 @@ namespace UnityEngine.VFX.Utility
 {
     [AddComponentMenu("VFX/Property Binders/Transform Binder Custom")]
     [VFXBinder("Transform/CustomTransform")]
+    
     public class VFXTransformBinderCustom : VFXBinderBase
     {
         public string Property { get { return (string)m_Property; } set { m_Property = value; UpdateSubProperties(); } }
