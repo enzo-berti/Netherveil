@@ -7,7 +7,6 @@ public abstract class Npc : Entity, IInterractable
     public Image RangeImage { get => rangeImage; }
     PlayerInteractions playerInteractions;
     Hero hero;
-    float factor = 0f;
 
     public virtual void Interract()
     {
@@ -19,7 +18,6 @@ public abstract class Npc : Entity, IInterractable
         base.Start();
         playerInteractions = GameObject.FindWithTag("Player").GetComponent<PlayerInteractions>();
         hero = playerInteractions.GetComponent<Hero>();
-        factor = Time.deltaTime * 2f;
     }
 
     protected override void Update()
@@ -46,8 +44,9 @@ public abstract class Npc : Entity, IInterractable
 
     public void ToggleRangeImage(bool toggle)
     {
+        float durationScale = 1.0f;
         StopAllCoroutines();
-        StartCoroutine(toggle ? EasingFunctions.UpScaleCoroutine(rangeImage.gameObject, factor) : EasingFunctions.DownScaleCoroutine(rangeImage.gameObject, factor));
+        StartCoroutine(toggle ? EasingFunctions.UpScaleCoroutine(rangeImage.gameObject, durationScale) : EasingFunctions.DownScaleCoroutine(rangeImage.gameObject, durationScale));
     }
 
     public void Select()
