@@ -8,6 +8,13 @@ public class Talker : Npc
     DialogueTreeRunner dialogueTreeRunner;
     Quest quest;
     Hero player;
+    public enum TalkerType
+    {
+        CLERIC,
+        SHAMAN
+    }
+
+    [SerializeField] TalkerType type;
 
     protected override void Start()
     {
@@ -32,7 +39,7 @@ public class Talker : Npc
     {
         if(dialogueTreeRunner.TalkerNPC == this)
         {
-            quest = Quest.LoadClass(Quest.GetRandomQuestName());
+            quest = Quest.LoadClass(Quest.GetRandomQuestName(), type);
             player.CurrentQuest = quest;
         }
     }
