@@ -4,6 +4,6 @@ public class RealTest : Quest
 {
     public override void AcceptQuest()
     {
-        throw new System.NotImplementedException();
+        progressText = "NB ENEMIES KILLED : 0/25";
     }
 } 

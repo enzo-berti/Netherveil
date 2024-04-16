@@ -6,6 +6,7 @@ public class QuestUI : MonoBehaviour
     Hero player;
     [SerializeField] TMP_Text description;
     [SerializeField] TMP_Text title;
+    [SerializeField] TMP_Text progressText;
 
     void Start()
     {
@@ -32,6 +33,7 @@ public class QuestUI : MonoBehaviour
         {
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);
+            progressText.SetText(player.CurrentQuest.progressText);
         }
     }
 }
