@@ -34,6 +34,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public IAttacker.HitDelegate OnAttackHit { get => onAttackHit; set => onAttackHit = value; }
     public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
+    int currentStep = 0;
+    readonly int STEP_VALUE = 25;
+
     public List<Status> StatusToApply => statusToApply;
 
     Quest currentQuest = null;
@@ -69,7 +72,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             attacker.OnAttackHit += attacker.ApplyStatus;
         }
 
-        stats.onStatChange += playerController.UpgradePlayerStats;
+        stats.onStatChange += UpgradePlayerStats;
     }
 
 
@@ -154,4 +157,163 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         OnAttackHit?.Invoke(damageable, this);
     }
+
+    #region Corruption&BenedictionManagement
+    public void UpgradePlayerStats(Stat stat)
+    {
+        if (stat != Stat.CORRUPTION)
+            return;
+
+        float corruptionStat = Stats.GetValue(stat);
+        float corruptionLastValue = Stats.GetLastValue(stat);
+        float diff = corruptionStat - corruptionLastValue;
+
+        ManageCorruptionChangeLessThanStep(corruptionStat, corruptionLastValue, diff);
+        ManageCorruptionChangeMoreThanStep(corruptionStat, corruptionLastValue, diff);
+
+        //ensure that player doesn't die by stat upgrade
+        if (Stats.GetValue(Stat.HP) <= 0f)
+        {
+            Stats.SetValue(Stat.HP, 1f);
+        }
+
+    }
+
+    private void ManageCorruptionChangeLessThanStep(float corruptionStat, float corruptionLastValue, float diff)
+    {
+        int nextStep = (int)(corruptionStat / STEP_VALUE);
+        bool isMovingPositive = Mathf.Abs(diff) < STEP_VALUE && nextStep > currentStep;
+        bool isMovingNegative = Mathf.Abs(diff) < STEP_VALUE && nextStep < currentStep;
+
+        if (isMovingPositive && diff > 0)
+        {
+            CorruptionUpgrade(corruptionStat);
+        }
+        else if (isMovingNegative && diff < 0)
+        {
+            BenedictionUpgrade(corruptionStat);
+        }
+        else if (isMovingPositive && corruptionStat < 0)
+        {
+            BenedictionDrawback(corruptionLastValue);
+        }
+        else if (isMovingNegative && corruptionStat > 0)
+        {
+            CorruptionDrawback(corruptionLastValue);
+        }
+    }
+
+    private void ManageCorruptionChangeMoreThanStep(float corruptionStat, float corruptionLastValue, float diff)
+    {
+        float currentValue = corruptionLastValue;
+        int stepDiff = Mathf.Abs((int)(diff / STEP_VALUE));
+        int offset = diff > 0 ? STEP_VALUE : -STEP_VALUE;
+
+        for (int i = 0; i < stepDiff; i++)
+        {
+            bool increaseAtStart = (diff > 0 && currentValue > 0) || (diff < 0 && currentValue <= 0);
+            int diffValue2 = (int)(corruptionStat - currentValue);
+            if (increaseAtStart)
+            {
+                currentValue += offset;
+            }
+
+            if (currentValue <= 0 && diffValue2 > 0)
+            {
+                BenedictionDrawback(currentValue);
+            }
+            else if (currentValue <= 0 && diffValue2 < 0)
+            {
+                BenedictionUpgrade(currentValue);
+            }
+            else if (currentValue >= 0 && diffValue2 > 0)
+            {
+                CorruptionUpgrade(currentValue);
+            }
+            else if (currentValue >= 0 && diffValue2 < 0)
+            {
+                CorruptionDrawback(currentValue);
+            }
+
+            if (!increaseAtStart)
+            {
+                currentValue += offset;
+            }
+        }
+    }
+
+    private void CorruptionUpgrade(float corruptionStat)
+    {
+        currentStep++;
+        if (corruptionStat >= Stats.GetMaxValue(Stat.CORRUPTION))
+        {
+            Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
+            playerController.LaunchUpgradeAnimation = true;
+            //debuff impossibilité de se soigner via consommables
+            //ajout nouvelle compétence
+        }
+        else
+        {
+            Stats.IncreaseValue(Stat.ATK, 5f);
+            Stats.DecreaseMaxValue(Stat.HP, 15f);
+            Stats.DecreaseValue(Stat.HP, 15f);
+            playerController.LaunchUpgradeAnimation = true;
+        }
+    }
+
+    private void BenedictionUpgrade(float corruptionStat)
+    {
+        currentStep--;
+        if (corruptionStat <= Stats.GetMinValue(Stat.CORRUPTION))
+        {
+            //ajout de la capacité divine shield
+            //ajout du malus de possibilité de dédoublement des mobs
+            playerController.LaunchUpgradeAnimation = true;
+        }
+        else
+        {
+            Stats.IncreaseMaxValue(Stat.HP, 15f);
+            Stats.IncreaseValue(Stat.HP, 15f);
+            Stats.DecreaseValue(Stat.ATK, 5f);
+            playerController.LaunchUpgradeAnimation = true;
+        }
+    }
+
+    private void BenedictionDrawback(float corruptionLastValue)
+    {
+        currentStep++;
+        if (corruptionLastValue <= Stats.GetMinValue(Stat.CORRUPTION))
+        {
+            //désactiver la capacité divine shield
+            //désactiver malus de possibilité de dédoublement des mobs
+            playerController.LaunchUpgradeAnimation = true;
+        }
+        else
+        {
+            Stats.DecreaseMaxValue(Stat.HP, 15f);
+            Stats.DecreaseValue(Stat.HP, 15f);
+            Stats.IncreaseValue(Stat.ATK, 5f);
+            playerController.LaunchUpgradeAnimation = true;
+        }
+    }
+
+    private void CorruptionDrawback(float corruptionLastValue)
+    {
+        currentStep--;
+        if (corruptionLastValue >= Stats.GetMaxValue(Stat.CORRUPTION))
+        {
+            Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
+            //désactiver debuff impossibilité de se soigner via consommables
+            //désactiver nouvelle compétence
+            playerController.LaunchUpgradeAnimation = true;
+        }
+        else
+        {
+            Stats.DecreaseValue(Stat.ATK, 5f);
+            Stats.IncreaseMaxValue(Stat.HP, 15f);
+            Stats.IncreaseValue(Stat.HP, 15f);
+            playerController.LaunchUpgradeAnimation = true;
+        }
+    }
+    #endregion
 }
