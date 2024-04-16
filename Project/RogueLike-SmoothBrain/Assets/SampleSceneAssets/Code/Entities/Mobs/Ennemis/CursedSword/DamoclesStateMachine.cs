@@ -16,10 +16,10 @@ public class DamoclesStateMachine : Mobs, IDamocles
     [System.Serializable]
     private class DamoclesSounds
     {
-        public EventReference deathSound;
-        public EventReference takeDamageSound;
-        public EventReference hitSound;
-        public EventReference moveSound;
+        public AudioManager.Sound deathSound;
+        public AudioManager.Sound takeDamageSound;
+        public AudioManager.Sound hitSound;
+        public AudioManager.Sound moveSound;
     }
 
     // state machine variables

@@ -15,10 +15,10 @@ public class PestStateMachine : Mobs, IPest
     [System.Serializable]
     private class PestSounds
     {
-        public EventReference deathSound;
-        public EventReference takeDamageSound;
-        public EventReference hitSound;
-        public EventReference moveSound;
+        public AudioManager.Sound deathSound;
+        public AudioManager.Sound takeDamageSound;
+        public AudioManager.Sound attackHitSound;
+        public AudioManager.Sound moveSound;
     }
 
     // state machine variables
@@ -35,8 +35,6 @@ public class PestStateMachine : Mobs, IPest
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     [SerializeField] private BoxCollider attackCollider;
     private Transform target;
-    private int frameToUpdate;
-    private int maxFrameUpdate = 500;
     private bool isDeath = false;
 
     // animation hash
@@ -115,7 +113,7 @@ public class PestStateMachine : Mobs, IPest
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        ApplyDamagesMob(_value, pestSounds.hitSound, Death, notEffectDamage);
+        ApplyDamagesMob(_value, pestSounds.takeDamageSound, Death, notEffectDamage);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
@@ -127,7 +125,7 @@ public class PestStateMachine : Mobs, IPest
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        AudioManager.Instance.PlaySound(pestSounds.hitSound, transform.position);
+        AudioManager.Instance.PlaySound(pestSounds.attackHitSound, transform.position);
     }
 
     public void Death()

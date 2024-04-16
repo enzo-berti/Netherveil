@@ -43,20 +43,20 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [System.Serializable]
     private class GraftedSounds
     {
-        public AudioManager.Sound deathSound = new("Death"); //
-        public AudioManager.Sound hitSound = new("Hit"); //
-        public AudioManager.Sound projectileLaunchedSound = new("Projectile launched"); //
-        public AudioManager.Sound projectileHitMapSound = new("Projectile hit map");
-        public AudioManager.Sound projectileHitPlayerSound = new("Projectile hit player");
-        public AudioManager.Sound thrustSound = new("Thrust"); //
-        public AudioManager.Sound introSound = new("Intro");
-        public AudioManager.Sound retrievingProjectileSound = new("Retrieving projectile"); //
-        public AudioManager.Sound spinAttackSound = new("Fall"); //
-        public AudioManager.Sound stretchSound = new("Dash"); //
-        public AudioManager.Sound weaponOutSound = new("WeaponOut"); //
-        public AudioManager.Sound weaponInSound = new("WeaponIn");
-        public AudioManager.Sound walkingSound = new("Walk"); //
-        public AudioManager.Sound music = new("Music");
+        public AudioManager.Sound deathSound;
+        public AudioManager.Sound hitSound;
+        public AudioManager.Sound projectileLaunchedSound;
+        public AudioManager.Sound projectileHitMapSound;
+        public AudioManager.Sound projectileHitPlayerSound;
+        public AudioManager.Sound thrustSound;
+        public AudioManager.Sound introSound;
+        public AudioManager.Sound retrievingProjectileSound;
+        public AudioManager.Sound spinAttackSound;
+        public AudioManager.Sound stretchSound;
+        public AudioManager.Sound weaponOutSound;
+        public AudioManager.Sound weaponInSound;
+        public AudioManager.Sound walkingSound;
+        public AudioManager.Sound music;
 
         public void StopAllSounds()
         {
@@ -286,9 +286,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     deathTimer = Time.deltaTime;
                     if (bossSounds.deathSound.GetState() != PLAYBACK_STATE.PLAYING)
                     {
-                        Destroy(transform.parent.gameObject);
                         Hero.OnKill?.Invoke(this);
+                        OnDeath?.Invoke(transform.position);
                         bossSounds.StopAllSounds();
+                        Destroy(transform.parent.gameObject);
                     }
                 }
             }
@@ -313,7 +314,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             _value *= 2;
         }
 
-        ApplyDamagesMob(_value, bossSounds.hitSound.reference, Death, notEffectDamage);
+        ApplyDamagesMob(_value, bossSounds.hitSound, Death, notEffectDamage);
     }
 
     public void Death()

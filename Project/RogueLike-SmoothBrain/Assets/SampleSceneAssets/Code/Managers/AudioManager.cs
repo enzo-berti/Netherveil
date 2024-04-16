@@ -21,14 +21,8 @@ public class AudioManager : MonoBehaviour
     [Serializable]
     public class Sound
     {
-        public string name = "N/A";
         public EventReference reference;
         public EventInstance instance;
-
-        public Sound(string _name)
-        {
-            name = _name;
-        }
 
         public PLAYBACK_STATE GetState()
         {
@@ -49,52 +43,52 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(Sound))]
-    public class SoundDrawerUIE : PropertyDrawer
-    {
-        int nbMember = 0;
-        SerializedProperty referenceProperty;
-        SerializedProperty nameProperty;
+//#if UNITY_EDITOR
+//    [CustomPropertyDrawer(typeof(Sound))]
+//    public class SoundDrawerUIE : PropertyDrawer
+//    {
+//        int nbMember = 0;
+//        SerializedProperty referenceProperty;
+//        SerializedProperty nameProperty;
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            referenceProperty = property.FindPropertyRelative("reference");
-            nameProperty = property.FindPropertyRelative("name");
-            nbMember = 0;
-            string labelText = nameProperty.stringValue;
-            EditorGUI.BeginProperty(position, label, property);
+//        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+//        {
+//            referenceProperty = property.FindPropertyRelative("reference");
+//            nameProperty = property.FindPropertyRelative("name");
+//            nbMember = 0;
+//            string labelText = nameProperty.stringValue;
+//            EditorGUI.BeginProperty(position, label, property);
 
-            DrawMember(position, referenceProperty, labelText);
+//            DrawMember(position, referenceProperty, labelText);
 
-            EditorGUI.EndProperty();
-        }
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            int totalLine = 1;
-            if (property.isExpanded)
-            {
-                totalLine += 1;
+//            EditorGUI.EndProperty();
+//        }
+//        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+//        {
+//            int totalLine = 1;
+//            if (property.isExpanded)
+//            {
+//                totalLine += 1;
 
-            }
-            return EditorGUIUtility.singleLineHeight * totalLine;
-        }
+//            }
+//            return EditorGUIUtility.singleLineHeight * totalLine;
+//        }
 
-        private void DrawMember(Rect position, SerializedProperty propertyToDraw, string labelText)
-        {
-            nbMember++;
-            EditorGUI.indentLevel++;
-            float posX = position.min.x;
-            float posY = position.min.y + EditorGUIUtility.singleLineHeight * nbMember;
-            float width = position.size.x;
-            float height = EditorGUIUtility.singleLineHeight;
+//        private void DrawMember(Rect position, SerializedProperty propertyToDraw, string labelText)
+//        {
+//            nbMember++;
+//            EditorGUI.indentLevel++;
+//            float posX = position.min.x;
+//            float posY = position.min.y + EditorGUIUtility.singleLineHeight * nbMember;
+//            float width = position.size.x;
+//            float height = EditorGUIUtility.singleLineHeight;
 
-            Rect drawArea = new Rect(posX, posY, width, height);
-            EditorGUI.PropertyField(drawArea, propertyToDraw, new GUIContent(labelText));
-            EditorGUI.indentLevel--;
-        }
-    }
-#endif
+//            Rect drawArea = new Rect(posX, posY, width, height);
+//            EditorGUI.PropertyField(drawArea, propertyToDraw, new GUIContent(labelText));
+//            EditorGUI.indentLevel--;
+//        }
+//    }
+//#endif
 
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -261,6 +255,7 @@ public class AudioManager : MonoBehaviour
     {
         EventInstance result = PlaySound(reference);
         result.set3DAttributes(worldPosition.To3DAttributes());
+        audioInstance.Add(result);
 
         return result;
     }

@@ -18,6 +18,10 @@ public abstract class Mobs : Entity
     protected EnemyLifeBar lifeBar;
     [SerializeField] protected Drop drop;
 
+    // opti
+    protected int frameToUpdate;
+    protected int maxFrameUpdate = 500;
+
     protected override void Start()
     {
         base.Start();
@@ -92,9 +96,37 @@ public abstract class Mobs : Entity
         hitMaterial.SetInt("_isHit", 0);
     }
 
-    protected void ApplyDamagesMob(int _value, EventReference hitSound, Action deathMethod, bool notEffectDamage)
+    // Je le laisse là ça servira peut être
+
+    //protected void ApplyDamagesMob(int _value, EventReference hitSound, Action deathMethod, bool notEffectDamage)
+    //{
+    //    // Some times, this method is called when entity is dead ??
+    //    if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
+    //        return;
+
+    //    Stats.DecreaseValue(Stat.HP, _value, false);
+    //    lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+
+    //    if (notEffectDamage)
+    //    {
+    //        //add SFX here
+    //        FloatingTextGenerator.CreateDamageText(_value, transform.position);
+    //        StartCoroutine(HitRoutine());
+    //    }
+
+    //    if (stats.GetValue(Stat.HP) <= 0)
+    //    {
+    //        deathMethod();
+    //    }
+    //    else
+    //    {
+    //        AudioManager.Instance.PlaySound(hitSound, transform.position);
+    //    }
+    //}
+
+    protected void ApplyDamagesMob(int _value, AudioManager.Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)
     {
-        // Some times, this method is call when entity is dead ??
+        // Some times, this method is called when entity is dead ??
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
@@ -114,7 +146,7 @@ public abstract class Mobs : Entity
         }
         else
         {
-            AudioManager.Instance.PlaySound(hitSound, transform.position);
+            AudioManager.Instance.PlaySound(hitSound, transform.position, _restartSound);
         }
     }
 

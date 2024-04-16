@@ -21,6 +21,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static event Action<int, IAttacker> OnTakeDamage;
     public static event Action<IDamageable, IAttacker> OnBasicAttack;
     public static event Action<IDamageable, IAttacker> OnSpearAttack;
+    public static event Action OnQuestObtained;
+    public static event Action OnQuestFinished;
 
     public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
     public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
@@ -30,6 +32,26 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
     public List<Status> StatusToApply => statusToApply;
+
+    Quest currentQuest = null;
+    public Quest CurrentQuest
+    {
+        get => currentQuest;
+        set
+        {
+            currentQuest = value;
+
+            if (value == null)
+            {
+                OnQuestFinished?.Invoke();
+            }
+            else
+            {
+                value.AcceptQuest();
+                OnQuestObtained?.Invoke();
+            }
+        }
+    }
 
     protected override void Start()
     {

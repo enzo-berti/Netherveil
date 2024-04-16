@@ -118,7 +118,7 @@ namespace Generation
         private static readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
 
         [SerializeField] private bool isRandom = true;
-        [SerializeField] private int seed = 0;
+        [SerializeField] private string seed;
 
         [SerializeField] private List<GameObject> roomLobby = new List<GameObject>();
         [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
@@ -135,9 +135,10 @@ namespace Generation
 
         private void Awake()
         {
+            Seed.RandomizeSeed();
             if (!isRandom)
             {
-                Seed.NewSeed(seed);
+                Seed.Set(seed);
             }
 
             GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1));
