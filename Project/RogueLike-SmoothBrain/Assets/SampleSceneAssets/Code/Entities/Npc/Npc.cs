@@ -7,6 +7,7 @@ public abstract class Npc : Entity, IInterractable
     public Image RangeImage { get => rangeImage; }
     PlayerInteractions playerInteractions;
     Hero hero;
+    private bool isSelect = false;
 
     public virtual void Interract()
     {
@@ -51,11 +52,19 @@ public abstract class Npc : Entity, IInterractable
 
     public void Select()
     {
+        if (isSelect)
+            return;
+
+        isSelect = true;
         ToggleRangeImage(true);
     }
 
     public void Deselect()
     {
+        if (!isSelect)
+            return;
+
+        isSelect = false;
         ToggleRangeImage(false);
     }
 }
