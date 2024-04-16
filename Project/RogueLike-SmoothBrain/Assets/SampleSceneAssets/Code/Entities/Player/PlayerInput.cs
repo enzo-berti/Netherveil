@@ -246,9 +246,11 @@ public class PlayerInput : MonoBehaviour
     private void ActiveIteamActivation(InputAction.CallbackContext ctx)
     {
         IActiveItem item = hero.Inventory.ActiveItem;
-        if (item != null && item.Cooldown < 10)
+        if (item != null && (item as ItemEffect).CurrentEnergy >= item.Cooldown)
         {
+            (item as ItemEffect).CurrentEnergy = 0;
             hero.Inventory.ActiveItem.Activate();
+            StartCoroutine(item.WaitToUse());
         }
     }
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)

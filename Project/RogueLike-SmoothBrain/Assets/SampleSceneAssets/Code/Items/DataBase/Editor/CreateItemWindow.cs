@@ -149,10 +149,14 @@ public class CreateItemWindow : EditorWindow
                                     else if (method.IsPrivate) methodToWrite += "private ";
                                     else methodToWrite += "protected ";
 
-                                    methodToWrite += method.ReturnParameter.ToString().ToLower() + " ";
+                                    Type type = method.ReturnType;
+                                    string typeString = type.ToString() == "System.Void" ? "void" : type.ToString();
+                                    methodToWrite += typeString + " ";
                                     methodToWrite += method.Name + "(";
-
-                                    methodToWrite += ")\n    {\n        throw new System.NotImplementedException();\n    }\n    ";
+                                    if(method.IsAbstract)
+                                    {
+                                        methodToWrite += ")\n    {\n        throw new System.NotImplementedException();\n    }\n    ";
+                                    }
                                 }
                                 
                             }
