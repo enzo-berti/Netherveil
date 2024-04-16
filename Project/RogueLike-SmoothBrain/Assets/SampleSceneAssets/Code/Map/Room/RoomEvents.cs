@@ -36,7 +36,7 @@ namespace Map
             // find room go's
             room = transform.parent.Find("RoomGenerator").GetChild(0).gameObject;
             enemies = room.transform.Find("Enemies").gameObject;
-            traps = room.transform.Find("Traps").gameObject;
+            //traps = room.transform.Find("Traps").gameObject;
             navMeshSurface = transform.parent.GetComponentInChildren<NavMeshSurface>();
 
             enemies.SetActive(false);
