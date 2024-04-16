@@ -16,14 +16,15 @@ public class Item : MonoBehaviour
     private ItemEffect itemEffect;
     private Color rarityColor = Color.white;
     public string idItemName = string.Empty;
+    private int price;
 
     private ItemDescription itemDescription;
 
     public Color RarityColor => rarityColor;
     public ItemEffect ItemData => itemEffect;
     public ItemDatabase Database => database;
+    public int Price => price;
 
-    public float Price { get; private set; } = 0;
     private void Start()
     {
         if (isRandomized)
@@ -36,7 +37,7 @@ public class Item : MonoBehaviour
         ItemData data = database.GetItem(idItemName);
         Material matToRender = data.mat;
         Mesh meshToRender = data.mesh;
-        Price = data.price;
+        price = data.price;
 
         rarityColor = database.GetItemRarityColor(idItemName);
 
