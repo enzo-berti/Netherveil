@@ -14,15 +14,16 @@ namespace Generation
 
         public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
         {
-
             nbRoomByType = new Dictionary<RoomType, int>
             {
+                { RoomType.Lobby, 0 },
                 { RoomType.Normal, nbNormal },
                 { RoomType.Treasure, nbTreasure },
                 { RoomType.Challenge, nbChallenge },
                 { RoomType.Merchant, nbMerchant },
                 { RoomType.Secret, nbSecret },
                 { RoomType.MiniBoss, nbMiniBoss },
+                { RoomType.Boss, 0 },
             };
 
             availableDoorsByRot = new Dictionary<int, List<Door>>
@@ -141,21 +142,21 @@ namespace Generation
                 Seed.Set(seed);
             }
 
-            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1));
+            GenerateMap(new GenerationParam(nbNormal: 2, nbTreasure: 4, nbMerchant: 1));
         }
 
         private void GenerateMap(GenerationParam genParam)
         {
+            RoomData.nbRoomByType = genParam.nbRoomByType;
+            RoomData.nbRoomByType[RoomType.Lobby] = 1;
+            RoomData.nbRoomByType[RoomType.Boss] = 1;
+
             GenerateLobbyRoom(ref genParam);
-
             GenerateRooms(ref genParam);
-
-            GenerateBossRoom(ref genParam);
-
             GenerateObstructionDoors(ref genParam);
         }
 
-        private void GenerateRooms(ref GenerationParam genParam)
+        private bool GenerateRooms(ref GenerationParam genParam)
         {
             int nbRoom = genParam.NbRoom;
 
@@ -164,9 +165,10 @@ namespace Generation
                 // if not enough door are available, spawn a normal room by force
                 if (genParam.AvailableDoorsCount <= 1)
                 {
-                    if (!GenerateRoom(ref genParam, RoomType.Normal))
+                    if (genParam.nbRoomByType[RoomType.Normal] <= 0 || !GenerateRoom(ref genParam, RoomType.Normal))
                     {
-                        return;
+                        Debug.LogError("Can't find any valid room");
+                        return false;
                     }
                     genParam.nbRoomByType[RoomType.Normal]--;
                 }
@@ -180,7 +182,7 @@ namespace Generation
                         {
                             if (!GenerateRoom(ref genParam, type))
                             {
-                                return;
+                                return false;
                             }
                             genParam.nbRoomByType[type]--;
                             break;
@@ -188,6 +190,14 @@ namespace Generation
                     }
                 }
             }
+
+            if (!TryInstantiateRoom(GetRandRoomGO(RoomType.Boss), RoomType.Boss, ref genParam))
+            {
+                Debug.LogError("Can't find any candidate for boss room");
+                return false;
+            }
+
+            return true;
         }
 
         private bool GenerateRoom(ref GenerationParam genParam, RoomType type)
@@ -215,14 +225,6 @@ namespace Generation
             Destroy(doorsGenerator);
 
             roomGO.transform.parent = gameObject.transform;
-        }
-
-        private void GenerateBossRoom(ref GenerationParam genParam)
-        {
-            if (!TryInstantiateRoom(GetRandRoomGO(RoomType.Boss), RoomType.Boss, ref genParam))
-            {
-                Debug.LogError("Can't find any candidate for boss room");
-            }
         }
 
         private void GenerateObstructionDoors(ref GenerationParam genParam)
@@ -360,6 +362,14 @@ namespace Generation
 
             int randIndex = Seed.Range(0, list.Count);
             return list[randIndex];
+        }
+
+        private void ResetGeneration()
+        {
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
         }
     }
 }
