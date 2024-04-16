@@ -77,6 +77,13 @@ namespace DialogueSystem.Editor
                 AddElement(newNode);
                 return newNode;
             }
+            if (type == typeof(EventDialogueNodeView))
+            {
+                newNode = new EventDialogueNodeView(this);
+                newNode.SetPosition(new Rect(position, defaultNodeSize));
+                AddElement(newNode);
+                return newNode;
+            }
 
             return null;
         }
@@ -86,6 +93,7 @@ namespace DialogueSystem.Editor
             RootNode root = node as RootNode;
             SimpleDialogueNode simple = node as SimpleDialogueNode;
             ChoiceDialogueNode choice = node as ChoiceDialogueNode;
+            EventDialogueNode eventN = node as EventDialogueNode;
 
             if (root != null)
             {
@@ -109,6 +117,16 @@ namespace DialogueSystem.Editor
                 ChoiceDialogueNodeView viewNode = new ChoiceDialogueNodeView(this);
                 viewNode.GUID = node.GUID;
                 viewNode.DialogueData = choice.dialogueData;
+                viewNode.SetPosition(new Rect(position, defaultNodeSize));
+                AddElement(viewNode);
+                return viewNode;
+            }
+            if (eventN != null)
+            {
+                EventDialogueNodeView viewNode = new EventDialogueNodeView(this);
+                viewNode.GUID = node.GUID;
+                viewNode.DialogueData = eventN.dialogueData;
+                viewNode.EventTag = eventN.eventTag;
                 viewNode.SetPosition(new Rect(position, defaultNodeSize));
                 AddElement(viewNode);
                 return viewNode;

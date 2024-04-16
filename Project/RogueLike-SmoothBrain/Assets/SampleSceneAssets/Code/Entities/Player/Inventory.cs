@@ -11,9 +11,11 @@ public class Inventory
     public List<IItem> AllItems 
     { 
         get 
-        { 
-            List<IItem> itemList = new List<IItem>();
-            itemList.Add(activeItem);
+        {
+            List<IItem> itemList = new List<IItem>
+            {
+                activeItem
+            };
             itemList.AddRange(passiveItems);
             return itemList;
         } 
@@ -23,7 +25,7 @@ public class Inventory
 
     private void AddActiveItem(IActiveItem item)
     {
-        if(activeItem == null)
+        if (activeItem == null)
         {
             activeItem = item;
         }
@@ -46,17 +48,19 @@ public class Inventory
     }
     public void AddItem(ItemEffect item)
     {
-        if (item as IActiveItem != null)
+        if ((item as IActiveItem) != null)
         {
             AddActiveItem(item as IActiveItem);
-            if ((item as IPassiveItem) != null)
+            if(!item.HasBeenRetreived)
             {
-                (item as IPassiveItem).OnRetrieved();
+                item.CurrentEnergy = (item as IActiveItem).Cooldown;
             }
+            (item as IPassiveItem)?.OnRetrieved();
         }
-        else if (item as IPassiveItem!= null)
+        else if (item as IPassiveItem != null)
         {
             AddPassiveItem(item as IPassiveItem);
         }
+        item.HasBeenRetreived = true;
     }
 }

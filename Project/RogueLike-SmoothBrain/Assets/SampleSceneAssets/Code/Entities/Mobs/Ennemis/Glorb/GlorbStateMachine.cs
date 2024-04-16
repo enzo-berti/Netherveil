@@ -15,10 +15,10 @@ public class GlorbStateMachine : Mobs, IGlorb
     [Serializable]
     class GlorbSounds
     {
-        public AudioManager.Sound shockwaveSFX;
-        public AudioManager.Sound punchSFX;
-        public AudioManager.Sound hitSFX;
-        public AudioManager.Sound deathSFX;
+        public Sound shockwaveSFX;
+        public Sound punchSFX;
+        public Sound hitSFX;
+        public Sound deathSFX;
     }
 
     // state machine variables
@@ -119,7 +119,7 @@ public class GlorbStateMachine : Mobs, IGlorb
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        AudioManager.Instance.PlaySound(glorbSounds.hitSFX.reference, transform.position);
+        glorbSounds.hitSFX.Play(transform.position);
     }
 
     public void Death()
@@ -127,7 +127,7 @@ public class GlorbStateMachine : Mobs, IGlorb
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
 
-        AudioManager.Instance.PlaySound(glorbSounds.deathSFX, transform.position);
+        glorbSounds.deathSFX.Play(transform.position);
 
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);

@@ -2,7 +2,6 @@ using DialogueSystem.Runtime;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DialogueTreeRunner : MonoBehaviour
@@ -20,8 +19,16 @@ public class DialogueTreeRunner : MonoBehaviour
     [SerializeField] private Button choiceButtonPrefab;
     public bool IsStarted => dialogueCanvas.gameObject.activeSelf;
     private string lastDialogue;
+    DialogueTreeEventManager eventManager;
+    public DialogueTreeEventManager EventManager { get => eventManager; }
+    public Npc TalkerNPC { get; private set; }
 
-    public void StartDialogue(DialogueTree tree)
+    private void Awake()
+    {
+        eventManager = GetComponent<DialogueTreeEventManager>();
+    }
+
+    public void StartDialogue(DialogueTree tree, Npc talker)
     {
         if (IsStarted)
             return;
@@ -29,12 +36,14 @@ public class DialogueTreeRunner : MonoBehaviour
         this.tree = tree;
         this.tree.ResetTree();
         dialogueCanvas.gameObject.SetActive(true);
+        TalkerNPC = talker;
         UpdateDialogue();
     }
 
     public void EndDialogue()
     {
         dialogueCanvas.gameObject.SetActive(false);
+        TalkerNPC = null;
     }
 
     public void UpdateDialogue()
@@ -47,6 +56,7 @@ public class DialogueTreeRunner : MonoBehaviour
 
         SimpleDialogueNode simple = tree.currentNode as SimpleDialogueNode;
         ChoiceDialogueNode choice = tree.currentNode as ChoiceDialogueNode;
+        EventDialogueNode eventN = tree.currentNode as EventDialogueNode;
 
         if (simple)
         {
@@ -72,6 +82,16 @@ public class DialogueTreeRunner : MonoBehaviour
                     UpdateDialogue();
                 });
             });
+        }
+        else if (eventN)
+        {
+            SetIllustration(eventN.dialogueData.illustration);
+            SetName(eventN.dialogueData.name);
+            SetDialogue(eventN.dialogueData.dialogue);
+
+            tree.Process(eventN.child);
+
+            eventManager.Invoke(eventN.eventTag);
         }
         else if (tree.currentNode == null)
         {

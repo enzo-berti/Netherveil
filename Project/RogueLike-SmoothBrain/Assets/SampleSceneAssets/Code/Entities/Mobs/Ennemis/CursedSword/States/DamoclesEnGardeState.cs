@@ -11,16 +11,41 @@
 // }
 
 using StateMachine; // include all script about stateMachine
+using Unity.VisualScripting;
+using UnityEngine;
 
 public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
 {
     public DamoclesEnGardeState(DamoclesStateMachine currentContext, StateFactory<DamoclesStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
-        
+
+    private int nextState = 0;
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+
+        if (Context.IsDeath)
+        {
+            SwitchState(Factory.GetState<DamoclesDeathState>());
+        }
+        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
+        {
+            SwitchState(Factory.GetState<DamoclesFollowTargetState>());
+        }
+        else
+        {
+            nextState = Random.Range(0, 2);
+
+            switch (nextState)
+            {
+                case 0:
+                    SwitchState(Factory.GetState<DamoclesSlashAttackState>());
+                    break;
+                case 1:
+                    SwitchState(Factory.GetState<DamoclesJumpAttackState>());
+                    break;
+            }
+        }
     }
 
     // This method will be call only one time before the update.

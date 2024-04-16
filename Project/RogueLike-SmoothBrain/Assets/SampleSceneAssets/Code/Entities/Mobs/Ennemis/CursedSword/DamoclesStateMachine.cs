@@ -9,17 +9,20 @@ using UnityEngine.AI;
 using FMODUnity;
 using System.Collections;
 using System.Linq;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class DamoclesStateMachine : Mobs, IDamocles
 {
     [System.Serializable]
     private class DamoclesSounds
     {
-        public AudioManager.Sound deathSound;
-        public AudioManager.Sound takeDamageSound;
-        public AudioManager.Sound hitSound;
-        public AudioManager.Sound moveSound;
+        public Sound deathSound;
+        public Sound takeDamageSound;
+        public Sound hitSound;
+        public Sound moveSound;
     }
 
     // state machine variables
@@ -34,7 +37,8 @@ public class DamoclesStateMachine : Mobs, IDamocles
     private IAttacker.HitDelegate onHit;
     [SerializeField] private DamoclesSounds damoclesSounds;
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
-    [SerializeField] private BoxCollider attackCollider;
+    [SerializeField] private BoxCollider attack1Collider;
+    [SerializeField] private BoxCollider attack2Collider;
     private Transform target;
     private int frameToUpdate;
     private int maxFrameUpdate = 500;
@@ -53,7 +57,8 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
     public NavMeshAgent Agent { get => agent; }
-    public BoxCollider AttackCollider { get => attackCollider; }
+    public BoxCollider Attack1Collider { get => attack1Collider; }
+    public BoxCollider Attack2Collider { get => attack2Collider; }
     public Transform Target { get => target; set => target = value; }
     public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
@@ -126,14 +131,14 @@ public class DamoclesStateMachine : Mobs, IDamocles
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        AudioManager.Instance.PlaySound(damoclesSounds.hitSound, transform.position);
+        damoclesSounds.hitSound.Play(transform.position);
     }
 
     public void Death()
     {
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
-        AudioManager.Instance.PlaySound(damoclesSounds.deathSound, transform.position);
+        damoclesSounds.deathSound.Play(transform.position);
         animator.SetBool(deathHash, true);
         isDeath = true;
 
@@ -146,7 +151,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
             return;
 
         agent.SetDestination(posToMove);
-        AudioManager.Instance.PlaySound(damoclesSounds.moveSound, transform.position);
+        damoclesSounds.moveSound.Play(transform.position);
     }
     #endregion
 

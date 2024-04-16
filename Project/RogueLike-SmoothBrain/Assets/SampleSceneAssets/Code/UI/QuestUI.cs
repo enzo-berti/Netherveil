@@ -13,12 +13,14 @@ public class QuestUI : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         Hero.OnQuestObtained += UpdateUI;
         Hero.OnQuestFinished += UpdateUI;
+        Quest.OnQuestUpdated += UpdateUI;
     }
 
     private void OnDestroy()
     {
         Hero.OnQuestObtained -= UpdateUI;
         Hero.OnQuestFinished -= UpdateUI;
+        Quest.OnQuestUpdated -= UpdateUI;
     }
 
     private void UpdateUI()
