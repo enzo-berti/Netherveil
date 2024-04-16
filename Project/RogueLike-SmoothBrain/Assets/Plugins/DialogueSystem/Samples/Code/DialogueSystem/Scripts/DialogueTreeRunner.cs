@@ -2,7 +2,6 @@ using DialogueSystem.Runtime;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DialogueTreeRunner : MonoBehaviour
@@ -20,6 +19,7 @@ public class DialogueTreeRunner : MonoBehaviour
     [SerializeField] private Button choiceButtonPrefab;
     public bool IsStarted => dialogueCanvas.gameObject.activeSelf;
     private string lastDialogue;
+    DialogueTreeEventManager eventManager;
 
     public void StartDialogue(DialogueTree tree)
     {
@@ -81,6 +81,8 @@ public class DialogueTreeRunner : MonoBehaviour
             SetDialogue(eventN.dialogueData.dialogue);
 
             tree.Process(eventN.child);
+
+            eventManager.Invoke(eventN.eventTag);
         }
         else if (tree.currentNode == null)
         {
