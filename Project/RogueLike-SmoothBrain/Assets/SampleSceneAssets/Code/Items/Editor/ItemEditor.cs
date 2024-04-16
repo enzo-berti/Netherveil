@@ -10,7 +10,7 @@ public class ItemEditor : Editor
     SerializedProperty isRandomizedProperty;
     private void OnEnable()
     {
-        itemName = serializedObject.FindProperty("idItemName");
+        itemName = serializedObject.FindProperty("idItem");
         databaseProperty = serializedObject.FindProperty("database");
         isRandomizedProperty = serializedObject.FindProperty("isRandomized");
         ChosenName = itemName.stringValue;
@@ -32,7 +32,7 @@ public class ItemEditor : Editor
         if (GUILayout.Button("Randomize item"))
         {
             Item.RandomizeItem((Item)target);
-            ChosenName = (target as Item).idItemName;
+            ChosenName = (target as Item).IdItem;
         }
         EditorGUILayout.EndHorizontal();
 
