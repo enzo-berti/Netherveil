@@ -19,6 +19,11 @@ public class Talker : Npc
     public override void Interract()
     {
         TriggerDialogue();
+        GiveQuest();
+    }
+
+    private void GiveQuest()
+    {
         quest = Quest.LoadClass(Quest.GetRandomQuestName());
         player.CurrentQuest = quest;
     }
