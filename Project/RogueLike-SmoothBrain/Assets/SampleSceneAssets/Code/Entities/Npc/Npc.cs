@@ -40,7 +40,7 @@ public abstract class Npc : Entity, IInterractable
         else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
         {
             playerInteractions.InteractablesInRange.Remove(this);
-            ToggleRangeImage(false);
+            
         }
     }
 
@@ -48,5 +48,15 @@ public abstract class Npc : Entity, IInterractable
     {
         StopAllCoroutines();
         StartCoroutine(toggle ? EasingFunctions.UpScaleCoroutine(rangeImage.gameObject, factor) : EasingFunctions.DownScaleCoroutine(rangeImage.gameObject, factor));
+    }
+
+    public void Select()
+    {
+        ToggleRangeImage(true);
+    }
+
+    public void Deselect()
+    {
+        ToggleRangeImage(false);
     }
 }

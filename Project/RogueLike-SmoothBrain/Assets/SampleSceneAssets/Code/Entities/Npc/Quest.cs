@@ -1,4 +1,5 @@
 using Generation;
+using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public abstract class Quest
     public QuestData Datas { get; protected set; }
     public string progressText = string.Empty;
     static QuestDatabase database;
+    public static event Action OnQuestUpdated;
 
     public abstract void AcceptQuest();
 
@@ -28,8 +30,13 @@ public abstract class Quest
         return database.datas[indexRandom].idName;
     }
 
-    protected void QuestFinished()
+    protected virtual void QuestFinished()
     {
         GameObject.FindWithTag("Player").GetComponent<Hero>().CurrentQuest = null;
+    }
+
+    protected void QuestUpdated()
+    {
+        OnQuestUpdated?.Invoke();
     }
 }

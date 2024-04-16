@@ -60,6 +60,18 @@ public class Item : MonoBehaviour, IInterractable
         Interraction();
     }
 
+    public void Select()
+    {
+        outline.EnableOutline();
+        itemDescription.TogglePanel(true);
+    }
+
+    public void Deselect()
+    {
+        outline.DisableOutline();
+        itemDescription.TogglePanel(false);
+    }
+
     private void Interraction()
     {
         bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2()) 
@@ -72,8 +84,7 @@ public class Item : MonoBehaviour, IInterractable
         else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
         {
             playerInteractions.InteractablesInRange.Remove(this);
-            outline.DisableOutline();
-            itemDescription.TogglePanel(false);
+            Deselect();
         }
     }
 
