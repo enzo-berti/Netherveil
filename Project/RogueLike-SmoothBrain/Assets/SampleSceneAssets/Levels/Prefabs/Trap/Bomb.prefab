@@ -133,12 +133,13 @@ MonoBehaviour:
   VFXObject: {fileID: 5558568420761266381}
   VFX: {fileID: 4510297898958729365}
   bombSFX:
-    Guid:
-      Data1: 1088130236
-      Data2: 1201804223
-      Data3: -900139347
-      Data4: -391393013
-    Path: event:/Object/BombeExplosion
+    reference:
+      Guid:
+        Data1: 1088130236
+        Data2: 1201804223
+        Data3: -900139347
+        Data4: -391393013
+      Path: event:/Object/BombeExplosion
   activateOnAwake: 0
   timerBeforeExplode: 5
   blastRadius: 5
@@ -146,7 +147,6 @@ MonoBehaviour:
   damageLayer:
     serializedVersion: 2
     m_Bits: 8
-  throwHeight: 5
 --- !u!1 &5558568420761266381
 GameObject:
   m_ObjectHideFlags: 0

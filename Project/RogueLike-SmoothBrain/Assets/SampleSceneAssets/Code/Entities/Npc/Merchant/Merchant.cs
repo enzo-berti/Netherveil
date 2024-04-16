@@ -13,6 +13,6 @@ public class Merchant : Npc, IInterractable
 
     private void TriggerDialogue()
     {
-        FindObjectOfType<DialogueTreeRunner>().StartDialogue(dialogue);
+        FindObjectOfType<DialogueTreeRunner>().StartDialogue(dialogue, this);
     }
 }

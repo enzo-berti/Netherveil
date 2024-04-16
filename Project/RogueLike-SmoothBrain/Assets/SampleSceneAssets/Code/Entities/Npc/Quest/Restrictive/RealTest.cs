@@ -7,6 +7,7 @@ public class RealTest : Quest
 
     public override void AcceptQuest()
     {
+        benedictionOrCorruptionValue = 30;
         progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
         Hero.OnKill += UpdateCount;
     }

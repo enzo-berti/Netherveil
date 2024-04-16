@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Electricity : Status
 {
     private float entityBaseSpeed;
-    const float stunTime = 0.2f;
+    const float stunTime = 0.5f;
 
     public Electricity(float duration, float chance) : base(duration, chance)
     {

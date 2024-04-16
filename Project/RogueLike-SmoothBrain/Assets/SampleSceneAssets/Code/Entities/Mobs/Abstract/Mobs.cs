@@ -124,7 +124,7 @@ public abstract class Mobs : Entity
     //    }
     //}
 
-    protected void ApplyDamagesMob(int _value, AudioManager.Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)
+    protected void ApplyDamagesMob(int _value, Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)
     {
         // Some times, this method is called when entity is dead ??
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
@@ -146,7 +146,7 @@ public abstract class Mobs : Entity
         }
         else
         {
-            AudioManager.Instance.PlaySound(hitSound, transform.position, _restartSound);
+            hitSound.Play(transform.position, _restartSound);
         }
     }
 

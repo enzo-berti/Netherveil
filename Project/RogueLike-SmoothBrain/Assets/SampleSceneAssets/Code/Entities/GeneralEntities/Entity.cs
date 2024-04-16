@@ -229,6 +229,7 @@ public class EntityDrawer : Editor
             nbStatus++;
             allIndex.Add(statusNameList.IndexOf(statusNameListProperty.GetArrayElementAtIndex(i).stringValue));
             durationList.Add(statusDurationListProperty.GetArrayElementAtIndex(i).floatValue);
+            chanceList.Add(statusChanceListProperty.GetArrayElementAtIndex(i).floatValue);
         }
 
         // Get all infos

@@ -11,16 +11,37 @@
 // }
 
 using StateMachine; // include all script about stateMachine
+using UnityEngine;
 
 public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
 {
     public DamoclesJumpAttackState(DamoclesStateMachine currentContext, StateFactory<DamoclesStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
-        
+
+    private bool isTargetTouched;
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        if (Context.IsDeath)
+        {
+            SwitchState(Factory.GetState<DamoclesDeathState>());
+        }
+        else if (isTargetTouched)
+        {
+            if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
+            {
+                SwitchState(Factory.GetState<DamoclesFollowTargetState>());
+            }
+            else
+            {
+                SwitchState(Factory.GetState<DamoclesEnGardeState>());
+            }
+        }
+        else
+        {
+            SwitchState(Factory.GetState<DamoclesVulnerableState>());
+        }
+
     }
 
     // This method will be call only one time before the update.
