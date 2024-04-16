@@ -146,13 +146,7 @@ namespace Generation
         private void GenerateMap(GenerationParam genParam)
         {
             GenerateLobbyRoom(ref genParam);
-
-            if (!GenerateRooms(ref genParam))
-            {
-                ResetGeneration();
-                return;
-            }
-
+            GenerateRooms(ref genParam);
             GenerateObstructionDoors(ref genParam);
         }
 
@@ -167,6 +161,7 @@ namespace Generation
                 {
                     if (genParam.nbRoomByType[RoomType.Normal] <= 0 || !GenerateRoom(ref genParam, RoomType.Normal))
                     {
+                        Debug.LogError("Can't find any valid room");
                         return false;
                     }
                     genParam.nbRoomByType[RoomType.Normal]--;
