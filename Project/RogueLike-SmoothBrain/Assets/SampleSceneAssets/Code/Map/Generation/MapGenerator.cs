@@ -16,12 +16,14 @@ namespace Generation
         {
             nbRoomByType = new Dictionary<RoomType, int>
             {
+                { RoomType.Lobby, 0 },
                 { RoomType.Normal, nbNormal },
                 { RoomType.Treasure, nbTreasure },
                 { RoomType.Challenge, nbChallenge },
                 { RoomType.Merchant, nbMerchant },
                 { RoomType.Secret, nbSecret },
                 { RoomType.MiniBoss, nbMiniBoss },
+                { RoomType.Boss, 0 },
             };
 
             availableDoorsByRot = new Dictionary<int, List<Door>>
@@ -145,6 +147,10 @@ namespace Generation
 
         private void GenerateMap(GenerationParam genParam)
         {
+            RoomData.nbRoomByType = genParam.nbRoomByType;
+            RoomData.nbRoomByType[RoomType.Lobby] = 1;
+            RoomData.nbRoomByType[RoomType.Boss] = 1;
+
             GenerateLobbyRoom(ref genParam);
             GenerateRooms(ref genParam);
             GenerateObstructionDoors(ref genParam);
