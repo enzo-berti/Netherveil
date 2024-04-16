@@ -328,7 +328,7 @@ public class PlayerController : MonoBehaviour
         int offset = diff > 0 ? 25 : -25;
         float currentValue = corruptionLastValue;
 
-        if (Mathf.Abs(diff) <= 25f && (int)(corruptionStat/25f) > currentStep && diff > 0)
+        if (Mathf.Abs(diff) < 25f && (int)(corruptionStat/25f) > currentStep && diff > 0)
         {
             currentStep++;
             if(corruptionStat >= 100f)
@@ -340,7 +340,7 @@ public class PlayerController : MonoBehaviour
                 BasicCorruptionUpgrade();
             }
         }
-        else if (Mathf.Abs(corruptionStat - corruptionLastValue) <= 25f && (int)(corruptionStat / 25f) < currentStep && diff < 0)
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) < currentStep && diff < 0)
         {
             currentStep--;
             if (corruptionStat <= -100f)
@@ -352,7 +352,7 @@ public class PlayerController : MonoBehaviour
                 BasicBenedictionUpgrade();
             }
         }
-        else if (Mathf.Abs(corruptionStat - corruptionLastValue) <= 25f && (int)(corruptionStat / 25f) > currentStep && corruptionStat < 0)
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) > currentStep && corruptionStat < 0)
         {
             currentStep++;
             if (corruptionLastValue <= -100f)
@@ -364,7 +364,7 @@ public class PlayerController : MonoBehaviour
                 BenedictionDrawback();
             }
         }
-        else if (Mathf.Abs(corruptionStat - corruptionLastValue) <= 25f && (int)(corruptionStat / 25f) < currentStep && corruptionStat > 0)
+        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) < currentStep && corruptionStat > 0)
         {
             currentStep--;
             if (corruptionLastValue >= 100f)
@@ -382,8 +382,9 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i< stepDiff; i++)
         {
             int diffValue2 = (int)(corruptionStat - currentValue);
+            currentValue += offset;
 
-            if (currentValue < 0 && diffValue2 > 0)
+            if (currentValue <= 0 && diffValue2 > 0)
             {
                 currentStep++;
                 if (currentValue <= -100f)
@@ -395,7 +396,7 @@ public class PlayerController : MonoBehaviour
                     BenedictionDrawback();
                 }
             }
-            else if (currentValue < 0 && diffValue2 < 0)
+            else if (currentValue <= 0 && diffValue2 < 0)
             {
                 currentStep--;
                 if (currentValue <= -100f)
@@ -407,7 +408,7 @@ public class PlayerController : MonoBehaviour
                     BasicBenedictionUpgrade();
                 }
             }
-            else if (currentValue > 0 && diffValue2 > 0)
+            else if (currentValue >= 0 && diffValue2 > 0)
             {
                 currentStep++;
                 if (currentValue >= 100f)
@@ -419,7 +420,7 @@ public class PlayerController : MonoBehaviour
                     BasicCorruptionUpgrade();
                 }
             }
-            else if (currentValue > 0 && diffValue2 < 0)
+            else if (currentValue >= 0 && diffValue2 < 0)
             {
                 currentStep--;
                 if (currentValue >= 100f)
@@ -431,8 +432,6 @@ public class PlayerController : MonoBehaviour
                     CorruptionDrawback();
                 }
             }
-
-            currentValue += offset;
         }
 
 
@@ -459,18 +458,6 @@ public class PlayerController : MonoBehaviour
         launchUpgradeAnim = true;
     }
 
-    private void NeutralStats()
-    {
-        //if(stepDiff <= -1f)
-        //{
-        //    BenedictionDrawback();
-        //}
-        //else if (stepDiff >= 1f)
-        //{
-        //    CorruptionDrawback();
-        //}
-    }
-
     private void UltimateBenedictionUpgrade()
     {
         //ajout de la capacité divine shield
@@ -488,8 +475,8 @@ public class PlayerController : MonoBehaviour
 
     private void BenedictionDrawback()
     {
-        hero.Stats.DecreaseValue(Stat.HP, 15f);
         hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.DecreaseValue(Stat.HP, 15f);
         hero.Stats.IncreaseValue(Stat.ATK, 5f);
         launchUpgradeAnim = true;
     }
@@ -497,15 +484,15 @@ public class PlayerController : MonoBehaviour
     private void CorruptionDrawback()
     {
         hero.Stats.DecreaseValue(Stat.ATK, 5f);
-        hero.Stats.IncreaseValue(Stat.HP, 15f);
         hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.IncreaseValue(Stat.HP, 15f);
         launchUpgradeAnim = true;
     }
 
     private void BasicBenedictionUpgrade()
     {
-        hero.Stats.IncreaseValue(Stat.HP, 15f);
         hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.IncreaseValue(Stat.HP, 15f);
         hero.Stats.DecreaseValue(Stat.ATK, 5f);
         launchUpgradeAnim = true;
     }
@@ -513,8 +500,8 @@ public class PlayerController : MonoBehaviour
     private void BasicCorruptionUpgrade()
     {
         hero.Stats.IncreaseValue(Stat.ATK, 5f);
-        hero.Stats.DecreaseValue(Stat.HP, 15f);
         hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.DecreaseValue(Stat.HP, 15f);
         launchUpgradeAnim = true;
     }
 
