@@ -35,7 +35,7 @@ public class WindowQuestDatabase : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         GUI.color = Color.green;
-        if (GUILayout.Button("Add Item"))
+        if (GUILayout.Button("Add Quest"))
         {
             GetWindow<CreateQuestWindow>("Create Quest");
         }
