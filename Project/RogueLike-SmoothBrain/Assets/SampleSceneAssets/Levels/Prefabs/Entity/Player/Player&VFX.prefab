@@ -974,7 +974,7 @@ CharacterController:
   serializedVersion: 3
   m_Height: 1.9
   m_Radius: 0.5
-  m_SlopeLimit: 45
+  m_SlopeLimit: 0
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -1073,6 +1073,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 863d1bec-c2de-4858-887a-f608b6e4651b
     m_ActionName: Gamepad/CamLookAway
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5fc5dc1c-aecc-4d80-913a-b1cbe96ddee5
+    m_ActionName: Keyboard/ActiveItem[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5cfb8626-e1aa-4ab9-bc79-838ee5891917
+    m_ActionName: Gamepad/ActiveItem
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Keyboard
@@ -1208,6 +1216,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 300
+      lastValue: 0
       coeff: 1
       maxValue: 300
       minValue: 0
@@ -1215,12 +1224,13 @@ MonoBehaviour:
       underload: 0
     - stat: 1
       hasMaxStat: 1
-      hasMinStat: 0
+      hasMinStat: 1
       hasCoeff: 1
       value: 5
+      lastValue: 0
       coeff: 1
       maxValue: 100
-      minValue: 0
+      minValue: 1
       overload: 0
       underload: 0
     - stat: 4
@@ -1228,6 +1238,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 8
+      lastValue: 0
       coeff: 0
       maxValue: 15
       minValue: 0
@@ -1238,6 +1249,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 3
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -1248,6 +1260,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 100
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -1258,6 +1271,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 2
+      lastValue: 0
       coeff: 0
       maxValue: 100
       minValue: 100
@@ -1268,6 +1282,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 8
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -1278,6 +1293,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 15
+      lastValue: 0
       coeff: 0
       maxValue: 100
       minValue: 0
@@ -1288,6 +1304,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 150
+      lastValue: 0
       coeff: 0
       maxValue: 100
       minValue: 0
@@ -1298,6 +1315,7 @@ MonoBehaviour:
       hasMinStat: 1
       hasCoeff: 0
       value: 0
+      lastValue: 0
       coeff: 0
       maxValue: 100
       minValue: -100
@@ -1308,6 +1326,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 1
+      lastValue: 0
       coeff: 0
       maxValue: 100
       minValue: 0
@@ -1318,6 +1337,7 @@ MonoBehaviour:
       hasMinStat: 1
       hasCoeff: 0
       value: 0
+      lastValue: 0
       coeff: 0
       maxValue: 1
       minValue: 0

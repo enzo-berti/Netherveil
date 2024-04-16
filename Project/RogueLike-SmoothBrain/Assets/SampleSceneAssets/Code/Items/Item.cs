@@ -9,6 +9,7 @@ using Generation;
 public class Item : MonoBehaviour
 {
     public static event Action<ItemEffect> OnRetrieved;
+    public static float priceCoef = 1.0f;
 
     [SerializeField] private bool isRandomized = true;
     [SerializeField] private ItemDatabase database;

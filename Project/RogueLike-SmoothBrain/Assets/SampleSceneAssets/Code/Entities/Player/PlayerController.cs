@@ -321,65 +321,60 @@ public class PlayerController : MonoBehaviour
 
         float corruptionStat = hero.Stats.GetValue(stat);
         float corruptionLastValue = hero.Stats.GetLastValue(stat);
+        int diff = Mathf.Abs((int)(corruptionStat - corruptionLastValue / 25f));
+        int offset = (corruptionStat - corruptionLastValue) > 0 ? 25 : -25;
+        float currentValue = corruptionLastValue;
 
-        if (corruptionStat >= 100 && corruptionLastValue < 100)
+        for(int i = 0; i< diff; i++)
         {
-            hero.Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
-            launchUpgradeAnim = true;
-            //debuff impossibilité de se soigner via consommables
-            //ajout nouvelle compétence
-        }
-        else if ((corruptionStat >= 75 && corruptionLastValue < 75) ||
-            (corruptionStat >= 50 && corruptionLastValue < 50) ||
-            (corruptionStat >= 25 && corruptionLastValue < 25))
-        {
-            hero.Stats.IncreaseValue(Stat.ATK, 5f);
-            hero.Stats.DecreaseValue(Stat.HP, 15f);
-            launchUpgradeAnim = true;
-        }
-        else if ((corruptionStat <= -75 && corruptionLastValue > -75) ||
-            (corruptionStat <= -50 && corruptionLastValue > -50) ||
-            (corruptionStat <= -25 && corruptionLastValue > -25))
-        {
-            hero.Stats.IncreaseValue(Stat.HP, 15f);
-            hero.Stats.DecreaseValue(Stat.ATK, 5f);
-            launchUpgradeAnim = true;
-        }
-        else if (corruptionStat <= -100 && corruptionLastValue > -100)
-        {
-            //ajout de la capacité divine shield
-            //ajout du malus de possibilité de dédoublement des mobs
-            launchUpgradeAnim = true;
-        }
+            int diffValue2 = (int)(corruptionStat - currentValue);
 
-        if (corruptionStat < 100 && corruptionLastValue >= 100)
-        {
-            hero.Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
-            //désactiver debuff impossibilité de se soigner via consommables
-            //désactiver nouvelle compétence
-            launchUpgradeAnim = true;
-        }
-        else if ((corruptionStat < 75 && corruptionLastValue >= 75) ||
-            (corruptionStat < 50 && corruptionLastValue >= 50) ||
-            (corruptionStat < 25 && corruptionLastValue >= 25))
-        {
-            hero.Stats.DecreaseValue(Stat.ATK, 5f);
-            hero.Stats.IncreaseValue(Stat.HP, 15f);
-            launchUpgradeAnim = true;
-        }
-        else if ((corruptionStat > -75 && corruptionLastValue <= -75) ||
-            (corruptionStat > -50 && corruptionLastValue <= -50) ||
-            (corruptionStat > -25 && corruptionLastValue <= -25))
-        {
-            hero.Stats.DecreaseValue(Stat.HP, 15f);
-            hero.Stats.IncreaseValue(Stat.ATK, 5f);
-            launchUpgradeAnim = true;
-        }
-        else if (corruptionStat > -100 && corruptionLastValue <= -100)
-        {
-            //désactiver la capacité divine shield
-            //désactiver malus de possibilité de dédoublement des mobs
-            launchUpgradeAnim = true;
+            if (currentValue < 0 && diffValue2 > 0)
+            {
+                if (currentValue <= -100f)
+                {
+                    UltimateBenedictionDrawback();
+                }
+                else
+                {
+                    BenedictionDrawback();
+                }
+            }
+            else if (currentValue < 0 && diffValue2 < 0)
+            {
+                if (currentValue <= -100f)
+                {
+                    UltimateBenedictionUpgrade();
+                }
+                else
+                {
+                    BasicBenedictionUpgrade();
+                }
+            }
+            else if (currentValue > 0 && diffValue2 > 0)
+            {
+                if (currentValue >= 100f)
+                {
+                    UltimateCorruptionUpgrade();
+                }
+                else
+                {
+                    BasicCorruptionUpgrade();
+                }
+            }
+            else if (currentValue > 0 && diffValue2 < 0)
+            {
+                if (currentValue >= 100f)
+                {
+                    UltimateCorruptionDrawback();
+                }
+                else
+                {
+                    CorruptionDrawback();
+                }
+            }
+
+            currentValue += offset;
         }
 
 
@@ -391,6 +386,80 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void UltimateBenedictionDrawback()
+    {
+        //désactiver la capacité divine shield
+        //désactiver malus de possibilité de dédoublement des mobs
+        launchUpgradeAnim = true;
+    }
+
+    private void UltimateCorruptionDrawback()
+    {
+        hero.Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
+        //désactiver debuff impossibilité de se soigner via consommables
+        //désactiver nouvelle compétence
+        launchUpgradeAnim = true;
+    }
+
+    private void NeutralStats()
+    {
+        //if(stepDiff <= -1f)
+        //{
+        //    BenedictionDrawback();
+        //}
+        //else if (stepDiff >= 1f)
+        //{
+        //    CorruptionDrawback();
+        //}
+    }
+
+    private void UltimateBenedictionUpgrade()
+    {
+        //ajout de la capacité divine shield
+        //ajout du malus de possibilité de dédoublement des mobs
+        launchUpgradeAnim = true;
+    }
+
+    private void UltimateCorruptionUpgrade()
+    {
+        hero.Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
+        launchUpgradeAnim = true;
+        //debuff impossibilité de se soigner via consommables
+        //ajout nouvelle compétence
+    }
+
+    private void BenedictionDrawback()
+    {
+        hero.Stats.DecreaseValue(Stat.HP, 15f);
+        hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.IncreaseValue(Stat.ATK, 5f);
+        launchUpgradeAnim = true;
+    }
+
+    private void CorruptionDrawback()
+    {
+        hero.Stats.DecreaseValue(Stat.ATK, 5f);
+        hero.Stats.IncreaseValue(Stat.HP, 15f);
+        hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+        launchUpgradeAnim = true;
+    }
+
+    private void BasicBenedictionUpgrade()
+    {
+        hero.Stats.IncreaseValue(Stat.HP, 15f);
+        hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+        hero.Stats.DecreaseValue(Stat.ATK, 5f);
+        launchUpgradeAnim = true;
+    }
+
+    private void BasicCorruptionUpgrade()
+    {
+        hero.Stats.IncreaseValue(Stat.ATK, 5f);
+        hero.Stats.DecreaseValue(Stat.HP, 15f);
+        hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+        launchUpgradeAnim = true;
+    }
+
     private void LaunchUpgradeAnim()
     {
         if (!launchUpgradeAnim)
@@ -398,6 +467,7 @@ public class PlayerController : MonoBehaviour
 
         animator.ResetTrigger("UpgradingStats");
         animator.SetTrigger("UpgradingStats");
+        hero.State = (int)Hero.PlayerState.UPGRADING_STATS;
         //launch benediction or corruptionVFX
     }
 
