@@ -1,58 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8076396071079019307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
-  position: {x: 559, y: 245}
-  dialogueData: {fileID: 11400000, guid: 3e91c16b5b2abf04ea267211d3894ae4, type: 2}
-  child: {fileID: 0}
---- !u!114 &-7393654028921290783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1047fa5621329014b85727877a2bfb5f, type: 3}
-  m_Name: EventDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 701ed27f-1948-4b78-b393-6ff1c40a1992
-  position: {x: 561, y: 71}
-  dialogueData: {fileID: 11400000, guid: e97e259a2a16419479b030e7c7d61fa4, type: 2}
-  child: {fileID: 0}
-  eventTag: GiveQuest
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
-  m_Name: ClercDialogueTree
-  m_EditorClassIdentifier: 
-  root: {fileID: 8447398264284738615}
-  nodes:
-  - {fileID: 8447398264284738615}
-  - {fileID: 5364105629061908528}
-  - {fileID: -8076396071079019307}
-  - {fileID: -7393654028921290783}
-  currentNode: {fileID: 0}
---- !u!114 &5364105629061908528
+--- !u!114 &-9168044050776868670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,14 +13,66 @@ MonoBehaviour:
   m_Name: ChoiceDialogueNode
   m_EditorClassIdentifier: 
   GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
-  position: {x: 185, y: 146}
+  position: {x: 193, y: 154}
   dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
   options:
   - option: Yes
-    child: {fileID: -7393654028921290783}
+    child: {fileID: 1360174843463779351}
   - option: No
-    child: {fileID: -8076396071079019307}
---- !u!114 &8447398264284738615
+    child: {fileID: -1837225741590867456}
+--- !u!114 &-1837225741590867456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
+  m_Name: SimpleDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
+  position: {x: 567, y: 253}
+  dialogueData: {fileID: 11400000, guid: af03db8786c3ad84e90cae354adbdb5c, type: 2}
+  child: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
+  m_Name: ClercDialogueTree
+  m_EditorClassIdentifier: 
+  root: {fileID: 3518158436425767135}
+  nodes:
+  - {fileID: 3518158436425767135}
+  - {fileID: -9168044050776868670}
+  - {fileID: 1360174843463779351}
+  - {fileID: -1837225741590867456}
+  currentNode: {fileID: 0}
+--- !u!114 &1360174843463779351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1047fa5621329014b85727877a2bfb5f, type: 3}
+  m_Name: EventDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 701ed27f-1948-4b78-b393-6ff1c40a1992
+  position: {x: 569, y: 79}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  eventTag: GiveQuest
+--- !u!114 &3518158436425767135
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,5 +85,5 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   GUID: f562f3af-0217-4d30-be09-e1ba76cca47d
-  position: {x: 32, y: 32}
-  child: {fileID: 5364105629061908528}
+  position: {x: 40, y: 40}
+  child: {fileID: -9168044050776868670}
