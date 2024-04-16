@@ -404,7 +404,15 @@ public class Stats
     {
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
+        {
+            float baseValue = stats[index].value;
             stats[index].value = value;
+            if(baseValue != stats[index].value)
+            {
+                onStatChange?.Invoke(info);
+            }
+        }
+           
         else
             Debug.LogWarning($"Can't find {info} in {name}");
     }
