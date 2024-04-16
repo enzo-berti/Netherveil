@@ -31,13 +31,11 @@ public class GlorbStateMachine : Mobs, IGlorb
     private IAttacker.HitDelegate onHit;
     [SerializeField] GlorbSounds glorbSounds;
     [SerializeField] CapsuleCollider shockwaveCollider;
-    [SerializeField] float visionAngle = 100f;
+    [SerializeField] float defaultVisionAngle = 100f;
 
     VFXStopper vfxStopper;
     Animator animator;
     Hero player = null;
-
-    bool isDead = false;
 
     bool cooldownSpeAttack = false;
     float specialAttackTimer = 0f;
@@ -55,7 +53,8 @@ public class GlorbStateMachine : Mobs, IGlorb
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public Hero Player { get => player; }
-
+    public float VisionAngle { get => (currentState is GlorbTriggeredState || currentState is GlorbAttackingState) && Player != null ? 360 : defaultVisionAngle; }
+    public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is GlorbTriggeredState || currentState is GlorbAttackingState ? 1.5f : 1f); }
 
     protected override void Start()
     {
@@ -92,7 +91,7 @@ public class GlorbStateMachine : Mobs, IGlorb
                 continue;
             }
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, visionAngle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, VisionRange, transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -108,6 +107,13 @@ public class GlorbStateMachine : Mobs, IGlorb
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
         ApplyDamagesMob(_value, glorbSounds.hitSFX, Death, notEffectDamage);
+
+        if (!(currentState is GlorbAttackingState || currentState is GlorbDeathState))
+        {
+            currentState = factory.GetState<GlorbTriggeredState>();
+            player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        }
+
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
@@ -132,16 +138,13 @@ public class GlorbStateMachine : Mobs, IGlorb
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
-        isDead = true;
-
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+
+        currentState = factory.GetState<GlorbDeathState>();
     }
 
     public void MoveTo(Vector3 posToMove)
     {
-        if (!agent.enabled)
-            return;
-
         agent.SetDestination(posToMove);
         //AudioManager.Instance.PlaySound(glorbSounds.walkSFX, transform.position);
     }
@@ -151,11 +154,11 @@ public class GlorbStateMachine : Mobs, IGlorb
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!Selection.Contains(gameObject))
-            return;
+        //if (!Selection.Contains(gameObject))
+        //    return;
 
-        DisplayVisionRange(visionAngle);
-        DisplayAttackRange(visionAngle);
+        DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayAttackRange(VisionAngle);
         DisplayInfos();
     }
 

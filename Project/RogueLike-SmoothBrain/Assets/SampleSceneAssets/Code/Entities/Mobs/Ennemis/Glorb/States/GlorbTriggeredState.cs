@@ -23,7 +23,10 @@ public class GlorbTriggeredState : BaseState<GlorbStateMachine>
     {
         if (Context.Player == null)
         {
-            SwitchState(Factory.GetState<GlorbWanderingState>());
+            if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
+            {
+                SwitchState(Factory.GetState<GlorbWanderingState>());
+            }
         }
         else if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
         {
@@ -46,8 +49,6 @@ public class GlorbTriggeredState : BaseState<GlorbStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        Debug.Log(GetType().Name);
-
         if (Context.Player != null)
             Context.MoveTo(Context.Player.transform.position);
     }

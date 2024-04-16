@@ -22,6 +22,9 @@ public abstract class Mobs : Entity
     protected int frameToUpdate;
     protected int maxFrameUpdate = 500;
 
+    // getters/setters
+    public NavMeshAgent Agent { get => agent; }
+
     protected override void Start()
     {
         base.Start();
@@ -61,7 +64,7 @@ public abstract class Mobs : Entity
     protected override void Update()
     {
         base.Update();
-        if(transform.position.y < -100f)
+        if (transform.position.y < -100f)
         {
             Destroy(transform.parent.gameObject);
         }
@@ -153,10 +156,10 @@ public abstract class Mobs : Entity
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)
     {
-        Handles.color = new Color(1, 0, 0, 0.25f);
+        Handles.color = new Color(1, 0, 0, 0.2f);
         if (nearbyEntities != null && nearbyEntities.Length != 0)
         {
-            Handles.color = new Color(0, 1, 0, 0.25f);
+            Handles.color = new Color(0, 1, 0, 0.2f);
         }
 
         Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)stats.GetValue(Stat.VISION_RANGE));
@@ -166,9 +169,24 @@ public abstract class Mobs : Entity
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValue(Stat.VISION_RANGE));
     }
 
+    protected virtual void DisplayVisionRange(float _angle, float _range)
+    {
+        Handles.color = new Color(1, 0, 0, 0.2f);
+        if (nearbyEntities != null && nearbyEntities.Length != 0)
+        {
+            Handles.color = new Color(0, 1, 0, 0.2f);
+        }
+
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)_range);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)_range);
+
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, Vector3.up, (int)_range);
+    }
+
     protected virtual void DisplayAttackRange(float _angle)
     {
-        Handles.color = new Color(1, 1, 0.5f, 0.25f);
+        Handles.color = new Color(1, 1, 0.5f, 0.2f);
         Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)stats.GetValue(Stat.ATK_RANGE));
         Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)stats.GetValue(Stat.ATK_RANGE));
 

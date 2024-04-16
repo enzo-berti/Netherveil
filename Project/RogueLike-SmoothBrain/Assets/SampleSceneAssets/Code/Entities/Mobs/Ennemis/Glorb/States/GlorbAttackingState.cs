@@ -49,7 +49,7 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        Debug.Log(GetType().Name);
+
     }
 
     // This method will be call on state changement.
