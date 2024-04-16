@@ -33,8 +33,8 @@ public class Gorgon : Mobs, IGorgon
     [SerializeField] private float timeBetweenFleeing;
     [SerializeField] private GameObject pfBomb;
     [SerializeField] private Transform hand;
-    [SerializeField] private EventReference hitSFX;
-    [SerializeField] private EventReference deathSFX;
+    [SerializeField] private AudioManager.Sound hitSFX;
+    [SerializeField] private AudioManager.Sound deathSFX;
     public VisualEffect dashVFX;
     [Header("Range Parameters")]
     [SerializeField, Min(0)] private float staggerDuration;

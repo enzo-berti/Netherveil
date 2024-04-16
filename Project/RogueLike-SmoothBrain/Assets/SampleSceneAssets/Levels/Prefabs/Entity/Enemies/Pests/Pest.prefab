@@ -187,6 +187,7 @@ MonoBehaviour:
     name: Default
   IsKnockbackable: 1
   canTriggerTraps: 1
+  IsInvincibleCount: 0
   drop:
     dropList:
     - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
@@ -201,33 +202,41 @@ MonoBehaviour:
       isChanceShared: 0
   pestSounds:
     deathSound:
-      Guid:
-        Data1: -518515845
-        Data2: 1312624553
-        Data3: -1301247842
-        Data4: 344521351
-      Path: event:/Enemy/Pest/PestDeath
+      name: 
+      reference:
+        Guid:
+          Data1: -518515845
+          Data2: 1312624553
+          Data3: -1301247842
+          Data4: 344521351
+        Path: event:/Enemy/Pest/PestDeath
     takeDamageSound:
-      Guid:
-        Data1: -1156276612
-        Data2: 1141279221
-        Data3: -1260183911
-        Data4: 1343401324
-      Path: event:/Enemy/Pest/PestAttack
-    hitSound:
-      Guid:
-        Data1: 2119710318
-        Data2: 1100372515
-        Data3: -1310569592
-        Data4: -1029966753
-      Path: event:/Enemy/Pest/PestHit
+      name: 
+      reference:
+        Guid:
+          Data1: 2119710318
+          Data2: 1100372515
+          Data3: -1310569592
+          Data4: -1029966753
+        Path: event:/Enemy/Pest/PestHit
+    attackHitSound:
+      name: Attack SFX
+      reference:
+        Guid:
+          Data1: -1156276612
+          Data2: 1141279221
+          Data3: -1260183911
+          Data4: 1343401324
+        Path: event:/Enemy/Pest/PestAttack
     moveSound:
-      Guid:
-        Data1: 270124610
-        Data2: 1326791521
-        Data3: 2090303120
-        Data4: 1856508161
-      Path: event:/Enemy/Pest/PestMove
+      name: 
+      reference:
+        Guid:
+          Data1: 270124610
+          Data2: 1326791521
+          Data3: 2090303120
+          Data4: 1856508161
+        Path: event:/Enemy/Pest/PestMove
   angle: 280
   attackCollider: {fileID: 5433158596567157123}
 --- !u!1 &4043230366547309803
@@ -470,22 +479,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.90962934
+      value: -0.8931477
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.2223688
+      value: -0.23630619
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.34085685
+      value: -0.36995393
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.08332615
+      value: 0.09788123
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

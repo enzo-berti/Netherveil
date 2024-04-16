@@ -239,6 +239,7 @@ MonoBehaviour:
     name: Tank
   IsKnockbackable: 1
   canTriggerTraps: 1
+  IsInvincibleCount: 0
   drop:
     dropList:
     - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
@@ -251,7 +252,15 @@ MonoBehaviour:
       chance: 0.8
       Quantity: 5
       isChanceShared: 0
-  shockwaveCollider: {fileID: 9178432390720270088}
+  hitSFX:
+    name: 
+    reference:
+      Guid:
+        Data1: -1115572954
+        Data2: 1318150160
+        Data3: 57613186
+        Data4: -1599309965
+      Path: event:/Enemy/Tank/TankHit
   shockwaveSFX:
     Guid:
       Data1: -1931713802
@@ -266,13 +275,6 @@ MonoBehaviour:
       Data3: -1085213788
       Data4: -1537104640
     Path: event:/Enemy/Tank/TankPunch
-  hitSFX:
-    Guid:
-      Data1: -1115572954
-      Data2: 1318150160
-      Data3: 57613186
-      Data4: -1599309965
-    Path: event:/Enemy/Tank/TankHit
   deadSFX:
     Guid:
       Data1: 686363957
@@ -280,6 +282,7 @@ MonoBehaviour:
       Data3: -261839722
       Data4: 1364696341
     Path: event:/Enemy/Tank/TankDeath
+  shockwaveCollider: {fileID: 9178432390720270088}
 --- !u!114 &1282194086456528784
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@
 // }
 
 using StateMachine; // include all script about stateMachine
+using UnityEngine;
 
 public class GlorbWanderingState : BaseState<GlorbStateMachine>
 {
@@ -20,25 +21,28 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        if (Context.Player != null)
+        {
+            SwitchState(Factory.GetState<GlorbTriggeredState>());
+        }
     }
 
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        throw new System.NotImplementedException();
+
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-        throw new System.NotImplementedException();
+
     }
 
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        Debug.Log(GetType().Name);
     }
 
     // This method will be call on state changement.
