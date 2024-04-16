@@ -6,6 +6,7 @@ namespace Map
     public enum RoomType
     {
         None,
+
         Lobby,
         Normal,
         Treasure,
@@ -13,22 +14,36 @@ namespace Map
         Merchant,
         Secret,
         MiniBoss,
-        Boss,
-
-        COUNT
+        Boss
     }
 
     public struct RoomData
     {
         static public Dictionary<RoomType, int> nbRoomByType = new Dictionary<RoomType, int>
         {
+            { RoomType.Lobby, 0 },
             { RoomType.Normal, 0 },
             { RoomType.Treasure, 0 },
             { RoomType.Challenge, 0 },
             { RoomType.Merchant, 0 },
             { RoomType.Secret, 0 },
             { RoomType.MiniBoss, 0 },
+            { RoomType.Boss, 0 },
         };
+
+        public readonly int NbRoom
+        {
+            get
+            {
+                int totalCount = 0;
+                foreach (int count in nbRoomByType.Values)
+                {
+                    totalCount += count;
+                }
+
+                return totalCount;
+            }
+        }
 
         public RoomData(GameObject enemiesContainer, Generation.RoomGenerator roomGenerator)
         {

@@ -4,13 +4,6 @@ using UnityEngine;
 
 namespace Generation
 {
-    public enum DoorState : byte
-    {
-        NONE = 0,
-        OPEN,
-        CLOSE
-    }
-
     [Serializable]
     public struct Door
     {
