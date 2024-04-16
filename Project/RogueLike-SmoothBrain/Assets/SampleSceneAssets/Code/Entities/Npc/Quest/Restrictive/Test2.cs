@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Test2 : Quest
 {
     int currentNumber = 0;
@@ -5,6 +7,7 @@ public class Test2 : Quest
 
     public override void AcceptQuest()
     {
+        benedictionOrCorruptionValue = 20;
         progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
         Hero.OnKill += UpdateCount;
     }

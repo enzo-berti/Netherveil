@@ -7,6 +7,7 @@ public abstract class Quest
 {
     public QuestData Datas { get; protected set; }
     public string progressText = string.Empty;
+    protected byte benedictionOrCorruptionValue = 0;
     static QuestDatabase database;
     public static event Action OnQuestUpdated;
 
