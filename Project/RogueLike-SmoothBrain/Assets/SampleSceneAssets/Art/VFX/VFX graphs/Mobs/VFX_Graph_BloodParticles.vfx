@@ -18,9 +18,9 @@ MonoBehaviour:
   uiBounds:
     serializedVersion: 2
     x: -658
-    y: -190
-    width: 3136
-    height: 2874
+    y: -415
+    width: 3031
+    height: 2822
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,6 +56,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615619}
   - {fileID: 8926484042661615798}
   - {fileID: 8926484042661615801}
+  - {fileID: 8926484042661615820}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
@@ -98,7 +99,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":2.9433960914611818,"g":0.4313906729221344,"b":0.0,"a":0.0}'
+      m_SerializableObject: '{"r":12.996038436889649,"g":0.576808512210846,"b":0.0,"a":0.0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -155,7 +156,9 @@ MonoBehaviour:
   m_Data: {fileID: 8926484042661614595}
   m_InputFlowSlot:
   - link: []
-  - link: []
+  - link:
+    - context: {fileID: 8926484042661615820}
+      slotIndex: 0
   m_OutputFlowSlot:
   - link:
     - context: {fileID: 8926484042661614558}
@@ -3206,7 +3209,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 2054, y: 873}
+  m_UIPosition: {x: 1949, y: 849}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -3294,7 +3297,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615348}
   - {fileID: 8926484042661615350}
   - {fileID: 8926484042661615352}
-  m_UIPosition: {x: 2045, y: 1149}
+  m_UIPosition: {x: 1940, y: 1125}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -3709,7 +3712,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 2045, y: 1594}
+  m_UIPosition: {x: 1940, y: 1570}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
@@ -3748,7 +3751,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615383}
   - {fileID: 8926484042661615386}
   - {fileID: 8926484042661615450}
-  m_UIPosition: {x: 2045, y: 2029}
+  m_UIPosition: {x: 1940, y: 1752}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -4688,7 +4691,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661615445}
     - outputSlot: {fileID: 8926484042661615439}
       inputSlot: {fileID: 8926484042661615805}
-    position: {x: 772, y: 2527}
+    position: {x: 779, y: 2350}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615439
@@ -4720,7 +4723,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":2.9433960914611818,"g":0.4313906729221344,"b":0.0,"a":0.0}'
+      m_SerializableObject: '{"r":12.996038436889649,"g":0.576808512210846,"b":0.0,"a":0.0}'
     m_Space: 2147483647
   m_Property:
     name: o
@@ -7889,7 +7892,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 1608, y: 2200}
+  m_UIPosition: {x: 1503, y: 2176}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
@@ -7978,7 +7981,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 1630, y: 2558}
+  m_UIPosition: {x: 1584, y: 2289}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -8507,3 +8510,53 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
   m_LinkedSlots: []
+--- !u!114 &8926484042661615820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2461f61b3c026d54db1951a4e17ab20e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 941, y: -415}
+  m_UICollapsed: 0
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots: []
+  m_Label: 
+  m_Data: {fileID: 8926484042661615821}
+  m_InputFlowSlot:
+  - link: []
+  m_OutputFlowSlot:
+  - link:
+    - context: {fileID: 8926484042661614555}
+      slotIndex: 1
+  eventName: onStop
+--- !u!114 &8926484042661615821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68759077adc0b143b6e1c101e82065e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  title: 
+  m_Owners:
+  - {fileID: 8926484042661615820}
