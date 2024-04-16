@@ -7,7 +7,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public enum PlayerState : int
     {
         DASH = EntityState.NB,
-        KNOCKBACK
+        KNOCKBACK,
+        UPGRADING_STATS
     }
     Animator animator;
     PlayerInput playerInput;

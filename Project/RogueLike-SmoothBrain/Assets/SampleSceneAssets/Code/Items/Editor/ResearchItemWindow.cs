@@ -1,11 +1,17 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class ResearchItemWindow : EditorWindow
 {
     ItemDatabase database;
     string search;
+    List<string> searchItem = new List<string>();
+    Vector2 scrollPos = Vector2.zero;
 
 
     private void OnEnable()
@@ -16,10 +22,12 @@ public class ResearchItemWindow : EditorWindow
 
     private void OnGUI()
     {
+        SearchItems();
         EditorGUILayout.BeginHorizontal();
         search = EditorGUILayout.TextField(search);
         EditorGUILayout.EndHorizontal();
-        foreach (var item in database.datas.Select(x => x.idName).Where(x => x.ToLower().Contains(search)))
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        foreach (var item in searchItem)
         {
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button(item))
@@ -29,5 +37,24 @@ public class ResearchItemWindow : EditorWindow
             }
             EditorGUILayout.EndHorizontal();
         }
+        EditorGUILayout.EndScrollView();
+    }
+
+    private void SearchItems()
+    {
+        searchItem = database.datas.Select(x => x.idName).
+            Where(x =>
+            {
+                for(int i = 0; i < search.Length; i++)
+                {
+                    if (x.ToLower()[i] != search[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            ).ToList();
+        searchItem.Sort();
     }
 }

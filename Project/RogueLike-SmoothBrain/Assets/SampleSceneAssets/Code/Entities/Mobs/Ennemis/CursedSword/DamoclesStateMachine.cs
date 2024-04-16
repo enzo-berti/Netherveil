@@ -63,8 +63,10 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public bool IsDeath { get => isDeath; }
 
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         factory = new StateFactory<DamoclesStateMachine>(this);
         // Set currentState here !
         currentState = factory.GetState<DamoclesIdle>();
@@ -84,8 +86,10 @@ public class DamoclesStateMachine : Mobs, IDamocles
         frameToUpdate = entitySpawn % maxFrameUpdate;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         currentState.Update();
     }
 
