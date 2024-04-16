@@ -6,20 +6,20 @@ public class DontDealWithMe : Quest
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnKill += UpdateCount;
+        progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK: {currentNumber}/{MAX_NUMBER}";
+        Hero.OnChargedAttack += UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        Hero.OnKill -= UpdateCount;
+        Hero.OnChargedAttack -= UpdateCount;
     }
 
-    private void UpdateCount(IDamageable damageable)
+    private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
         currentNumber++;
-        progressText = $"NB ENEMIES KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
         QuestUpdated();
 
         if (currentNumber >= MAX_NUMBER)
