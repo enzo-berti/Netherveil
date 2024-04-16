@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     readonly float smoothTime = 0.05f;
     float currentVelocity = 0f;
     int currentStep = 0;
-    int lastStep = 0;
+    readonly int STEP_VALUE = 25;
 
     //used to auto-redirect on enemies in vision cone when attacking
     const float ATTACK_CONE_ANGLE = 45f;
@@ -324,125 +324,9 @@ public class PlayerController : MonoBehaviour
         float corruptionStat = hero.Stats.GetValue(stat);
         float corruptionLastValue = hero.Stats.GetLastValue(stat);
         float diff = corruptionStat - corruptionLastValue;
-        int stepDiff = Mathf.Abs((int)(diff / 25f));
-        int offset = diff > 0 ? 25 : -25;
-        float currentValue = corruptionLastValue;
 
-        if (Mathf.Abs(diff) < 25f && (int)(corruptionStat/25f) > currentStep && diff > 0)
-        {
-            currentStep++;
-            if(corruptionStat >= 100f)
-            {
-                UltimateCorruptionUpgrade();
-            }
-            else
-            {
-                BasicCorruptionUpgrade();
-            }
-        }
-        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) < currentStep && diff < 0)
-        {
-            currentStep--;
-            if (corruptionStat <= -100f)
-            {
-                UltimateBenedictionUpgrade();
-            }
-            else
-            {
-                BasicBenedictionUpgrade();
-            }
-        }
-        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) > currentStep && corruptionStat < 0)
-        {
-            currentStep++;
-            if (corruptionLastValue <= -100f)
-            {
-                UltimateBenedictionDrawback();
-            }
-            else
-            {
-                BenedictionDrawback();
-            }
-        }
-        else if (Mathf.Abs(corruptionStat - corruptionLastValue) < 25f && (int)(corruptionStat / 25f) < currentStep && corruptionStat > 0)
-        {
-            currentStep--;
-            if (corruptionLastValue >= 100f)
-            {
-                UltimateCorruptionDrawback();
-            }
-            else
-            {
-                CorruptionDrawback();
-            }
-        }
-
-
-
-        for (int i = 0; i< stepDiff; i++)
-        {
-            bool test = (diff > 0 && currentValue > 0) || (diff < 0 && currentValue <= 0);
-            int diffValue2 = (int)(corruptionStat - currentValue);
-            if(test)
-            {
-                currentValue += offset;
-            }
-
-            if (currentValue <= 0 && diffValue2 > 0)
-            {
-                currentStep++;
-                if (currentValue <= -100f)
-                {
-                    UltimateBenedictionDrawback();
-                }
-                else
-                {
-                    BenedictionDrawback();
-                }
-            }
-            else if (currentValue <= 0 && diffValue2 < 0)
-            {
-                currentStep--;
-                if (currentValue <= -100f)
-                {
-                    UltimateBenedictionUpgrade();
-                }
-                else
-                {
-                    BasicBenedictionUpgrade();
-                }
-            }
-            else if (currentValue >= 0 && diffValue2 > 0)
-            {
-                currentStep++;
-                if (currentValue >= 100f)
-                {
-                    UltimateCorruptionUpgrade();
-                }
-                else
-                {
-                    BasicCorruptionUpgrade();
-                }
-            }
-            else if (currentValue >= 0 && diffValue2 < 0)
-            {
-                currentStep--;
-                if (currentValue >= 100f)
-                {
-                    UltimateCorruptionDrawback();
-                }
-                else
-                {
-                    CorruptionDrawback();
-                }
-            }
-
-            if(!test)
-            {
-                currentValue += offset;
-            }
-        }
-
+        ManageCorruptionChangeLess25(corruptionStat, corruptionLastValue, diff);
+        ManageCorruptionChangeMore25(corruptionStat, corruptionLastValue, diff);
 
         //ensure that player doesn't die by stat upgrade
         if (hero.Stats.GetValue(Stat.HP) <= 0f)
@@ -452,66 +336,141 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void UltimateBenedictionDrawback()
+    private void ManageCorruptionChangeLess25(float corruptionStat, float corruptionLastValue, float diff)
     {
-        //désactiver la capacité divine shield
-        //désactiver malus de possibilité de dédoublement des mobs
-        launchUpgradeAnim = true;
+        int nextStep = (int)(corruptionStat / STEP_VALUE);
+        bool isMovingPositive = Mathf.Abs(diff) < STEP_VALUE && nextStep > currentStep;
+        bool isMovingNegative = Mathf.Abs(diff) < STEP_VALUE && nextStep < currentStep;
+
+        if (isMovingPositive && diff > 0)
+        {
+            CorruptionUpgrade(corruptionStat);
+        }
+        else if (isMovingNegative && diff < 0)
+        {
+            BenedictionUpgrade(corruptionStat);
+        }
+        else if (isMovingPositive && corruptionStat < 0)
+        {
+            BenedictionDrawback(corruptionLastValue);
+        }
+        else if (isMovingNegative && corruptionStat > 0)
+        {
+            CorruptionDrawback(corruptionLastValue);
+        }
     }
 
-    private void UltimateCorruptionDrawback()
+    private void ManageCorruptionChangeMore25(float corruptionStat, float corruptionLastValue, float diff)
     {
-        hero.Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
-        //désactiver debuff impossibilité de se soigner via consommables
-        //désactiver nouvelle compétence
-        launchUpgradeAnim = true;
+        float currentValue = corruptionLastValue;
+        int stepDiff = Mathf.Abs((int)(diff / STEP_VALUE));
+        int offset = diff > 0 ? STEP_VALUE : -STEP_VALUE;
+
+        for (int i = 0; i < stepDiff; i++)
+        {
+            bool increaseAtStart = (diff > 0 && currentValue > 0) || (diff < 0 && currentValue <= 0);
+            int diffValue2 = (int)(corruptionStat - currentValue);
+            if (increaseAtStart)
+            {
+                currentValue += offset;
+            }
+
+            if (currentValue <= 0 && diffValue2 > 0)
+            {
+                BenedictionDrawback(currentValue);
+            }
+            else if (currentValue <= 0 && diffValue2 < 0)
+            {
+                BenedictionUpgrade(currentValue);
+            }
+            else if (currentValue >= 0 && diffValue2 > 0)
+            {
+                CorruptionUpgrade(currentValue);
+            }
+            else if (currentValue >= 0 && diffValue2 < 0)
+            {
+                CorruptionDrawback(currentValue);
+            }
+
+            if (!increaseAtStart)
+            {
+                currentValue += offset;
+            }
+        }
     }
 
-    private void UltimateBenedictionUpgrade()
+    private void CorruptionUpgrade(float corruptionStat)
     {
-        //ajout de la capacité divine shield
-        //ajout du malus de possibilité de dédoublement des mobs
-        launchUpgradeAnim = true;
+        currentStep++;
+        if (corruptionStat >= 100f)
+        {
+            hero.Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
+            launchUpgradeAnim = true;
+            //debuff impossibilité de se soigner via consommables
+            //ajout nouvelle compétence
+        }
+        else
+        {
+            hero.Stats.IncreaseValue(Stat.ATK, 5f);
+            hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+            hero.Stats.DecreaseValue(Stat.HP, 15f);
+            launchUpgradeAnim = true;
+        }
     }
 
-    private void UltimateCorruptionUpgrade()
+    private void BenedictionUpgrade(float corruptionStat)
     {
-        hero.Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
-        launchUpgradeAnim = true;
-        //debuff impossibilité de se soigner via consommables
-        //ajout nouvelle compétence
+        currentStep--;
+        if (corruptionStat <= -100f)
+        {
+            //ajout de la capacité divine shield
+            //ajout du malus de possibilité de dédoublement des mobs
+            launchUpgradeAnim = true;
+        }
+        else
+        {
+            hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+            hero.Stats.IncreaseValue(Stat.HP, 15f);
+            hero.Stats.DecreaseValue(Stat.ATK, 5f);
+            launchUpgradeAnim = true;
+        }
     }
 
-    private void BenedictionDrawback()
+    private void BenedictionDrawback(float corruptionLastValue)
     {
-        hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
-        hero.Stats.DecreaseValue(Stat.HP, 15f);
-        hero.Stats.IncreaseValue(Stat.ATK, 5f);
-        launchUpgradeAnim = true;
+        currentStep++;
+        if (corruptionLastValue <= -100f)
+        {
+            //désactiver la capacité divine shield
+            //désactiver malus de possibilité de dédoublement des mobs
+            launchUpgradeAnim = true;
+        }
+        else
+        {
+            hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
+            hero.Stats.DecreaseValue(Stat.HP, 15f);
+            hero.Stats.IncreaseValue(Stat.ATK, 5f);
+            launchUpgradeAnim = true;
+        }
     }
 
-    private void CorruptionDrawback()
+    private void CorruptionDrawback(float corruptionLastValue)
     {
-        hero.Stats.DecreaseValue(Stat.ATK, 5f);
-        hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
-        hero.Stats.IncreaseValue(Stat.HP, 15f);
-        launchUpgradeAnim = true;
-    }
-
-    private void BasicBenedictionUpgrade()
-    {
-        hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
-        hero.Stats.IncreaseValue(Stat.HP, 15f);
-        hero.Stats.DecreaseValue(Stat.ATK, 5f);
-        launchUpgradeAnim = true;
-    }
-
-    private void BasicCorruptionUpgrade()
-    {
-        hero.Stats.IncreaseValue(Stat.ATK, 5f);
-        hero.Stats.DecreaseMaxValue(Stat.HP, 15f);
-        hero.Stats.DecreaseValue(Stat.HP, 15f);
-        launchUpgradeAnim = true;
+        currentStep--;
+        if (corruptionLastValue >= 100f)
+        {
+            hero.Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
+            //désactiver debuff impossibilité de se soigner via consommables
+            //désactiver nouvelle compétence
+            launchUpgradeAnim = true;
+        }
+        else
+        {
+            hero.Stats.DecreaseValue(Stat.ATK, 5f);
+            hero.Stats.IncreaseMaxValue(Stat.HP, 15f);
+            hero.Stats.IncreaseValue(Stat.HP, 15f);
+            launchUpgradeAnim = true;
+        }
     }
 
     private void LaunchUpgradeAnim()
