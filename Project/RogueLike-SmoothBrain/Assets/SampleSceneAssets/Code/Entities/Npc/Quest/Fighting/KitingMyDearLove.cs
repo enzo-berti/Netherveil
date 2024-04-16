@@ -1,38 +1,37 @@
-
-using UnityEngine;
-
-public class SpinKiller : Quest
+using UnityEngine; 
+ 
+public class KitingMyDearLove : Quest 
 {
     int currentNumber = 0;
-    bool asDoAnChargedAttack = false;
-    readonly int MAX_NUMBER = 5;
+    bool asDoAnDistanceAttack = false;
+    readonly int MAX_NUMBER = 10;
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK: {currentNumber}/{MAX_NUMBER}";
-        Hero.OnChargedAttack += SetBool;
+        progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK: {currentNumber}/{MAX_NUMBER}";
+        Hero.OnSpearAttack += SetBool;
         Hero.OnKill += UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        Hero.OnChargedAttack -= SetBool;
+        Hero.OnSpearAttack -= SetBool;
         Hero.OnKill -= UpdateCount;
     }
 
     private void SetBool(IDamageable damageable, IAttacker attacker)
     {
-        asDoAnChargedAttack = true;
+        asDoAnDistanceAttack = true;
     }
 
     private void UpdateCount(IDamageable damageable)
     {
         Entity monster = (damageable as Entity);
-        if (asDoAnChargedAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
+        if (asDoAnDistanceAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
         {
             currentNumber++;
-            progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
+            progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
 
             if (currentNumber >= MAX_NUMBER)
@@ -40,6 +39,8 @@ public class SpinKiller : Quest
                 QuestFinished();
             }
         }
-        asDoAnChargedAttack = false;
+        asDoAnDistanceAttack = false;
     }
-}
+
+
+} 
