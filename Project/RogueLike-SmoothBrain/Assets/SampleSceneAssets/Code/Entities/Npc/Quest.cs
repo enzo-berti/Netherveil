@@ -10,13 +10,17 @@ public abstract class Quest
     protected byte benedictionOrCorruptionValue = 0;
     static QuestDatabase database;
     public static event Action OnQuestUpdated;
+    protected Hero player;
+    protected Talker.TalkerType talkerType;
 
     public abstract void AcceptQuest();
 
-    static public Quest LoadClass(string name)
+    static public Quest LoadClass(string name, Talker.TalkerType type)
     {
         Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
         quest.Datas = database.GetQuest(name);
+        quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        quest.talkerType = type;
         return quest;
     }
 
@@ -33,7 +37,8 @@ public abstract class Quest
 
     protected virtual void QuestFinished()
     {
-        GameObject.FindWithTag("Player").GetComponent<Hero>().CurrentQuest = null;
+        player.CurrentQuest = null;
+        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == Talker.TalkerType.CLERIC ? -benedictionOrCorruptionValue : benedictionOrCorruptionValue);
     }
 
     protected void QuestUpdated()
