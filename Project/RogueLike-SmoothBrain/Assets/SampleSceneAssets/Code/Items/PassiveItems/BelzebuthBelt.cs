@@ -5,8 +5,13 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
 {
     const float coefValue = 1.33f;
 
+
+#pragma warning disable CS0414 // Supprimer le warning dans unity
+#pragma warning disable IDE0052 // Supprimer les membres privés non lus
     //used to display in description, dont delete it
     readonly float displayValue;
+#pragma warning restore IDE0052
+#pragma warning restore CS0414
 
     public BelzebuthBelt()
     {

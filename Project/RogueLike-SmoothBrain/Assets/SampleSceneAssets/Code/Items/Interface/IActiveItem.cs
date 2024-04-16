@@ -5,7 +5,7 @@ public interface IActiveItem : IItem
 {
     float Cooldown { get; set; }
     void Activate();
-    IEnumerator WaitToUse()
+    sealed IEnumerator WaitToUse()
     {
         while((this as ItemEffect).CurrentEnergy < Cooldown)
         {
