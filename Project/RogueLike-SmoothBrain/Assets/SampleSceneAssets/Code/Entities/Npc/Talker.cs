@@ -14,18 +14,27 @@ public class Talker : Npc
         base.Start();
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        dialogueTreeRunner.EventManager.AddListener("GiveQuest", GiveQuest);
+    }
+
+    private void OnDestroy()
+    {
+        dialogueTreeRunner.EventManager.RemoveListener("GiveQuest");
     }
 
     public override void Interract()
     {
         TriggerDialogue();
-        GiveQuest();
+        //GiveQuest();
     }
 
     private void GiveQuest()
     {
-        quest = Quest.LoadClass(Quest.GetRandomQuestName());
-        player.CurrentQuest = quest;
+        if(dialogueTreeRunner.Talker == this)
+        {
+            quest = Quest.LoadClass(Quest.GetRandomQuestName());
+            player.CurrentQuest = quest;
+        }
     }
 
     private void TriggerDialogue()
@@ -36,7 +45,7 @@ public class Talker : Npc
         }
         else
         {
-            dialogueTreeRunner.StartDialogue(dialogue);
+            dialogueTreeRunner.StartDialogue(dialogue, this);
         }
     }
 }
