@@ -1,22 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8019634971298967203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 577eaa0e-0e36-469c-9a8e-95f1c1627b66
-  position: {x: 572, y: -23}
-  dialogueData: {fileID: 11400000, guid: e40f6dca5a371c54e8ec1d6081eaa9d8, type: 2}
-  child: {fileID: 0}
---- !u!114 &-5885846960745022553
+--- !u!114 &-7017180112716466666
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29,48 +13,9 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   GUID: f562f3af-0217-4d30-be09-e1ba76cca47d
-  position: {x: 16, y: 16}
-  child: {fileID: -4972429040117637746}
---- !u!114 &-4972429040117637746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
-  m_Name: ChoiceDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
-  position: {x: 241, y: 32}
-  dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
-  options:
-  - option: Choice 1
-    child: {fileID: -8019634971298967203}
-  - option: Choice 2
-    child: {fileID: 2742986954339146955}
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
-  m_Name: ClercDialogueTree
-  m_EditorClassIdentifier: 
-  root: {fileID: -5885846960745022553}
-  nodes:
-  - {fileID: -5885846960745022553}
-  - {fileID: -4972429040117637746}
-  - {fileID: -8019634971298967203}
-  - {fileID: 2742986954339146955}
-  currentNode: {fileID: 0}
---- !u!114 &2742986954339146955
+  position: {x: 24, y: 24}
+  child: {fileID: -3040725664345586375}
+--- !u!114 &-4439398063707872950
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -83,6 +28,62 @@ MonoBehaviour:
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
   GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
-  position: {x: 567, y: 100}
+  position: {x: 575, y: 108}
   dialogueData: {fileID: 11400000, guid: 3e91c16b5b2abf04ea267211d3894ae4, type: 2}
   child: {fileID: 0}
+--- !u!114 &-4072484117187604458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1047fa5621329014b85727877a2bfb5f, type: 3}
+  m_Name: EventDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 701ed27f-1948-4b78-b393-6ff1c40a1992
+  position: {x: 587, y: -6}
+  dialogueData: {fileID: 11400000, guid: e97e259a2a16419479b030e7c7d61fa4, type: 2}
+  child: {fileID: 0}
+  eventTag: GiveQuest
+--- !u!114 &-3040725664345586375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
+  position: {x: 211, y: 48}
+  dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
+  options:
+  - option: No
+    child: {fileID: -4439398063707872950}
+  - option: Yes
+    child: {fileID: -4072484117187604458}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
+  m_Name: ClercDialogueTree
+  m_EditorClassIdentifier: 
+  root: {fileID: -7017180112716466666}
+  nodes:
+  - {fileID: -7017180112716466666}
+  - {fileID: -4439398063707872950}
+  - {fileID: -4072484117187604458}
+  - {fileID: -3040725664345586375}
+  currentNode: {fileID: 0}
