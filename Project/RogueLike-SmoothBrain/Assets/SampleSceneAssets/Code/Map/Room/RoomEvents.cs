@@ -9,7 +9,7 @@ namespace Map
 
         private GameObject room;
         private GameObject enemies;
-        private GameObject traps;
+        //private GameObject traps;
         private NavMeshSurface navMeshSurface;
 
         private bool allEnemiesDeadCalled = false;
@@ -55,7 +55,6 @@ namespace Map
 
         private void EnterEvents()
         {
-            Debug.Log("ENTER ROOM");
             enterRoomCalled = true;
 
             // local events
@@ -70,7 +69,6 @@ namespace Map
 
         private void ExitEvents()
         {
-            Debug.Log("EXIT ROOM");
             exitRoomCalled = true;
 
             // local events
