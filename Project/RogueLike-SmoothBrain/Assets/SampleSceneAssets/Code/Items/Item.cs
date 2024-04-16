@@ -14,15 +14,14 @@ public class Item : MonoBehaviour
     [SerializeField] private ItemDatabase database;
 
     private ItemEffect itemData;
-    private string idItem = string.Empty;
     private Color rarityColor = Color.white;
+    public string idItemName = string.Empty;
 
     private ItemDescription itemDescription;
 
     public Color RarityColor => rarityColor;
     public ItemEffect ItemData => itemData;
     public ItemDatabase Database => database;
-    public string IdItem => idItem;
 
     private void Start()
     {
@@ -32,20 +31,28 @@ public class Item : MonoBehaviour
         }
 
         itemData = LoadClass();
-        Material matToRender = database.GetItem(idItem).mat;
-        Mesh meshToRender = database.GetItem(idItem).mesh;
-        rarityColor = database.GetItemRarityColor(idItem);
+        Material matToRender = database.GetItem(idItemName).mat;
+        Mesh meshToRender = database.GetItem(idItemName).mesh;
+        rarityColor = database.GetItemRarityColor(idItemName);
 
         this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : this.GetComponentInChildren<MeshRenderer>().material;
         this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : this.GetComponentInChildren<MeshFilter>().mesh;
 
         itemDescription = GetComponent<ItemDescription>();
-        itemDescription.SetDescription(idItem);
+        itemDescription.SetDescription(idItemName);
+    }
+
+    public static void InvokeOnRetrieved(ItemEffect effect)
+    {
+        if (OnRetrieved != null)
+        {
+            OnRetrieved(effect);
+        }
     }
 
     private ItemEffect LoadClass()
     {
-        return Assembly.GetExecutingAssembly().CreateInstance(idItem.GetPascalCase()) as ItemEffect;
+        return Assembly.GetExecutingAssembly().CreateInstance(idItemName.GetPascalCase()) as ItemEffect;
     }
 
     static public void RandomizeItem(Item item)
@@ -56,7 +63,7 @@ public class Item : MonoBehaviour
             allItems.Add(itemInDb.idName);
         }
         int indexRandom = Seed.Range(0, allItems.Count);
-        item.idItem = allItems[indexRandom];
+        item.idItemName = allItems[indexRandom];
     }
 
     public void RandomizeItem()
@@ -67,6 +74,6 @@ public class Item : MonoBehaviour
             allItems.Add(itemInDb.idName);
         }
         int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
-        idItem = allItems[indexRandom];
+        idItemName = allItems[indexRandom];
     }
 }

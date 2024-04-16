@@ -5,36 +5,71 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
     private Outline outline;
     private ItemDescription itemDescription;
     private Hero hero;
-    private PlayerInteractions interaction;
+    private PlayerInteractions interactions;
+    private Item item;
+
+    private bool isSelect = false;
 
     private void Start()
     {
         outline = GetComponent<Outline>();
         itemDescription = GetComponent<ItemDescription>();
+        item = GetComponent<Item>();
         hero = FindObjectOfType<Hero>();
-        interaction = hero.GetComponent<PlayerInteractions>();
+        interactions = hero.GetComponent<PlayerInteractions>();
+    }
+
+    private void Update()
+    {
+        Interraction();
     }
 
     public void Select()
     {
+        if (isSelect)
+            return;
+
+        isSelect = true;
         outline.EnableOutline();
         itemDescription.TogglePanel(true);
     }
 
     public void Deselect()
     {
+        if (!isSelect)
+            return;
+
+        isSelect = false;
         outline.DisableOutline();
         itemDescription.TogglePanel(false);
     }
 
+    private void Interraction()
+    {
+        bool isInRange = Vector2.Distance(interactions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2())
+            <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
+
+        if (isInRange && !interactions.InteractablesInRange.Contains(this))
+        {
+            interactions.InteractablesInRange.Add(this);
+        }
+        else if (!isInRange && interactions.InteractablesInRange.Contains(this))
+        {
+            interactions.InteractablesInRange.Remove(this);
+            Deselect();
+        }
+    }
+
     public void Interract()
     {
-        //itemToGive.Name = idItemName;
-        //hero.Inventory.AddItem(itemToGive);
-        //interaction.InteractablesInRange.Remove(this);
-        //Item.OnRetrieved?.Invoke(itemToGive);
+        item.ItemData.Name = item.idItemName;
 
-        //Destroy(this.gameObject);
-        //DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+        hero.Inventory.AddItem(item.ItemData);
+        interactions.InteractablesInRange.Remove(this);
+
+        Item.InvokeOnRetrieved(item.ItemData);
+
+        Destroy(this.gameObject);
+        DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
     }
 }

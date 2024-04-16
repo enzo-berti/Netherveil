@@ -65,12 +65,12 @@ public class ItemInteraction : MonoBehaviour, IInterractable
 
     public void Interract()
     {
-        item.ItemData.Name = item.IdItem;
+        item.ItemData.Name = item.idItemName;
 
         hero.Inventory.AddItem(item.ItemData);
         interactions.InteractablesInRange.Remove(this);
 
-        //OnRetrieved?.Invoke(item.ItemData);
+        Item.InvokeOnRetrieved(item.ItemData);
 
         Destroy(this.gameObject);
         DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
