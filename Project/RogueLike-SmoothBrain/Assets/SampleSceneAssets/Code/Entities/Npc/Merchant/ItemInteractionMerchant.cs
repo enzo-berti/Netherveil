@@ -64,11 +64,12 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
 
     public void Interract()
     {
-        if (hero.Inventory.Blood < item.Price)
+        int price = (int)(item.Price * Item.priceCoef);
+
+        if (hero.Inventory.Blood < price)
             return;
 
-        hero.Inventory.Blood -= item.Price;
-
+        hero.Inventory.Blood -= price;
         item.ItemData.Name = item.idItemName;
 
         hero.Inventory.AddItem(item.ItemData);
