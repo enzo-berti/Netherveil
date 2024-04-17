@@ -212,25 +212,25 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         for (int i = 0; i < stepDiff; i++)
         {
             bool increaseAtStart = (diff > 0 && currentValue > 0) || (diff < 0 && currentValue <= 0);
-            int diffValue2 = (int)(corruptionStat - currentValue);
+            int currentDiff = (int)(corruptionStat - currentValue);
             if (increaseAtStart)
             {
                 currentValue += offset;
             }
 
-            if (currentValue <= 0 && diffValue2 > 0)
+            if (currentValue <= 0 && currentDiff > 0)
             {
                 BenedictionDrawback(currentValue);
             }
-            else if (currentValue <= 0 && diffValue2 < 0)
+            else if (currentValue <= 0 && currentDiff < 0)
             {
                 BenedictionUpgrade(currentValue);
             }
-            else if (currentValue >= 0 && diffValue2 > 0)
+            else if (currentValue >= 0 && currentDiff > 0)
             {
                 CorruptionUpgrade(currentValue);
             }
-            else if (currentValue >= 0 && diffValue2 < 0)
+            else if (currentValue >= 0 && currentDiff < 0)
             {
                 CorruptionDrawback(currentValue);
             }
