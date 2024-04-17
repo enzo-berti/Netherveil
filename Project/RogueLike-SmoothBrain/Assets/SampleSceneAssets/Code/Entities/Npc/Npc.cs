@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public abstract class Npc : Entity, IInterractable
 {
-    [SerializeField] Image rangeImage;
+    [SerializeField] public Image rangeImage;
     public Image RangeImage { get => rangeImage; }
     PlayerInteractions playerInteractions;
     Hero hero;

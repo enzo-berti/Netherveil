@@ -11,11 +11,11 @@ public abstract class Quest
     static QuestDatabase database;
     public static event Action OnQuestUpdated;
     protected Hero player;
-    protected Talker.TalkerType talkerType;
+    protected QuestTalker.TalkerType talkerType;
 
     public abstract void AcceptQuest();
 
-    static public Quest LoadClass(string name, Talker.TalkerType type)
+    static public Quest LoadClass(string name, QuestTalker.TalkerType type)
     {
         Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
         quest.Datas = database.GetQuest(name);
@@ -38,7 +38,7 @@ public abstract class Quest
     protected virtual void QuestFinished()
     {
         player.CurrentQuest = null;
-        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == Talker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
+        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
     }
 
     protected void QuestUpdated()
