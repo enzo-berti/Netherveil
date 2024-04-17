@@ -43,13 +43,6 @@ public class SpearStrike : ItemEffect , IPassiveItem
         }
 
         GameObject.Destroy(thunderstrikeCollider, 1f);
-        //GameObject.Destroy(thunderstrikeVFX, 1f);
+        GameObject.Destroy(thunderstrikeVFX, 1f);
     }
-
-    //private IEnumerator PlayVFXLateUpdate(VisualEffect thunderstrikeVFX)
-    //{
-    //    Debug.Log("eyo");
-    //    yield return new WaitForSeconds(0.1f);
-
-    //}
 } 
