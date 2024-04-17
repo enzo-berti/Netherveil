@@ -4,15 +4,11 @@ public class QuestTalkerApprentice : QuestTalker
 {
     protected override void StartDialogue()
     {
-        DialogueTree dialogue = refusesDialogueDT;
+        DialogueTree dialogue = questDT;
 
         if (player.CurrentQuest != null)
         {
             dialogue = alreadyHaveQuestDT;
-        }
-        else if (PlayerInvestedInOppositeWay())
-        {
-            dialogue = questDT;
         }
 
         dialogueTreeRunner.StartDialogue(dialogue, this);
