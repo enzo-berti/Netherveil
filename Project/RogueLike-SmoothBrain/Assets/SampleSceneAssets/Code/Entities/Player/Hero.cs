@@ -35,7 +35,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
     int currentStep = 0;
-    readonly int STEP_VALUE = 25;
+    public readonly int STEP_VALUE = 25;
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -176,7 +176,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             Stats.SetValue(Stat.HP, 1f);
         }
-
     }
 
     private void ManageCorruptionChangeLessThanStep(float corruptionStat, float corruptionLastValue, float diff)

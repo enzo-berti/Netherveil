@@ -38,31 +38,37 @@ public static class EasingFunctions
         EaseOutSin
     }
 
-    public static IEnumerator UpScaleCoroutine(GameObject go, float duration, float maxScale = 1.0f)
+    public static IEnumerator UpScaleCoroutine(Transform t, float duration, float maxScale = 1.0f, float minScale = 0.0f)
     {
         float elapsed = 0.0f;
+        float startScale = t.localScale.x;
+        duration -= (startScale - minScale) / (maxScale - minScale) * duration;
 
         while (elapsed < duration)
         {
             elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
             float factor = elapsed / duration;
+            float lerp = Mathf.Lerp(startScale, maxScale, factor);
 
-            go.transform.localScale = Vector3.one * factor * maxScale;
+            t.localScale = Vector3.one * lerp;
 
             yield return null;
         }
     }
 
-    public static IEnumerator DownScaleCoroutine(GameObject go, float duration, float maxScale = 1.0f)
+    public static IEnumerator DownScaleCoroutine(Transform t, float duration, float maxScale = 1.0f, float minScale = 0.0f)
     {
         float elapsed = 0.0f;
+        float startScale = t.localScale.x;
+        duration -= (startScale - maxScale) / (minScale - maxScale) * duration;
 
         while (elapsed < duration)
         {
             elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
-            float factor = 1.0f - elapsed / duration;
+            float factor = elapsed / duration;
+            float lerp = Mathf.Lerp(startScale, minScale, factor);
 
-            go.transform.localScale = Vector3.one * factor * maxScale;
+            t.localScale = Vector3.one * lerp;
 
             yield return null;
         }
