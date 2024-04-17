@@ -238,15 +238,21 @@ public class EntityDrawer : Editor
         // Get all infos
         List<FieldInfo> infos = new();
         Type currentType = target.GetType();
+        List<FieldInfo[]> test = new();
         while (currentType != typeof(Entity))
         {
-            foreach (var field in currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-            {
-                infos.Add(field);
-            }
+            test.Add(currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
             currentType = currentType.BaseType;
         }
-        List<string> toSort = new List<string>();
+        test.Reverse();
+
+        for(int j = 0; j < test.Count; j++)
+        {
+            foreach(var coucou in test[j])
+            {
+                infos.Add(coucou);
+            }
+        }
         for(int i = 0; i < infos.Count; i++)
         {
             if ((infos[i].IsPublic && !infos[i].IsInitOnly && infos[i].GetCustomAttribute(typeof(HideInInspector)) == null) || infos[i].GetCustomAttribute(typeof(SerializeField)) != null)
