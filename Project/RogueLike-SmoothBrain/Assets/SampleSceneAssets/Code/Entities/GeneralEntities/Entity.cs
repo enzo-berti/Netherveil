@@ -244,7 +244,7 @@ public class EntityDrawer : Editor
         for (int i = infos.Length - 1; i >= 0; i--)
         {
             if (entityInfo.FirstOrDefault(x => x.Name == infos[i].Name) != null) continue;
-            if ((infos[i].IsPublic && infos[i].GetCustomAttribute(typeof(HideInInspector)) == null) || infos[i].GetCustomAttribute(typeof(SerializeField)) != null)
+            if ((infos[i].IsPublic && !infos[i].IsInitOnly && infos[i].GetCustomAttribute(typeof(HideInInspector)) == null) || infos[i].GetCustomAttribute(typeof(SerializeField)) != null)
             {
                 classField.Add(infos[i].Name);
             }
