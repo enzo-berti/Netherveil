@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace DialogueSystem.Editor
@@ -127,7 +128,7 @@ namespace DialogueSystem.Editor
                 }
             }
 
-            edges.ForEach(edge =>
+            edges.OrderBy(x => x.input.worldTransform.GetPosition().y).ToList().ForEach(edge =>
             {
                 NodeView outputNodeView = edge.output.node as NodeView;
                 NodeView inputNodeView = edge.input.node as NodeView;
