@@ -21,7 +21,7 @@ public class DialogueTreeRunner : MonoBehaviour
     private string lastDialogue;
     DialogueTreeEventManager eventManager;
     public DialogueTreeEventManager EventManager { get => eventManager; }
-    public Talker TalkerNPC { get; private set; }
+    public QuestTalker TalkerNPC { get; private set; }
     private Hero player;
 
     private void Awake()
@@ -40,8 +40,8 @@ public class DialogueTreeRunner : MonoBehaviour
 
         dialogueCanvas.gameObject.SetActive(true);
 
-        if (npc is Talker)
-            TalkerNPC = npc as Talker;
+        if (npc is QuestTalker)
+            TalkerNPC = npc as QuestTalker;
 
         UpdateDialogue();
     }
