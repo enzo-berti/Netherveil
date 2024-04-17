@@ -37,7 +37,6 @@ public class Talker : Npc
     public override void Interract()
     {
         TriggerDialogue();
-        //GiveQuest();
     }
 
     private void GiveQuest()

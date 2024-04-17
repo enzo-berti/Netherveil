@@ -1,21 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5953775249095234885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
-  m_Name: RootNode
-  m_EditorClassIdentifier: 
-  GUID: 263353f8-0a8f-44a0-b63a-5f39f8ee6a91
-  position: {x: 8, y: 8}
-  child: {fileID: 0}
---- !u!114 &-4637098878010315760
+--- !u!114 &-5260624081891439245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -27,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
-  GUID: 9861dc09319b9194884291488425ae69
-  position: {x: 0, y: 0}
-  dialogueData: {fileID: 0}
+  GUID: eece5392-5d21-46a7-a79f-25c8f91a9c95
+  position: {x: 214, y: 45}
+  dialogueData: {fileID: 11400000, guid: 3883a4c4769c4a941aee13504e280ecd, type: 2}
   child: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -43,8 +28,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
   m_Name: ClericRefusesDialogueDT
   m_EditorClassIdentifier: 
-  root: {fileID: -5953775249095234885}
+  root: {fileID: 7787098642752408887}
   nodes:
-  - {fileID: -5953775249095234885}
-  - {fileID: -4637098878010315760}
+  - {fileID: 7787098642752408887}
+  - {fileID: -5260624081891439245}
   currentNode: {fileID: 0}
+--- !u!114 &7787098642752408887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  GUID: 62187aa6-20ae-415e-940c-65d7b231b9f8
+  position: {x: 16, y: 16}
+  child: {fileID: -5260624081891439245}

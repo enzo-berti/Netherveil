@@ -22,7 +22,10 @@ public class DialogueTreeEventManager : MonoBehaviour
 
     public void Invoke(string tag)
     {
-        dialogueEvent.First(x => x.tag == tag).onCall.Invoke();
+        dialogueEvent.Where(x => x.tag == tag).ToList().ForEach(x =>
+        {
+            x.onCall.Invoke();
+        });
     }
 
     public void AddListener(string tag, UnityAction action)

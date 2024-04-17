@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7878339120895302663
+--- !u!114 &-477194559012765256
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: ChoiceDialogueNode
   m_EditorClassIdentifier: 
   GUID: dc7f22ce-419e-41ba-a722-2437a2a5864f
-  position: {x: 212, y: 14}
+  position: {x: 228, y: 30}
   dialogueData: {fileID: 11400000, guid: a21599b75c768c141a2beff5634fdf34, type: 2}
   options:
   - option: Yes
-    child: {fileID: -6917525884974882741}
+    child: {fileID: -261641897270278938}
   - option: No
-    child: {fileID: 6600735252293477880}
---- !u!114 &-6917525884974882741
+    child: {fileID: 7610238363113712108}
+--- !u!114 &-261641897270278938
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29,13 +29,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
+  m_Script: {fileID: 11500000, guid: 1047fa5621329014b85727877a2bfb5f, type: 3}
+  m_Name: EventDialogueNode
   m_EditorClassIdentifier: 
-  GUID: 0ae169f0-be4d-4cca-bbde-7028bb5bc7dc
-  position: {x: 562, y: -42}
+  GUID: 6733febe-ffb5-4626-af81-97669208486a
+  position: {x: 581, y: -19}
   dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
   child: {fileID: 0}
+  eventTag: GiveQuest
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,14 +49,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
   m_Name: ShamanClassicDT
   m_EditorClassIdentifier: 
-  root: {fileID: 4455562765371660149}
+  root: {fileID: 7603642053036146541}
   nodes:
-  - {fileID: 4455562765371660149}
-  - {fileID: -7878339120895302663}
-  - {fileID: 6600735252293477880}
-  - {fileID: -6917525884974882741}
+  - {fileID: 7603642053036146541}
+  - {fileID: -477194559012765256}
+  - {fileID: -261641897270278938}
+  - {fileID: 7610238363113712108}
   currentNode: {fileID: 0}
---- !u!114 &4455562765371660149
+--- !u!114 &7603642053036146541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -68,9 +69,9 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   GUID: 1a1beb0a-dbc7-46a2-be56-347d9e3decd3
-  position: {x: 24, y: 24}
-  child: {fileID: -7878339120895302663}
---- !u!114 &6600735252293477880
+  position: {x: 40, y: 40}
+  child: {fileID: -477194559012765256}
+--- !u!114 &7610238363113712108
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -83,6 +84,6 @@ MonoBehaviour:
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
   GUID: bece73a0-7ab2-4229-a395-52ee5535d8a0
-  position: {x: 563, y: 97}
+  position: {x: 586, y: 143}
   dialogueData: {fileID: 11400000, guid: 39cff87bc5d4e3e4a812b704150be7d5, type: 2}
   child: {fileID: 0}
