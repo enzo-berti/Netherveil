@@ -47,6 +47,12 @@ namespace DialogueSystem.Editor
                     userData = new EventDialogueNodeView(graphView),
                     level = 2
                 },
+
+                new SearchTreeEntry(new GUIContent("Quest Dialogue Node", indentationIcon))
+                {
+                    userData = new QuestDialogueNodeView(graphView),
+                    level = 2
+                },
             };
             return tree;
         }
@@ -67,6 +73,9 @@ namespace DialogueSystem.Editor
                     return true;
                 case EventDialogueNodeView:
                     graphView.CreateNode(typeof(EventDialogueNodeView), localMousePosition);
+                    return true;
+                case QuestDialogueNodeView:
+                    graphView.CreateNode(typeof(QuestDialogueNodeView), localMousePosition);
                     return true;
                 default:
                     return false;

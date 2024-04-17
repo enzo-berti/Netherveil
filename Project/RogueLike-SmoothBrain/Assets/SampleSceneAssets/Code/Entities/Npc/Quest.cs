@@ -1,5 +1,6 @@
 using Generation;
 using System;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ public abstract class Quest
 
     static public string GetRandomQuestName()
     {
-        if(database == null)
+        if (database == null)
         {
             database = Resources.Load<QuestDatabase>("QuestDatabase");
         }

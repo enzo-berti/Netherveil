@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace DialogueSystem.Editor
@@ -111,9 +112,23 @@ namespace DialogueSystem.Editor
                         continue;
                     }
                 }
+
+                {
+                    QuestDialogueNodeView dialogueView = nodeView as QuestDialogueNodeView;
+                    if (dialogueView != null)
+                    {
+                        QuestDialogueNodeView eventNodeView = nodeView as QuestDialogueNodeView;
+                        QuestDialogueNode dialogue = tree.CreateNode(nodeView.type) as QuestDialogueNode;
+                        dialogue.dialogueData = eventNodeView.DialogueData;
+                        dialogue.questTag = eventNodeView.QuestTag;
+                        dialogue.GUID = nodeView.GUID;
+                        dialogue.position = nodeView.GetPosition().position;
+                        continue;
+                    }
+                }
             }
 
-            edges.ForEach(edge =>
+            edges.OrderBy(x => x.input.worldTransform.GetPosition().y).ToList().ForEach(edge =>
             {
                 NodeView outputNodeView = edge.output.node as NodeView;
                 NodeView inputNodeView = edge.input.node as NodeView;
@@ -129,13 +144,17 @@ namespace DialogueSystem.Editor
                 {
                     (outputNode as SimpleDialogueNode).child = inputNode;
                 }
+                if (outputNode is ChoiceDialogueNode)
+                {
+                    (outputNode as ChoiceDialogueNode).AddOption(edge.output.portName, inputNode);
+                }
                 if (outputNode is EventDialogueNode)
                 {
                     (outputNode as EventDialogueNode).child = inputNode;
                 }
-                if (outputNode is ChoiceDialogueNode)
+                if (outputNode is QuestDialogueNode)
                 {
-                    (outputNode as ChoiceDialogueNode).AddOption(edge.output.portName, inputNode);
+                    (outputNode as QuestDialogueNode).child = inputNode;
                 }
             });
 
@@ -164,6 +183,7 @@ namespace DialogueSystem.Editor
                 SimpleDialogueNode simple = n as SimpleDialogueNode;
                 ChoiceDialogueNode choice = n as ChoiceDialogueNode;
                 EventDialogueNode eventN = n as EventDialogueNode;
+                QuestDialogueNode quest = n as QuestDialogueNode;
 
                 List<NodeView> nodesGraph = nodes.ToList().Cast<NodeView>().ToList();
 
@@ -197,6 +217,15 @@ namespace DialogueSystem.Editor
                 {
                     EventDialogueNodeView outputNodeView = nodesGraph.Find(x => x.GUID == eventN.GUID) as EventDialogueNodeView;
                     NodeView inputNodeView = nodesGraph.Find(x => x.GUID == eventN.child.GUID);
+
+                    Edge edge = outputNodeView.outputContainer[0].Q<Port>()
+                        .ConnectTo(inputNodeView.inputContainer[0].Q<Port>());
+                    targetGraphView.AddElement(edge);
+                }
+                else if (quest != null && quest.child != null)
+                {
+                    QuestDialogueNodeView outputNodeView = nodesGraph.Find(x => x.GUID == quest.GUID) as QuestDialogueNodeView;
+                    NodeView inputNodeView = nodesGraph.Find(x => x.GUID == quest.child.GUID);
 
                     Edge edge = outputNodeView.outputContainer[0].Q<Port>()
                         .ConnectTo(inputNodeView.inputContainer[0].Q<Port>());
