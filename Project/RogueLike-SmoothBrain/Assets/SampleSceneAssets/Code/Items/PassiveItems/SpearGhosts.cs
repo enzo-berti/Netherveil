@@ -41,7 +41,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
         PlayerInput.OnRetrieveSpear -= RetrieveSpearGhosts;
         Spear.OnPlacedInHand -= DestroySpearGhosts;
     } 
- 
+
     private void ThrowSpearGhosts(Vector3 posToReach)
     {
         GameObject spear = GameObject.FindWithTag("Player").GetComponent<PlayerController>().Spear.gameObject;
