@@ -13,7 +13,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
     /// of a binding should be refreshed. It then checks whether we have an icon for the current binding
     /// and if so, replaces the default text display with an icon.
     /// </summary>
-    public class GamepadIcons : MonoBehaviour
+    public class KeybindingsIcons : MonoBehaviour
     {
         public GamepadIconsSprites xbox;
         public GamepadIconsSprites ps4;
@@ -63,7 +63,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     AddInteractionsToLabel(component);
 
                     if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
-                        textMesh.text = bindingDisplayString;
+                        textMesh.text = bindingDisplayString.Length == 1 ? bindingDisplayString : controlPath;
                     else if (textMesh != null)
                         textMesh.text = string.Empty;
                 }
