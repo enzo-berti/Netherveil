@@ -7,6 +7,7 @@ using UnityEngine.InputSystem.Composites;
 using System.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
+using System.ComponentModel;
 
 ////TODO: localization support
 
@@ -525,7 +526,25 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 var action = m_Action?.action;
                 int index = action.bindings.IndexOf(x => x.id.ToString() == bindingId);
                 var binding = action.bindings[index];
-                m_ActionLabel.text = action != null ? $"{action.name} {ObjectNames.NicifyVariableName(binding.name)}" : string.Empty;
+
+                Debug.Log(action.interactions);
+
+                string[] interactions = string.IsNullOrEmpty(action.interactions) ? null : action.interactions.Split(";");
+                string interactionToAdd = string.Empty;
+                if (interactions != null && interactions.Length > 0)
+                {
+                    for (int i = 0; i < interactions.Length; ++i)
+                    {
+                        interactionToAdd = "(";
+                        if (!string.IsNullOrEmpty(interactions[i]))
+                        {
+                            interactionToAdd += interactions[i] + (i != interactions.Length - 1 ? "," : "");
+                        }
+                        interactionToAdd += ")";
+                    }
+                }
+
+                m_ActionLabel.text = action != null ? $"{action.name} {ObjectNames.NicifyVariableName(binding.name)} {interactionToAdd}" : string.Empty;
             }
         }
 

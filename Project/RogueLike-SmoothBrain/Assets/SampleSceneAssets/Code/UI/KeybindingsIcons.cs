@@ -18,6 +18,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
         public GamepadIconsSprites xbox;
         public GamepadIconsSprites ps4;
         public KeyboardIconsSprites kb;
+        public MouseIconsSprites mouse;
 
         protected void OnEnable()
         {
@@ -43,6 +44,8 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 icon = xbox.GetSprite(controlPath);
             else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
                 icon = kb.GetSprite(controlPath);
+            else if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Mouse"))
+                icon = mouse.GetSprite(controlPath);
 
 
             var textComponent = component.bindingText;
@@ -60,7 +63,6 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     textComponent.gameObject.SetActive(false);
                     imageComponent.sprite = icon;
                     imageComponent.gameObject.SetActive(true);
-                    AddInteractionsToLabel(component);
 
                     if (InputSystem.IsFirstLayoutBasedOnSecond(deviceLayoutName, "Keyboard"))
                         textMesh.text = bindingDisplayString.Length == 1 ? bindingDisplayString : controlPath;
@@ -72,23 +74,6 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     imageComponent.gameObject.SetActive(false);
                     textComponent.gameObject.SetActive(true);
                 }
-            }
-        }
-
-        private void AddInteractionsToLabel(RebindActionUI component)
-        {
-            var label = component.transform.parent.Find("Label");
-            string[] interactions = component.actionReference.action.interactions.Split(";");
-
-            if (interactions.Length > 0 && interactions[0] != string.Empty)
-            {
-                label.GetComponent<TMP_Text>().text += " (";
-
-                for (int i = 0; i < interactions.Length; ++i)
-                {
-                    label.GetComponent<TMP_Text>().text += interactions[i] + (i != interactions.Length - 1 ? "," : "");
-                }
-                label.GetComponent<TMP_Text>().text += ")";
             }
         }
 
@@ -173,6 +158,30 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     case "tab": return buttonMedium;
                     case "space": return buttonLong;
                     default: return buttonSimple;
+                }
+            }
+        }
+
+        [Serializable]
+        public struct MouseIconsSprites
+
+        {
+            public Sprite mouse;
+            public Sprite mouseLeft;
+            public Sprite mouseRight;
+            public Sprite mouseScroll;
+
+            public Sprite GetSprite(string controlPath)
+            {
+                // From the input system, we get the path of the control on device. So we can just
+                // map from that to the sprites we have for gamepads.
+
+                switch (controlPath)
+                {
+                    case "leftButton": return mouseLeft;
+                    case "rightButton": return mouseRight;
+                    case "middleButton": return mouseScroll;
+                    default: return mouse;
                 }
             }
         }
