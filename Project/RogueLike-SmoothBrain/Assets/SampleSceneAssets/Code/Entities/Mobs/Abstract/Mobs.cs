@@ -8,7 +8,6 @@ using System;
 using UnityEditor;
 #endif
 
-[RequireComponent(typeof(NavMeshAgent))]
 public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
@@ -72,7 +71,7 @@ public abstract class Mobs : Entity
 
     private void ApplySpeed(Stat speedStat)
     {
-        if (speedStat != Stat.SPEED)
+        if (speedStat != Stat.SPEED || agent == null)
             return;
 
         agent.speed = stats.GetValue(Stat.SPEED);
