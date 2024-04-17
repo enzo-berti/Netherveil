@@ -4,14 +4,12 @@ public class PressurePlateTrap : MonoBehaviour
 {
     public GameObject[] trapToActivate;
     public float cooldownTime = 2f;
-    private float currentCooldownTime = 0;
+    private float currentCooldownTime = 0f;
     private bool canActive = true;
-
 
     private void OnTriggerStay(Collider other)
     {
-        IDamageable damageable = other.GetComponent<IDamageable>();
-        if (canActive && damageable != null && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
+        if (canActive && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
         {
             ActivateTraps();
         }
@@ -19,14 +17,14 @@ public class PressurePlateTrap : MonoBehaviour
 
     private void ActivateTraps()
     {
-        for (int i = 0; i < trapToActivate.Length; i++)
+        foreach (var t in trapToActivate)
         {
-            IActivableTrap activableTrap = trapToActivate[i].GetComponent<IActivableTrap>();
-            if (activableTrap != null)
+            if (t.TryGetComponent(out IActivableTrap activableTrap))
             {
                 activableTrap.Active();
             }
         }
+
         canActive = false;
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using TMPro;
@@ -21,24 +22,40 @@ public class ItemDescription : MonoBehaviour
         ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;
 
         string descriptionToDisplay = item.Database.GetItem(id).Description;
-        string[] splitDescription = descriptionToDisplay.Split(" ");
+        char[] separators = new char[] { ' ', '\n' };
+        string[] splitDescription = descriptionToDisplay.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         string finalDescription = string.Empty;
 
+        foreach(var test in splitDescription)
+        {
+            Debug.Log(test.ToString());
+        }
         FieldInfo[] fieldOfItem = itemEffect.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
         for (int i = 0; i < splitDescription.Length; i++)
         {
             if (splitDescription[i].Length > 0 && splitDescription[i][0] == '{')
             {
-                string[] splitCurrent = splitDescription[i].Split('{', '}');
-                string valueToFind = splitCurrent[1];
+                char[] separatorsForCurrent = { '{', '}' };
+                string[] splitCurrent = splitDescription[i].Split(separatorsForCurrent, System.StringSplitOptions.RemoveEmptyEntries);
+                string valueToFind = splitCurrent[0];
 
                 FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
 
                 if (valueInfo != null)
                 {
                     var memberValue = valueInfo.GetValue(itemEffect);
+
+                    if(splitCurrent.Length > 1 && splitCurrent[1] == "%")
+                    {
+                        memberValue = Convert.ToSingle(valueInfo.GetValue(itemEffect)) * 100;
+                    }
+
                     splitDescription[i] = memberValue.ToString();
+                    for(int j = 1; j < splitCurrent.Length; j++)
+                    {
+                        splitDescription[i] += splitCurrent[j];
+                    }
                 }
                 else
                 {
