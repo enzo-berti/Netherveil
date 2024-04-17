@@ -25,11 +25,6 @@ public class ItemDescription : MonoBehaviour
         char[] separators = new char[] { ' ', '\n' };
         string[] splitDescription = descriptionToDisplay.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         string finalDescription = string.Empty;
-
-        foreach(var test in splitDescription)
-        {
-            Debug.Log(test.ToString());
-        }
         FieldInfo[] fieldOfItem = itemEffect.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
         for (int i = 0; i < splitDescription.Length; i++)
