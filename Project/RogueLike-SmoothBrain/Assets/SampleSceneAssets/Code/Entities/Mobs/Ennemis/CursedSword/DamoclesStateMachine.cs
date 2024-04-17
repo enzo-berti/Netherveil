@@ -1,7 +1,3 @@
-// ---[ STATE MACHINE ] ---
-// "factory" is use to get all state possible
-// "currentState" can be set in the start with : currentState = factory.GetState<YOUR_STATE>();
-
 using UnityEngine;
 using StateMachine; // include all script about stateMachine
 using System.Collections.Generic;

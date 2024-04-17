@@ -1,15 +1,3 @@
-// ---[ STATE ] ---
-// replace "DamoclesEnGardeState_STATEMACHINE" by your state machine class name.
-//
-// Here you can see an exemple of CheckSwitchStates method:
-// protected override void CheckSwitchStates()
-// {
-//      if (isRunning)
-//      {
-//          SwitchState(Factory.GetState<RunningState>());
-//      }
-// }
-
 using StateMachine; // include all script about stateMachine
 using Unity.VisualScripting;
 using UnityEngine;
