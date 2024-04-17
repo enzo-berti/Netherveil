@@ -150,9 +150,12 @@ public class Gorgon : Mobs, IGorgon
     {
         for (int i = 1; i < listDashes.Count; i++)
         {
-            StartCoroutine(GoSmoothToPosition(listDashes[i]));
-            animator.ResetTrigger("Dash");
-            animator.SetTrigger("Dash");
+            if(this.Stats.GetValue(Stat.SPEED) > 0)
+            {
+                StartCoroutine(GoSmoothToPosition(listDashes[i]));
+                animator.ResetTrigger("Dash");
+                animator.SetTrigger("Dash");
+            }
             yield return new WaitUntil(() => isSmoothCoroutineOn == false);
         }
         isGoingOnPlayer = false;

@@ -12,9 +12,10 @@ public class Freeze : Status
 
     public override void ApplyEffect(Entity target, IAttacker attacker)
     {
+        Debug.Log("Freeze " + target.name);
         if (target.Stats.HasStat(Stat.SPEED))
         {
-            baseAgentSpeed = target.gameObject.GetComponent<NavMeshAgent>().speed;
+            baseAgentSpeed = target.Stats.GetCoeff(Stat.SPEED);
             target.AddStatus(this);
             PlayVfx("VFX_Frozen");
         }
@@ -29,13 +30,13 @@ public class Freeze : Status
     protected override void Effect()
     {
         if(target != null)
-        { 
-            target.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+        {
+            target.Stats.SetValue(Stat.SPEED, 0);
         }
     }
 
     public override void OnFinished()
     {
-        target.gameObject.GetComponent<NavMeshAgent>().speed = baseAgentSpeed;
+        target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
     }
 }
