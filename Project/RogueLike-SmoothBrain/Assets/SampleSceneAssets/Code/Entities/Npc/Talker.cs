@@ -4,7 +4,9 @@ using UnityEngine;
 public class Talker : Npc
 {
     [Header("Talker parameters")]
-    [SerializeField] private DialogueTree dialogue;
+    [SerializeField] private DialogueTree questDT;
+    [SerializeField] private DialogueTree refusesDialogueDT;
+    [SerializeField] private DialogueTree alreadyHaveQuestDT;
     DialogueTreeRunner dialogueTreeRunner;
     Quest quest;
     Hero player;
@@ -35,7 +37,6 @@ public class Talker : Npc
     public override void Interract()
     {
         TriggerDialogue();
-        //GiveQuest();
     }
 
     private void GiveQuest()
@@ -55,7 +56,31 @@ public class Talker : Npc
         }
         else
         {
+            DialogueTree dialogue = questDT;
+
+            if (player.CurrentQuest != null)
+            {
+                dialogue = alreadyHaveQuestDT;
+            }
+            else if (PlayerInvestedInOppositeWay())
+            {
+                dialogue = refusesDialogueDT;
+            }
+
             dialogueTreeRunner.StartDialogue(dialogue, this);
         }
+    }
+
+    private bool PlayerInvestedInOppositeWay()
+    {
+        if(type == TalkerType.CLERIC && player.Stats.GetValue(Stat.CORRUPTION) >= player.STEP_VALUE)
+        {
+            return true;
+        }
+        else if (type == TalkerType.SHAMAN && player.Stats.GetValue(Stat.CORRUPTION) <= -player.STEP_VALUE)
+        {
+            return true;
+        }
+        return false;
     }
 }
