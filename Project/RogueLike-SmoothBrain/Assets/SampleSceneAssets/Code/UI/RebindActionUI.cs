@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem.Composites;
+using System.Linq;
+using UnityEditor;
+using UnityEngine.UIElements;
+using System.ComponentModel;
 
 ////TODO: localization support
 
@@ -519,7 +524,25 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             if (m_ActionLabel != null)
             {
                 var action = m_Action?.action;
-                m_ActionLabel.text = action != null ? action.name : string.Empty;
+                int index = action.bindings.IndexOf(x => x.id.ToString() == bindingId);
+                var binding = action.bindings[index];
+
+                string[] interactions = string.IsNullOrEmpty(action.interactions) ? null : action.interactions.Split(";");
+                string interactionToAdd = string.Empty;
+                if (interactions != null && interactions.Length > 0)
+                {
+                    for (int i = 0; i < interactions.Length; ++i)
+                    {
+                        interactionToAdd = "(";
+                        if (!string.IsNullOrEmpty(interactions[i]))
+                        {
+                            interactionToAdd += interactions[i] + (i != interactions.Length - 1 ? "," : "");
+                        }
+                        interactionToAdd += ")";
+                    }
+                }
+
+                m_ActionLabel.text = action != null ? $"{action.name} {ObjectNames.NicifyVariableName(binding.name)} {interactionToAdd}" : string.Empty;
             }
         }
 

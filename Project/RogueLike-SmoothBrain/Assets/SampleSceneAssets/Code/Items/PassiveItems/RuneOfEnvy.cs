@@ -35,10 +35,11 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
     private void StealStats()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
-
         foreach (GameObject enemy in RoomUtilities.roomData.enemies)
         {
             Mobs mob = enemy.GetComponent<Mobs>();
+            mob.StatSuckerVFX.GetComponent<VFXStopper>().Duration = 1f;
+            mob.StatSuckerVFX.GetComponent<VFXStopper>().PlayVFX();
             float hpStolen = mob.Stats.GetValue(Stat.HP) * stealPourcentage;
             float atkStolen = mob.Stats.GetValue(Stat.ATK) * stealPourcentage;
             float speedStolen = mob.Stats.GetValue(Stat.SPEED) * stealPourcentage;

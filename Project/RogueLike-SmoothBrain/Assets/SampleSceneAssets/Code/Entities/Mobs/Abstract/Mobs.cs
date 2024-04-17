@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using FMODUnity;
 using System;
+using UnityEngine.VFX;
+using UnityEngine.VFX.Utility;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,6 +19,7 @@ public abstract class Mobs : Entity
     protected Entity[] nearbyEntities;
     protected EnemyLifeBar lifeBar;
     [SerializeField] protected Drop drop;
+    public VisualEffect StatSuckerVFX;
 
     // opti
     protected int frameToUpdate;
@@ -58,6 +62,10 @@ public abstract class Mobs : Entity
         this.transform.parent.position = Vector3.zero;
         this.transform.parent.localPosition = Vector3.zero;
         this.transform.localPosition = pos;
+
+
+        StatSuckerVFX.SetVector3("Attract Target", GameObject.FindWithTag("Player").transform.position + Vector3.up);
+        StatSuckerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXPositionBinderCustom>().ToArray()[0].Target = GameObject.FindWithTag("Player").transform;
     }
 
     protected override void Update()
