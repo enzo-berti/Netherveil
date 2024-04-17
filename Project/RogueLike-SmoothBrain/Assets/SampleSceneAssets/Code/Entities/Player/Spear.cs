@@ -10,7 +10,7 @@ public class Spear : MonoBehaviour
     Hero hero;
     Transform parent = null;
     Animator playerAnimator;
-    public static event Action<Vector3> OnPlacedInWorld;
+    public static event Action<Spear> OnPlacedInWorld;
     public static event Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
@@ -111,7 +111,7 @@ public class Spear : MonoBehaviour
         SpearThrowCollider.gameObject.SetActive(false);
         placedInWorld = true;
 
-        OnPlacedInWorld?.Invoke(transform.position);
+        OnPlacedInWorld?.Invoke(this);
     }
 
     public void Throw(Vector3 _posToReach)
@@ -200,13 +200,7 @@ public class Spear : MonoBehaviour
             SpearThrowCollider.gameObject.SetActive(true);
         }
 
-        //offset so that the collide also takes the spear end spot
-        float collideOffset = 0.2f;
-        //construct collider(visible also in scene so we can debug it)
-        Vector3 scale = SpearThrowCollider.transform.localScale;
-        scale.z = playerToTargetPos.magnitude;
-        SpearThrowCollider.transform.localScale = scale;
-        SpearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
+        ScaleColliderToVector(playerToTargetPos);
 
         Collider[] colliders = SpearThrowCollider.BoxOverlap();
 
@@ -220,6 +214,16 @@ public class Spear : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ScaleColliderToVector(Vector3 centerToSpearVec)
+    {
+        //offset so that the collide also takes the spear end spot
+        float collideOffset = 0.2f;
+        Vector3 scale = SpearThrowCollider.transform.localScale;
+        scale.z = centerToSpearVec.magnitude;
+        SpearThrowCollider.transform.localScale = scale;
+        SpearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
     }
 
     private bool CanPlaceSpearInHand()
