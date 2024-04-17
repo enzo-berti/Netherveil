@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 7625873073129795474}
   - component: {fileID: 10401993589473847}
   - component: {fileID: 1232839932973434077}
-  - component: {fileID: 3571255901773785332}
+  - component: {fileID: 3136213946276396586}
+  - component: {fileID: -3001676827536227451}
   m_Layer: 0
   m_Name: VFX_StatSucker
   m_TagString: Untagged
@@ -53,7 +54,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 1
+        m_Name: Duration
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -145,9 +149,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ExecuteInEditor: 1
   m_Bindings:
-  - {fileID: 3571255901773785332}
+  - {fileID: 3136213946276396586}
   m_VisualEffect: {fileID: 5828447149792092049}
---- !u!114 &3571255901773785332
+--- !u!114 &3136213946276396586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -156,9 +160,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 7118060903458549486}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
+  m_Script: {fileID: 11500000, guid: a876b802851349b4c89021cbaca4ed47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Property:
     m_Name: Attract Target
   Target: {fileID: 0}
+--- !u!114 &-3001676827536227451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7118060903458549486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93677b87523a3ae448f869b9f85f39b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: 5828447149792092049}
+  destroyOnStop: 0
+  destroyDurationDelay: 0

@@ -142,6 +142,7 @@ Transform:
   - {fileID: 3298921738939079264}
   - {fileID: 3180234459085398662}
   - {fileID: 5450060368180123845}
+  - {fileID: 7742775025048813136}
   m_Father: {fileID: 867203832160427953}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &8048143146362212682
@@ -211,6 +212,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 750
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -221,6 +223,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 1
       value: 15
+      lastValue: 0
       coeff: 1
       maxValue: 0
       minValue: 0
@@ -231,6 +234,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 5
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -241,6 +245,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 0
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -251,6 +256,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 9
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -261,6 +267,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 20
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -271,6 +278,7 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 5
+      lastValue: 0
       coeff: 0
       maxValue: 0
       minValue: 0
@@ -279,6 +287,7 @@ MonoBehaviour:
     name: Grafted
   IsKnockbackable: 1
   canTriggerTraps: 1
+  IsInvincibleCount: 0
   drop:
     dropList:
     - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
@@ -286,9 +295,9 @@ MonoBehaviour:
       chance: 1
       Quantity: 50
       isChanceShared: 0
+  StatSuckerVFX: {fileID: 6293110322402977416}
   bossSounds:
     deathSound:
-      name: Death
       reference:
         Guid:
           Data1: 1654136484
@@ -297,7 +306,6 @@ MonoBehaviour:
           Data4: 685301962
         Path: event:/Enemy/Grafted/GraftedDeath
     hitSound:
-      name: Hit
       reference:
         Guid:
           Data1: -214694489
@@ -306,7 +314,6 @@ MonoBehaviour:
           Data4: 1018888436
         Path: event:/Enemy/Grafted/GraftedHit
     projectileLaunchedSound:
-      name: Projectile launched
       reference:
         Guid:
           Data1: 200127847
@@ -315,7 +322,6 @@ MonoBehaviour:
           Data4: -1983943433
         Path: event:/Enemy/Grafted/GraftedLunchProjectil
     projectileHitMapSound:
-      name: Projectile hit map
       reference:
         Guid:
           Data1: 833271855
@@ -324,7 +330,6 @@ MonoBehaviour:
           Data4: -916089434
         Path: event:/Enemy/Grafted/GraftedProjectilHitMap
     projectileHitPlayerSound:
-      name: Projectile hit player
       reference:
         Guid:
           Data1: 2035182190
@@ -333,7 +338,6 @@ MonoBehaviour:
           Data4: 524391268
         Path: event:/Enemy/Grafted/GraftedProjectilHitPlayer
     thrustSound:
-      name: Thrust
       reference:
         Guid:
           Data1: 2110755741
@@ -342,7 +346,6 @@ MonoBehaviour:
           Data4: -1644813887
         Path: event:/Enemy/Grafted/GraftedPunch
     introSound:
-      name: Intro
       reference:
         Guid:
           Data1: 1083504436
@@ -351,7 +354,6 @@ MonoBehaviour:
           Data4: -995448669
         Path: event:/Enemy/Grafted/GraftedScream
     retrievingProjectileSound:
-      name: Retrieving projectile
       reference:
         Guid:
           Data1: 801531834
@@ -360,7 +362,6 @@ MonoBehaviour:
           Data4: 820297616
         Path: event:/Enemy/Grafted/GraftedSpellCast
     spinAttackSound:
-      name: Fall
       reference:
         Guid:
           Data1: -741354411
@@ -369,7 +370,6 @@ MonoBehaviour:
           Data4: -1535010658
         Path: event:/Enemy/Grafted/GraftedFall
     stretchSound:
-      name: Dash
       reference:
         Guid:
           Data1: 1252271740
@@ -378,7 +378,6 @@ MonoBehaviour:
           Data4: 1477004850
         Path: event:/Enemy/Grafted/GraftedDash
     weaponOutSound:
-      name: WeaponOut
       reference:
         Guid:
           Data1: -128107736
@@ -387,7 +386,6 @@ MonoBehaviour:
           Data4: 2013680109
         Path: event:/Enemy/Grafted/GraftedTakeWeapon
     weaponInSound:
-      name: WeaponIn
       reference:
         Guid:
           Data1: 1699441104
@@ -396,7 +394,6 @@ MonoBehaviour:
           Data4: 1605154435
         Path: event:/Enemy/Grafted/GraftedTuckWeapon
     walkingSound:
-      name: Walk
       reference:
         Guid:
           Data1: -1622528925
@@ -405,7 +402,6 @@ MonoBehaviour:
           Data4: 819532573
         Path: event:/Enemy/Grafted/GraftedWalk
     music:
-      name: Music
       reference:
         Guid:
           Data1: 746641329
@@ -639,6 +635,86 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &556005109689137433
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3090980824970208318}
+    m_Modifications:
+    - target: {fileID: 7118060903458549486, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_Name
+      value: VFX_StatSucker
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 32f3b67cab93eda4d845db69a925aab9, type: 3}
+--- !u!2083052967 &6293110322402977416 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 5828447149792092049, guid: 32f3b67cab93eda4d845db69a925aab9,
+    type: 3}
+  m_PrefabInstance: {fileID: 556005109689137433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7742775025048813136 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
+    type: 3}
+  m_PrefabInstance: {fileID: 556005109689137433}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &829317876949907546
 PrefabInstance:
   m_ObjectHideFlags: 0
