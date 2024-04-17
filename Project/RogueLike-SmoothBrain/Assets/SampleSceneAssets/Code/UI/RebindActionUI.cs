@@ -527,8 +527,6 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 int index = action.bindings.IndexOf(x => x.id.ToString() == bindingId);
                 var binding = action.bindings[index];
 
-                Debug.Log(action.interactions);
-
                 string[] interactions = string.IsNullOrEmpty(action.interactions) ? null : action.interactions.Split(";");
                 string interactionToAdd = string.Empty;
                 if (interactions != null && interactions.Length > 0)
