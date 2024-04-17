@@ -61,7 +61,6 @@ public static class EasingFunctions
         float elapsed = 0.0f;
         float startScale = t.localScale.x;
         duration -= (startScale - maxScale) / (minScale - maxScale) * duration;
-        Debug.Log(duration);
 
         while (elapsed < duration)
         {
