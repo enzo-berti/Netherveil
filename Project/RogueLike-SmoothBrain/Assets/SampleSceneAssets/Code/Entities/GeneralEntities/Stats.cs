@@ -529,6 +529,47 @@ public class Stats
         }
     }
 
+    public void MultiplyCoeffValue(Stat info, float  multipliedValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+        {
+            if (stats[index].hasCoeff)
+            {
+                stats[index].coeff *= multipliedValue;
+            }
+            else
+            {
+                Debug.LogWarning($"Can't find {info} coeff in {name}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {info} in {name}");
+        }
+    }
+
+    public void DivideCoeffValue(Stat info, float divideValue)
+    {
+        int index = stats.FindIndex(x => x.stat == info);
+
+        if (index != -1)
+        {
+            if (stats[index].hasCoeff)
+            {
+                stats[index].coeff /= divideValue;
+            }
+            else
+            {
+                Debug.LogWarning($"Can't find {info} coeff in {name}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Can't find {info} in {name}");
+        }
+    }
     #endregion
 
     #region ClampMaths
