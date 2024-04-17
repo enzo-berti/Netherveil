@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Spear : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Spear : MonoBehaviour
     public static event Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
+    public VisualEffect PhantomSpearVFX;
     public BoxCollider SpearThrowCollider { get; set; } = null;
     GameObject trail;
 
@@ -59,7 +61,7 @@ public class Spear : MonoBehaviour
             meshRenderer.transform.Rotate(new Vector3(0, 50f * Time.deltaTime, 0));
         }
 
-            if (trail == null)
+        if (trail == null)
         {
             return;
         }
@@ -98,7 +100,7 @@ public class Spear : MonoBehaviour
         Destroy(trail);
         meshRenderer.enabled = true;
         // We set position at the exact place ( the spear doesn't move, just tp )
-        transform.SetPositionAndRotation(posToReach + Vector3.up, 
+        transform.SetPositionAndRotation(posToReach + Vector3.up,
             Quaternion.identity * Quaternion.Euler(-90f, 90f, 0));
 
         IsThrowing = false;
@@ -150,7 +152,7 @@ public class Spear : MonoBehaviour
             }
         }
 
-        ApplyDamages(playerToPosToReachVec,debugMode: false);
+        ApplyDamages(playerToPosToReachVec, debugMode: false);
 
         // On set le parent que la lance avait ( la main du joueur ), puis on la retire tant qu'elle est lancée afin de la rendre indépendante 
         parent = transform.parent;
@@ -188,10 +190,10 @@ public class Spear : MonoBehaviour
         }
 
         Vector3 playerToSpearVec = spearPosition - player.position;
-        ApplyDamages(playerToSpearVec,debugMode: false);
+        ApplyDamages(playerToSpearVec, debugMode: false);
     }
 
-    void ApplyDamages(Vector3 playerToTargetPos,bool debugMode)
+    void ApplyDamages(Vector3 playerToTargetPos, bool debugMode)
     {
         if (debugMode)
         {

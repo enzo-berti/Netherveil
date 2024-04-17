@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9168044050776868670
+--- !u!114 &-2172452538167431940
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,33 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
-  m_Name: ChoiceDialogueNode
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
   m_EditorClassIdentifier: 
-  GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
-  position: {x: 193, y: 154}
-  dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
-  options:
-  - option: Yes
-    child: {fileID: 1360174843463779351}
-  - option: No
-    child: {fileID: -1837225741590867456}
---- !u!114 &-1837225741590867456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
-  position: {x: 567, y: 253}
-  dialogueData: {fileID: 11400000, guid: af03db8786c3ad84e90cae354adbdb5c, type: 2}
+  GUID: 83d104ff-5807-4416-b692-18e4126282fb
+  position: {x: 571, y: 123}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
   child: {fileID: 0}
+  questTag: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,14 +29,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
   m_Name: ClericClassicDT
   m_EditorClassIdentifier: 
-  root: {fileID: 3518158436425767135}
+  root: {fileID: 1011901695734120964}
   nodes:
-  - {fileID: 3518158436425767135}
-  - {fileID: -9168044050776868670}
-  - {fileID: 1360174843463779351}
-  - {fileID: -1837225741590867456}
+  - {fileID: 1011901695734120964}
+  - {fileID: 790664537931371365}
+  - {fileID: 8925685809708569857}
+  - {fileID: -2172452538167431940}
   currentNode: {fileID: 0}
---- !u!114 &1360174843463779351
+--- !u!114 &790664537931371365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,15 +45,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1047fa5621329014b85727877a2bfb5f, type: 3}
-  m_Name: EventDialogueNode
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
   m_EditorClassIdentifier: 
-  GUID: 701ed27f-1948-4b78-b393-6ff1c40a1992
-  position: {x: 569, y: 79}
-  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
-  child: {fileID: 0}
-  eventTag: GiveQuest
---- !u!114 &3518158436425767135
+  GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
+  position: {x: 221, y: 183}
+  dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
+  options:
+  - option: Yes
+    child: {fileID: -2172452538167431940}
+  - option: No
+    child: {fileID: 8925685809708569857}
+--- !u!114 &1011901695734120964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,5 +69,21 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   GUID: f562f3af-0217-4d30-be09-e1ba76cca47d
-  position: {x: 40, y: 40}
-  child: {fileID: -9168044050776868670}
+  position: {x: 56, y: 56}
+  child: {fileID: 790664537931371365}
+--- !u!114 &8925685809708569857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
+  m_Name: SimpleDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
+  position: {x: 573, y: 271}
+  dialogueData: {fileID: 11400000, guid: af03db8786c3ad84e90cae354adbdb5c, type: 2}
+  child: {fileID: 0}
