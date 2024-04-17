@@ -49,7 +49,6 @@ public class PestStateMachine : Mobs, IPest
     public BaseState<PestStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
-    public NavMeshAgent Agent { get => agent; }
     public int ChargeInHash { get => chargeInHash; }
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }

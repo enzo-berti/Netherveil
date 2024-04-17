@@ -54,7 +54,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public BaseState<DamoclesStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
-    public NavMeshAgent Agent { get => agent; }
     public BoxCollider Attack1Collider { get => attack1Collider; }
     public BoxCollider Attack2Collider { get => attack2Collider; }
     public Transform Target { get => target; set => target = value; }
