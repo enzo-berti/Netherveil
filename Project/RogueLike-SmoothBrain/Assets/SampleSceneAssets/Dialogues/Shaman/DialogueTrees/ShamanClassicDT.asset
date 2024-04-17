@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8674577912925472469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
+  m_Name: SimpleDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: bece73a0-7ab2-4229-a395-52ee5535d8a0
+  position: {x: 602, y: 159}
+  dialogueData: {fileID: 11400000, guid: 39cff87bc5d4e3e4a812b704150be7d5, type: 2}
+  child: {fileID: 0}
+--- !u!114 &-6007847781954393611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 856d4336-ae4a-413c-9fe4-cd6d3c49bdd9
+  position: {x: 605, y: -15}
+  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &-4055434260148928788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: dc7f22ce-419e-41ba-a722-2437a2a5864f
+  position: {x: 244, y: 46}
+  dialogueData: {fileID: 11400000, guid: a21599b75c768c141a2beff5634fdf34, type: 2}
+  options:
+  - option: Yes
+    child: {fileID: -6007847781954393611}
+  - option: No
+    child: {fileID: -8674577912925472469}
+--- !u!114 &-1604237959363653201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  GUID: 1a1beb0a-dbc7-46a2-be56-347d9e3decd3
+  position: {x: 56, y: 56}
+  child: {fileID: -4055434260148928788}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
+  m_Name: ShamanClassicDT
+  m_EditorClassIdentifier: 
+  root: {fileID: -1604237959363653201}
+  nodes:
+  - {fileID: -1604237959363653201}
+  - {fileID: -4055434260148928788}
+  - {fileID: -8674577912925472469}
+  - {fileID: -6007847781954393611}
+  currentNode: {fileID: 0}

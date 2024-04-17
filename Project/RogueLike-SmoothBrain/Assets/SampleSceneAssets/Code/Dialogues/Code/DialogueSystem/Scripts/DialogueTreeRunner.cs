@@ -21,22 +21,28 @@ public class DialogueTreeRunner : MonoBehaviour
     private string lastDialogue;
     DialogueTreeEventManager eventManager;
     public DialogueTreeEventManager EventManager { get => eventManager; }
-    public Npc TalkerNPC { get; private set; }
+    public Talker TalkerNPC { get; private set; }
+    private Hero player;
 
     private void Awake()
     {
         eventManager = GetComponent<DialogueTreeEventManager>();
+        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
     }
 
-    public void StartDialogue(DialogueTree tree, Npc talker)
+    public void StartDialogue(DialogueTree tree, Npc npc)
     {
         if (IsStarted)
             return;
 
         this.tree = tree;
         this.tree.ResetTree();
+
         dialogueCanvas.gameObject.SetActive(true);
-        TalkerNPC = talker;
+
+        if (npc is Talker)
+            TalkerNPC = npc as Talker;
+
         UpdateDialogue();
     }
 
@@ -57,6 +63,7 @@ public class DialogueTreeRunner : MonoBehaviour
         SimpleDialogueNode simple = tree.currentNode as SimpleDialogueNode;
         ChoiceDialogueNode choice = tree.currentNode as ChoiceDialogueNode;
         EventDialogueNode eventN = tree.currentNode as EventDialogueNode;
+        QuestDialogueNode quest = tree.currentNode as QuestDialogueNode;
 
         if (simple)
         {
@@ -92,6 +99,22 @@ public class DialogueTreeRunner : MonoBehaviour
             tree.Process(eventN.child);
 
             eventManager.Invoke(eventN.eventTag);
+        }
+        else if (quest)
+        {
+            SetIllustration(quest.dialogueData.illustration);
+            SetName(quest.dialogueData.name);
+            SetDialogue(quest.dialogueData.dialogue);
+
+            tree.Process(quest.child);
+
+            if (TalkerNPC != null)
+            {
+                if (string.IsNullOrEmpty(quest.questTag))
+                    player.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), TalkerNPC.Type);
+                else
+                    player.CurrentQuest = Quest.LoadClass(quest.questTag, TalkerNPC.Type);
+            }
         }
         else if (tree.currentNode == null)
         {

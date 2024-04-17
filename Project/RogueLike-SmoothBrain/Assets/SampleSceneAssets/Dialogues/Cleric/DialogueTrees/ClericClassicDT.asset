@@ -1,6 +1,42 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7878339120895302663
+--- !u!114 &-2172452538167431940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 83d104ff-5807-4416-b692-18e4126282fb
+  position: {x: 571, y: 123}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
+  m_Name: ClericClassicDT
+  m_EditorClassIdentifier: 
+  root: {fileID: 1011901695734120964}
+  nodes:
+  - {fileID: 1011901695734120964}
+  - {fileID: 790664537931371365}
+  - {fileID: 8925685809708569857}
+  - {fileID: -2172452538167431940}
+  currentNode: {fileID: 0}
+--- !u!114 &790664537931371365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,50 +48,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
   m_Name: ChoiceDialogueNode
   m_EditorClassIdentifier: 
-  GUID: dc7f22ce-419e-41ba-a722-2437a2a5864f
-  position: {x: 212, y: 14}
-  dialogueData: {fileID: 11400000, guid: a21599b75c768c141a2beff5634fdf34, type: 2}
+  GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
+  position: {x: 221, y: 183}
+  dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
   options:
   - option: Yes
-    child: {fileID: -6917525884974882741}
+    child: {fileID: -2172452538167431940}
   - option: No
-    child: {fileID: 6600735252293477880}
---- !u!114 &-6917525884974882741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 0ae169f0-be4d-4cca-bbde-7028bb5bc7dc
-  position: {x: 562, y: -42}
-  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
-  child: {fileID: 0}
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
-  m_Name: ShamanDialogueTree
-  m_EditorClassIdentifier: 
-  root: {fileID: 4455562765371660149}
-  nodes:
-  - {fileID: 4455562765371660149}
-  - {fileID: -7878339120895302663}
-  - {fileID: 6600735252293477880}
-  - {fileID: -6917525884974882741}
-  currentNode: {fileID: 0}
---- !u!114 &4455562765371660149
+    child: {fileID: 8925685809708569857}
+--- !u!114 &1011901695734120964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -67,10 +68,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
   m_Name: RootNode
   m_EditorClassIdentifier: 
-  GUID: 1a1beb0a-dbc7-46a2-be56-347d9e3decd3
-  position: {x: 24, y: 24}
-  child: {fileID: -7878339120895302663}
---- !u!114 &6600735252293477880
+  GUID: f562f3af-0217-4d30-be09-e1ba76cca47d
+  position: {x: 56, y: 56}
+  child: {fileID: 790664537931371365}
+--- !u!114 &8925685809708569857
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -82,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
-  GUID: bece73a0-7ab2-4229-a395-52ee5535d8a0
-  position: {x: 563, y: 97}
-  dialogueData: {fileID: 11400000, guid: 39cff87bc5d4e3e4a812b704150be7d5, type: 2}
+  GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
+  position: {x: 573, y: 271}
+  dialogueData: {fileID: 11400000, guid: af03db8786c3ad84e90cae354adbdb5c, type: 2}
   child: {fileID: 0}

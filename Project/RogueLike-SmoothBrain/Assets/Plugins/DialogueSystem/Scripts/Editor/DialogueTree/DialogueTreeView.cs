@@ -84,6 +84,13 @@ namespace DialogueSystem.Editor
                 AddElement(newNode);
                 return newNode;
             }
+            if (type == typeof(QuestDialogueNodeView))
+            {
+                newNode = new QuestDialogueNodeView(this);
+                newNode.SetPosition(new Rect(position, defaultNodeSize));
+                AddElement(newNode);
+                return newNode;
+            }
 
             return null;
         }
@@ -94,6 +101,7 @@ namespace DialogueSystem.Editor
             SimpleDialogueNode simple = node as SimpleDialogueNode;
             ChoiceDialogueNode choice = node as ChoiceDialogueNode;
             EventDialogueNode eventN = node as EventDialogueNode;
+            QuestDialogueNode quest = node as QuestDialogueNode;
 
             if (root != null)
             {
@@ -127,6 +135,16 @@ namespace DialogueSystem.Editor
                 viewNode.GUID = node.GUID;
                 viewNode.DialogueData = eventN.dialogueData;
                 viewNode.EventTag = eventN.eventTag;
+                viewNode.SetPosition(new Rect(position, defaultNodeSize));
+                AddElement(viewNode);
+                return viewNode;
+            }
+            if (quest != null)
+            {
+                QuestDialogueNodeView viewNode = new QuestDialogueNodeView(this);
+                viewNode.GUID = node.GUID;
+                viewNode.DialogueData = quest.dialogueData;
+                viewNode.QuestTag = quest.questTag;
                 viewNode.SetPosition(new Rect(position, defaultNodeSize));
                 AddElement(viewNode);
                 return viewNode;

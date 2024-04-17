@@ -35,7 +35,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
     int currentStep = 0;
-    readonly int STEP_VALUE = 25;
+    public readonly int STEP_VALUE = 25;
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -176,7 +176,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             Stats.SetValue(Stat.HP, 1f);
         }
-
     }
 
     private void ManageCorruptionChangeLessThanStep(float corruptionStat, float corruptionLastValue, float diff)
@@ -286,14 +285,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             //désactiver la capacité divine shield
             //désactiver malus de possibilité de dédoublement des mobs
-            playerController.LaunchUpgradeAnimation = true;
         }
         else
         {
             Stats.DecreaseMaxValue(Stat.HP, 15f);
             Stats.DecreaseValue(Stat.HP, 15f);
             Stats.IncreaseValue(Stat.ATK, 5f);
-            playerController.LaunchUpgradeAnimation = true;
         }
     }
 
@@ -305,14 +302,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
             //désactiver debuff impossibilité de se soigner via consommables
             //désactiver nouvelle compétence
-            playerController.LaunchUpgradeAnimation = true;
         }
         else
         {
             Stats.DecreaseValue(Stat.ATK, 5f);
             Stats.IncreaseMaxValue(Stat.HP, 15f);
             Stats.IncreaseValue(Stat.HP, 15f);
-            playerController.LaunchUpgradeAnimation = true;
         }
     }
     #endregion
