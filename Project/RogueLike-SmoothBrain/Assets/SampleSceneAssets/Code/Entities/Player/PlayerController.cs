@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
     public VisualEffect DashVFX;
     public VisualEffect ChargedAttackVFX;
     public VisualEffect spearLaunchVFX;
+    public VisualEffect corruptionUpgradeVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;
@@ -325,6 +326,16 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("UpgradingStats");
         hero.State = (int)Hero.PlayerState.UPGRADING_STATS;
         LaunchUpgradeAnimation = false;
+        if(hero.Stats.GetValue(Stat.CORRUPTION) > 0)
+        {
+            VFXWrapper.transform.position = transform.position;
+            corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+        }
+        else if (hero.Stats.GetValue(Stat.CORRUPTION) < 0)
+        {
+            VFXWrapper.transform.position = transform.position;
+            corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+        }
         //launch benediction or corruptionVFX
     }
 
