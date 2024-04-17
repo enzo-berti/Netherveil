@@ -8,7 +8,6 @@ public class Talker : Npc
     [SerializeField] private DialogueTree refusesDialogueDT;
     [SerializeField] private DialogueTree alreadyHaveQuestDT;
     DialogueTreeRunner dialogueTreeRunner;
-    Quest quest;
     Hero player;
     public enum TalkerType
     {
@@ -17,35 +16,18 @@ public class Talker : Npc
     }
 
     [SerializeField] TalkerType type;
+    public TalkerType Type => type;
 
     protected override void Start()
     {
         base.Start();
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        dialogueTreeRunner.EventManager.AddListener(nameof(GiveQuest), GiveQuest);
-    }
-
-    private void OnDestroy()
-    {
-        if (dialogueTreeRunner != null)
-        {
-            dialogueTreeRunner.EventManager.RemoveListener(nameof(GiveQuest));
-        }
     }
 
     public override void Interract()
     {
         TriggerDialogue();
-    }
-
-    private void GiveQuest()
-    {
-        if(dialogueTreeRunner.TalkerNPC == this)
-        {
-            quest = Quest.LoadClass(Quest.GetRandomQuestName(), type);
-            player.CurrentQuest = quest;
-        }
     }
 
     private void TriggerDialogue()
