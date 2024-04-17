@@ -17,7 +17,7 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     public void Activate()
     {
         RoomUtilities.ExitEvents += ResetStat;
-        Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        Hero hero = Utilities.Hero;
         foreach(var stat in hero.Stats.StatsName)
         {
             if(!avoidedStat.Contains(stat))
@@ -29,7 +29,7 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
 
     private void ResetStat()
     {
-        Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        Hero hero = Utilities.Hero;
         foreach (var stat in hero.Stats.StatsName)
         {
             if (!avoidedStat.Contains(stat))

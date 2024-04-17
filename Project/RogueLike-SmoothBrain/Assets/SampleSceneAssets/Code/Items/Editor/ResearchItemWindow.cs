@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ResearchItemWindow : EditorWindow
 {
+    static private bool FocusOnOpen;
     ItemDatabase database;
     string search;
     List<string> searchItem = new List<string>();
@@ -15,14 +16,17 @@ public class ResearchItemWindow : EditorWindow
     {
         database = Resources.Load<ItemDatabase>("ItemDatabase");
         search = string.Empty;
+        FocusOnOpen = true;
     }
 
     private void OnGUI()
     {
         SearchItems();
         EditorGUILayout.BeginHorizontal();
+        GUI.SetNextControlName("search");
         search = EditorGUILayout.TextField(search);
         EditorGUILayout.EndHorizontal();
+        FocusSearch();
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
         foreach (var item in searchItem)
         {
@@ -53,5 +57,15 @@ public class ResearchItemWindow : EditorWindow
             }
             ).ToList();
         searchItem.Sort();
+    }
+
+    private void FocusSearch()
+    {
+        if(FocusOnOpen)
+        {
+            FocusOnOpen = false;
+            GUI.FocusControl("search");
+        }
+        
     }
 }

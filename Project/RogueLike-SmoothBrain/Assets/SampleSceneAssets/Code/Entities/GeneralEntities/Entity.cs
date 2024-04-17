@@ -236,20 +236,24 @@ public class EntityDrawer : Editor
         }
 
         // Get all infos
-        FieldInfo[] infos = target.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-        // Get entity infos only
-        FieldInfo[] entityInfo = typeof(Entity).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-        List<string> toSort = new List<string>();
-        for (int i = infos.Length - 1; i >= 0; i--)
+        List<FieldInfo> infos = new();
+        Type currentType = target.GetType();
+        while (currentType != typeof(Entity))
         {
-            if (entityInfo.FirstOrDefault(x => x.Name == infos[i].Name) != null) continue;
+            foreach (var field in currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            {
+                infos.Add(field);
+            }
+            currentType = currentType.BaseType;
+        }
+        List<string> toSort = new List<string>();
+        for(int i = 0; i < infos.Count; i++)
+        {
             if ((infos[i].IsPublic && !infos[i].IsInitOnly && infos[i].GetCustomAttribute(typeof(HideInInspector)) == null) || infos[i].GetCustomAttribute(typeof(SerializeField)) != null)
             {
                 classField.Add(infos[i].Name);
             }
         }
-        classField.Reverse();
     }
 
     public override void OnInspectorGUI()
