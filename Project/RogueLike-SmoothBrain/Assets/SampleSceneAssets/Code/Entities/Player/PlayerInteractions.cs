@@ -4,27 +4,20 @@ using UnityEngine;
 
 public class PlayerInteractions : MonoBehaviour
 {
-    private List<IInterractable> interactablesInRange = new List<IInterractable>();
-    public List<IInterractable> InteractablesInRange
+    public List<IInterractable> InteractablesInRange { get ; private set; } = new List<IInterractable>();
+
+    private void Update()
     {
-        get
-        {
-            SelectClosestItem();
-            return interactablesInRange;
-        }
-        private set
-        {
-            interactablesInRange = value;
-        }
+        SelectClosestItem();
     }
 
     private void SelectClosestItem()
     {
-        if (interactablesInRange.Count == 0)
+        if (InteractablesInRange.Count == 0)
             return;
 
         Vector2 playerPos = transform.position.ToCameraOrientedVec2();
-        interactablesInRange = interactablesInRange.OrderBy(interactable =>
+        InteractablesInRange = InteractablesInRange.OrderBy(interactable =>
         {
             Vector2 itemPos = (interactable as MonoBehaviour).transform.position.ToCameraOrientedVec2();
             return Vector2.Distance(playerPos, itemPos);
@@ -32,11 +25,11 @@ public class PlayerInteractions : MonoBehaviour
         ).ToList();
 
 
-        for (int i = 1; i< interactablesInRange.Count; ++i)
+        for (int i = 1; i< InteractablesInRange.Count; ++i)
         {
-            interactablesInRange[i].Deselect();
+            InteractablesInRange[i].Deselect();
         }
 
-        interactablesInRange[0].Select();
+        InteractablesInRange[0].Select();
     }
 }
