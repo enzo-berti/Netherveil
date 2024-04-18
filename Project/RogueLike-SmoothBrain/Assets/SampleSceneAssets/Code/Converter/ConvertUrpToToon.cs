@@ -27,7 +27,7 @@ public static class ConvertUrpToToon
 
                         material.shader = toonShader;
 
-                        if (memMat.HasFloat("_Blend")) material.SetInt("_Blend", (int)memMat.GetFloat("_Blend"));
+                        if (memMat.HasFloat("_Blend")) material.SetInt("_Blend", memMat.GetFloat("_Blend") > 0 ? 1 : 0);
 
                         material.SetColor("_1st_ShadeColor", new Color(0.67f, 0.67f, 0.67f, 1.0f));
                         material.SetColor("_2st_ShadeColor", new Color(0.33f, 0.33f, 0.33f, 1.0f));
