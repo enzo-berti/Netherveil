@@ -10,7 +10,7 @@ public class GorgonDashBehaviour : StateMachineBehaviour
     {
         GameObject gorgon = animator.transform.parent.gameObject;
         VisualEffect vfx = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Dash_Gorgon")).GetComponent<VisualEffect>();
-        vfx.gameObject.transform.position = Vector3.zero;
+        //vfx.gameObject.transform.position = Vector3.zero;
         vfx.gameObject.GetComponent<VFXStopper>().Duration = stateInfo.length * 3;
         vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", gorgon.GetComponentInChildren<SkinnedMeshRenderer>());
         vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = gorgon.GetComponentInChildren<VFXTarget>().transform;
