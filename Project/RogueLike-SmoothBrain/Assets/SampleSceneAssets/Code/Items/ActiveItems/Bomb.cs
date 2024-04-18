@@ -1,4 +1,3 @@
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class Bomb : ItemEffect, IActiveItem
@@ -20,5 +19,5 @@ public class Bomb : ItemEffect, IActiveItem
         explodingBomb.SetTimeToExplode(0.5f * 1.5f);
         explodingBomb.SetBlastDamages((int)Utilities.Hero.Stats.GetValue(Stat.ATK));
         explodingBomb.Activate();
-    } 
-} 
+    }
+}

@@ -96,7 +96,7 @@ public abstract class Status
     {
         if (target.transform.parent.Find(vfxName) == null)
         {
-            VisualEffect vfx = GameObject.Instantiate(Resources.Load<GameObject>(vfxName), target.transform.parent).GetComponent<VisualEffect>();
+            VisualEffect vfx = GameObject.Instantiate(GameResources.Get<GameObject>(vfxName), target.transform.parent).GetComponent<VisualEffect>();
             vfx.gameObject.transform.position = Vector3.zero;
             vfx.gameObject.GetComponent<VFXStopper>().Duration = duration;
             vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());

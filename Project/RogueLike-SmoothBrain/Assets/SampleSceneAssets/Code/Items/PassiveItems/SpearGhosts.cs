@@ -50,7 +50,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
         for (int i = 0; i< spearThrowWrappers.Count; ++i)
         {
             GameObject ghostSpear = GameObject.Instantiate(spear, spear.transform.position, spear.transform.rotation, spear.transform.parent);
-            ghostSpear.GetComponentInChildren<MeshRenderer>().material = Resources.Load("PhantomSpearMat") as Material;
+            ghostSpear.GetComponentInChildren<MeshRenderer>().material = GameResources.Get<Material>("PhantomSpearMat");
             ghostSpear.GetComponentInChildren<VisualEffect>().Play();
             ghostSpears.Add(ghostSpear);
 
