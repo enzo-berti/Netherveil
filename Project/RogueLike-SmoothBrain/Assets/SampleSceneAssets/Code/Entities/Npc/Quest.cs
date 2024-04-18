@@ -60,6 +60,12 @@ public abstract class Quest
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
     }
 
+    protected virtual void QuestLost()
+    {
+        player.CurrentQuest = null;
+        //add feedback to show that quest is lost
+    }
+
     protected void QuestUpdated()
     {
         OnQuestUpdated?.Invoke();
