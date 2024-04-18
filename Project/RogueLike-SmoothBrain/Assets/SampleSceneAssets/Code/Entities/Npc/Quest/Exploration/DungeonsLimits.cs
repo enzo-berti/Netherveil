@@ -3,27 +3,23 @@ using Map;
 public class DungeonsLimits : Quest
 {
     float currentNumber = 0f;
-    float MAX_NUMBER;
-    float poucentageAmout;
 
     public override void AcceptQuest()
     {
-        MAX_NUMBER = RoomUtilities.NbRoom;
-        poucentageAmout = 100f / MAX_NUMBER;
         progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/100%";
-        RoomUtilities.allEnemiesDeadEvents += UpdateCount;
+        RoomUtilities.EnterEvents += UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        RoomUtilities.allEnemiesDeadEvents -= UpdateCount;
+        RoomUtilities.EnterEvents -= UpdateCount;
     }
 
     private void UpdateCount()
     {
-        currentNumber += poucentageAmout;
-        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{MAX_NUMBER}%";
+        currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Normal] / RoomUtilities.nbRoomByType[RoomType.Normal] * 100f;
+        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/100%";
         QuestUpdated();
 
         if (currentNumber >= 100)
@@ -31,6 +27,4 @@ public class DungeonsLimits : Quest
             QuestFinished();
         }
     }
-
-
 }
