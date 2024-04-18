@@ -5,6 +5,14 @@ using UnityEngine;
 
 public abstract class Quest
 {
+    public enum QuestDifficulty
+    {
+        EASY,
+        MEDIUM,
+        HARD,
+        NB
+    }
+
     public QuestData Datas { get; protected set; }
     public string progressText = string.Empty;
     static QuestDatabase database;
@@ -12,6 +20,7 @@ public abstract class Quest
     protected Hero player;
     protected QuestTalker.TalkerType talkerType;
     protected QuestTalker.TalkerGrade talkerGrade;
+    protected QuestDifficulty difficulty;
 
     public abstract void AcceptQuest();
 
@@ -22,6 +31,7 @@ public abstract class Quest
         quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         quest.talkerType = type;
         quest.talkerGrade = grade;
+        quest.difficulty = (QuestDifficulty)Seed.Range(0, (int)QuestDifficulty.NB);
         return quest;
     }
 
