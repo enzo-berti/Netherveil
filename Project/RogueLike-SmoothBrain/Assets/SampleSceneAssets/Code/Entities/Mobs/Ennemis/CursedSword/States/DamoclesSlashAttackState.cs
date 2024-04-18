@@ -1,15 +1,3 @@
-// ---[ STATE ] ---
-// replace "DamoclesSlashAttackState_STATEMACHINE" by your state machine class name.
-//
-// Here you can see an exemple of CheckSwitchStates method:
-// protected override void CheckSwitchStates()
-// {
-//      if (isRunning)
-//      {
-//          SwitchState(Factory.GetState<RunningState>());
-//      }
-// }
-
 using StateMachine; // include all script about stateMachine
 using System.Collections;
 using System.Linq;
