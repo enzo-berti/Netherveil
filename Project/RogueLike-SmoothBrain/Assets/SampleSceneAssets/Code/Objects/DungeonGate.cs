@@ -1,6 +1,6 @@
+using Map;
 using System.Threading.Tasks;
 using UnityEngine;
-using Map;
 
 public class DungeonGate : MonoBehaviour
 {
@@ -50,6 +50,11 @@ public class DungeonGate : MonoBehaviour
         while ((disolveMat - 1f) < 0.05f)
         {
             disolveMat += Time.deltaTime;
+
+            if (material == null)
+            {
+                return;
+            }
             material.SetFloat("_Dissolve", disolveMat);
 
             await Task.Yield();
@@ -64,6 +69,11 @@ public class DungeonGate : MonoBehaviour
         while (disolveMat > 0.05f)
         {
             disolveMat -= Time.deltaTime;
+
+            if (material == null)
+            {
+                return;
+            }
             material.SetFloat("_Dissolve", disolveMat);
 
             await Task.Yield();
