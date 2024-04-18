@@ -332,15 +332,12 @@ public class PlayerController : MonoBehaviour
         LaunchUpgradeAnimation = false;
         if(hero.Stats.GetValue(Stat.CORRUPTION) > 0)
         {
-            VFXWrapper.transform.position = transform.position;
             corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
         }
         else if (hero.Stats.GetValue(Stat.CORRUPTION) < 0)
         {
-            VFXWrapper.transform.position = transform.position;
-            corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+            benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
         }
-        //launch benediction or corruptionVFX
     }
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
