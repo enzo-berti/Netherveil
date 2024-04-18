@@ -147,9 +147,9 @@ namespace Generation
 
         private void GenerateMap(GenerationParam genParam)
         {
-            RoomData.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
-            RoomData.nbRoomByType[RoomType.Lobby] = 1;
-            RoomData.nbRoomByType[RoomType.Boss] = 1;
+            RoomUtilities.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
+            RoomUtilities.nbRoomByType[RoomType.Lobby] = 1;
+            RoomUtilities.nbRoomByType[RoomType.Boss] = 1;
 
             GenerateLobbyRoom(ref genParam);
             GenerateRooms(ref genParam);

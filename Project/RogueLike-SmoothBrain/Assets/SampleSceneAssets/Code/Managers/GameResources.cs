@@ -3,67 +3,53 @@ using UnityEngine;
 
 public class GameResources : MonoBehaviour
 {
-    static private GameResources instance;
-    private readonly Dictionary<string, Object> keyValuePairs = new Dictionary<string, Object>();
+    static bool load = false;
+    static private readonly Dictionary<string, Object> objDictionary = new Dictionary<string, Object>();
     [SerializeField] private List<Object> objectsToLoad;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadGameResources()
     {
-        _ = Instance;
-    }
-
-    static public GameResources Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                Instantiate(Resources.Load<GameObject>(nameof(AudioManager)));
-            }
-
-            return instance;
-        }
+        Debug.Log("???");
+        GameObject.Instantiate(Resources.Load<GameObject>(nameof(GameResources)));
     }
 
     private void Awake()
     {
-        if (instance == null)
+        if (!load)
         {
-            instance = this;
-            DontDestroyOnLoad(instance);
-        }
-        else
-        {
-            Destroy(instance);
-            return;
+            foreach (Object obj in objectsToLoad)
+            {
+                Debug.Log(obj.name);
+                objDictionary.Add(obj.name, obj);
+            }
+            objectsToLoad.Clear();
+            objectsToLoad = null;
+
+            load = true;
         }
 
-        foreach (Object obj in objectsToLoad)
-        {
-            Debug.Log(obj.name);
-            keyValuePairs.Add(obj.name, obj);
-        }
-        objectsToLoad.Clear();
+        Debug.Log("WOW");
+        Destroy(gameObject);
     }
 
-    public T Get<T>(string key) where T : Object
+    static public T Get<T>(string key) where T : Object
     {
-        if (!keyValuePairs.ContainsKey(key))
+        if (!objDictionary.ContainsKey(key))
         {
             T obj = Resources.Load<T>(key);
             if (obj == null)
             {
                 Debug.LogError("GameResources doesn't contain " + key + " and can't load this from file");
             }
-            keyValuePairs.Add(key, obj);
+            objDictionary.Add(key, obj);
         }
 
-        return (T)keyValuePairs[key];
+        return (T)objDictionary[key];
     }
 
-    public bool Remove(string key)
+    static public bool Remove(string key)
     {
-        return keyValuePairs.Remove(key);
+        return objDictionary.Remove(key);
     }
 }
