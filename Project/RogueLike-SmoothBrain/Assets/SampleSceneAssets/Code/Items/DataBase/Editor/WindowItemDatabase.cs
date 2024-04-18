@@ -13,7 +13,7 @@ public class WindowItemDatabase : EditorWindow
     string search = "";
     const int SizeArea = 100;
 
-    [UnityEditor.MenuItem("Tools/ItemDatabase")]
+    [UnityEditor.MenuItem("Tools/Item/Database")]
     public static void OpenWindow()
     {
         GetWindow<WindowItemDatabase>("Item Database");
@@ -38,7 +38,7 @@ public class WindowItemDatabase : EditorWindow
         GUI.color = Color.green;
         if (GUILayout.Button("Add Item"))
         {
-            GetWindow<CreateItemWindow>("Create Item");
+            ItemCreatorEditor.OpenWindow();
         }
         GUI.color = Color.white;
         EditorGUILayout.EndHorizontal();

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class Utilities
 {
-    static public Hero Hero { get => GameObject.FindWithTag("Player").GetComponent<Hero>(); }
     static public GameObject Player { get => GameObject.FindWithTag("Player"); }
+    static public Hero Hero { get => Player.GetComponent<Hero>(); }
+    static public Inventory Inventory { get => Hero.Inventory; }
 }
