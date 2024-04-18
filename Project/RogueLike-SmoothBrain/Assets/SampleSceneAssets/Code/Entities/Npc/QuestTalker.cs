@@ -7,6 +7,7 @@ public class QuestTalker : Npc
     [SerializeField] protected DialogueTree questDT;
     [SerializeField] protected DialogueTree refusesDialogueDT;
     [SerializeField] protected DialogueTree alreadyHaveQuestDT;
+    [SerializeField] protected DialogueTree alreadyDoneQuestDT;
     protected DialogueTreeRunner dialogueTreeRunner;
     protected Hero player;
     public enum TalkerType
@@ -15,8 +16,16 @@ public class QuestTalker : Npc
         SHAMAN
     }
 
+    public enum TalkerGrade
+    {
+        BOSS,
+        APPRENTICE
+    }
+
     [SerializeField] protected TalkerType type;
+    [SerializeField] protected TalkerGrade grade;
     public TalkerType Type => type;
+    public TalkerGrade Grade => grade;
 
     protected override void Start()
     {
@@ -46,13 +55,17 @@ public class QuestTalker : Npc
     {
         DialogueTree dialogue = questDT;
 
-        if (player.CurrentQuest != null)
+        if (PlayerInvestedInOppositeWay())
+        {
+            dialogue = refusesDialogueDT;
+        }
+        else if (player.CurrentQuest != null)
         {
             dialogue = alreadyHaveQuestDT;
         }
-        else if (PlayerInvestedInOppositeWay())
+        else if (player.GetComponent<PlayerController>().DoneQuestQTThiStage)
         {
-            dialogue = refusesDialogueDT;
+            dialogue = alreadyDoneQuestDT;
         }
 
         dialogueTreeRunner.StartDialogue(dialogue, this);
