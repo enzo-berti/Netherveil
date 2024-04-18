@@ -1,9 +1,18 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public class ItemData : IComparable<ItemData>
 {
+    public static readonly List<int> rarityWeighting = new List<int>()
+    {
+        20,
+        40,
+        25,
+        10,
+        5
+    };
     public enum Rarity
     {
         COMMON,

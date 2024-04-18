@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using Generation;
+using System.Linq;
+using FMOD;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
@@ -10,6 +12,7 @@ public class Item : MonoBehaviour
 {
     public static event Action<ItemEffect> OnRetrieved;
     public static float priceCoef = 1.0f;
+    public static List<List<ItemData>> ItemPool;
 
     [SerializeField] private bool isRandomized = true;
     [SerializeField] private ItemDatabase database;
@@ -21,19 +24,20 @@ public class Item : MonoBehaviour
 
     private ItemDescription itemDescription;
     public Color RarityColor => rarityColor;
-    public ItemEffect ItemData => itemEffect;
+    public ItemEffect ItemEffect => itemEffect;
     public ItemDatabase Database => database;
-    public static List<ItemData> ItemPool;
+
     public int Price => price;
 
-    private void Start() 
+    private void Start()
     {
-        if(ItemPool == null)
+        if (ItemPool == null)
         {
-            ItemPool = new List<ItemData>();
-            foreach(var itemData in database.datas)
+            ItemPool = new List<List<ItemData>>();
+            for (int i = 0; i < Enum.GetNames(typeof(ItemData.Rarity)).Length; i++)
             {
-                ItemPool.Add(itemData);
+                // Adding pool for each Rarity
+                ItemPool.Add(database.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).ToList());
             }
         }
         if (isRandomized)
@@ -69,24 +73,71 @@ public class Item : MonoBehaviour
 
     static public void RandomizeItem(Item item)
     {
-        if(ItemPool.Count > 0)
+        bool isEveryPoolEmpty = true;
+        // If every pool empty then spawn MonsterHeart
+        for (int i = 0; i < ItemPool.Count; i++)
         {
-            List<string> allItems = new();
-            foreach (var itemInPool in ItemPool)
+            if (ItemPool[i].Count > 0)
             {
-                allItems.Add(itemInPool.idName);
+                isEveryPoolEmpty = false;
+                break;
             }
-            int indexRandom = Seed.Range(0, allItems.Count);
-            item.idItemName = allItems[indexRandom];
-            ItemPool.RemoveAt(indexRandom);
-
         }
-        else
+        if(isEveryPoolEmpty)
         {
             item.idItemName = "MonsterHeart";
+            return;
         }
-        
+        // List every item name in each pool ( Common, uncommon... )
+        List<List<string>> allItemsByPool = new();
+        for (int j = 0; j < ItemPool.Count; j++)
+        {
+            allItemsByPool.Add(new List<string>());
+            for (int k = 0; k < ItemPool[j].Count; k++)
+            {
+                allItemsByPool[j].Add(ItemPool[j][k].idName);
+            }
+        }
+
+        // Copy list of weighting
+        List<int> currentRarityWeighting = ItemData.rarityWeighting;
+        // Then we will modify it, because some pools are empty
+        for(int test = allItemsByPool.Count; test >= 0 ; test--)
+        {
+            // If a pool is empty ( no more common item for exemple )
+            if (allItemsByPool[test].Count == 0)
+            {
+                float chanceToDivide = currentRarityWeighting[test];
+                // We remove the empty pool in rarity weighting
+                currentRarityWeighting.RemoveAt(test);
+                chanceToDivide /= currentRarityWeighting.Count;
+
+                for(int iWeighting = 0;  iWeighting < currentRarityWeighting.Count; iWeighting++)
+                {
+                    currentRarityWeighting[iWeighting] += (int)chanceToDivide;
+                }
+            }
+            // And we remove the pool
+            allItemsByPool.RemoveAt(test);
+        }
+
+        int chanceForRarity = Seed.Range(0, 100);
+        int currentChance = 0;
+        int indexRarity;
+        for (indexRarity = 0; indexRarity < currentRarityWeighting.Count; indexRarity++)
+        {
+            currentChance += currentRarityWeighting[indexRarity];
+            if (chanceForRarity < currentChance)
+            {
+                break;
+            }
+        }
+        int indexInPool = Seed.Range(0, allItemsByPool[indexRarity].Count);
+        item.idItemName = allItemsByPool[indexRarity][indexInPool];
+        ItemPool[indexRarity].RemoveAt(indexInPool);
+        UnityEngine.Debug.Log((ItemData.Rarity)indexRarity);
     }
+
 
     public void RandomizeItem()
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
@@ -44,6 +45,19 @@ namespace Generation
         static public int Range(int minInclusive, int maxExclusive)
         {
             return random.Next(minInclusive, maxExclusive);
+        }
+
+        static public float Range(float minInclusive, float maxExclusive)
+        {
+            return (float)random.NextDouble() * float.MaxValue % (maxExclusive - minInclusive) + minInclusive;
+        }
+
+        static float NextFloat()
+        {
+            double mantissa = (random.NextDouble() * 2.0) - 1.0;
+            // choose -149 instead of -126 to also generate subnormal floats (*)
+            double exponent = Math.Pow(2.0, random.Next(-126, 128));
+            return (float)(mantissa * exponent);
         }
 
         static public List<T> RandList<T>(List<T> list)
