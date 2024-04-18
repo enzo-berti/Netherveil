@@ -9,7 +9,7 @@ public class SpinKiller : Quest
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK: {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
         Hero.OnChargedAttack += SetBool;
         Hero.OnKill += UpdateCount;
     }

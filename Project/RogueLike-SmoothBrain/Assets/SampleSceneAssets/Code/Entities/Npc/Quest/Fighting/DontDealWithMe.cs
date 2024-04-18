@@ -6,7 +6,7 @@ public class DontDealWithMe : Quest
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK: {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
         Hero.OnChargedAttack += UpdateCount;
     }
 
