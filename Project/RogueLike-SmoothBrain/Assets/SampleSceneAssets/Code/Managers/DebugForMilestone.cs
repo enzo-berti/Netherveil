@@ -5,18 +5,15 @@ public class DebugForMilestone : MonoBehaviour
 {
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+        if(Input.GetKeyDown(KeyCode.Keypad1))
         {
             Utilities.Hero.Stats.IncreaseValue(Stat.HP, 10);
         }
-        if (Input.GetKeyDown(KeyCode.Keypad2))
+        if(Input.GetKeyDown(KeyCode.Keypad2))
         {
-            foreach (var enemy in RoomUtilities.roomData.enemies)
+            foreach(var enemy in RoomUtilities.roomData.enemies)
             {
-                if (enemy != null)
-                {
-                    enemy.GetComponent<IDamageable>().Death();
-                }
+                enemy.GetComponent<IDamageable>().Death();
             }
             RoomUtilities.roomData.enemies.Clear();
         }
