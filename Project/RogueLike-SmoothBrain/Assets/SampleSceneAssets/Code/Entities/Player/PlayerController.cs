@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
+    public Coroutine SpecialAbilityCoroutine { get; set; } = null;
+    public ISpecialAbility SpecialAbility { get; set; } = new DivineShield();
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
@@ -53,6 +55,8 @@ public class PlayerController : MonoBehaviour
     public VisualEffect ChargedAttackVFX;
     public VisualEffect spearLaunchVFX;
     public VisualEffect corruptionUpgradeVFX;
+    public VisualEffect benedictionUpgradeVFX;
+    public VisualEffect divineShieldVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;

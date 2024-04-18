@@ -63,7 +63,7 @@ public class CreateQuestWindow : EditorWindow
                 path += "Restrictive";
                 break;
             case QuestData.QuestType.EXPLORATION:
-                path += "Restrictive";
+                path += "Exploration";
                 break;
             case QuestData.QuestType.FIGHTING:
                 path += "Fighting";
