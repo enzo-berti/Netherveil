@@ -45,6 +45,8 @@ public class GameResources : MonoBehaviour
             {
                 Debug.LogError("GameResources doesn't contain " + key + " and can't load this from resources file");
             }
+
+            Debug.Log("MY COCK ??!", obj);
             objDictionary.Add(key, obj);
         }
 

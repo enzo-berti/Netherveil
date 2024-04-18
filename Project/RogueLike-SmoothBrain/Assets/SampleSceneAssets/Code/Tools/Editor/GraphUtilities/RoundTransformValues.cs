@@ -8,6 +8,7 @@ public static class RoundTransformValues
     public static void RoundTransform()
     {
         Transform[] transforms = Selection.gameObjects.Select(x => x.transform).ToArray();
+
         foreach (var t in transforms)
         {
             t.position = t.position.ToRound(2);
