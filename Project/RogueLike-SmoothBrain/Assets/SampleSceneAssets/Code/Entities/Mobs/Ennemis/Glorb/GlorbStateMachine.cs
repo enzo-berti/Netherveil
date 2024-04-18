@@ -91,6 +91,8 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     protected override void Update()
     {
+        base.Update();
+
         animator.SetBool(walkHash, currentState is GlorbAttackingState ? false : agent.remainingDistance > agent.stoppingDistance);
 
         if (!(currentState is GlorbWanderingState))
@@ -132,7 +134,7 @@ public class GlorbStateMachine : Mobs, IGlorb
         if (!(currentState is GlorbAttackingState || currentState is GlorbDeathState))
         {
             currentState = factory.GetState<GlorbTriggeredState>();
-            player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+            player = Utilities.Hero;
         }
     }
 

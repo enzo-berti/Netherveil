@@ -52,6 +52,8 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
     protected override void EnterState()
     {
         Context.Agent.isStopped = true;
+        stompDelay = 0f;
+        punchDelay = 0f;
     }
 
     // This method will be call only one time after the last update.
