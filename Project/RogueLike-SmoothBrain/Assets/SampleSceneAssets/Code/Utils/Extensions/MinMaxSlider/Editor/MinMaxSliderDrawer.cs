@@ -1,5 +1,5 @@
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 [CustomPropertyDrawer(typeof(MinMaxSliderAttribute))]
 public class MinMaxSliderDrawer : PropertyDrawer
@@ -90,7 +90,9 @@ public class MinMaxSliderDrawer : PropertyDrawer
 
         for (int i = 0; i < n; i++)
         {
+
             rects[i] = new Rect(rectToSplit.position.x + (i * rectToSplit.width / n), rectToSplit.position.y, rectToSplit.width / n, rectToSplit.height);
+
         }
 
         int padding = (int)rects[0].width - 40;
