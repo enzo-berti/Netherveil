@@ -11,34 +11,49 @@
 // }
 
 using StateMachine; // include all scripts about StateMachines
+using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class GorgonAttackingState : BaseState<GorgonStateMachine>
 {
     public GorgonAttackingState(GorgonStateMachine currentContext, StateFactory<GorgonStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
-        
+
+    bool attackFinished;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        if (attackFinished)
+        {
+            SwitchState(Factory.GetState<GorgonTriggeredState>());
+        }
     }
 
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-        throw new System.NotImplementedException();
+        Context.Agent.isStopped = true;
+        attackFinished = false;
+        Context.StartCoroutine(LongRangeAttack());
     }
 
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
-        throw new System.NotImplementedException();
+        Context.Agent.isStopped = false;
+        Context.AttackCooldown = 0f;
     }
 
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        Quaternion lookRotation = Quaternion.LookRotation(Context.Player.transform.position - Context.transform.position);
+        lookRotation.x = 0;
+        lookRotation.z = 0;
+
+        Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 10f * Time.deltaTime);
     }
 
     // This method will be called on state switch.
@@ -48,4 +63,38 @@ public class GorgonAttackingState : BaseState<GorgonStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
+    #region Extra methods
+    private IEnumerator LongRangeAttack()
+    {
+        Context.Animator.SetTrigger("Attack");
+        float timeToThrow = 0.8f;
+        yield return new WaitWhile(() => Context.HasRemovedHead == false);
+
+        Vector2 pointToReach2D = MathsExtension.GetPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), 1f);
+        Vector3 pointToReach3D = new(pointToReach2D.x, Context.Player.transform.position.y, pointToReach2D.y);
+        if (NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
+        {
+            pointToReach3D = hit.position;
+        }   
+
+        if (Context.gameObject != null)
+        {
+            GameObject bomb = GameObject.Instantiate(Context.BombPrefab, Context.Hand);
+            yield return new WaitWhile(() => Context.HasLaunchAnim == false);
+            bomb.transform.rotation = Quaternion.identity;
+            bomb.transform.parent = null;
+
+            ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
+
+            exploBomb.ThrowToPos(Context, pointToReach3D, timeToThrow);
+            exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
+            exploBomb.SetBlastDamages((int)Context.Stats.GetValue(Stat.ATK));
+            exploBomb.Activate();
+
+            yield return new WaitForSeconds(0.5f);
+            attackFinished = true;
+        }
+    }
+    #endregion
 }

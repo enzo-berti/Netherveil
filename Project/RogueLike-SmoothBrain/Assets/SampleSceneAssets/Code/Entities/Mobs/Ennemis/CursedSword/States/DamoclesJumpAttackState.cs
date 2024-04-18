@@ -11,6 +11,8 @@
 // }
 
 using StateMachine; // include all script about stateMachine
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
@@ -18,7 +20,22 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     public DamoclesJumpAttackState(DamoclesStateMachine currentContext, StateFactory<DamoclesStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    private bool isTargetTouched;
+    private bool isTargetTouched = false;
+    private bool stateEnded = false;
+    private float elapsedTimeMovement = 0.0f;
+    private float attackTime = 2.5f;
+
+    private enum State
+    {
+        Start,
+        RunIn,
+        Jump,
+        Backward
+    }
+
+    private State curState = State.Start;
+    private Coroutine jumpRoutine;
+    private Vector3 previousPos;
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
@@ -26,8 +43,10 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         {
             SwitchState(Factory.GetState<DamoclesDeathState>());
         }
-        else if (isTargetTouched)
+        else if (isTargetTouched && stateEnded)
         {
+            stateEnded = false;
+            isTargetTouched = false;
             if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
             {
                 SwitchState(Factory.GetState<DamoclesFollowTargetState>());
@@ -37,8 +56,9 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
                 SwitchState(Factory.GetState<DamoclesEnGardeState>());
             }
         }
-        else
+        else if (!isTargetTouched && stateEnded)
         {
+            stateEnded = false;
             SwitchState(Factory.GetState<DamoclesVulnerableState>());
         }
 
@@ -59,7 +79,64 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
+        Vector3 direction = (Context.Target.position - Context.transform.position).normalized;
+        Context.MoveTo(Context.transform.position + direction * Context.NormalSpeed);
 
+        if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) < Context.Stats.GetValue(Stat.ATK_RANGE)/2)
+        {
+            //jouer l'anim
+        }
+
+
+        // Delay
+        if (Time.time - elapsedTimeMovement < attackTime)
+            return;
+
+        elapsedTimeMovement = Time.time;
+        stateEnded = true;
+
+        //
+
+        if (curState == State.Start)
+        {
+            Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
+            Context.transform.LookAt(positionToLookAt);
+            curState = State.RunIn;
+            previousPos = Context.transform.position;
+
+            //Context.Animator.ResetTrigger(Context.);
+            //Context.Animator.SetTrigger(Context.);
+        }
+        else if (curState == State.RunIn)
+        {
+            if (Vector3.Distance(Context.Target.position, Context.transform.position) > 1)
+            {
+                Context.MoveTo(Context.Target.position);
+            }
+            else
+            {
+                curState = State.Jump;
+            }
+
+            jumpRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack1Collider));
+
+            //Context.Animator.ResetTrigger(Context.);
+            //Context.Animator.SetTrigger(Context.);
+        }
+        else if (curState == State.Jump)
+        {
+            if (jumpRoutine != null)
+            {
+                curState = State.Backward;
+            }
+        }
+        else if (curState == State.Backward)
+        {
+            if (Vector3.Distance(Context.Target.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+            {
+                Context.MoveTo(previousPos);
+            }
+        }
     }
 
     // This method will be call on state changement.
@@ -68,5 +145,21 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     {
         base.SwitchState(newState);
         Context.currentState = newState;
+    }
+
+    private IEnumerator SlashCoroutine(BoxCollider attackCollider)
+    {
+        IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(attackCollider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
+                                              .Select(x => x.GetComponent<IDamageable>())
+                                              .Where(x => x != null)
+                                              .FirstOrDefault();
+
+        if (player != null)
+        {
+            Context.Attack(player);
+        }
+
+        jumpRoutine = null;
+        yield return null;
     }
 }

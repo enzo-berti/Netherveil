@@ -16,11 +16,14 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
 {
     public GorgonWanderingState(GorgonStateMachine currentContext, StateFactory<GorgonStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
-        
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-
+        if (Context.Player != null)
+        {
+            SwitchState(Factory.GetState<GorgonTriggeredState>());
+        }
     }
 
     // This method will be called only once before the update.
