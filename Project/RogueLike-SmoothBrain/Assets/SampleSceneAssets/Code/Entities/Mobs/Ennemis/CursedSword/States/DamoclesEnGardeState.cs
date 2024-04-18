@@ -8,6 +8,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         : base(currentContext, currentFactory) { }
 
     private int nextState = 0;
+    private bool stateEnded = false;
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
@@ -20,8 +21,9 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         {
             SwitchState(Factory.GetState<DamoclesFollowTargetState>());
         }
-        else
+        else if (stateEnded)
         {
+            stateEnded = false;
             nextState = Random.Range(0, 2);
 
             switch (nextState)
@@ -51,7 +53,11 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
+        Vector3 direction = Context.Target.transform.position - Context.transform.position;
+        direction.Normalize();
 
+        Context.Move(new Vector3(-direction.z, 0, direction.x) * Time.deltaTime);
+        stateEnded = true;
     }
 
     // This method will be call on state changement.
