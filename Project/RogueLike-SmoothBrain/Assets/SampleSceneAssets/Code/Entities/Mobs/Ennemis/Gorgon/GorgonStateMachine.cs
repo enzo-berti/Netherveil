@@ -5,7 +5,7 @@
 using UnityEngine;
 using StateMachine; // include all script about stateMachine
 
-public class GorgonStateMachine : MonoBehaviour, IGorgon
+public class GorgonStateMachine : MonoBehaviour
 {
     [HideInInspector]
     public BaseState<GorgonStateMachine> currentState;
