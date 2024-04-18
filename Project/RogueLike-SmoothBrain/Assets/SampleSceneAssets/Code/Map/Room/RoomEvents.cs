@@ -74,6 +74,7 @@ namespace Map
             // local events
             gameObject.layer = LayerMask.NameToLayer("Map");
             RoomUtilities.roomData = mapData;
+            RoomUtilities.nbEnterRoomByType[RoomUtilities.roomData.Type] += 1;
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
 
