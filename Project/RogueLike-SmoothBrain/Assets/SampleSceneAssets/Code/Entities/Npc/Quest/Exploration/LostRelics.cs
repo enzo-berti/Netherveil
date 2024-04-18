@@ -1,15 +1,32 @@
-using UnityEngine; 
- 
-public class LostRelics : Quest 
-{ 
+
+public class LostRelics : Quest
+{
+    int currentNumber = 0;
+    readonly int MAX_NUMBER = 15;
+
     public override void AcceptQuest()
     {
-        throw new System.NotImplementedException();
+        progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
+        Hero.OnChargedAttack += UpdateCount;
     }
+
     protected override void QuestFinished()
     {
-        throw new System.NotImplementedException();
+        base.QuestFinished();
+        Hero.OnChargedAttack -= UpdateCount;
     }
-    
- 
-} 
+
+    private void UpdateCount(IDamageable damageable, IAttacker attacker)
+    {
+        currentNumber++;
+        progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
+        QuestUpdated();
+
+        if (currentNumber >= MAX_NUMBER)
+        {
+            QuestFinished();
+        }
+    }
+
+
+}
