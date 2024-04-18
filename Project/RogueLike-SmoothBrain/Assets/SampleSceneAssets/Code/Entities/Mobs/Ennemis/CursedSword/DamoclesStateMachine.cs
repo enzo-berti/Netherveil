@@ -78,6 +78,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
         deathHash = Animator.StringToHash("IsDeath");
 
         // opti variables
+        maxFrameUpdate = 10;
         frameToUpdate = entitySpawn % maxFrameUpdate;
     }
 
@@ -150,14 +151,23 @@ public class DamoclesStateMachine : Mobs, IDamocles
         agent.SetDestination(posToMove);
         damoclesSounds.moveSound.Play(transform.position);
     }
+
+    public void Move(Vector3 posToMove)
+    {
+        if (!agent.enabled)
+            return;
+
+        agent.Move(posToMove);
+        damoclesSounds.moveSound.Play(transform.position);
+    }
     #endregion
 
     #region EDITOR
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!Selection.Contains(gameObject))
-            return;
+        //if (!Selection.Contains(gameObject))
+        //    return;
 
         DisplayVisionRange(angle);
         DisplayAttackRange(angle);
