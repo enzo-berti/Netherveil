@@ -6,6 +6,8 @@ public class ToolNamer : EditorWindow
 {
     private GroupBox replaceBox;
     private GroupBox deleteBox;
+    private GroupBox currentOpen;
+
     private TextField replaceFromField;
     private TextField replaceToField;
     private TextField deleteField;
@@ -29,30 +31,29 @@ public class ToolNamer : EditorWindow
         VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
         root.Add(labelFromUXML);
 
-        root.Q<Button>("Replace-Toolbar-Button").clicked += () => DisplayReplace();
-        root.Q<Button>("Delete-Toolbar-Button").clicked += () => DisplayDelete();
+        replaceBox = root.Q<GroupBox>("ReplaceBox");
+        deleteBox = root.Q<GroupBox>("DeleteBox");
+
+        root.Q<Button>("Replace-Toolbar-Button").clicked += () => DisplayGroup(replaceBox);
+        root.Q<Button>("Delete-Toolbar-Button").clicked += () => DisplayGroup(deleteBox);
 
         root.Q<Button>("Replace-Button").clicked += () => Replace();
         root.Q<Button>("Delete-Button").clicked += () => Delete();
 
-        replaceBox = root.Q<GroupBox>("ReplaceBox");
-        deleteBox = root.Q<GroupBox>("DeleteBox");
-
         replaceFromField = root.Q<TextField>("Replace-From");
         replaceToField = root.Q<TextField>("Replace-To");
         deleteField = root.Q<TextField>("Delete-Word");
+
+        DisplayGroup(replaceBox);
     }
 
-    public void DisplayReplace()
+    public void DisplayGroup(GroupBox toDisplay)
     {
-        replaceBox.style.display = DisplayStyle.Flex;
-        deleteBox.style.display = DisplayStyle.None;
-    }
+        if (currentOpen != null)
+            currentOpen.style.display = DisplayStyle.None;
 
-    public void DisplayDelete()
-    {
-        replaceBox.style.display = DisplayStyle.None;
-        deleteBox.style.display = DisplayStyle.Flex;
+        toDisplay.style.display = DisplayStyle.Flex;
+        currentOpen = toDisplay;
     }
 
     public void Replace()

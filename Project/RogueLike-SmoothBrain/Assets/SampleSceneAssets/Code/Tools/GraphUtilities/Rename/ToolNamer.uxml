@@ -4,7 +4,7 @@
         <uie:ToolbarButton text="Delete" display-tooltip-when-elided="true" name="Delete-Toolbar-Button" />
     </uie:Toolbar>
     <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="ScrollView" style="justify-content: flex-start; align-self: stretch; align-items: stretch; flex-grow: 1;">
-        <ui:GroupBox name="ReplaceBox">
+        <ui:GroupBox name="ReplaceBox" style="display: none;">
             <ui:Label tabindex="-1" text="REPLACE" display-tooltip-when-elided="true" style="color: rgb(196, 196, 196); font-size: 22px; -unity-font-style: bold; -unity-text-align: upper-center;" />
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; align-self: stretch; align-items: stretch;">
                 <ui:TextField picking-mode="Ignore" label="From" value="MESH" name="Replace-From" multiline="false" auto-correction="false" style="flex-shrink: 1; flex-grow: 1; flex-direction: column;" />
