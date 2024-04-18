@@ -7,7 +7,7 @@ public class ToolNathanEditor : EditorWindow
     [SerializeField]
     private VisualTreeAsset m_VisualTreeAsset = default;
 
-    [MenuItem("Tools/Nathan")]
+    [MenuItem("Tools/Graphs Utilities/Rename")]
     public static void OpenWindow()
     {
         ToolNathanEditor wnd = GetWindow<ToolNathanEditor>();
