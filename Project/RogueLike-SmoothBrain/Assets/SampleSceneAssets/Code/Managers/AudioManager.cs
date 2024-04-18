@@ -64,13 +64,14 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadBuses();
         }
         else
         {
             Destroy(gameObject);
             return;
         }
+
+        LoadBuses();
     }
 
     void Start()
