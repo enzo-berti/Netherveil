@@ -8,8 +8,8 @@ public class ShockwaveBracelet : ItemEffect, IActiveItem
     public void Activate()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        GameObject shockwaveCollider = GameObject.Instantiate(Resources.Load<GameObject>("ShockwaveBraceletCollide"));
-        GameObject shockwaveVFX = GameObject.Instantiate(Resources.Load<GameObject>("VFX_ShockWaveTank"));
+        GameObject shockwaveCollider = GameObject.Instantiate(GameResources.Get<GameObject>("ShockwaveBraceletCollide"));
+        GameObject shockwaveVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ShockWaveTank"));
         shockwaveCollider.SetActive(false);
 
         shockwaveVFX.transform.position = hero.transform.position;

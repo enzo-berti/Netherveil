@@ -131,7 +131,7 @@ public class DeviceManager : MonoBehaviour
 
     void CallChangeEvents()
     {
-        if(instance != null)
+        if (instance != null)
         {
             StopAllCoroutines();
         }
@@ -199,7 +199,7 @@ public class DeviceManager : MonoBehaviour
 
     IEnumerator VibrationsInfiniteCoroutine(float lowFrequency, float highFrequency)
     {
-        while(true)
+        while (true)
         {
             (CurrentDevice as Gamepad).SetMotorSpeeds(lowFrequency, highFrequency);
             yield return new WaitForSeconds(1f);

@@ -19,8 +19,8 @@ public class SpearStrike : ItemEffect , IPassiveItem
     private void Thunderstrike(Spear spear)
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        GameObject thunderstrikeCollider = GameObject.Instantiate(Resources.Load<GameObject>("ThunderstrikeCollide"));
-        GameObject thunderstrikeVFX = GameObject.Instantiate(Resources.Load<GameObject>("VFX_TEMP_Thunderstrike"));
+        GameObject thunderstrikeCollider = GameObject.Instantiate(GameResources.Get<GameObject>("ThunderstrikeCollide"));
+        GameObject thunderstrikeVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_TEMP_Thunderstrike"));
         thunderstrikeCollider.SetActive(false);
 
         thunderstrikeVFX.transform.position = spear.transform.position;

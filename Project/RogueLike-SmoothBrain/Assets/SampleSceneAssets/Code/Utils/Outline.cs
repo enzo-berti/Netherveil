@@ -10,7 +10,7 @@ public class Outline : MonoBehaviour
 
     void Awake()
     {
-        mOutlineMaterial = Resources.Load("OutlineShaderMat") as Material;
+        mOutlineMaterial = GameResources.Get<Material>("OutlineShaderMat");
 
         if (mRenderer == null)
             mRenderer = GetComponentsInChildren<Renderer>();

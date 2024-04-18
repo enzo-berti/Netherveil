@@ -1,6 +1,5 @@
 using Generation;
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -28,7 +27,7 @@ public abstract class Quest
     {
         if (database == null)
         {
-            database = Resources.Load<QuestDatabase>("QuestDatabase");
+            database = GameResources.Get<QuestDatabase>("QuestDatabase");
         }
 
         int indexRandom = Seed.Range(0, database.datas.Count);

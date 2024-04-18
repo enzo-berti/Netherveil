@@ -46,7 +46,7 @@ static public class FloatingTextGenerator
         Vector3 randomOffsetVec = Random.onUnitSphere * randScale;
         pos += new Vector3(randomOffsetVec.x, 0f, randomOffsetVec.z);
 
-        var newText = GameObject.Instantiate(Resources.Load("FloatingText") as GameObject, pos, Camera.main.transform.rotation).GetComponent<FloatingText>();
+        var newText = GameObject.Instantiate(GameResources.Get<GameObject>("FloatingText"), pos, Camera.main.transform.rotation).GetComponent<FloatingText>();
         newText.SetColor(color);
         newText.SetText(text);
 
