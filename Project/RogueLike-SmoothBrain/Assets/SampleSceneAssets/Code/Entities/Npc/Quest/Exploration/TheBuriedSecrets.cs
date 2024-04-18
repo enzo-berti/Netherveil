@@ -23,7 +23,7 @@ public class TheBuriedSecrets : Quest
     {
         if (RoomUtilities.roomData.Type == RoomType.Secret)
         {
-            currentNumber++;
+            currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Secret];
             progressText = $"NB SECRETS ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
 
