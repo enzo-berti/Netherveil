@@ -39,7 +39,7 @@ public abstract class Npc : Entity, IInterractable
         else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
         {
             playerInteractions.InteractablesInRange.Remove(this);
-            
+            Deselect();       
         }
     }
 

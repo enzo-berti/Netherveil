@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -13,7 +14,8 @@ public class ExplodingBomb : MonoBehaviour
     [Header("Bomb Parameter")]
     [SerializeField] private bool activateOnAwake;
     [SerializeField] private float timerBeforeExplode;
-    [SerializeField] private float blastRadius;
+    [SerializeField] private float blastDiameter;
+    private float BlastRadius { get => blastDiameter / 2; }
     [SerializeField] private int blastDamage;
     [SerializeField] private LayerMask damageLayer;
     private bool isActive;
@@ -26,7 +28,7 @@ public class ExplodingBomb : MonoBehaviour
     private void Start()
     {
         VFX.SetFloat("ExplosionTime", 1.0f);
-        VFX.SetFloat("ExplosionRadius", blastRadius);
+        VFX.SetFloat("ExplosionRadius", blastDiameter);
 
         if (activateOnAwake)
             Activate();
@@ -56,10 +58,10 @@ public class ExplodingBomb : MonoBehaviour
         VFX.Play();
         
         float timer = 0;
-        Vector3 basePos = graphics.transform.position;
+        Vector3 basePos = this.transform.position;
         Vector3 position3D = Vector3.zero;
         float a = -16, b = 16;
-        float c = graphics.transform.position.y;
+        float c = this.transform.position.y;
         float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, 0).Max();
         while (timer < timerToReach)
         {
@@ -72,7 +74,7 @@ public class ExplodingBomb : MonoBehaviour
                 position3D = Vector3.Lerp(basePos, pos, timer);
             }
             position3D.y = MathsExtension.SquareFunction(a, b, c, timer);
-            graphics.transform.position = position3D;
+            this.transform.position = position3D;
             timer += Time.deltaTime / throwTime;
         }
     }
@@ -104,7 +106,7 @@ public class ExplodingBomb : MonoBehaviour
 
     private IEnumerator ExplodeRoutine()
     {
-        Physics.OverlapSphere(graphics.transform.position, blastRadius, damageLayer)
+        Physics.OverlapSphere(this.transform.position, BlastRadius/2, damageLayer)
             .Select(entity => entity.GetComponent<IBlastable>())
             .Where(entity => entity != null)
             .ToList()
@@ -114,7 +116,7 @@ public class ExplodingBomb : MonoBehaviour
             });
 
         graphics.SetActive(false);
-        bombSFX.Play(graphics.transform.position);
+        bombSFX.Play(this.transform.position);
         float timer = VFX.GetFloat("ExplosionTime");
 
         while (timer > 0f)
@@ -143,26 +145,18 @@ public class ExplodingBomb : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    //private void OnDrawGizmos()
-    //{
-    //    if (isActive || isMoving)
-    //    {
-    //        Handles.color = new Color(1, 0, 0, 0.25f);
-    //        Handles.DrawWireDisc(endPosition, Vector3.up, blastRadius);
+    private void OnDrawGizmos()
+    {
 
-    //        Handles.color = Color.white;
-    //        Handles.Label(transform.position + Vector3.up,
-    //            $"Bomb" +
-    //            $"\nActivate : {isActive}" +
-    //            $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
-    //    }
-    //    else
-    //    {
-    //        Handles.color = Color.white;
-    //        Handles.Label(transform.position + Vector3.up,
-    //            $"Bomb" +
-    //            $"\nActivate : {isActive}");
-    //    }
-    //}
+            //Handles.color = new Color(1, 0, 0, 0.25f);
+           
+            //Gizmos.DrawSphere(this.transform.position, blastRadius/2);
+
+            //Handles.color = Color.white;
+            //Handles.Label(transform.position + Vector3.up,
+            //    $"Bomb" +
+            //    $"\nActivate : {isActive}" +
+            //    $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
+    }
 #endif
 }
