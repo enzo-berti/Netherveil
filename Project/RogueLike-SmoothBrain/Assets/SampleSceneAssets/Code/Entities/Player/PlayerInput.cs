@@ -243,7 +243,7 @@ public class PlayerInput : MonoBehaviour
         dashCoroutine = null;
     }
 
-    private void ActiveIteamActivation(InputAction.CallbackContext ctx)
+    private void ActiveItemActivation(InputAction.CallbackContext ctx)
     {
         IActiveItem item = hero.Inventory.ActiveItem;
         if (item != null && (item as ItemEffect).CurrentEnergy >= item.Cooldown)
@@ -253,6 +253,17 @@ public class PlayerInput : MonoBehaviour
             StartCoroutine(item.WaitToUse());
         }
     }
+
+    private void SpecialAbilityActivation(InputAction.CallbackContext ctx)
+    {
+        if (controller.SpecialAbility != null && controller.SpecialAbility.CurrentEnergy >= controller.SpecialAbility.Cooldown)
+        {
+            controller.SpecialAbility.CurrentEnergy = 0;
+            controller.SpecialAbility.Activate();
+            StartCoroutine(controller.SpecialAbility.WaitToUse());
+        }
+    }
+
     private void ThrowOrRetrieveSpear(InputAction.CallbackContext ctx)
     {
         // If spear is being thrown we can't recall this attack
@@ -482,7 +493,8 @@ public class PlayerInput : MonoBehaviour
             map["Spear"].performed -= ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed -= ChargedAttack;
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
-            map["ActiveItem"].performed -= ActiveIteamActivation;
+            map["ActiveItem"].performed -= ActiveItemActivation;
+            map["SpecialAbility"].performed -= SpecialAbilityActivation;
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed -= hudHandler.ToggleMap;
@@ -500,7 +512,8 @@ public class PlayerInput : MonoBehaviour
             map["Spear"].performed += ThrowOrRetrieveSpear;
             map["ChargedAttack"].performed += ChargedAttack;
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
-            map["ActiveItem"].performed += ActiveIteamActivation;
+            map["ActiveItem"].performed += ActiveItemActivation;
+            map["SpecialAbility"].performed += SpecialAbilityActivation;
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed += hudHandler.ToggleMap;
@@ -509,7 +522,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    private void DisableGameplayInputs()
+    public void DisableGameplayInputs()
     {
         playerInputMap.currentActionMap["Movement"].Disable();
         playerInputMap.currentActionMap["BasicAttack"].Disable();
@@ -517,9 +530,11 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.currentActionMap["Interact"].Disable();
         playerInputMap.currentActionMap["Spear"].Disable();
         playerInputMap.currentActionMap["ChargedAttack"].Disable();
+        playerInputMap.currentActionMap["ActiveItem"].Disable();
+        playerInputMap.currentActionMap["SpecialAbility"].Disable();
     }
 
-    private void EnableGameplayInputs()
+    public void EnableGameplayInputs()
     {
         playerInputMap.currentActionMap["Movement"].Enable();
         playerInputMap.currentActionMap["BasicAttack"].Enable();
@@ -527,6 +542,8 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.currentActionMap["Interact"].Enable();
         playerInputMap.currentActionMap["Spear"].Enable();
         playerInputMap.currentActionMap["ChargedAttack"].Enable();
+        playerInputMap.currentActionMap["ActiveItem"].Enable();
+        playerInputMap.currentActionMap["SpecialAbility"].Enable();
     }
 
     private void ResetForceReturnToMove()

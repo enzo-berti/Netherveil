@@ -36,6 +36,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     int currentStep = 0;
     public readonly int STEP_VALUE = 25;
+    public bool CanHealFromConsumables { get; set; } = true;
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -248,7 +249,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
             playerController.LaunchUpgradeAnimation = true;
-            //debuff impossibilité de se soigner via consommables
+            CanHealFromConsumables = false;
             //ajout nouvelle compétence
         }
         else
@@ -265,7 +266,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         currentStep--;
         if (corruptionStat <= Stats.GetMinValue(Stat.CORRUPTION))
         {
-            //ajout de la capacité divine shield
+            playerController.SpecialAbility = new DivineShield();
             //ajout du malus de possibilité de dédoublement des mobs
             playerController.LaunchUpgradeAnimation = true;
         }
@@ -283,7 +284,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         currentStep++;
         if (corruptionLastValue <= Stats.GetMinValue(Stat.CORRUPTION))
         {
-            //désactiver la capacité divine shield
+            playerController.SpecialAbility = null;
             //désactiver malus de possibilité de dédoublement des mobs
         }
         else
@@ -300,7 +301,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionLastValue >= Stats.GetMaxValue(Stat.CORRUPTION))
         {
             Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
-            //désactiver debuff impossibilité de se soigner via consommables
+            CanHealFromConsumables = true;
             //désactiver nouvelle compétence
         }
         else
