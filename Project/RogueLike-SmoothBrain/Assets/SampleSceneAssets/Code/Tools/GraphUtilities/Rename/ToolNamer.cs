@@ -13,7 +13,7 @@ public class ToolNamer : EditorWindow
     [SerializeField]
     private VisualTreeAsset m_VisualTreeAsset = default;
 
-    [MenuItem("Tools/Graphs Utilities/Namer")]
+    [MenuItem("Tools/Graphs Utilities/Namer", priority = 10)]
     public static void OpenWindow()
     {
         ToolNamer wnd = GetWindow<ToolNamer>();
