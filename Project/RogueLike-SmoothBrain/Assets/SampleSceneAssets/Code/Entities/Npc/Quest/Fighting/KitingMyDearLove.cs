@@ -8,7 +8,7 @@ public class KitingMyDearLove : Quest
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK: {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
         Hero.OnSpearAttack += SetBool;
         Hero.OnKill += UpdateCount;
     }
