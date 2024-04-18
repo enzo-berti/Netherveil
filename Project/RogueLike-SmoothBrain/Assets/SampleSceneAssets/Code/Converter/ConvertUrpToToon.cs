@@ -23,6 +23,7 @@ public static class ConvertUrpToToon
                     if (toonShader != null)
                     {
                         material.shader = toonShader;
+                        material.SetFloat("_BaseColor_Step", 0f);
                         EditorUtility.SetDirty(material);
                     }
                     else
