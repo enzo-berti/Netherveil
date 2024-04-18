@@ -22,8 +22,40 @@ public static class ConvertUrpToToon
                 {
                     if (toonShader != null)
                     {
+                        Material memMat = material;
+
                         material.shader = toonShader;
+                        material.SetColor("_1st_ShadeColor", new Color(0.67f, 0.67f, 0.67f, 1.0f));
+                        material.SetColor("_2st_ShadeColor", new Color(0.33f, 0.33f, 0.33f, 1.0f));
+
                         material.SetFloat("_BaseColor_Step", 0.25f);
+                        material.SetFloat("_BaseShade_Feather", 0.03f);
+                        material.SetFloat("_ShadeColor_Step", 0.25f);
+                        material.SetFloat("_1st2nd_Shades_Feather", 0.03f);
+
+                        material.SetTexture("_NormalMap", memMat.GetTexture("_BumpMap"));
+                        material.SetFloat("_NormalScale", memMat.GetFloat("_BumpScale"));
+
+                        material.SetColor("_HighColor", new Color(0.64f, 0.62f, 0.67f, 1.0f));
+                        material.SetFloat("_HighColor_Power", 0.4f);
+
+                        material.SetFloat("_RimLight", 1);
+                        material.SetColor("_RimLightColor", new Color(0.64f, 0.62f, 0.67f, 1.0f));
+                        material.SetFloat("_RimLight_Power", 1.0f);
+                        material.SetFloat("_RimLight_InsideMask", 0.65f);
+                        material.SetFloat("_LightDirection_MaskOn", 1);
+                        material.SetFloat("_Tweak_LightDirection_MaskLevel", 0.5f);
+                        material.SetFloat("_Tweak_RimLightMaskLevel", -0.25f);
+
+                        material.SetFloat("_MatCap", 1);
+                        material.SetTexture("_MatCap_Sampler", memMat.GetTexture("_MetallicGlossMap"));
+                        material.SetFloat("_Is_NormalMapForMatCap", 1);
+                        material.SetTexture("_MatCap_Sampler", memMat.GetTexture("_NormalMapForMatCap"));
+
+                        material.SetTexture("_Emissive_Tex", memMat.GetTexture("_EmissionMap"));
+
+                        material.SetFloat("_Outline_Width", 5.0f);
+
                         EditorUtility.SetDirty(material);
                     }
                     else
