@@ -90,6 +90,7 @@ public class PlayerController : MonoBehaviour
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
         RoomUtilities.allEnemiesDeadEvents += LaunchUpgradeAnim;
+        RoomUtilities.allChestOpenEvents += LaunchUpgradeAnim;
     }
 
     private void OnDestroy()
