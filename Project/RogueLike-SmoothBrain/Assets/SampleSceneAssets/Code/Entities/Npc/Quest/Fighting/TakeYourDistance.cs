@@ -6,7 +6,7 @@ public class TakeYourDistance : Quest
 
     public override void AcceptQuest()
     {
-        progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK: {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
         Hero.OnSpearAttack += UpdateCount;
     }
 

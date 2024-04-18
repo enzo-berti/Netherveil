@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Map
 {
     static public class RoomUtilities
@@ -13,5 +15,31 @@ namespace Map
         static public AllChestsOpen allChestOpenEvents;
 
         static public RoomData roomData;
+
+        static public Dictionary<RoomType, int> nbRoomByType = new Dictionary<RoomType, int>
+        {
+            { RoomType.Lobby, 0 },
+            { RoomType.Normal, 0 },
+            { RoomType.Treasure, 0 },
+            { RoomType.Challenge, 0 },
+            { RoomType.Merchant, 0 },
+            { RoomType.Secret, 0 },
+            { RoomType.MiniBoss, 0 },
+            { RoomType.Boss, 0 },
+        };
+
+        static public int NbRoom
+        {
+            get
+            {
+                int totalCount = 0;
+                foreach (int count in nbRoomByType.Values)
+                {
+                    totalCount += count;
+                }
+
+                return totalCount;
+            }
+        }
     }
 }
