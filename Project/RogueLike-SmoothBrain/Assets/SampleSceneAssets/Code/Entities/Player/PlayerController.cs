@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
     public Coroutine SpecialAbilityCoroutine { get; set; } = null;
-    public ISpecialAbility SpecialAbility { get; set; } = null;
+    public ISpecialAbility SpecialAbility { get; set; } = new DamnationVeil();
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }

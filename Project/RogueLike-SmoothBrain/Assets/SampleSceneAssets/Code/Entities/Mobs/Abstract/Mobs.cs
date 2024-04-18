@@ -27,6 +27,7 @@ public abstract class Mobs : Entity
 
     // getters/setters
     public NavMeshAgent Agent { get => agent; }
+    public float DamageTakenMultiplicator { get; set; } = 1f;
 
     protected override void Start()
     {
@@ -140,7 +141,7 @@ public abstract class Mobs : Entity
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
-        Stats.DecreaseValue(Stat.HP, _value, false);
+        Stats.DecreaseValue(Stat.HP, _value * DamageTakenMultiplicator, false);
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (notEffectDamage)
