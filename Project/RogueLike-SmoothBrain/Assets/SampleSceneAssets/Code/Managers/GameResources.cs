@@ -10,7 +10,6 @@ public class GameResources : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadGameResources()
     {
-        Debug.Log("???");
         GameObject.Instantiate(Resources.Load<GameObject>(nameof(GameResources)));
     }
 
@@ -20,7 +19,12 @@ public class GameResources : MonoBehaviour
         {
             foreach (Object obj in objectsToLoad)
             {
-                Debug.Log(obj.name);
+                if (objDictionary.ContainsKey(obj.name))
+                {
+                    Debug.LogError("Two object have the same keys >:( !!! " + obj.name, obj);
+                    continue;
+                }
+
                 objDictionary.Add(obj.name, obj);
             }
             objectsToLoad.Clear();
@@ -29,7 +33,6 @@ public class GameResources : MonoBehaviour
             load = true;
         }
 
-        Debug.Log("WOW");
         Destroy(gameObject);
     }
 
@@ -40,7 +43,7 @@ public class GameResources : MonoBehaviour
             T obj = Resources.Load<T>(key);
             if (obj == null)
             {
-                Debug.LogError("GameResources doesn't contain " + key + " and can't load this from file");
+                Debug.LogError("GameResources doesn't contain " + key + " and can't load this from resources file");
             }
             objDictionary.Add(key, obj);
         }

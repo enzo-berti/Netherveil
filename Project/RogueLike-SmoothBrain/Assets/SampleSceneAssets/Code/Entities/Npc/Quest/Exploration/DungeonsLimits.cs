@@ -1,33 +1,30 @@
-using UnityEngine; 
- 
-public class DungeonsLimits : Quest 
+using Map;
+
+public class DungeonsLimits : Quest
 {
-    int currentNumber = 0;
-    readonly int MAX_NUMBER = 15;
+    float currentNumber = 0f;
 
     public override void AcceptQuest()
     {
-        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{MAX_NUMBER}%";
-        Hero.OnChargedAttack += UpdateCount;
+        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/100%";
+        RoomUtilities.EnterEvents += UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        Hero.OnChargedAttack -= UpdateCount;
+        RoomUtilities.EnterEvents -= UpdateCount;
     }
 
-    private void UpdateCount(IDamageable damageable, IAttacker attacker)
+    private void UpdateCount()
     {
-        currentNumber++;
-        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{MAX_NUMBER}%";
+        currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Normal] / RoomUtilities.nbRoomByType[RoomType.Normal] * 100f;
+        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/100%";
         QuestUpdated();
 
-        if (currentNumber >= MAX_NUMBER)
+        if (currentNumber >= 100)
         {
             QuestFinished();
         }
     }
-
-
-} 
+}

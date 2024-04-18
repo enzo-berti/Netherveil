@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
 
     public bool LaunchUpgradeAnimation { get; set; } = false;
+    public bool DoneQuestQTThiStage = false;
+    public bool DoneQuestQTApprenticeThiStage = false;
 
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;

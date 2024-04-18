@@ -5,13 +5,13 @@ using UnityEngine;
 [Serializable]
 public class ItemData : IComparable<ItemData>
 {
-    public static readonly List<int> rarityWeighting = new List<int>()
+    public static readonly List<float> rarityWeighting = new List<float>()
     {
-        20,
-        40,
-        25,
-        10,
-        5
+        0.2f,
+        0.4f,
+        0.25f,
+        0.1f,
+        0.05f
     };
     public enum Rarity
     {
