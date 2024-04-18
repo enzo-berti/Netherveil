@@ -63,8 +63,6 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        Debug.Log(currentAttack);
-
         if (Context.IsSpeAttackAvailable && currentAttack != Attacks.BASIC)
         {
             if (stompDelay == 0f)
