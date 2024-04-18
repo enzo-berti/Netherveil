@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
+    public Coroutine SpecialAbilityCoroutine { get; set; } = null;
+    public ISpecialAbility SpecialAbility { get; set; } = null;
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
@@ -53,6 +55,8 @@ public class PlayerController : MonoBehaviour
     public VisualEffect ChargedAttackVFX;
     public VisualEffect spearLaunchVFX;
     public VisualEffect corruptionUpgradeVFX;
+    public VisualEffect benedictionUpgradeVFX;
+    public VisualEffect divineShieldVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;
@@ -328,15 +332,12 @@ public class PlayerController : MonoBehaviour
         LaunchUpgradeAnimation = false;
         if(hero.Stats.GetValue(Stat.CORRUPTION) > 0)
         {
-            VFXWrapper.transform.position = transform.position;
             corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
         }
         else if (hero.Stats.GetValue(Stat.CORRUPTION) < 0)
         {
-            VFXWrapper.transform.position = transform.position;
-            corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+            benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
         }
-        //launch benediction or corruptionVFX
     }
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)

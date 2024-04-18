@@ -265,7 +265,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         currentStep--;
         if (corruptionStat <= Stats.GetMinValue(Stat.CORRUPTION))
         {
-            //ajout de la capacité divine shield
+            playerController.SpecialAbility = new DivineShield();
             //ajout du malus de possibilité de dédoublement des mobs
             playerController.LaunchUpgradeAnimation = true;
         }
@@ -283,7 +283,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         currentStep++;
         if (corruptionLastValue <= Stats.GetMinValue(Stat.CORRUPTION))
         {
-            //désactiver la capacité divine shield
+            playerController.SpecialAbility = null;
             //désactiver malus de possibilité de dédoublement des mobs
         }
         else

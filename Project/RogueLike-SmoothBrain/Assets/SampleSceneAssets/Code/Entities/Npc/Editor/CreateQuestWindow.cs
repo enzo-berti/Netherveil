@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -63,7 +62,7 @@ public class CreateQuestWindow : EditorWindow
                 path += "Restrictive";
                 break;
             case QuestData.QuestType.EXPLORATION:
-                path += "Restrictive";
+                path += "Exploration";
                 break;
             case QuestData.QuestType.FIGHTING:
                 path += "Fighting";

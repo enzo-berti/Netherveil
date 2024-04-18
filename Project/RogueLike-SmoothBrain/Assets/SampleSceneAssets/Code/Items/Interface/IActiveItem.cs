@@ -3,7 +3,7 @@ using UnityEngine;
 
 public interface IActiveItem : IItem
 {
-    float Cooldown { get; set; }
+    public float Cooldown { get; set; }
     void Activate();
     sealed IEnumerator WaitToUse()
     {
