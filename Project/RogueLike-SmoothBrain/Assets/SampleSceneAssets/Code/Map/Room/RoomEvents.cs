@@ -1,3 +1,4 @@
+using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -9,9 +10,11 @@ namespace Map
 
         private GameObject room;
         private GameObject enemies;
+        private GameObject treasures;
         //private GameObject traps;
         private NavMeshSurface navMeshSurface;
 
+        private bool allChestsOpenCalled = false;
         private bool allEnemiesDeadCalled = false;
         private bool enterRoomCalled = false;
         private bool exitRoomCalled = false;
@@ -36,14 +39,17 @@ namespace Map
             // find room go's
             room = transform.parent.Find("RoomGenerator").GetChild(0).gameObject;
             enemies = room.transform.Find("Enemies").gameObject;
+            treasures = room.transform.Find("Treasures").gameObject;
             //traps = room.transform.Find("Traps").gameObject;
             navMeshSurface = transform.parent.GetComponentInChildren<NavMeshSurface>();
 
             enemies.SetActive(false);
             gameObject.layer = LayerMask.NameToLayer("Default");
 
-            // set bool to true to not call the events in the room
+            // set bool to true to not call the events in the room if there is no enemy
             allEnemiesDeadCalled = (enemies.transform.childCount == 0);
+            // set bool to true to not call the events in the room if there is no chest
+            allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
 
             // create data of the map
             mapData = new RoomData(enemies, transform.parent.GetComponentInChildren<Generation.RoomGenerator>());
@@ -51,6 +57,14 @@ namespace Map
             {
                 EnterEvents();
             }
+        }
+
+        private void OpenChestsEvent()
+        {
+            allChestsOpenCalled = true;
+
+            // global events
+            RoomUtilities.allChestOpenEvents?.Invoke();
         }
 
         private void EnterEvents()
@@ -90,9 +104,14 @@ namespace Map
 
         private void FixedUpdate()
         {
-            if (enemies.transform.childCount == 0 && !allEnemiesDeadCalled)
+            if (!allEnemiesDeadCalled && enemies.transform.childCount == 0)
             {
                 AllEnemiesEvents();
+            }
+
+            if (!allChestsOpenCalled && treasures.GetComponentsInChildren<Item>().Count() == 0)
+            {
+                OpenChestsEvent();
             }
         }
 
