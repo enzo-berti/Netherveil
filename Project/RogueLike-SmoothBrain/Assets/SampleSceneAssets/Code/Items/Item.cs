@@ -148,8 +148,6 @@ public class Item : MonoBehaviour
         }
        
     }
-
-
     public void RandomizeItem()
     {
         List<string> allItems = new();
