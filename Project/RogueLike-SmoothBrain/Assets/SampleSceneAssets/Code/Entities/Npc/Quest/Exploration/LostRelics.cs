@@ -23,8 +23,8 @@ public class LostRelics : Quest
     {
         if (RoomUtilities.roomData.Type == RoomType.Treasure)
         {
-            currentNumber++;
-            progressText = $"NB TREASURE< ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
+            currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Treasure];
+            progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
 
             if (currentNumber >= MAX_NUMBER)
