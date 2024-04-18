@@ -1,33 +1,36 @@
-using UnityEngine; 
- 
-public class TheBuriedSecrets : Quest 
+
+using Map;
+
+public class TheBuriedSecrets : Quest
 {
     int currentNumber = 0;
-    readonly int MAX_NUMBER = 15;
+    int MAX_NUMBER;
 
     public override void AcceptQuest()
     {
+        MAX_NUMBER = RoomUtilities.nbRoomByType[RoomType.Secret];
         progressText = $"NB SECRETS ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnChargedAttack += UpdateCount;
+        RoomUtilities.EnterEvents += UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        Hero.OnChargedAttack -= UpdateCount;
+        RoomUtilities.EnterEvents -= UpdateCount;
     }
 
-    private void UpdateCount(IDamageable damageable, IAttacker attacker)
+    private void UpdateCount()
     {
-        currentNumber++;
-        progressText = $"NB SECRETS ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
-        QuestUpdated();
-
-        if (currentNumber >= MAX_NUMBER)
+        if (RoomUtilities.roomData.Type == RoomType.Secret)
         {
-            QuestFinished();
+            currentNumber++;
+            progressText = $"NB SECRETS ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
+            QuestUpdated();
+
+            if (currentNumber >= MAX_NUMBER)
+            {
+                QuestFinished();
+            }
         }
     }
-
-
-} 
+}
