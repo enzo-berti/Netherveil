@@ -65,7 +65,6 @@ public static class ConvertUrpToToon
                     }
                 }
             }
-            break;
         }
 
         AssetDatabase.SaveAssets();
