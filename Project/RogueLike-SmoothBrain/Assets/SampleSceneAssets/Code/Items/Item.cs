@@ -102,7 +102,7 @@ public class Item : MonoBehaviour
         // Copy list of weighting
         List<int> currentRarityWeighting = ItemData.rarityWeighting;
         // Then we will modify it, because some pools are empty
-        for(int test = allItemsByPool.Count; test >= 0 ; test--)
+        for(int test = allItemsByPool.Count - 1; test >= 0 ; test--)
         {
             // If a pool is empty ( no more common item for exemple )
             if (allItemsByPool[test].Count == 0)
@@ -116,9 +116,10 @@ public class Item : MonoBehaviour
                 {
                     currentRarityWeighting[iWeighting] += (int)chanceToDivide;
                 }
+                // And we remove the pool
+                allItemsByPool.RemoveAt(test);
             }
-            // And we remove the pool
-            allItemsByPool.RemoveAt(test);
+           
         }
 
         int chanceForRarity = Seed.Range(0, 100);
@@ -132,10 +133,21 @@ public class Item : MonoBehaviour
                 break;
             }
         }
+        UnityEngine.Debug.Log(allItemsByPool.Count);
+        UnityEngine.Debug.Log(indexRarity);
+
         int indexInPool = Seed.Range(0, allItemsByPool[indexRarity].Count);
         item.idItemName = allItemsByPool[indexRarity][indexInPool];
-        ItemPool[indexRarity].RemoveAt(indexInPool);
-        UnityEngine.Debug.Log((ItemData.Rarity)indexRarity);
+        for(int poolIndex = 0; poolIndex < ItemPool.Count; poolIndex++)
+        {
+            var test = ItemPool[poolIndex].FirstOrDefault(x => x.idName == item.idItemName);
+            if ( test != null)
+            {
+                ItemPool[poolIndex].Remove(test);
+                return;
+            }
+        }
+       
     }
 
 
