@@ -327,6 +327,7 @@ public class PlayerController : MonoBehaviour
         if (!LaunchUpgradeAnimation)
             return;
 
+        playerInput.DisableGameplayInputs();
         animator.ResetTrigger("UpgradingStats");
         animator.SetTrigger("UpgradingStats");
         hero.State = (int)Hero.PlayerState.UPGRADING_STATS;

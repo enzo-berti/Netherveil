@@ -19,6 +19,7 @@ public class UpgradingStatsBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        GameObject.FindWithTag("Player").GetComponent<PlayerInput>().EnableGameplayInputs();
         GameObject.FindWithTag("Player").GetComponent<Hero>().State = (int)Entity.EntityState.MOVE;
     }
 

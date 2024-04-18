@@ -522,7 +522,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    private void DisableGameplayInputs()
+    public void DisableGameplayInputs()
     {
         playerInputMap.currentActionMap["Movement"].Disable();
         playerInputMap.currentActionMap["BasicAttack"].Disable();
@@ -534,7 +534,7 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.currentActionMap["SpecialAbility"].Disable();
     }
 
-    private void EnableGameplayInputs()
+    public void EnableGameplayInputs()
     {
         playerInputMap.currentActionMap["Movement"].Enable();
         playerInputMap.currentActionMap["BasicAttack"].Enable();
