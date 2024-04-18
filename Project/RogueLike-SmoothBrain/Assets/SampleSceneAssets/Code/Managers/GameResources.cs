@@ -5,6 +5,13 @@ public class GameResources : MonoBehaviour
 {
     static private GameResources instance;
     private readonly Dictionary<string, Object> keyValuePairs = new Dictionary<string, Object>();
+    [SerializeField] private List<Object> objectsToLoad;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void LoadGameResources()
+    {
+        _ = Instance;
+    }
 
     static public GameResources Instance
     {
@@ -12,8 +19,7 @@ public class GameResources : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject obj = new GameObject(nameof(GameResources));
-                obj.AddComponent<GameResources>();
+                Instantiate(Resources.Load<GameObject>(nameof(AudioManager)));
             }
 
             return instance;
@@ -32,6 +38,13 @@ public class GameResources : MonoBehaviour
             Destroy(instance);
             return;
         }
+
+        foreach (Object obj in objectsToLoad)
+        {
+            Debug.Log(obj.name);
+            keyValuePairs.Add(obj.name, obj);
+        }
+        objectsToLoad.Clear();
     }
 
     public T Get<T>(string key) where T : Object
@@ -39,6 +52,10 @@ public class GameResources : MonoBehaviour
         if (!keyValuePairs.ContainsKey(key))
         {
             T obj = Resources.Load<T>(key);
+            if (obj == null)
+            {
+                Debug.LogError("GameResources doesn't contain " + key + " and can't load this from file");
+            }
             keyValuePairs.Add(key, obj);
         }
 

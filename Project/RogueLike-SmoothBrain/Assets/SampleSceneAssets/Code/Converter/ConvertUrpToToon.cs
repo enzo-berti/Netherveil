@@ -24,6 +24,7 @@ public static class ConvertUrpToToon
                     {
                         Material memMat = material;
 
+
                         material.shader = toonShader;
                         material.SetColor("_1st_ShadeColor", new Color(0.67f, 0.67f, 0.67f, 1.0f));
                         material.SetColor("_2st_ShadeColor", new Color(0.33f, 0.33f, 0.33f, 1.0f));
@@ -33,8 +34,8 @@ public static class ConvertUrpToToon
                         material.SetFloat("_ShadeColor_Step", 0.25f);
                         material.SetFloat("_1st2nd_Shades_Feather", 0.03f);
 
-                        material.SetTexture("_NormalMap", memMat.GetTexture("_BumpMap"));
-                        material.SetFloat("_NormalScale", memMat.GetFloat("_BumpScale"));
+                        if (memMat.HasTexture("_BumpMap")) material.SetTexture("_NormalMap", material.GetTexture("_BumpMap"));
+                        if (memMat.HasFloat("_BumpScale")) material.SetFloat("_NormalScale", material.GetFloat("_BumpScale"));
 
                         material.SetColor("_HighColor", new Color(0.64f, 0.62f, 0.67f, 1.0f));
                         material.SetFloat("_HighColor_Power", 0.4f);
@@ -48,11 +49,11 @@ public static class ConvertUrpToToon
                         material.SetFloat("_Tweak_RimLightMaskLevel", -0.25f);
 
                         material.SetFloat("_MatCap", 1);
-                        material.SetTexture("_MatCap_Sampler", memMat.GetTexture("_MetallicGlossMap"));
+                        if (memMat.HasTexture("_MetallicGlossMap")) material.SetTexture("_MatCap_Sampler", material.GetTexture("_MetallicGlossMap"));
                         material.SetFloat("_Is_NormalMapForMatCap", 1);
-                        material.SetTexture("_MatCap_Sampler", memMat.GetTexture("_NormalMapForMatCap"));
+                        if (memMat.HasTexture("_NormalMapForMatCap")) material.SetTexture("_MatCap_Sampler", material.GetTexture("_NormalMapForMatCap"));
 
-                        material.SetTexture("_Emissive_Tex", memMat.GetTexture("_EmissionMap"));
+                        if (memMat.HasTexture("_EmissionMap")) material.SetTexture("_Emissive_Tex", material.GetTexture("_EmissionMap"));
 
                         material.SetFloat("_Outline_Width", 5.0f);
 
