@@ -43,7 +43,7 @@ public class GameResources : MonoBehaviour
             T obj = Resources.Load<T>(key);
             if (obj == null)
             {
-                Debug.LogError("GameResources doesn't contain " + key + " and can't load this from file");
+                Debug.LogError("GameResources doesn't contain " + key + " and can't load this from resources file");
             }
             objDictionary.Add(key, obj);
         }
