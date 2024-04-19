@@ -12,11 +12,12 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private MapHUD mapHUD;
     [SerializeField] private TMP_Text BloodTestMesh;
 
-    Hero player;
+    private Hero player;
+
     public static event Action OnPause;
     public static event Action OnUnpause;
 
-    private void Start()
+    private void Awake()
     {
         player = FindObjectOfType<Hero>();
     }
