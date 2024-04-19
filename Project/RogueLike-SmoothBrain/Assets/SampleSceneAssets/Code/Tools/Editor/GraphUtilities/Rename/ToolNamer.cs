@@ -82,15 +82,12 @@ public class ToolNamer : EditorWindow
     {
         float MinRotY = 0f;
         float MaxRotY = 360f;
-
-
-
+                
         GameObject[] objects = Selection.gameObjects;
-        foreach (var item in objects){
 
+        foreach (var item in objects){
             float newRotY = Random.Range(MinRotY, MaxRotY);
             item.transform.rotation = Quaternion.Euler(0f, newRotY,0f);
-
         }
     }
 }

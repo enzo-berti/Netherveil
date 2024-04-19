@@ -19,7 +19,7 @@ public class DamoclesFollowTargetState : BaseState<DamoclesStateMachine>
         {
             SwitchState(Factory.GetState<DamoclesEnGardeState>());
         }
-        else if (Context.Target == null)
+        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.VISION_RANGE))
         {
             SwitchState(Factory.GetState<DamoclesIdle>());
         }

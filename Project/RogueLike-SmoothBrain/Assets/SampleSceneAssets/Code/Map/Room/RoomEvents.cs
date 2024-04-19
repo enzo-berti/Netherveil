@@ -79,8 +79,8 @@ namespace Map
             enemies.SetActive(true);
 
             // global events
-            RoomUtilities.EarlyEnterEvents?.Invoke();
-            RoomUtilities.EnterEvents?.Invoke();
+            RoomUtilities.earlyEnterEvents?.Invoke();
+            RoomUtilities.enterEvents?.Invoke();
         }
 
         private void ExitEvents()
@@ -92,7 +92,7 @@ namespace Map
             enemies.SetActive(false);
 
             // global events
-            RoomUtilities.ExitEvents?.Invoke();
+            RoomUtilities.exitEvents?.Invoke();
         }
 
         private void AllEnemiesEvents()

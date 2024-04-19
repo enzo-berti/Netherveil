@@ -8,6 +8,8 @@ namespace Map
         {
             if (other.gameObject.CompareTag("Player"))
             {
+                RoomUtilities.onFinishStageEvents?.Invoke();
+
                 LevelLoader.current.LoadScene("InGame");
             }
         }

@@ -16,14 +16,14 @@ public class RuneOfPride : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Hero.OnKill -= ctx => Berserk();
-        RoomUtilities.EnterEvents -= Reset;
+        RoomUtilities.enterEvents -= Reset;
     }
 
     public void OnRetrieved() 
     { 
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         Hero.OnKill += ctx => Berserk();
-        RoomUtilities.EnterEvents += Reset;
+        RoomUtilities.enterEvents += Reset;
     } 
 
     private void Berserk()

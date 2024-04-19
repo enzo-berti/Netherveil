@@ -7,13 +7,13 @@ public class DungeonsLimits : Quest
     public override void AcceptQuest()
     {
         progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/100%";
-        RoomUtilities.EnterEvents += UpdateCount;
+        RoomUtilities.enterEvents += UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        RoomUtilities.EnterEvents -= UpdateCount;
+        RoomUtilities.enterEvents -= UpdateCount;
     }
 
     private void UpdateCount()
