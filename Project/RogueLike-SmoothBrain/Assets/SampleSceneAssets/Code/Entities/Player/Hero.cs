@@ -21,6 +21,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private event IAttacker.HitDelegate onAttackHit;
     public static event Action<int, IAttacker> OnTakeDamage;
     public static event Action<IDamageable, IAttacker> OnBasicAttack;
+    public static event Action<IDamageable, IAttacker> OnDashAttack;
     public static event Action<IDamageable, IAttacker> OnSpearAttack;
     public static event Action<IDamageable, IAttacker> OnChargedAttack;
     public static event Action<IDamageable, IAttacker> OnFinisherAttack;
@@ -144,9 +145,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             damages += PlayerController.SPEAR_DAMAGES;
             OnSpearAttack?.Invoke(damageable, this);
         }
+        else if (playerInput.LaunchedDashAttack)
+        {
+            OnDashAttack?.Invoke(damageable, this);
+        }
         else
         {
-            DeviceManager.Instance.ApplyVibrations(0f, 0.1f, 0.1f);
             OnBasicAttack?.Invoke(damageable, this);
         }
 
