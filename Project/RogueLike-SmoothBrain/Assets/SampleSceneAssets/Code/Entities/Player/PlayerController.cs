@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
     public Coroutine SpecialAbilityCoroutine { get; set; } = null;
-    public ISpecialAbility SpecialAbility { get; set; } = new DamnationVeil();
+    public ISpecialAbility SpecialAbility { get; set; } = null;
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
@@ -48,13 +48,14 @@ public class PlayerController : MonoBehaviour
     public int ComboCount { get; set; } = 0;
     public static readonly int FINISHER_DAMAGES = 10;
     public static readonly int SPEAR_DAMAGES = 5;
-    public static readonly int CHARGED_ATTACK_DAMAGES = 20;
+    public static readonly int CHARGED_ATTACK_DAMAGES = 75;
     public static readonly int MAX_COMBO_COUNT = 3;
     public static readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
 
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;
     public List<VisualEffect> SpearAttacksVFX;
+    public VisualEffect DashAttackVFX;
     public VisualEffect HitVFX;
     public VisualEffect DashVFX;
     public VisualEffect ChargedAttackVFX;
@@ -394,6 +395,11 @@ public class PlayerController : MonoBehaviour
         }
 
         playerInput.ResetValuesInput();
+    }
+
+    public void UpdateVFXWrapperTransform()
+    {
+        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
     }
 
     #endregion

@@ -45,6 +45,7 @@ public class PlayerInput : MonoBehaviour
     public bool LaunchedChargedAttack { get; private set; } = false;
     readonly List<Collider> dashAttackAlreadyAttacked = new();
     bool applyVibrationsDashAttack = true;
+    public bool LaunchedDashAttack { get; private set; } = false;
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
@@ -282,7 +283,7 @@ public class PlayerInput : MonoBehaviour
         if (!controller.Spear.IsThrown)
         {
             Vector3 posToReach = transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
-            OnThrowSpear?.Invoke(posToReach);          
+            OnThrowSpear?.Invoke(posToReach);
             controller.Spear.Throw(posToReach);
             controller.PlayVFX(controller.spearLaunchVFX);
         }
@@ -350,7 +351,7 @@ public class PlayerInput : MonoBehaviour
     public void StartOfBasicAttack()
     {
         hero.OnAttack?.Invoke();
-        controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, true);
+        controller.AttackCollide(controller.SpearAttacks[controller.ComboCount].data, false);
 
         //stop all VFX of the combo attacks to prevent them to overlap each other
         foreach (VisualEffect vfx in controller.SpearAttacksVFX)
@@ -404,17 +405,21 @@ public class PlayerInput : MonoBehaviour
         DashDir = transform.forward;
         dashAttackAlreadyAttacked.Clear();
         applyVibrationsDashAttack = true;
+        controller.PlayVFX(controller.DashAttackVFX);
+        LaunchedDashAttack = true;
     }
 
     public void UpdateDashAttackAnimation()
     {
-        controller.ApplyCollide(controller.DashAttackCollider, dashAttackAlreadyAttacked, ref applyVibrationsDashAttack, true);
+        controller.UpdateVFXWrapperTransform();
+        controller.ApplyCollide(controller.DashAttackCollider, dashAttackAlreadyAttacked, ref applyVibrationsDashAttack, false);
     }
 
     public void EndOfDashAttackAnimation()
     {
         hero.State = (int)Entity.EntityState.MOVE;
         controller.ResetValues();
+        LaunchedDashAttack = false;
     }
 
     #endregion
@@ -505,7 +510,7 @@ public class PlayerInput : MonoBehaviour
         InputManagement(gamepadMap, unsubscribe: false);
     }
 
-   
+
     void InputManagement(InputActionMap map, bool unsubscribe)
     {
         if (unsubscribe)
@@ -586,6 +591,7 @@ public class PlayerInput : MonoBehaviour
         LaunchedChargedAttack = false;
         chargedAttackMax = false;
         chargedAttackTime = 0f;
+        LaunchedDashAttack = false;
         animator.ResetTrigger("DashAttack");
     }
 

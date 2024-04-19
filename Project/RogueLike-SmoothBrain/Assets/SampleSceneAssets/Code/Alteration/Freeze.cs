@@ -1,22 +1,10 @@
 using UnityEngine;
 
-public class Freeze : Status
+public class Freeze : ConstantStatus
 {
     float baseAgentSpeed;
-    public Freeze(float duration, float chance) : base(duration, chance)
+    public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
-        isStackable = false;
-    }
-
-    public override void ApplyEffect(Entity target, IAttacker attacker)
-    {
-        Debug.Log("Freeze " + target.name);
-        if (target.Stats.HasStat(Stat.SPEED))
-        {
-            baseAgentSpeed = target.Stats.GetCoeff(Stat.SPEED);
-            target.AddStatus(this);
-            PlayVfx("VFX_Frozen");
-        }
     }
 
     public override Status DeepCopy()
@@ -36,5 +24,15 @@ public class Freeze : Status
     public override void OnFinished()
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
+    }
+
+    public override bool CanApplyEffect(Entity target)
+    {
+        return target.Stats.HasStat(Stat.SPEED);
+    }
+
+    protected override void PlayVFX()
+    {
+        PlayVfx("VFX_Frozen");
     }
 }
