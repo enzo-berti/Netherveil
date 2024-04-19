@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Bleeding : Status
 {
-    readonly float coefValue = 0.025f;
+    readonly float coefValue = 0.03f;
     static Color bleedingColor = new(0.5f, 0.11f, 0.11f, 1f);
 
     public Bleeding(float _duration, float _chance) : base(_duration, _chance)
