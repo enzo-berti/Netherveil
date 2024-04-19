@@ -1,12 +1,12 @@
+using Map;
+using Map.Generation;
+using PrefabLightMapBaker;
 using System.IO;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
-using Generation;
-using Map;
-using PrefabLightMapBaker;
 
-public class RoomWindow : EditorWindow 
+public class RoomWindow : EditorWindow
 {
     public enum TypeRoom
     {
@@ -57,13 +57,13 @@ public class RoomWindow : EditorWindow
         MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
         collisionPlayer.includeLayers = -1;
         skeleton.AddComponent<RoomEvents>();
-        
+
         GameObject arrows = room.transform.GetChild(0).gameObject;
         arrows.gameObject.name = "Doors";
         arrows.transform.parent = skeleton.transform;
         DoorsGenerator generator = arrows.AddComponent<DoorsGenerator>();
         generator.GeneratePrefab();
-        
+
         GameObject staticProps = room.transform.GetChild(1).gameObject;
         staticProps.gameObject.name = "StaticProps";
         staticProps.transform.parent = skeleton.transform;
@@ -74,7 +74,7 @@ public class RoomWindow : EditorWindow
         GameObject roomGenerator = new GameObject("RoomGenerator");
         roomGenerator.transform.parent = roomPrefab.transform;
         roomGenerator.AddComponent<RoomGenerator>();
-        
+
         GameObject roomSeed1 = new GameObject("Room1");
         roomSeed1.transform.parent = roomGenerator.transform;
         roomSeed1.AddComponent<NavMeshSurface>();

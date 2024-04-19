@@ -1,11 +1,10 @@
-using Map;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-namespace Generation
+namespace Map.Generation
 {
     public struct GenerationParam
     {

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Map;
 
-namespace Generation
+namespace Map.Generation
 {
     public class RoomGenerator : MonoBehaviour
     {
