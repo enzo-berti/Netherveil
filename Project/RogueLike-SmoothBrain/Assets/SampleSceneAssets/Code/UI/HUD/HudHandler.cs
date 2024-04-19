@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class HudHandlerDeFou : MonoBehaviour
+public class HudHandler : MonoBehaviour
 {
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject GameOver;
