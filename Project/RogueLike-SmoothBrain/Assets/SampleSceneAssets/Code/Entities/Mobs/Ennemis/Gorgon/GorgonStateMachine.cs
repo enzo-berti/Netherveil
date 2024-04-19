@@ -40,12 +40,8 @@ public class GorgonStateMachine : Mobs, IGorgon
     Animator animator;
     Hero player = null;
 
-    bool isAttackAvailable;
-
     ///
-    private bool canAttack = true;
-    private bool canFlee = true;
-    private bool isGoingOnPlayer = false;
+    private bool isDashing = false;
     private bool isSmoothCoroutineOn = false;
     private bool hasLaunchAnim = false;
     private bool hasRemoveHead = false;
@@ -53,6 +49,12 @@ public class GorgonStateMachine : Mobs, IGorgon
     bool canLoseAggro = true;
     float attackCooldown = 0f;
     float MAX_ATTACK_COOLDOWN = 1f;
+
+    float dashCooldown = 0f;
+    float MAX_DASH_COOLDOWN = 2f;
+
+    float fleeCooldown = 0f;
+    float MAX_FLEE_COOLDOWN = 1f;
 
     #region getters/setters
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
@@ -64,12 +66,17 @@ public class GorgonStateMachine : Mobs, IGorgon
     //private float DistanceToFlee { get => stats.GetValue(Stat.ATK_RANGE) / 1.5f; }
     public GameObject BombPrefab { get => bombPrefab; }
     public Transform Hand { get => hand; }
-    public float VisionAngle { get => (currentState is GorgonTriggeredState || currentState is GorgonAttackingState) && player != null ? 360 : defaultVisionAngle; }
-    public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is GorgonTriggeredState || currentState is GorgonAttackingState ? 1.25f : 1f); }
+    public float VisionAngle { get => !canLoseAggro ? 360 : (currentState is GorgonTriggeredState || currentState is GorgonAttackingState) && player != null ? 360 : defaultVisionAngle; }
+    public float VisionRange { get => !canLoseAggro ? Stats.GetValue(Stat.VISION_RANGE) * 1.25f : Stats.GetValue(Stat.VISION_RANGE) * (currentState is GorgonTriggeredState || currentState is GorgonAttackingState ? 1.25f : 1f); }
     public bool CanLoseAggro { set => canLoseAggro = value; }
     public bool IsAttackAvailable { get => attackCooldown >= MAX_ATTACK_COOLDOWN; }
     public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
+    public bool IsDashAvailable { get => dashCooldown >= MAX_DASH_COOLDOWN; }
+    public float DashCooldown { get => dashCooldown; set => dashCooldown = value; }
+    public bool IsFleeAvailable { get => fleeCooldown >= MAX_FLEE_COOLDOWN; }
+    public float FleeCooldown { get => fleeCooldown; set => fleeCooldown = value; }
     public float TimeBetweenAttacks { get => timeBetweenAttack; }
+    public bool IsDashing { get => isDashing; }
     #endregion
 
     public List<Status> StatusToApply { get => statusToApply; }
@@ -93,9 +100,13 @@ public class GorgonStateMachine : Mobs, IGorgon
         base.Update();
 
         if (currentState is not GorgonAttackingState)
-        {
             if (attackCooldown < MAX_ATTACK_COOLDOWN) attackCooldown += Time.deltaTime;
-        }
+
+        if (currentState is not GorgonDashingState)
+            if (dashCooldown < MAX_DASH_COOLDOWN) dashCooldown += Time.deltaTime;
+
+        if (currentState is not GorgonFleeingState)
+            if (fleeCooldown < MAX_FLEE_COOLDOWN) fleeCooldown += Time.deltaTime;
 
         currentState.Update();
     }
@@ -134,6 +145,12 @@ public class GorgonStateMachine : Mobs, IGorgon
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
         ApplyDamagesMob(_value, gorgonSounds.hitSFX, Death, notEffectDamage);
+
+        if (!player)
+        {
+            currentState = factory.GetState<GorgonTriggeredState>();
+            player = Utilities.Hero;
+        }
     }
 
     public void Death()
@@ -164,8 +181,8 @@ public class GorgonStateMachine : Mobs, IGorgon
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayAttackRange(VisionAngle);
@@ -196,6 +213,8 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     public IEnumerator DashToPos(List<Vector3> listDashes)
     {
+        isDashing = true;
+
         for (int i = 1; i < listDashes.Count; i++)
         {
             if (this.Stats.GetValue(Stat.SPEED) > 0)
@@ -206,7 +225,8 @@ public class GorgonStateMachine : Mobs, IGorgon
             }
             yield return new WaitUntil(() => isSmoothCoroutineOn == false);
         }
-        isGoingOnPlayer = false;
+
+        isDashing = false;
     }
 
     private IEnumerator GoSmoothToPosition(Vector3 posToReach)
@@ -227,6 +247,7 @@ public class GorgonStateMachine : Mobs, IGorgon
             yield return null;
         }
         yield return new WaitForSeconds(0.25f);
+
         isSmoothCoroutineOn = false;
     }
 

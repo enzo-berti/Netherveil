@@ -1,5 +1,6 @@
 using FMODUnity;
 using Map;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -97,11 +98,20 @@ public class PlayerController : MonoBehaviour
         OverridePlayerRotation(225f, true);
         RoomUtilities.allEnemiesDeadEvents += LaunchUpgradeAnim;
         RoomUtilities.allChestOpenEvents += LaunchUpgradeAnim;
+        RoomUtilities.onFinishStageEvents += ResetStageDependentValues;
+    }
+
+    private void ResetStageDependentValues()
+    {
+        DoneQuestQTThiStage = false;
+        DoneQuestQTApprenticeThiStage = false;
     }
 
     private void OnDestroy()
     {
         RoomUtilities.allEnemiesDeadEvents -= LaunchUpgradeAnim;
+        RoomUtilities.allChestOpenEvents -= LaunchUpgradeAnim;
+        RoomUtilities.onFinishStageEvents -= ResetStageDependentValues;
     }
 
     private void Update()

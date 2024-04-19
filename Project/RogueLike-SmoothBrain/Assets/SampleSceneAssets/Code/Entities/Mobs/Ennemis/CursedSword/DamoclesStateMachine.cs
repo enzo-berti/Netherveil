@@ -152,12 +152,12 @@ public class DamoclesStateMachine : Mobs, IDamocles
         damoclesSounds.moveSound.Play(transform.position);
     }
 
-    public void Move(Vector3 posToMove)
+    public void Move(Vector3 direction)
     {
         if (!agent.enabled)
             return;
 
-        agent.Move(posToMove);
+        agent.Move(direction);
         damoclesSounds.moveSound.Play(transform.position);
     }
     #endregion

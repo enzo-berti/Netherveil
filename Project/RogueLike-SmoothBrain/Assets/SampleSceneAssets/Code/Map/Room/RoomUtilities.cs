@@ -5,11 +5,12 @@ namespace Map
 {
     static public class RoomUtilities
     {
-        static public Action EarlyEnterEvents;
-        static public Action EnterEvents;
-        static public Action ExitEvents;
+        static public Action earlyEnterEvents;
+        static public Action enterEvents;
+        static public Action exitEvents;
         static public Action allEnemiesDeadEvents;
         static public Action allChestOpenEvents;
+        static public Action onFinishStageEvents;
 
         static public RoomData roomData;
 

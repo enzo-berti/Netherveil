@@ -31,12 +31,12 @@ public abstract class Mobs : Entity
 
     protected void OnEnable()
     {
-        RoomUtilities.EarlyEnterEvents += OnEarlyEnterRoom;
+        RoomUtilities.earlyEnterEvents += OnEarlyEnterRoom;
     }
 
     protected void OnDisable()
     {
-        RoomUtilities.EarlyEnterEvents -= OnEarlyEnterRoom;
+        RoomUtilities.earlyEnterEvents -= OnEarlyEnterRoom;
     }
 
     protected override void Start()

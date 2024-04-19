@@ -36,11 +36,16 @@ public class GorgonTriggeredState : BaseState<GorgonStateMachine>
                 SwitchState(Factory.GetState<GorgonAttackingState>());
                 return;
             }
-            else
+            else if (Context.IsFleeAvailable)
             {
                 SwitchState(Factory.GetState<GorgonFleeingState>());
                 return;
             }
+        }
+        else if (Context.IsAttackAvailable && Context.IsDashAvailable)
+        {
+            SwitchState(Factory.GetState<GorgonDashingState>());
+            return;
         }
     }
 
