@@ -11,11 +11,6 @@ public class MiniMapCam : MonoBehaviour
 
     void LateUpdate()
     {
-        SetPosition();
-    }
-
-    private void SetPosition()
-    {
         Vector3 newPos = player.position;
         newPos.y = transform.position.y;
         transform.position = newPos;

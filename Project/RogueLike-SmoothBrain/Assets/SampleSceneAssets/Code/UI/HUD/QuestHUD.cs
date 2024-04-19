@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class QuestUI : MonoBehaviour
+public class QuestHUD : MonoBehaviour
 {
     private Hero player;
     [SerializeField] private TMP_Text description;
