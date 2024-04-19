@@ -20,8 +20,6 @@ namespace Fountain
             hero = FindObjectOfType<Hero>();
             interactions = hero.GetComponent<PlayerInteractions>();
             outline = GetComponent<Outline>();
-
-            hero.Inventory.Blood = 20;
         }
 
         private void Update()
