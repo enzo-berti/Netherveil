@@ -36,14 +36,14 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
                 case 1:
                     SwitchState(Factory.GetState<DamoclesJumpAttackState>());
                     break;
-            }
+            } 
         }
     }
 
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-
+        elapsedTimeMovement = Time.time;
     }
 
     // This method will be call only one time after the last update.
@@ -55,17 +55,17 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        Debug.Log("guard");
         Vector3 direction = Context.Target.transform.position - Context.transform.position;
+        direction.y = 0;
         direction.Normalize();
 
-        Context.Move(new Vector3(-direction.z, 0, direction.x) * Time.deltaTime);
+        Context.Move(new Vector3(-direction.z, 0, direction.x) * Time.deltaTime * Context.Stats.GetValue(Stat.SPEED));
+        //Context.transform.position += new Vector3(-direction.z, 0, direction.x) * Time.deltaTime * Context.Stats.GetValue(Stat.SPEED);
 
         // Delay
         if (Time.time - elapsedTimeMovement < guardTime)
             return;
 
-        Debug.Log("endguard");
         elapsedTimeMovement = Time.time;
 
         stateEnded = true;
