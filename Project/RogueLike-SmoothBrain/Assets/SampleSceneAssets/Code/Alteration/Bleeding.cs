@@ -9,6 +9,7 @@ public class Bleeding : Status
     {
         isStackable = true;
         frequency = 0.5f;
+        maxStack = 3;
     }
 
     public override void ApplyEffect(Entity target, IAttacker attacker)
