@@ -68,6 +68,6 @@ public class ItemDescription : MonoBehaviour
     public void TogglePanel(bool toggle)
     {
         StopAllCoroutines();
-        StartCoroutine(toggle ? UITween.UpScaleCoroutine(panel.transform, scaleDuration) : UITween.DownScaleCoroutine(panel.transform, scaleDuration));
+        StartCoroutine(toggle ? panel.GetComponent<RectTransform>().UpScaleCoroutine(scaleDuration) : panel.GetComponent<RectTransform>().DownScaleCoroutine(scaleDuration));
     }
 }

@@ -17,7 +17,8 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private Slider lifeJauge;
     [SerializeField] private TextMeshProUGUI lifeRatioText;
     [SerializeField] private GeneralMenu pauseMenu;
-    
+    [SerializeField] private QuestUI questUI;
+
     Hero player;
     public static event Action OnPause;
     public static event Action OnUnpause;
@@ -48,6 +49,11 @@ public class HudHandler : MonoBehaviour
             miniMapFrame.SetActive(true);
             bigMapFrame.SetActive(false);
         }
+    }
+
+    public void ToggleQuest(InputAction.CallbackContext ctx)
+    {
+        questUI.Toggle();
     }
 
     public void TogglePause(InputAction.CallbackContext ctx)
