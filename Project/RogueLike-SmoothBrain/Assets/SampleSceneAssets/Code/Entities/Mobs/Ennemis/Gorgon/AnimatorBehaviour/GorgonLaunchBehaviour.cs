@@ -13,23 +13,22 @@ public class GorgonLaunchBehaviour : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //Debug.Log(stateInfo.normalizedTime); // mis en com par Dorian
-        //if (stateInfo.normalizedTime > timeToRemoveHead)
-        //{
-        //    //animator.transform.parent.GetComponent<Gorgon>().HasRemoveHead = true;
-        //    animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = true;
-        //}
-        //if (stateInfo.normalizedTime > timeToLaunchHead)
-        //{
-        //    animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = true;
-        //}
+        if (stateInfo.normalizedTime > timeToRemoveHead)
+        {
+            //animator.transform.parent.GetComponent<Gorgon>().HasRemoveHead = true;
+            animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = true;
+        }
+        if (stateInfo.normalizedTime > timeToLaunchHead)
+        {
+            animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = true;
+        }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = false;
-        //animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = false;
+        animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = false;
+        animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

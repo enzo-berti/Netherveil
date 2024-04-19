@@ -56,7 +56,7 @@ public class ExplodingBomb : MonoBehaviour
         VFXObject.transform.parent = null;
         VFXObject.transform.position = pos;
         VFX.Play();
-        
+
         float timer = 0;
         Vector3 basePos = this.transform.position;
         Vector3 position3D = Vector3.zero;
@@ -84,7 +84,7 @@ public class ExplodingBomb : MonoBehaviour
         launcher = attacker;
         StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
     }
-    
+
     void UpdateTimerExplosion()
     {
         if (elapsedExplosionTime + timerBeforeExplode < Time.time)
@@ -95,7 +95,7 @@ public class ExplodingBomb : MonoBehaviour
     {
         isActive = true;
         elapsedExplosionTime = Time.time;
-        
+
     }
 
     public void Explode()
@@ -106,7 +106,7 @@ public class ExplodingBomb : MonoBehaviour
 
     private IEnumerator ExplodeRoutine()
     {
-        Physics.OverlapSphere(this.transform.position, BlastRadius/2, damageLayer)
+        Physics.OverlapSphere(this.transform.position, BlastRadius / 2, damageLayer)
             .Select(entity => entity.GetComponent<IBlastable>())
             .Where(entity => entity != null)
             .ToList()
@@ -147,16 +147,15 @@ public class ExplodingBomb : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        //Handles.color = new Color(1, 0, 0, 0.25f);
 
-            //Handles.color = new Color(1, 0, 0, 0.25f);
-           
-            //Gizmos.DrawSphere(this.transform.position, blastRadius/2);
+        //Gizmos.DrawSphere(this.transform.position, blastRadius / 2);
 
-            //Handles.color = Color.white;
-            //Handles.Label(transform.position + Vector3.up,
-            //    $"Bomb" +
-            //    $"\nActivate : {isActive}" +
-            //    $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
+        //Handles.color = Color.white;
+        //Handles.Label(transform.position + Vector3.up,
+        //    $"Bomb" +
+        //    $"\nActivate : {isActive}" +
+        //    $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
     }
 #endif
 }

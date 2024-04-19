@@ -6,17 +6,17 @@ using UnityEngine;
 public abstract class OverTimeStatus : Status
 {
     private bool isCoroutineOn = false;
-    protected float frequency = 1f;
+    protected float frequency;
 
-    protected OverTimeStatus(float _duration, float _chance, float _frequency) : base(_duration, _chance)
+    protected OverTimeStatus(float _duration, float _chance) : base(_duration, _chance)
     {
-        frequency = _frequency;
+        isCoroutineOn = false;
     }
     public sealed override void DoEffect()
     {
         if (!isCoroutineOn)
         {
-            CoroutineManager.Instance.StartCoroutine(EffectAsync());
+            CoroutineManager.Instance.StartCustom(EffectAsync());
         }
     }
     private IEnumerator EffectAsync()
@@ -24,22 +24,28 @@ public abstract class OverTimeStatus : Status
         isCoroutineOn = true;
         yield return new WaitForSeconds(frequency);
         if (!isFinished)
+        {
+            Debug.Log("Call effect in OvertimeStatus");
             Effect();
+        }
+            
         isCoroutineOn = false;
     }
 
     public override void ApplyEffect(Entity target)
     {
         base.ApplyEffect(target);
-        UpdateEffect();
+        Debug.Log("ApplyEffect in OvertimeStatus");
+        CoroutineManager.Instance.StartCustom(UpdateEffect());
     }
 
     private IEnumerator UpdateEffect()
     {
-        while(true)
+        while(!isFinished)
         {
             DoEffect();
             yield return null;
         }
+        yield break;
     }
 }

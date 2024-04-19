@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class HudHandler : MonoBehaviour
 {
@@ -36,6 +35,7 @@ public class HudHandler : MonoBehaviour
     {
         player.OnDeath -= ActiveGameOver;
     }
+
 
     public void ActiveGameOver(Vector3 _)
     {

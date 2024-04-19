@@ -252,7 +252,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionStat >= Stats.GetMaxValue(Stat.CORRUPTION))
         {
             Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
-            playerController.LaunchUpgradeAnimation = true;
             CanHealFromConsumables = false;
             playerController.SpecialAbility = new DamnationVeil();
         }
@@ -261,8 +260,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.IncreaseValue(Stat.ATK, 5f);
             Stats.DecreaseMaxValue(Stat.HP, 15f);
             Stats.DecreaseValue(Stat.HP, 15f);
-            playerController.LaunchUpgradeAnimation = true;
         }
+        playerController.LaunchUpgradeAnimation = true;
     }
 
     private void BenedictionUpgrade(float corruptionStat)
@@ -271,16 +270,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionStat <= Stats.GetMinValue(Stat.CORRUPTION))
         {
             playerController.SpecialAbility = new DivineShield();
-            //ajout du malus de possibilité de dédoublement des mobs
-            playerController.LaunchUpgradeAnimation = true;
         }
         else
         {
             Stats.IncreaseMaxValue(Stat.HP, 15f);
             Stats.IncreaseValue(Stat.HP, 15f);
             Stats.DecreaseValue(Stat.ATK, 5f);
-            playerController.LaunchUpgradeAnimation = true;
         }
+
+        playerController.LaunchUpgradeAnimation = true;
     }
 
     private void BenedictionDrawback(float corruptionLastValue)
@@ -289,7 +287,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionLastValue <= Stats.GetMinValue(Stat.CORRUPTION))
         {
             playerController.SpecialAbility = null;
-            //désactiver malus de possibilité de dédoublement des mobs
         }
         else
         {
@@ -297,6 +294,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseValue(Stat.HP, 15f);
             Stats.IncreaseValue(Stat.ATK, 5f);
         }
+        playerController.LaunchDrawbackAnimation = true;
     }
 
     private void CorruptionDrawback(float corruptionLastValue)
@@ -314,6 +312,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.IncreaseMaxValue(Stat.HP, 15f);
             Stats.IncreaseValue(Stat.HP, 15f);
         }
+        playerController.LaunchDrawbackAnimation = true;
     }
     #endregion
 }
