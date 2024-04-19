@@ -36,6 +36,7 @@ public class HudHandler : MonoBehaviour
         player.OnDeath -= ActiveGameOver;
     }
 
+
     public void ActiveGameOver(Vector3 _)
     {
         GameOver.SetActive(true);
