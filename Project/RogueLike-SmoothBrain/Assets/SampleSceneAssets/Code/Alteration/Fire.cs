@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Fire : OverTimeStatus
@@ -5,8 +6,9 @@ public class Fire : OverTimeStatus
     private int damage = 10;
     static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1.0f);
 
-    public Fire(float _duration, float _statusChance, float frequency) : base(_duration, _statusChance, frequency)
+    public Fire(float _duration, float _statusChance) : base(_duration, _statusChance)
     {
+        frequency = 0.5f;
         isStackable = true;
     }
     protected override void Effect()
@@ -14,6 +16,7 @@ public class Fire : OverTimeStatus
         if (target != null)
         {
             FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, fireColor);
+            Debug.Log("FireDamage");
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, launcher, false);
         }
     }
@@ -26,7 +29,7 @@ public class Fire : OverTimeStatus
 
     public override void OnFinished()
     {
-        //throw new System.NotImplementedException();
+        Debug.Log("Finished => " + isFinished);
     }
 
     public override bool CanApplyEffect(Entity target)
