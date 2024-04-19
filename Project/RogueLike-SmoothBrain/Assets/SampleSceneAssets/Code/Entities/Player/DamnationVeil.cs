@@ -22,8 +22,7 @@ public class DamnationVeil : ISpecialAbility
             .ToList()
             .ForEach(currentEntity =>
             {
-                Debug.Log("coucou " + currentEntity.name);
-                currentEntity.ApplyEffect(new Damnation(1000f, 1));
+                currentEntity.AddStatus(new Damnation(1000f, 1));
             });
     }
 }

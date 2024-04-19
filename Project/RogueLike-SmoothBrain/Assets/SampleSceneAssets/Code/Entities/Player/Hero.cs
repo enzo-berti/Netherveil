@@ -250,7 +250,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
             playerController.LaunchUpgradeAnimation = true;
             CanHealFromConsumables = false;
-            //ajout nouvelle compétence
+            playerController.SpecialAbility = new DamnationVeil();
         }
         else
         {
@@ -302,7 +302,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
             CanHealFromConsumables = true;
-            //désactiver nouvelle compétence
+            playerController.SpecialAbility = null;
         }
         else
         {

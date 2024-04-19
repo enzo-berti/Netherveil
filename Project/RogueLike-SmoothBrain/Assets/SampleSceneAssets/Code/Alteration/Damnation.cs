@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Damnation : Status
+public class Damnation : ConstantStatus
 {
     public Damnation(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
     }
 
-    public override void ApplyEffect(Entity target, IAttacker attacker)
+    public override bool CanApplyEffect(Entity target)
     {
-        target.GetComponent<Mobs>().DamageTakenMultiplicator += 1.0f;
+        return target.TryGetComponent<Mobs>(out _);
     }
 
     public override Status DeepCopy()
@@ -27,6 +27,11 @@ public class Damnation : Status
 
     protected override void Effect()
     {
-        return;
+        target.GetComponent<Mobs>().DamageTakenMultiplicator += 1.0f;
+    }
+
+    protected override void PlayVFX()
+    {
+        throw new System.NotImplementedException("Bleeding VFX is not implemented");
     }
 }

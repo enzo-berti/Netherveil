@@ -20,15 +20,17 @@ public class PlayerController : MonoBehaviour
     public Spear Spear;
     [SerializeField] GameObject spearThrowWrapper;
     [SerializeField] BoxCollider spearThrowCollider;
+    [SerializeField] BoxCollider dashAttackCollider;
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
     public Coroutine SpecialAbilityCoroutine { get; set; } = null;
-    public ISpecialAbility SpecialAbility { get; set; } = new DamnationVeil();
+    public ISpecialAbility SpecialAbility { get; set; } = null;
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
+    public BoxCollider DashAttackCollider { get => dashAttackCollider; }
 
     public bool LaunchUpgradeAnimation { get; set; } = false;
     public bool DoneQuestQTThiStage = false;
@@ -200,7 +202,7 @@ public class PlayerController : MonoBehaviour
         ApplyCollide(collider, alreadyAttacked, ref applyVibrations, debugMode);
     }
 
-    private void ApplyCollide(Collider collider, List<Collider> alreadyAttacked, ref bool applyVibrations, bool debugMode = true)
+    public void ApplyCollide(Collider collider, List<Collider> alreadyAttacked, ref bool applyVibrations, bool debugMode = true)
     {
         if (debugMode)
         {
@@ -381,6 +383,7 @@ public class PlayerController : MonoBehaviour
     {
         ComboCount = 0;
         ChargedAttack.gameObject.SetActive(false);
+        dashAttackCollider.gameObject.SetActive(false);
 
         foreach (NestedList<Collider> colliders in SpearAttacks)
         {
@@ -407,7 +410,5 @@ public class PlayerController : MonoBehaviour
 
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
-
-
     }
 }

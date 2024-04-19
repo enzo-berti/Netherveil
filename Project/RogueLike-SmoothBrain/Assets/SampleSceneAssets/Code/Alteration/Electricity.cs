@@ -1,28 +1,21 @@
 using System.Collections;
+using System.IO.IsolatedStorage;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Electricity : Status
+public class Electricity : OverTimeStatus
 {
     private float entityBaseSpeed;
     const float stunTime = 0.5f;
-
-    public Electricity(float duration, float chance) : base(duration, chance)
+    private bool isStunCoroutineOn = false;
+    public Electricity(float duration, float chance, float frequency) : base(duration, chance, frequency)
     {
         isStackable = false;
-        frequency = 1f;
     }
-    public override void ApplyEffect(Entity target, IAttacker attacker)
+    public override bool CanApplyEffect(Entity target)
     {
-        Debug.Log("apply effect");
-        if (target.Stats.HasStat(Stat.SPEED))
-        {
-            launcher = attacker;
-            target.AddStatus(this);
-            entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
-            PlayVfx("VFX_Electricity");
-        }
+        return target.Stats.HasStat(Stat.SPEED);
     }
 
     public override Status DeepCopy()
@@ -38,16 +31,23 @@ public class Electricity : Status
 
     protected override void Effect()
     {
-        if (target != null)
+        if (target != null && !isStunCoroutineOn)
         {
             Stun();
         }
     }
 
-    private async void Stun()
+    private IEnumerator Stun()
     {
+        isStunCoroutineOn = true;
         target.Stats.SetValue(Stat.SPEED, 0);
-        await Task.Delay((int)(stunTime * 1000));
+        yield return new WaitForSeconds(stunTime);
         target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
+        isStunCoroutineOn = false;
+    }
+
+    protected override void PlayVFX()
+    {
+        PlayVfx("VFX_Electricity");
     }
 }

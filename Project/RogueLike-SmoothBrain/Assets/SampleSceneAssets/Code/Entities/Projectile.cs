@@ -47,13 +47,13 @@ public abstract class Projectile : MonoBehaviour, IProjectile
                 switch (elementalDamage)
                 {
                     case DamageState.FIRE:
-                        entity.ApplyEffect(new Fire(2, 1.0f));
+                        entity.AddStatus(new Fire(2, 1.0f, 0.5f));
                         break;
                     case DamageState.ICE:
-                        entity.ApplyEffect(new Freeze(2, 1.0f));
+                        entity.AddStatus(new Freeze(2, 1.0f));
                         break;
                     case DamageState.ELECTRICITY:
-                        entity.ApplyEffect(new Electricity(2, 1.0f));
+                        entity.AddStatus(new Electricity(2, 1.0f, 1.0f));
                         break;
                 }
                 // apply elementalState
