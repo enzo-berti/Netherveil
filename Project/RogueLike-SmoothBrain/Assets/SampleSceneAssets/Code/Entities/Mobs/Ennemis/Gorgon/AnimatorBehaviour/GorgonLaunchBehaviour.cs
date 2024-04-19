@@ -28,8 +28,8 @@ public class GorgonLaunchBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = false;
-        animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = false;
+        //animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = false;
+        //animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
