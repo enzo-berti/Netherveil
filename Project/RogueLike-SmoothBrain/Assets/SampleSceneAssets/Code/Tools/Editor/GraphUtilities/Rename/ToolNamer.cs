@@ -6,6 +6,7 @@ public class ToolNamer : EditorWindow
 {
     private GroupBox replaceBox;
     private GroupBox deleteBox;
+    private GroupBox randomBox;
     private GroupBox currentOpen;
 
     private TextField replaceFromField;
@@ -33,12 +34,15 @@ public class ToolNamer : EditorWindow
 
         replaceBox = root.Q<GroupBox>("ReplaceBox");
         deleteBox = root.Q<GroupBox>("DeleteBox");
+        randomBox = root.Q<GroupBox>("RandomRotBox");
 
         root.Q<Button>("Replace-Toolbar-Button").clicked += () => DisplayGroup(replaceBox);
         root.Q<Button>("Delete-Toolbar-Button").clicked += () => DisplayGroup(deleteBox);
+        root.Q<Button>("RandomRotate-Toolbar-Button").clicked += () => DisplayGroup(randomBox);
 
         root.Q<Button>("Replace-Button").clicked += () => Replace();
         root.Q<Button>("Delete-Button").clicked += () => Delete();
+        root.Q<Button>("Random-Button").clicked += () => RandomRot();
 
         replaceFromField = root.Q<TextField>("Replace-From");
         replaceToField = root.Q<TextField>("Replace-To");
@@ -71,6 +75,22 @@ public class ToolNamer : EditorWindow
         foreach (var item in objects)
         {
             item.name = item.name.Replace(deleteField.value, "");
+        }
+    }
+
+    public void RandomRot()
+    {
+        float MinRotY = 0f;
+        float MaxRotY = 360f;
+
+
+
+        GameObject[] objects = Selection.gameObjects;
+        foreach (var item in objects){
+
+            float newRotY = Random.Range(MinRotY, MaxRotY);
+            item.transform.rotation = Quaternion.Euler(0f, newRotY,0f);
+
         }
     }
 }

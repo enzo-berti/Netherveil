@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Generation
+namespace Map.Generation
 {
     [Serializable]
     public struct Door

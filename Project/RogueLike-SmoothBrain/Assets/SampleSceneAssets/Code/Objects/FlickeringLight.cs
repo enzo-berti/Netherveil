@@ -11,10 +11,18 @@ public class FlickeringLight : MonoBehaviour
     private void Start()
     {
         startIntensity = lightobject.intensity;
+
+        if (lightobject == null)
+        {
+            Debug.LogError("A FlickeringLight don't have light !");
+        }
     }
 
     private void Update()
     {
+        if (lightobject == null)
+            return;
+
         lightobject.intensity = startIntensity + Mathf.Sin(Time.time * timeFactor) * offset + Random.Range(-randomOffset, randomOffset);
     }
 }

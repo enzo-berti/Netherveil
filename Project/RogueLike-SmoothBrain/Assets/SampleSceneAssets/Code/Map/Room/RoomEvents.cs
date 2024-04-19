@@ -6,7 +6,7 @@ namespace Map
 {
     public class RoomEvents : MonoBehaviour
     {
-        private RoomData mapData;
+        private RoomData roomData;
 
         private GameObject room;
         private GameObject enemies;
@@ -52,8 +52,8 @@ namespace Map
             allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
 
             // create data of the map
-            mapData = new RoomData(enemies, transform.parent.GetComponentInChildren<Generation.RoomGenerator>());
-            if (mapData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
+            roomData = new RoomData(enemies, transform.parent.GetComponentInChildren<Generation.RoomGenerator>());
+            if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
             {
                 EnterEvents();
             }
@@ -73,12 +73,13 @@ namespace Map
 
             // local events
             gameObject.layer = LayerMask.NameToLayer("Map");
-            RoomUtilities.roomData = mapData;
+            RoomUtilities.roomData = roomData;
             RoomUtilities.nbEnterRoomByType[RoomUtilities.roomData.Type] += 1;
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
 
             // global events
+            RoomUtilities.EarlyEnterEvents?.Invoke();
             RoomUtilities.EnterEvents?.Invoke();
         }
 

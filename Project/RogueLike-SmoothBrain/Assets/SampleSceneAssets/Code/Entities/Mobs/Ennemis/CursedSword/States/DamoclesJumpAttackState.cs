@@ -22,8 +22,6 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
 
     private bool isTargetTouched = false;
     private bool stateEnded = false;
-    private float elapsedTimeMovement = 0.0f;
-    private float attackTime = 2.5f;
 
     private enum State
     {
@@ -79,62 +77,51 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        Vector3 direction = (Context.Target.position - Context.transform.position).normalized;
-        Context.MoveTo(Context.transform.position + direction * Context.NormalSpeed);
-
-        if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) < Context.Stats.GetValue(Stat.ATK_RANGE)/2)
-        {
-            //jouer l'anim
-        }
-
-
-        // Delay
-        if (Time.time - elapsedTimeMovement < attackTime)
-            return;
-
-        elapsedTimeMovement = Time.time;
-        stateEnded = true;
-
-        //
-
         if (curState == State.Start)
         {
             Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
             Context.transform.LookAt(positionToLookAt);
             curState = State.RunIn;
             previousPos = Context.transform.position;
+            Vector3 direction = (Context.Target.position - Context.transform.position).normalized;
+            Context.MoveTo(Context.transform.position + direction * Context.NormalSpeed);
 
             //Context.Animator.ResetTrigger(Context.);
             //Context.Animator.SetTrigger(Context.);
         }
         else if (curState == State.RunIn)
         {
-            if (Vector3.Distance(Context.Target.position, Context.transform.position) > 1)
-            {
-                Context.MoveTo(Context.Target.position);
-            }
-            else
+            Context.MoveTo(Context.Target.position);
+
+            if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) < Context.Stats.GetValue(Stat.ATK_RANGE) / 2)
             {
                 curState = State.Jump;
             }
 
-            jumpRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack1Collider));
+            jumpRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack2Collider));
 
             //Context.Animator.ResetTrigger(Context.);
             //Context.Animator.SetTrigger(Context.);
         }
         else if (curState == State.Jump)
         {
-            if (jumpRoutine != null)
+            if (isTargetTouched)
             {
                 curState = State.Backward;
             }
+
+            //Context.Animator.ResetTrigger(Context.);
+            //Context.Animator.SetTrigger(Context.);
         }
         else if (curState == State.Backward)
         {
             if (Vector3.Distance(Context.Target.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
             {
                 Context.MoveTo(previousPos);
+            }
+            else
+            {
+                stateEnded = true;
             }
         }
     }
@@ -157,6 +144,12 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         if (player != null)
         {
             Context.Attack(player);
+            isTargetTouched = true;
+        }
+        else
+        {
+            isTargetTouched = false;
+            stateEnded = true;
         }
 
         jumpRoutine = null;

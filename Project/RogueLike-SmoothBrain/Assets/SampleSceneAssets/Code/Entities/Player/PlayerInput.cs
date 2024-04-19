@@ -270,15 +270,7 @@ public class PlayerInput : MonoBehaviour
         if (hero.State != (int)Entity.EntityState.MOVE || controller.Spear.IsThrowing)
             return;
 
-        if (DeviceManager.Instance.IsPlayingKB())
-        {
-            controller.MouseOrientation();
-        }
-        else
-        {
-            controller.JoystickOrientation();
-            controller.OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
-        }
+        controller.RotatePlayerToDeviceAndMargin();
 
         if (!controller.Spear.IsThrown)
         {

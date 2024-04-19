@@ -1,10 +1,9 @@
+using Map.Generation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using Generation;
-using System.Linq;
-using FMOD;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
@@ -83,7 +82,7 @@ public class Item : MonoBehaviour
                 break;
             }
         }
-        if(isEveryPoolEmpty)
+        if (isEveryPoolEmpty)
         {
             item.idItemName = "MonsterHeart";
             return;
@@ -102,7 +101,7 @@ public class Item : MonoBehaviour
         // Copy list of weighting
         List<float> currentRarityWeighting = ItemData.rarityWeighting;
         // Then we will modify it, because some pools are empty
-        for(int test = allItemsByPool.Count - 1; test >= 0 ; test--)
+        for (int test = allItemsByPool.Count - 1; test >= 0; test--)
         {
             // If a pool is empty ( no more common item for exemple )
             if (allItemsByPool[test].Count == 0)
@@ -112,7 +111,7 @@ public class Item : MonoBehaviour
                 currentRarityWeighting.RemoveAt(test);
                 chanceToDivide /= currentRarityWeighting.Count;
 
-                for(int iWeighting = 0;  iWeighting < currentRarityWeighting.Count; iWeighting++)
+                for (int iWeighting = 0; iWeighting < currentRarityWeighting.Count; iWeighting++)
                 {
                     currentRarityWeighting[iWeighting] += chanceToDivide;
                 }
@@ -120,7 +119,7 @@ public class Item : MonoBehaviour
                 allItemsByPool.RemoveAt(test);
                 ItemPool.RemoveAt(test);
             }
-           
+
         }
 
         float chanceForRarity = Seed.Range(0.0f, 1.0f);
@@ -137,16 +136,16 @@ public class Item : MonoBehaviour
 
         int indexInPool = Seed.Range(0, allItemsByPool[indexRarity].Count);
         item.idItemName = allItemsByPool[indexRarity][indexInPool];
-        for(int poolIndex = 0; poolIndex < ItemPool.Count; poolIndex++)
+        for (int poolIndex = 0; poolIndex < ItemPool.Count; poolIndex++)
         {
             var test = ItemPool[poolIndex].FirstOrDefault(x => x.idName == item.idItemName);
-            if ( test != null)
+            if (test != null)
             {
                 ItemPool[poolIndex].Remove(test);
                 return;
             }
         }
-       
+
     }
     public void RandomizeItem()
     {

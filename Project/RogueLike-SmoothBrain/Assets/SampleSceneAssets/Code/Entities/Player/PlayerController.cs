@@ -2,6 +2,7 @@ using FMODUnity;
 using Map;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
     public Coroutine SpecialAbilityCoroutine { get; set; } = null;
-    public ISpecialAbility SpecialAbility { get; set; } = null;
+    public ISpecialAbility SpecialAbility { get; set; } = new DamnationVeil();
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
@@ -234,7 +235,7 @@ public class PlayerController : MonoBehaviour
     /// or to joystick direction if using gamepad
     /// and orients automatically the player to an enemy if in the attack cone
     /// </summary>
-    private void RotatePlayerToDeviceAndMargin()
+    public void RotatePlayerToDeviceAndMargin()
     {
 
         if (DeviceManager.Instance.IsPlayingKB())
@@ -334,7 +335,7 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("UpgradingStats");
         hero.State = (int)Hero.PlayerState.UPGRADING_STATS;
         LaunchUpgradeAnimation = false;
-        if(hero.Stats.GetValue(Stat.CORRUPTION) > 0)
+        if (hero.Stats.GetValue(Stat.CORRUPTION) > 0)
         {
             corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
         }
@@ -393,4 +394,20 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+            return;
+
+
+        Handles.color = new Color(1, 1, 0.5f, 0.2f);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+
+
+    }
 }

@@ -13,7 +13,10 @@ public class DebugForMilestone : MonoBehaviour
         {
             foreach(var enemy in RoomUtilities.roomData.enemies)
             {
-                enemy.GetComponent<IDamageable>().Death();
+                if (enemy != null)
+                {
+                    enemy.GetComponentInChildren<IDamageable>().Death();
+                }
             }
             RoomUtilities.roomData.enemies.Clear();
         }
