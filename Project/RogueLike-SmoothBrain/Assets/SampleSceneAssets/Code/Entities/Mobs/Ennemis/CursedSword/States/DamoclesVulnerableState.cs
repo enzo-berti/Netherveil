@@ -30,6 +30,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
+        elapsedTimeMovement = Time.time;
     }
 
     // This method will be called only once after the last update.
