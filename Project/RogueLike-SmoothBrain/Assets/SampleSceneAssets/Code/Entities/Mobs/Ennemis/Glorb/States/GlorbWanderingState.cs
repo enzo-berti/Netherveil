@@ -52,8 +52,11 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
 
         if (idleTimer > 1f)
         {
-            ChoseRandomDirection();
-            Context.MoveTo(Context.transform.position + randomDirection * Context.Stats.GetValue(Stat.VISION_RANGE));
+            float range = Context.Stats.GetValue(Stat.VISION_RANGE) / 2f;
+            range += Random.Range(0, range);
+
+            ChoseRandomDirection(range);
+            Context.MoveTo(Context.transform.position + randomDirection * range);
             idleTimer = 0f;
         }
     }
@@ -69,7 +72,7 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
 
 
     // Extra methods
-    void ChoseRandomDirection()
+    void ChoseRandomDirection(float _range)
     {
         bool validDirection = false;
 
@@ -88,14 +91,9 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
             randomDirection.Normalize();
 
             // aide à éviter les murs
-            RaycastHit hit;
-
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, out hit, Context.Stats.GetValue(Stat.VISION_RANGE)/2f))
+            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, _range, LayerMask.GetMask("Map")))
             {
-                if (!hit.transform.CompareTag("Player"))
-                {
-                    continue;
-                }
+                continue;
             }
 
             validDirection = true;
