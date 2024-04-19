@@ -3,20 +3,24 @@ using UnityEngine;
 
 public class QuestUI : MonoBehaviour
 {
-    Hero player;
-    [SerializeField] TMP_Text description;
-    [SerializeField] TMP_Text title;
-    [SerializeField] TMP_Text progressText;
+    private Hero player;
+    [SerializeField] private TMP_Text description;
+    [SerializeField] private TMP_Text title;
+    [SerializeField] private TMP_Text progressText;
 
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+    }
+
+    private void OnEnable()
+    {
         Hero.OnQuestObtained += UpdateUI;
         Hero.OnQuestFinished += UpdateUI;
         Quest.OnQuestUpdated += UpdateUI;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         Hero.OnQuestObtained -= UpdateUI;
         Hero.OnQuestFinished -= UpdateUI;

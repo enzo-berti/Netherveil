@@ -27,14 +27,14 @@ namespace Fountain
 
             if (displayRoutine != null)
                 StopCoroutine(displayRoutine);
-            displayRoutine = StartCoroutine(EasingFunctions.UpScaleCoroutine(canvas.transform, displayDuration, 0.01f));
+            displayRoutine = StartCoroutine(UITween.UpScaleCoroutine(canvas.transform, displayDuration, 0.01f));
         }
 
         public void Undisplay()
         {
             if (displayRoutine != null)
                 StopCoroutine(displayRoutine);
-            displayRoutine = StartCoroutine(EasingFunctions.DownScaleCoroutine(canvas.transform, displayDuration, 0.01f));
+            displayRoutine = StartCoroutine(UITween.DownScaleCoroutine(canvas.transform, displayDuration, 0.01f));
         }
 
         private void SetText(Fountain fountain)

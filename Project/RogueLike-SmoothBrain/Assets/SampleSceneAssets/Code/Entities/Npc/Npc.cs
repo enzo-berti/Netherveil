@@ -47,7 +47,7 @@ public abstract class Npc : Entity, IInterractable
     {
         float durationScale = 1.0f;
         StopAllCoroutines();
-        StartCoroutine(toggle ? EasingFunctions.UpScaleCoroutine(rangeImage.transform, durationScale) : EasingFunctions.DownScaleCoroutine(rangeImage.transform, durationScale));
+        StartCoroutine(toggle ? UITween.UpScaleCoroutine(rangeImage.transform, durationScale) : UITween.DownScaleCoroutine(rangeImage.transform, durationScale));
     }
 
     public void Select()
