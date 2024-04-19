@@ -131,8 +131,8 @@ GameObject:
   - component: {fileID: 3728823635463378181}
   - component: {fileID: 7347822268238158182}
   - component: {fileID: 76122807682343785}
-  - component: {fileID: 4536250286799723355}
   - component: {fileID: 5061550714055684533}
+  - component: {fileID: 1095622961786328033}
   m_Layer: 3
   m_Name: GorgonCharacter
   m_TagString: Enemy
@@ -148,8 +148,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7804571435766203971}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.36161652, z: -0, w: 0.932327}
+  m_LocalPosition: {x: 0.08994621, y: 0, z: -0.03488753}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -158,7 +158,7 @@ Transform:
   - {fileID: 694003772293646748}
   - {fileID: 4830281231719497835}
   m_Father: {fileID: 2632037533365565917}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 42.399, z: 0}
 --- !u!136 &7347822268238158182
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -204,7 +204,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4536250286799723355
+--- !u!114 &5061550714055684533
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -213,7 +213,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 7804571435766203971}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d3a1917e7473a45ab3ff3145d96119, type: 3}
+  m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceFactor: 0
+  damageTakeOnObstacleCollide: 10
+--- !u!114 &1095622961786328033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804571435766203971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96b8955c76f12540b31a0d45d348d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statusNameToApply: []
@@ -239,7 +253,7 @@ MonoBehaviour:
       value: 10
       lastValue: 0
       coeff: 0
-      maxValue: 100
+      maxValue: 0
       minValue: 0
       overload: 0
       underload: 0
@@ -247,7 +261,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 4
+      value: 2
       lastValue: 0
       coeff: 0
       maxValue: 0
@@ -258,7 +272,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 8
+      value: 7
       lastValue: 0
       coeff: 0
       maxValue: 0
@@ -269,7 +283,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 15
+      value: 12
       lastValue: 0
       coeff: 0
       maxValue: 0
@@ -303,54 +317,32 @@ MonoBehaviour:
   canTriggerTraps: 1
   IsInvincibleCount: 0
   drop:
-    dropList:
-    - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
-        type: 3}
-      chance: 1
-      Quantity: 1
-      isChanceShared: 0
-    - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
-        type: 3}
-      chance: 0.8
-      Quantity: 5
-      isChanceShared: 0
+    dropList: []
   StatSuckerVFX: {fileID: 3857291725889900868}
   timeBetweenAttack: 2
   timeBetweenFleeing: 5
-  pfBomb: {fileID: 3855923176943414352, guid: b420fdc9a271de84c879ad3ad4778e49, type: 3}
+  bombPrefab: {fileID: 3855923176943414352, guid: b420fdc9a271de84c879ad3ad4778e49,
+    type: 3}
   hand: {fileID: 9111015995907246164}
-  hitSFX:
-    reference:
-      Guid:
-        Data1: 178491280
-        Data2: 1124786547
-        Data3: 532161973
-        Data4: -2002185684
-      Path: event:/Enemy/Bomber/BomberHit
-  deathSFX:
-    reference:
-      Guid:
-        Data1: -1697250076
-        Data2: 1281752529
-        Data3: 1596434062
-        Data4: 56683401
-      Path: event:/Enemy/Bomber/BomberDeath
+  defaultVisionAngle: 145
   dashVFX: {fileID: 0}
-  staggerDuration: 0
---- !u!114 &5061550714055684533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7804571435766203971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  distanceFactor: 0
-  damageTakeOnObstacleCollide: 10
+  gorgonSounds:
+    hitSFX:
+      reference:
+        Guid:
+          Data1: 178491280
+          Data2: 1124786547
+          Data3: 532161973
+          Data4: -2002185684
+        Path: event:/Enemy/Bomber/BomberHit
+    deathSFX:
+      reference:
+        Guid:
+          Data1: -1697250076
+          Data2: 1281752529
+          Data3: 1596434062
+          Data4: 56683401
+        Path: event:/Enemy/Bomber/BomberDeath
 --- !u!1001 &1098462964448772630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -853,22 +845,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.894375
+      value: -0.92289823
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.2316177
+      value: -0.19850776
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.37046227
+      value: -0.32255256
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09593919
+      value: 0.06937836
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

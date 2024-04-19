@@ -9,7 +9,7 @@ public class Electricity : OverTimeStatus
     private float entityBaseSpeed;
     const float stunTime = 0.5f;
     private bool isStunCoroutineOn = false;
-    public Electricity(float duration, float chance, float frequency) : base(duration, chance, frequency)
+    public Electricity(float duration, float chance) : base(duration, chance)
     {
         isStackable = false;
     }
@@ -40,6 +40,7 @@ public class Electricity : OverTimeStatus
     private IEnumerator Stun()
     {
         isStunCoroutineOn = true;
+        entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
         target.Stats.SetValue(Stat.SPEED, 0);
         yield return new WaitForSeconds(stunTime);
         target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
