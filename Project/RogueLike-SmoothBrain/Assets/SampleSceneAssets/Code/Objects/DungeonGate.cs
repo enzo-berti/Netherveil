@@ -17,13 +17,13 @@ public class DungeonGate : MonoBehaviour
 
     private void Start()
     {
-        RoomUtilities.EnterEvents += Close;
+        RoomUtilities.enterEvents += Close;
         RoomUtilities.allEnemiesDeadEvents += Open;
     }
 
     private void OnDestroy()
     {
-        RoomUtilities.EnterEvents -= Close;
+        RoomUtilities.enterEvents -= Close;
         RoomUtilities.allEnemiesDeadEvents -= Open;
     }
 
