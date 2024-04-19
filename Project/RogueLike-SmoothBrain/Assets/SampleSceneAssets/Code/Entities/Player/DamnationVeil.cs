@@ -22,7 +22,7 @@ public class DamnationVeil : ISpecialAbility
             .ToList()
             .ForEach(currentEntity =>
             {
-                Debug.Log("coucou");
+                Debug.Log("coucou " + currentEntity.name);
                 currentEntity.ApplyEffect(new Damnation(1000f, 1));
             });
     }

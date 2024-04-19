@@ -151,7 +151,8 @@ public abstract class Mobs : Entity
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
-        Stats.DecreaseValue(Stat.HP, _value * DamageTakenMultiplicator, false);
+        _value = (int)(_value * DamageTakenMultiplicator);
+        Stats.DecreaseValue(Stat.HP, _value, false);
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (notEffectDamage)
