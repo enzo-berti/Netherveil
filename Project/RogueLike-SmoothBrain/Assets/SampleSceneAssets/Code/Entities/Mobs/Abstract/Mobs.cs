@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using FMODUnity;
 using System;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
+using Map;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -28,6 +28,16 @@ public abstract class Mobs : Entity
     // getters/setters
     public NavMeshAgent Agent { get => agent; }
     public float DamageTakenMultiplicator { get; set; } = 1f;
+
+    protected void OnEnable()
+    {
+        RoomUtilities.EarlyEnterEvents += OnEarlyEnterRoom;
+    }
+
+    protected void OnDisable()
+    {
+        RoomUtilities.EarlyEnterEvents -= OnEarlyEnterRoom;
+    }
 
     protected override void Start()
     {
@@ -75,6 +85,15 @@ public abstract class Mobs : Entity
         if (transform.position.y < -100f)
         {
             Destroy(transform.parent.gameObject);
+        }
+    }
+
+    private void OnEarlyEnterRoom()
+    {
+        if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -100f)
+        {
+            GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
+            RoomUtilities.roomData.enemies.Add(clone);
         }
     }
 

@@ -1,35 +1,26 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class GorgonLaunchBehaviour : StateMachineBehaviour
+public class DashAttackBehaviour : StateMachineBehaviour
 {
-    [SerializeField] float timeToRemoveHead = 0.6f;
-    [SerializeField] float timeToLaunchHead = 0.8f;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        Utilities.Player.GetComponent<PlayerInput>().StartOfDashAttackAnimation();
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //Debug.Log(stateInfo.normalizedTime); // mis en com par Dorian
-        //if (stateInfo.normalizedTime > timeToRemoveHead)
-        //{
-        //    //animator.transform.parent.GetComponent<Gorgon>().HasRemoveHead = true;
-        //    animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = true;
-        //}
-        //if (stateInfo.normalizedTime > timeToLaunchHead)
-        //{
-        //    animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = true;
-        //}
+        Utilities.Hero.State = (int)Hero.PlayerState.DASH;
+        Utilities.Player.GetComponent<PlayerInput>().UpdateDashAttackAnimation();
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //animator.transform.parent.GetComponent<GorgonStateMachine>().HasLaunchAnim = false;
-        //animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = false;
+        Utilities.Player.GetComponent<PlayerInput>().EndOfDashAttackAnimation();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

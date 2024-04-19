@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using Generation;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
@@ -70,7 +69,7 @@ public class ItemShop : MonoBehaviour, IInterractable
 
     private void Interraction()
     {
-        bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2()) 
+        bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2())
             <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
 
         if (isInRange && !playerInteractions.InteractablesInRange.Contains(this))
@@ -135,7 +134,7 @@ public class ItemShop : MonoBehaviour, IInterractable
                     splitDescription[i] = "N/A";
                     Debug.LogWarning($"value : {valueToFind}, has not be found");
                 }
-                
+
             }
             finalDescription += splitDescription[i] + " ";
         }

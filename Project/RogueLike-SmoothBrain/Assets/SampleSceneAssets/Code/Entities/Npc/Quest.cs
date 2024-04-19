@@ -1,4 +1,4 @@
-using Generation;
+using Map.Generation;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -49,7 +49,7 @@ public abstract class Quest
     protected virtual void QuestFinished()
     {
         player.CurrentQuest = null;
-        if(talkerGrade == QuestTalker.TalkerGrade.BOSS)
+        if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
         {
             player.GetComponent<PlayerController>().DoneQuestQTThiStage = true;
         }

@@ -33,37 +33,6 @@ Transform:
   - {fileID: 165167341685550816}
   m_Father: {fileID: 6583867547684713463}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1367023732369626150
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8028101973611021476}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8028101973611021476
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1367023732369626150}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.008661509, y: 1.4014218, z: -0.018482447}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6164533990102865139}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2077170564847773805
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +63,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6583867547684713463}
-  - {fileID: 8028101973611021476}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2196822713475936795
@@ -111,7 +79,7 @@ GameObject:
   - component: {fileID: 1282194086456528784}
   - component: {fileID: 2191641442306479398}
   - component: {fileID: 4692543997195375639}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GlorbCharacter
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -982,6 +950,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyLifebarCanva
       objectReference: {fileID: 0}
+    - target: {fileID: 406469051128394454, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1081,6 +1054,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5662773921335967175, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7228402893422998607, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8209317438256755233, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1221,6 +1209,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_SockWaveTank
       objectReference: {fileID: 0}
+    - target: {fileID: 7116472688431711367, guid: 74a0d698e286d5749a4faa5622a27fec,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8912614158239557465, guid: 74a0d698e286d5749a4faa5622a27fec,
         type: 3}
       propertyPath: m_Enabled
@@ -1306,6 +1299,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VFX_StatSucker
+      objectReference: {fileID: 0}
+    - target: {fileID: 7118060903458549486, guid: 32f3b67cab93eda4d845db69a925aab9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7837546959234549577, guid: 32f3b67cab93eda4d845db69a925aab9,
         type: 3}

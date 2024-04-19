@@ -43,6 +43,8 @@ public class PlayerInput : MonoBehaviour
     float chargedAttackVFXMaxSize = 0f;
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
+    readonly List<Collider> dashAttackAlreadyAttacked = new();
+    bool applyVibrationsDashAttack = true;
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
@@ -212,6 +214,11 @@ public class PlayerInput : MonoBehaviour
         {
             ThrowOrRetrieveSpear(ctx);
         }
+        else if (CanDashAttack())
+        {
+            animator.ResetTrigger("DashAttack");
+            animator.SetTrigger("DashAttack");
+        }
     }
 
     private void Dash(InputAction.CallbackContext ctx)
@@ -270,15 +277,7 @@ public class PlayerInput : MonoBehaviour
         if (hero.State != (int)Entity.EntityState.MOVE || controller.Spear.IsThrowing)
             return;
 
-        if (DeviceManager.Instance.IsPlayingKB())
-        {
-            controller.MouseOrientation();
-        }
-        else
-        {
-            controller.JoystickOrientation();
-            controller.OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
-        }
+        controller.RotatePlayerToDeviceAndMargin();
 
         if (!controller.Spear.IsThrown)
         {
@@ -397,6 +396,27 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
+
+    public void StartOfDashAttackAnimation()
+    {
+        hero.State = (int)Hero.PlayerState.DASH;
+        controller.RotatePlayerToDeviceAndMargin();
+        DashDir = transform.forward;
+        dashAttackAlreadyAttacked.Clear();
+        applyVibrationsDashAttack = true;
+    }
+
+    public void UpdateDashAttackAnimation()
+    {
+        controller.ApplyCollide(controller.DashAttackCollider, dashAttackAlreadyAttacked, ref applyVibrationsDashAttack, true);
+    }
+
+    public void EndOfDashAttackAnimation()
+    {
+        hero.State = (int)Entity.EntityState.MOVE;
+        controller.ResetValues();
+    }
+
     #endregion
 
     #region InputConditions
@@ -406,6 +426,12 @@ public class PlayerInput : MonoBehaviour
         return (hero.State == (int)Entity.EntityState.MOVE ||
             (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
              && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
+    }
+
+    private bool CanDashAttack()
+    {
+        return hero.State == (int)Hero.PlayerState.DASH
+        && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
     }
 
     private bool CanCastChargedAttack()
@@ -560,6 +586,7 @@ public class PlayerInput : MonoBehaviour
         LaunchedChargedAttack = false;
         chargedAttackMax = false;
         chargedAttackTime = 0f;
+        animator.ResetTrigger("DashAttack");
     }
 
     private void StopChargedAttackCoroutine()
