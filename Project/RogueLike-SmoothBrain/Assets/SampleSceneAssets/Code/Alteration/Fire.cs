@@ -1,24 +1,13 @@
 using UnityEngine;
 
-public class Fire : Status
+public class Fire : OverTimeStatus
 {
     private int damage = 10;
     static Color fireColor = new Color(0.929f, 0.39f, 0.08f, 1.0f);
 
-    public Fire(float _duration, float _statusChance) : base(_duration, _statusChance)
+    public Fire(float _duration, float _statusChance, float frequency) : base(_duration, _statusChance, frequency)
     {
         isStackable = true;
-        frequency = 0.5f;
-    }
-
-    public override void ApplyEffect(Entity target, IAttacker attacker)
-    {
-        if (target.gameObject.TryGetComponent<IDamageable>(out _))
-        {
-            launcher = attacker;
-            target.AddStatus(this);
-            PlayVfx("VFX_Fire");
-        }
     }
     protected override void Effect()
     {
@@ -38,5 +27,15 @@ public class Fire : Status
     public override void OnFinished()
     {
         //throw new System.NotImplementedException();
+    }
+
+    public override bool CanApplyEffect(Entity target)
+    {
+        return target.gameObject.TryGetComponent<IDamageable>(out _);
+    }
+
+    protected override void PlayVFX()
+    {
+        PlayVfx("VFX_Fire");
     }
 }

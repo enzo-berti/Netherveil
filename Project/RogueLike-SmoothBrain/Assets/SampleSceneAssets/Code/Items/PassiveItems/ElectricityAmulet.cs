@@ -2,14 +2,15 @@ using UnityEngine;
  
 public class ElectricityAmulet : ItemEffect , IPassiveItem 
 {
-    private float electricityChance = 0.1f;
-    private float electricityDuration = 2.0f;
+    private readonly float electricityChance = 0.1f;
+    private readonly float electricityDuration = 2.0f;
+    private readonly float electricityFrequency = 0.5f;
     int indexInStatus = 0;
     public void OnRetrieved()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
         indexInStatus = hero.StatusToApply.Count;
-        hero.StatusToApply.Add(new Electricity(electricityDuration, electricityChance));
+        hero.StatusToApply.Add(new Electricity(electricityDuration, electricityChance, electricityFrequency));
     }
 
     public void OnRemove()

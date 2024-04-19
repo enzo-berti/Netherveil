@@ -11,7 +11,7 @@ public class RuneOfSloth : ItemEffect, IActiveItem
         {
             if(enemy.TryGetComponent<Mobs>(out var mob))
             {
-                mob.ApplyEffect(new Freeze(duration, 1));
+                mob.AddStatus(new Freeze(duration, 1));
             }
         }
     }

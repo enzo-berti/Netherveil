@@ -1,24 +1,13 @@
 using UnityEngine;
 
-public class Bleeding : Status
+public class Bleeding : OverTimeStatus
 {
     readonly float coefValue = 0.05f;
     static Color bleedingColor = new(0.5f, 0.11f, 0.11f, 1f);
 
-    public Bleeding(float _duration, float _chance) : base(_duration, _chance)
+    public Bleeding(float _duration, float _chance, float _frequency) : base(_duration, _chance, _frequency)
     {
         isStackable = true;
-        frequency = 0.5f;
-    }
-
-    public override void ApplyEffect(Entity target, IAttacker attacker)
-    {
-        if (target.gameObject.TryGetComponent<IDamageable>(out _))
-        {
-            launcher = attacker;
-            target.AddStatus(this);
-            PlayVfx("VFX_Fire");
-        }
     }
 
     public override Status DeepCopy()
@@ -40,5 +29,15 @@ public class Bleeding : Status
             FloatingTextGenerator.CreateEffectDamageText(damages, target.transform.position, bleedingColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damages, launcher, false);
         }
+    }
+
+    public override bool CanApplyEffect(Entity target)
+    {
+        return target.gameObject.TryGetComponent<IDamageable>(out _);
+    }
+
+    protected override void PlayVFX()
+    {
+        PlayVfx("VFX_Fire");
     }
 }

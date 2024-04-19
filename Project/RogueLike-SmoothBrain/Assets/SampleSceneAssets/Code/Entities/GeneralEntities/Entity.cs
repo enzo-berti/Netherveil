@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public abstract class Entity : MonoBehaviour
 {
@@ -152,28 +153,43 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public void ApplyEffect(Status status, IAttacker launcher = null)
+    /// <summary>
+    /// Try to add a status and return false if it didn't work
+    /// </summary>
+    /// <param name="status"></param>
+    /// <returns></returns>
+    public bool AddStatus(Status status, IAttacker attacker = null)
     {
-        status.target = this;
-        float chance = UnityEngine.Random.value;
-        if (chance <= status.statusChance)
+        if (status == null)
         {
-            foreach (var item in AppliedStatusList)
-            {
-                if (item.GetType() == status.GetType())
-                {
-                    item.AddStack(1);
-                    return;
-                }
-            }
-            status.ApplyEffect(this, launcher);
+            Debug.LogError("Can't add status on " + this.name + " because status is null");
+            return false;
         }
-
-    }
-
-    public void AddStatus(Status status)
-    {
-        AppliedStatusList.Add(status);
+        if (!status.CanApplyEffect(this))
+        {
+            return false;
+        }
+        else
+        {
+            float chance = UnityEngine.Random.value;
+            if (chance <= status.statusChance)
+            {
+                // If status already exist add a stack
+                foreach (var item in AppliedStatusList)
+                {
+                    if (item.GetType() == status.GetType())
+                    {
+                        item.AddStack(1);
+                        return true;
+                    }
+                }
+                // Else add the status
+                status.target = this;
+                status.launcher = attacker;
+                status.ApplyEffect(this);
+            }
+            return true;
+        }
     }
 
     protected void ClearStatus()
@@ -246,14 +262,14 @@ public class EntityDrawer : Editor
         }
         test.Reverse();
 
-        for(int j = 0; j < test.Count; j++)
+        for (int j = 0; j < test.Count; j++)
         {
-            foreach(var coucou in test[j])
+            foreach (var coucou in test[j])
             {
                 infos.Add(coucou);
             }
         }
-        for(int i = 0; i < infos.Count; i++)
+        for (int i = 0; i < infos.Count; i++)
         {
             if ((infos[i].IsPublic && !infos[i].IsInitOnly && infos[i].GetCustomAttribute(typeof(HideInInspector)) == null) || infos[i].GetCustomAttribute(typeof(SerializeField)) != null)
             {
