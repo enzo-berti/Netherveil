@@ -2,27 +2,39 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GeneralMenu : MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
-    [SerializeField] GameObject hud;
+    [SerializeField] private GameObject hud;
+
     public static event Action OnPause;
     public static event Action OnUnpause;
 
-    public void Toggle(bool toggle)
+    public void Toggle()
     {
-        gameObject.SetActive(toggle);
-
-        if (toggle)
-            OnPause?.Invoke();
+        if (gameObject.activeSelf)
+            Resume();
         else
-            OnUnpause?.Invoke();
+            Pause();
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0.0f;
+
+        hud.SetActive(false);
+        gameObject.SetActive(true);
+
+        OnPause?.Invoke();
     }
 
     public void Resume()
     {
-        Time.timeScale = 1f;
+        Time.timeScale = 1.0f;
+
         hud.SetActive(true);
-        Toggle(false);
+        gameObject.SetActive(false);
+
+        OnUnpause?.Invoke();
     }
 
     public void ReloadGame()

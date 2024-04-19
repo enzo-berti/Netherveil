@@ -93,6 +93,15 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ToggleQuest"",
+                    ""type"": ""Button"",
+                    ""id"": ""13868f5d-afd8-438b-bd44-1d11408a028c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""b509354d-e83b-46a0-bb93-ea4669c59244"",
@@ -274,6 +283,17 @@ namespace Netherveil.Inputs
                     ""action"": ""SpecialAbility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c393c1c7-1cfd-42ca-854a-dbe1211d263e"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleQuest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -339,6 +359,15 @@ namespace Netherveil.Inputs
                     ""name"": ""ToggleMap"",
                     ""type"": ""Button"",
                     ""id"": ""8e70fd4d-7c29-4331-9da2-4444d40328fb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleQuest"",
+                    ""type"": ""Button"",
+                    ""id"": ""2dec7434-5d35-4f23-a6b9-afae95d763b7"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -590,6 +619,17 @@ namespace Netherveil.Inputs
                     ""action"": ""SpecialAbility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fa8f7929-2e15-42be-aebd-87bd50b8734b"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleQuest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -627,6 +667,7 @@ namespace Netherveil.Inputs
             m_Keyboard_Dash = m_Keyboard.FindAction("Dash", throwIfNotFound: true);
             m_Keyboard_Interact = m_Keyboard.FindAction("Interact", throwIfNotFound: true);
             m_Keyboard_ToggleMap = m_Keyboard.FindAction("ToggleMap", throwIfNotFound: true);
+            m_Keyboard_ToggleQuest = m_Keyboard.FindAction("ToggleQuest", throwIfNotFound: true);
             m_Keyboard_Pause = m_Keyboard.FindAction("Pause", throwIfNotFound: true);
             m_Keyboard_ActiveItem = m_Keyboard.FindAction("ActiveItem", throwIfNotFound: true);
             m_Keyboard_SpecialAbility = m_Keyboard.FindAction("SpecialAbility", throwIfNotFound: true);
@@ -639,6 +680,7 @@ namespace Netherveil.Inputs
             m_Gamepad_Dash = m_Gamepad.FindAction("Dash", throwIfNotFound: true);
             m_Gamepad_Interact = m_Gamepad.FindAction("Interact", throwIfNotFound: true);
             m_Gamepad_ToggleMap = m_Gamepad.FindAction("ToggleMap", throwIfNotFound: true);
+            m_Gamepad_ToggleQuest = m_Gamepad.FindAction("ToggleQuest", throwIfNotFound: true);
             m_Gamepad_Pause = m_Gamepad.FindAction("Pause", throwIfNotFound: true);
             m_Gamepad_CamLookAway = m_Gamepad.FindAction("CamLookAway", throwIfNotFound: true);
             m_Gamepad_ActiveItem = m_Gamepad.FindAction("ActiveItem", throwIfNotFound: true);
@@ -711,6 +753,7 @@ namespace Netherveil.Inputs
         private readonly InputAction m_Keyboard_Dash;
         private readonly InputAction m_Keyboard_Interact;
         private readonly InputAction m_Keyboard_ToggleMap;
+        private readonly InputAction m_Keyboard_ToggleQuest;
         private readonly InputAction m_Keyboard_Pause;
         private readonly InputAction m_Keyboard_ActiveItem;
         private readonly InputAction m_Keyboard_SpecialAbility;
@@ -725,6 +768,7 @@ namespace Netherveil.Inputs
             public InputAction @Dash => m_Wrapper.m_Keyboard_Dash;
             public InputAction @Interact => m_Wrapper.m_Keyboard_Interact;
             public InputAction @ToggleMap => m_Wrapper.m_Keyboard_ToggleMap;
+            public InputAction @ToggleQuest => m_Wrapper.m_Keyboard_ToggleQuest;
             public InputAction @Pause => m_Wrapper.m_Keyboard_Pause;
             public InputAction @ActiveItem => m_Wrapper.m_Keyboard_ActiveItem;
             public InputAction @SpecialAbility => m_Wrapper.m_Keyboard_SpecialAbility;
@@ -758,6 +802,9 @@ namespace Netherveil.Inputs
                 @ToggleMap.started += instance.OnToggleMap;
                 @ToggleMap.performed += instance.OnToggleMap;
                 @ToggleMap.canceled += instance.OnToggleMap;
+                @ToggleQuest.started += instance.OnToggleQuest;
+                @ToggleQuest.performed += instance.OnToggleQuest;
+                @ToggleQuest.canceled += instance.OnToggleQuest;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -792,6 +839,9 @@ namespace Netherveil.Inputs
                 @ToggleMap.started -= instance.OnToggleMap;
                 @ToggleMap.performed -= instance.OnToggleMap;
                 @ToggleMap.canceled -= instance.OnToggleMap;
+                @ToggleQuest.started -= instance.OnToggleQuest;
+                @ToggleQuest.performed -= instance.OnToggleQuest;
+                @ToggleQuest.canceled -= instance.OnToggleQuest;
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
@@ -829,6 +879,7 @@ namespace Netherveil.Inputs
         private readonly InputAction m_Gamepad_Dash;
         private readonly InputAction m_Gamepad_Interact;
         private readonly InputAction m_Gamepad_ToggleMap;
+        private readonly InputAction m_Gamepad_ToggleQuest;
         private readonly InputAction m_Gamepad_Pause;
         private readonly InputAction m_Gamepad_CamLookAway;
         private readonly InputAction m_Gamepad_ActiveItem;
@@ -844,6 +895,7 @@ namespace Netherveil.Inputs
             public InputAction @Dash => m_Wrapper.m_Gamepad_Dash;
             public InputAction @Interact => m_Wrapper.m_Gamepad_Interact;
             public InputAction @ToggleMap => m_Wrapper.m_Gamepad_ToggleMap;
+            public InputAction @ToggleQuest => m_Wrapper.m_Gamepad_ToggleQuest;
             public InputAction @Pause => m_Wrapper.m_Gamepad_Pause;
             public InputAction @CamLookAway => m_Wrapper.m_Gamepad_CamLookAway;
             public InputAction @ActiveItem => m_Wrapper.m_Gamepad_ActiveItem;
@@ -878,6 +930,9 @@ namespace Netherveil.Inputs
                 @ToggleMap.started += instance.OnToggleMap;
                 @ToggleMap.performed += instance.OnToggleMap;
                 @ToggleMap.canceled += instance.OnToggleMap;
+                @ToggleQuest.started += instance.OnToggleQuest;
+                @ToggleQuest.performed += instance.OnToggleQuest;
+                @ToggleQuest.canceled += instance.OnToggleQuest;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -915,6 +970,9 @@ namespace Netherveil.Inputs
                 @ToggleMap.started -= instance.OnToggleMap;
                 @ToggleMap.performed -= instance.OnToggleMap;
                 @ToggleMap.canceled -= instance.OnToggleMap;
+                @ToggleQuest.started -= instance.OnToggleQuest;
+                @ToggleQuest.performed -= instance.OnToggleQuest;
+                @ToggleQuest.canceled -= instance.OnToggleQuest;
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
@@ -962,6 +1020,7 @@ namespace Netherveil.Inputs
             void OnDash(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
             void OnToggleMap(InputAction.CallbackContext context);
+            void OnToggleQuest(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
             void OnActiveItem(InputAction.CallbackContext context);
             void OnSpecialAbility(InputAction.CallbackContext context);
@@ -975,6 +1034,7 @@ namespace Netherveil.Inputs
             void OnDash(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
             void OnToggleMap(InputAction.CallbackContext context);
+            void OnToggleQuest(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
             void OnCamLookAway(InputAction.CallbackContext context);
             void OnActiveItem(InputAction.CallbackContext context);

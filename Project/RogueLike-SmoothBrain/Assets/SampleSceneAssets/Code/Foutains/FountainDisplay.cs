@@ -9,7 +9,7 @@ namespace Fountain
     {
         private Fountain fountain;
 
-        [SerializeField] private Canvas canvas;
+        [SerializeField] private RectTransform rectTransform;
         [SerializeField] private TMP_Text displayTextMesh;
         private Coroutine displayRoutine;
         private float displayDuration = 0.2f;
@@ -18,7 +18,7 @@ namespace Fountain
         {
             fountain = GetComponent<Fountain>();
 
-            canvas.transform.localScale = Vector3.zero;
+            rectTransform.localScale = Vector3.zero;
         }
 
         public void Display()
@@ -27,14 +27,14 @@ namespace Fountain
 
             if (displayRoutine != null)
                 StopCoroutine(displayRoutine);
-            displayRoutine = StartCoroutine(UITween.UpScaleCoroutine(canvas.transform, displayDuration, 0.01f));
+            displayRoutine = StartCoroutine(rectTransform.UpScaleCoroutine(displayDuration, 0.01f));
         }
 
         public void Undisplay()
         {
             if (displayRoutine != null)
                 StopCoroutine(displayRoutine);
-            displayRoutine = StartCoroutine(UITween.DownScaleCoroutine(canvas.transform, displayDuration, 0.01f));
+            displayRoutine = StartCoroutine(rectTransform.DownScaleCoroutine(displayDuration, 0.01f));
         }
 
         private void SetText(Fountain fountain)
