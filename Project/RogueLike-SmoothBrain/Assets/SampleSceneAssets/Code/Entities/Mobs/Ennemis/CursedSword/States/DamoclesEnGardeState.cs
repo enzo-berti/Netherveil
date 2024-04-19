@@ -10,7 +10,9 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     private int nextState = 0;
     private bool stateEnded = false;
     private float elapsedTimeMovement = 0.0f;
+    private float elapsedRotaTime = 0.0f;
     private float guardTime = 4f;
+    private float guardRotaTime = 1.5f;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -25,7 +27,6 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         }
         else if (stateEnded)
         {
-            stateEnded = false;
             nextState = Random.Range(0, 2);
 
             switch (nextState)
@@ -36,7 +37,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
                 case 1:
                     SwitchState(Factory.GetState<DamoclesJumpAttackState>());
                     break;
-            } 
+            }
         }
     }
 
@@ -44,6 +45,9 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         elapsedTimeMovement = Time.time;
+        elapsedRotaTime = Time.time;
+        stateEnded = false;
+        Context.Stats.SetValue(Stat.SPEED, 3);
     }
 
     // This method will be call only one time after the last update.
@@ -59,15 +63,27 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         direction.y = 0;
         direction.Normalize();
 
-        Context.Move(new Vector3(-direction.z, 0, direction.x) * Time.deltaTime * Context.Stats.GetValue(Stat.SPEED));
-        //Context.transform.position += new Vector3(-direction.z, 0, direction.x) * Time.deltaTime * Context.Stats.GetValue(Stat.SPEED);
+        Context.transform.LookAt(Context.Target.transform.position);
+
+        if (Time.time - elapsedRotaTime < guardRotaTime)
+        {
+            Context.MoveTo(Context.transform.position + new Vector3(-direction.z, 0, direction.x));
+        }
+        else
+        {
+            Context.MoveTo(Context.transform.position + new Vector3(direction.z, 0, -direction.x));
+            if (Time.time - elapsedRotaTime > guardRotaTime * 2f)
+            {
+                elapsedRotaTime = Time.time;
+            }
+        }
 
         // Delay
         if (Time.time - elapsedTimeMovement < guardTime)
             return;
 
         elapsedTimeMovement = Time.time;
-
+        Context.Stats.SetValue(Stat.SPEED, 5);
         stateEnded = true;
     }
 

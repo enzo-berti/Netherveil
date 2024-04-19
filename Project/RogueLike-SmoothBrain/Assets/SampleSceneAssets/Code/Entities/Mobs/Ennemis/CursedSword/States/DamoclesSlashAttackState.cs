@@ -42,6 +42,7 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
+        curState = State.Start;
     }
 
     // This method will be call only one time after the last update.

@@ -16,8 +16,8 @@ public abstract class Status
         this.duration = _duration;
         this.statusChance = _chance;
         this.totalDuration = duration;
-        AddStack(1);
-        CoroutineManager.Instance.StartCoroutine(ManageStack());
+        this.isFinished = false;
+        
     }
 
     public abstract Status DeepCopy();
@@ -48,7 +48,9 @@ public abstract class Status
     public abstract bool CanApplyEffect(Entity target);
     public virtual void ApplyEffect(Entity target)
     {
+        AddStack(1);
         PlayVFX();
+        CoroutineManager.Instance.StartCoroutine(ManageStack());
     }
 
     // Do something when status is removed from the target
@@ -82,7 +84,7 @@ public abstract class Status
     }
     private IEnumerator ManageStack()
     {
-        while(true)
+        while(!isFinished)
         {
             if (!isFinished && stopTimes.Count > 0)
             {
@@ -100,6 +102,7 @@ public abstract class Status
             }
             yield return null;
         }
+        yield break;
     }
     #endregion
 
