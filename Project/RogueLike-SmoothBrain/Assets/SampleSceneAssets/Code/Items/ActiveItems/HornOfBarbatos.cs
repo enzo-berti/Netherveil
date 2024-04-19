@@ -16,7 +16,7 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
 
     public void Activate()
     {
-        RoomUtilities.ExitEvents += ResetStat;
+        RoomUtilities.exitEvents += ResetStat;
         Hero hero = Utilities.Hero;
         foreach(var stat in hero.Stats.StatsName)
         {

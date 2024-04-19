@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Bleeding : OverTimeStatus
@@ -5,10 +6,11 @@ public class Bleeding : OverTimeStatus
     readonly float coefValue = 0.03f;
     static Color bleedingColor = new(0.5f, 0.11f, 0.11f, 1f);
 
-    public Bleeding(float _duration, float _chance, float _frequency) : base(_duration, _chance, _frequency)
+    public Bleeding(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = true;
         maxStack = 3;
+        
     }
     public override Status DeepCopy()
     {

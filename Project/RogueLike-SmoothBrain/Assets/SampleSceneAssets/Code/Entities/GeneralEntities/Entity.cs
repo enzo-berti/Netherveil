@@ -167,6 +167,7 @@ public abstract class Entity : MonoBehaviour
         }
         if (!status.CanApplyEffect(this))
         {
+            Debug.Log("Status can't be applied on " + this.name);
             return false;
         }
         else
@@ -175,11 +176,11 @@ public abstract class Entity : MonoBehaviour
             if (chance <= status.statusChance)
             {
                 // If status already exist add a stack
-                foreach (var item in AppliedStatusList)
+                foreach (var appliedStatus in AppliedStatusList)
                 {
-                    if (item.GetType() == status.GetType())
+                    if (appliedStatus.GetType() == status.GetType())
                     {
-                        item.AddStack(1);
+                        appliedStatus.AddStack(1);
                         return true;
                     }
                 }
@@ -187,13 +188,20 @@ public abstract class Entity : MonoBehaviour
                 status.target = this;
                 status.launcher = attacker;
                 status.ApplyEffect(this);
+                this.AppliedStatusList.Add(status);
+                return true;
             }
-            return true;
+            Debug.Log("MissChance");
+            return false;
         }
     }
 
     protected void ClearStatus()
     {
+        foreach(var status in AppliedStatusList)
+        {
+            status.isFinished = true;
+        }
         AppliedStatusList.Clear();
     }
 }
@@ -235,7 +243,11 @@ public class EntityDrawer : Editor
         // Add existing Status name in a list
         if (statusNameList.Count == 0)
         {
-            var typeList = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsSubclassOf(typeof(Status)));
+            var typeList = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
+            {
+                return type.IsSubclassOf(typeof(Status)) && !type.IsAbstract;
+            });
+        
             foreach (Type status in typeList)
             {
                 statusNameList.Add(status.Name);
@@ -246,7 +258,12 @@ public class EntityDrawer : Editor
         for (int i = 0; i < statusNameListProperty.arraySize; i++)
         {
             nbStatus++;
-            allIndex.Add(statusNameList.IndexOf(statusNameListProperty.GetArrayElementAtIndex(i).stringValue));
+            int indexOfString = statusNameList.IndexOf(statusNameListProperty.GetArrayElementAtIndex(i).stringValue);
+            if (indexOfString != -1)
+            {
+                allIndex.Add(indexOfString);
+            }
+            
             durationList.Add(statusDurationListProperty.GetArrayElementAtIndex(i).floatValue);
             chanceList.Add(statusChanceListProperty.GetArrayElementAtIndex(i).floatValue);
         }
@@ -292,30 +309,7 @@ public class EntityDrawer : Editor
         {
             for (int i = 0; i < nbStatus; i++)
             {
-                if (foldoutList.Count <= i)
-                {
-                    foldoutList.Add(false);
-                }
-                if (allIndex.Count <= i)
-                {
-                    allIndex.Add(0);
-                }
-                if (durationList.Count <= i)
-                {
-                    durationList.Add(0);
-                }
-                if (chanceList.Count <= i)
-                {
-                    chanceList.Add(0);
-                }
-                if (statusDurationListProperty.arraySize <= i)
-                {
-                    statusDurationListProperty.InsertArrayElementAtIndex(i);
-                }
-                if (statusChanceListProperty.arraySize <= i)
-                {
-                    statusChanceListProperty.InsertArrayElementAtIndex(i);
-                }
+                AddValueInEachList(i);
                 EditorGUI.indentLevel++;
                 EditorGUILayout.BeginHorizontal();
                 foldoutList[i] = EditorGUILayout.Foldout(foldoutList[i], statusNameList.ToArray()[allIndex[i]]);
@@ -388,6 +382,35 @@ public class EntityDrawer : Editor
         serializedObject.ApplyModifiedProperties();
 
     }
+
+    private void AddValueInEachList(int i)
+    {
+        if (foldoutList.Count <= i)
+        {
+            foldoutList.Add(false);
+        }
+        if (allIndex.Count <= i)
+        {
+            allIndex.Add(0);
+        }
+        if (durationList.Count <= i)
+        {
+            durationList.Add(0);
+        }
+        if (chanceList.Count <= i)
+        {
+            chanceList.Add(0);
+        }
+        if (statusDurationListProperty.arraySize <= i)
+        {
+            statusDurationListProperty.InsertArrayElementAtIndex(i);
+        }
+        if (statusChanceListProperty.arraySize <= i)
+        {
+            statusChanceListProperty.InsertArrayElementAtIndex(i);
+        }
+    }
+
     void DrawScript()
     {
         EditorGUILayout.BeginHorizontal();

@@ -6,9 +6,10 @@ using UnityEngine;
 
 public class ItemDescription : MonoBehaviour
 {
-    [SerializeField] private GameObject panel;
+    [SerializeField] private RectTransform canvasRectTransform;
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text priceText;
     private Item item;
     private float scaleDuration = 0.25f;
 
@@ -18,6 +19,11 @@ public class ItemDescription : MonoBehaviour
 
         nameText.text = item.idItemName.SeparateAllCase();
         nameText.color = item.RarityColor;
+
+        if (priceText != null)
+        {
+            priceText.text = item.Price + " Bloods";
+        }
 
         ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;
 
@@ -68,6 +74,6 @@ public class ItemDescription : MonoBehaviour
     public void TogglePanel(bool toggle)
     {
         StopAllCoroutines();
-        StartCoroutine(toggle ? UITween.UpScaleCoroutine(panel.transform, scaleDuration) : UITween.DownScaleCoroutine(panel.transform, scaleDuration));
+        StartCoroutine(toggle ? canvasRectTransform.UpScaleCoroutine(scaleDuration, 0.01f) : canvasRectTransform.DownScaleCoroutine(scaleDuration, 0.01f));
     }
 }

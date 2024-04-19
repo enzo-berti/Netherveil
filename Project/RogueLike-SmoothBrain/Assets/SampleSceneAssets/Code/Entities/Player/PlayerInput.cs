@@ -529,6 +529,7 @@ public class PlayerInput : MonoBehaviour
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed -= hudHandler.ToggleMap;
+                map["ToggleQuest"].performed -= hudHandler.ToggleQuest;
                 map["Pause"].started -= hudHandler.TogglePause;
             }
         }
@@ -548,6 +549,7 @@ public class PlayerInput : MonoBehaviour
             if (hudHandler != null)
             {
                 map["ToggleMap"].performed += hudHandler.ToggleMap;
+                map["ToggleQuest"].performed += hudHandler.ToggleQuest;
                 map["Pause"].started += hudHandler.TogglePause;
             }
         }
