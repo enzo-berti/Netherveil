@@ -90,7 +90,11 @@ public abstract class Mobs : Entity
 
     private void OnEarlyEnterRoom()
     {
-        Debug.Log("ENTER ROOM");
+        if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -100f)
+        {
+            GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
+            RoomUtilities.roomData.enemies.Add(clone);
+        }
     }
 
     private void ApplySpeed(Stat speedStat)

@@ -5,7 +5,10 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
 {
     public DamoclesVulnerableState(DamoclesStateMachine currentContext, StateFactory<DamoclesStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
-        
+
+    private bool stateEnded = false;
+    private float elapsedTimeMovement = 0.0f;
+    private float vulnerableTime = 4f;
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -17,8 +20,9 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
         {
             SwitchState(Factory.GetState<DamoclesFollowTargetState>());
         }
-        else
+        else if (stateEnded)
         {
+            stateEnded = false;
             SwitchState(Factory.GetState<DamoclesEnGardeState>());
         }
     }
@@ -36,6 +40,16 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        // Delay
+        if (Time.time - elapsedTimeMovement < vulnerableTime)
+            return;
+
+        elapsedTimeMovement = Time.time;
+
+        //Context.Animator.ResetTrigger(Context.);
+        //Context.Animator.SetTrigger(Context.);
+
+        stateEnded = true;
     }
 
     // This method will be called on state switch.
