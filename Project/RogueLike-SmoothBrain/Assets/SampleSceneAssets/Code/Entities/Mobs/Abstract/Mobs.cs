@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using FMODUnity;
 using System;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
+using Map;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -31,12 +31,12 @@ public abstract class Mobs : Entity
 
     protected void OnEnable()
     {
-        
+        RoomUtilities.EarlyEnterEvents += OnEarlyEnterRoom;
     }
 
     protected void OnDisable()
     {
-        
+        RoomUtilities.EarlyEnterEvents -= OnEarlyEnterRoom;
     }
 
     protected override void Start()
@@ -86,6 +86,11 @@ public abstract class Mobs : Entity
         {
             Destroy(transform.parent.gameObject);
         }
+    }
+
+    private void OnEarlyEnterRoom()
+    {
+        Debug.Log("ENTER ROOM");
     }
 
     private void ApplySpeed(Stat speedStat)
