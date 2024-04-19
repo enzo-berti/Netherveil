@@ -11,11 +11,19 @@
 // }
 
 using StateMachine; // include all scripts about StateMachines
+using System.Collections.Generic;
+using UnityEngine;
 
 public class GorgonWanderingState : BaseState<GorgonStateMachine>
 {
     public GorgonWanderingState(GorgonStateMachine currentContext, StateFactory<GorgonStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
+
+    bool canMove = false;
+    float idleTimer = 0f;
+    float MAX_IDLE_COOLDOWN = 2f;
+
+    Vector3 randomDirection;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -39,6 +47,24 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
+        {
+            canMove = idleTimer >= MAX_IDLE_COOLDOWN;
+
+            if (!canMove)
+            {
+                idleTimer += Time.deltaTime;
+            }
+            else
+            {
+                float range = Context.Stats.GetValue(Stat.ATK_RANGE) / 2f;
+                range += Random.Range(0, range);
+
+                ChoseRandomDirection(range);
+                Context.MoveTo(Context.transform.position + randomDirection * range);
+                idleTimer = 0f;
+            }
+        }
     }
 
     // This method will be called on state switch.
@@ -47,5 +73,36 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     {
         base.SwitchState(newState);
         Context.currentState = newState;
+    }
+
+
+
+    // Extra methods
+    void ChoseRandomDirection(float _range)
+    {
+        bool validDirection = false;
+
+        do
+        {
+            float randomX = Random.Range(-1f, 1f);
+            float randomZ = Random.Range(-1f, 1f);
+
+            randomDirection = new Vector3(randomX, 0, randomZ);
+
+            if (randomDirection == Vector3.zero)
+            {
+                continue;
+            }
+
+            randomDirection.Normalize();
+
+            // aide à éviter les murs
+            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, _range, LayerMask.GetMask("Map")))
+            {
+                continue;
+            }
+
+            validDirection = true;
+        } while (!validDirection);
     }
 }
