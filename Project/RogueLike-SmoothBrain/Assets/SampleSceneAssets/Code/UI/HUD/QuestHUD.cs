@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestHUD : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class QuestHUD : MonoBehaviour
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+
+        title.SetText(string.Empty);
+        description.SetText(string.Empty);
+        progressText.SetText(string.Empty);
     }
 
     public void Toggle()
@@ -66,6 +71,8 @@ public class QuestHUD : MonoBehaviour
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);
             progressText.SetText(player.CurrentQuest.progressText);
+
+            description.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         }
     }
 }
