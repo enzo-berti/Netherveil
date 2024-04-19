@@ -1,18 +1,15 @@
+using System;
 using System.Collections.Generic;
 
 namespace Map
 {
     static public class RoomUtilities
     {
-        public delegate void Enter();
-        public delegate void Exit();
-        public delegate void AllEnemiesDead();
-        public delegate void AllChestsOpen();
-
-        static public Enter EnterEvents;
-        static public Exit ExitEvents;
-        static public AllEnemiesDead allEnemiesDeadEvents;
-        static public AllChestsOpen allChestOpenEvents;
+        static public Action EarlyEnterEvents;
+        static public Action EnterEvents;
+        static public Action ExitEvents;
+        static public Action allEnemiesDeadEvents;
+        static public Action allChestOpenEvents;
 
         static public RoomData roomData;
 

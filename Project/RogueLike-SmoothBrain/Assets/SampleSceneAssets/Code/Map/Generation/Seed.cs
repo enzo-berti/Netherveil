@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
-namespace Generation
+namespace Map.Generation
 {
     static public class Seed
     {

@@ -51,10 +51,11 @@ public abstract class Status
 
     #region Stack
     private int stack = 0;
+    protected int maxStack = int.MaxValue;
     public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
-        if(isStackable || stack < 1)
+        if((isStackable && stack < maxStack) || stack < 1)
         {
             stack += isStackable ? nb : 1;
             for (int i = 0; i < nb; i++)

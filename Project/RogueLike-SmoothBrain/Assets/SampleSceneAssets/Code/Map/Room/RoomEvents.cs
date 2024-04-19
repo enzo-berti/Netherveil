@@ -79,6 +79,7 @@ namespace Map
             enemies.SetActive(true);
 
             // global events
+            RoomUtilities.EarlyEnterEvents?.Invoke();
             RoomUtilities.EnterEvents?.Invoke();
         }
 

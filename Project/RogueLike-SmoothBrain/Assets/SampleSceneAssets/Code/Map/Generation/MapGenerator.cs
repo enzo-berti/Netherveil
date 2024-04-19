@@ -1,11 +1,10 @@
-using Map;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-namespace Generation
+namespace Map.Generation
 {
     public struct GenerationParam
     {
@@ -275,10 +274,11 @@ namespace Generation
                     continue;
                 }
 
+                float defaultRot = doorsGenerator.transform.parent.parent.rotation.eulerAngles.y;
                 foreach (Door candidateExitDoor in Seed.RandList(genParam.availableDoorsByRot[rotation]))
                 {
                     // rotate gameObject entrance door to correspond the exit door
-                    doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation), 0f);
+                    doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
 
                     // Set position
                     roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
@@ -287,7 +287,7 @@ namespace Generation
                     // Check collision
                     if (IsRoomCollidingOtherRoom(roomGO, candidateExitDoor))
                     {
-                        doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, 0f, 0f); // reset rotation
+                        doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
                         continue; // fail to generate continue to next door candidate
                     }
 

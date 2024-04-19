@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using FMODUnity;
 using System;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
+using Map;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -28,6 +28,16 @@ public abstract class Mobs : Entity
     // getters/setters
     public NavMeshAgent Agent { get => agent; }
     public float DamageTakenMultiplicator { get; set; } = 1f;
+
+    protected void OnEnable()
+    {
+        RoomUtilities.EarlyEnterEvents += OnEarlyEnterRoom;
+    }
+
+    protected void OnDisable()
+    {
+        RoomUtilities.EarlyEnterEvents -= OnEarlyEnterRoom;
+    }
 
     protected override void Start()
     {
@@ -76,6 +86,11 @@ public abstract class Mobs : Entity
         {
             Destroy(transform.parent.gameObject);
         }
+    }
+
+    private void OnEarlyEnterRoom()
+    {
+        Debug.Log("ENTER ROOM");
     }
 
     private void ApplySpeed(Stat speedStat)
@@ -141,7 +156,8 @@ public abstract class Mobs : Entity
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
-        Stats.DecreaseValue(Stat.HP, _value * DamageTakenMultiplicator, false);
+        _value = (int)(_value * DamageTakenMultiplicator);
+        Stats.DecreaseValue(Stat.HP, _value, false);
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (notEffectDamage)
