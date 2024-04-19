@@ -8,6 +8,8 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private GameObject framePf;
     private List<GameObject> itemSlot = new List<GameObject>();
     [SerializeField] private ItemDatabase database;
+    private int maxItemDisplay = 5;
+    [SerializeField] private Transform itemPassiveTransform;
 
     void Start()
     {
@@ -16,12 +18,12 @@ public class ItemBar : MonoBehaviour
 
     private void OnItemAdd(ItemEffect itemAdd)
     {
-        GameObject frame = Instantiate(framePf, transform);
+        GameObject frame = Instantiate(framePf, itemPassiveTransform);
         frame.GetComponentInChildren<RawImage>().texture = database.GetItem(itemAdd.Name).icon;
         itemSlot.Add(frame);
 
-        if (transform.childCount > 5)
-            DestroyImmediate(transform.GetChild(0).gameObject);
+        if (itemPassiveTransform.childCount > maxItemDisplay)
+            DestroyImmediate(itemPassiveTransform.GetChild(0).gameObject);
     }
 
     private void OnDestroy()
