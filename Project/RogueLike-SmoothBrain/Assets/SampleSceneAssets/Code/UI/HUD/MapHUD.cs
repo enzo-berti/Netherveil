@@ -5,8 +5,9 @@ public class MapHUD : MonoBehaviour
 {
     private GameObject minimapCam;
     private GameObject bigmapCam;
-    [SerializeField] private GameObject miniMap;
-    [SerializeField] private GameObject bigMap;
+    [SerializeField] private RectTransform miniMap;
+    [SerializeField] private RectTransform bigMap;
+    private bool isMiniMapActive = true;
 
     private void Start()
     {
@@ -17,21 +18,23 @@ public class MapHUD : MonoBehaviour
 
     public void Toggle()
     {
-        if (miniMap.activeSelf)
+        if (isMiniMapActive)
         {
             minimapCam.SetActive(false);
-            miniMap.SetActive(false);
-
             bigmapCam.SetActive(true);
-            bigMap.SetActive(true);
+
+            StartCoroutine(miniMap.DownScaleCoroutine(0.1f));
+            StartCoroutine(bigMap.UpScaleCoroutine(0.1f));
         }
         else
         {
             minimapCam.SetActive(true);
-            miniMap.SetActive(true);
-
             bigmapCam.SetActive(false);
-            bigMap.SetActive(false);
+
+            StartCoroutine(miniMap.UpScaleCoroutine(0.1f));
+            StartCoroutine(bigMap.DownScaleCoroutine(0.1f));
         }
+
+        isMiniMapActive = !isMiniMapActive;
     }
 }

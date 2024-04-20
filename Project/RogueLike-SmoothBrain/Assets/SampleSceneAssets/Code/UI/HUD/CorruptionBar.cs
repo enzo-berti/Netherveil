@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 public class CorruptionBar : MonoBehaviour
 {
-    [SerializeField] Slider positive;
-    [SerializeField] Slider negative;
-    [SerializeField] Vector2 EdgeValue;
+    [SerializeField] private Slider positive;
+    [SerializeField] private Slider negative;
+    [SerializeField] private Vector2 EdgeValue;
 
     void Start()
     {
