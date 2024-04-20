@@ -11,6 +11,7 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private QuestHUD questHUD;
     [SerializeField] private MapHUD mapHUD;
     [SerializeField] private TMP_Text BloodTestMesh;
+    [SerializeField] private MinMaxSlider corruptionSlider;
 
     private Hero player;
 
@@ -25,6 +26,8 @@ public class HudHandler : MonoBehaviour
     private void Update()
     {
         BloodTestMesh.text = player.Inventory.Blood.ToString();
+
+        corruptionSlider.value = player.Stats.GetValue(Stat.CORRUPTION);
     }
 
     private void OnEnable()
