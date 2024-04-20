@@ -59,7 +59,6 @@ public class GorgonFleeingState : BaseState<GorgonStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        Debug.Log(GetType().Name);
     }
 
     // This method will be called on state switch.

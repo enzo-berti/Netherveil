@@ -15,7 +15,7 @@ public class ExplodingBomb : MonoBehaviour
     [SerializeField] private bool activateOnAwake;
     [SerializeField] private float timerBeforeExplode;
     [SerializeField] private float blastDiameter;
-    private float BlastRadius { get => blastDiameter / 2; }
+    private float BlastRadius { get => blastDiameter; }
     [SerializeField] private int blastDamage;
     [SerializeField] private LayerMask damageLayer;
     private bool isActive;
@@ -63,7 +63,7 @@ public class ExplodingBomb : MonoBehaviour
         float a = -16, b = 16;
         float c = this.transform.position.y;
         float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, 0).Max();
-        while (timer < timerToReach)
+        while (timer < timerToReach && transform.position.y > pos.y)
         {
             yield return null;
             timer = timer > timerToReach ? timerToReach : timer;
@@ -106,7 +106,7 @@ public class ExplodingBomb : MonoBehaviour
 
     private IEnumerator ExplodeRoutine()
     {
-        Physics.OverlapSphere(this.transform.position, BlastRadius / 2, damageLayer)
+        Physics.OverlapSphere(this.transform.position, BlastRadius / 2f - BlastRadius / 8f, damageLayer)
             .Select(entity => entity.GetComponent<IBlastable>())
             .Where(entity => entity != null)
             .ToList()
@@ -147,15 +147,15 @@ public class ExplodingBomb : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //Handles.color = new Color(1, 0, 0, 0.25f);
+        Handles.color = new Color(1, 0, 0, 0.25f);
 
-        //Gizmos.DrawSphere(this.transform.position, blastRadius / 2);
+        Gizmos.DrawSphere(this.transform.position, BlastRadius / 2);
 
-        //Handles.color = Color.white;
-        //Handles.Label(transform.position + Vector3.up,
-        //    $"Bomb" +
-        //    $"\nActivate : {isActive}" +
-        //    $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
+        Handles.color = Color.white;
+        Handles.Label(transform.position + Vector3.up,
+            $"Bomb" +
+            $"\nActivate : {isActive}" +
+            $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
     }
 #endif
 }
