@@ -119,8 +119,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField, Range(0f, 360f)] float visionAngle = 360f;
     [SerializeField] float rotationSpeed = 5f;
 
-    void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         // jouer l'anim de début de combat
 
         // mettre la cam entre le joueur et le boss
@@ -134,8 +135,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         bossSounds.music.Play();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         if (gameMusic != null)
         {
             gameMusic.SetActive(true);

@@ -29,12 +29,12 @@ public abstract class Mobs : Entity
     public NavMeshAgent Agent { get => agent; }
     public float DamageTakenMultiplicator { get; set; } = 1f;
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
         RoomUtilities.earlyEnterEvents += OnEarlyEnterRoom;
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
         RoomUtilities.earlyEnterEvents -= OnEarlyEnterRoom;
     }

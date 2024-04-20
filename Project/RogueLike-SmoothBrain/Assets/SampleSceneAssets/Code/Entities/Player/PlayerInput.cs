@@ -77,15 +77,15 @@ public class PlayerInput : MonoBehaviour
         hero.OnChangeState += ResetForceReturnToMove;
         chargedAttackScaleSize = controller.ChargedAttack.gameObject.transform.localScale.x;
         chargedAttackVFXMaxSize = controller.ChargedAttackVFX.GetFloat("VFX Size");
-        HudHandler.OnPause += DisableGameplayInputs;
-        HudHandler.OnUnpause += EnableGameplayInputs;
+        PauseMenu.OnPause += DisableGameplayInputs;
+        PauseMenu.OnUnpause += EnableGameplayInputs;
     }
 
     private void OnDestroy()
     {
         hero.OnChangeState -= ResetForceReturnToMove;
-        HudHandler.OnPause -= DisableGameplayInputs;
-        HudHandler.OnUnpause -= EnableGameplayInputs;
+        PauseMenu.OnPause -= DisableGameplayInputs;
+        PauseMenu.OnUnpause -= EnableGameplayInputs;
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
         InputManagement(kbMap, unsubscribe: true);
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);

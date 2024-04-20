@@ -15,9 +15,6 @@ public class HudHandler : MonoBehaviour
 
     private Hero player;
 
-    public static event Action OnPause;
-    public static event Action OnUnpause;
-
     private void Awake()
     {
         player = FindObjectOfType<Hero>();
