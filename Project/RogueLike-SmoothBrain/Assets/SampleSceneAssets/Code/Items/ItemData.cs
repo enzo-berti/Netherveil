@@ -36,6 +36,27 @@ public class ItemData : IComparable<ItemData>
     public Mesh mesh;
     [Multiline] public string Description;
     public Texture icon;
+    public Color rarityColor
+    {
+        get
+        {
+            switch (RarityTier)
+            {
+                case Rarity.COMMON:         // Blanc
+                    return Color.white;
+                case Rarity.UNCOMMON:       // Bleu
+                    return new Color(0.10f, 0.54f, 0.98f, 1.0f);
+                case Rarity.RARE:           // Violet
+                    return new Color(0.67f, 0.16f, 0.88f, 1.0f);
+                case Rarity.EPIC:           // Orange
+                    return new Color(0.87f, 0.38f, 0.08f, 1.0f);
+                case Rarity.LEGENDARY:      // Jaune
+                    return new Color(0.91f, 0.76f, 0.17f, 1.0f);
+                default:
+                    return Color.white;
+            }
+        }
+    }
 
     public int CompareTo(ItemData other)
     {

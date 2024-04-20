@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class ItemBar : MonoBehaviour
 {
     [SerializeField] private GameObject framePf;
-    private List<GameObject> itemSlot = new List<GameObject>();
     [SerializeField] private ItemDatabase database;
     private int maxItemDisplay = 5;
     [SerializeField] private Transform itemPassiveTransform;
@@ -18,9 +17,10 @@ public class ItemBar : MonoBehaviour
 
     private void OnItemAdd(ItemEffect itemAdd)
     {
+        ItemData data = database.GetItem(itemAdd.Name);
         GameObject frame = Instantiate(framePf, itemPassiveTransform);
-        frame.GetComponentInChildren<RawImage>().texture = database.GetItem(itemAdd.Name).icon;
-        itemSlot.Add(frame);
+        frame.GetComponentInChildren<RawImage>().texture = data.icon;
+        frame.GetComponent<Image>().color = data.rarityColor;
 
         if (itemPassiveTransform.childCount > maxItemDisplay)
             DestroyImmediate(itemPassiveTransform.GetChild(0).gameObject);

@@ -75,11 +75,11 @@ public class ItemCreatorEditor : EditorWindow
             item.price = evt.newValue;
         });
 
-        rarityField.RegisterValueChangedCallback(evt =>
+        rarityField.RegisterValueChangedCallback((EventCallback<ChangeEvent<Enum>>)(evt =>
         {
             ItemData.Rarity type = (ItemData.Rarity)evt.newValue;
             item.RarityTier = type;
-        });
+        }));
 
         typeField.RegisterValueChangedCallback(evt =>
         {
