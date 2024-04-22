@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.Events;
-using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem.Composites;
-using System.Linq;
 using UnityEditor;
-using UnityEngine.UIElements;
-using System.ComponentModel;
+using UnityEngine.Events;
 
 ////TODO: localization support
 
@@ -510,8 +505,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             UpdateActionLabel();
             UpdateBindingDisplay();
         }
-
-#endif
+        #endif
 
         private void Start()
         {
@@ -542,7 +536,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     }
                 }
 
-                m_ActionLabel.text = action != null ? $"{action.name} {ObjectNames.NicifyVariableName(binding.name)} {interactionToAdd}" : string.Empty;
+                m_ActionLabel.text = action != null ? $"{action.name} {binding.name} {interactionToAdd}" : string.Empty;
             }
         }
 
