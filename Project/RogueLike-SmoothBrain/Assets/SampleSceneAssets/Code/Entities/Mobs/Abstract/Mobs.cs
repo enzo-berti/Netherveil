@@ -184,52 +184,6 @@ public abstract class Mobs : Entity
         }
     }
 
-    // ntm l'opti
-    //public Vector3 GetRandomPointOnWanderZone(Vector3 _unitPos, float _minTravelDistance = 0f, float _maxTravelDistance = 0f, bool _avoidWalls = true)
-    //{
-    //    if (_minTravelDistance > wanderZone.radius)
-    //    {
-    //        Debug.LogError("Invalid min value. Returning (0,0,0).");
-    //        return default;
-    //    }
-
-    //    float maxTravelDistance = _maxTravelDistance == 0 ? wanderZone.radius : _maxTravelDistance;
-
-    //    Vector3 randomDirection3D = default;
-    //    Vector3 unitToPoint;
-    //    do
-    //    {
-    //        if (_avoidWalls)
-    //        {
-    //            bool validDirection = false;
-    //            do
-    //            {
-    //                Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
-    //                randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, maxTravelDistance);
-    //                randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
-
-    //                // aide à éviter les murs
-    //                if (Physics.Raycast(wanderZone.center + new Vector3(0, 1, 0), randomDirection3D.normalized, randomDirection3D.magnitude, LayerMask.GetMask("Map")))
-    //                {
-    //                    continue;
-    //                }
-
-    //                validDirection = true;
-    //            } while (!validDirection);
-    //        }
-    //        else
-    //        {
-    //            Vector2 randomPoint2D = UnityEngine.Random.insideUnitCircle;
-    //            randomPoint2D *= UnityEngine.Random.Range(_minTravelDistance, maxTravelDistance);
-    //            randomDirection3D = new Vector3(randomPoint2D.x, 0, randomPoint2D.y);
-    //        }
-
-    //        unitToPoint = (wanderZone.center + randomDirection3D) - _unitPos;
-    //    } while (unitToPoint.sqrMagnitude < _minTravelDistance * _minTravelDistance || unitToPoint.sqrMagnitude > _maxTravelDistance * _maxTravelDistance);
-
-    //    return wanderZone.center + randomDirection3D;
-    //}
-
     public Vector3 GetRandomPointOnWanderZone(Vector3 _unitPos, float _minTravelDistance, float _maxTravelDistance, bool _avoidWalls = true)
     {
         if (_minTravelDistance >= _maxTravelDistance)
@@ -240,9 +194,16 @@ public abstract class Mobs : Entity
 
         Vector3 randomDirection3D = default;
 
+        int iterations = 0;
         bool validPoint = true;
         do
         {
+
+            if (iterations >= 3)
+            {
+                return (_unitPos - wanderZone.center).normalized * _minTravelDistance;
+            }
+
             Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
             randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, _maxTravelDistance);
             randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
@@ -254,6 +215,7 @@ public abstract class Mobs : Entity
                 // aide à éviter les murs
                 if (Physics.Raycast(_unitPos + new Vector3(0, 1, 0), randomDirection3D.normalized, randomDirection3D.magnitude, LayerMask.GetMask("Map")))
                 {
+                    iterations++;
                     continue;
                 }
 

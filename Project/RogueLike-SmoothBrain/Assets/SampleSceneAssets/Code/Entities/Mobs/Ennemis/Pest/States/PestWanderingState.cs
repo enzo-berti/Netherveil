@@ -54,37 +54,4 @@ public class PestWanderingState : BaseState<PestStateMachine>
         base.SwitchState(newState);
         Context.CurrentState = newState;
     }
-
-    #region Extra methods
-    void ChoseRandomDirection(float _range)
-    {
-        bool validDirection = false;
-
-        do
-        {
-            float randomX = Random.Range(-1f, 1f);
-            float randomZ = Random.Range(-1f, 1f);
-
-            randomDirection = new Vector3(randomX, 0, randomZ);
-
-            if (randomDirection == Vector3.zero)
-            {
-                continue;
-            }
-
-            randomDirection.Normalize();
-
-            Debug.DrawRay(Context.transform.position + new Vector3(0, 0.2f, 0), randomDirection * _range, Color.green);
-
-            // aide à éviter les murs
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, _range, LayerMask.GetMask("Map")))
-            {
-                continue;
-            }
-
-            validDirection = true;
-        } while (!validDirection);
-    }
-
-    #endregion
 }

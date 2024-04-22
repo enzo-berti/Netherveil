@@ -106,6 +106,8 @@ public class PestStateMachine : Mobs, IPest
             currentState.Update();
 
             if (!CanMove) { dashTimer += Time.deltaTime; }
+
+            if (currentState is not PestWanderingState) { WanderZoneCenter = transform.position; }
         //}
     }
 
