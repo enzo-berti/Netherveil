@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class Inventory
@@ -25,14 +26,7 @@ public class Inventory
 
     private void AddActiveItem(IActiveItem item)
     {
-        if (activeItem == null)
-        {
-            activeItem = item;
-        }
-        else
-        {
-            activeItem = item;
-        }
+        activeItem = item;
     }
 
     private void AddPassiveItem(IPassiveItem item)
