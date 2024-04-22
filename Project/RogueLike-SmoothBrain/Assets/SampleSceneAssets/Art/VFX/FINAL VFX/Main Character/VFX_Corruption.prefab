@@ -51,7 +51,13 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 2
+        m_Name: Duration
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Add Size Aura
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -127,3 +133,6 @@ MonoBehaviour:
   effect: {fileID: 3385850805067224118}
   destroyOnStop: 0
   destroyDurationDelay: 0
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
