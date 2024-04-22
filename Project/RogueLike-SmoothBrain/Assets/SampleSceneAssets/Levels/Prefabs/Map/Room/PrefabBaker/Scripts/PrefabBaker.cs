@@ -14,22 +14,25 @@ namespace PrefabLightMapBaker
         [SerializeField] public Texture2D[] texturesDir;
         [SerializeField] public Texture2D[] texturesShadow;
 
-        public Texture2D[ ][ ] AllTextures() => new Texture2D[ ][ ] { 
-            texturesColor, texturesDir, texturesShadow 
+        public Texture2D[][] AllTextures() => new Texture2D[][] {
+            texturesColor, texturesDir, texturesShadow
         };
 
-        public bool HasBakeData => ( renderers?.Length ?? 0 ) > 0 && ( texturesColor?.Length ?? 0 ) > 0;
+        public bool HasBakeData => (renderers?.Length ?? 0) > 0 && (texturesColor?.Length ?? 0) > 0;
 
-        public bool BakeApplied { get 
+        public bool BakeApplied
         {
-            bool hasColors = Utils.SceneHasAllLightmaps( texturesColor );
-            bool hasDirs = Utils.SceneHasAllLightmaps( texturesDir );
-            bool hasShadows = Utils.SceneHasAllLightmaps( texturesShadow );
+            get
+            {
+                bool hasColors = Utils.SceneHasAllLightmaps(texturesColor);
+                bool hasDirs = Utils.SceneHasAllLightmaps(texturesDir);
+                bool hasShadows = Utils.SceneHasAllLightmaps(texturesShadow);
 
-            return hasColors && hasDirs && hasShadows;
-        } }
+                return hasColors && hasDirs && hasShadows;
+            }
+        }
 
-        void Start( )
+        void Start()
         {
             // Warnning : this will mess up the renderer lightmaps reference
             // // StaticBatchingUtility.Combine( gameObject );
@@ -38,37 +41,37 @@ namespace PrefabLightMapBaker
 
         void Awake()
         {
-            BakeApply( );
+            BakeApply();
         }
 
         public void BakeApply()
         {
-            if( ! HasBakeData )
+            if (!HasBakeData)
             {
                 BakeJustApplied = false;
                 return;
             }
 
-            if( ! BakeApplied )
+            if (!BakeApplied)
             {
-                BakeJustApplied = Utils.Apply( this );
+                BakeJustApplied = Utils.Apply(this);
 
-                if( BakeJustApplied ) Debug.Log( "[PrefabBaker] Addeded prefab lightmap data to current scene" );
+                if (BakeJustApplied) Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
             }
         }
 
         void OnEnable()
         {
-            if(!Application.isPlaying)
+            if (!Application.isPlaying)
 
-                BakeApply( );
+                BakeApply();
 
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            BakeApply( );
+            BakeApply();
         }
 
         void OnDisable()
