@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.VFX;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -34,6 +35,7 @@ public abstract class Entity : MonoBehaviour
 
     public List<Status> AppliedStatusList = new();
     protected List<Status> statusToApply = new();
+    public List<VisualEffect> statusVfxs = new();
     public bool IsKnockbackable = true;
     public bool canTriggerTraps = true;
 
@@ -200,11 +202,20 @@ public abstract class Entity : MonoBehaviour
 
     protected void ClearStatus()
     {
+        Debug.Log("status");
         foreach(var status in AppliedStatusList)
         {
             status.isFinished = true;
         }
+        foreach(var vfx in statusVfxs)
+        {
+            Debug.Log("stop VFX");
+            vfx.GetComponent<VFXStopper>().StopAllCoroutines();
+            vfx.Stop();
+            Destroy(vfx.gameObject);
+        }
         AppliedStatusList.Clear();
+        statusVfxs.Clear();
     }
 }
 
