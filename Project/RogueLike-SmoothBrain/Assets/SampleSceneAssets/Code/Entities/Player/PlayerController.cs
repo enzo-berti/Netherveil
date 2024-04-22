@@ -435,6 +435,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying)
@@ -448,4 +449,5 @@ public class PlayerController : MonoBehaviour
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
     }
+#endif
 }
