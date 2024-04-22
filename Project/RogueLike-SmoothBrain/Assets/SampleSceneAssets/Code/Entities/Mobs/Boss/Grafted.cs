@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
@@ -118,6 +119,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField, Range(0f, 360f)] float visionAngle = 360f;
     [SerializeField] float rotationSpeed = 5f;
 
+    [Header("VFXs")]
+    [SerializeField] VisualEffect dashVFX;
+    [SerializeField] VisualEffect tripleThrustVFX;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -189,7 +194,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         while (true)
         {
-            yield return null;
+            yield return new WaitUntil(() => animator.speed != 0);
 
             if (deathTimer <= 0)
             {
@@ -534,6 +539,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             }
 
             animator.SetBool(fallHash, true);
+            dashVFX.GetComponent<VFXStopper>().PlayVFX();
         }
 
         if (attackState == AttackState.ATTACKING)
