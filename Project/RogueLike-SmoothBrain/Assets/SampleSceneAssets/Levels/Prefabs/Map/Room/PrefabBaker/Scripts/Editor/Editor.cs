@@ -1,162 +1,165 @@
 ﻿#if UNITY_EDITOR
 
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace PrefabLightMapBaker
 {
-    [CustomEditor( typeof( PrefabBaker ) ) ]
+    [CustomEditor(typeof(PrefabBaker))]
     public class PrefabBakerEditor : Editor
     {
         public bool PreviewData = true;
 
         public bool EditComponents = false;
 
-        public override void OnInspectorGUI( )
+        public override void OnInspectorGUI()
         {
-            PrefabBaker instance = ( PrefabBaker ) target;
+            PrefabBaker instance = (PrefabBaker)target;
 
-            GUILayout.Space( 15 );
+            GUILayout.Space(15);
 
-            if( Window.instance == null )
+            if (Window.instance == null)
             {
-                if(GUILayout.Button( "Open Baker", GUILayout.Height( 30 ) ))
-                
-                    Window.OpenWindow( );
+                if (GUILayout.Button("Open Baker", GUILayout.Height(30)))
+                {
+                    Window.OpenWindow();
+                }
 
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
             }
 
             bool hasData = instance.HasBakeData;
 
-            if( hasData )
+            if (hasData)
             {
-                using( new GUILayout.HorizontalScope() )
+                using (new GUILayout.HorizontalScope())
                 {
-                    EditorGUI.BeginDisabledGroup( instance.BakeApplied );
+                    EditorGUI.BeginDisabledGroup(instance.BakeApplied);
 
-                    if(GUILayout.Button( "Apply", GUILayout.Height( 25 ) )) 
-                        
-                        instance.BakeApply( );
+                    if (GUILayout.Button("Apply", GUILayout.Height(25)))
+                    {
+                        instance.BakeApply();
+                    }
 
-                    EditorGUI.EndDisabledGroup( );
+                    EditorGUI.EndDisabledGroup();
 
-                    GUILayout.Space( 5 );
+                    GUILayout.Space(5);
 
-                    GUI.color = new Color( 1f, 0.5f, 0.5f );
+                    GUI.color = new Color(1f, 0.5f, 0.5f);
 
-                    if(GUILayout.Button( "Clear", GUILayout.Height( 25 ), GUILayout.Width( 70 ) ))
-                    
-                        EditorUtils.Reset( instance );
+                    if (GUILayout.Button("Clear", GUILayout.Height(25), GUILayout.Width(70)))
+                    {
+                        EditorUtils.Reset(instance);
+                    }
 
                     GUI.color = Color.white;
                 }
 
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
 
-                GUILayout.Label( "", GUI.skin.horizontalSlider );
+                GUILayout.Label("", GUI.skin.horizontalSlider);
             }
 
-            GUILayout.Space( 5 );
+            GUILayout.Space(5);
 
-            EditorUtils.BoxGUI( ( ) =>
+            EditorUtils.BoxGUI(() =>
             {
-                using(new GUILayout.HorizontalScope( ))
+                using (new GUILayout.HorizontalScope())
                 {
-                    GUILayout.Space( 10 );
-                    EditComponents = EditorGUILayout.Foldout( EditComponents, " Override Nested Components", true );
+                    GUILayout.Space(10);
+                    EditComponents = EditorGUILayout.Foldout(EditComponents, " Override Nested Components", true);
                 }
 
                 //EditComponents = EditorGUILayout.ToggleLeft( " Override Nested Components", EditComponents );
 
-                if( ! EditComponents ) return;
+                if (!EditComponents) return;
 
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
 
-                PanelComponentsOverride.Draw( );
+                PanelComponentsOverride.Draw();
 
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
 
-                if(GUILayout.Button( "Apply" )) 
-                    
-                    PanelComponentsOverride.Apply( instance.gameObject );
-            } );
+                if (GUILayout.Button("Apply"))
 
-            GUILayout.Space( 5 );
+                    PanelComponentsOverride.Apply(instance.gameObject);
+            });
 
-            if( ! hasData ) return;
+            GUILayout.Space(5);
 
-            PreviewData = EditorGUILayout.Foldout( PreviewData, "Show data", true );
+            if (!hasData) return;
 
-            GUILayout.Space( 5 );
+            PreviewData = EditorGUILayout.Foldout(PreviewData, "Show data", true);
 
-            if( ! PreviewData ) return ; //base.OnInspectorGUI( );
+            GUILayout.Space(5);
+
+            if (!PreviewData) return; //base.OnInspectorGUI( );
 
             var ln = instance.lights?.Length;
 
-            string info = $"{ instance.lights?.Length ?? 0 } Lights | " +
+            string info = $"{instance.lights?.Length ?? 0} Lights | " +
                 $" {instance.renderers?.Length ?? 0} Renderers\n" +
                 $"{instance.texturesColor?.Length ?? 0} Color Textures";
 
-            if(( instance.texturesDir?.Length ?? 0 ) > 0)
-                info += $"\n{ instance.texturesDir?.Length ?? 0} Directional Textures";
-            
-            if(( instance.texturesShadow?.Length ?? 0 ) > 0)
-                info += $"\n{ instance.texturesShadow?.Length ?? 0} Shadow Textures";
+            if ((instance.texturesDir?.Length ?? 0) > 0)
+                info += $"\n{instance.texturesDir?.Length ?? 0} Directional Textures";
 
-            GUILayout.Label( "Info", EditorStyles.boldLabel );
-            EditorGUILayout.HelpBox( info, MessageType.None );
+            if ((instance.texturesShadow?.Length ?? 0) > 0)
+                info += $"\n{instance.texturesShadow?.Length ?? 0} Shadow Textures";
 
-            GUILayout.Space( 5 );
+            GUILayout.Label("Info", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox(info, MessageType.None);
 
-            GUILayout.Label( "Textures", EditorStyles.boldLabel );
+            GUILayout.Space(5);
 
-            DrawTextures( instance.texturesColor, ref scroll_color );
-            DrawTextures( instance.texturesDir, ref scroll_dir );
-            DrawTextures( instance.texturesShadow, ref scroll_shadow );
+            GUILayout.Label("Textures", EditorStyles.boldLabel);
+
+            DrawTextures(instance.texturesColor, ref scroll_color);
+            DrawTextures(instance.texturesDir, ref scroll_dir);
+            DrawTextures(instance.texturesShadow, ref scroll_shadow);
         }
 
         [SerializeField] Vector2 scroll_color;
         [SerializeField] Vector2 scroll_dir;
         [SerializeField] Vector2 scroll_shadow;
 
-        void DrawTextures( Texture2D[] textures, ref Vector2 scroll )
+        void DrawTextures(Texture2D[] textures, ref Vector2 scroll)
         {
-            if(( textures?.Length ?? 0 ) < 1) return;
+            if ((textures?.Length ?? 0) < 1) return;
 
-            var h = GUILayout.Height( scroll.y < 0 ? 70 : 55 );
+            var h = GUILayout.Height(scroll.y < 0 ? 70 : 55);
 
-            using(var scope = new GUILayout.ScrollViewScope( scroll, GUI.skin.textArea, h ) )
+            using (var scope = new GUILayout.ScrollViewScope(scroll, GUI.skin.textArea, h))
             {
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
 
-                using( new GUILayout.HorizontalScope() )
+                using (new GUILayout.HorizontalScope())
                 {
-                    GUILayout.Space( 5 );
+                    GUILayout.Space(5);
 
                     Rect rect = Rect.zero;
 
-                    foreach( var tex in textures )
+                    foreach (var tex in textures)
                     {
-                        Window.DrawTexturePing( tex, 40, 4 );
-                        
-                        rect = GUILayoutUtility.GetLastRect( );
+                        Window.DrawTexturePing(tex, 40, 4);
 
-                        GUILayout.Space( 5 );
+                        rect = GUILayoutUtility.GetLastRect();
+
+                        GUILayout.Space(5);
                     }
-                    
-                    if( Event.current.type == EventType.Repaint )
+
+                    if (Event.current.type == EventType.Repaint)
 
                         // double rect width to support unexpected pixel shifts in DPI scaling in windows 
-                        scroll.y = ( rect.width * 2 + rect.x + 10 ) > ( Screen.width / EditorGUIUtility.pixelsPerPoint ) ? - 0.05f : 0;
+                        scroll.y = (rect.width * 2 + rect.x + 10) > (Screen.width / EditorGUIUtility.pixelsPerPoint) ? -0.05f : 0;
                 }
 
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
 
                 scroll.x = scope.scrollPosition.x;
             }
 
-            GUILayout.Space( 5 );
+            GUILayout.Space(5);
         }
     }
 }
