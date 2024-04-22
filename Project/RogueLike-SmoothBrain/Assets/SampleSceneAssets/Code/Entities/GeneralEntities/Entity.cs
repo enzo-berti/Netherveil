@@ -39,6 +39,7 @@ public abstract class Entity : MonoBehaviour
     public bool IsKnockbackable = true;
     public bool canTriggerTraps = true;
 
+
     //not a bool because if you get multiple invincibility sources at the same time,
     //if one would go away, he would put the bool at false but it would break the invincibility from other sources too,
     //so it is a count that means the entity is invincible if this variable is over zero.
@@ -88,11 +89,7 @@ public abstract class Entity : MonoBehaviour
         {
             for (int i = AppliedStatusList.Count - 1; i >= 0; i--)
             {
-                if (!AppliedStatusList[i].isFinished)
-                {
-                    AppliedStatusList[i].DoEffect();
-                }
-                else
+                if (AppliedStatusList[i].isFinished)
                 {
                     AppliedStatusList.RemoveAt(i);
                 }
@@ -203,11 +200,11 @@ public abstract class Entity : MonoBehaviour
     protected void ClearStatus()
     {
         Debug.Log("status");
-        foreach(var status in AppliedStatusList)
+        foreach (var status in AppliedStatusList)
         {
             status.isFinished = true;
         }
-        foreach(var vfx in statusVfxs)
+        foreach (var vfx in statusVfxs)
         {
             Debug.Log("stop VFX");
             vfx.GetComponent<VFXStopper>().StopAllCoroutines();
@@ -260,7 +257,7 @@ public class EntityDrawer : Editor
             {
                 return type.IsSubclassOf(typeof(Status)) && !type.IsAbstract;
             });
-        
+
             foreach (Type status in typeList)
             {
                 statusNameList.Add(status.Name);
@@ -276,7 +273,7 @@ public class EntityDrawer : Editor
             {
                 allIndex.Add(indexOfString);
             }
-            
+
             durationList.Add(statusDurationListProperty.GetArrayElementAtIndex(i).floatValue);
             chanceList.Add(statusChanceListProperty.GetArrayElementAtIndex(i).floatValue);
         }

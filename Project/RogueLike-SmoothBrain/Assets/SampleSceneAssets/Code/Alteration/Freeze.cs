@@ -8,6 +8,7 @@ public class Freeze : ConstantStatus
     Material freezeMat = null;
     public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
+        isStackable = false;
     }
 
     public override Status DeepCopy()
@@ -20,6 +21,8 @@ public class Freeze : ConstantStatus
     {
         if (target != null)
         {
+            Debug.Log(target.Stats.GetValue(Stat.SPEED));
+            baseAgentSpeed = target.Stats.GetValue(Stat.SPEED);
             target.Stats.SetValue(Stat.SPEED, 0);
         }
     }
