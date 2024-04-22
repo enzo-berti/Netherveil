@@ -16,14 +16,17 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
         {
             SwitchState(Factory.GetState<DamoclesDeathState>());
         }
-        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
-        {
-            SwitchState(Factory.GetState<DamoclesFollowTargetState>());
-        }
         else if (stateEnded)
         {
-            stateEnded = false;
-            SwitchState(Factory.GetState<DamoclesEnGardeState>());
+            if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
+            {
+                SwitchState(Factory.GetState<DamoclesFollowTargetState>());
+            }
+            else
+            {
+                stateEnded = false;
+                SwitchState(Factory.GetState<DamoclesEnGardeState>());
+            }
         }
     }
 

@@ -1,6 +1,4 @@
 using StateMachine; // include all script about stateMachine
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamoclesFollowTargetState : BaseState<DamoclesStateMachine>
@@ -28,6 +26,7 @@ public class DamoclesFollowTargetState : BaseState<DamoclesStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
+        Context.Stats.SetValue(Stat.SPEED, 5);
     }
 
     // This method will be call only one time after the last update.
