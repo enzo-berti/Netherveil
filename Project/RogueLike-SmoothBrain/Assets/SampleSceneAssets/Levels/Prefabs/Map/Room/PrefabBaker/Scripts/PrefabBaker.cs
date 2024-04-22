@@ -49,18 +49,19 @@ namespace PrefabLightMapBaker
             if (!HasBakeData)
             {
                 BakeJustApplied = false;
+                Debug.LogWarning("PrefabBaker doesn't have bake data", this);
                 return;
             }
 
-            if (!BakeApplied)
-            {
+            //if (!BakeApplied) Vas-y ça marche mdr
+            //{
                 BakeJustApplied = Utils.Apply(this);
 
                 if (BakeJustApplied)
                 {
-                    Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
+                    //Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
                 }
-            }
+            //}
         }
 
         void OnEnable()
