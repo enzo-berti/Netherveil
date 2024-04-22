@@ -190,6 +190,7 @@ public class PestStateMachine : Mobs, IPest
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
+        DisplayWanderZone();
     }
 
     protected override void DisplayInfos()

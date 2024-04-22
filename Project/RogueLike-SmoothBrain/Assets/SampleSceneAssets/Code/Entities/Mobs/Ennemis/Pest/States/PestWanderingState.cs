@@ -39,11 +39,10 @@ public class PestWanderingState : BaseState<PestStateMachine>
     {
         if (Context.CanMove)
         {
-            float range = Context.Stats.GetValue(Stat.ATK_RANGE) - Context.Stats.GetValue(Stat.ATK_RANGE) / 4f;
-            range += Random.Range(0, Context.Stats.GetValue(Stat.ATK_RANGE) / 4f);
+            float minRange = Context.Stats.GetValue(Stat.ATK_RANGE) - Context.Stats.GetValue(Stat.ATK_RANGE) / 4f;
+            float maxRange = Context.Stats.GetValue(Stat.ATK_RANGE);
 
-            ChoseRandomDirection(range);
-            Context.MoveTo(Context.transform.position + randomDirection * range);
+            Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
             Context.MovementTimer = 0f;
         }
     }

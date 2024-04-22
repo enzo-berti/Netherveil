@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
+using UnityEngine.SocialPlatforms;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -27,9 +28,21 @@ public abstract class Mobs : Entity
     protected int frameToUpdate;
     protected int maxFrameUpdate = 20;
 
+    // extra
+    [Serializable]
+    public struct Zone
+    {
+        [HideInInspector]
+        public Vector3 center;
+        public float radius;
+    }
+    [SerializeField] protected Zone wanderZone;
+
     // getters/setters
     public NavMeshAgent Agent { get => agent; }
     public float DamageTakenMultiplicator { get; set; } = 1f;
+    public Vector3 WanderZoneCenter { get => wanderZone.center; set => wanderZone.center = value; }
+    public float WanderZoneRadius { get => wanderZone.radius; set => wanderZone.radius = value; }
 
     protected virtual void OnEnable()
     {
@@ -84,6 +97,8 @@ public abstract class Mobs : Entity
         spawningVFX.GetComponent<VFXStopper>().Duration = 3.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
+
+        wanderZone.center = transform.position;
     }
 
     protected override void Update()
@@ -138,34 +153,6 @@ public abstract class Mobs : Entity
         hitMaterial.SetInt("_isHit", 0);
     }
 
-    // Je le laisse là ça servira peut être
-
-    //protected void ApplyDamagesMob(int _value, EventReference hitSound, Action deathMethod, bool notEffectDamage)
-    //{
-    //    // Some times, this method is called when entity is dead ??
-    //    if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
-    //        return;
-
-    //    Stats.DecreaseValue(Stat.HP, _value, false);
-    //    lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-    //    if (notEffectDamage)
-    //    {
-    //        //add SFX here
-    //        FloatingTextGenerator.CreateDamageText(_value, transform.position);
-    //        StartCoroutine(HitRoutine());
-    //    }
-
-    //    if (stats.GetValue(Stat.HP) <= 0)
-    //    {
-    //        deathMethod();
-    //    }
-    //    else
-    //    {
-    //        AudioManager.Instance.PlaySound(hitSound, transform.position);
-    //    }
-    //}
-
     protected void ApplyDamagesMob(int _value, Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)
     {
         // Some times, this method is called when entity is dead ??
@@ -192,6 +179,88 @@ public abstract class Mobs : Entity
             hitSound.Play(transform.position, _restartSound);
         }
     }
+
+    // ntm l'opti
+    //public Vector3 GetRandomPointOnWanderZone(Vector3 _unitPos, float _minTravelDistance = 0f, float _maxTravelDistance = 0f, bool _avoidWalls = true)
+    //{
+    //    if (_minTravelDistance > wanderZone.radius)
+    //    {
+    //        Debug.LogError("Invalid min value. Returning (0,0,0).");
+    //        return default;
+    //    }
+
+    //    float maxTravelDistance = _maxTravelDistance == 0 ? wanderZone.radius : _maxTravelDistance;
+
+    //    Vector3 randomDirection3D = default;
+    //    Vector3 unitToPoint;
+    //    do
+    //    {
+    //        if (_avoidWalls)
+    //        {
+    //            bool validDirection = false;
+    //            do
+    //            {
+    //                Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
+    //                randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, maxTravelDistance);
+    //                randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
+
+    //                // aide à éviter les murs
+    //                if (Physics.Raycast(wanderZone.center + new Vector3(0, 1, 0), randomDirection3D.normalized, randomDirection3D.magnitude, LayerMask.GetMask("Map")))
+    //                {
+    //                    continue;
+    //                }
+
+    //                validDirection = true;
+    //            } while (!validDirection);
+    //        }
+    //        else
+    //        {
+    //            Vector2 randomPoint2D = UnityEngine.Random.insideUnitCircle;
+    //            randomPoint2D *= UnityEngine.Random.Range(_minTravelDistance, maxTravelDistance);
+    //            randomDirection3D = new Vector3(randomPoint2D.x, 0, randomPoint2D.y);
+    //        }
+
+    //        unitToPoint = (wanderZone.center + randomDirection3D) - _unitPos;
+    //    } while (unitToPoint.sqrMagnitude < _minTravelDistance * _minTravelDistance || unitToPoint.sqrMagnitude > _maxTravelDistance * _maxTravelDistance);
+
+    //    return wanderZone.center + randomDirection3D;
+    //}
+
+    public Vector3 GetRandomPointOnWanderZone(Vector3 _unitPos, float _minTravelDistance, float _maxTravelDistance, bool _avoidWalls = true)
+    {
+        if (_minTravelDistance >= _maxTravelDistance)
+        {
+            Debug.LogError("Invalid min/max value. Returning (0,0,0).");
+            return default;
+        }
+
+        Vector3 randomDirection3D = default;
+
+        bool validPoint = true;
+        do
+        {
+            Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
+            randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, _maxTravelDistance);
+            randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
+
+            if (_avoidWalls)
+            {
+                validPoint = false;
+
+                // aide à éviter les murs
+                if (Physics.Raycast(_unitPos + new Vector3(0, 1, 0), randomDirection3D.normalized, randomDirection3D.magnitude, LayerMask.GetMask("Map")))
+                {
+                    continue;
+                }
+
+                validPoint = true;
+            }
+        } while ((_unitPos + randomDirection3D - wanderZone.center).sqrMagnitude > wanderZone.radius * wanderZone.radius || !validPoint);
+
+        Debug.Log((_unitPos + randomDirection3D - wanderZone.center).sqrMagnitude + " : " + wanderZone.radius * wanderZone.radius);
+        return _unitPos + randomDirection3D;
+    }
+
 
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)
@@ -233,7 +302,7 @@ public abstract class Mobs : Entity
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValue(Stat.ATK_RANGE));
     }
-    
+
     protected virtual void DisplayAttackRange(float _angle, float _range)
     {
         Handles.color = new Color(1, 1, 0.5f, 0.2f);
@@ -242,6 +311,14 @@ public abstract class Mobs : Entity
 
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)_range);
+    }
+
+    protected virtual void DisplayWanderZone()
+    {
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(wanderZone.center, Vector3.up, (int)wanderZone.radius, 5);
+        Handles.color = new Color(1, 1, 0, 0.1f);
+        Handles.DrawSolidDisc(wanderZone.center, Vector3.up, (int)wanderZone.radius);
     }
 
     protected virtual void DisplayInfos()

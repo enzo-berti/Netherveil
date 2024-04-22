@@ -23,7 +23,7 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     float idleTimer = 0f;
     float MAX_IDLE_COOLDOWN = 2f;
 
-    Vector3 randomDirection;
+    Vector3 randomPoint;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -57,11 +57,8 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
             }
             else
             {
-                float range = Context.Stats.GetValue(Stat.ATK_RANGE) / 2f;
-                range += Random.Range(0, range);
-
-                ChoseRandomDirection(range);
-                Context.MoveTo(Context.transform.position + randomDirection * range);
+                ChoseRandomDirection(Context.Stats.GetValue(Stat.ATK_RANGE) / 2f);
+                Context.MoveTo(randomPoint);
                 idleTimer = 0f;
             }
         }
@@ -78,26 +75,28 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
 
 
     // Extra methods
-    void ChoseRandomDirection(float _range)
+    void ChoseRandomDirection(float _minRange = 0f)
     {
         bool validDirection = false;
 
         do
         {
-            float randomX = Random.Range(-1f, 1f);
-            float randomZ = Random.Range(-1f, 1f);
+            //float randomX = Random.Range(-1f, 1f);
+            //float randomZ = Random.Range(-1f, 1f);
 
-            randomDirection = new Vector3(randomX, 0, randomZ);
+            //randomDirection = new Vector3(randomX, 0, randomZ);
 
-            if (randomDirection == Vector3.zero)
-            {
-                continue;
-            }
+            //if (randomDirection == Vector3.zero)
+            //{
+            //    continue;
+            //}
 
-            randomDirection.Normalize();
+            //randomDirection.Normalize();
+
+            //randomPoint = Context.GetRandomPointOnWanderZone(_minRange);
 
             // aide à éviter les murs
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, _range, LayerMask.GetMask("Map")))
+            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomPoint, randomPoint.magnitude, LayerMask.GetMask("Map")))
             {
                 continue;
             }
