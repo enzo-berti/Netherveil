@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.VFX;
 
 public class VFXStopper : MonoBehaviour
@@ -8,6 +9,7 @@ public class VFXStopper : MonoBehaviour
     public float Duration { get; set; } = 0f;
     [SerializeField] bool destroyOnStop = false;
     [SerializeField] float destroyDurationDelay = 0f;
+    public UnityEvent OnStop;
 
 
     private void Start()
@@ -31,7 +33,8 @@ public class VFXStopper : MonoBehaviour
     {
         yield return new WaitForSeconds(Duration);
         effect.Stop();
-        if(destroyOnStop)
+        OnStop?.Invoke();
+        if (destroyOnStop)
         {
             yield return new WaitForSeconds(destroyDurationDelay);
             Destroy(gameObject);
