@@ -82,6 +82,7 @@ public abstract class Mobs : Entity
 
         animator.speed = 0;
         IsInvincibleCount++;
+        lifeBar.gameObject.SetActive(false);
         spawningVFX.GetComponent<VFXStopper>().Duration = spawningVFX.GetFloat("Duration") + 0.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
@@ -116,6 +117,7 @@ public abstract class Mobs : Entity
     private void EndOfSpawningVFX()
     {
         IsInvincibleCount--;
+        lifeBar.gameObject.SetActive(true);
         animator.speed = 1;
     }
 
