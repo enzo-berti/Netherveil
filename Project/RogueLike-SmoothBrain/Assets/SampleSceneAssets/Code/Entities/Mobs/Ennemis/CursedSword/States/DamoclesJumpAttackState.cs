@@ -34,6 +34,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     private State curState = State.Start;
     private Coroutine jumpRoutine;
     private Vector3 previousPos;
+    private Vector3 jumpTarget;
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
@@ -43,16 +44,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         }
         else if (isTargetTouched && stateEnded)
         {
-            stateEnded = false;
-            isTargetTouched = false;
-            if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
-            {
-                SwitchState(Factory.GetState<DamoclesFollowTargetState>());
-            }
-            else
-            {
-                SwitchState(Factory.GetState<DamoclesEnGardeState>());
-            }
+            SwitchState(Factory.GetState<DamoclesEnGardeState>());
         }
         else if (!isTargetTouched && stateEnded)
         {
@@ -66,6 +58,9 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         curState = State.Start;
+        stateEnded = false;
+        isTargetTouched = false;
+        Context.Stats.SetValue(Stat.SPEED, 5);
     }
 
     // This method will be call only one time after the last update.
@@ -84,6 +79,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
             curState = State.RunIn;
             previousPos = Context.transform.position;
             Vector3 direction = (Context.Target.position - Context.transform.position).normalized;
+            jumpTarget = Context.Target.position;
             Context.MoveTo(Context.transform.position + direction * Context.NormalSpeed);
 
             //Context.Animator.ResetTrigger(Context.);
@@ -91,20 +87,25 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         }
         else if (curState == State.RunIn)
         {
-            Context.MoveTo(Context.Target.position);
+            Context.MoveTo(jumpTarget);
 
             if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) < Context.Stats.GetValue(Stat.ATK_RANGE) / 2)
             {
+                Context.Stats.SetValue(Stat.SPEED, 3);
+                //Context.Animator.ResetTrigger(Context.);
+                //Context.Animator.SetTrigger(Context.);
+
                 curState = State.Jump;
             }
-
-            jumpRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack2Collider));
-
-            //Context.Animator.ResetTrigger(Context.);
-            //Context.Animator.SetTrigger(Context.);
         }
         else if (curState == State.Jump)
         {
+
+            if (Vector3.Distance(Context.transform.position, jumpTarget) < 0.1f)
+            {
+                jumpRoutine = Context.StartCoroutine(JumpCoroutine());
+            }
+
             if (isTargetTouched)
             {
                 curState = State.Backward;
@@ -134,9 +135,9 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         Context.currentState = newState;
     }
 
-    private IEnumerator SlashCoroutine(BoxCollider attackCollider)
+    private IEnumerator JumpCoroutine()
     {
-        IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(attackCollider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
+        IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(Context.Attack1Collider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
                                               .Select(x => x.GetComponent<IDamageable>())
                                               .Where(x => x != null)
                                               .FirstOrDefault();
@@ -152,7 +153,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
             stateEnded = true;
         }
 
-        jumpRoutine = null;
         yield return null;
+        jumpRoutine = null;
     }
 }

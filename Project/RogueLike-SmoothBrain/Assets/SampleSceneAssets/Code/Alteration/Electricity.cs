@@ -1,8 +1,5 @@
 using System.Collections;
-using System.IO.IsolatedStorage;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Electricity : OverTimeStatus
 {
