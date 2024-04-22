@@ -23,9 +23,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public BaseState<DamoclesStateMachine> currentState;
     private StateFactory<DamoclesStateMachine> factory;
 
-    // declare reference variables
-    private Animator animator;
-
     // mobs variables
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
@@ -66,9 +63,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
         // Set currentState here !
         currentState = factory.GetState<DamoclesIdle>();
 
-        // getter(s) reference
-        animator = GetComponentInChildren<Animator>();
-
         // common initialization
 
 
@@ -84,6 +78,9 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
     protected override void Update()
     {
+        if (animator.speed == 0)
+            return;
+
         base.Update();
 
         currentState.Update();
