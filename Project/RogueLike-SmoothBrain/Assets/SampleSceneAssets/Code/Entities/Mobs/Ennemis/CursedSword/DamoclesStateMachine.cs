@@ -23,9 +23,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public BaseState<DamoclesStateMachine> currentState;
     private StateFactory<DamoclesStateMachine> factory;
 
-    // declare reference variables
-    private Animator animator;
-
     // mobs variables
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
@@ -65,9 +62,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
         factory = new StateFactory<DamoclesStateMachine>(this);
         // Set currentState here !
         currentState = factory.GetState<DamoclesIdle>();
-
-        // getter(s) reference
-        animator = GetComponentInChildren<Animator>();
 
         // common initialization
 
