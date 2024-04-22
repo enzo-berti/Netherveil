@@ -17,7 +17,6 @@ public abstract class Status
     {
         this.duration = _duration;
         this.statusChance = _chance;
-        this.totalDuration = duration;
         this.isFinished = false;
 
     }
@@ -32,7 +31,6 @@ public abstract class Status
     public float statusChance = 0.3f;
     // Duration of one stack of the effect
     protected float duration = 1;
-    private float totalDuration = 0;
     protected bool isStackable = false;
     #endregion
 
@@ -73,7 +71,6 @@ public abstract class Status
             for (int i = 0; i < nb; i++)
             {
                 stopTimes.Add(duration + currentTime);
-                totalDuration = stopTimes.Sum();
                 OnAddStack?.Invoke();
             }
         }
@@ -121,8 +118,7 @@ public abstract class Status
             target.statusVfxs.Add(vfx);
             if (VFX == null) VFX = vfx;
             vfx.gameObject.GetComponent<VFXStopper>().OnStop.AddListener(RemoveVFXFromEntity);
-            vfx.gameObject.GetComponent<VFXStopper>().Duration = totalDuration;
-            Debug.Log("total duration => " + totalDuration);
+            vfx.gameObject.GetComponent<VFXStopper>().Duration = stopTimes[^1];
             vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
             vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
             vfx.gameObject.GetComponent<VFXStopper>().PlayVFX();
@@ -131,8 +127,7 @@ public abstract class Status
         {
             VFXStopper vfxStopper = target.statusVfxs.FirstOrDefault(x => x.name.Contains(vfxName)).GetComponent<VFXStopper>();
             vfxStopper.StopAllCoroutines();
-            Debug.Log("total duration on reset => " + totalDuration);
-            vfxStopper.Duration = totalDuration;
+            vfxStopper.Duration = stopTimes[^1];
             vfxStopper.PlayVFX();
         }
     }
