@@ -12,7 +12,7 @@ public class VFXStopper : MonoBehaviour
     public UnityEvent OnStop;
 
 
-    private void Start()
+    private void Awake()
     {
         if(effect.HasFloat("Duration"))
         {

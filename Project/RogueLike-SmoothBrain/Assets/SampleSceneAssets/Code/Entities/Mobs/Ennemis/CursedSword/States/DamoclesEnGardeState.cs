@@ -1,5 +1,4 @@
 using StateMachine; // include all script about stateMachine
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
@@ -21,7 +20,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         {
             SwitchState(Factory.GetState<DamoclesDeathState>());
         }
-        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
+        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.VISION_RANGE) * 2/3)
         {
             SwitchState(Factory.GetState<DamoclesFollowTargetState>());
         }
