@@ -1,6 +1,4 @@
 using Map;
-using System;
-using UnityEngine;
 
 public class TestOfEndurance : Quest
 {
@@ -9,6 +7,21 @@ public class TestOfEndurance : Quest
 
     public override void AcceptQuest()
     {
+        
+        switch (difficulty)
+        {
+            case QuestDifficulty.EASY:
+                NB_ROOM_SURVIVING = 2;
+                break;
+            case QuestDifficulty.MEDIUM:
+                Datas.CorruptionModifierValue += 5;
+                NB_ROOM_SURVIVING = 4;
+                break;
+            case QuestDifficulty.HARD:
+                Datas.CorruptionModifierValue += 10;
+                NB_ROOM_SURVIVING = 6;
+                break;
+        }
         progressText = $"DON'T FALL UNDER 100HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
         RoomUtilities.allEnemiesDeadEvents += UpdateCount;
         Hero.OnTakeDamage += TestHp;

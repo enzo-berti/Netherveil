@@ -193,6 +193,7 @@ public static class PhysicsExtensions
                 Vector3 resultPos = x.transform.position - center;
                 resultPos.y = 0;
                 float toCompare = Vector3.Angle(resultPos, forward);
+                Debug.Log(toCompare);
                 return toCompare >= -(angle / 2f) && toCompare <= angle / 2f;
             })
             .ToArray();

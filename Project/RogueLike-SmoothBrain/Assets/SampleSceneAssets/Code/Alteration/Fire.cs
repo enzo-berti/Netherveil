@@ -16,7 +16,6 @@ public class Fire : OverTimeStatus
         if (target != null)
         {
             FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, fireColor);
-            Debug.Log("FireDamage");
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, launcher, false);
         }
     }
@@ -29,7 +28,6 @@ public class Fire : OverTimeStatus
 
     public override void OnFinished()
     {
-        Debug.Log("Finished => " + isFinished);
     }
 
     public override bool CanApplyEffect(Entity target)
