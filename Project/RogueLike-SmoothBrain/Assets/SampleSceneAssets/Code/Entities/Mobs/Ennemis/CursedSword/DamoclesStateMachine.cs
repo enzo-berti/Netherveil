@@ -84,6 +84,9 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
     protected override void Update()
     {
+        if (animator.speed == 0)
+            return;
+
         base.Update();
 
         currentState.Update();

@@ -19,6 +19,14 @@ public class DummyStateMachine : Mobs, IDummy
         hitHash = Animator.StringToHash("Hit");
     }
 
+    protected override void Update()
+    {
+        if(animator.speed == 0)
+            return;
+
+        base.Update();
+    }
+
     public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
     {
         if (hasAnimation)
