@@ -81,6 +81,7 @@ public abstract class Mobs : Entity
         StatSuckerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXPositionBinderCustom>().ToArray()[0].Target = GameObject.FindWithTag("Player").transform;
 
         animator.speed = 0;
+        IsInvincibleCount++;
         spawningVFX.GetComponent<VFXStopper>().Duration = spawningVFX.GetFloat("Duration") + 0.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
@@ -114,7 +115,7 @@ public abstract class Mobs : Entity
 
     private void EndOfSpawningVFX()
     {
-        Debug.Log("FIN");
+        IsInvincibleCount--;
         animator.speed = 1;
     }
 
