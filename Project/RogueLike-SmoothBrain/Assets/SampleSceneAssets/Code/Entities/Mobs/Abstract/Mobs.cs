@@ -261,7 +261,6 @@ public abstract class Mobs : Entity
             }
         } while ((_unitPos + randomDirection3D - wanderZone.center).sqrMagnitude > wanderZone.radius * wanderZone.radius || !validPoint);
 
-        Debug.Log((_unitPos + randomDirection3D - wanderZone.center).sqrMagnitude + " : " + wanderZone.radius * wanderZone.radius);
         return _unitPos + randomDirection3D;
     }
 
