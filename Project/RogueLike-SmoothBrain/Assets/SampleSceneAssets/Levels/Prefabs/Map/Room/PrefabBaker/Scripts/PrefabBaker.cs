@@ -14,10 +14,6 @@ namespace PrefabLightMapBaker
         [SerializeField] public Texture2D[] texturesDir;
         [SerializeField] public Texture2D[] texturesShadow;
 
-#if UNITY_EDITOR
-        [SerializeField] private bool log = false;
-#endif
-
         public Texture2D[][] AllTextures() => new Texture2D[][] {
             texturesColor, texturesDir, texturesShadow
         };
@@ -45,7 +41,7 @@ namespace PrefabLightMapBaker
 
         void Awake()
         {
-            //BakeApply();
+            BakeApply();
         }
 
         public void BakeApply()
@@ -60,21 +56,15 @@ namespace PrefabLightMapBaker
             {
                 BakeJustApplied = Utils.Apply(this);
 
-#if UNITY_EDITOR
-                if (BakeJustApplied && log)
-                {
-                    Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
-                }
-#endif
+                if (BakeJustApplied) Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
             }
         }
 
         void OnEnable()
         {
             if (!Application.isPlaying)
-            {
+
                 BakeApply();
-            }
 
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
