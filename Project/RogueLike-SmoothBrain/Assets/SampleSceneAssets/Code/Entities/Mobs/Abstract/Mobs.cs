@@ -23,7 +23,7 @@ public abstract class Mobs : Entity
 
     // opti
     protected int frameToUpdate;
-    protected int maxFrameUpdate = 500;
+    protected int maxFrameUpdate = 20;
 
     // getters/setters
     public NavMeshAgent Agent { get => agent; }
