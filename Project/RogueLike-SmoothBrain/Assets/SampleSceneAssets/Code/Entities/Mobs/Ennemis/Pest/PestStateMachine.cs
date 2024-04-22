@@ -89,10 +89,27 @@ public class PestStateMachine : Mobs, IPest
 
     protected override void Update()
     {
-        base.Update();
-        currentState.Update();
+        // A decommenter plus tard
 
-        if (!CanMove) { dashTimer += Time.deltaTime; }
+        //bool frozen = false;
+        //foreach (var appliedStatus in AppliedStatusList)
+        //{
+        //    if (appliedStatus.GetType() == typeof(Freeze))
+        //    {
+        //        animator.ResetTrigger("Cancel");
+        //        animator.SetTrigger("Cancel");
+        //        currentState = factory.GetState<PestWanderingState>();
+        //        frozen = true;
+        //    }
+        //}
+
+        //if (!frozen)
+        //{
+            base.Update();
+            currentState.Update();
+
+            if (!CanMove) { dashTimer += Time.deltaTime; }
+        //}
     }
 
     #region MOBS METHODS
