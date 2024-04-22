@@ -8,7 +8,6 @@ public class DummyStateMachine : Mobs, IDummy
         public Sound hitSound;
     }
 
-    private Animator animator;
     private int hitHash;
 
     [SerializeField] private DummySounds dummySounds;
@@ -17,8 +16,6 @@ public class DummyStateMachine : Mobs, IDummy
     protected override void Start()
     {
         base.Start();
-
-        animator = GetComponentInChildren<Animator>();
         hitHash = Animator.StringToHash("Hit");
     }
 
