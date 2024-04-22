@@ -186,8 +186,8 @@ public class PestStateMachine : Mobs, IPest
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayAttackRange(VisionAngle);

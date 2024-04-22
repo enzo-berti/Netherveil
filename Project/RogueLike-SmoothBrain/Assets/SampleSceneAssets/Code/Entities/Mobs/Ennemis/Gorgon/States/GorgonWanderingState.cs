@@ -57,8 +57,10 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
             }
             else
             {
-                ChoseRandomDirection(Context.Stats.GetValue(Stat.ATK_RANGE) / 2f);
-                Context.MoveTo(randomPoint);
+                float minRange = Context.Stats.GetValue(Stat.ATK_RANGE) / 2f;
+                float maxRange = Context.Stats.GetValue(Stat.ATK_RANGE);
+
+                Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
                 idleTimer = 0f;
             }
         }
@@ -70,38 +72,5 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     {
         base.SwitchState(newState);
         Context.currentState = newState;
-    }
-
-
-
-    // Extra methods
-    void ChoseRandomDirection(float _minRange = 0f)
-    {
-        bool validDirection = false;
-
-        do
-        {
-            //float randomX = Random.Range(-1f, 1f);
-            //float randomZ = Random.Range(-1f, 1f);
-
-            //randomDirection = new Vector3(randomX, 0, randomZ);
-
-            //if (randomDirection == Vector3.zero)
-            //{
-            //    continue;
-            //}
-
-            //randomDirection.Normalize();
-
-            //randomPoint = Context.GetRandomPointOnWanderZone(_minRange);
-
-            // aide à éviter les murs
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomPoint, randomPoint.magnitude, LayerMask.GetMask("Map")))
-            {
-                continue;
-            }
-
-            validDirection = true;
-        } while (!validDirection);
     }
 }

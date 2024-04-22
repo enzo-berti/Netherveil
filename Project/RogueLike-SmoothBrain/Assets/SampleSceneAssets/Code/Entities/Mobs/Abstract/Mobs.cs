@@ -34,15 +34,15 @@ public abstract class Mobs : Entity
     {
         [HideInInspector]
         public Vector3 center;
-        public float radius;
+        public int radius;
     }
-    [SerializeField] protected Zone wanderZone;
+    [SerializeField] protected Zone wanderZone = new() { radius = 8 };
 
     // getters/setters
     public NavMeshAgent Agent { get => agent; }
     public float DamageTakenMultiplicator { get; set; } = 1f;
     public Vector3 WanderZoneCenter { get => wanderZone.center; set => wanderZone.center = value; }
-    public float WanderZoneRadius { get => wanderZone.radius; set => wanderZone.radius = value; }
+    public int WanderZoneRadius { get => wanderZone.radius; set => wanderZone.radius = value; }
 
     protected virtual void OnEnable()
     {
@@ -281,9 +281,9 @@ public abstract class Mobs : Entity
     protected virtual void DisplayWanderZone()
     {
         Handles.color = Color.yellow;
-        Handles.DrawWireDisc(wanderZone.center, Vector3.up, (int)wanderZone.radius, 5);
+        Handles.DrawWireDisc(wanderZone.center, Vector3.up, wanderZone.radius, 5);
         Handles.color = new Color(1, 1, 0, 0.1f);
-        Handles.DrawSolidDisc(wanderZone.center, Vector3.up, (int)wanderZone.radius);
+        Handles.DrawSolidDisc(wanderZone.center, Vector3.up, wanderZone.radius);
     }
 
     protected virtual void DisplayInfos()

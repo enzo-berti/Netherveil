@@ -96,9 +96,10 @@ public class GlorbStateMachine : Mobs, IGlorb
 
         animator.SetBool(walkHash, currentState is GlorbAttackingState ? false : agent.remainingDistance > agent.stoppingDistance);
 
-        if (!(currentState is GlorbWanderingState))
+        if (currentState is not GlorbWanderingState)
         {
             UpdateAttacksTimers();
+            WanderZoneCenter = transform.position;
         }
 
         currentState.Update();
@@ -204,17 +205,6 @@ public class GlorbStateMachine : Mobs, IGlorb
     }
     #endregion
 
-    #region Extra methods
-    void UpdateAttacksTimers()
-    {
-        if (!speAttackAvailable) specialAttackTimer += Time.deltaTime;
-        speAttackAvailable = specialAttackTimer >= SPECIAL_ATTACK_COOLDOWN;
-
-        if (!basicAttackAvailable) basicAttackTimer += Time.deltaTime;
-        basicAttackAvailable = basicAttackTimer >= BASIC_ATTACK_COOLDOWN;
-    }
-    #endregion
-
     #region EDITOR
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -225,6 +215,7 @@ public class GlorbStateMachine : Mobs, IGlorb
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayAttackRange(VisionAngle, AttackRange);
         DisplayInfos();
+        DisplayWanderZone();
     }
 
     protected override void DisplayInfos()
@@ -245,5 +236,16 @@ public class GlorbStateMachine : Mobs, IGlorb
         });
     }
 #endif
+    #endregion
+
+    #region Extra methods
+    void UpdateAttacksTimers()
+    {
+        if (!speAttackAvailable) specialAttackTimer += Time.deltaTime;
+        speAttackAvailable = specialAttackTimer >= SPECIAL_ATTACK_COOLDOWN;
+
+        if (!basicAttackAvailable) basicAttackTimer += Time.deltaTime;
+        basicAttackAvailable = basicAttackTimer >= BASIC_ATTACK_COOLDOWN;
+    }
     #endregion
 }
