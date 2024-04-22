@@ -63,7 +63,7 @@ namespace Map.Generation
             }
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public void GeneratePrefab()
         {
             doors.Clear();
@@ -78,7 +78,7 @@ namespace Map.Generation
                 DestroyImmediate(transform.GetChild(i).gameObject);
             }
         }
-        #endif
+#endif
 
         public void RemoveDoor(Door door)
         {

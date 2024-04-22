@@ -31,7 +31,7 @@ public abstract class Projectile : MonoBehaviour, IProjectile
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Map") && !other.isTrigger)
         {
             Destroy(gameObject);
             return;

@@ -1,12 +1,14 @@
 using FMODUnity;
 using Map;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class PlayerController : MonoBehaviour
 {
@@ -435,6 +437,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying)
@@ -448,4 +451,5 @@ public class PlayerController : MonoBehaviour
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
     }
+#endif
 }

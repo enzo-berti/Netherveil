@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.WSA;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public abstract class Entity : MonoBehaviour
 {
