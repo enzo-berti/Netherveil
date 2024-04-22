@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Freeze : ConstantStatus
 {
     float baseAgentSpeed;
+    Material freezeMat = null;
     public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
     }
@@ -16,7 +18,7 @@ public class Freeze : ConstantStatus
 
     protected override void Effect()
     {
-        if(target != null)
+        if (target != null)
         {
             target.Stats.SetValue(Stat.SPEED, 0);
         }
@@ -25,6 +27,10 @@ public class Freeze : ConstantStatus
     public override void OnFinished()
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
+        Renderer renderer = target.GetComponentInChildren<Renderer>();
+        List<Material> materials = new List<Material>(renderer.materials);
+        materials.RemoveAll(mat => mat.shader == freezeMat.shader);
+        renderer.SetMaterials(materials);
     }
 
     public override bool CanApplyEffect(Entity target)
@@ -35,5 +41,14 @@ public class Freeze : ConstantStatus
     protected override void PlayVFX()
     {
         PlayVfx("VFX_Frozen");
+
+        freezeMat = GameResources.Get<Material>("OutlineShaderMat");
+        Renderer renderer = target.GetComponentInChildren<Renderer>();
+
+        List<Material> materials = new List<Material>(renderer.materials)
+            {
+                freezeMat
+            };
+        renderer.SetMaterials(materials);
     }
 }
