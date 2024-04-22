@@ -2,7 +2,6 @@ using StateMachine; // include all script about stateMachine
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
 {
@@ -21,6 +20,11 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
     private State curState = State.Start;
     private Coroutine slashRoutine;
     private Vector3 previousPos;
+    private Vector3 closeMovement;
+    private bool stateEnded = false;
+    private float elapsedTimeMovement = 0.0f;
+    private float timeBeforeFirstSlash = 4.0f;
+    private float timeBetweenSlash = 1.25f;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -29,11 +33,7 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
         {
             SwitchState(Factory.GetState<DamoclesDeathState>());
         }
-        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
-        {
-            SwitchState(Factory.GetState<DamoclesFollowTargetState>());
-        }
-        else
+        else if (stateEnded)
         {
             SwitchState(Factory.GetState<DamoclesEnGardeState>());
         }
@@ -43,6 +43,9 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         curState = State.Start;
+        stateEnded = false;
+        Context.Stats.SetValue(Stat.SPEED, 6);
+        Context.Stats.SetValue(Stat.KNOCKBACK_DISTANCE, 0);
     }
 
     // This method will be call only one time after the last update.
@@ -64,35 +67,43 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
         {
             Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
             Context.transform.LookAt(positionToLookAt);
-            curState = State.RunIn;
             previousPos = Context.transform.position;
+            Vector3 dist = Context.Target.position - Context.transform.position;
+            float magnitude = Mathf.Max(0f, dist.magnitude - 2.25f);
+            closeMovement = dist.normalized * magnitude;
+            curState = State.RunIn;
 
             //Context.Animator.ResetTrigger(Context.);
             //Context.Animator.SetTrigger(Context.);
         }
         else if (curState == State.RunIn)
         {
-            if (Vector3.Distance(Context.Target.position, Context.transform.position) > 1)
+            Context.MoveTo(previousPos + closeMovement);
+            if (Vector3.Distance(Context.transform.position, previousPos + closeMovement) < 0.1)
             {
-                Context.MoveTo(Context.Target.position);
-            }
-            else
-            {
-                curState = State.Slash;
-            }
+                // Delay
+                if (Time.time - elapsedTimeMovement < timeBeforeFirstSlash)
+                    return;
 
-            slashRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack1Collider));
+                elapsedTimeMovement = Time.time;
+                
+                curState = State.Slash;
+                slashRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack2Collider));
+                elapsedTimeMovement = Time.time;
+            }
 
             //Context.Animator.ResetTrigger(Context.);
             //Context.Animator.SetTrigger(Context.);
         }
         else if (curState == State.Slash)
         {
-            if (slashRoutine != null)
-            {
-                curState = State.BackSlash;
-                slashRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack1Collider)); //collider à changer
-            }
+            // Delay
+            if (Time.time - elapsedTimeMovement < timeBetweenSlash)
+                return;
+
+            elapsedTimeMovement = Time.time;
+            curState = State.BackSlash;
+            slashRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack3Collider)); //collider à changer
         }
         else if (curState == State.BackSlash)
         {
@@ -103,9 +114,15 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
         }
         else if (curState == State.Backward)
         {
-            if (Vector3.Distance(Context.Target.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+            if (Vector3.Distance(Context.Target.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE) - 1f)
             {
                 Context.MoveTo(previousPos);
+                Debug.Log("non");
+            }
+            else
+            {
+                Debug.Log("oui");
+                stateEnded = true;
             }
         }
     }

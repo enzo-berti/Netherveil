@@ -12,6 +12,7 @@ public abstract class ConstantStatus : Status
     {
         base.ApplyEffect(target);
         OnAddStack += DoEffect;
+        DoEffect();
     }
 
     public override void DoEffect()

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
@@ -11,26 +12,25 @@ public abstract class Status
 {
     public IAttacker launcher = null;
     public Entity target;
+    private VisualEffect VFX;
     public Status(float _duration, float _chance)
     {
         this.duration = _duration;
         this.statusChance = _chance;
-        this.totalDuration = duration;
         this.isFinished = false;
-        
+
     }
 
     public abstract Status DeepCopy();
 
     #region Properties
-    
+
     // If an effect is played cyclically, at which frequency ( in seconds )
-    
+
     // Chance to apply a status ( 0 -> 1 )
     public float statusChance = 0.3f;
     // Duration of one stack of the effect
     protected float duration = 1;
-    private float totalDuration = 0;
     protected bool isStackable = false;
     #endregion
 
@@ -65,26 +65,25 @@ public abstract class Status
     public int Stack { get => stack; }
     public void AddStack(int nb)
     {
-        if((isStackable && stack < maxStack) || stack < 1)
+        if ((isStackable && stack < maxStack) || stack < 1)
         {
             stack += isStackable ? nb : 1;
             for (int i = 0; i < nb; i++)
             {
                 stopTimes.Add(duration + currentTime);
-                totalDuration = stopTimes.Sum();
                 OnAddStack?.Invoke();
             }
         }
-        
+
     }
     public void RemoveStack(int nb)
     {
-        if(isStackable)
+        if (isStackable)
             stack -= nb;
     }
     private IEnumerator ManageStack()
     {
-        while(!isFinished)
+        while (!isFinished)
         {
             if (!isFinished && stopTimes.Count > 0)
             {
@@ -111,12 +110,15 @@ public abstract class Status
 
     protected void PlayVfx(string vfxName)
     {
-        if(target.statusVfxs.FirstOrDefault(x => x.name.Contains(vfxName)) == null)
+        if (target.Stats.GetValue(Stat.HP) <= 0) return;
+        if (target.statusVfxs.FirstOrDefault(x => x.name.Contains(vfxName)) == null)
         {
-            if (target.Stats.GetValue(Stat.HP) <= 0) return;
+            
             VisualEffect vfx = GameObject.Instantiate(GameResources.Get<GameObject>(vfxName)).GetComponent<VisualEffect>();
             target.statusVfxs.Add(vfx);
-            vfx.gameObject.GetComponent<VFXStopper>().Duration = totalDuration;
+            if (VFX == null) VFX = vfx;
+            vfx.gameObject.GetComponent<VFXStopper>().OnStop.AddListener(RemoveVFXFromEntity);
+            vfx.gameObject.GetComponent<VFXStopper>().Duration = stopTimes[^1];
             vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
             vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
             vfx.gameObject.GetComponent<VFXStopper>().PlayVFX();
@@ -125,10 +127,13 @@ public abstract class Status
         {
             VFXStopper vfxStopper = target.statusVfxs.FirstOrDefault(x => x.name.Contains(vfxName)).GetComponent<VFXStopper>();
             vfxStopper.StopAllCoroutines();
-            vfxStopper.Duration = totalDuration;
+            vfxStopper.Duration = stopTimes[^1];
             vfxStopper.PlayVFX();
         }
     }
 
-    
+    private void RemoveVFXFromEntity()
+    {
+        target.statusVfxs.Remove(VFX);
+    }
 }
