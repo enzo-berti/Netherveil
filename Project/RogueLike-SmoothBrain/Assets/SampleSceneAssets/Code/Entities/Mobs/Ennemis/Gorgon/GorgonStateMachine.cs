@@ -37,7 +37,6 @@ public class GorgonStateMachine : Mobs, IGorgon
     public VisualEffect dashVFX;
     [SerializeField] GorgonSounds gorgonSounds;
 
-    Animator animator;
     Hero player = null;
 
     ///
@@ -88,8 +87,6 @@ public class GorgonStateMachine : Mobs, IGorgon
         factory = new StateFactory<GorgonStateMachine>(this);
         currentState = factory.GetState<GorgonWanderingState>();
 
-        animator = GetComponentInChildren<Animator>();
-
         // opti variables
         maxFrameUpdate = 10;
         frameToUpdate = entitySpawn % maxFrameUpdate;
@@ -97,6 +94,9 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     protected override void Update()
     {
+        if (animator.speed == 0)
+            return;
+
         base.Update();
 
         if (currentState is not GorgonAttackingState)
