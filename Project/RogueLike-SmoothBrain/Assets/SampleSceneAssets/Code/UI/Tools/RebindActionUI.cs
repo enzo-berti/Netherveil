@@ -536,9 +536,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     }
                 }
 
-            #if UNITY_EDITOR
-                m_ActionLabel.text = action != null ? $"{action.name} {ObjectNames.NicifyVariableName(binding.name)} {interactionToAdd}" : string.Empty;
-            #endif
+                m_ActionLabel.text = action != null ? $"{action.name} {binding.name} {interactionToAdd}" : string.Empty;
             }
         }
 
