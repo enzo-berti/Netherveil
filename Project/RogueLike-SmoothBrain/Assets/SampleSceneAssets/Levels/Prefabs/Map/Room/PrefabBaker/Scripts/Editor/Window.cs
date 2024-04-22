@@ -1,12 +1,11 @@
 ﻿#if UNITY_EDITOR
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
 
 namespace PrefabLightMapBaker
 {
@@ -19,10 +18,10 @@ namespace PrefabLightMapBaker
         [MenuItem("Window/Prefab Baker")]
         public static void OpenWindow()
         {
-            if(instance != null) return;
+            if (instance != null) return;
 
-            var window = GetWindow<Window>( "Prefab Baker" );
-            window.minSize = new Vector2( 255, 300 );
+            var window = GetWindow<Window>("Prefab Baker");
+            window.minSize = new Vector2(255, 300);
             instance = window;
         }
 
@@ -33,14 +32,14 @@ namespace PrefabLightMapBaker
 
         readonly int label_width = 115;
 
-        readonly string README = 
+        readonly string README =
             "Baking multiple prefabs will result them in sharing the same lightmap textures"
             + "\n. All light sources will be taken into account when baking the prefabs"
             + "\n. Using quick bake will override scene lightmap settings"
             + "\n. Note: this process assumes that all meshs you want to apply a light map to has proper UV's for lightmapping";
 
         Vector2 scroll;
-        
+
         void RefreshVars()
         {
             textureIndex = lightmapMaxSizeValues.ToList().IndexOf(LightmapEditorSettings.maxAtlasSize);
@@ -62,7 +61,7 @@ namespace PrefabLightMapBaker
             instance = null;
         }
 
-        private void OnDisable( )
+        private void OnDisable()
         {
             instance = null;
         }
@@ -72,7 +71,7 @@ namespace PrefabLightMapBaker
             RefreshVars();
         }
 
-        private void OnEnable() 
+        private void OnEnable()
         {
             RefreshVars();
 
@@ -81,60 +80,71 @@ namespace PrefabLightMapBaker
 
         private void OnValidate()
         {
-            if ( ! FolderValidate() ) return;
+            if (!FolderValidate()) return;
         }
 
         private void OnInspectorUpdate()
         {
-            if(instance == null) instance = this;
+            if (instance == null) instance = this;
 
             PrefabBakerUpdate();
         }
 
         private void OnGUI()
         {
-            using( var scope = new GUILayout.ScrollViewScope( scroll ))
+            using (var scope = new GUILayout.ScrollViewScope(scroll))
             {
                 scroll = scope.scrollPosition;
 
-                                                            GUILayout.Space( 10 );
-                HeaderGUI( );
-                                                            GUILayout.Space( 10 );
-                if( ! FolderGUI( ) ) return;
-                                                            GUILayout.Space( 5 );
-                TextureGUI( );
-                                                            GUILayout.Space( 5 );
-                if( ! PrefabBakerGUI( ) ) return;
-                                                            GUILayout.Space( 5 );
-                EditorUtils.BoxGUI( ( ) => {
+                GUILayout.Space(10);
+                HeaderGUI();
+                GUILayout.Space(10);
 
-                    BakeSettingsGUI( );
+                if (!FolderGUI())
+                {
+                    return;
+                }
+                GUILayout.Space(5);
 
-                                                            GUILayout.Space( 5 );
+                TextureGUI();
+                GUILayout.Space(5);
 
-                    var h = GUILayout.Height( 30 );
-                    
-                    if( GUILayout.Button( "Bake", h ) ) 
-                        
-                        Baker.Start( );
-                } );
+                if (!PrefabBakerGUI())
+                {
+                    return;
+                }
 
-                                                            GUILayout.Space( 5 );
-                SceneLightmapsGUI( );
+                GUILayout.Space(5);
+                EditorUtils.BoxGUI(() =>
+                {
+                    BakeSettingsGUI();
+
+                    GUILayout.Space(5);
+
+                    var h = GUILayout.Height(30);
+
+                    if (GUILayout.Button("Bake", h))
+                    {
+                        Baker.Start();
+                    }
+                });
+
+                GUILayout.Space(5);
+                SceneLightmapsGUI();
             }
         }
 
-        private void HeaderGUI( )
+        private void HeaderGUI()
         {
-            using(new GUILayout.HorizontalScope( ))
+            using (new GUILayout.HorizontalScope())
             {
-                GUILayout.Label( "Prefab Lightmap Baker", EditorStyles.boldLabel );
+                GUILayout.Label("Prefab Lightmap Baker", EditorStyles.boldLabel);
 
-                GUILayout.FlexibleSpace( );
+                GUILayout.FlexibleSpace();
 
-                if( GUILayout.Button( " ? ", EditorStyles.miniButton ) )
+                if (GUILayout.Button(" ? ", EditorStyles.miniButton))
 
-                    EditorUtility.DisplayDialog( "Info", README, "Close" );
+                    EditorUtility.DisplayDialog("Info", README, "Close");
             }
         }
 
@@ -145,63 +155,63 @@ namespace PrefabLightMapBaker
 
         bool sceneLightmaps = false;
 
-        public static Texture2D DrawTexturePing( Texture2D tx, int size = 60, int txPadding = 6, bool preview = false, int index = -1 )
+        public static Texture2D DrawTexturePing(Texture2D tx, int size = 60, int txPadding = 6, bool preview = false, int index = -1)
         {
-            if(tx == null) return null;
+            if (tx == null) return null;
 
-            var content = new GUIContent("name: ", tx.name + "\ntexel: " + tx.texelSize + "\nsize: " + tx.width  + "\naniso: " + tx.anisoLevel );
+            var content = new GUIContent("name: ", tx.name + "\ntexel: " + tx.texelSize + "\nsize: " + tx.width + "\naniso: " + tx.anisoLevel);
 
-            if(GUILayout.Button( content, GUILayout.Width( size ), GUILayout.Height( size ) ))
+            if (GUILayout.Button(content, GUILayout.Width(size), GUILayout.Height(size)))
             {
-                if( preview ) EditorUtils.CreateLightmapPreviewWindow( index );
-                
-                else EditorGUIUtility.PingObject( tx );
+                if (preview) EditorUtils.CreateLightmapPreviewWindow(index);
+
+                else EditorGUIUtility.PingObject(tx);
             }
 
             Rect rect = GUILayoutUtility.GetLastRect();
 
             rect.x += txPadding; rect.y += txPadding;
             rect.width -= txPadding * 2; rect.height -= txPadding * 2;
-            EditorGUI.DrawPreviewTexture( rect , tx );
+            EditorGUI.DrawPreviewTexture(rect, tx);
 
             return tx;
         }
 
         void SceneLightmapsGUI()
         {
-            if(( LightmapSettings.lightmaps?.Length ?? 0 ) < 1) return;
+            if ((LightmapSettings.lightmaps?.Length ?? 0) < 1) return;
 
-            GUILayout.Space( 5 );
+            GUILayout.Space(5);
 
-            sceneLightmaps = EditorGUILayout.Foldout( sceneLightmaps, "Preview Scene Lightmaps", true );
+            sceneLightmaps = EditorGUILayout.Foldout(sceneLightmaps, "Preview Scene Lightmaps", true);
 
-            if( ! sceneLightmaps) return;
+            if (!sceneLightmaps) return;
 
-            for( var i = 0; i < LightmapSettings.lightmaps.Length; ++i )
+            for (var i = 0; i < LightmapSettings.lightmaps.Length; ++i)
             {
-                var lm = LightmapSettings.lightmaps[ i ];
+                var lm = LightmapSettings.lightmaps[i];
 
                 List<Texture2D> texs = new List<Texture2D>();
 
-                using(new GUILayout.HorizontalScope( ))
+                using (new GUILayout.HorizontalScope())
                 {
-                    texs.Add( DrawTexturePing( lm.lightmapColor, preview : true, index : i ) );     GUILayout.Space( 5 );
-                    texs.Add( DrawTexturePing( lm.lightmapDir, preview: true, index: i ) );         GUILayout.Space( 5 );
-                    texs.Add( DrawTexturePing( lm.shadowMask, preview: true, index: i ) );          GUILayout.Space( 5 );
+                    texs.Add(DrawTexturePing(lm.lightmapColor, preview: true, index: i)); GUILayout.Space(5);
+                    texs.Add(DrawTexturePing(lm.lightmapDir, preview: true, index: i)); GUILayout.Space(5);
+                    texs.Add(DrawTexturePing(lm.shadowMask, preview: true, index: i)); GUILayout.Space(5);
                 }
 
-                texs = texs.Where( x => x != null ).ToList( );
+                texs = texs.Where(x => x != null).ToList();
 
-                var info = texs.Select( x => 
+                var info = texs.Select(x =>
                 {
-                    var path = Path.GetFileNameWithoutExtension( AssetDatabase.GetAssetPath( x ) );
+                    var path = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(x));
 
-                    return $"{path}  .  {x.width}x{x.height}  mip={ x.desiredMipmapLevel }  frmt={x.format.ToString()}";
-                } );
+                    return $"{path}  .  {x.width}x{x.height}  mip={x.desiredMipmapLevel}  frmt={x.format.ToString()}";
+                });
 
-                EditorGUILayout.HelpBox( string.Join( "\n", info ), MessageType.None );
+                EditorGUILayout.HelpBox(string.Join("\n", info), MessageType.None);
 
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
             }
         }
 
@@ -226,19 +236,19 @@ namespace PrefabLightMapBaker
 
         static LightmapBake lightCasting = LightmapBake.Baked;
 
-        public static LightmapBakeType LightBakeType => ( LightmapBakeType ) lightCasting;
+        public static LightmapBakeType LightBakeType => (LightmapBakeType)lightCasting;
 
         void BakeSettingsGUI()
         {
-            QuickBake = EditorGUILayout.ToggleLeft( "Quick bake", QuickBake );
+            QuickBake = EditorGUILayout.ToggleLeft("Quick bake", QuickBake);
 
-            GUILayout.Space( 5 );
-            
-            AutoClean = EditorGUILayout.ToggleLeft( autoCleanLabel, AutoClean );
+            GUILayout.Space(5);
 
-            GUILayout.Space( 5 );
+            AutoClean = EditorGUILayout.ToggleLeft(autoCleanLabel, AutoClean);
 
-            lightCasting = ( LightmapBake ) EditorGUILayout.EnumPopup( "Lights", lightCasting );
+            GUILayout.Space(5);
+
+            lightCasting = (LightmapBake)EditorGUILayout.EnumPopup("Lights", lightCasting);
         }
 
         #endregion
@@ -252,27 +262,27 @@ namespace PrefabLightMapBaker
 
         bool PrefabBakerGUI()
         {
-            if( prefab_baker_count < 1 )
+            if (prefab_baker_count < 1)
             {
                 var s = "No active prefabs found";
-                EditorGUILayout.HelpBox( s, MessageType.Error );
+                EditorGUILayout.HelpBox(s, MessageType.Error);
                 return false;
             }
-            else if( prefab_baker_missing_lights )
+            else if (prefab_baker_missing_lights)
             {
                 var s = "Note: one of the active prefabs has no lights";
-                EditorGUILayout.HelpBox( s, MessageType.Warning );
-                GUILayout.Space( 5 );
+                EditorGUILayout.HelpBox(s, MessageType.Warning);
+                GUILayout.Space(5);
             }
 
-            var info = $"{ prefab_baker_count } active prefabs will be baked";
+            var info = $"{prefab_baker_count} active prefabs will be baked";
             info += $" ( total {prefab_baker_lights_count} lights )";
-            EditorGUILayout.HelpBox( info, MessageType.None );
+            EditorGUILayout.HelpBox(info, MessageType.None);
 
             return true;
         }
 
-        void PrefabBakerUpdate() 
+        void PrefabBakerUpdate()
         {
             prefab_baker_count = 0;
             prefab_baker_lights_count = 0;
@@ -282,20 +292,20 @@ namespace PrefabLightMapBaker
 
             foreach (var go in scene.GetRootGameObjects())
             {
-                if( ! go.activeSelf ) continue;
+                if (!go.activeSelf) continue;
 
                 var baker = go.GetComponent<PrefabBaker>();
 
-                if ( baker == null ) continue;
+                if (baker == null) continue;
 
                 prefab_baker_count++;
 
                 var light_count = go.GetComponentsInChildren<Light>().Length;
 
-                if( light_count < 1 ) prefab_baker_missing_lights = true;
+                if (light_count < 1) prefab_baker_missing_lights = true;
 
                 prefab_baker_lights_count += light_count;
-                
+
             }
         }
 
@@ -308,11 +318,11 @@ namespace PrefabLightMapBaker
         //  UnityCsReference/Editor/Mono/Inspector/LightingSettingsEditor.cs 
         public static readonly int[] lightmapMaxSizeValues = { 32, 64, 128, 256, 512, 1024, 2048, 4096 };
         public static readonly GUIContent[] lightmapMaxSizeStrings = System.Array.ConvertAll(
-            lightmapMaxSizeValues, x => new GUIContent(x.ToString() + "x" + x.ToString() ) );
+            lightmapMaxSizeValues, x => new GUIContent(x.ToString() + "x" + x.ToString()));
 
         void TextureGUI()
         {
-            using(new GUILayout.HorizontalScope())
+            using (new GUILayout.HorizontalScope())
             {
                 GUILayout.Label("Texture Size", GUILayout.Width(label_width));
 
@@ -349,7 +359,7 @@ namespace PrefabLightMapBaker
 
             preview_folder = folder;
 
-            if ( preview_folder.Contains(Application.dataPath ) )
+            if (preview_folder.Contains(Application.dataPath))
             {
                 // remove full path and display only relative path 
                 preview_folder = preview_folder.Substring(Application.dataPath.Length - "Assets".Length);
@@ -362,30 +372,30 @@ namespace PrefabLightMapBaker
 
         bool FolderGUI()
         {
-            GUILayout.Space( 5 );
+            GUILayout.Space(5);
 
-            using(new GUILayout.HorizontalScope( ))
+            using (new GUILayout.HorizontalScope())
             {
-                GUILayout.Label( "Lightmaps folder", GUILayout.Width( label_width ) );
+                GUILayout.Label("Lightmaps folder", GUILayout.Width(label_width));
 
-                GUILayout.Space( 5 );
+                GUILayout.Space(5);
 
-                if( GUILayout.Button( "Change", EditorStyles.miniButton ) )
+                if (GUILayout.Button("Change", EditorStyles.miniButton))
                 {
                     string newFolderPath = EditorUtility.OpenFolderPanel("Select lightmaps folder", folder, "");
 
-                    if(!string.IsNullOrEmpty( newFolderPath ))
+                    if (!string.IsNullOrEmpty(newFolderPath))
                     {
                         folder = newFolderPath;
 
-                        OnValidate( );
+                        OnValidate();
                     }
                 }
             }
 
-            EditorGUILayout.HelpBox( preview_folder, MessageType.None );
-            
-            GUILayout.Space( 10 );
+            EditorGUILayout.HelpBox(preview_folder, MessageType.None);
+
+            GUILayout.Space(10);
 
             if (!folder_is_valid)
             {
