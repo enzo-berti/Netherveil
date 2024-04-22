@@ -25,7 +25,6 @@ public abstract class OverTimeStatus : Status
         yield return new WaitForSeconds(frequency);
         if (!isFinished)
         {
-            Debug.Log("Call effect in OvertimeStatus");
             Effect();
         }
             
@@ -35,7 +34,6 @@ public abstract class OverTimeStatus : Status
     public override void ApplyEffect(Entity target)
     {
         base.ApplyEffect(target);
-        Debug.Log("ApplyEffect in OvertimeStatus");
         CoroutineManager.Instance.StartCustom(UpdateEffect());
     }
 

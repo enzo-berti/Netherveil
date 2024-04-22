@@ -95,6 +95,12 @@ namespace PrefabLightMapBaker
             for (var i = 0; i < prefab.renderers.Length; ++i)
             {
                 var renderer = prefab.renderers[i];
+
+                if (renderer == null)
+                {
+                    continue;
+                }
+
                 var lightIndex = prefab.renderersLightmapIndex[i];
                 var lightScale = prefab.renderersLightmapOffsetScale[i];
 
@@ -133,9 +139,10 @@ namespace PrefabLightMapBaker
 
         public static bool SceneHasAllLightmaps(Texture2D[] texs)
         {
-            if ((texs?.Length ?? 0) < 1) return true;
-
-            else if ((LightmapSettings.lightmaps?.Length ?? 0) < 1) return false;
+            if ((texs?.Length ?? 0) < 1)
+                return true;
+            else if ((LightmapSettings.lightmaps?.Length ?? 0) < 1)
+                return false;
 
             foreach (var lmd in LightmapSettings.lightmaps)
             {
