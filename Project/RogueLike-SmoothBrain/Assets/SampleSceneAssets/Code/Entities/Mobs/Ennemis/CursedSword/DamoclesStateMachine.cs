@@ -1,8 +1,6 @@
 using UnityEngine;
 using StateMachine; // include all script about stateMachine
 using System.Collections.Generic;
-using UnityEngine.AI;
-using FMODUnity;
 using System.Collections;
 using System.Linq;
 
@@ -35,6 +33,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     [SerializeField] private BoxCollider attack1Collider;
     [SerializeField] private BoxCollider attack2Collider;
+    [SerializeField] private BoxCollider attack3Collider;
     private Transform target;
     private bool isDeath = false;
 
@@ -52,6 +51,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public Animator Animator { get => animator; }
     public BoxCollider Attack1Collider { get => attack1Collider; }
     public BoxCollider Attack2Collider { get => attack2Collider; }
+    public BoxCollider Attack3Collider { get => attack3Collider; }
     public Transform Target { get => target; set => target = value; }
     public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
@@ -70,7 +70,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
         animator = GetComponentInChildren<Animator>();
 
         // common initialization
-       
+
 
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
