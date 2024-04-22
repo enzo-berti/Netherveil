@@ -56,15 +56,19 @@ namespace PrefabLightMapBaker
             {
                 BakeJustApplied = Utils.Apply(this);
 
-                if (BakeJustApplied) Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
+                if (BakeJustApplied)
+                {
+                    Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
+                }
             }
         }
 
         void OnEnable()
         {
             if (!Application.isPlaying)
-
+            {
                 BakeApply();
+            }
 
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
