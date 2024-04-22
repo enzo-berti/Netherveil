@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class Freeze : ConstantStatus
 {
     float baseAgentSpeed;
     Material freezeMat = null;
+    public static event Action OnFreeze;
     public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
@@ -24,12 +26,15 @@ public class Freeze : ConstantStatus
             Debug.Log(target.Stats.GetValue(Stat.SPEED));
             baseAgentSpeed = target.Stats.GetValue(Stat.SPEED);
             target.Stats.SetValue(Stat.SPEED, 0);
+            target.isFreeze = true;
+            OnFreeze?.Invoke();
         }
     }
 
     public override void OnFinished()
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
+        target.isFreeze = false;
         Renderer renderer = target.GetComponentInChildren<Renderer>();
         List<Material> materials = new List<Material>(renderer.materials);
         materials.RemoveAll(mat => mat.shader == freezeMat.shader);
