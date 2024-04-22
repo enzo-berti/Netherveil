@@ -111,9 +111,11 @@ public abstract class Status
 
     protected void PlayVfx(string vfxName)
     {
-        if (target.transform.parent.Find(vfxName) == null)
+        if(target.statusVfxs.FirstOrDefault(x => x.name.Contains(vfxName)) == null)
         {
+            if (target.Stats.GetValue(Stat.HP) <= 0) return;
             VisualEffect vfx = GameObject.Instantiate(GameResources.Get<GameObject>(vfxName)).GetComponent<VisualEffect>();
+            target.statusVfxs.Add(vfx);
             vfx.gameObject.GetComponent<VFXStopper>().Duration = totalDuration;
             vfx.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", target.gameObject.GetComponentInChildren<SkinnedMeshRenderer>());
             vfx.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = target.gameObject.GetComponentInChildren<VFXTarget>().transform;
@@ -121,7 +123,7 @@ public abstract class Status
         }
         else
         {
-            VFXStopper vfxStopper = target.transform.parent.Find(vfxName).GetComponent<VFXStopper>();
+            VFXStopper vfxStopper = target.statusVfxs.FirstOrDefault(x => x.name.Contains(vfxName)).GetComponent<VFXStopper>();
             vfxStopper.StopAllCoroutines();
             vfxStopper.Duration = totalDuration;
             vfxStopper.PlayVFX();
