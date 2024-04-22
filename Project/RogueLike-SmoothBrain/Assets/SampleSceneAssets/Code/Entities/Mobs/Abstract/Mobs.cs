@@ -18,8 +18,10 @@ public abstract class Mobs : Entity
     private Material hitMaterial;
     protected Entity[] nearbyEntities;
     protected EnemyLifeBar lifeBar;
+    protected Animator animator;
     [SerializeField] protected Drop drop;
     public VisualEffect StatSuckerVFX;
+    [SerializeField] protected VisualEffect spawningVFX;
 
     // opti
     protected int frameToUpdate;
@@ -45,6 +47,7 @@ public abstract class Mobs : Entity
         agent = GetComponent<NavMeshAgent>();
         mRenderer = GetComponentInChildren<Renderer>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
+        animator = GetComponentInChildren<Animator>();
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
 
         foreach (Material mat in mRenderer.materials)
@@ -74,9 +77,13 @@ public abstract class Mobs : Entity
         this.transform.parent.localPosition = Vector3.zero;
         this.transform.localPosition = pos;
 
-
         StatSuckerVFX.SetVector3("Attract Target", GameObject.FindWithTag("Player").transform.position + Vector3.up);
         StatSuckerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXPositionBinderCustom>().ToArray()[0].Target = GameObject.FindWithTag("Player").transform;
+
+        animator.speed = 0;
+        spawningVFX.GetComponent<VFXStopper>().Duration = 3.5f;
+        spawningVFX.GetComponent<VFXStopper>().PlayVFX();
+        spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
     }
 
     protected override void Update()
@@ -103,6 +110,11 @@ public abstract class Mobs : Entity
             return;
 
         agent.speed = stats.GetValue(Stat.SPEED);
+    }
+
+    private void EndOfSpawningVFX()
+    {
+        animator.speed = 1;
     }
 
     protected virtual IEnumerator Brain()

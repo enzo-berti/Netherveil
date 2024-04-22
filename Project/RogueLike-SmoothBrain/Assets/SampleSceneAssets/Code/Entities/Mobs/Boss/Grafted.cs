@@ -13,7 +13,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public List<Status> StatusToApply => statusToApply;
 
-    private Animator animator;
     float deathTimer = 0;
 
     int dyingHash;
@@ -176,8 +175,6 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
-
-        animator = GetComponentInChildren<Animator>();
 
         // hashing animation
         dyingHash = Animator.StringToHash("Dying");

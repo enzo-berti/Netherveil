@@ -30,6 +30,11 @@ public class Spear : MonoBehaviour
     readonly float SPEAR_WAIT_TIME = 0.15f;
     bool placedInWorld = false;
 
+    LineRenderer thunderlinkLineRenderer;
+    public LineRenderer ThunderLinkLineRenderer { get => thunderlinkLineRenderer; }
+    VisualEffect thunderLinkVFX;
+    public VisualEffect ThunderLinkVFX { get => thunderLinkVFX; }
+
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -224,6 +229,12 @@ public class Spear : MonoBehaviour
         scale.z = centerToSpearVec.magnitude;
         SpearThrowCollider.transform.localScale = scale;
         SpearThrowCollider.transform.localPosition = new Vector3(0f, 0f, scale.z / 2f + collideOffset);
+    }
+
+    public void SetThunderLinkVFX(VisualEffect vfx, LineRenderer lr)
+    {
+        thunderLinkVFX = vfx;
+        thunderlinkLineRenderer = lr;
     }
 
     private bool CanPlaceSpearInHand()
