@@ -35,7 +35,6 @@ public class GlorbStateMachine : Mobs, IGlorb
     [SerializeField] float defaultVisionAngle = 100f;
 
     VFXStopper vfxStopper;
-    Animator animator;
     Hero player = null;
 
     bool speAttackAvailable = true;
@@ -78,7 +77,6 @@ public class GlorbStateMachine : Mobs, IGlorb
 
         player = null;
         vfxStopper = GetComponent<VFXStopper>();
-        animator = GetComponentInChildren<Animator>();
 
         // animation Hash
         deathHash = Animator.StringToHash("Death");
@@ -91,6 +89,9 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     protected override void Update()
     {
+        if (animator.speed == 0)
+            return;
+
         base.Update();
 
         animator.SetBool(walkHash, currentState is GlorbAttackingState ? false : agent.remainingDistance > agent.stoppingDistance);

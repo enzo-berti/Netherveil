@@ -25,9 +25,6 @@ public class PestStateMachine : Mobs, IPest
     private BaseState<PestStateMachine> currentState;
     private StateFactory<PestStateMachine> factory;
 
-    // declare reference variables
-    private Animator animator;
-
     // mobs variables
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
@@ -72,9 +69,6 @@ public class PestStateMachine : Mobs, IPest
         factory = new StateFactory<PestStateMachine>(this);
         currentState = factory.GetState<PestWanderingState>();
 
-        // getter(s) reference
-        animator = GetComponentInChildren<Animator>();
-
         // common initialization
         GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
 
@@ -89,6 +83,9 @@ public class PestStateMachine : Mobs, IPest
 
     protected override void Update()
     {
+        if (animator.speed == 0)
+            return;
+
         // A decommenter plus tard
 
         //bool frozen = false;
