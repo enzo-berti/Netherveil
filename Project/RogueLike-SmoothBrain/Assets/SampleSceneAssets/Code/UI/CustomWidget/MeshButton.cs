@@ -1,14 +1,16 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace MeshUI
 {
     [RequireComponent(typeof(Collider))]
-    public class MeshButton : MonoBehaviour
+    public class MeshButton : Selectable, ISubmitHandler
     {
         private bool isHovered = false;
         private bool isPressed = false;
+        private bool isSelect = false;
 
         [Header("Events"), Space]
         [SerializeField] private UnityEvent onHoverEnter;
@@ -66,12 +68,14 @@ namespace MeshUI
 
         public void OnHover()
         {
-            onHoverEnter?.Invoke();
+            if (!isSelect)
+                onHoverEnter?.Invoke();
         }
 
         public void OnOut()
         {
-            onHoverExit?.Invoke();
+            if (!isSelect)
+                onHoverExit?.Invoke();
         }
 
         public void OnPress()
@@ -82,6 +86,25 @@ namespace MeshUI
         public void OnRelease()
         {
             onRelease?.Invoke();
+        }
+
+        public override void OnSelect(BaseEventData eventData)
+        {
+            base.OnSelect(eventData);
+            OnHover();
+            isSelect = true;
+        }
+
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            base.OnDeselect(eventData);
+            isSelect = false;
+            OnOut();
+        }
+
+        public void OnSubmit(BaseEventData eventData)
+        {
+            OnPress();
         }
     }
 }

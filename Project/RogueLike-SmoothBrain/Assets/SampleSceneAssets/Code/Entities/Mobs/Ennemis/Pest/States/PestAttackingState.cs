@@ -4,9 +4,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PestAttackState : BaseState<PestStateMachine>
+public class PestAttackingState : BaseState<PestStateMachine>
 {
-    public PestAttackState(PestStateMachine currentContext, StateFactory<PestStateMachine> currentFactory)
+    public PestAttackingState(PestStateMachine currentContext, StateFactory<PestStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     private enum State
@@ -27,16 +27,21 @@ public class PestAttackState : BaseState<PestStateMachine>
 
     private Coroutine dashRoutine;
 
+    bool attackEnded = false;
+
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        if (Context.IsDeath)
+        if (attackEnded)
         {
-            SwitchState(Factory.GetState<PestDeathState>());
-        }
-        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
-        {
-            SwitchState(Factory.GetState<PestFollowTargetState>());
+            if (!Context.Player)
+            {
+                SwitchState(Factory.GetState<PestWanderingState>());
+            }
+            else if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
+            {
+                SwitchState(Factory.GetState<PestTriggeredState>());
+            }
         }
     }
 
@@ -49,14 +54,14 @@ public class PestAttackState : BaseState<PestStateMachine>
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
-    { 
+    {
         if (dashRoutine != null)
         {
             Context.StopCoroutine(dashRoutine);
             dashRoutine = null;
         }
-        Context.Animator.ResetTrigger(Context.ChargeOutHash);
-        Context.Animator.SetTrigger(Context.ChargeOutHash);
+
+        Context.CanLoseAggro = true;
     }
 
     // This method will be call every frame.
@@ -64,9 +69,11 @@ public class PestAttackState : BaseState<PestStateMachine>
     {
         if (curState == State.Start)
         {
-            Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
-            dashDistance = Vector3.Distance(Context.Target.position, Context.transform.position);
-            Context.transform.LookAt(positionToLookAt);
+            Context.CanLoseAggro = false;
+            attackEnded = false;
+            Vector3 positionToLookAt = new Vector3(Context.Player.position.x, Context.transform.position.y, Context.Player.position.z);
+            LookAt(positionToLookAt, 10f);
+
             curState = State.Charge;
 
             Context.Animator.ResetTrigger(Context.ChargeInHash);
@@ -80,6 +87,9 @@ public class PestAttackState : BaseState<PestStateMachine>
                 elapsedTimeState = 0.0f;
                 curState = State.Dash;
 
+                dashDistance = Vector3.Distance(Context.Player.position, Context.transform.position);
+                dashDistance = Mathf.Clamp(dashDistance, 0f, Context.Stats.GetValue(Stat.ATK_RANGE));
+
                 Vector3 curScale = Context.AttackCollider.transform.localScale;
                 curScale.z = dashDistance;
                 Context.AttackCollider.transform.localScale = curScale;
@@ -92,6 +102,11 @@ public class PestAttackState : BaseState<PestStateMachine>
 
                 Context.Animator.ResetTrigger(Context.ChargeOutHash);
                 Context.Animator.SetTrigger(Context.ChargeOutHash);
+            }
+            else if (elapsedTimeState <= chargeDuration - 0.2f)
+            {
+                Vector3 positionToLookAt = new Vector3(Context.Player.position.x, Context.transform.position.y, Context.Player.position.z);
+                LookAt(positionToLookAt, 10f);
             }
         }
         else if (curState == State.Dash)
@@ -107,7 +122,9 @@ public class PestAttackState : BaseState<PestStateMachine>
             if (elapsedTimeState >= rechargeDuration)
             {
                 elapsedTimeState = 0.0f;
+                Context.CanLoseAggro = true;
                 curState = State.Start;
+                attackEnded = true;
             }
         }
     }
@@ -155,4 +172,15 @@ public class PestAttackState : BaseState<PestStateMachine>
         base.SwitchState(newState);
         Context.CurrentState = newState;
     }
+
+    #region Extra methods
+    void LookAt(Vector3 _target, float _speed)
+    {
+        Quaternion lookRotation = Quaternion.LookRotation(_target - Context.transform.position);
+        lookRotation.x = 0;
+        lookRotation.z = 0;
+
+        Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, _speed * Time.deltaTime);
+    }
+    #endregion
 }

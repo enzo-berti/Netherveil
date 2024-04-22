@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2656834896085959645}
   - component: {fileID: 3430311335244249555}
   - component: {fileID: 7140812088046067353}
+  - component: {fileID: -2762334006471742150}
+  - component: {fileID: -3818488641722623801}
   m_Layer: 0
   m_Name: VFX_ThunderLink
   m_TagString: Untagged
@@ -117,3 +119,34 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &-2762334006471742150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917322730486792068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExecuteInEditor: 1
+  m_Bindings:
+  - {fileID: -3818488641722623801}
+  m_VisualEffect: {fileID: 3430311335244249555}
+--- !u!114 &-3818488641722623801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917322730486792068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a876b802851349b4c89021cbaca4ed47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Attract Target
+  Target: {fileID: 0}

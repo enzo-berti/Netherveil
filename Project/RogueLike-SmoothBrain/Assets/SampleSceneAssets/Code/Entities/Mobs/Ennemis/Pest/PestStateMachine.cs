@@ -34,8 +34,10 @@ public class PestStateMachine : Mobs, IPest
     [SerializeField] private PestSounds pestSounds;
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     [SerializeField] private BoxCollider attackCollider;
-    private Transform target;
+    private Transform player;
     private bool isDeath = false;
+    float dashTimer = 0f;
+    bool canLoseAggro = true;
 
     // animation hash
     private int chargeInHash;
@@ -52,17 +54,23 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeInHash { get => chargeInHash; }
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
-    public Transform Target { get => target; set => target = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
+    public Transform Player { get => player; set => player = value; }
+    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 5.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
     public bool IsDeath { get => isDeath; }
+    public float VisionAngle { get => (currentState is PestTriggeredState || currentState is PestAttackingState) && Player != null ? 360 : angle; }
+    public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is PestTriggeredState || currentState is PestAttackingState ? 1.25f : 1f); }
+    public float MovementTimer { set => dashTimer = value; }
+    public float MovementDelay { get => (currentState is PestTriggeredState ? 1f : 1.5f); }
+    public bool CanMove { get => dashTimer > MovementDelay; }
+    public bool CanLoseAggro { set => canLoseAggro = value; }
 
     protected override void Start()
     {
         base.Start();
 
         factory = new StateFactory<PestStateMachine>(this);
-        currentState = factory.GetState<PestPatrolState>();
+        currentState = factory.GetState<PestWanderingState>();
 
         // getter(s) reference
         animator = GetComponentInChildren<Animator>();
@@ -83,6 +91,8 @@ public class PestStateMachine : Mobs, IPest
     {
         base.Update();
         currentState.Update();
+
+        if (!CanMove) { dashTimer += Time.deltaTime; }
     }
 
     #region MOBS METHODS
@@ -96,15 +106,21 @@ public class PestStateMachine : Mobs, IPest
                 continue;
             }
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            if (!canLoseAggro)
+            {
+                player = Utilities.Hero.transform;
+                yield return null;
+                continue;
+            }
+
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, VisionRange, transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
 
-            Entity targetE = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
-            if (targetE != null)
-                target = targetE.transform;
+            Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
+            player = playerEntity ? playerEntity.transform : null;
 
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
@@ -135,6 +151,8 @@ public class PestStateMachine : Mobs, IPest
         animator.SetBool(deathHash, true);
         isDeath = true;
 
+        currentState = factory.GetState<PestDeathState>();
+
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
@@ -152,11 +170,11 @@ public class PestStateMachine : Mobs, IPest
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!Selection.Contains(gameObject))
-            return;
+        //if (!Selection.Contains(gameObject))
+        //return;
 
-        DisplayVisionRange(angle);
-        DisplayAttackRange(angle);
+        DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayAttackRange(VisionAngle);
         DisplayInfos();
     }
 
