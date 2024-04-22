@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7972066551748298975}
   - component: {fileID: 3811362047865036032}
   - component: {fileID: 5383144009567884693}
+  - component: {fileID: 8826767243101328406}
   m_Layer: 0
   m_Name: VFX_SpawnCircle
   m_TagString: Untagged
@@ -117,3 +118,21 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &8826767243101328406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206219349471999316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93677b87523a3ae448f869b9f85f39b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: 3811362047865036032}
+  destroyOnStop: 0
+  destroyDurationDelay: 0
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
