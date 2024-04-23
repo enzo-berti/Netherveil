@@ -1,5 +1,4 @@
-using UnityEngine; 
- 
+
 public class BloodFlask : ItemEffect , IPassiveItem 
 { 
     public void OnRetrieved() 

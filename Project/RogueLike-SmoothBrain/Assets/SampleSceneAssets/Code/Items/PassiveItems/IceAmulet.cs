@@ -2,14 +2,14 @@ using UnityEngine;
  
 public class IceAmulet : ItemEffect , IPassiveItem 
 {
-    private float iceChance = 0.1f;
-    private float iceDuration = 2.0f;
+    private readonly float iceChance = 10f;
+    private readonly float iceDuration = 2.0f;
     int indexInStatus = 0;
     public void OnRetrieved()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
         indexInStatus = hero.StatusToApply.Count;
-        hero.StatusToApply.Add(new Freeze(iceDuration, iceChance));
+        hero.StatusToApply.Add(new Freeze(iceDuration, iceChance / 100f));
     }
 
     public void OnRemove()

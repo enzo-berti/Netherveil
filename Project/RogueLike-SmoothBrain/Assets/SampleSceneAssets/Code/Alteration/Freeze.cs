@@ -7,7 +7,6 @@ public class Freeze : ConstantStatus
 {
     float baseAgentSpeed;
     Material freezeMat = null;
-    public static event Action OnFreeze;
     public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
@@ -27,7 +26,6 @@ public class Freeze : ConstantStatus
             baseAgentSpeed = target.Stats.GetValue(Stat.SPEED);
             target.Stats.SetValue(Stat.SPEED, 0);
             target.isFreeze = true;
-            OnFreeze?.Invoke();
         }
     }
 
@@ -53,6 +51,7 @@ public class Freeze : ConstantStatus
     {
         PlayVFX();
         PlayPostProcessing();
+        target.OnFreeze?.Invoke();
     }
     
     private void PlayVFX()
