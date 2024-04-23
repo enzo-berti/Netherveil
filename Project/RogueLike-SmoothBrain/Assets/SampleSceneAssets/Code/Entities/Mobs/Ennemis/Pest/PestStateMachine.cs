@@ -90,7 +90,7 @@ public class PestStateMachine : Mobs, IPest
         else
             animator.speed = 1;
 
-        if (animator.speed == 0)
+        if (animator.speed == 0 || isSpawning)
             return;
 
         base.Update();

@@ -28,6 +28,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static event Action<IDamageable, IAttacker> OnFinisherAttack;
     public static event Action OnQuestObtained;
     public static event Action OnQuestFinished;
+    public static event Action<ISpecialAbility> OnBenedictionMaxUpgrade;
+    public static event Action<ISpecialAbility> OnCorruptionMaxUpgrade;
+    public static event Action OnBenedictionMaxDrawback;
+    public static event Action OnCorruptionMaxDrawback;
 
     public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
     public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
@@ -264,8 +268,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
             CanHealFromConsumables = false;
-            DescriptionTab.current.SetTab("Damnation Veil", "On Activation ,azdazdzadad");
             playerController.SpecialAbility = new DamnationVeil();
+            OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
         }
         else
         {
@@ -282,6 +286,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionStat <= Stats.GetMinValue(Stat.CORRUPTION))
         {
             playerController.SpecialAbility = new DivineShield();
+            OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
         }
         else
         {
@@ -299,6 +304,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionLastValue <= Stats.GetMinValue(Stat.CORRUPTION))
         {
             playerController.SpecialAbility = null;
+            OnBenedictionMaxDrawback?.Invoke();
         }
         else
         {
@@ -317,6 +323,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
             CanHealFromConsumables = true;
             playerController.SpecialAbility = null;
+            OnCorruptionMaxDrawback?.Invoke();
         }
         else
         {

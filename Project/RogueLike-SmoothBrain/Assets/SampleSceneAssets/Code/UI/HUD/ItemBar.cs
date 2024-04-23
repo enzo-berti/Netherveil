@@ -13,6 +13,9 @@ public class ItemBar : MonoBehaviour
     private int maxItemDisplay = 5;
     [SerializeField] private Transform itemPassiveTransform;
     [SerializeField] private GameObject activeFrame;
+    [SerializeField] private GameObject specialAbilityFrame;
+    [SerializeField] private Texture damnationVeilIcon;
+    [SerializeField] private Texture divineShieldIcon;
 
     private void Start()
     {
@@ -22,12 +25,20 @@ public class ItemBar : MonoBehaviour
     private void OnEnable()
     {
         Item.OnRetrieved += OnItemAdd;
+        Hero.OnBenedictionMaxUpgrade += OnSpecialAbilityAdd;
+        Hero.OnCorruptionMaxUpgrade += OnSpecialAbilityAdd;
+        Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
+        Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted += () => StartCoroutine(ActiveItemCooldown());
     }
 
     private void OnDisable()
     {
         Item.OnRetrieved -= OnItemAdd;
+        Hero.OnBenedictionMaxUpgrade -= OnSpecialAbilityAdd;
+        Hero.OnCorruptionMaxUpgrade -= OnSpecialAbilityAdd;
+        Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
+        Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted -= () => StartCoroutine(ActiveItemCooldown());
     }
 
@@ -46,6 +57,25 @@ public class ItemBar : MonoBehaviour
             activeFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
             SetFrameItemData(activeFrame, itemAdd);
         }
+    }
+
+    private void OnSpecialAbilityAdd(ISpecialAbility ability)
+    {
+        if(ability as DamnationVeil != null)
+        {
+            specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
+            specialAbilityFrame.GetComponentInChildren<RawImage>().texture = damnationVeilIcon;
+        }
+        else if (ability as DivineShield != null)
+        {
+            specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
+            specialAbilityFrame.GetComponentInChildren<RawImage>().texture = divineShieldIcon;
+        }
+    }
+
+    private void OnSpecialAbilityRemove()
+    {
+        specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(false);
     }
 
     private GameObject CreateFrame(Transform t)

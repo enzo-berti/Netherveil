@@ -27,6 +27,7 @@ public abstract class Mobs : Entity
     // opti
     protected int frameToUpdate;
     protected int maxFrameUpdate = 20;
+    protected bool isSpawning = true;
 
     // extra
     [Serializable]
@@ -135,6 +136,7 @@ public abstract class Mobs : Entity
         spawningVFX.Stop();
         lifeBar.gameObject.SetActive(true);
         animator.speed = 1;
+        isSpawning = false;
     }
 
     protected virtual IEnumerator Brain()

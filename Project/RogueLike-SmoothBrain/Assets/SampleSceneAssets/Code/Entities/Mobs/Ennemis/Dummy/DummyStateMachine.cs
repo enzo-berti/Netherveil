@@ -43,7 +43,7 @@ public class DummyStateMachine : Mobs, IDummy
 
     protected override void Update()
     {
-        if (animator.speed == 0)
+        if (animator.speed == 0 || isSpawning)
             return;
 
         base.Update();

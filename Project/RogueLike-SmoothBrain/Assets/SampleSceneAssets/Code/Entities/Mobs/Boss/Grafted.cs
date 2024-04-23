@@ -197,7 +197,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         while (true)
         {
-            yield return new WaitUntil(() => animator.speed != 0);
+            yield return new WaitUntil(() => animator.speed != 0 && !isSpawning);
 
             if (deathTimer <= 0)
             {

@@ -96,7 +96,7 @@ public class GlorbStateMachine : Mobs, IGlorb
     {
         animator.speed = isFreeze ? 0 : 1;
 
-        if (animator.speed == 0)
+        if (animator.speed == 0 || isSpawning)
             return;
 
         base.Update();
