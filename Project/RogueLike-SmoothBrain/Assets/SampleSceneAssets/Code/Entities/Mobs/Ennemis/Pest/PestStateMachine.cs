@@ -87,7 +87,10 @@ public class PestStateMachine : Mobs, IPest
 
     protected override void Update()
     {
-        animator.speed = isFreeze ? 0 : 1;
+        if (currentState is not PestDeathState)
+            animator.speed = isFreeze ? 0 : 1;
+        else
+            animator.speed = 1;
 
         if (animator.speed == 0)
             return;
@@ -127,6 +130,12 @@ public class PestStateMachine : Mobs, IPest
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
         ApplyDamagesMob(_value, pestSounds.takeDamageSound, Death, notEffectDamage);
+
+        if (currentState is not PestAttackingState || currentState is not PestDeathState)
+        {
+            currentState = factory.GetState<PestTriggeredState>();
+            player = Utilities.Hero.transform;
+        }
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
