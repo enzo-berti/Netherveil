@@ -62,18 +62,9 @@ public abstract class Status
     protected int maxStack = int.MaxValue;
     //public event Action onAddingStack;
     public int Stack { get => stack; }
-    public void AddStack(int nb)
+    public virtual void AddStack(int nb)
     {
-        if ((isStackable && stack < maxStack) || stack < 1)
-        {
-            nb = isStackable ? nb : 1;
-            stack += nb;
-            for (int i = 0; i < nb; i++)
-            {
-                stopTimes.Add(duration + currentTime);
-                OnAddStack?.Invoke();
-            }
-        }
+        OnAddStack?.Invoke();
 
     }
     public void RemoveStack(int nb)

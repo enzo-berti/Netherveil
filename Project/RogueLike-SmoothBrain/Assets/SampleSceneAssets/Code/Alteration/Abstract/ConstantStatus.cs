@@ -20,4 +20,17 @@ public abstract class ConstantStatus : Status
         Effect();
     }
 
+    public sealed override void AddStack(int nb)
+    {
+        base.AddStack(nb);
+        if ((isStackable && stack < maxStack) || stack < 1)
+        {
+            nb = isStackable ? nb : 1;
+            stack += nb;
+            for (int i = 0; i < nb; i++)
+            {
+                stopTimes.Add(duration + currentTime);
+            }
+        }
+    }
 }

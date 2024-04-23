@@ -199,14 +199,12 @@ public abstract class Entity : MonoBehaviour
 
     protected void ClearStatus()
     {
-        Debug.Log("status");
         foreach (var status in AppliedStatusList)
         {
             status.isFinished = true;
         }
         foreach (var vfx in statusVfxs)
         {
-            Debug.Log("stop VFX");
             vfx.GetComponent<VFXStopper>().StopAllCoroutines();
             vfx.Stop();
             Destroy(vfx.gameObject);
