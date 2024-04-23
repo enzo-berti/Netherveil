@@ -86,7 +86,8 @@ public abstract class Status
                     if (stack <= 0)
                     {
                         isFinished = true;
-                        OnFinished();
+                        if(target != null)
+                            OnFinished();
                     }
                 }
             }

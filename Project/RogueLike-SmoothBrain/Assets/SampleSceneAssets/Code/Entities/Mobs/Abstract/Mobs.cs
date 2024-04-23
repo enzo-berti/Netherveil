@@ -220,7 +220,6 @@ public abstract class Mobs : Entity
         return (_unitPos - wanderZone.center).normalized * _minTravelDistance;
     }
 
-
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)
     {

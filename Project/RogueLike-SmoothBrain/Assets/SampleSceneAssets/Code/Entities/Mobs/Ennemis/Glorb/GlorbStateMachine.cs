@@ -140,7 +140,7 @@ public class GlorbStateMachine : Mobs, IGlorb
     {
         ApplyDamagesMob(_value, glorbSounds.hitSFX, Death, notEffectDamage);
 
-        if (!(currentState is GlorbAttackingState || currentState is GlorbDeathState))
+        if (currentState is not GlorbAttackingState || currentState is not GlorbDeathState)
         {
             currentState = factory.GetState<GlorbTriggeredState>();
             player = Utilities.Hero;
@@ -161,6 +161,7 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     public void Death()
     {
+        animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
 

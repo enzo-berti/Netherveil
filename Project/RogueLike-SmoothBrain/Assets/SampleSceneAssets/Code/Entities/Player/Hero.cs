@@ -122,6 +122,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     }
     public void Death()
     {
+        animator.speed = 1;
         OnDeath?.Invoke(this.transform.position);
         GetComponent<Knockback>().StopAllCoroutines();
         Destroy(GetComponent<CharacterController>());
@@ -263,6 +264,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
             CanHealFromConsumables = false;
+            DescriptionTab.current.SetTab("Damnation Veil", "On Activation ,azdazdzadad");
             playerController.SpecialAbility = new DamnationVeil();
         }
         else

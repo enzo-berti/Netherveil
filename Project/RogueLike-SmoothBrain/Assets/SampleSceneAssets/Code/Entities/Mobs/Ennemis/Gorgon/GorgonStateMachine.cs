@@ -88,12 +88,13 @@ public class GorgonStateMachine : Mobs, IGorgon
         currentState = factory.GetState<GorgonWanderingState>();
 
         // opti variables
-        maxFrameUpdate = 10;
         frameToUpdate = entitySpawn % maxFrameUpdate;
     }
 
     protected override void Update()
     {
+        animator.speed = isFreeze ? 0 : 1;
+
         if (animator.speed == 0)
             return;
 
@@ -158,6 +159,7 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     public void Death()
     {
+        animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
 

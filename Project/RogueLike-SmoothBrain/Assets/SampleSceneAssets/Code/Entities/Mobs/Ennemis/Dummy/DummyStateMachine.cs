@@ -159,6 +159,7 @@ public class DummyStateMachine : Mobs, IDummy
 
     public void Death()
     {
+        animator.speed = 1;
         Unsubscribe();
         Destroy(objectToDestroy);
         StopAllCoroutines();

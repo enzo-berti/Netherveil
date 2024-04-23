@@ -19,6 +19,8 @@ public class PlayerInput : MonoBehaviour
     DialogueTreeRunner dialogueTreeRunner;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
 
+    public HudHandler HudHandler { get => hudHandler; }
+
     public static event Action<Vector3> OnThrowSpear;
     public static event Action OnRetrieveSpear;
     public static event Action OnStartDash;

@@ -3,9 +3,16 @@ using UnityEngine;
 
 public class DescriptionTab : MonoBehaviour
 {
+    static public DescriptionTab current;
+
     [SerializeField] private RectTransform tabRectTransform;
     [SerializeField] private TMP_Text titleTextMesh;
     [SerializeField] private TMP_Text descriptionTextMesh;
+
+    private void Awake()
+    {
+        current = this;
+    }
 
     public void SetTab(string title, string description)
     {
