@@ -25,7 +25,8 @@ public interface IAttacker
         if (entity == null) return;
         foreach (var status in StatusToApply)
         {
-            entity.AddStatus(status.DeepCopy());
+            Status newStatus = status.DeepCopy();
+            entity.AddStatus(newStatus);
         }
     }
 }

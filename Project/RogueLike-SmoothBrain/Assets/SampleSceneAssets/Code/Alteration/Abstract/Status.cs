@@ -37,7 +37,7 @@ public abstract class Status
     public bool isFinished = false;
     protected float currentTime = 0;
 
-    readonly public List<float> stopTimes = new();
+    public List<float> stopTimes = new();
 
     #endregion
 
@@ -47,6 +47,7 @@ public abstract class Status
     public abstract bool CanApplyEffect(Entity target);
     public virtual void ApplyEffect(Entity target)
     {
+        Debug.Log("stop times count => " + stopTimes.Count);
         AddStack(1);
         PlayStatus();
         CoroutineManager.Instance.StartCoroutine(ManageStack());
@@ -81,8 +82,10 @@ public abstract class Status
                 currentTime += Time.deltaTime;
                 if (currentTime >= stopTimes[0])
                 {
+                    Debug.Log("Manage stack, stoptime count => " + stopTimes.Count);
                     stopTimes.RemoveAt(0);
                     stack--;
+                    Debug.Log("stack-- => " + stack);
                     if (stack <= 0)
                     {
                         isFinished = true;

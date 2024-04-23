@@ -14,8 +14,9 @@ public class Damnation : ConstantStatus
 
     public override Status DeepCopy()
     {
-        Damnation status = (Damnation)this.MemberwiseClone();
-        return status;
+        Damnation damnation = (Damnation)this.MemberwiseClone();
+        damnation.stopTimes = new();
+        return damnation;
     }
 
     public override void OnFinished()

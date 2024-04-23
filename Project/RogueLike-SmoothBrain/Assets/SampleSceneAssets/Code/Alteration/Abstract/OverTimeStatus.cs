@@ -45,7 +45,7 @@ public abstract class OverTimeStatus : Status
             stack += nb;
             for (int i = 0; i < nb; i++)
             {
-                stopTimes.Add(duration + currentTime + frequency * (i + 1));
+                stopTimes.Add(duration + currentTime + frequency * stopTimes.Count);
             }
         }
 

@@ -20,6 +20,7 @@ public class Electricity : OverTimeStatus
     public override Status DeepCopy()
     {
         Electricity electricity = (Electricity)MemberwiseClone();
+        electricity.stopTimes = new();
         return electricity;
     }
 

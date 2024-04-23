@@ -67,6 +67,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
+        if (Context == null) return;
         if (curState == State.Start)
         {
             Context.CanLoseAggro = false;

@@ -21,6 +21,7 @@ public class Poison : OverTimeStatus
     public override Status DeepCopy()
     {
         Poison poison = (Poison)this.MemberwiseClone();
+        poison.stopTimes = new();
         return poison;
     }
 
@@ -39,7 +40,6 @@ public class Poison : OverTimeStatus
 
     protected override void PlayStatus()
     {
-        Debug.Log("play status");
         AddStack(baseStack - 1);
     }
 }

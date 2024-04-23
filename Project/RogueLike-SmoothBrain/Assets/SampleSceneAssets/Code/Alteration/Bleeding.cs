@@ -17,6 +17,7 @@ public class Bleeding : OverTimeStatus
     public override Status DeepCopy()
     {
         Bleeding bleeding = (Bleeding)this.MemberwiseClone();
+        bleeding.stopTimes = new();
         return bleeding;
     }
 

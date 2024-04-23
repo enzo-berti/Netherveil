@@ -27,6 +27,7 @@ public class Fire : OverTimeStatus
     public override Status DeepCopy()
     {
         Fire fire = (Fire)this.MemberwiseClone();
+        fire.stopTimes = new();
         return fire;
     }
 
