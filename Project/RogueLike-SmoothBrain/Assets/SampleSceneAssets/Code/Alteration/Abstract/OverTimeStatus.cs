@@ -31,7 +31,7 @@ public abstract class OverTimeStatus : Status
         isCoroutineOn = false;
     }
 
-    public override void ApplyEffect(Entity target)
+    public sealed override void ApplyEffect(Entity target)
     {
         base.ApplyEffect(target);
         CoroutineManager.Instance.StartCustom(UpdateEffect());

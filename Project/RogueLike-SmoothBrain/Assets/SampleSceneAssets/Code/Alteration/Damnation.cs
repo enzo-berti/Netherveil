@@ -30,7 +30,7 @@ public class Damnation : ConstantStatus
         target.GetComponent<Mobs>().DamageTakenMultiplicator += 1.0f;
     }
 
-    protected override void PlayVFX()
+    protected override void PlayStatus()
     {
         throw new System.NotImplementedException("Bleeding VFX is not implemented");
     }

@@ -38,7 +38,7 @@ public class Bleeding : OverTimeStatus
         return target.gameObject.TryGetComponent<IDamageable>(out _);
     }
 
-    protected override void PlayVFX()
+    protected override void PlayStatus()
     {
         PlayVfx("VFX_Fire");
     }

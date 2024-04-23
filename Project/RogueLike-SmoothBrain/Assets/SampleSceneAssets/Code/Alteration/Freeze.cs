@@ -46,7 +46,7 @@ public class Freeze : ConstantStatus
         return target.Stats.HasStat(Stat.SPEED);
     }
 
-    protected override void PlayVFX()
+    protected override void PlayStatus()
     {
         PlayVfx("VFX_Frozen");
 

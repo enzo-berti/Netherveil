@@ -49,13 +49,13 @@ public abstract class Status
     public virtual void ApplyEffect(Entity target)
     {
         AddStack(1);
-        PlayVFX();
+        PlayStatus();
         CoroutineManager.Instance.StartCoroutine(ManageStack());
     }
 
     // Do something when status is removed from the target
     public abstract void OnFinished();
-    protected abstract void PlayVFX();
+    protected abstract void PlayStatus();
     #endregion
 
     #region Stack

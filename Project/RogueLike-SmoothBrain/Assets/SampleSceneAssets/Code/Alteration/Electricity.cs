@@ -9,6 +9,7 @@ public class Electricity : OverTimeStatus
     public Electricity(float duration, float chance) : base(duration, chance)
     {
         isStackable = false;
+        frequency = 1.0f;
     }
     public override bool CanApplyEffect(Entity target)
     {
@@ -30,7 +31,9 @@ public class Electricity : OverTimeStatus
     {
         if (target != null && !isStunCoroutineOn)
         {
+            Debug.Log("Entity base speed =>>>>>>>>> " + entityBaseSpeed);
             Stun();
+            Debug.Log("Entity base speed after =>>>>>>>>> " + entityBaseSpeed);
         }
     }
 
@@ -38,13 +41,14 @@ public class Electricity : OverTimeStatus
     {
         isStunCoroutineOn = true;
         entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
+        Debug.Log("Entity base speed during =>>>>>>>>> " + entityBaseSpeed);
         target.Stats.SetValue(Stat.SPEED, 0);
         yield return new WaitForSeconds(stunTime);
         target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
         isStunCoroutineOn = false;
     }
 
-    protected override void PlayVFX()
+    protected override void PlayStatus()
     {
         PlayVfx("VFX_Electricity");
     }
