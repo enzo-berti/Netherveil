@@ -1,3 +1,4 @@
+using PostProcessingEffects;
 using UnityEngine;
 
 public class Poison : OverTimeStatus
@@ -33,6 +34,9 @@ public class Poison : OverTimeStatus
         {
             FloatingTextGenerator.CreateEffectDamageText(Stack, target.transform.position, poisonColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(Stack, launcher, false);
+
+            if (Utilities.IsPlayer(target))
+                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Poison);
         }
     }
 
