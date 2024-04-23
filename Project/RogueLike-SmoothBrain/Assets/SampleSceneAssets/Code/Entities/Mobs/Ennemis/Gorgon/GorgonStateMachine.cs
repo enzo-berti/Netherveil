@@ -158,6 +158,7 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     public void Death()
     {
+        animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
 

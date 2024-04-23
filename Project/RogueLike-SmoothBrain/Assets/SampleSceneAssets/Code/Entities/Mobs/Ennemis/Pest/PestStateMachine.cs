@@ -32,7 +32,6 @@ public class PestStateMachine : Mobs, IPest
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     [SerializeField] private BoxCollider attackCollider;
     private Transform player;
-    private bool isDeath = false;
     float dashTimer = 0f;
 
     // animation hash
@@ -53,7 +52,6 @@ public class PestStateMachine : Mobs, IPest
     public Transform Player { get => player; set => player = value; }
     public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 5.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
-    public bool IsDeath { get => isDeath; }
     public float VisionAngle { get => (currentState is PestTriggeredState || currentState is PestAttackingState) && Player != null ? 360 : angle; }
     public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is PestTriggeredState || currentState is PestAttackingState ? 1.25f : 1f); }
     public float MovementTimer { set => dashTimer = value; }
@@ -73,7 +71,7 @@ public class PestStateMachine : Mobs, IPest
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
         chargeOutHash = Animator.StringToHash("ChargeOut");
-        deathHash = Animator.StringToHash("IsDeath");
+        deathHash = Animator.StringToHash("Death");
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
@@ -152,11 +150,12 @@ public class PestStateMachine : Mobs, IPest
 
     public void Death()
     {
+        animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
         pestSounds.deathSound.Play(transform.position);
-        animator.SetBool(deathHash, true);
-        isDeath = true;
+        animator.ResetTrigger(deathHash);
+        animator.SetTrigger(deathHash);
 
         currentState = factory.GetState<PestDeathState>();
 

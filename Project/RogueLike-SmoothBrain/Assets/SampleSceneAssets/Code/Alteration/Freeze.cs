@@ -31,6 +31,9 @@ public class Freeze : ConstantStatus
 
     public override void OnFinished()
     {
+        if (target == null)
+            return;
+
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
         target.isFreeze = false;
         Renderer[] renderers = target.GetComponentsInChildren<Renderer>();

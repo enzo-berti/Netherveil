@@ -161,6 +161,7 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     public void Death()
     {
+        animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
 
