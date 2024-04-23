@@ -10,14 +10,14 @@ public class Fire : OverTimeStatus
     public Fire(float _duration, float _statusChance) : base(_duration, _statusChance)
     {
         frequency = 0.5f;
-        isStackable = true;
+        isStackable = false;
     }
     protected override void Effect()
     {
         if (target != null)
         {
-            FloatingTextGenerator.CreateEffectDamageText(damage * Stack, target.transform.position, fireColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage * Stack, launcher, false);
+            FloatingTextGenerator.CreateEffectDamageText(damage, target.transform.position, fireColor);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage, launcher, false);
         }
     }
 

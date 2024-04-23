@@ -18,7 +18,6 @@ public abstract class Status
         this.duration = _duration;
         this.statusChance = _chance;
         this.isFinished = false;
-
     }
 
     public abstract Status DeepCopy();
@@ -67,7 +66,8 @@ public abstract class Status
     {
         if ((isStackable && stack < maxStack) || stack < 1)
         {
-            stack += isStackable ? nb : 1;
+            nb = isStackable ? nb : 1;
+            stack += nb;
             for (int i = 0; i < nb; i++)
             {
                 stopTimes.Add(duration + currentTime);
