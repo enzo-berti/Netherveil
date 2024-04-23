@@ -34,7 +34,6 @@ public class PestStateMachine : Mobs, IPest
     private Transform player;
     private bool isDeath = false;
     float dashTimer = 0f;
-    bool canLoseAggro = true;
 
     // animation hash
     private int chargeInHash;
@@ -60,7 +59,6 @@ public class PestStateMachine : Mobs, IPest
     public float MovementTimer { set => dashTimer = value; }
     public float MovementDelay { get => (currentState is PestTriggeredState ? 1f : 1.5f); }
     public bool CanMove { get => dashTimer > MovementDelay; }
-    public bool CanLoseAggro { set => canLoseAggro = value; }
 
     protected override void Start()
     {
@@ -118,13 +116,6 @@ public class PestStateMachine : Mobs, IPest
         {
             if (!agent.enabled)
             {
-                yield return null;
-                continue;
-            }
-
-            if (!canLoseAggro)
-            {
-                player = Utilities.Hero.transform;
                 yield return null;
                 continue;
             }
