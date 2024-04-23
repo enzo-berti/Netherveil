@@ -51,6 +51,7 @@ public class Freeze : ConstantStatus
     {
         PlayVFX();
         PlayPostProcessing();
+        target.OnFreeze?.Invoke();
     }
     
     private void PlayVFX()

@@ -12,7 +12,7 @@ using UnityEditor;
 public abstract class Entity : MonoBehaviour
 {
     public static int entitySpawn = 0;
-    public event Action OnFreeze;
+    public Action OnFreeze;
     public enum EntityState : int
     {
         MOVE,
