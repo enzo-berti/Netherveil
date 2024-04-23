@@ -6,6 +6,8 @@ public class DontDealWithMe : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
+
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
@@ -24,6 +26,11 @@ public class DontDealWithMe : Quest
         Hero.OnChargedAttack += UpdateCount;
     }
 
+    protected override bool IsQuestFinished()
+    {
+        return currentNumber >= MAX_NUMBER;
+    }
+
     protected override void QuestFinished()
     {
         base.QuestFinished();
@@ -32,6 +39,9 @@ public class DontDealWithMe : Quest
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
+        if (IsQuestFinished())
+            return;
+
         currentNumber++;
         progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
         QuestUpdated();

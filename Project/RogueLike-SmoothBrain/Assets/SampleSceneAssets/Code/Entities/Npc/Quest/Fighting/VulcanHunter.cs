@@ -6,6 +6,7 @@ public class VulcanHunter : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
@@ -24,6 +25,11 @@ public class VulcanHunter : Quest
         Hero.OnKill += UpdateCount;
     }
 
+    protected override bool IsQuestFinished()
+    {
+        return currentNumber >= MAX_NUMBER;
+    }
+
     protected override void QuestFinished()
     {
         base.QuestFinished();
@@ -32,16 +38,14 @@ public class VulcanHunter : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
+        if (IsQuestFinished())
+            return;
+
         if (damageable as IGorgon != null)
         {
             currentNumber++;
             progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
-
-            if (currentNumber >= MAX_NUMBER)
-            {
-                QuestFinished();
-            }
         }
     }
 }

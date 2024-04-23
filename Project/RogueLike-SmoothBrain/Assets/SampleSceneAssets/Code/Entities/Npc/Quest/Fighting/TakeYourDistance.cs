@@ -6,6 +6,7 @@ public class TakeYourDistance : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
@@ -24,6 +25,11 @@ public class TakeYourDistance : Quest
         Hero.OnSpearAttack += UpdateCount;
     }
 
+    protected override bool IsQuestFinished()
+    {
+        return currentNumber >= MAX_NUMBER;
+    }
+
     protected override void QuestFinished()
     {
         base.QuestFinished();
@@ -32,13 +38,11 @@ public class TakeYourDistance : Quest
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
+        if (!IsQuestFinished())
+            return;
+
         currentNumber++;
         progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
         QuestUpdated();
-
-        if (currentNumber >= MAX_NUMBER)
-        {
-            QuestFinished();
-        }
     }
 }

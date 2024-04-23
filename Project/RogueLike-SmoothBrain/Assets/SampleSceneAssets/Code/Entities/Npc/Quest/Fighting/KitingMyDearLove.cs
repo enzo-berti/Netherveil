@@ -1,5 +1,4 @@
-using UnityEngine; 
- 
+
 public class KitingMyDearLove : Quest 
 {
     int currentNumber = 0;
@@ -8,6 +7,7 @@ public class KitingMyDearLove : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
@@ -27,6 +27,11 @@ public class KitingMyDearLove : Quest
         Hero.OnKill += UpdateCount;
     }
 
+    protected override bool IsQuestFinished()
+    {
+        return currentNumber >= MAX_NUMBER;
+    }
+
     protected override void QuestFinished()
     {
         base.QuestFinished();
@@ -41,17 +46,15 @@ public class KitingMyDearLove : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
+        if (IsQuestFinished())
+            return;
+
         Entity monster = (damageable as Entity);
         if (asDoAnDistanceAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
         {
             currentNumber++;
             progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
-
-            if (currentNumber >= MAX_NUMBER)
-            {
-                QuestFinished();
-            }
         }
         asDoAnDistanceAttack = false;
     }

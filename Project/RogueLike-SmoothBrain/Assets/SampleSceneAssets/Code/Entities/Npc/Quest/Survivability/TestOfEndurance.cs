@@ -7,7 +7,7 @@ public class TestOfEndurance : Quest
 
     public override void AcceptQuest()
     {
-        
+        base.AcceptQuest();
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
@@ -31,11 +31,13 @@ public class TestOfEndurance : Quest
     {
         base.QuestLost();
         Hero.OnTakeDamage -= TestHp;
+        RoomUtilities.allEnemiesDeadEvents -= UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
+        Hero.OnTakeDamage -= TestHp;
         RoomUtilities.allEnemiesDeadEvents -= UpdateCount;
     }
 
@@ -43,19 +45,27 @@ public class TestOfEndurance : Quest
     {
         if (Utilities.Hero.Stats.GetValue(Stat.HP) < 100)
         {
-            QuestLost();
+            questLost = true;
         }
     }
 
     private void UpdateCount()
     {
+        if (IsQuestFinished() || questLost)
+            return;
+
         currentSurvivedRoom++;
         progressText = $"DON'T FALL UNDER 100HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
         QuestUpdated();
+    }
 
-        if (currentSurvivedRoom >= NB_ROOM_SURVIVING)
-        {
-            QuestFinished();
-        }
+    protected override bool IsQuestFinished()
+    {
+        return currentSurvivedRoom >= NB_ROOM_SURVIVING;
+    }
+
+    protected bool IsQuestLost()
+    {
+        return Utilities.Hero.Stats.GetValue(Stat.HP) < 100;
     }
 }

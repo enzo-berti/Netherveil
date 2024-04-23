@@ -1182,6 +1182,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 688d5a40-0eea-4b89-8da6-088b9f2e6fb4
     m_ActionName: Gamepad/SpecialAbility
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 13868f5d-afd8-438b-bd44-1d11408a028c
+    m_ActionName: Keyboard/ToggleQuest[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2dec7434-5d35-4f23-a6b9-afae95d763b7
+    m_ActionName: Gamepad/ToggleQuest
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Keyboard
@@ -1226,8 +1234,8 @@ MonoBehaviour:
   SpearLaunchVFX: {fileID: 6162956545141077538}
   corruptionUpgradeVFX: {fileID: 2566926860641753374}
   benedictionUpgradeVFX: {fileID: 4914791504489867642}
-  benedictionDrawbackVFX: {fileID: 0}
-  corruptionDrawbackVFX: {fileID: 0}
+  benedictionDrawbackVFX: {fileID: 2566926860641753374}
+  corruptionDrawbackVFX: {fileID: 4914791504489867642}
   DivineShieldVFX: {fileID: 5231877333891943702}
   DamnationVeilVFX: {fileID: 7696305895192340609}
   DashSFX:
@@ -1318,10 +1326,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusNameToApply:
-  - Freeze
+  - Fire
+  - Electricity
   durationStatusToApply:
-  - 3
+  - 10
+  - 10
   chanceStatusToApply:
+  - 1
   - 1
   stats:
     stats:
