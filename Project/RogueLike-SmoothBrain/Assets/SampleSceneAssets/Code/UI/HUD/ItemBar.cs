@@ -57,7 +57,7 @@ public class ItemBar : MonoBehaviour
     {
         ItemData data = database.GetItem(itemEffect.Name);
         frame.GetComponentInChildren<RawImage>(true).texture = data.icon;
-        frame.GetComponent<Image>().color = data.rarityColor;
+        frame.GetComponent<Image>().color = database.GetItemRarityColor(itemEffect.Name);
     }
 
     private IEnumerator ActiveItemCooldown()
