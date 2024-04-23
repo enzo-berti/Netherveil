@@ -4,6 +4,7 @@ public class DragonScale : ItemEffect , IPassiveItem
 {
     readonly float coefValue = 0.5f;
     readonly float hpValue = 25f;
+
     public void OnRetrieved() 
     { 
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();

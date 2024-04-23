@@ -6,7 +6,7 @@ using UnityEngine;
 public class HornOfBarbatos : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 10f;
-    private float increaseValue = 0.2f;
+    private float increaseValue = 20f;
     private List<Stat> avoidedStat = new List<Stat>()
     {
         Stat.CORRUPTION,
@@ -18,11 +18,11 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     {
         RoomUtilities.exitEvents += ResetStat;
         Hero hero = Utilities.Hero;
-        foreach(var stat in hero.Stats.StatsName)
+        foreach (var stat in hero.Stats.StatsName)
         {
-            if(!avoidedStat.Contains(stat))
+            if (!avoidedStat.Contains(stat))
             {
-                hero.Stats.MultiplyCoeffValue(stat, 1+increaseValue);
+                hero.Stats.MultiplyCoeffValue(stat, 1 + increaseValue / 100f);
             }
         }
     }
@@ -34,8 +34,8 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
         {
             if (!avoidedStat.Contains(stat))
             {
-                hero.Stats.DivideCoeffValue(stat, 1+increaseValue);
+                hero.Stats.DivideCoeffValue(stat, 1 + increaseValue / 100f);
             }
         }
     }
-} 
+}
