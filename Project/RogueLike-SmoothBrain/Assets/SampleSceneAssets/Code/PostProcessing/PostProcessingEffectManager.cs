@@ -1,0 +1,129 @@
+using System;
+using UnityEngine;
+using UnityEngine.Rendering;
+
+namespace PostProcessingEffects
+{
+    public enum Effect
+    {
+        Hit,
+        Blessing,
+        Freeze,
+        Electricity,
+        Fire,
+        Damnation,
+        Bleeding
+    }
+
+    public class PostProcessingEffectManager : MonoBehaviour
+    {
+        static private PostProcessingEffectManager instance;
+        static public PostProcessingEffectManager current
+        {
+            get
+            {
+                if (instance == null)
+                    throw new Exception("No PostProcessingEffectManager in the scene !");
+
+                return instance;
+            }
+        }
+
+        [SerializeField] private Volume volume;
+        public Coroutine routine = null;
+
+        public Volume Volume => volume;
+
+        [Header("All effects")]
+        [SerializeField] private PostProcessingHitEffect hitEffect;
+        [SerializeField] private PostProcessingBlessingEffect blessingEffect;
+        [SerializeField] private PostProcessingFreezeEffect freezeEffect;
+        [SerializeField] private PostProcessingElectricityEffect electricityEffect;
+        [SerializeField] private PostProcessingFireEffect fireEffect;
+        [SerializeField] private PostProcessingDamnationEffect damnationEffect;
+        [SerializeField] private PostProcessingBleedingEffect bleedingEffect;
+
+        private void Awake()
+        {
+            instance = this;
+        }
+
+        public void Play(int effect)
+        {
+            Effect cur = (Effect)Enum.Parse(typeof(Effect), effect.ToString());
+            Play(cur, true);
+        }
+
+        public void Play(Effect effect, bool forceCancelPrevious = true)
+        {
+            if (routine != null)
+            {
+                if (!forceCancelPrevious)
+                {
+                    Debug.LogWarning("An post processing effect is currently use.");
+                    return;
+                }
+
+                StopCoroutine(routine);
+            }
+
+            volume.weight = 0.0f;
+
+            switch (effect)
+            {
+                case Effect.Hit:
+                    hitEffect.Play(this);
+                    break;
+                case Effect.Blessing:
+                    blessingEffect.Play(this);
+                    break;
+                case Effect.Freeze:
+                    freezeEffect.Play(this);
+                    break;
+                case Effect.Electricity:
+                    electricityEffect.Play(this);
+                    break;
+                case Effect.Fire:
+                    fireEffect.Play(this);
+                    break;
+                case Effect.Damnation:
+                    damnationEffect.Play(this);
+                    break;
+                case Effect.Bleeding:
+                    bleedingEffect.Play(this);
+                    break;
+            }
+        }
+
+
+        public void Stop(int effect)
+        {
+            Effect cur = (Effect)Enum.Parse(typeof(Effect), effect.ToString());
+            Stop(cur, true);
+        }
+
+        public void Stop(Effect effect, bool forceCancelPrevious = true)
+        {
+            if (routine != null)
+            {
+                if (!forceCancelPrevious)
+                {
+                    Debug.LogWarning("An post processing effect is currently use.");
+                    return;
+                }
+
+                StopCoroutine(routine);
+            }
+
+            switch (effect)
+            {
+                case Effect.Freeze:
+                    freezeEffect.Stop(this);
+                    break;
+                case Effect.Damnation:
+                    damnationEffect.Stop(this);
+                    break;
+            }
+        }
+    }
+}
