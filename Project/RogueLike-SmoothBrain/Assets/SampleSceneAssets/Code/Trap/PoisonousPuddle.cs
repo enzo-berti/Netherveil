@@ -4,45 +4,45 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class ExplodingBomb : MonoBehaviour
+public class PoisonousPuddle : MonoBehaviour
 {
     [Header("Gameobjects & Components")]
     [SerializeField] private GameObject graphics;
     [SerializeField] private GameObject VFXObject;
     [SerializeField] private VisualEffect VFX;
-    [SerializeField] private Sound bombSFX;
-    [Header("Bomb Parameter")]
+    [SerializeField] private Sound puddleSFX;
+    [Header("Puddle Parameter")]
     [SerializeField] private bool activateOnAwake;
-    [SerializeField] private float timerBeforeExplode;
-    [SerializeField] private float blastDiameter;
-    private float BlastDiameter { get => blastDiameter; }
-    [SerializeField] private int blastDamage;
+    [SerializeField] private float timerBeforeRemoved;
+    [SerializeField] private float puddleDiameter;
+    private float PuddleDiameter { get => puddleDiameter; }
+    [SerializeField] private int impactDamage;
     [SerializeField] private LayerMask damageLayer;
     private bool isActive;
     private bool isMoving => throwRoutine != null;
-    private float elapsedExplosionTime;
+    private float elapsedOnFieldTime;
     private Coroutine throwRoutine;
-    private Coroutine explosionRoutine;
+    private Coroutine impactRoutine;
     IAttacker launcher = null;
 
     private void Start()
     {
-        VFX.SetFloat("ExplosionTime", 1.0f);
-        VFX.SetFloat("ExplosionRadius", blastDiameter);
+        VFX.SetFloat("StayOnFieldTime", 1.0f);
+        VFX.SetFloat("PuddleRadius", puddleDiameter);
 
         if (activateOnAwake)
             Activate();
     }
 
-    public void SetTimeToExplode(float _timeToExplode)
+    public void SetTimeStayingOnField(float _timeStaying)
     {
-        timerBeforeExplode = _timeToExplode;
-        VFX.SetFloat("TimeToExplode", timerBeforeExplode);
+        timerBeforeRemoved = _timeStaying;
+        VFX.SetFloat("StayOnFieldTime", timerBeforeRemoved);
     }
 
-    public void SetBlastDamages(int damages)
+    public void SetImpactDamages(int damages)
     {
-        blastDamage = damages;
+        impactDamage = damages;
     }
 
     void Update()
@@ -87,37 +87,37 @@ public class ExplodingBomb : MonoBehaviour
 
     void UpdateTimerExplosion()
     {
-        if (elapsedExplosionTime + timerBeforeExplode < Time.time)
-            Explode();
+        if (elapsedOnFieldTime + timerBeforeRemoved < Time.time)
+            Impact();
     }
 
     public void Activate()
     {
         isActive = true;
-        elapsedExplosionTime = Time.time;
+        elapsedOnFieldTime = Time.time;
 
     }
 
-    public void Explode()
+    public void Impact()
     {
-        if (explosionRoutine == null)
-            explosionRoutine = StartCoroutine(ExplodeRoutine());
+        if (impactRoutine == null)
+            impactRoutine = StartCoroutine(ImpactRoutine());
     }
 
-    private IEnumerator ExplodeRoutine()
+    private IEnumerator ImpactRoutine()
     {
-        Physics.OverlapSphere(this.transform.position, BlastDiameter / 2f - BlastDiameter / 8f, damageLayer)
+        Physics.OverlapSphere(this.transform.position, PuddleDiameter / 2f - PuddleDiameter / 8f, damageLayer)
             .Select(entity => entity.GetComponent<IBlastable>())
             .Where(entity => entity != null)
             .ToList()
             .ForEach(currentEntity =>
             {
-                currentEntity.ApplyDamage(blastDamage, launcher);
+                currentEntity.ApplyDamage(impactDamage, launcher);
             });
 
         graphics.SetActive(false);
-        bombSFX.Play(this.transform.position);
-        float timer = VFX.GetFloat("ExplosionTime");
+        puddleSFX.Play(this.transform.position);
+        float timer = VFX.GetFloat("ExplosionTime"); 
 
         while (timer > 0f)
         {
@@ -149,13 +149,13 @@ public class ExplodingBomb : MonoBehaviour
     {
         Handles.color = new Color(1, 0, 0, 0.25f);
 
-        Gizmos.DrawSphere(this.transform.position, BlastDiameter / 2);
+        Gizmos.DrawSphere(this.transform.position, PuddleDiameter / 2);
 
         Handles.color = Color.white;
         Handles.Label(transform.position + Vector3.up,
             $"Bomb" +
             $"\nActivate : {isActive}" +
-            $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
+            $"\nBefore explode : {timerBeforeRemoved - Time.time + elapsedOnFieldTime}");
     }
 #endif
 }

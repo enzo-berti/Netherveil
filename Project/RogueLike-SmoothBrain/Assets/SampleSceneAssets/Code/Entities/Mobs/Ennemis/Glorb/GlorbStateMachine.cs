@@ -140,7 +140,7 @@ public class GlorbStateMachine : Mobs, IGlorb
     {
         ApplyDamagesMob(_value, glorbSounds.hitSFX, Death, notEffectDamage);
 
-        if (!(currentState is GlorbAttackingState || currentState is GlorbDeathState))
+        if (currentState is not GlorbAttackingState || currentState is not GlorbDeathState)
         {
             currentState = factory.GetState<GlorbTriggeredState>();
             player = Utilities.Hero;

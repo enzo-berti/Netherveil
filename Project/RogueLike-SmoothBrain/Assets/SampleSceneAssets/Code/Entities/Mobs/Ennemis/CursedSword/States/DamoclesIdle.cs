@@ -25,6 +25,7 @@ public class DamoclesIdle : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         Context.Stats.SetValue(Stat.SPEED, 5);
+        elapsedTimeMovement = Time.time;
     }
 
     // This method will be call only one time after the last update.
