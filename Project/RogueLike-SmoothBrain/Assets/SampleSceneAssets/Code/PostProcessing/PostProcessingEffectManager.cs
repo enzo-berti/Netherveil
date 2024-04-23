@@ -12,7 +12,8 @@ namespace PostProcessingEffects
         Electricity,
         Fire,
         Damnation,
-        Bleeding
+        Bleeding,
+        Poison
     }
 
     public class PostProcessingEffectManager : MonoBehaviour
@@ -43,6 +44,7 @@ namespace PostProcessingEffects
         [SerializeField] private PostProcessingFireEffect fireEffect;
         [SerializeField] private PostProcessingDamnationEffect damnationEffect;
         [SerializeField] private PostProcessingBleedingEffect bleedingEffect;
+        [SerializeField] private PostProcessingPoisonEffect poisonEffect;
 
         private void Awake()
         {
@@ -54,10 +56,7 @@ namespace PostProcessingEffects
             if (effectIsPlaying)
             {
                 if (!forceCancelPrevious)
-                {
-                    Debug.LogWarning("An post processing effect is currently use.");
                     return;
-                }
 
                 effectIsPlaying = false;
                 if (routine != null)
@@ -88,6 +87,9 @@ namespace PostProcessingEffects
                     break;
                 case Effect.Bleeding:
                     bleedingEffect.Play(this);
+                    break;
+                case Effect.Poison:
+                    poisonEffect.Play(this);
                     break;
             }
         }

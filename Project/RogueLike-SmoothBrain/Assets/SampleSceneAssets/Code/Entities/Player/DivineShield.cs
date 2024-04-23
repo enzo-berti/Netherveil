@@ -17,8 +17,8 @@ public class DivineShield : ISpecialAbility
     public void Activate()
     {
         PlayerController playerController = Utilities.Player.GetComponent<PlayerController>();
-        playerController.divineShieldVFX.SetFloat("Duration", duration);
-        playerController.divineShieldVFX.Play();
+        playerController.DivineShieldVFX.SetFloat("Duration", duration);
+        playerController.DivineShieldVFX.Play();
         playerController.SpecialAbilityCoroutine = playerController.StartCoroutine(DisableDivineShield());
         Utilities.Hero.IsInvincibleCount++;
     }
@@ -31,7 +31,7 @@ public class DivineShield : ISpecialAbility
             yield return null;
         }
         Utilities.Player.GetComponent<PlayerController>().SpecialAbilityCoroutine = null;
-        Utilities.Player.GetComponent<PlayerController>().divineShieldVFX.Stop();
+        Utilities.Player.GetComponent<PlayerController>().DivineShieldVFX.Stop();
         currentTime = 0f;
         Utilities.Hero.IsInvincibleCount--;
         yield break;

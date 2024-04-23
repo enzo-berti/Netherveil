@@ -73,7 +73,7 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
                 Context.Animator.SetTrigger("Shockwave");
                 currentAttack = Attacks.SPECIAL;
             }
-            else if (stompDelay >= 0.6f)
+            else if (stompDelay >= 0.8f)
             {
                 stompDelay = 0f;
                 Context.SpecialAttackTimer = 0f;
@@ -98,7 +98,7 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
                 Context.Animator.SetTrigger("Punch");
                 currentAttack = Attacks.BASIC;
             }
-            else if (punchDelay >= 0.4f)
+            else if (punchDelay >= 0.6f)
             {
                 punchDelay = 0f;
                 Context.BasicAttackTimer = 0f;

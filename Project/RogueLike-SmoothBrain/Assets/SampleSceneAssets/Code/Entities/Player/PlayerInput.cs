@@ -285,7 +285,7 @@ public class PlayerInput : MonoBehaviour
             Vector3 posToReach = transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
             OnThrowSpear?.Invoke(posToReach);
             controller.Spear.Throw(posToReach);
-            controller.PlayVFX(controller.spearLaunchVFX);
+            controller.PlayVFX(controller.SpearLaunchVFX);
         }
         else
         {
