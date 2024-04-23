@@ -31,9 +31,7 @@ public class Electricity : OverTimeStatus
     {
         if (target != null && !isStunCoroutineOn)
         {
-            Debug.Log("Entity base speed =>>>>>>>>> " + entityBaseSpeed);
-            Stun();
-            Debug.Log("Entity base speed after =>>>>>>>>> " + entityBaseSpeed);
+            CoroutineManager.Instance.StartCustom(Stun());
         }
     }
 
@@ -41,7 +39,6 @@ public class Electricity : OverTimeStatus
     {
         isStunCoroutineOn = true;
         entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
-        Debug.Log("Entity base speed during =>>>>>>>>> " + entityBaseSpeed);
         target.Stats.SetValue(Stat.SPEED, 0);
         yield return new WaitForSeconds(stunTime);
         target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
