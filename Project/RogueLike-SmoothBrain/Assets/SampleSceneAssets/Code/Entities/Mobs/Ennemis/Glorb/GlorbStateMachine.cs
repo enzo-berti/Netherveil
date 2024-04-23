@@ -83,12 +83,19 @@ public class GlorbStateMachine : Mobs, IGlorb
         walkHash = Animator.StringToHash("Walk");
 
         // opti variables
-        maxFrameUpdate = 10;
         frameToUpdate = entitySpawn % maxFrameUpdate;
+
+        OnFreeze += GlorbStateMachine_OnFreeze;
+    }
+
+    private void GlorbStateMachine_OnFreeze()
+    {
     }
 
     protected override void Update()
     {
+        animator.speed = isFreeze ? 0 : 1;
+
         if (animator.speed == 0)
             return;
 
