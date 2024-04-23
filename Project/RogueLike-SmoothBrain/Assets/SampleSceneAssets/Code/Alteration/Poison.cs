@@ -39,6 +39,7 @@ public class Poison : OverTimeStatus
 
     protected override void PlayStatus()
     {
-       
+        Debug.Log("play status");
+        AddStack(baseStack - 1);
     }
 }

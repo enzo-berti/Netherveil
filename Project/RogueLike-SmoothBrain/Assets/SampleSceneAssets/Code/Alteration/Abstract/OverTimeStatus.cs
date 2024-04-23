@@ -37,6 +37,19 @@ public abstract class OverTimeStatus : Status
         CoroutineManager.Instance.StartCustom(UpdateEffect());
     }
 
+    public sealed override void AddStack(int nb)
+    {
+        if ((isStackable && stack < maxStack) || stack < 1)
+        {
+            nb = isStackable ? nb : 1;
+            stack += nb;
+            for (int i = 0; i < nb; i++)
+            {
+                stopTimes.Add(duration + currentTime + frequency * (i + 1));
+            }
+        }
+
+    }
     private IEnumerator UpdateEffect()
     {
         while(!isFinished)

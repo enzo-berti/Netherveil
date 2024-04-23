@@ -8,4 +8,9 @@ public static class Utilities
     static public Hero Hero { get => Player.GetComponent<Hero>(); }
     static public Stats PlayerStat { get => Hero.Stats; }
     static public Inventory Inventory { get => Hero.Inventory; }
+
+    static public bool IsPlayer(Entity entity)
+    {
+        return entity.CompareTag("Player");
+    }
 }
