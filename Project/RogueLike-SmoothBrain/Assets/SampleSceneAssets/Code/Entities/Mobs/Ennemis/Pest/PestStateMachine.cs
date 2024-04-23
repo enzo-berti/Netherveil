@@ -106,6 +106,8 @@ public class PestStateMachine : Mobs, IPest
             currentState.Update();
 
             if (!CanMove) { dashTimer += Time.deltaTime; }
+
+            if (currentState is not PestWanderingState) { WanderZoneCenter = transform.position; }
         //}
     }
 
@@ -184,12 +186,13 @@ public class PestStateMachine : Mobs, IPest
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
+        DisplayWanderZone();
     }
 
     protected override void DisplayInfos()

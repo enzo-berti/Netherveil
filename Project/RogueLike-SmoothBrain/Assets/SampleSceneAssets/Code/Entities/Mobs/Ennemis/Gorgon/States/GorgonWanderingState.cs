@@ -23,7 +23,7 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     float idleTimer = 0f;
     float MAX_IDLE_COOLDOWN = 2f;
 
-    Vector3 randomDirection;
+    Vector3 randomPoint;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -57,11 +57,10 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
             }
             else
             {
-                float range = Context.Stats.GetValue(Stat.ATK_RANGE) / 2f;
-                range += Random.Range(0, range);
+                float minRange = Context.Stats.GetValue(Stat.ATK_RANGE) / 2f;
+                float maxRange = Context.Stats.GetValue(Stat.ATK_RANGE);
 
-                ChoseRandomDirection(range);
-                Context.MoveTo(Context.transform.position + randomDirection * range);
+                Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
                 idleTimer = 0f;
             }
         }
@@ -73,36 +72,5 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     {
         base.SwitchState(newState);
         Context.currentState = newState;
-    }
-
-
-
-    // Extra methods
-    void ChoseRandomDirection(float _range)
-    {
-        bool validDirection = false;
-
-        do
-        {
-            float randomX = Random.Range(-1f, 1f);
-            float randomZ = Random.Range(-1f, 1f);
-
-            randomDirection = new Vector3(randomX, 0, randomZ);
-
-            if (randomDirection == Vector3.zero)
-            {
-                continue;
-            }
-
-            randomDirection.Normalize();
-
-            // aide à éviter les murs
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), randomDirection, _range, LayerMask.GetMask("Map")))
-            {
-                continue;
-            }
-
-            validDirection = true;
-        } while (!validDirection);
     }
 }

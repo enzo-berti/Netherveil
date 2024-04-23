@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
+using UnityEngine.SocialPlatforms;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -27,9 +28,21 @@ public abstract class Mobs : Entity
     protected int frameToUpdate;
     protected int maxFrameUpdate = 20;
 
+    // extra
+    [Serializable]
+    public struct Zone
+    {
+        [HideInInspector]
+        public Vector3 center;
+        public int radius;
+    }
+    [SerializeField] protected Zone wanderZone = new() { radius = 8 };
+
     // getters/setters
     public NavMeshAgent Agent { get => agent; }
     public float DamageTakenMultiplicator { get; set; } = 1f;
+    public Vector3 WanderZoneCenter { get => wanderZone.center; set => wanderZone.center = value; }
+    public int WanderZoneRadius { get => wanderZone.radius; set => wanderZone.radius = value; }
 
     protected virtual void OnEnable()
     {
@@ -82,9 +95,12 @@ public abstract class Mobs : Entity
 
         animator.speed = 0;
         IsInvincibleCount++;
+        lifeBar.gameObject.SetActive(false);
         spawningVFX.GetComponent<VFXStopper>().Duration = spawningVFX.GetFloat("Duration") + 0.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
+
+        wanderZone.center = transform.position;
     }
 
     protected override void Update()
@@ -116,6 +132,8 @@ public abstract class Mobs : Entity
     private void EndOfSpawningVFX()
     {
         IsInvincibleCount--;
+        spawningVFX.Stop();
+        lifeBar.gameObject.SetActive(true);
         animator.speed = 1;
     }
 
@@ -139,34 +157,6 @@ public abstract class Mobs : Entity
         yield return new WaitForSeconds(0.05f);
         hitMaterial.SetInt("_isHit", 0);
     }
-
-    // Je le laisse là ça servira peut être
-
-    //protected void ApplyDamagesMob(int _value, EventReference hitSound, Action deathMethod, bool notEffectDamage)
-    //{
-    //    // Some times, this method is called when entity is dead ??
-    //    if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
-    //        return;
-
-    //    Stats.DecreaseValue(Stat.HP, _value, false);
-    //    lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
-    //    if (notEffectDamage)
-    //    {
-    //        //add SFX here
-    //        FloatingTextGenerator.CreateDamageText(_value, transform.position);
-    //        StartCoroutine(HitRoutine());
-    //    }
-
-    //    if (stats.GetValue(Stat.HP) <= 0)
-    //    {
-    //        deathMethod();
-    //    }
-    //    else
-    //    {
-    //        AudioManager.Instance.PlaySound(hitSound, transform.position);
-    //    }
-    //}
 
     protected void ApplyDamagesMob(int _value, Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)
     {
@@ -194,6 +184,49 @@ public abstract class Mobs : Entity
             hitSound.Play(transform.position, _restartSound);
         }
     }
+
+    public Vector3 GetRandomPointOnWanderZone(Vector3 _unitPos, float _minTravelDistance, float _maxTravelDistance, bool _avoidWalls = true)
+    {
+        if (_minTravelDistance >= _maxTravelDistance)
+        {
+            Debug.LogError("Invalid min/max value. Returning (0,0,0).");
+            return default;
+        }
+
+        Vector3 randomDirection3D = default;
+
+        int iterations = 0;
+        bool validPoint = true;
+        do
+        {
+
+            if (iterations >= 3)
+            {
+                return (_unitPos - wanderZone.center).normalized * _minTravelDistance;
+            }
+
+            Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
+            randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, _maxTravelDistance);
+            randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
+
+            if (_avoidWalls)
+            {
+                validPoint = false;
+
+                // aide à éviter les murs
+                if (Physics.Raycast(_unitPos + new Vector3(0, 1, 0), randomDirection3D.normalized, randomDirection3D.magnitude, LayerMask.GetMask("Map")))
+                {
+                    iterations++;
+                    continue;
+                }
+
+                validPoint = true;
+            }
+        } while ((_unitPos + randomDirection3D - wanderZone.center).sqrMagnitude > wanderZone.radius * wanderZone.radius || !validPoint);
+
+        return _unitPos + randomDirection3D;
+    }
+
 
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)
@@ -235,7 +268,7 @@ public abstract class Mobs : Entity
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValue(Stat.ATK_RANGE));
     }
-    
+
     protected virtual void DisplayAttackRange(float _angle, float _range)
     {
         Handles.color = new Color(1, 1, 0.5f, 0.2f);
@@ -244,6 +277,14 @@ public abstract class Mobs : Entity
 
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)_range);
+    }
+
+    protected virtual void DisplayWanderZone()
+    {
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(wanderZone.center, Vector3.up, wanderZone.radius, 5);
+        Handles.color = new Color(1, 1, 0, 0.1f);
+        Handles.DrawSolidDisc(wanderZone.center, Vector3.up, wanderZone.radius);
     }
 
     protected virtual void DisplayInfos()
