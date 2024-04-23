@@ -20,7 +20,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
     private State curState = State.Start;
     private float elapsedTimeState = 0.0f;
 
-    private float chargeDuration = 1.0f;
+    private float chargeDuration = 0.5f;
     private float rechargeDuration = 0.25f;
 
     private float dashDistance = 0.0f;
