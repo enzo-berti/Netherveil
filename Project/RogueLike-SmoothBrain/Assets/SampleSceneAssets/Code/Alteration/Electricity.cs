@@ -1,3 +1,4 @@
+using PostProcessingEffects;
 using System.Collections;
 using UnityEngine;
 
@@ -32,6 +33,9 @@ public class Electricity : OverTimeStatus
         if (target != null && !isStunCoroutineOn)
         {
             CoroutineManager.Instance.StartCustom(Stun());
+
+            if (Utilities.IsPlayer(target))
+                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Electricity);
         }
     }
 

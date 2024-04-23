@@ -165,7 +165,18 @@ MonoBehaviour:
   durationStatusToApply: []
   chanceStatusToApply: []
   stats:
-    stats: []
+    stats:
+    - stat: 0
+      hasMaxStat: 1
+      hasMinStat: 1
+      hasCoeff: 0
+      value: 50
+      lastValue: 0
+      coeff: 0
+      maxValue: 50
+      minValue: 0
+      overload: 0
+      underload: 0
     name: Default
   statusVfxs: []
   IsKnockbackable: 1
@@ -176,6 +187,9 @@ MonoBehaviour:
     dropList: []
   StatSuckerVFX: {fileID: 3940933872674138072}
   spawningVFX: {fileID: 3350385435705600938}
+  wanderZone:
+    center: {x: 0, y: 0, z: 0}
+    radius: 8
   dummySounds:
     hitSound:
       reference:
@@ -185,6 +199,8 @@ MonoBehaviour:
           Data3: -25959548
           Data4: 1701839417
         Path: event:/Object/WoodStair
+  weakness: 0
+  objectToDestroy: {fileID: 3579123295321707440}
 --- !u!1001 &1916941742330443434
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -273,6 +289,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4354502123978459146}
     m_Modifications:
+    - target: {fileID: 100584686206630655, guid: 8a697d9347d061f4cbc1c7bc7a0b708f,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100584686206630655, guid: 8a697d9347d061f4cbc1c7bc7a0b708f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 58ed67b853adba54dadb6266e6faa1aa, type: 2}
     - target: {fileID: 218094721346499257, guid: 8a697d9347d061f4cbc1c7bc7a0b708f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -353,7 +379,7 @@ Animator:
   m_GameObject: {fileID: 1811766127645940222}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 65fd411653973fb4a85f8648ded8aadc, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

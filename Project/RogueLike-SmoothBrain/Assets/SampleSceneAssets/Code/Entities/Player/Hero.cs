@@ -1,3 +1,4 @@
+using PostProcessingEffects;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -77,6 +78,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         stats.onStatChange += UpgradePlayerStats;
     }
 
+    private void OnEnable()
+    {
+        OnTakeDamage += (dam, atk) => PostProcessingEffectManager.current.Play(Effect.Hit);
+    }
+
+    private void OnDisable()
+    {
+        OnTakeDamage -= (dam, atk) => PostProcessingEffectManager.current.Play(Effect.Hit);
+    }
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {

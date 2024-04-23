@@ -1,3 +1,4 @@
+using PostProcessingEffects;
 using System.Collections;
 using UnityEngine;
 
@@ -30,6 +31,9 @@ public class Bleeding : OverTimeStatus
             int damages = (int)(target.Stats.GetMaxValue(Stat.HP) * coefValue * Stack);
             FloatingTextGenerator.CreateEffectDamageText(damages, target.transform.position, bleedingColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damages, launcher, false);
+
+            if (Utilities.IsPlayer(target))
+                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Electricity);
         }
     }
 
