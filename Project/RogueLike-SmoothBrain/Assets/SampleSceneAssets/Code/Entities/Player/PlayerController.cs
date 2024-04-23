@@ -63,12 +63,13 @@ public class PlayerController : MonoBehaviour
     public VisualEffect HitVFX;
     public VisualEffect DashVFX;
     public VisualEffect ChargedAttackVFX;
-    public VisualEffect spearLaunchVFX;
+    public VisualEffect SpearLaunchVFX;
     [SerializeField] VisualEffect corruptionUpgradeVFX;
     [SerializeField] VisualEffect benedictionUpgradeVFX;
     [SerializeField] VisualEffect benedictionDrawbackVFX;
     [SerializeField] VisualEffect corruptionDrawbackVFX;
-    public VisualEffect divineShieldVFX;
+    public VisualEffect DivineShieldVFX;
+    public VisualEffect DamnationVeilVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;
@@ -97,7 +98,7 @@ public class PlayerController : MonoBehaviour
         mouseRaycastPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
 
         //divide by 5 because the vfx is based on plane scale size, and -0.2 is to make the arrow perfectly at the spear end pos
-        spearLaunchVFX.SetFloat("VFX Length", hero.Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
+        SpearLaunchVFX.SetFloat("VFX Length", hero.Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
 
         //initialize starting rotation
         OverridePlayerRotation(225f, true);

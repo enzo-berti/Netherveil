@@ -13,6 +13,9 @@ public class DamnationVeil : ISpecialAbility
     }
     public void Activate()
     {
+        PlayerController playerController = Utilities.Player.GetComponent<PlayerController>();
+        playerController.PlayVFX(playerController.DamnationVeilVFX);
+
         Physics.OverlapSphere(Utilities.Player.transform.position, radius, LayerMask.GetMask("Entity"))
             .Select(entity => entity.GetComponent<Mobs>())
             .Where(entity => entity != null)

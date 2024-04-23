@@ -23,7 +23,7 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
         PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         player.GetComponent<Hero>().Stats.SetValue(Stat.ATK_RANGE, player.GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE) * coefValue);
         //divide by 5 because the vfx is based on plane scale size, and -0.2 is to make the arrow perfectly at the spear end pos
-        player.spearLaunchVFX.SetFloat("VFX Length", player.GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
+        player.SpearLaunchVFX.SetFloat("VFX Length", player.GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
 
         for (int i = 0; i< player.SpearAttacks.Count; ++i)
         {
@@ -60,7 +60,7 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
         PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         player.GetComponent<Hero>().Stats.SetValue(Stat.ATK_RANGE, player.GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE) / coefValue);
         //divide by 5 because the vfx is based on plane scale size, and -0.2 is to make the arrow perfectly at the spear end pos
-        player.spearLaunchVFX.SetFloat("VFX Length", player.GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
+        player.SpearLaunchVFX.SetFloat("VFX Length", player.GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
 
         for (int i = 0; i < player.SpearAttacks.Count; ++i)
         {
