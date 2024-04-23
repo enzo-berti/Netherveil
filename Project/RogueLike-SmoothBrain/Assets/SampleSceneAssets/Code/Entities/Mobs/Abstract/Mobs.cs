@@ -132,6 +132,7 @@ public abstract class Mobs : Entity
     private void EndOfSpawningVFX()
     {
         IsInvincibleCount--;
+        spawningVFX.Stop();
         lifeBar.gameObject.SetActive(true);
         animator.speed = 1;
     }
