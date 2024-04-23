@@ -82,10 +82,8 @@ public abstract class Status
                 currentTime += Time.deltaTime;
                 if (currentTime >= stopTimes[0])
                 {
-                    Debug.Log("Manage stack, stoptime count => " + stopTimes.Count);
                     stopTimes.RemoveAt(0);
                     stack--;
-                    Debug.Log("stack-- => " + stack);
                     if (stack <= 0)
                     {
                         isFinished = true;
