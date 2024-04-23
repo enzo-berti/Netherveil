@@ -31,6 +31,7 @@ namespace PostProcessingEffects
 
         [SerializeField] private Volume volume;
         public Coroutine routine = null;
+        public bool effectIsPlaying = false;
 
         public Volume Volume => volume;
 
@@ -48,15 +49,9 @@ namespace PostProcessingEffects
             instance = this;
         }
 
-        public void Play(int effect)
-        {
-            Effect cur = (Effect)Enum.Parse(typeof(Effect), effect.ToString());
-            Play(cur, true);
-        }
-
         public void Play(Effect effect, bool forceCancelPrevious = true)
         {
-            if (routine != null)
+            if (effectIsPlaying)
             {
                 if (!forceCancelPrevious)
                 {
@@ -64,7 +59,9 @@ namespace PostProcessingEffects
                     return;
                 }
 
-                StopCoroutine(routine);
+                effectIsPlaying = false;
+                if (routine != null)
+                    StopCoroutine(routine);
             }
 
             volume.weight = 0.0f;

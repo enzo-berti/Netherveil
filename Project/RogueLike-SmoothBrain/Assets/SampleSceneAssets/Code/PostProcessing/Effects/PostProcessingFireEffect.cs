@@ -15,6 +15,7 @@ namespace PostProcessingEffects
         protected override IEnumerator PlayRoutine(PostProcessingEffectManager manager)
         {
             manager.Volume.profile = profile;
+            manager.effectIsPlaying = true;
             float elapsed = 0.0f;
 
             while (elapsed < durationIn)
@@ -43,6 +44,7 @@ namespace PostProcessingEffects
 
             manager.Volume.weight = 0.0f;
             manager.routine = null;
+            manager.effectIsPlaying = false;
         }
 
         protected override IEnumerator StopRoutine(PostProcessingEffectManager manager)

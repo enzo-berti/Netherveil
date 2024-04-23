@@ -15,6 +15,7 @@ namespace PostProcessingEffects
         {
             manager.Volume.profile = profile;
             manager.Volume.weight = 1.0f;
+            manager.effectIsPlaying = true;
             float elapsed = 0.0f;
 
             while (elapsed < durationOut)
@@ -30,6 +31,7 @@ namespace PostProcessingEffects
 
             manager.Volume.weight = 0.0f;
             manager.routine = null;
+            manager.effectIsPlaying = false;
         }
 
         protected override IEnumerator StopRoutine(PostProcessingEffectManager manager)

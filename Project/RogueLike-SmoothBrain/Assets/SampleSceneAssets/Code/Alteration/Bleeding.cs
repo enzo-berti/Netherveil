@@ -11,7 +11,8 @@ public class Bleeding : OverTimeStatus
     {
         isStackable = true;
         maxStack = 3;
-        
+        frequency = 1.0f;
+
     }
     public override Status DeepCopy()
     {
@@ -33,7 +34,7 @@ public class Bleeding : OverTimeStatus
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damages, launcher, false);
 
             if (Utilities.IsPlayer(target))
-                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Electricity);
+                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Bleeding);
         }
     }
 

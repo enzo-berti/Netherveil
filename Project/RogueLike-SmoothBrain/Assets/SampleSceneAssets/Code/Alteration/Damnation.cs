@@ -1,7 +1,4 @@
 using PostProcessingEffects;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Damnation : ConstantStatus
 {
