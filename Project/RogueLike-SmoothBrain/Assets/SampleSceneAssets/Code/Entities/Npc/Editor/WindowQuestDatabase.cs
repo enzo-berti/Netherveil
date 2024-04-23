@@ -10,7 +10,7 @@ public class WindowQuestDatabase : EditorWindow
     List<QuestData> searchQuests = new List<QuestData>();
     Vector2 scrollPos = Vector2.zero;
     string search = "";
-    const int SizeArea = 100;
+    const int SizeArea = 25;
 
     [UnityEditor.MenuItem("Tools/QuestDatabase")]
     public static void OpenWindow()
@@ -46,6 +46,7 @@ public class WindowQuestDatabase : EditorWindow
         EditorGUILayout.LabelField("Id_Name", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Type", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("CorruptionModifierValue", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("HasDifferentGrades", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Description", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.EndHorizontal();
 
@@ -59,6 +60,8 @@ public class WindowQuestDatabase : EditorWindow
             EditorGUILayout.LabelField(quest.idName.SeparateAllCase(), GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             quest.Type = (QuestData.QuestType)EditorGUILayout.EnumPopup(quest.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             quest.CorruptionModifierValue = EditorGUILayout.IntField(quest.CorruptionModifierValue, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            GUILayout.Space(150f);
+            quest.HasDifferentGrades = EditorGUILayout.Toggle(quest.HasDifferentGrades, GUILayout.Width(0),GUILayout.ExpandWidth(true));
             quest.Description = EditorGUILayout.TextArea(quest.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
             GUI.color = Color.red;
             if (GUILayout.Button("X", GUILayout.Width(50)))

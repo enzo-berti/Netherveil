@@ -22,6 +22,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     int throwingHash;
     int retrievingHash;
     int fallHash;
+    Coroutine tripleThrustCoroutine = null;
 
     enum Attacks
     {
@@ -188,6 +189,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
         throwingHash = Animator.StringToHash("Throwing");
         retrievingHash = Animator.StringToHash("Retrieving");
         fallHash = Animator.StringToHash("Fall");
+        tripleThrustVFX.transform.parent = null;
+        tripleThrustVFX.Play();
     }
 
     protected override IEnumerator Brain()
@@ -479,7 +482,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 }
                 else
                 {
-                    AttackCollide(attacks[(int)Attacks.THRUST].data);
+                    AttackCollide(attacks[(int)Attacks.THRUST].data, debugMode: false);
                     thrustChargeTimer = 0;
                     attackState = AttackState.ATTACKING;
 
@@ -491,6 +494,16 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                 if (thrustDurationTimer < thrustDuration)
                 {
+                    if (tripleThrustCoroutine == null && thrustDurationTimer == 0f)
+                    {
+                        tripleThrustCoroutine = StartCoroutine(TripleThrustVFX());
+                    }
+                    else if (tripleThrustCoroutine != null && thrustDurationTimer == 0f)
+                    {
+                        StopCoroutine(tripleThrustCoroutine);
+                        tripleThrustCoroutine = StartCoroutine(TripleThrustVFX());
+                    }
+
                     thrustDurationTimer += Time.deltaTime;
                 }
                 else
@@ -507,6 +520,11 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                 if (thrustCounter < 3)
                 {
+                    //if (tripleThrustCoroutine != null)
+                    //{
+                    //    StopCoroutine(tripleThrustCoroutine);
+                    //}
+                    //tripleThrustCoroutine = null;
                     attackState = AttackState.CHARGING;
                 }
                 else
@@ -520,6 +538,20 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 }
                 break;
         }
+    }
+
+    private IEnumerator TripleThrustVFX()
+    {
+        //tripleThrustVFX.Play();
+        tripleThrustVFX.transform.position = new Vector3(transform.position.x, 0f , transform.position.z);
+        Vector3 endPos = tripleThrustVFX.transform.position + transform.forward * attacks[(int)Attacks.THRUST].data[0].transform.localScale.z;
+        while (tripleThrustVFX.transform.position != endPos)
+        {
+            tripleThrustVFX.transform.position = Vector3.MoveTowards(tripleThrustVFX.transform.position, endPos, 23f * Time.deltaTime);
+            yield return null;
+        }
+
+        //tripleThrustVFX.Stop();
     }
 
     void Dash()
@@ -536,10 +568,10 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             if (!animator.GetBool(fallHash))
             {
                 bossSounds.stretchSound.Play(transform.position);
+                dashVFX.GetComponent<VFXStopper>().PlayVFX();
             }
 
             animator.SetBool(fallHash, true);
-            dashVFX.GetComponent<VFXStopper>().PlayVFX();
         }
 
         if (attackState == AttackState.ATTACKING)
@@ -548,7 +580,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
             if (!triggerAOE && !playerHit)
             {
-                AttackCollide(attacks[(int)Attacks.DASH].data, true);
+                AttackCollide(attacks[(int)Attacks.DASH].data, debugMode: false);
             }
 
             if (travelledDistance <= dashRange)
@@ -568,7 +600,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             {
                 if (!playerHit)
                 {
-                    AttackCollide(attacks[(int)Attacks.DASH + 1].data, true);
+                    AttackCollide(attacks[(int)Attacks.DASH + 1].data, debugMode: false);
                 }
 
                 AOETimer += Time.deltaTime;
