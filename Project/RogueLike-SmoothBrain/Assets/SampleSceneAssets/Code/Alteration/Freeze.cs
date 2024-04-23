@@ -26,7 +26,6 @@ public class Freeze : ConstantStatus
             baseAgentSpeed = target.Stats.GetValue(Stat.SPEED);
             target.Stats.SetValue(Stat.SPEED, 0);
             target.isFreeze = true;
-            OnFreeze?.Invoke();
         }
     }
 
