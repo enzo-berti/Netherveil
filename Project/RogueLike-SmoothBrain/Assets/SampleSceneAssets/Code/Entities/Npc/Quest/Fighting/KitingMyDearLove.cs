@@ -7,6 +7,7 @@ public class KitingMyDearLove : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
