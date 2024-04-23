@@ -280,9 +280,10 @@ public class EntityDrawer : Editor
         List<FieldInfo> infos = new();
         Type currentType = target.GetType();
         List<FieldInfo[]> test = new();
-        while (currentType != typeof(Entity))
+        while (currentType != typeof(Entity) || currentType != typeof(object))
         {
             test.Add(currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            // If doesn't inherit, return type System.Object ( that's equal to object )
             currentType = currentType.BaseType;
         }
         test.Reverse();
