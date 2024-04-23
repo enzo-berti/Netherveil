@@ -7,7 +7,6 @@ public class Freeze : ConstantStatus
 {
     float baseAgentSpeed;
     Material freezeMat = null;
-    public static event Action OnFreeze;
     public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
