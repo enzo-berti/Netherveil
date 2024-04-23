@@ -6,6 +6,7 @@ public class MonsterHunter : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
@@ -24,6 +25,11 @@ public class MonsterHunter : Quest
         Hero.OnKill += UpdateCount;
     }
 
+    protected override bool IsQuestFinished()
+    {
+        return currentNumber >= MAX_NUMBER;
+    }
+
     protected override void QuestFinished()
     {
         base.QuestFinished();
@@ -32,13 +38,11 @@ public class MonsterHunter : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
+        if (IsQuestFinished())
+            return;
+
         currentNumber++;
         progressText = $"NB MONSTERS KILLED : {currentNumber}/{MAX_NUMBER}";
         QuestUpdated();
-
-        if (currentNumber >= MAX_NUMBER)
-        {
-            QuestFinished();
-        }
     }
 }

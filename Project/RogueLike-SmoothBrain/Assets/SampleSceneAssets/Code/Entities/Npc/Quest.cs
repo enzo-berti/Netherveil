@@ -1,3 +1,4 @@
+using Map;
 using Map.Generation;
 using System;
 using System.Reflection;
@@ -21,8 +22,14 @@ public abstract class Quest
     protected QuestTalker.TalkerType talkerType;
     protected QuestTalker.TalkerGrade talkerGrade;
     protected QuestDifficulty difficulty;
+    protected bool questLost = false;
 
-    public abstract void AcceptQuest();
+    public virtual void AcceptQuest()
+    {
+        RoomUtilities.allEnemiesDeadEvents += CheckQuestFinished;
+        RoomUtilities.allChestOpenEvents += CheckQuestFinished;
+        RoomUtilities.enterEvents += CheckQuestFinished;
+    }
 
     static public Quest LoadClass(string name, QuestTalker.TalkerType type, QuestTalker.TalkerGrade grade)
     {
@@ -58,6 +65,22 @@ public abstract class Quest
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
+
+        RoomUtilities.allEnemiesDeadEvents -= CheckQuestFinished;
+        RoomUtilities.allChestOpenEvents -= CheckQuestFinished;
+        RoomUtilities.enterEvents -= CheckQuestFinished;
+    }
+
+    protected void CheckQuestFinished()
+    {
+        if (questLost)
+        {
+            QuestLost();
+        }
+        else if(IsQuestFinished())
+        {
+            QuestFinished();
+        }
     }
 
     protected virtual void QuestLost()
@@ -65,6 +88,8 @@ public abstract class Quest
         player.CurrentQuest = null;
         //add feedback to show that quest is lost
     }
+
+    protected abstract bool IsQuestFinished();
 
     protected void QuestUpdated()
     {

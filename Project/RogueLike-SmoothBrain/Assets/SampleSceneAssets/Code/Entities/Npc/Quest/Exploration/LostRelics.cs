@@ -1,4 +1,3 @@
-
 using Map;
 
 public class LostRelics : Quest
@@ -8,9 +7,16 @@ public class LostRelics : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
+
         MAX_NUMBER = RoomUtilities.nbRoomByType[RoomType.Treasure];
         progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
         RoomUtilities.enterEvents += UpdateCount;
+    }
+
+    protected override bool IsQuestFinished()
+    {
+        return currentNumber >= MAX_NUMBER;
     }
 
     protected override void QuestFinished()
@@ -21,16 +27,14 @@ public class LostRelics : Quest
 
     private void UpdateCount()
     {
+        if (IsQuestFinished())
+            return;
+
         if (RoomUtilities.roomData.Type == RoomType.Treasure)
         {
             currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Treasure];
             progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
-
-            if (currentNumber >= MAX_NUMBER)
-            {
-                QuestFinished();
-            }
         }
     }
 

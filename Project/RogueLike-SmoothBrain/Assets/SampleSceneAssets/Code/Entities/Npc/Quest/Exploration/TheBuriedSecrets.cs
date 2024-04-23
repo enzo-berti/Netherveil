@@ -1,4 +1,3 @@
-
 using Map;
 
 public class TheBuriedSecrets : Quest
@@ -8,9 +7,15 @@ public class TheBuriedSecrets : Quest
 
     public override void AcceptQuest()
     {
+        base.AcceptQuest();
         MAX_NUMBER = RoomUtilities.nbRoomByType[RoomType.Secret];
         progressText = $"NB SECRETS ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
         RoomUtilities.enterEvents += UpdateCount;
+    }
+
+    protected override bool IsQuestFinished()
+    {
+        return currentNumber >= MAX_NUMBER;
     }
 
     protected override void QuestFinished()
@@ -21,16 +26,14 @@ public class TheBuriedSecrets : Quest
 
     private void UpdateCount()
     {
+        if (IsQuestFinished())
+            return;
+
         if (RoomUtilities.roomData.Type == RoomType.Secret)
         {
             currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Secret];
             progressText = $"NB SECRETS ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
             QuestUpdated();
-
-            if (currentNumber >= MAX_NUMBER)
-            {
-                QuestFinished();
-            }
         }
     }   
 }
