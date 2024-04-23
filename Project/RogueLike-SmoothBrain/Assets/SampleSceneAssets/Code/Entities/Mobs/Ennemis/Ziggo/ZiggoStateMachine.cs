@@ -1,39 +1,38 @@
-using FMODUnity;
-using StateMachine;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using StateMachine; // include all script about stateMachine
+using System.Collections.Generic;
 using System.Collections;
-using UnityEngine.AI;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class PestStateMachine : Mobs, IPest
+public class ZiggoStateMachine : Mobs, IZiggo
 {
     [System.Serializable]
-    private class PestSounds
+    private class ZiggoSounds
     {
         public Sound deathSound;
         public Sound takeDamageSound;
-        public Sound attackHitSound;
+        public Sound hitSound;
         public Sound moveSound;
     }
 
     // state machine variables
-    private BaseState<PestStateMachine> currentState;
-    private StateFactory<PestStateMachine> factory;
+    public BaseState<ZiggoStateMachine> currentState;
+    private StateFactory<ZiggoStateMachine> factory;
 
     // mobs variables
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
-    [SerializeField] private PestSounds pestSounds;
+    [SerializeField] private ZiggoSounds ziggoSounds;
     [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
-    [SerializeField] private BoxCollider attackCollider;
-    private Transform player;
+    [SerializeField] private BoxCollider attack1Collider;
+    [SerializeField] private BoxCollider attack2Collider;
+    [SerializeField] private BoxCollider attack3Collider;
+    private Transform target;
     private bool isDeath = false;
-    float dashTimer = 0f;
 
     // animation hash
     private int chargeInHash;
@@ -44,31 +43,28 @@ public class PestStateMachine : Mobs, IPest
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
-    public BaseState<PestStateMachine> CurrentState { get => currentState; set => currentState = value; }
+    public BaseState<ZiggoStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
-    public int ChargeInHash { get => chargeInHash; }
-    public int ChargeOutHash { get => chargeOutHash; }
-    public BoxCollider AttackCollider { get => attackCollider; }
-    public Transform Player { get => player; set => player = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 5.0f; }
+    public BoxCollider Attack1Collider { get => attack1Collider; }
+    public BoxCollider Attack2Collider { get => attack2Collider; }
+    public BoxCollider Attack3Collider { get => attack3Collider; }
+    public Transform Target { get => target; set => target = value; }
+    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
     public bool IsDeath { get => isDeath; }
-    public float VisionAngle { get => (currentState is PestTriggeredState || currentState is PestAttackingState) && Player != null ? 360 : angle; }
-    public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is PestTriggeredState || currentState is PestAttackingState ? 1.25f : 1f); }
-    public float MovementTimer { set => dashTimer = value; }
-    public float MovementDelay { get => (currentState is PestTriggeredState ? 1f : 1.5f); }
-    public bool CanMove { get => dashTimer > MovementDelay; }
+
 
     protected override void Start()
     {
         base.Start();
 
-        factory = new StateFactory<PestStateMachine>(this);
-        currentState = factory.GetState<PestWanderingState>();
+        factory = new StateFactory<ZiggoStateMachine>(this);
+        // Set currentState here !
+        currentState = factory.GetState<ZiggoWandering>();
 
         // common initialization
-        GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
+
 
         // hashing animation
         chargeInHash = Animator.StringToHash("ChargeIn");
@@ -76,32 +72,20 @@ public class PestStateMachine : Mobs, IPest
         deathHash = Animator.StringToHash("IsDeath");
 
         // opti variables
+        maxFrameUpdate = 10;
         frameToUpdate = entitySpawn % maxFrameUpdate;
-
-        OnFreeze += PestStateMachine_OnFreeze;
-    }
-
-    private void PestStateMachine_OnFreeze()
-    {
     }
 
     protected override void Update()
     {
-        if (currentState is not PestDeathState)
-            animator.speed = isFreeze ? 0 : 1;
-        else
-            animator.speed = 1;
-
         if (animator.speed == 0)
             return;
 
         base.Update();
+
         currentState.Update();
-
-        if (!CanMove) { dashTimer += Time.deltaTime; }
-
-        if (currentState is not PestWanderingState) { WanderZoneCenter = transform.position; }
     }
+
 
     #region MOBS METHODS
     protected override IEnumerator EntityDetection()
@@ -114,14 +98,15 @@ public class PestStateMachine : Mobs, IPest
                 continue;
             }
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, VisionRange, transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
 
-            Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
-            player = playerEntity ? playerEntity.transform : null;
+            Entity targetE = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
+            if (targetE != null)
+                target = targetE.transform;
 
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
@@ -129,13 +114,7 @@ public class PestStateMachine : Mobs, IPest
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        ApplyDamagesMob(_value, pestSounds.takeDamageSound, Death, notEffectDamage);
-
-        if (currentState is not PestAttackingState || currentState is not PestDeathState)
-        {
-            currentState = factory.GetState<PestTriggeredState>();
-            player = Utilities.Hero.transform;
-        }
+        ApplyDamagesMob(_value, ziggoSounds.hitSound, Death, notEffectDamage);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
@@ -147,18 +126,16 @@ public class PestStateMachine : Mobs, IPest
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        pestSounds.attackHitSound.Play(transform.position);
+        ziggoSounds.hitSound.Play(transform.position);
     }
 
     public void Death()
     {
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
-        pestSounds.deathSound.Play(transform.position);
+        ziggoSounds.deathSound.Play(transform.position);
         animator.SetBool(deathHash, true);
         isDeath = true;
-
-        currentState = factory.GetState<PestDeathState>();
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
@@ -169,7 +146,16 @@ public class PestStateMachine : Mobs, IPest
             return;
 
         agent.SetDestination(posToMove);
-        pestSounds.moveSound.Play(transform.position);
+        ziggoSounds.moveSound.Play(transform.position);
+    }
+
+    public void Move(Vector3 direction)
+    {
+        if (!agent.enabled)
+            return;
+
+        agent.Move(direction);
+        ziggoSounds.moveSound.Play(transform.position);
     }
     #endregion
 
@@ -177,13 +163,12 @@ public class PestStateMachine : Mobs, IPest
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!Selection.Contains(gameObject))
-            return;
+        //if (!Selection.Contains(gameObject))
+        //    return;
 
-        DisplayVisionRange(VisionAngle, VisionRange);
-        DisplayAttackRange(VisionAngle);
+        DisplayVisionRange(angle);
+        DisplayAttackRange(angle);
         DisplayInfos();
-        DisplayWanderZone();
     }
 
     protected override void DisplayInfos()
