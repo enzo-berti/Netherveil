@@ -46,6 +46,6 @@ public class Bleeding : OverTimeStatus
 
     protected override void PlayStatus()
     {
-        PlayVfx("VFX_Fire");
+        PlayVfx("VFX_Bleeding");
     }
 }
