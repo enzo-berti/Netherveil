@@ -1,5 +1,5 @@
+using PostProcessingEffects;
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class Fire : OverTimeStatus
@@ -18,6 +18,9 @@ public class Fire : OverTimeStatus
         {
             FloatingTextGenerator.CreateEffectDamageText(damage, target.transform.position, fireColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage, launcher, false);
+
+            if (Utilities.IsPlayer(target))
+                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Fire);
         }
     }
 

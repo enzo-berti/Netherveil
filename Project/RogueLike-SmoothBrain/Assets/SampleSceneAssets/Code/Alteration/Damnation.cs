@@ -1,3 +1,4 @@
+using PostProcessingEffects;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,9 @@ public class Damnation : ConstantStatus
     public override void OnFinished()
     {
         target.GetComponent<Mobs>().DamageTakenMultiplicator -= 1.0f;
+
+        if (Utilities.IsPlayer(target))
+            PostProcessingEffectManager.current.Stop(PostProcessingEffects.Effect.Damnation);
     }
 
     protected override void Effect()
@@ -32,6 +36,18 @@ public class Damnation : ConstantStatus
 
     protected override void PlayStatus()
     {
-        throw new System.NotImplementedException("Bleeding VFX is not implemented");
+        PlayVFX();
+        PlayPostProcessing();
+    }
+
+    private void PlayVFX()
+    {
+        throw new System.NotImplementedException("Damnation VFX is not implemented");
+    }
+
+    private void PlayPostProcessing()
+    {
+        if (Utilities.IsPlayer(target))
+            PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Damnation);
     }
 }

@@ -1,5 +1,5 @@
+using PostProcessingEffects;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,6 +39,9 @@ public class Freeze : ConstantStatus
         List<Material> materials = new List<Material>(renderer.materials);
         materials.RemoveAll(mat => mat.shader == freezeMat.shader);
         renderer.SetMaterials(materials);
+
+        if (Utilities.IsPlayer(target))
+            PostProcessingEffectManager.current.Stop(PostProcessingEffects.Effect.Freeze);
     }
 
     public override bool CanApplyEffect(Entity target)
@@ -47,6 +50,12 @@ public class Freeze : ConstantStatus
     }
 
     protected override void PlayStatus()
+    {
+        PlayVFX();
+        PlayPostProcessing();
+    }
+    
+    private void PlayVFX()
     {
         PlayVfx("VFX_Frozen");
 
@@ -58,5 +67,11 @@ public class Freeze : ConstantStatus
                 freezeMat
             };
         renderer.SetMaterials(materials);
+    }
+
+    private void PlayPostProcessing()
+    {
+        if (Utilities.IsPlayer(target))
+            PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Freeze);
     }
 }
