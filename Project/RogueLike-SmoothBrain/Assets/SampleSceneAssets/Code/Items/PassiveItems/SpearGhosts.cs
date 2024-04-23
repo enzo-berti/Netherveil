@@ -12,7 +12,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
     {
         //used a wrapper instead of the object itself to make it rotate from player's position, not the middle of the collide
         GameObject spearThrowWrapper = GameObject.FindWithTag("Player").GetComponent<PlayerController>().SpearThrowWrapper;
-        GameObject spearVFX = GameObject.FindWithTag("Player").GetComponent<PlayerController>().spearLaunchVFX.gameObject;
+        GameObject spearVFX = GameObject.FindWithTag("Player").GetComponent<PlayerController>().SpearLaunchVFX.gameObject;
 
         for(int i = 0; i< 2; ++i)
         {

@@ -397,6 +397,7 @@ Transform:
   - {fileID: 6606723652905628459}
   - {fileID: 2795327838727925454}
   - {fileID: 4574402777992253921}
+  - {fileID: 2874659799855492425}
   m_Father: {fileID: 1378612059112917621}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2819107228932577241
@@ -1222,12 +1223,13 @@ MonoBehaviour:
   HitVFX: {fileID: 5619644451371436711}
   DashVFX: {fileID: 2934421512825703588}
   ChargedAttackVFX: {fileID: 4339925852799118057}
-  spearLaunchVFX: {fileID: 6162956545141077538}
+  SpearLaunchVFX: {fileID: 6162956545141077538}
   corruptionUpgradeVFX: {fileID: 2566926860641753374}
   benedictionUpgradeVFX: {fileID: 4914791504489867642}
   benedictionDrawbackVFX: {fileID: 0}
   corruptionDrawbackVFX: {fileID: 0}
-  divineShieldVFX: {fileID: 5231877333891943702}
+  DivineShieldVFX: {fileID: 5231877333891943702}
+  DamnationVeilVFX: {fileID: 7696305895192340609}
   DashSFX:
     Guid:
       Data1: 1298710530
@@ -1315,9 +1317,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144b6e3df1e33da48b21c13ea28cb518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusNameToApply: []
-  durationStatusToApply: []
-  chanceStatusToApply: []
+  statusNameToApply:
+  - Freeze
+  durationStatusToApply:
+  - 3
+  chanceStatusToApply:
+  - 1
   stats:
     stats:
     - stat: 0
@@ -1431,8 +1436,10 @@ MonoBehaviour:
       overload: 0
       underload: 0
     name: Player
+  statusVfxs: []
   IsKnockbackable: 1
   canTriggerTraps: 1
+  isFreeze: 0
   IsInvincibleCount: 0
 --- !u!114 &1911203549151711130
 MonoBehaviour:
@@ -1978,6 +1985,86 @@ Transform:
   - {fileID: 9021368992841520656}
   m_Father: {fileID: 200325822250048358}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &623529773121575610
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 200325822250048358}
+    m_Modifications:
+    - target: {fileID: 192527832277097026, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_Name
+      value: VFX_DamnationVeil
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3f93d3cbea7466f4c9c3f90399b7f666, type: 3}
+--- !u!4 &2874659799855492425 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3405828376541394931, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+    type: 3}
+  m_PrefabInstance: {fileID: 623529773121575610}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &7696305895192340609 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 7091476617186619963, guid: 3f93d3cbea7466f4c9c3f90399b7f666,
+    type: 3}
+  m_PrefabInstance: {fileID: 623529773121575610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &964750257553755432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2378,6 +2465,9 @@ MonoBehaviour:
   effect: {fileID: 4914791504489867642}
   destroyOnStop: 0
   destroyDurationDelay: 0
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &7575975745771408224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6706770338217277538, guid: 19669160db507d6469a585fd75292d7f,
