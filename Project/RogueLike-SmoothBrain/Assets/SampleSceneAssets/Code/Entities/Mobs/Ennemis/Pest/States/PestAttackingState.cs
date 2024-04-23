@@ -29,6 +29,8 @@ public class PestAttackingState : BaseState<PestStateMachine>
 
     bool attackEnded = false;
 
+    Vector3 playerPos;
+
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
@@ -50,6 +52,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
     {
         curState = State.Start;
         elapsedTimeState = 0.0f;
+        playerPos = Context.Player.position;
     }
 
     // This method will be call only one time after the last update.
@@ -61,18 +64,21 @@ public class PestAttackingState : BaseState<PestStateMachine>
             dashRoutine = null;
         }
 
-        Context.CanLoseAggro = true;
+        Context.Animator.ResetTrigger("Cancel");
+        Context.Animator.SetTrigger("Cancel");
     }
 
     // This method will be call every frame.
     protected override void UpdateState()
     {
         if (Context == null) return;
+
+        if (Context.Player) playerPos = Context.Player.position;
+
         if (curState == State.Start)
         {
-            Context.CanLoseAggro = false;
             attackEnded = false;
-            Vector3 positionToLookAt = new Vector3(Context.Player.position.x, Context.transform.position.y, Context.Player.position.z);
+            Vector3 positionToLookAt = new Vector3(playerPos.x, Context.transform.position.y, playerPos.z);
             LookAt(positionToLookAt, 10f);
 
             curState = State.Charge;
@@ -88,7 +94,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
                 elapsedTimeState = 0.0f;
                 curState = State.Dash;
 
-                dashDistance = Vector3.Distance(Context.Player.position, Context.transform.position);
+                dashDistance = Vector3.Distance(playerPos, Context.transform.position);
                 dashDistance = Mathf.Clamp(dashDistance, 0f, Context.Stats.GetValue(Stat.ATK_RANGE));
 
                 Vector3 curScale = Context.AttackCollider.transform.localScale;
@@ -106,7 +112,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
             }
             else if (elapsedTimeState <= chargeDuration - 0.2f)
             {
-                Vector3 positionToLookAt = new Vector3(Context.Player.position.x, Context.transform.position.y, Context.Player.position.z);
+                Vector3 positionToLookAt = new Vector3(playerPos.x, Context.transform.position.y, playerPos.z);
                 LookAt(positionToLookAt, 10f);
             }
         }
@@ -123,7 +129,6 @@ public class PestAttackingState : BaseState<PestStateMachine>
             if (elapsedTimeState >= rechargeDuration)
             {
                 elapsedTimeState = 0.0f;
-                Context.CanLoseAggro = true;
                 curState = State.Start;
                 attackEnded = true;
             }

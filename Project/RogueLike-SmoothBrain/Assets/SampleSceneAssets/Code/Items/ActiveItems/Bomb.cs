@@ -4,9 +4,18 @@ public class Bomb : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 5f;
     private GameObject bombPf;
+
+#pragma warning disable CS0414 // Supprimer le warning dans unity
+#pragma warning disable IDE0052 // Supprimer les membres privés non lus
+    //used to display in description, dont delete it
+    readonly float displayValue;
+#pragma warning restore IDE0052
+#pragma warning restore CS0414
+
     public Bomb()
     {
         bombPf = Resources.Load<GameObject>("Bomb");
+        displayValue = Utilities.Hero.Stats.GetValue(Stat.ATK);
     }
     public void Activate()
     {

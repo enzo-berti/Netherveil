@@ -11,6 +11,8 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly List<VisualEffect> thunderLinkVFXs = new();
     readonly List<LineRenderer> thunderLinkLineRenderers = new();
     readonly float THUNDERLINK_WAIT_TIME = 0.5f;
+    readonly float duration = 3f;
+    readonly float chance = 20f;
 
     public void OnRetrieved()
     {
@@ -84,6 +86,10 @@ public class ThunderLink : ItemEffect, IPassiveItem
                     if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
                     {
                         player.Attack(entity);
+                        if((entity as MonoBehaviour).TryGetComponent(out Entity mob))
+                        {
+                            mob.AddStatus(new Electricity(duration, chance / 100f), player);
+                        }
                     }
                 }
             }

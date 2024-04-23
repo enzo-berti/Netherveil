@@ -1,14 +1,12 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class VampireTooth : ItemEffect, IPassiveItem
 {
-    //between 0 and 1
-    const float lifeStealStat = 0.2f;
+    const float lifeStealStat = 20f;
     public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat);
+        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat/100f);
         player.OnAttackHit += LifeSteal;
     }
 
@@ -26,7 +24,7 @@ public class VampireTooth : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.DecreaseValue(Stat.LIFE_STEAL, lifeStealStat);
+        player.Stats.DecreaseValue(Stat.LIFE_STEAL, lifeStealStat / 100f);
         player.OnAttackHit -= LifeSteal;
     }
 }
