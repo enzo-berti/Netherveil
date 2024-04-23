@@ -54,10 +54,7 @@ namespace PostProcessingEffects
             if (effectIsPlaying)
             {
                 if (!forceCancelPrevious)
-                {
-                    Debug.LogWarning("An post processing effect is currently use.");
                     return;
-                }
 
                 effectIsPlaying = false;
                 if (routine != null)

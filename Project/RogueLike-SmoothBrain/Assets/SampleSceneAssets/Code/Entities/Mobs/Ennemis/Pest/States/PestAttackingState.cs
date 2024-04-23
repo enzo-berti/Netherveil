@@ -156,6 +156,8 @@ public class PestAttackingState : BaseState<PestStateMachine>
 
         while (timeElapsed < duration && isOnNavMesh)
         {
+            yield return null;
+
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
             Vector3 warpPosition = Vector3.Lerp(startPosition, dashTarget, t);
@@ -164,8 +166,6 @@ public class PestAttackingState : BaseState<PestStateMachine>
             {
                 Context.Agent.Warp(hit.position);
             }
-
-            yield return null;
         }
 
         dashRoutine = null;
