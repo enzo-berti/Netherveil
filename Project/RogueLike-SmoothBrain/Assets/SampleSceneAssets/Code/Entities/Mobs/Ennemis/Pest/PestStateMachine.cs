@@ -77,36 +77,27 @@ public class PestStateMachine : Mobs, IPest
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
+
+        OnFreeze += PestStateMachine_OnFreeze;
+    }
+
+    private void PestStateMachine_OnFreeze()
+    {
     }
 
     protected override void Update()
     {
+        animator.speed = isFreeze ? 0 : 1;
+
         if (animator.speed == 0)
             return;
 
-        // A decommenter plus tard
+        base.Update();
+        currentState.Update();
 
-        //bool frozen = false;
-        //foreach (var appliedStatus in AppliedStatusList)
-        //{
-        //    if (appliedStatus.GetType() == typeof(Freeze))
-        //    {
-        //        animator.ResetTrigger("Cancel");
-        //        animator.SetTrigger("Cancel");
-        //        currentState = factory.GetState<PestWanderingState>();
-        //        frozen = true;
-        //    }
-        //}
+        if (!CanMove) { dashTimer += Time.deltaTime; }
 
-        //if (!frozen)
-        //{
-            base.Update();
-            currentState.Update();
-
-            if (!CanMove) { dashTimer += Time.deltaTime; }
-
-            if (currentState is not PestWanderingState) { WanderZoneCenter = transform.position; }
-        //}
+        if (currentState is not PestWanderingState) { WanderZoneCenter = transform.position; }
     }
 
     #region MOBS METHODS
