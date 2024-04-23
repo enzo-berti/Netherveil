@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Poison : OverTimeStatus
@@ -40,6 +38,7 @@ public class Poison : OverTimeStatus
 
     protected override void PlayStatus()
     {
+        PlayVfx("VFX_Poison");
         AddStack(baseStack - 1);
     }
 }
