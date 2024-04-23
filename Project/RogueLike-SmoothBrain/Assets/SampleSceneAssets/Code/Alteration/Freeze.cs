@@ -33,10 +33,14 @@ public class Freeze : ConstantStatus
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
         target.isFreeze = false;
-        Renderer renderer = target.GetComponentInChildren<Renderer>();
-        List<Material> materials = new List<Material>(renderer.materials);
-        materials.RemoveAll(mat => mat.shader == freezeMat.shader);
-        renderer.SetMaterials(materials);
+        Renderer[] renderers = target.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+            List<Material> materials = new List<Material>(renderer.materials);
+            materials.RemoveAll(mat => mat.shader == freezeMat.shader);
+            renderer.SetMaterials(materials);
+        }
 
         if (Utilities.IsPlayer(target))
             PostProcessingEffectManager.current.Stop(PostProcessingEffects.Effect.Freeze);
@@ -59,13 +63,16 @@ public class Freeze : ConstantStatus
         PlayVfx("VFX_Frozen");
 
         freezeMat = GameResources.Get<Material>("OutlineShaderMat");
-        Renderer renderer = target.GetComponentInChildren<Renderer>();
+        Renderer[] renderers = target.GetComponentsInChildren<Renderer>();
 
-        List<Material> materials = new List<Material>(renderer.materials)
+        foreach(Renderer renderer in renderers)
+        {
+            List<Material> materials = new List<Material>(renderer.materials)
             {
                 freezeMat
             };
-        renderer.SetMaterials(materials);
+            renderer.SetMaterials(materials);
+        }
     }
 
     private void PlayPostProcessing()
