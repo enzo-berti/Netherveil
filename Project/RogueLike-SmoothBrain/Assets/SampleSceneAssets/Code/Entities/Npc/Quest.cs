@@ -31,7 +31,7 @@ public abstract class Quest
         quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         quest.talkerType = type;
         quest.talkerGrade = grade;
-        quest.difficulty = (QuestDifficulty)Seed.Range(0, (int)QuestDifficulty.NB);
+        quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)Seed.Range(0, (int)QuestDifficulty.NB) : QuestDifficulty.MEDIUM;
         return quest;
     }
 
