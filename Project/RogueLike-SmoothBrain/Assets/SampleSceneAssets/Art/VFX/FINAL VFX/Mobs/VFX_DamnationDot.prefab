@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8339237244622949472}
   - component: {fileID: 5431105377385037282}
   - component: {fileID: 6571577492183468403}
+  - component: {fileID: -3258776336425407106}
   m_Layer: 0
   m_Name: VFX_DamnationDot
   m_TagString: Untagged
@@ -156,3 +157,21 @@ MonoBehaviour:
   m_Property:
     m_Name: New Transform
   Target: {fileID: 0}
+--- !u!114 &-3258776336425407106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3044193286458700990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93677b87523a3ae448f869b9f85f39b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: 2916536532542050364}
+  destroyOnStop: 1
+  destroyDurationDelay: 0.3
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
