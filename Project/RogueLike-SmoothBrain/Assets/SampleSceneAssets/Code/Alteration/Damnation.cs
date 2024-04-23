@@ -40,7 +40,7 @@ public class Damnation : ConstantStatus
 
     private void PlayVFX()
     {
-        throw new System.NotImplementedException("Damnation VFX is not implemented");
+        PlayVfx("VFX_DamnationDot");
     }
 
     private void PlayPostProcessing()
