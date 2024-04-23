@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BootOfSwiftness : ItemEffect, IPassiveItem
 {
-    private float speedStat = 1.5f;
+    private readonly float speedStat = 1.5f;
 
     public void OnRemove()
     {
