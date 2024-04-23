@@ -47,7 +47,6 @@ public abstract class Status
     public abstract bool CanApplyEffect(Entity target);
     public virtual void ApplyEffect(Entity target)
     {
-        Debug.Log("stop times count => " + stopTimes.Count);
         AddStack(1);
         PlayStatus();
         CoroutineManager.Instance.StartCoroutine(ManageStack());
