@@ -436,6 +436,13 @@ public class PlayerController : MonoBehaviour
         VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
     }
 
+    public void PlayBloodPouringAnim()
+    {
+        hero.State = (int)Hero.PlayerState.POURING_BLOOD;
+        animator.ResetTrigger("BloodPouring");
+        animator.SetTrigger("BloodPouring");
+    }
+
     #endregion
 
 #if UNITY_EDITOR

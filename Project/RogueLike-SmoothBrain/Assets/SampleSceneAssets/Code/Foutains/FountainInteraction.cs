@@ -72,6 +72,7 @@ namespace Fountain
 
             hero.Inventory.Blood -= price;
             hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
+            hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
             FloatingTextGenerator.CreateEffectDamageText(fountain.AbsoluteValueTrade, transform.position, fountain.Color);
         }
     }
