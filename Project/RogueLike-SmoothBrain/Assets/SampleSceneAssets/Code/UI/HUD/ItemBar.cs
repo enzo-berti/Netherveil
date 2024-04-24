@@ -16,6 +16,7 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private GameObject specialAbilityFrame;
     [SerializeField] private Texture damnationVeilIcon;
     [SerializeField] private Texture divineShieldIcon;
+    [SerializeField] private Sprite[] rarityBackItemSprite;
 
     private void Start()
     {
@@ -87,7 +88,7 @@ public class ItemBar : MonoBehaviour
     {
         ItemData data = database.GetItem(itemEffect.Name);
         frame.GetComponentInChildren<RawImage>(true).texture = data.icon;
-        frame.GetComponent<Image>().color = database.GetItemRarityColor(itemEffect.Name);
+        frame.GetComponent<Image>().sprite = rarityBackItemSprite[(int)data.RarityTier];
     }
 
     private IEnumerator ActiveItemCooldown()
