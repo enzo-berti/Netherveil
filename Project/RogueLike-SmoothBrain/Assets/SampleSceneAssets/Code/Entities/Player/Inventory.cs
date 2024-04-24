@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
 public class Inventory
 {
+    public static GameObject ActiveItemGameObject;
     IActiveItem activeItem = null;
     List<IPassiveItem> passiveItems = new List<IPassiveItem>();
     public IActiveItem ActiveItem { get { return activeItem; } }
     public List<IPassiveItem> PassiveItems { get { return passiveItems; } }
-    public List<IItem> AllItems 
-    { 
-        get 
+    public List<IItem> AllItems
+    {
+        get
         {
             List<IItem> itemList = new List<IItem>
             {
@@ -19,20 +21,27 @@ public class Inventory
             };
             itemList.AddRange(passiveItems);
             return itemList;
-        } 
+        }
+    }
+    public bool HasActiveItem
+    {
+        get => activeItem != null;
     }
     public int Blood = 0;
     public int Keys = 0;
 
     private void AddActiveItem(IActiveItem item)
     {
+        if (activeItem != null && (activeItem as IPassiveItem) != null)
+        {
+            (activeItem as IPassiveItem).OnRemove();
+        }
         activeItem = item;
     }
 
     private void AddPassiveItem(IPassiveItem item)
     {
         passiveItems.Add(item);
-        item.OnRetrieved();
     }
 
     public void RemoveItem(IPassiveItem item)
@@ -40,21 +49,34 @@ public class Inventory
         item.OnRemove();
         passiveItems.Remove(item);
     }
-    public void AddItem(ItemEffect item)
+    public void AddItem(Item item)
     {
-        if ((item as IActiveItem) != null)
+        ItemEffect itemEffect = item.ItemEffect;
+        if ((itemEffect as IActiveItem) != null)
         {
-            AddActiveItem(item as IActiveItem);
-            if(!item.HasBeenRetreived)
+            if (activeItem == null)
             {
-                item.CurrentEnergy = (item as IActiveItem).Cooldown;
+                ActiveItemGameObject = GameObject.Instantiate(item.gameObject);
             }
-            (item as IPassiveItem)?.OnRetrieved();
+            else
+            {
+                GameObject.Instantiate(ActiveItemGameObject, item.gameObject.transform.position, Quaternion.identity);
+                ActiveItemGameObject = GameObject.Instantiate(item.gameObject);
+                ActiveItemGameObject.gameObject.SetActive(false);
+            }
+            AddActiveItem(itemEffect as IActiveItem);
+
+            if (!itemEffect.HasBeenRetreived)
+            {
+                itemEffect.CurrentEnergy = (itemEffect as IActiveItem).Cooldown;
+            }
+
         }
-        else if (item as IPassiveItem != null)
+        else if (itemEffect as IPassiveItem != null)
         {
-            AddPassiveItem(item as IPassiveItem);
+            AddPassiveItem(itemEffect as IPassiveItem);
         }
-        item.HasBeenRetreived = true;
+        (itemEffect as IPassiveItem)?.OnRetrieved();
+        itemEffect.HasBeenRetreived = true;
     }
 }

@@ -3,8 +3,13 @@ using UnityEngine;
 public class ShockwaveBracelet : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 20f;
+    public readonly float cooldownDisplay;
     readonly int AOE_DAMAGES = 15;
 
+    public ShockwaveBracelet()
+    {
+        cooldownDisplay = Cooldown;
+    }
     public void Activate()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
@@ -35,4 +40,4 @@ public class ShockwaveBracelet : ItemEffect, IActiveItem
         GameObject.Destroy(shockwaveCollider, 3f);
         GameObject.Destroy(shockwaveVFX, 3f);
     }
-} 
+}

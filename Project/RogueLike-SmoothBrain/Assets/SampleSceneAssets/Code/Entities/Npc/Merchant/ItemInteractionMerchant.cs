@@ -70,7 +70,7 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         hero.Inventory.Blood -= price;
         item.ItemEffect.Name = item.idItemName;
 
-        hero.Inventory.AddItem(item.ItemEffect);
+        hero.Inventory.AddItem(item);
         interactions.InteractablesInRange.Remove(this);
 
         Item.InvokeOnRetrieved(item.ItemEffect);
