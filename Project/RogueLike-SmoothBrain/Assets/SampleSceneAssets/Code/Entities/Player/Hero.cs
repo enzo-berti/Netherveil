@@ -9,7 +9,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     {
         DASH = EntityState.NB,
         KNOCKBACK,
-        UPGRADING_STATS
+        UPGRADING_STATS,
+        POURING_BLOOD
     }
     Animator animator;
     PlayerInput playerInput;
