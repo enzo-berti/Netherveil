@@ -8,13 +8,13 @@ public class Knockback : MonoBehaviour
     private Hero hero;
     private Animator animator;
     private Coroutine knockbackRoutine;
-    private bool isKnockback;
+    private bool isKnockback = false;
     public Vector3 startKnockback;
     public Vector3 endKnockback;
 
     [SerializeField] private float distanceFactor = 1f;
 
-    public bool IsKnockback => IsKnockback;
+    public bool IsKnockback => isKnockback;
     public Vector3 StartKnockback => startKnockback;
     public Vector3 EndKnockback => endKnockback;
 

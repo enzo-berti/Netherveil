@@ -130,6 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3728823635463378181}
   - component: {fileID: 7347822268238158182}
+  - component: {fileID: 917367554391916753}
   - component: {fileID: 76122807682343785}
   - component: {fileID: 5061550714055684533}
   - component: {fileID: 1095622961786328033}
@@ -184,6 +185,33 @@ CapsuleCollider:
   m_Height: 2.28
   m_Direction: 1
   m_Center: {x: 0, y: 1.1, z: 0}
+--- !u!54 &917367554391916753
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804571435766203971}
+  serializedVersion: 4
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!195 &76122807682343785
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -218,6 +246,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb579e025ccb380458046403cb986b85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startKnockback: {x: 0, y: 0, z: 0}
+  endKnockback: {x: 0, y: 0, z: 0}
   distanceFactor: 0
   damageTakeOnObstacleCollide: 10
 --- !u!114 &1095622961786328033
