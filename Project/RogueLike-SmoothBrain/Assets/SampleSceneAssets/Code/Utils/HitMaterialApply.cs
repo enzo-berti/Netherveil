@@ -93,10 +93,11 @@ public class HitMaterialApply : MonoBehaviour
 
         while (elapsed < duration)
         {
-            elapsed = Mathf.Max(elapsed + Time.deltaTime, 0.0f);
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
             float factor = elapsed / duration;
             float ease = easingFunction(factor);
             float result = Mathf.Lerp(from, to, ease);
+            Debug.Log(result);
 
             SetAlpha(result);
 
