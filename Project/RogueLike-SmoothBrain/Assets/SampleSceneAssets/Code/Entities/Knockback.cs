@@ -14,7 +14,7 @@ public class Knockback : MonoBehaviour
 
     [SerializeField] private float distanceFactor = 1f;
 
-    public bool IsKnockback => IsKnockback;
+    public bool IsKnockback => isKnockback;
     public Vector3 StartKnockback => startKnockback;
     public Vector3 EndKnockback => endKnockback;
 
