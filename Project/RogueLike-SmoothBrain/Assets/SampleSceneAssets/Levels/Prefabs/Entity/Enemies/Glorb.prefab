@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 1282194086456528784}
   - component: {fileID: 2191641442306479398}
   - component: {fileID: 4692543997195375639}
+  - component: {fileID: 6725402744118248641}
   m_Layer: 3
   m_Name: GlorbCharacter
   m_TagString: Enemy
@@ -330,6 +331,20 @@ MonoBehaviour:
   - {fileID: 8662212702313579967}
   - {fileID: 9178432390720270088}
   defaultVisionAngle: 145
+--- !u!114 &6725402744118248641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196822713475936795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2f2ce35e687fc46a1b2ff82aa11a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mRenderer:
+  - {fileID: 2715056375790952104}
 --- !u!1 &6055099168171347159
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,7 +664,7 @@ PrefabInstance:
     - target: {fileID: -5851142470089824826, guid: 6a4e82d46e945654f9cf0785c6681ac7,
         type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -5851142470089824826, guid: 6a4e82d46e945654f9cf0785c6681ac7,
         type: 3}
@@ -953,6 +968,12 @@ PrefabInstance:
 --- !u!4 &931111467901033605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a4e82d46e945654f9cf0785c6681ac7,
+    type: 3}
+  m_PrefabInstance: {fileID: 820008690067569518}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &2715056375790952104 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5851142470089824826, guid: 6a4e82d46e945654f9cf0785c6681ac7,
     type: 3}
   m_PrefabInstance: {fileID: 820008690067569518}
   m_PrefabAsset: {fileID: 0}
