@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 8048143146362212682}
   - component: {fileID: 1647762869994520278}
   - component: {fileID: 7908437519458255297}
+  - component: {fileID: 2593171056149161103}
   m_Layer: 3
   m_Name: GraftedCharacter
   m_TagString: Enemy
@@ -437,6 +438,20 @@ MonoBehaviour:
   rotationSpeed: 3
   dashVFX: {fileID: 2957463444878155984}
   tripleThrustVFX: {fileID: 3982427714799087355}
+--- !u!114 &2593171056149161103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438280403736243787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2f2ce35e687fc46a1b2ff82aa11a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mRenderer:
+  - {fileID: 4729386694269739003}
 --- !u!1 &6298279552371567863
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +756,7 @@ PrefabInstance:
     - target: {fileID: 10401993589473847, guid: 32f3b67cab93eda4d845db69a925aab9,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7118060903458549486, guid: 32f3b67cab93eda4d845db69a925aab9,
         type: 3}
@@ -907,7 +922,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -1071,7 +1086,7 @@ PrefabInstance:
     - target: {fileID: 5383144009567884693, guid: 1b1ef451daeac5e458b4a230c73f76f7,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7972066551748298975, guid: 1b1ef451daeac5e458b4a230c73f76f7,
         type: 3}
@@ -1156,7 +1171,7 @@ PrefabInstance:
     - target: {fileID: 4085193227205891110, guid: 7ed315d8c4a3fd24c9e26770233b990f,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7895906903998644739, guid: 7ed315d8c4a3fd24c9e26770233b990f,
         type: 3}
@@ -1391,7 +1406,7 @@ PrefabInstance:
     - target: {fileID: 975610265630073045, guid: 702ed034f4819734981edbf3037ab64f,
         type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 975610265630073045, guid: 702ed034f4819734981edbf3037ab64f,
         type: 3}
@@ -1487,6 +1502,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7537499918959251610}
   m_SourcePrefab: {fileID: 100100000, guid: 702ed034f4819734981edbf3037ab64f, type: 3}
+--- !u!137 &4729386694269739003 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 975610265630073045, guid: 702ed034f4819734981edbf3037ab64f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5487698242713091886}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5450060368180123845 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 702ed034f4819734981edbf3037ab64f,
@@ -1522,7 +1543,7 @@ PrefabInstance:
     - target: {fileID: 1470582591752437035, guid: 74a0d698e286d5749a4faa5622a27fec,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6554612544311084130, guid: 74a0d698e286d5749a4faa5622a27fec,
         type: 3}

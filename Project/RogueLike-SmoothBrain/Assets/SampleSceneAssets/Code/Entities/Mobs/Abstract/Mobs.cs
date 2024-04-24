@@ -6,23 +6,23 @@ using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
-using UnityEngine.SocialPlatforms;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+[RequireComponent(typeof(HitMaterialApply))]
 public abstract class Mobs : Entity
 {
     protected NavMeshAgent agent;
     protected Renderer mRenderer;
-    private Material hitMaterial;
     protected Entity[] nearbyEntities;
     protected EnemyLifeBar lifeBar;
     protected Animator animator;
     [SerializeField] protected Drop drop;
     public VisualEffect StatSuckerVFX;
     [SerializeField] protected VisualEffect spawningVFX;
+    private HitMaterialApply hit;
 
     // opti
     protected int frameToUpdate;
@@ -62,15 +62,8 @@ public abstract class Mobs : Entity
         mRenderer = GetComponentInChildren<Renderer>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
         animator = GetComponentInChildren<Animator>();
+        hit = GetComponentInChildren<HitMaterialApply>();
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
-
-        foreach (Material mat in mRenderer.materials)
-        {
-            if (mat.HasInt("_isHit"))
-            {
-                hitMaterial = mat;
-            }
-        }
 
         nearbyEntities = null;
         ApplySpeed(Stat.SPEED);
@@ -151,13 +144,17 @@ public abstract class Mobs : Entity
 
     protected IEnumerator HitRoutine()
     {
-        hitMaterial.SetInt("_isHit", 1);
+        hit.EnableMat();
+
+        hit.SetAlpha(1.0f);
         yield return new WaitForSeconds(0.05f);
-        hitMaterial.SetInt("_isHit", 0);
+        hit.SetAlpha(0.0f);
         yield return new WaitForSeconds(0.05f);
-        hitMaterial.SetInt("_isHit", 1);
+        hit.SetAlpha(1.0f);
         yield return new WaitForSeconds(0.05f);
-        hitMaterial.SetInt("_isHit", 0);
+        hit.SetAlpha(0.0f);
+
+        hit.DisableMat();
     }
 
     protected void ApplyDamagesMob(int _value, Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)

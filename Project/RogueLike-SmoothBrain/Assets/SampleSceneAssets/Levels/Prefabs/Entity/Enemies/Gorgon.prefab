@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 76122807682343785}
   - component: {fileID: 5061550714055684533}
   - component: {fileID: 1095622961786328033}
+  - component: {fileID: 3465136333735062172}
   m_Layer: 3
   m_Name: GorgonCharacter
   m_TagString: Enemy
@@ -350,6 +351,20 @@ MonoBehaviour:
           Data3: 1596434062
           Data4: 56683401
         Path: event:/Enemy/Bomber/BomberDeath
+--- !u!114 &3465136333735062172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804571435766203971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2f2ce35e687fc46a1b2ff82aa11a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mRenderer:
+  - {fileID: 8008192434753543167}
 --- !u!1001 &355351471672168385
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -611,7 +626,7 @@ PrefabInstance:
     - target: {fileID: -2297866429832046103, guid: d511acd616bb9e34a812b228721da91a,
         type: 3}
       propertyPath: m_Materials.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -2297866429832046103, guid: d511acd616bb9e34a812b228721da91a,
         type: 3}
@@ -855,6 +870,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bad904c67b36e9144ba2622ed1d8b8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!137 &8008192434753543167 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -2297866429832046103, guid: d511acd616bb9e34a812b228721da91a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1098462964448772630}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9111015995907246164 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1058817630299731390, guid: d511acd616bb9e34a812b228721da91a,
@@ -932,22 +953,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.9746164
+      value: -0.96782434
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.22131017
+      value: -0.25056756
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.03299428
+      value: -0.022328896
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0074921376
+      value: 0.0057808645
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

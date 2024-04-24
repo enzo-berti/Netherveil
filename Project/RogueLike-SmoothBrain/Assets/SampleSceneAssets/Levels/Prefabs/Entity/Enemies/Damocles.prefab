@@ -1412,7 +1412,6 @@ SkinnedMeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: a899782951574a44f9d37ddb32300eb3, type: 2}
   - {fileID: 2100000, guid: 1ad947ce788e2c04ea416887051c8277, type: 2}
-  - {fileID: 2100000, guid: 58ed67b853adba54dadb6266e6faa1aa, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1650,6 +1649,7 @@ GameObject:
   - component: {fileID: 7183308250778894639}
   - component: {fileID: 7522457324236340436}
   - component: {fileID: 6427336968220816908}
+  - component: {fileID: 8465467415020403185}
   m_Layer: 3
   m_Name: DamoclesCharacter
   m_TagString: Enemy
@@ -1826,6 +1826,9 @@ MonoBehaviour:
     dropList: []
   StatSuckerVFX: {fileID: 4894878004148887784}
   spawningVFX: {fileID: 3479612167709144714}
+  wanderZone:
+    center: {x: 0, y: 0, z: 0}
+    radius: 8
   damoclesSounds:
     deathSound:
       reference:
@@ -1863,6 +1866,20 @@ MonoBehaviour:
   attack1Collider: {fileID: 943080324769429000}
   attack2Collider: {fileID: 3858017537836676493}
   attack3Collider: {fileID: 4901483605780937797}
+--- !u!114 &8465467415020403185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8420235329488438992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2f2ce35e687fc46a1b2ff82aa11a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mRenderer:
+  - {fileID: 464637807031241959}
 --- !u!1 &8569105310389706201
 GameObject:
   m_ObjectHideFlags: 0
