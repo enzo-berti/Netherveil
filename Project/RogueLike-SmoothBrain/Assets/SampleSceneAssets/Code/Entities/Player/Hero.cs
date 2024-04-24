@@ -362,11 +362,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.IncreaseValue(Stat.HP, 15f);
         }
 
-        foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[currentStep - 1].data)
         {
             armorPiece.SetActive(false);
         }
-        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[currentStep - 1].data)
         {
             armorPiece.SetActive(true);
         }
