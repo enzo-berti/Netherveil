@@ -224,24 +224,6 @@ public abstract class Mobs : Entity
 
         return (_unitPos - wanderZone.center).normalized * _minTravelDistance;
     }
-    public IEnumerator FadeIn()
-    {
-        float timer = 0;
-        while (timer < 1)
-        {
-            timer += Time.deltaTime / 3;
-            timer = timer > 1 ? 1 : timer;
-            foreach (var mat in this.GetComponentInChildren<SkinnedMeshRenderer>().materials)
-            {
-                Color matColor = mat.color;
-                matColor.a = timer;
-                mat.color = matColor;
-            }
-
-            yield return null;
-        }
-        yield break;
-    }
 
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)

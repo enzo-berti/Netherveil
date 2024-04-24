@@ -78,7 +78,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
 
     protected override void Update()
     {
-        if (animator.speed == 0)
+        if (isFreeze || isSpawning)
             return;
 
         base.Update();
