@@ -42,6 +42,7 @@ public class PlayerInput : MonoBehaviour
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
     readonly float CHARGED_ATTACK_MAX_TIME = 1f;
+    readonly float CHARGED_ATTACK_CAN_RELEASE_TIME = 0.2f;
     float chargedAttackScaleSize = 0f;
     float chargedAttackVFXMaxSize = 0f;
     public float ChargedAttackCoef { get; private set; } = 0f;
@@ -121,7 +122,7 @@ public class PlayerInput : MonoBehaviour
         if (!LaunchedChargedAttack)
             return;
 
-        if ((chargedAttackTime / CHARGED_ATTACK_MAX_TIME) > 0.2f)
+        if (CanReleaseChargedAttack())
         {
             StopChargedAttackCoroutine();
             controller.ComboCount = 0;
@@ -169,7 +170,7 @@ public class PlayerInput : MonoBehaviour
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
-            if((chargedAttackTime / CHARGED_ATTACK_MAX_TIME) > 0.2f && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= 0.21f && !flashMaterial.IsEnable)
+            if(CanReleaseChargedAttack() && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= CHARGED_ATTACK_CAN_RELEASE_TIME + 0.01f && !flashMaterial.IsEnable)
             {
                 flashMaterial.EnableMat();
                 flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1,0, 0.15f, () => flashMaterial.DisableMat()));
@@ -437,6 +438,11 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region InputConditions
+
+    private bool CanReleaseChargedAttack()
+    {
+        return (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) > CHARGED_ATTACK_CAN_RELEASE_TIME;
+    }
 
     private bool CanAttack()
     {

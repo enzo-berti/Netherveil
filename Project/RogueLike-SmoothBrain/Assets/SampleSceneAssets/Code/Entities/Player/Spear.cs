@@ -14,7 +14,7 @@ public class Spear : MonoBehaviour
     public static event Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
-    public VisualEffect PhantomSpearVFX;
+    public VisualEffect PhantomSpearVFX { get; set; }
     public BoxCollider SpearThrowCollider { get; set; } = null;
     GameObject trail;
 
