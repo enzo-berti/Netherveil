@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2543520604295491573}
   - component: {fileID: 3282655328587899484}
   - component: {fileID: 239094205178700740}
+  - component: {fileID: 1964151299831731648}
   m_Layer: 3
   m_Name: PestCharacter
   m_TagString: Enemy
@@ -252,6 +253,20 @@ MonoBehaviour:
         Path: event:/Enemy/Pest/PestMove
   angle: 200
   attackCollider: {fileID: 5433158596567157123}
+--- !u!114 &1964151299831731648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3418721256038646307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2f2ce35e687fc46a1b2ff82aa11a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mRenderer:
+  - {fileID: 1744453393231416807}
 --- !u!1 &4043230366547309803
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,22 +590,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8931477
+      value: -0.8998499
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.23630619
+      value: -0.23201787
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.36995393
+      value: -0.35767686
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09788123
+      value: 0.09222363
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
@@ -964,7 +979,7 @@ PrefabInstance:
     - target: {fileID: 6835092815877465729, guid: 5faaeea49fadf77488b138930ddec7a2,
         type: 3}
       propertyPath: m_Materials.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6835092815877465729, guid: 5faaeea49fadf77488b138930ddec7a2,
         type: 3}
@@ -1033,6 +1048,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bad904c67b36e9144ba2622ed1d8b8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!137 &1744453393231416807 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6835092815877465729, guid: 5faaeea49fadf77488b138930ddec7a2,
+    type: 3}
+  m_PrefabInstance: {fileID: 5111211389313870694}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4711911798478376077 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5faaeea49fadf77488b138930ddec7a2,
