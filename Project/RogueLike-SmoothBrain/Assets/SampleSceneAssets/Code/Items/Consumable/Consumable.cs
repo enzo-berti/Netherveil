@@ -30,7 +30,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         Vector3 updatePos = model.transform.position;
         updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
         model.transform.position = updatePos;
-        model.transform.Rotate(new Vector3(0, 0.5f, 0));
+        model.transform.Rotate(new Vector3(0, 50f * Time.deltaTime, 0));
     }
 
     private void RetrieveConsumable()
