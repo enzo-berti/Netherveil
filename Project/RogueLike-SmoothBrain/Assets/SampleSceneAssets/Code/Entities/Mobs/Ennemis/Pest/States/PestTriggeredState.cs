@@ -56,7 +56,7 @@ public class PestTriggeredState : BaseState<PestStateMachine>
             Vector3 direction = (lastPlayerPos - Context.transform.position).normalized;
             Context.MoveTo(Context.transform.position + direction * Context.Stats.GetValue(Stat.ATK_RANGE));
 
-            Context.MovementTimer = 0f;
+            Context.idleTimer = 0f;
         }
     }
 

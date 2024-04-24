@@ -61,7 +61,7 @@ public class PestRegroupState : BaseState<PestStateMachine>
                 avoidPos /= pests.Count();
 
                 Context.MoveTo(averagePos + avoidPos);
-                Context.MovementTimer = 0f;
+                Context.idleTimer = 0f;
             }
         }
     }

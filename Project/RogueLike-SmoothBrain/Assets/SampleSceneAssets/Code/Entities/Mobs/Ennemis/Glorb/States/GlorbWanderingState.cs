@@ -56,7 +56,7 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
             float maxRange = Context.Stats.GetValue(Stat.VISION_RANGE) / 2f;
 
             Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
-            idleTimer = 0f;
+            idleTimer = Random.Range(-0.5f, 0.5f);
         }
     }
 

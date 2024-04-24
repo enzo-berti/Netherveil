@@ -61,7 +61,7 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
                 float maxRange = Context.Stats.GetValue(Stat.ATK_RANGE);
 
                 Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
-                idleTimer = 0f;
+                idleTimer = Random.Range(-0.5f, 0.5f);
             }
         }
     }

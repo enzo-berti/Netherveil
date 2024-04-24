@@ -25,7 +25,7 @@ public class PestWanderingState : BaseState<PestStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        Context.MovementTimer = Context.MovementDelay / 2f;
+        Context.idleTimer = Context.MovementDelay / 2f;
     }
 
     // This method will be call only one time after the last update.
@@ -43,7 +43,7 @@ public class PestWanderingState : BaseState<PestStateMachine>
             float maxRange = Context.Stats.GetValue(Stat.ATK_RANGE);
 
             Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
-            Context.MovementTimer = 0f;
+            Context.idleTimer = Random.Range(-0.5f, 0.5f);
         }
     }
 
