@@ -1,5 +1,4 @@
 using Map;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,9 +13,21 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
         Stat.HP
     };
 
-    public void Activate()
+    public HornOfBarbatos()
     {
         RoomUtilities.exitEvents += ResetStat;
+    }
+
+    ~HornOfBarbatos()
+    {
+        RoomUtilities.exitEvents -= ResetStat;
+    }
+
+    public void Activate()
+    {
+        Camera.main.GetComponent<CameraUtilities>().ShakeCamera(0.3f, 0.25f, EasingFunctions.EaseInQuint);
+        //add sfx here
+
         Hero hero = Utilities.Hero;
         foreach (var stat in hero.Stats.StatsName)
         {
