@@ -1,17 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HitMaterialApply : MonoBehaviour
 {
     [SerializeField] private Renderer[] mRenderer;
     private Material mMaterial;
+    private Material currentMat;
     private Coroutine routine;
     Func<float, float> defaultEasing = e => e;
 
-    private bool isEnable;
-    public bool IsEnable => isEnable;
+    public bool IsEnable => currentMat != null;
 
     void Awake()
     {
@@ -25,7 +26,7 @@ public class HitMaterialApply : MonoBehaviour
 
     public void SetAlpha(float alpha)
     {
-        mMaterial.SetFloat("alpha", alpha);
+        currentMat.SetFloat("_alpha", alpha);
     }
 
     public void SetAlpha(float from, float to, float duration)
@@ -53,13 +54,12 @@ public class HitMaterialApply : MonoBehaviour
 
     public void EnableMat()
     {
-        if (isEnable)
+        if (IsEnable)
         {
             Debug.LogWarning("Hit material is already enable");
             return;
         }
 
-        isEnable = true;
         foreach (Renderer renderer in mRenderer)
         {
             List<Material> materials = new List<Material>(renderer.materials)
@@ -67,23 +67,24 @@ public class HitMaterialApply : MonoBehaviour
                 mMaterial
             };
             renderer.SetMaterials(materials);
+            currentMat = renderer.materials.First(mat => mat.shader == mMaterial.shader);
         }
     }
 
     public void DisableMat()
     {
-        if (!isEnable)
+        if (!IsEnable)
         {
             Debug.LogWarning("Hit material is already disable");
             return;
         }
 
-        isEnable = false;
         foreach (Renderer renderer in mRenderer)
         {
             List<Material> materials = new List<Material>(renderer.materials);
             materials.RemoveAll(mat => mat.shader == mMaterial.shader);
             renderer.SetMaterials(materials);
+            currentMat = null;
         }
     }
 
@@ -97,7 +98,6 @@ public class HitMaterialApply : MonoBehaviour
             float factor = elapsed / duration;
             float ease = easingFunction(factor);
             float result = Mathf.Lerp(from, to, ease);
-            Debug.Log(result);
 
             SetAlpha(result);
 

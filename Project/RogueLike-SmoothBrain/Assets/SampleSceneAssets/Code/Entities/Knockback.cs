@@ -5,8 +5,6 @@ using UnityEngine.AI;
 
 public class Knockback : MonoBehaviour
 {
-    private NavMeshAgent agent;
-    private CharacterController characterController;
     private Hero hero;
     private Animator animator;
     private Coroutine knockbackRoutine;
@@ -30,31 +28,32 @@ public class Knockback : MonoBehaviour
 
     private void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        characterController = GetComponent<CharacterController>();
         hero = GetComponent<Hero>();
         animator = GetComponentInChildren<Animator>();
     }
 
     public void GetKnockback(IAttacker attacker, Vector3 direction, float distance, float speed)
     {
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        CharacterController characterController = GetComponent<CharacterController>();
+
         if (knockbackRoutine != null || !GetComponent<Entity>().IsKnockbackable)
             return;
 
         if (agent != null)
         {
-            knockbackRoutine = StartCoroutine(ApplyKnockbackAgent(attacker, direction, distance, speed));
+            knockbackRoutine = StartCoroutine(ApplyKnockback(agent, attacker, direction, distance, speed));
         }
         else if (characterController != null && hero.State != (int)Entity.EntityState.DEAD)
         {
             animator.SetBool("IsKnockback", true);
             hero.State = (int)Hero.PlayerState.KNOCKBACK;
-            knockbackRoutine = StartCoroutine(ApplyKnockbackPlayer(attacker, direction, distance, speed));
+            knockbackRoutine = StartCoroutine(ApplyKnockback(characterController, attacker, direction, distance, speed));
         }
 
     }
 
-    private IEnumerator ApplyKnockbackAgent(IAttacker attacker, Vector3 direction, float distance, float speed)
+    private IEnumerator ApplyKnockback(NavMeshAgent agent, IAttacker attacker, Vector3 direction, float distance, float speed)
     {
         float elapsed = 0f;
         bool canWarp = true;
@@ -71,7 +70,7 @@ public class Knockback : MonoBehaviour
             float factor = elapsed / duration;
             Vector3 lerp = Vector3.Lerp(startKnockback, endKnockback, factor);
 
-            canWarp = WarpPosition(lerp, attacker);
+            canWarp = WarpPosition(agent, lerp, attacker);
 
             yield return null;
         }
@@ -80,15 +79,15 @@ public class Knockback : MonoBehaviour
         knockbackRoutine = null;
     }
 
-    protected IEnumerator ApplyKnockbackPlayer(IAttacker attacker, Vector3 direction, float distance, float speed)
+    protected IEnumerator ApplyKnockback(CharacterController controller, IAttacker attacker, Vector3 direction, float distance, float speed)
     {
-        if (characterController == null)
+        if (controller == null)
         {
             knockbackRoutine = null;
             yield return null;
         }
 
-        characterController.enabled = false;
+        controller.enabled = false;
 
         float elapsed = 0f;
         startKnockback = transform.position;
@@ -118,9 +117,9 @@ public class Knockback : MonoBehaviour
             yield return null;
         }
 
-        if (characterController != null)
+        if (controller != null)
         {
-            characterController.enabled = true;
+            controller.enabled = true;
             hero.State = (int)Entity.EntityState.MOVE;
             animator.SetBool("IsKnockback", false);
         }
@@ -128,7 +127,7 @@ public class Knockback : MonoBehaviour
         isKnockback = false;
     }
 
-    private bool WarpPosition(Vector3 position, IAttacker attacker)
+    private bool WarpPosition(NavMeshAgent agent, Vector3 position, IAttacker attacker)
     {
         bool canWarp = NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas);
         if (canWarp)
