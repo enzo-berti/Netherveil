@@ -94,9 +94,7 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     protected override void Update()
     {
-        animator.speed = isFreeze ? 0 : 1;
-
-        if (animator.speed == 0 || isSpawning)
+        if (isFreeze || isSpawning)
             return;
 
         base.Update();

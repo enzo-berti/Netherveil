@@ -85,12 +85,7 @@ public class PestStateMachine : Mobs, IPest
 
     protected override void Update()
     {
-        if (currentState is not PestDeathState)
-            animator.speed = isFreeze ? 0 : 1;
-        else
-            animator.speed = 1;
-
-        if (animator.speed == 0 || isSpawning)
+        if (isFreeze || isSpawning)
             return;
 
         base.Update();

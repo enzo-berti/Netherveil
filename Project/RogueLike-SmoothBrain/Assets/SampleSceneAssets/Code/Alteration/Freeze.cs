@@ -33,6 +33,7 @@ public class Freeze : ConstantStatus
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
         target.isFreeze = false;
+        target.GetComponentInChildren<Animator>().speed = 1;
         Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
 
         foreach (Renderer renderer in renderers)
@@ -55,6 +56,7 @@ public class Freeze : ConstantStatus
     {
         PlayVFX();
         PlayPostProcessing();
+        target.GetComponentInChildren<Animator>().speed = 0;
         target.OnFreeze?.Invoke();
     }
     
