@@ -1,8 +1,10 @@
 using Map;
 using Map.Generation;
 using System;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public abstract class Quest
 {
@@ -39,6 +41,7 @@ public abstract class Quest
         quest.talkerType = type;
         quest.talkerGrade = grade;
         quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)Seed.Range(0, (int)QuestDifficulty.NB) : QuestDifficulty.MEDIUM;
+        InitDescription(ref quest.Datas.Description);
         return quest;
     }
 
@@ -77,7 +80,7 @@ public abstract class Quest
         {
             QuestLost();
         }
-        else if(IsQuestFinished())
+        else if (IsQuestFinished())
         {
             QuestFinished();
         }
@@ -95,4 +98,16 @@ public abstract class Quest
     {
         OnQuestUpdated?.Invoke();
     }
+    static private void InitDescription(ref string description)
+    {
+        string finalDescription = string.Empty;
+        char[] separators = new char[] { ' ', '\n' };
+        string[] splitDescription = description.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        foreach(var test in splitDescription)
+        {
+            finalDescription += test + ' ';
+        }
+        description = finalDescription;
+    }
+
 }
