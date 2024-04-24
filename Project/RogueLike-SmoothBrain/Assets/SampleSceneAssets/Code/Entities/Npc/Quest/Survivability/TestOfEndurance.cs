@@ -22,7 +22,7 @@ public class TestOfEndurance : Quest
                 NB_ROOM_SURVIVING = 6;
                 break;
         }
-        progressText = $"DON'T FALL UNDER 100HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
+        progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
         RoomUtilities.allEnemiesDeadEvents += UpdateCount;
         Hero.OnTakeDamage += TestHp;
     }
@@ -43,7 +43,7 @@ public class TestOfEndurance : Quest
 
     private void TestHp(int _arg, IAttacker _attacker)
     {
-        if (Utilities.Hero.Stats.GetValue(Stat.HP) < 100)
+        if (IsQuestLost())
         {
             questLost = true;
         }
@@ -55,7 +55,7 @@ public class TestOfEndurance : Quest
             return;
 
         currentSurvivedRoom++;
-        progressText = $"DON'T FALL UNDER 100HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
+        progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
         QuestUpdated();
     }
 
@@ -66,6 +66,6 @@ public class TestOfEndurance : Quest
 
     protected bool IsQuestLost()
     {
-        return Utilities.Hero.Stats.GetValue(Stat.HP) < 100;
+        return Utilities.Hero.Stats.GetValue(Stat.HP) / Utilities.Hero.Stats.GetMaxValue(Stat.HP) < 0.25f;
     }
 }
