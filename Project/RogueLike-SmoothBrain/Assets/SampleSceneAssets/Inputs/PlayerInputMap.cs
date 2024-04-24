@@ -243,7 +243,7 @@ namespace Netherveil.Inputs
                 {
                     ""name"": """",
                     ""id"": ""1315a9f1-a6e4-43df-b268-71ab6b910c96"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Keyboard>/semicolon"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -287,7 +287,7 @@ namespace Netherveil.Inputs
                 {
                     ""name"": """",
                     ""id"": ""c393c1c7-1cfd-42ca-854a-dbe1211d263e"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
