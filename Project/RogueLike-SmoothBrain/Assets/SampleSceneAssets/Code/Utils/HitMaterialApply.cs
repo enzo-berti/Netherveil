@@ -27,15 +27,25 @@ public class HitMaterialApply : MonoBehaviour
 
     public void SetAlpha(float from, float to, float duration)
     {
-        SetAlpha(from, to, duration, defaultEasing);
+        SetAlpha(from, to, duration, defaultEasing, null);
     }
 
     public void SetAlpha(float from, float to, float duration, Func<float, float> easingFunction)
     {
+        SetAlphaRoutine(from, to, duration, easingFunction, null);
+    }
+
+    public void SetAlpha(float from, float to, float duration, Action onFinish)
+    {
+        SetAlphaRoutine(from, to, duration, defaultEasing, onFinish);
+    }
+
+    public void SetAlpha(float from, float to, float duration, Func<float, float> easingFunction, Action onFinish)
+    {
         if (routine != null)
             StopCoroutine(routine);
 
-        routine = StartCoroutine(SetAlphaRoutine(from, to, duration, easingFunction));
+        routine = StartCoroutine(SetAlphaRoutine(from, to, duration, easingFunction, onFinish));
     }
 
     public void EnableMat()
@@ -60,7 +70,7 @@ public class HitMaterialApply : MonoBehaviour
         }
     }
 
-    private IEnumerator SetAlphaRoutine(float from, float to, float duration, Func<float, float> easingFunction)
+    private IEnumerator SetAlphaRoutine(float from, float to, float duration, Func<float, float> easingFunction, Action onFinish)
     {
         float elapsed = 0.0f;
 
@@ -75,5 +85,8 @@ public class HitMaterialApply : MonoBehaviour
 
             yield return null;
         }
+
+        SetAlpha(to);
+        onFinish?.Invoke();
     }
 }

@@ -10,8 +10,11 @@ public class Knockback : MonoBehaviour
     private Hero hero;
     private Animator animator;
     private Coroutine knockbackRoutine;
-
+    private bool isKnockback;
+    
     [SerializeField] private float distanceFactor = 1f;
+
+    public bool IsKnockback => IsKnockback;
 
     /// <summary>
     /// int _value, bool isCrit = false, bool notEffectDamages = true
@@ -55,6 +58,7 @@ public class Knockback : MonoBehaviour
 
         float duration = distance * distanceFactor / speed;
         bool isOnNavMesh = true;
+        isKnockback = true;
 
         while (timeElapsed < duration && isOnNavMesh)
         {
@@ -75,6 +79,7 @@ public class Knockback : MonoBehaviour
             yield return null;
         }
 
+        isKnockback = false;
         knockbackRoutine = null;
     }
 
@@ -94,6 +99,7 @@ public class Knockback : MonoBehaviour
 
         float duration = distance * distanceFactor / speed;
         bool hitObstacle = false;
+        isKnockback = true;
 
         while (timeElapsed < duration && !hitObstacle)
         {
@@ -122,6 +128,7 @@ public class Knockback : MonoBehaviour
             animator.SetBool("IsKnockback", false);
         }
         knockbackRoutine = null;
+        isKnockback = false;
     }
 }
 
