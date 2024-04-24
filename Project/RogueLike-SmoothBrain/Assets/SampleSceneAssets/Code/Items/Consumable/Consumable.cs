@@ -16,6 +16,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
     protected virtual void Start()
     {
         model = GetComponentInChildren<MeshRenderer>().gameObject;
+        Destroy(gameObject, 60);
     }
 
     protected virtual void Update()
