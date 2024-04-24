@@ -9,7 +9,7 @@ public class TearOfZeus : ItemEffect, IPassiveItem
     public void OnRetrieved()
     {
         thunderstrikeCollider = GameObject.Instantiate(GameResources.Get<GameObject>("ThunderstrikeCollide"));
-        thunderstrikeVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_TEMP_Thunderstrike"));
+        thunderstrikeVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ThunderStrike"));
         thunderstrikeCollider.SetActive(false);
 
         PlayerInput.OnEndDash += DropTear;
@@ -28,7 +28,7 @@ public class TearOfZeus : ItemEffect, IPassiveItem
 
         thunderstrikeVFX.transform.position = playerPos;
         thunderstrikeCollider.transform.position = playerPos;
-        thunderstrikeCollider.SetActive(true);
+        //thunderstrikeCollider.SetActive(true);
         thunderstrikeVFX.GetComponent<VisualEffect>().Play();
 
         Collider[] colliders = thunderstrikeCollider.GetComponent<CapsuleCollider>().CapsuleOverlap();
