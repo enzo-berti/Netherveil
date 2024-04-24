@@ -5,7 +5,7 @@ using Map;
 public class RuneOfEnvy : ItemEffect, IPassiveItem
 {
     readonly List<List<float>> statsStolen = new();
-    readonly float stealPourcentage = 10f;
+    readonly float stealPourcentage = 0.1f;
 
     enum StolenStats
     {
@@ -40,9 +40,9 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
             Mobs mob = enemy.GetComponent<Mobs>();
             mob.StatSuckerVFX.GetComponent<VFXStopper>().Duration = 1f;
             mob.StatSuckerVFX.GetComponent<VFXStopper>().PlayVFX();
-            float hpStolen = mob.Stats.GetValue(Stat.HP) * (stealPourcentage/100f);
-            float atkStolen = mob.Stats.GetValue(Stat.ATK) * (stealPourcentage / 100f);
-            float speedStolen = mob.Stats.GetValue(Stat.SPEED) * (stealPourcentage / 100f);
+            float hpStolen = mob.Stats.GetValue(Stat.HP) * (stealPourcentage);
+            float atkStolen = mob.Stats.GetValue(Stat.ATK) * (stealPourcentage);
+            float speedStolen = mob.Stats.GetValue(Stat.SPEED) * (stealPourcentage);
 
             statsStolen[(int)StolenStats.HP].Add(hpStolen);
             statsStolen[(int)StolenStats.ATK].Add(atkStolen);

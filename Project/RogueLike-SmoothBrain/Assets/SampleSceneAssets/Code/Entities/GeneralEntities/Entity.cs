@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.VFX;
+using System.Collections;
+using static UnityEngine.EventSystems.EventTrigger;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -73,7 +75,8 @@ public abstract class Entity : MonoBehaviour
             if (constructor != null)
             {
                 statusToApply.Add((Status)constructor.Invoke(new object[] { durationStatusToApply[i], chanceStatusToApply[i] }));
-            }
+            }           
+
         }
     }
     protected virtual void Start()
@@ -95,7 +98,30 @@ public abstract class Entity : MonoBehaviour
                 }
             }
         }
+    }
 
+    protected virtual void OnTriggerStay(Collider collider)
+    {
+        if (collider.gameObject.TryGetComponent(out Entity other))
+        {
+            CheckKnockbackCollision(other);
+        }
+    }
+
+    protected virtual void CheckKnockbackCollision(Entity other)
+    {
+        if (!this.IsKnockbackable || !other.IsKnockbackable) // one entity can't be knockback : don't need to check anything
+        {
+            return;
+        }
+
+        Knockback otherKnockback = other.GetComponent<Knockback>();
+        Knockback thisKnockback = this.GetComponent<Knockback>();
+
+        if (otherKnockback.IsKnockback && !thisKnockback.IsKnockback)
+        {
+            this.ApplyKnockback(this.GetComponent<IDamageable>(), other.GetComponent<IAttacker>(), Vector3.Distance(otherKnockback.transform.position, otherKnockback.endKnockback));
+        }
     }
 
     public void ApplyKnockback(IDamageable damageable, IAttacker attacker)
@@ -109,10 +135,19 @@ public abstract class Entity : MonoBehaviour
         ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
 
-    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, float distance, float speed)
+    public void ApplyKnockback(IDamageable damageable, IAttacker attacker, float distance = -1f, float speed = -1f)
     {
         Vector3 temp = (damageable as MonoBehaviour).transform.position - transform.position;
         Vector3 direction = new Vector3(temp.x, 0f, temp.z).normalized;
+
+        if (distance < 0f)
+        {
+            distance = stats.GetValue(Stat.KNOCKBACK_DISTANCE);
+        }
+        if (speed < 0f)
+        {
+            speed = stats.GetValue(Stat.KNOCKBACK_COEFF);
+        }
 
         ApplyKnockback(damageable, attacker, direction, distance, speed);
     }
@@ -212,6 +247,8 @@ public abstract class Entity : MonoBehaviour
         AppliedStatusList.Clear();
         statusVfxs.Clear();
     }
+
+    
 }
 
 #if UNITY_EDITOR
@@ -279,18 +316,18 @@ public class EntityDrawer : Editor
         // Get all infos
         List<FieldInfo> infos = new();
         Type currentType = target.GetType();
-        List<FieldInfo[]> test = new();
-        while (currentType != typeof(Entity) || currentType != typeof(object))
+        List<FieldInfo[]> fieldInfos = new();
+        while (currentType != typeof(Entity) && currentType != typeof(object) && currentType != null)
         {
-            test.Add(currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            fieldInfos.Add(currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
             // If doesn't inherit, return type System.Object ( that's equal to object )
             currentType = currentType.BaseType;
         }
-        test.Reverse();
+        fieldInfos.Reverse();
 
-        for (int j = 0; j < test.Count; j++)
+        for (int j = 0; j < fieldInfos.Count; j++)
         {
-            foreach (var coucou in test[j])
+            foreach (var coucou in fieldInfos[j])
             {
                 infos.Add(coucou);
             }

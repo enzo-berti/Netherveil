@@ -2,7 +2,7 @@ using UnityEngine;
  
 public class UrnOfAvarice : ItemEffect , IPassiveItem 
 {
-    readonly float bloodDamagesCoef = 1f;
+    readonly float bloodDamagesCoef = 0.01f;
 
     public void OnRetrieved() 
     {
@@ -17,6 +17,6 @@ public class UrnOfAvarice : ItemEffect , IPassiveItem
     private void AddBloodDamages(ref int damages, IDamageable target)
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        damages += (int)(hero.Inventory.Blood * (bloodDamagesCoef / 100f));
+        damages += (int)(hero.Inventory.Blood * (bloodDamagesCoef));
     }
 } 
