@@ -45,7 +45,8 @@ public class GameResources : MonoBehaviour
             {
                 Debug.LogError("GameResources doesn't contain " + key + " and can't load this from resources file");
             }
-            Debug.Log("MA GROSSE BITE ", obj);
+
+            Debug.LogWarning("Load asset from Resources, can cause lag on the middle of the gameplay", obj);
             objDictionary.Add(key, obj);
         }
 
