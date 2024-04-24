@@ -11,10 +11,14 @@ public class Knockback : MonoBehaviour
     private Animator animator;
     private Coroutine knockbackRoutine;
     private bool isKnockback;
-    
+    public Vector3 startKnockback;
+    public Vector3 endKnockback;
+
     [SerializeField] private float distanceFactor = 1f;
 
     public bool IsKnockback => IsKnockback;
+    public Vector3 StartKnockback => startKnockback;
+    public Vector3 EndKnockback => endKnockback;
 
     /// <summary>
     /// int _value, bool isCrit = false, bool notEffectDamages = true
@@ -52,29 +56,22 @@ public class Knockback : MonoBehaviour
 
     private IEnumerator ApplyKnockbackAgent(IAttacker attacker, Vector3 direction, float distance, float speed)
     {
-        float timeElapsed = 0f;
-        Vector3 startPosition = transform.position;
-        Vector3 targetPosition = transform.position + direction * distance * distanceFactor;
-
-        float duration = distance * distanceFactor / speed;
-        bool isOnNavMesh = true;
+        float elapsed = 0f;
+        bool canWarp = true;
         isKnockback = true;
 
-        while (timeElapsed < duration && isOnNavMesh)
+        startKnockback = transform.position;
+        endKnockback = transform.position + direction * distance * distanceFactor;
+
+        float duration = distance * distanceFactor / speed;
+
+        while (elapsed < duration && canWarp)
         {
-            timeElapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(timeElapsed / duration);
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+            Vector3 lerp = Vector3.Lerp(startKnockback, endKnockback, factor);
 
-            Vector3 warpPosition = Vector3.Lerp(startPosition, targetPosition, t);
-
-            if (isOnNavMesh = NavMesh.SamplePosition(warpPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-            {
-                agent.Warp(hit.position);
-            }
-            else
-            {
-                onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);
-            }
+            canWarp = WarpPosition(lerp, attacker);
 
             yield return null;
         }
@@ -93,21 +90,21 @@ public class Knockback : MonoBehaviour
 
         characterController.enabled = false;
 
-        float timeElapsed = 0f;
-        Vector3 startPosition = transform.position;
-        Vector3 targetPosition = transform.position + direction * distance * distanceFactor;
+        float elapsed = 0f;
+        startKnockback = transform.position;
+        endKnockback = transform.position + direction * distance * distanceFactor;
 
         float duration = distance * distanceFactor / speed;
         bool hitObstacle = false;
         isKnockback = true;
 
-        while (timeElapsed < duration && !hitObstacle)
+        while (elapsed < duration && !hitObstacle)
         {
-            timeElapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(timeElapsed / duration);
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
 
             Vector3 lastPos = transform.position;
-            Vector3 nextPos = Vector3.Lerp(startPosition, targetPosition, t);
+            Vector3 nextPos = Vector3.Lerp(startKnockback, endKnockback, t);
 
             if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos), ~LayerMask.GetMask("Entity")))
             {
@@ -129,6 +126,17 @@ public class Knockback : MonoBehaviour
         }
         knockbackRoutine = null;
         isKnockback = false;
+    }
+
+    private bool WarpPosition(Vector3 position, IAttacker attacker)
+    {
+        bool canWarp = NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas);
+        if (canWarp)
+            agent.Warp(hit.position);
+        else
+            onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);
+
+        return canWarp;
     }
 }
 
