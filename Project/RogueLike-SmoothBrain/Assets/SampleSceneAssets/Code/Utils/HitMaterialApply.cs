@@ -10,6 +10,9 @@ public class HitMaterialApply : MonoBehaviour
     private Coroutine routine;
     Func<float, float> defaultEasing = e => e;
 
+    private bool isEnable;
+    public bool IsEnable => isEnable;
+
     void Awake()
     {
         mMaterial = GameResources.Get<Material>("MAT_Entity_Hit");
@@ -50,6 +53,13 @@ public class HitMaterialApply : MonoBehaviour
 
     public void EnableMat()
     {
+        if (isEnable)
+        {
+            Debug.LogWarning("Hit material is already enable");
+            return;
+        }
+
+        isEnable = true;
         foreach (Renderer renderer in mRenderer)
         {
             List<Material> materials = new List<Material>(renderer.materials)
@@ -62,6 +72,13 @@ public class HitMaterialApply : MonoBehaviour
 
     public void DisableMat()
     {
+        if (!isEnable)
+        {
+            Debug.LogWarning("Hit material is already disable");
+            return;
+        }
+
+        isEnable = false;
         foreach (Renderer renderer in mRenderer)
         {
             List<Material> materials = new List<Material>(renderer.materials);
