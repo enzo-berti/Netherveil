@@ -66,6 +66,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
+    [SerializeField] List<NestedList<GameObject>> CorruptionArmorsToActivatePerStep;
+    [SerializeField] List<NestedList<GameObject>> BenedictionArmorsToActivatePerStep;
+    [SerializeField] List<NestedList<GameObject>> NormalArmorsToActivatePerStep;
+
     protected override void Start()
     {
         base.Start();
@@ -237,7 +241,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 currentValue += offset;
             }
 
-            if (currentValue <= 0 && currentDiff > 0)
+            if (currentValue < 0 && currentDiff > 0)
             {
                 BenedictionDrawback(currentValue);
             }
@@ -249,7 +253,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 CorruptionUpgrade(currentValue);
             }
-            else if (currentValue >= 0 && currentDiff < 0)
+            else if (currentValue > 0 && currentDiff < 0)
             {
                 CorruptionDrawback(currentValue);
             }
@@ -277,6 +281,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseMaxValue(Stat.HP, 15f);
             Stats.DecreaseValue(Stat.HP, 15f);
         }
+
+        foreach(GameObject armorPiece in CorruptionArmorsToActivatePerStep[currentStep -1].data)
+        {
+            armorPiece.SetActive(true);
+        }
+        foreach(GameObject armorPiece in NormalArmorsToActivatePerStep[currentStep -1].data)
+        {
+            armorPiece.SetActive(false);
+        }
+
         playerController.LaunchUpgradeAnimation = true;
     }
 
@@ -295,12 +309,19 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseValue(Stat.ATK, 5f);
         }
 
+        foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        {
+            armorPiece.SetActive(true);
+        }
+        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        {
+            armorPiece.SetActive(false);
+        }
         playerController.LaunchUpgradeAnimation = true;
     }
 
     private void BenedictionDrawback(float corruptionLastValue)
     {
-        currentStep++;
         if (corruptionLastValue <= Stats.GetMinValue(Stat.CORRUPTION))
         {
             playerController.SpecialAbility = null;
@@ -312,12 +333,21 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseValue(Stat.HP, 15f);
             Stats.IncreaseValue(Stat.ATK, 5f);
         }
+
+        foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        {
+            armorPiece.SetActive(false);
+        }
+        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        {
+            armorPiece.SetActive(true);
+        }
+        currentStep++;
         playerController.LaunchDrawbackAnimation = true;
     }
 
     private void CorruptionDrawback(float corruptionLastValue)
     {
-        currentStep--;
         if (corruptionLastValue >= Stats.GetMaxValue(Stat.CORRUPTION))
         {
             Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
@@ -331,6 +361,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.IncreaseMaxValue(Stat.HP, 15f);
             Stats.IncreaseValue(Stat.HP, 15f);
         }
+
+        foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        {
+            armorPiece.SetActive(false);
+        }
+        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
+        {
+            armorPiece.SetActive(true);
+        }
+
+        currentStep--;
         playerController.LaunchDrawbackAnimation = true;
     }
     #endregion
