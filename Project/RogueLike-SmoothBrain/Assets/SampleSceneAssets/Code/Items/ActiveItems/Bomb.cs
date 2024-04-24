@@ -14,7 +14,7 @@ public class Bomb : ItemEffect, IActiveItem
 
     public Bomb()
     {
-        bombPf = Resources.Load<GameObject>("Bomb");
+        bombPf = GameResources.Get<GameObject>("Bomb");
         displayValue = Utilities.Hero.Stats.GetValue(Stat.ATK);
     }
     public void Activate()
