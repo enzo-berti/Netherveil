@@ -69,7 +69,7 @@ public class HitMaterialApply : MonoBehaviour
             elapsed = Mathf.Max(elapsed + Time.deltaTime, 0.0f);
             float factor = elapsed / duration;
             float ease = easingFunction(factor);
-            float result = Mathf.Lerp(from, to, factor);
+            float result = Mathf.Lerp(from, to, ease);
 
             SetAlpha(result);
 
