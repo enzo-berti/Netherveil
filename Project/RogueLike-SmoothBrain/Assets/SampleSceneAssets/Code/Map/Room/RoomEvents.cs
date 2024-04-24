@@ -77,6 +77,10 @@ namespace Map
             RoomUtilities.nbEnterRoomByType[RoomUtilities.roomData.Type] += 1;
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
+            foreach(var enemy in RoomUtilities.roomData.enemies)
+            {
+                CoroutineManager.Instance.StartCustom(enemy.GetComponent<Mobs>().FadeIn());
+            }
 
             // global events
             RoomUtilities.earlyEnterEvents?.Invoke();

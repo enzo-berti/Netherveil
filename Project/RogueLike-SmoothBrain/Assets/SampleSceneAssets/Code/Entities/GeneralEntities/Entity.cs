@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.VFX;
+using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -73,7 +74,8 @@ public abstract class Entity : MonoBehaviour
             if (constructor != null)
             {
                 statusToApply.Add((Status)constructor.Invoke(new object[] { durationStatusToApply[i], chanceStatusToApply[i] }));
-            }
+            }           
+
         }
     }
     protected virtual void Start()
@@ -212,6 +214,8 @@ public abstract class Entity : MonoBehaviour
         AppliedStatusList.Clear();
         statusVfxs.Clear();
     }
+
+    
 }
 
 #if UNITY_EDITOR
@@ -279,18 +283,18 @@ public class EntityDrawer : Editor
         // Get all infos
         List<FieldInfo> infos = new();
         Type currentType = target.GetType();
-        List<FieldInfo[]> test = new();
-        while (currentType != typeof(Entity) || currentType != typeof(object))
+        List<FieldInfo[]> fieldInfos = new();
+        while (currentType != typeof(Entity) && currentType != typeof(object) && currentType != null)
         {
-            test.Add(currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            fieldInfos.Add(currentType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
             // If doesn't inherit, return type System.Object ( that's equal to object )
             currentType = currentType.BaseType;
         }
-        test.Reverse();
+        fieldInfos.Reverse();
 
-        for (int j = 0; j < test.Count; j++)
+        for (int j = 0; j < fieldInfos.Count; j++)
         {
-            foreach (var coucou in test[j])
+            foreach (var coucou in fieldInfos[j])
             {
                 infos.Add(coucou);
             }

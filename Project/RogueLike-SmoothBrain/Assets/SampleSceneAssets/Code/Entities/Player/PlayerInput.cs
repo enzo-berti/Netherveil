@@ -169,10 +169,10 @@ public class PlayerInput : MonoBehaviour
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
-            if((chargedAttackTime / CHARGED_ATTACK_MAX_TIME) > 0.2f && !flashMaterial.IsEnable)
+            if((chargedAttackTime / CHARGED_ATTACK_MAX_TIME) > 0.2f && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= 0.21f && !flashMaterial.IsEnable)
             {
                 flashMaterial.EnableMat();
-                flashMaterial.SetAlpha(0, 1, 0.25f, () => flashMaterial.SetAlpha(1,0,0.25f, () => flashMaterial.DisableMat()));
+                flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1,0, 0.15f, () => flashMaterial.DisableMat()));
             }
 
             if (DeviceManager.Instance.IsPlayingKB())
@@ -189,7 +189,7 @@ public class PlayerInput : MonoBehaviour
         DeviceManager.Instance.ApplyVibrationsInfinite(0.005f, 0.005f);
         chargedAttackMax = true;
         flashMaterial.EnableMat();
-        flashMaterial.SetAlpha(0, 1, 0.5f, () => flashMaterial.SetAlpha(1, 0, 0.5f, () => flashMaterial.DisableMat()));
+        flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1, 0, 0.15f, () => flashMaterial.DisableMat()));
         FloatingTextGenerator.CreateActionText(transform.position, "Max!");
         AudioManager.Instance.PlaySound(controller.ChargedAttackMaxSFX);
         yield return null;
