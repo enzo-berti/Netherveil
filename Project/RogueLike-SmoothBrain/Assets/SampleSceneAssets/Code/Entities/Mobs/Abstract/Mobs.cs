@@ -58,6 +58,12 @@ public abstract class Mobs : Entity
     protected override void Start()
     {
         base.Start();
+        foreach (var mat in this.GetComponentInChildren<SkinnedMeshRenderer>().materials)
+        {
+            Color matColor = mat.color;
+            matColor.a = 0;
+            mat.color = matColor;
+        }
         agent = GetComponent<NavMeshAgent>();
         mRenderer = GetComponentInChildren<Renderer>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
@@ -217,6 +223,24 @@ public abstract class Mobs : Entity
         }
 
         return (_unitPos - wanderZone.center).normalized * _minTravelDistance;
+    }
+    public IEnumerator FadeIn()
+    {
+        float timer = 0;
+        while (timer < 1)
+        {
+            timer += Time.deltaTime / 3;
+            timer = timer > 1 ? 1 : timer;
+            foreach (var mat in this.GetComponentInChildren<SkinnedMeshRenderer>().materials)
+            {
+                Color matColor = mat.color;
+                matColor.a = timer;
+                mat.color = matColor;
+            }
+
+            yield return null;
+        }
+        yield break;
     }
 
 #if UNITY_EDITOR

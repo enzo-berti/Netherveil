@@ -12,7 +12,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly List<LineRenderer> thunderLinkLineRenderers = new();
     readonly float THUNDERLINK_WAIT_TIME = 0.5f;
     readonly float duration = 3f;
-    readonly float chance = 20f;
+    readonly float chance = 0.2f;
 
     public void OnRetrieved()
     {
@@ -88,7 +88,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
                         player.Attack(entity);
                         if((entity as MonoBehaviour).TryGetComponent(out Entity mob))
                         {
-                            mob.AddStatus(new Electricity(duration, chance / 100f), player);
+                            mob.AddStatus(new Electricity(duration, chance), player);
                         }
                     }
                 }
