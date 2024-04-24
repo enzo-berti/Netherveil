@@ -8,11 +8,11 @@ public class HitMaterialApply : MonoBehaviour
 {
     [SerializeField] private Renderer[] mRenderer;
     private Material mMaterial;
-    private Material currentMat;
     private Coroutine routine;
     Func<float, float> defaultEasing = e => e;
 
-    public bool IsEnable => currentMat != null;
+    private bool isEnable = false;
+    public bool IsEnable => isEnable;
 
     void Awake()
     {
@@ -26,7 +26,10 @@ public class HitMaterialApply : MonoBehaviour
 
     public void SetAlpha(float alpha)
     {
-        currentMat.SetFloat("_alpha", alpha);
+        if (!IsEnable)
+            return;
+
+        mMaterial.SetFloat("_alpha", alpha);
     }
 
     public void SetAlpha(float from, float to, float duration)
@@ -36,12 +39,12 @@ public class HitMaterialApply : MonoBehaviour
 
     public void SetAlpha(float from, float to, float duration, Func<float, float> easingFunction)
     {
-        SetAlphaRoutine(from, to, duration, easingFunction, null);
+        SetAlpha(from, to, duration, easingFunction, null);
     }
 
     public void SetAlpha(float from, float to, float duration, Action onFinish)
     {
-        SetAlphaRoutine(from, to, duration, defaultEasing, onFinish);
+        SetAlpha(from, to, duration, defaultEasing, onFinish);
     }
 
     public void SetAlpha(float from, float to, float duration, Func<float, float> easingFunction, Action onFinish)
@@ -55,10 +58,9 @@ public class HitMaterialApply : MonoBehaviour
     public void EnableMat()
     {
         if (IsEnable)
-        {
-            Debug.LogWarning("Hit material is already enable");
             return;
-        }
+
+        isEnable = true;
 
         foreach (Renderer renderer in mRenderer)
         {
@@ -67,24 +69,21 @@ public class HitMaterialApply : MonoBehaviour
                 mMaterial
             };
             renderer.SetMaterials(materials);
-            currentMat = renderer.materials.First(mat => mat.shader == mMaterial.shader);
         }
     }
 
     public void DisableMat()
     {
         if (!IsEnable)
-        {
-            Debug.LogWarning("Hit material is already disable");
             return;
-        }
+
+        isEnable = false;
 
         foreach (Renderer renderer in mRenderer)
         {
             List<Material> materials = new List<Material>(renderer.materials);
             materials.RemoveAll(mat => mat.shader == mMaterial.shader);
             renderer.SetMaterials(materials);
-            currentMat = null;
         }
     }
 
