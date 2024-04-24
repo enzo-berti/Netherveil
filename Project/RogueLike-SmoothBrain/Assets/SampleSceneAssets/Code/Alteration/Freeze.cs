@@ -33,7 +33,7 @@ public class Freeze : ConstantStatus
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
         target.isFreeze = false;
-        Renderer[] renderers = target.GetComponentsInChildren<Renderer>();
+        Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
 
         foreach (Renderer renderer in renderers)
         {
@@ -63,7 +63,7 @@ public class Freeze : ConstantStatus
         PlayVfx("VFX_Frozen");
 
         freezeMat = GameResources.Get<Material>("OutlineShaderMat");
-        Renderer[] renderers = target.GetComponentsInChildren<Renderer>();
+        Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
 
         foreach(Renderer renderer in renderers)
         {
