@@ -8,6 +8,12 @@ public static class MathsExtension
         float randomValue = Random.Range(0, 2 * Mathf.PI);
         return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
+    public static UnityEngine.Vector2 GetPointInCircle(UnityEngine.Vector2 center, float maxRadius)
+    {
+        float randomValue = Random.Range(0, 2 * Mathf.PI);
+        float radius = Random.Range(0, maxRadius);
+        return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
+    }
 
     public static UnityEngine.Vector2 GetPointOnCone(UnityEngine.Vector2 center, UnityEngine.Vector2 direction, float radius, float angle)
     {

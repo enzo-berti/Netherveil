@@ -76,7 +76,8 @@ MonoBehaviour:
     price: 10
     mat: {fileID: 0}
     mesh: {fileID: -7251949149118512804, guid: a5a462d90359afa44a9309f5e490ff32, type: 3}
-    Description: "Increases Health by {maxLifeStat} and \nSpeed by {speed}."
+    Description: "Increases Health by {maxLifeStat} and \nSpeed by {speed}.\nCooldown
+      : {cooldownDisplay}s"
     icon: {fileID: 2800000, guid: deb28cb372e1ee54fad618f6df43247f, type: 3}
   - RarityTier: 2
     Type: 0
@@ -128,7 +129,7 @@ MonoBehaviour:
     mat: {fileID: 0}
     mesh: {fileID: 0}
     Description: "On use, creates a shockwave all around you that \nknockbacks enemies
-      and deals {AOE_DAMAGES} \ndamages in AOE.\nCooldown : {Cooldown}s."
+      and deals {AOE_DAMAGES} \ndamages in AOE.\nCooldown : {cooldownDisplay}s."
     icon: {fileID: 2800000, guid: 70efeb6d97126f843b30b8ed62d18a4f, type: 3}
   - RarityTier: 2
     Type: 0
@@ -154,7 +155,7 @@ MonoBehaviour:
     mat: {fileID: 0}
     mesh: {fileID: 0}
     Description: "When you launch your spear, \nit will launch 2 additionnal ghosty
-      spears \nthat also deals damages."
+      spears \nthat also deals damages.\nCooldown : {cooldownDisplay}s"
     icon: {fileID: 2800000, guid: a21ab25a7948b4d4b8d067f622d33d7d, type: 3}
   - RarityTier: 2
     Type: 0
@@ -189,7 +190,7 @@ MonoBehaviour:
     mat: {fileID: 0}
     mesh: {fileID: -6664551520949665087, guid: 81bd60ac314fd3e4fa959a373d1e902e, type: 3}
     Description: "If you attack enemies on their back, \nyou deal {attackValue} extra
-      damages."
+      damages.\nCooldown : {cooldownDisplay}s"
     icon: {fileID: 2800000, guid: b517c7488df413849a35eb3bb4575443, type: 3}
   - RarityTier: 2
     Type: 0
@@ -197,7 +198,7 @@ MonoBehaviour:
     price: 20
     mat: {fileID: 0}
     mesh: {fileID: -2384404724758573017, guid: d86d9e248d1e65b42a5caf46d9e1550a, type: 3}
-    Description: All items in the shop cost {displayValue}% less blood.
+    Description: All items in the shop cost {coefValue}% less blood.
     icon: {fileID: 2800000, guid: fb0f59347d9ee424aa82cbe01cba0936, type: 3}
   - RarityTier: 2
     Type: 0
@@ -231,7 +232,7 @@ MonoBehaviour:
     mat: {fileID: 0}
     mesh: {fileID: 0}
     Description: "When the spear throw is finished, \ncreates a thunderstrike at
-      \nthe end position that deals {AOE_DAMAGES} \ndamages in AOE."
+      \nthe end position that deals {AOE_DAMAGES} \ndamages in AOE.\nCooldown : {cooldownDisplay}s"
     icon: {fileID: 2800000, guid: 93f8abb6df8f9f348910ec6328660560, type: 3}
   - RarityTier: 3
     Type: 0
