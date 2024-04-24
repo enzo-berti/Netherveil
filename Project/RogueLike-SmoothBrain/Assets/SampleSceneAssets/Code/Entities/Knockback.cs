@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -50,7 +51,6 @@ public class Knockback : MonoBehaviour
             hero.State = (int)Hero.PlayerState.KNOCKBACK;
             knockbackRoutine = StartCoroutine(ApplyKnockback(characterController, attacker, direction, distance, speed));
         }
-
     }
 
     private IEnumerator ApplyKnockback(NavMeshAgent agent, IAttacker attacker, Vector3 direction, float distance, float speed)
@@ -99,13 +99,14 @@ public class Knockback : MonoBehaviour
 
         while (elapsed < duration && !hitObstacle)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
 
             Vector3 lastPos = transform.position;
-            Vector3 nextPos = Vector3.Lerp(startKnockback, endKnockback, t);
+            Vector3 nextPos = Vector3.Lerp(startKnockback, endKnockback, factor);
 
-            if (hitObstacle = Physics.Raycast(transform.position, direction, Vector3.Distance(lastPos, nextPos), ~LayerMask.GetMask("Entity")))
+            hitObstacle = Physics.OverlapSphere(transform.position + direction * Vector3.Distance(lastPos, nextPos) + Vector3.up, 0.5f, ~LayerMask.GetMask("Entity")).Any();
+            if (hitObstacle)
             {
                 onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);
             }
