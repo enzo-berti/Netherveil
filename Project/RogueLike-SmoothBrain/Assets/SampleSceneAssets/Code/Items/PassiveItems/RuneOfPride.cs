@@ -32,7 +32,6 @@ public class RuneOfPride : ItemEffect, IPassiveItem
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         if (nbBoost * boostValue > MAX_BOOST) return;
         player.Stats.IncreaseValue(Stat.ATK, boostValue, false);
-        player.Stats.IncreaseValue(Stat.ATK_RANGE, boostValue, false);
         nbBoost++;
     }
 
@@ -40,7 +39,6 @@ public class RuneOfPride : ItemEffect, IPassiveItem
     {
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         player.Stats.DecreaseValue(Stat.ATK, boostValue * nbBoost, false);
-        player.Stats.DecreaseValue(Stat.ATK_RANGE, boostValue * nbBoost, false);
         nbBoost = 0;
     }
 } 
