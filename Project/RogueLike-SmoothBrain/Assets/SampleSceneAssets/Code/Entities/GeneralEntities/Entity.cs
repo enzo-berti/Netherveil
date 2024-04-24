@@ -102,10 +102,10 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void OnTriggerStay(Collider collider)
     {
-        if (collider.gameObject.TryGetComponent(out Entity other))
-        {
-            CheckKnockbackCollision(other);
-        }
+        //if (collider.gameObject.TryGetComponent(out Entity other))
+        //{
+        //    CheckKnockbackCollision(other);
+        //}
     }
 
     protected virtual void CheckKnockbackCollision(Entity other)
