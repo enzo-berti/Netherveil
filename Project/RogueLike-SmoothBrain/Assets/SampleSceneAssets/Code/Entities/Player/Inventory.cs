@@ -57,6 +57,7 @@ public class Inventory
             if (activeItem == null)
             {
                 ActiveItemGameObject = GameObject.Instantiate(item.gameObject);
+                ActiveItemGameObject.gameObject.SetActive(false);
             }
             else
             {
