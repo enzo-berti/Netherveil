@@ -24,6 +24,7 @@ public class Bomb : ItemEffect, IActiveItem
         Vector3 direction = player.transform.forward;
         var bomb = GameObject.Instantiate(bombPf, player.transform.position, Quaternion.identity);
         var explodingBomb = bomb.GetComponent<ExplodingBomb>();
+        
         explodingBomb.ThrowToPos(Utilities.Hero, player.transform.position + direction * Utilities.Hero.Stats.GetValue(Stat.ATK_RANGE), 0.5f);
         explodingBomb.SetTimeToExplode(0.5f * 1.5f);
         explodingBomb.SetBlastDamages((int)Utilities.Hero.Stats.GetValue(Stat.ATK));
