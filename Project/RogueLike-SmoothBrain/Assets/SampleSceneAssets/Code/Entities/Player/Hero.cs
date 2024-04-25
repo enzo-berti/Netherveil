@@ -235,9 +235,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     {
         for (int i = Mathf.Abs(lastStep); i > 0; i--)
         {
-            if (lastStep < 0) //corruption drawbacks
+            if (lastStep < 0) // benediction drawbacks
             {
-                if (i == CORRUPTION_MAX)
+                if (i == Mathf.Abs(BENEDICTION_MAX))
                 {
                     playerController.SpecialAbility = null;
                     OnBenedictionMaxDrawback?.Invoke();
@@ -249,9 +249,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                     Stats.IncreaseValue(Stat.ATK, 5f);
                 }
             }
-            else if (lastStep > 0) //benediction drawbacks
+            else if (lastStep > 0) //corruption drawbacks
             {
-                if (i == BENEDICTION_MAX)
+                if (i == CORRUPTION_MAX)
                 {
                     Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
                     CanHealFromConsumables = true;
