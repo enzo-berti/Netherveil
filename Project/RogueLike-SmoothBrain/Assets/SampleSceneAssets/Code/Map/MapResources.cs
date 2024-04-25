@@ -19,7 +19,15 @@ namespace Map
             { RoomType.Boss, new List <RoomPrefab>() },
         };
 
-        [SerializeField] private List<RoomPrefab> roomsToLoad;
+        [SerializeField] public List<RoomPrefab> roomsToLoad;
+
+        [SerializeField] private List<GameObject> obstructionDoors;
+        [SerializeField] private List<GameObject> stairsPrefabs;
+        [SerializeField] private GameObject gatePrefab;
+
+        static public List<GameObject> ObstructionDoors;
+        static public List<GameObject> StairsPrefabs;
+        static public GameObject GatePrefab;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void LoadGameResources()
@@ -31,12 +39,14 @@ namespace Map
         {
             if (!load)
             {
+                ObstructionDoors = obstructionDoors;
+                StairsPrefabs = stairsPrefabs;
+                GatePrefab = gatePrefab;
+
                 foreach (RoomPrefab roomPrefab in roomsToLoad)
                 {
                     roomPrefabsByType[roomPrefab.type].Add(roomPrefab);
                 }
-                roomsToLoad.Clear();
-                roomsToLoad = null;
 
                 load = true;
             }
