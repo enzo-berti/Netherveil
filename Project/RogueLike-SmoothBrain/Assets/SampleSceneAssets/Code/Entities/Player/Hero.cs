@@ -288,25 +288,31 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionUpgradeOnly)
         {
             playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+            AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
         }
         else if (benedictionUpgradeOnly)
         {
             playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+            AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
             playerController.corruptionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
             if (hascorruptionDrawbackPositiveToNegative && curStep < 0)
             {
                 playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+                AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             }
         }
         else if (hasbenedictionDrawbackNegativeToPositive || hasbenedictionDrawbackNegativeOnly)
         {
             playerController.benedictionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
             if (hasbenedictionDrawbackNegativeToPositive && curStep > 0)
             {
                 playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+                AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             }
         }
     }
