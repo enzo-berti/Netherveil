@@ -11,6 +11,8 @@
 // }
 
 using StateMachine; // include all scripts about StateMachines
+using System.Collections.Generic;
+using UnityEngine;
 
 public class SonielTriggeredState : BaseState<SonielStateMachine>
 {
@@ -20,19 +22,22 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SwitchState(Factory.GetState<SonielCircularHit>());
+        }
     }
 
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-
+        Context.Animator.SetBool("Walk", true);
     }
 
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
-
+        Context.Animator.SetBool("Walk", false);
     }
 
     // This method will be called every frame.

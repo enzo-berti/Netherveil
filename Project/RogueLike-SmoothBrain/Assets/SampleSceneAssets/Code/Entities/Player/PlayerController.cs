@@ -35,8 +35,8 @@ public class PlayerController : MonoBehaviour
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
     public BoxCollider DashAttackCollider { get => dashAttackCollider; }
 
-    public bool DoneQuestQTThiStage = false;
-    public bool DoneQuestQTApprenticeThiStage = false;
+    public bool DoneQuestQTThiStage { get; set; } = false;
+    public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
 
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;
@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour
     public EventReference ChargedAttackMaxSFX;
     public EventReference ChargedAttackReleaseSFX;
     public EventReference HealSFX;
+    public EventReference StepUpgradeSFX;
+    public EventReference StepDowngradeSFX;
     public EventReference[] AttacksSFX;
 
     private void Awake()

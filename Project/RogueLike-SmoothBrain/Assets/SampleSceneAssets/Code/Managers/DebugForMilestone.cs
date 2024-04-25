@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class DebugForMilestone : MonoBehaviour
 {
+    public float corruptionDelta = 1;
+    public float benedictionDelta = 1;
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Keypad1))
@@ -26,7 +28,7 @@ public class DebugForMilestone : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
-            Utilities.Hero.Stats.IncreaseValue(Stat.CORRUPTION, 10);
+            Utilities.Hero.Stats.IncreaseValue(Stat.CORRUPTION, corruptionDelta);
             Utilities.Hero.DebugCallLaunchUpgrade();
             Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
@@ -44,7 +46,7 @@ public class DebugForMilestone : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Keypad7))
         {
-            Utilities.Hero.Stats.DecreaseValue(Stat.CORRUPTION, 10);
+            Utilities.Hero.Stats.DecreaseValue(Stat.CORRUPTION, benedictionDelta);
             Utilities.Hero.DebugCallLaunchUpgrade();
             Utilities.Hero.ChangeStatsBasedOnAlignment();
         }

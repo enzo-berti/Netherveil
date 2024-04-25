@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 namespace Map.Generation
 {
@@ -232,8 +233,10 @@ namespace Map.Generation
             GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Tutorial).gameObject);
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
-            genParam.AddAvailableDoors(doorsGenerator);
-            Destroy(doorsGenerator);
+            Door entranceDoor = doorsGenerator.doors[0];
+            TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
+
+            InitRoom(roomGO, ref genParam, entranceDoor, exitDoor);
 
             roomGO.transform.parent = gameObject.transform;
         }
