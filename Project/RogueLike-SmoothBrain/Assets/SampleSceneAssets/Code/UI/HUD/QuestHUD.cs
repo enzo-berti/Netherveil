@@ -12,6 +12,7 @@ public class QuestHUD : MonoBehaviour
 
     [SerializeField] private RectTransform questTransform;
     private bool questEnable = false;
+    public bool QuestEnable { get => questEnable; }
     private Coroutine questRoutine;
 
     void Start()
