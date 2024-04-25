@@ -58,12 +58,7 @@ public abstract class Mobs : Entity
     protected override void Start()
     {
         base.Start();
-        foreach (var mat in this.GetComponentInChildren<SkinnedMeshRenderer>().materials)
-        {
-            Color matColor = mat.color;
-            matColor.a = 0;
-            mat.color = matColor;
-        }
+
         agent = GetComponent<NavMeshAgent>();
         mRenderer = GetComponentInChildren<Renderer>();
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
