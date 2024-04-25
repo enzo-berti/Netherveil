@@ -124,7 +124,7 @@ public class PestStateMachine : Mobs, IPest
     {
         ApplyDamagesMob(_value, pestSounds.takeDamageSound, Death, notEffectDamage);
 
-        if (currentState is not PestAttackingState || currentState is not PestDeathState)
+        if (currentState is not PestAttackingState && currentState is not PestDeathState)
         {
             currentState = factory.GetState<PestTriggeredState>();
             player = Utilities.Hero.transform;
@@ -152,9 +152,10 @@ public class PestStateMachine : Mobs, IPest
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
+        isFreeze = false;
         currentState = factory.GetState<PestDeathState>();
 
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+        //Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
     public void MoveTo(Vector3 posToMove)
