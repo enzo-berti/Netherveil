@@ -27,32 +27,42 @@ public class DebugForMilestone : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             Utilities.Hero.Stats.IncreaseValue(Stat.CORRUPTION, 10);
+            Utilities.Hero.DebugCallLaunchUpgrade();
+            Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
         if (Input.GetKeyDown(KeyCode.Keypad5))
         {
             Utilities.Hero.Stats.IncreaseValue(Stat.CORRUPTION, 25);
+            Utilities.Hero.DebugCallLaunchUpgrade();
+            Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
         if (Input.GetKeyDown(KeyCode.Keypad6))
         {
             Utilities.Hero.Stats.IncreaseValue(Stat.CORRUPTION, 100);
+            Utilities.Hero.DebugCallLaunchUpgrade();
+            Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
         if (Input.GetKeyDown(KeyCode.Keypad7))
         {
             Utilities.Hero.Stats.DecreaseValue(Stat.CORRUPTION, 10);
+            Utilities.Hero.DebugCallLaunchUpgrade();
+            Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
         if (Input.GetKeyDown(KeyCode.Keypad8))
         {
             Utilities.Hero.Stats.DecreaseValue(Stat.CORRUPTION, 50);
+            Utilities.Hero.DebugCallLaunchUpgrade();
+            Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
         if (Input.GetKeyDown(KeyCode.Keypad9))
         {
             Utilities.Hero.Stats.DecreaseValue(Stat.CORRUPTION, 100);
+            Utilities.Hero.DebugCallLaunchUpgrade();
+            Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
         if(Input.GetKeyDown(KeyCode.KeypadDivide))
         {
-            //Utilities.Hero.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), QuestTalker.TalkerType.CLERIC, QuestTalker.TalkerGrade.BOSS);
-            Utilities.Player.GetComponent<PlayerController>().LaunchDrawbackVFX();
-            Utilities.Player.GetComponent<PlayerController>().LaunchUpgradeAnim();
+            Utilities.Hero.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), QuestTalker.TalkerType.CLERIC, QuestTalker.TalkerGrade.BOSS);
         }
     }
 }
