@@ -116,23 +116,14 @@ namespace Map.Generation
 
     public class MapGenerator : MonoBehaviour
     {
-        private static readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
-
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed;
-
-        [SerializeField] private List<GameObject> roomLobby = new List<GameObject>();
-        [SerializeField] private List<GameObject> roomNormal = new List<GameObject>();
-        [SerializeField] private List<GameObject> roomTreasure = new List<GameObject>();
-        [SerializeField] private List<GameObject> roomChallenge = new List<GameObject>();
-        [SerializeField] private List<GameObject> roomMerchant = new List<GameObject>();
-        [SerializeField] private List<GameObject> roomSecret = new List<GameObject>();
-        [SerializeField] private List<GameObject> roomMiniBoss = new List<GameObject>();
-        [SerializeField] private List<GameObject> roomBoss = new List<GameObject>();
 
         [SerializeField] private List<GameObject> obstructionsDoor;
         [SerializeField] private List<GameObject> stairsPrefab;
         [SerializeField] private GameObject gatePrefab;
+
+        private readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
 
         private void Awake()
         {
@@ -141,7 +132,7 @@ namespace Map.Generation
             {
                 Seed.Set(seed);
             }
-            
+
             GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 0));
         }
 
@@ -159,7 +150,7 @@ namespace Map.Generation
             {
                 Debug.LogError("Can't find any candidate for boss room");
             }
-            
+
             GenerateObstructionDoors(ref genParam);
         }
 
@@ -210,9 +201,9 @@ namespace Map.Generation
 
         private bool GenerateRoom(ref GenerationParam genParam, RoomType type)
         {
-            foreach (GameObject candidateRoom in Seed.RandList(GetRoomsGO(type)))
+            foreach (RoomPrefab candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
             {
-                GameObject roomGO = Instantiate(candidateRoom);
+                GameObject roomGO = Instantiate(candidateRoomPrefab.gameObject);
                 if (!TryPutRoom(roomGO, ref genParam, out Door entranceDoor, out Door exitDoor))
                 {
                     continue;
@@ -228,7 +219,7 @@ namespace Map.Generation
 
         private void GenerateLobbyRoom(ref GenerationParam genParam)
         {
-            GameObject roomGO = Instantiate(GetRandRoomGO(RoomType.Lobby));
+            GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Lobby).gameObject);
 
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
@@ -325,43 +316,13 @@ namespace Map.Generation
 
         static private bool IsRoomCollidingOtherRoom(GameObject roomGO, Door exitDoor)
         {
-            GameObject skeletonGO = roomGO.GetComponentInChildren<Skeleton>().gameObject; 
+            GameObject skeletonGO = roomGO.GetComponentInChildren<Skeleton>().gameObject;
             BoxCollider roomColliderEnter = skeletonGO.GetComponent<BoxCollider>();
             BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
 
             // if we find another trigger with the "map" tag then we collide with another room
             Collider[] colliders = roomColliderEnter.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.UseGlobal).Where(collider => collider != roomColliderEnter && collider != roomColliderExit && collider.isTrigger).ToArray();
             return colliders.Any();
-        }
-
-        private List<GameObject> GetRoomsGO(RoomType type)
-        {
-            return type switch // define type of list
-            {
-                RoomType.Lobby => roomLobby,
-                RoomType.Normal => roomNormal,
-                RoomType.Treasure => roomTreasure,
-                RoomType.Challenge => roomChallenge,
-                RoomType.Merchant => roomMerchant,
-                RoomType.Secret => roomSecret,
-                RoomType.MiniBoss => roomMiniBoss,
-                RoomType.Boss => roomBoss,
-                _ => null,
-            };
-        }
-
-        private GameObject GetRandRoomGO(RoomType type)
-        {
-            List<GameObject> list = GetRoomsGO(type);
-
-            if (list == null || !list.Any())
-            {
-                Debug.LogWarning("Can't find candidate room for type : " + type, this);
-                return null;
-            }
-
-            int randIndex = Seed.Range(0, list.Count);
-            return list[randIndex];
         }
 
         private void ResetGeneration()
