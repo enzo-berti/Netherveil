@@ -18,7 +18,9 @@ public class SonielStateMachine : Mobs, ISoniel
 
     public enum SonielAttacks
     {
-        CIRCULAR,
+        CIRCULAR_CHARGE,
+        CIRCULAR_ATTACK,
+        CIRCULAR_THRUST,
         BERSERK,
         SPINNING_SWORDS,
         SAWS
@@ -34,7 +36,6 @@ public class SonielStateMachine : Mobs, ISoniel
     Hero player = null;
     [SerializeField] SonielSounds sounds;
     [SerializeField] List<NestedList<Collider>> attackColliders;
-    [SerializeField] float defaultVisionAngle = 100f;
     bool phaseTwo = false;
     bool playerHit = false;
     float[] attacksRange = { 4f };

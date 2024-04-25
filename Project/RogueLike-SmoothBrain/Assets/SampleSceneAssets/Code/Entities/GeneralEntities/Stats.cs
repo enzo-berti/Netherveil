@@ -478,7 +478,10 @@ public class Stats
         if (index != -1)
         {
             if (stats[index].hasCoeff)
+            {
                 stats[index].coeff = value;
+                onStatChange?.Invoke(info);
+            }
             else
                 Debug.Log($"Missing coeff value of {info} in {name}");
         }

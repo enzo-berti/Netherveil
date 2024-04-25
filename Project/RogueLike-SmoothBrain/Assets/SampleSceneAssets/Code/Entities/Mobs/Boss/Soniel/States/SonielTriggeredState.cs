@@ -43,7 +43,9 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        Context.MoveTo(Context.Player.transform.position);
+        Context.MoveTo(Context.Player.transform.position - (Context.Player.transform.position - Context.transform.position).normalized * 2f);
+
+        Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
     }
 
     // This method will be called on state switch.

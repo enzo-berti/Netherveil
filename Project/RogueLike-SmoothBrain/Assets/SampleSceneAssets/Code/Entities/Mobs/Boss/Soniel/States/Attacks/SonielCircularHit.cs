@@ -25,15 +25,10 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         THRUST
     }
 
-    class CircularAttack
-    {
-        float dashCharge = 0f;
-        float attackCharge = 0f;
-        float thrustCharge = 0f;
-    }
-
     // anim hash
+    int dashHash = Animator.StringToHash("Charge");
     int circularHash = Animator.StringToHash("Circular");
+    int thrustHash = Animator.StringToHash("Thrust");
 
     // state
     CircularStates currentState;
@@ -41,16 +36,22 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
     // timers
     float attackDuration = 0f;
     float[] circularAttackChargeTimers = new float[3];
-    float[] MAX_CIRCULAR_ATTACK_CHARGE = { 0, 0.2f, 0 };
+    readonly float[] MAX_CIRCULAR_ATTACK_CHARGE = { 0, 0.45f, 0.2f };
+    bool[] attackLaunched = { false, false, false };
 
     // ranges
     float attackRange = 4f;
     float dashRange = 10f;
 
+    bool attackEnded = false;
+
+    // DEBUG
+    bool debugMode = false;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
+        if (attackEnded)
         {
             SwitchState(Factory.GetState<SonielTriggeredState>());
         }
@@ -63,13 +64,21 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         Context.Agent.isStopped = true;
         attackDuration = 0f;
 
-        Context.Animator.ResetTrigger(circularHash);
-        Context.Animator.SetTrigger(circularHash);
+        attackEnded = false;
+        Context.Animator.SetBool("Walk", false);
+        Context.Animator.SetBool(thrustHash, false);
 
-        currentState = CircularStates.ATTACK;
-        if (Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position) <= attackRange)
+        if (Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position) > attackRange * attackRange)
         {
             currentState = CircularStates.DASH;
+            Context.Animator.ResetTrigger(dashHash);
+            Context.Animator.SetTrigger(dashHash);
+        }
+        else
+        {
+            currentState = CircularStates.ATTACK;
+            Context.Animator.ResetTrigger(circularHash);
+            Context.Animator.SetTrigger(circularHash);
         }
     }
 
@@ -79,15 +88,32 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         Context.PlayerHit = false;
         Context.Agent.isStopped = false;
 
+        Context.Animator.SetBool(thrustHash, false);
+
+        // DEBUG
         Context.DisableHitboxes();
     }
 
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        if (!Context.PlayerHit)
+        UpdateTimers();
+
+        switch (currentState)
         {
-            Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR].data, debugMode: true);
+            case CircularStates.DASH:
+                Dash();
+                break;
+            case CircularStates.ATTACK:
+                Attack();
+                break;
+            case CircularStates.THRUST:
+                Thrust();
+                break;
+
+            default:
+                Debug.LogError("wtf");
+                break;
         }
 
         attackDuration += Time.deltaTime;
@@ -100,4 +126,143 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
+    #region Extra methods
+    void UpdateTimers()
+    {
+        int currentAttack = (int)currentState;
+
+        if (circularAttackChargeTimers[currentAttack] < MAX_CIRCULAR_ATTACK_CHARGE[currentAttack])
+        {
+            circularAttackChargeTimers[currentAttack] += Time.deltaTime;
+        }
+    }
+
+    void Dash()
+    {
+        int currentAttack = (int)currentState;
+
+        if (!attackLaunched[currentAttack])
+        {
+            Context.Agent.isStopped = false;
+
+            // lance l'attaque
+            if (circularAttackChargeTimers[currentAttack] >= MAX_CIRCULAR_ATTACK_CHARGE[currentAttack])
+            {
+                // augmente la speed
+                Context.Stats.SetCoeffValue(Stat.SPEED, 1.75f);
+
+                // se dirige vers le joueur
+                Vector3 mobToPlayer = Context.Player.transform.position - Context.transform.position;
+                float distanceToPlayer = mobToPlayer.magnitude - 0.5f;
+                distanceToPlayer = Mathf.Clamp(distanceToPlayer, 0f, dashRange);
+                Context.MoveTo(Context.transform.position + mobToPlayer.normalized * Mathf.Min(distanceToPlayer, dashRange));
+
+                attackLaunched[currentAttack] = true;
+            }
+        }
+        else // effectue l'attaque
+        {
+            // vérifie la collision avec la hitbox du dash
+            if (!Context.PlayerHit)
+            {
+                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_CHARGE].data, debugMode: debugMode);
+            }
+
+            if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance || Context.PlayerHit)
+            {
+                Context.Agent.isStopped = true;
+
+                // rétablit la speed
+                Context.Stats.SetCoeffValue(Stat.SPEED, 1f);
+
+                Context.Animator.ResetTrigger(circularHash);
+                Context.Animator.SetTrigger(circularHash);
+
+                SwitchState(currentAttack, CircularStates.ATTACK);
+
+                // DEBUG
+                Context.DisableHitboxes();
+            }
+        }
+    }
+
+    void Attack()
+    {
+        int currentAttack = (int)currentState;
+
+        if (IsAttackLaunched(currentAttack)) // effectue l'attaque en elle même
+        {
+            // vérifie la collision
+            if (!Context.PlayerHit)
+            {
+                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_ATTACK].data, debugMode: debugMode);
+            }
+
+            // à la fin de l'attaque, ...
+            if (attackDuration > Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
+            {
+                if (Context.PlayerHit && Random.Range(0, 11) >= 5) // lance l'estoc
+                {
+                    SwitchState(currentAttack, CircularStates.THRUST);
+
+                    Context.Animator.SetBool(thrustHash, true);
+
+                    Context.PlayerHit = false;
+
+                    // DEBUG
+                    Context.DisableHitboxes();
+                }
+                else attackEnded = true; // sort du state
+            }
+        }
+    }
+
+    void Thrust()
+    {
+        int currentAttack = (int)currentState;
+
+        if (IsAttackLaunched(currentAttack))
+        {
+            Context.Animator.SetBool(thrustHash, false);
+
+            // vérifie la collision avec la hitbox de l'estoc
+            if (!Context.PlayerHit)
+            {
+                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_THRUST].data, debugMode: debugMode);
+            }
+
+            if (attackDuration > Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
+            {
+                // sort du state
+                attackEnded = true;
+            }
+        }
+    }
+
+
+    bool IsAttackLaunched(int _currentAttack)
+    {
+        if (!attackLaunched[_currentAttack])
+        {
+            if (circularAttackChargeTimers[_currentAttack] >= MAX_CIRCULAR_ATTACK_CHARGE[_currentAttack]) // lance l'attaque après un délai
+            {
+                attackLaunched[_currentAttack] = true;
+            }
+        }
+
+        return attackLaunched[_currentAttack];
+    }
+
+    void SwitchState(int _currentAttack, CircularStates _nextAttack)
+    {
+        attackLaunched[_currentAttack] = false;
+        circularAttackChargeTimers[_currentAttack] = 0f;
+
+        attackDuration = 0f;
+
+        currentState = _nextAttack;
+    }
+
+    #endregion
 }
