@@ -20,7 +20,7 @@ public class ToolNamer : EditorWindow
     public static void OpenWindow()
     {
         ToolNamer wnd = GetWindow<ToolNamer>();
-        wnd.titleContent = new GUIContent("Tool Nathan Editor");
+        wnd.titleContent = new GUIContent("Tool Graphs Editor");
     }
 
     public void CreateGUI()
@@ -83,11 +83,10 @@ public class ToolNamer : EditorWindow
         float MinRotY = 0f;
         float MaxRotY = 360f;
 
-
-
         GameObject[] objects = Selection.gameObjects;
 
-        foreach (var item in objects){
+        foreach (var item in objects)
+        {
             float actualRotX = item.transform.localRotation.eulerAngles.x;
             float actualRotY = item.transform.localRotation.eulerAngles.y;
             float actualRotz = item.transform.localRotation.eulerAngles.z;
