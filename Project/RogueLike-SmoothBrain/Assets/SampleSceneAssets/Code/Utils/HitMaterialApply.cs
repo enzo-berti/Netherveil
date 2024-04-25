@@ -29,7 +29,15 @@ public class HitMaterialApply : MonoBehaviour
         if (!IsEnable)
             return;
 
-        mMaterial.SetFloat("_alpha", alpha);
+        foreach (Renderer renderer in mRenderer)
+        {
+            List<Material> materials = new List<Material>(renderer.materials).Where(mat => mat.shader == mMaterial.shader).ToList();
+
+            materials.ForEach(x =>
+            {
+                x.SetFloat("_alpha", alpha);
+            });
+        }
     }
 
     public void SetAlpha(float from, float to, float duration)
