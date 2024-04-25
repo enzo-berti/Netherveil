@@ -23,27 +23,27 @@ public class DummyStateMachine : Mobs, IDummy
     [SerializeField] private Weakness weakness;
     [SerializeField] private GameObject objectToDestroy;
 
-    private bool isAnChargedAttack;
-    private bool isAnFinisherAttack;
+    private bool isAChargedAttack;
+    private bool isAFinisherAttack;
     private bool isAnDistanceAttack;
-    private bool isAnDashAttack;
+    private bool isADashAttack;
 
     protected override void Start()
     {
         base.Start();
         hitHash = Animator.StringToHash("Hit");
 
-        isAnChargedAttack = false;
-        isAnFinisherAttack = false;
+        isAChargedAttack = false;
+        isAFinisherAttack = false;
         isAnDistanceAttack = false;
-        isAnDashAttack = false;
+        isADashAttack = false;
 
         Subscribe();
     }
 
     protected override void Update()
     {
-        if (animator.speed == 0 || isSpawning)
+        if (animator.speed == 0 || IsSpawning)
             return;
 
         base.Update();
@@ -51,39 +51,39 @@ public class DummyStateMachine : Mobs, IDummy
 
     private void SetDashAttack(IDamageable _damageable, IAttacker _attacker)
     {
-        isAnDashAttack = true;
+        isADashAttack = true;
     }
 
     private void SetChargedAttack(IDamageable _damageable, IAttacker _attacker)
     {
-        isAnChargedAttack = true;
+        isAChargedAttack = true;
     }
 
     private void SetDistanceAttack(IDamageable _damageable, IAttacker _attacker)
     {
-        isAnDashAttack = true;
+        isADashAttack = true;
     }
 
     private void SetFinisherAttack(IDamageable _damageable, IAttacker _attacker)
     {
-        isAnFinisherAttack = true;
+        isAFinisherAttack = true;
     }
 
     private void CanTakeDamage(int _value)
     {
-        if (isAnFinisherAttack)
+        if (isAFinisherAttack)
         {
             Stats.DecreaseValue(Stat.HP, _value, true);
         }
-        if (isAnChargedAttack)
+        else if (isAChargedAttack)
         {
             Stats.DecreaseValue(Stat.HP, _value, true);
         }
-        if (isAnDistanceAttack)
+        else if (isAnDistanceAttack)
         {
             Stats.DecreaseValue(Stat.HP, _value, true);
         }
-        if (isAnDashAttack)
+        else if (isADashAttack)
         {
             Stats.DecreaseValue(Stat.HP, _value, true);
         }
@@ -92,10 +92,10 @@ public class DummyStateMachine : Mobs, IDummy
 
     private void ResetBool()
     {
-        isAnFinisherAttack = false; 
-        isAnChargedAttack = false;
+        isAFinisherAttack = false; 
+        isAChargedAttack = false;
         isAnDistanceAttack = false;
-        isAnDashAttack = false;
+        isADashAttack = false;
     }
 
     public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)

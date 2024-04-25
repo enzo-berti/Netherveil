@@ -123,6 +123,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [Header("VFXs")]
     [SerializeField] VisualEffect dashVFX;
     [SerializeField] VisualEffect tripleThrustVFX;
+    bool dashVFXPlayed = false;
 
     protected override void OnEnable()
     {
@@ -203,7 +204,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
             //else
             //    animator.speed = 1;
 
-            yield return new WaitUntil(() => !isFreeze && !isSpawning);
+            yield return new WaitUntil(() => !isFreeze && !IsSpawning);
 
             if (deathTimer <= 0)
             {
@@ -557,20 +558,22 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         attackState = AttackState.ATTACKING;
 
+        dashChargeTimer += Time.deltaTime;
+
         if (dashChargeTimer <= 0.3f)
         {
-            dashChargeTimer += Time.deltaTime;
             attackState = AttackState.CHARGING;
         }
         else
         {
-            if (!animator.GetBool(fallHash))
+            animator.SetBool(fallHash, true);
+
+            if (!dashVFXPlayed && dashChargeTimer >= 0.5f)
             {
                 bossSounds.stretchSound.Play(transform.position);
                 dashVFX.GetComponent<VFXStopper>().PlayVFX();
+                dashVFXPlayed = true;
             }
-
-            animator.SetBool(fallHash, true);
         }
 
         if (attackState == AttackState.ATTACKING)
@@ -618,6 +621,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
                     SetAtkCooldown(0.5f, 0.2f);
                     DisableHitboxes();
+
+                    dashVFXPlayed = false;
 
                     animator.SetBool(dashHash, false);
                     animator.SetBool(fallHash, false);

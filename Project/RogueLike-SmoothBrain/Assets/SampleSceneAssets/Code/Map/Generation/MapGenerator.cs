@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 namespace Map.Generation
 {
@@ -17,6 +18,7 @@ namespace Map.Generation
             nbRoomByType = new Dictionary<RoomType, int>
             {
                 { RoomType.Lobby, 0 },
+                { RoomType.Tutorial, 0 },
                 { RoomType.Normal, nbNormal },
                 { RoomType.Treasure, nbTreasure },
                 { RoomType.Challenge, nbChallenge },
@@ -139,6 +141,7 @@ namespace Map.Generation
             RoomUtilities.nbRoomByType[RoomType.Boss] = 1;
 
             GenerateLobbyRoom(ref genParam);
+            GenerateTutorialRoom(ref genParam);
             GenerateRooms(ref genParam);
 
             // Generate boss rooms
@@ -221,6 +224,31 @@ namespace Map.Generation
 
             genParam.AddAvailableDoors(doorsGenerator);
             Destroy(doorsGenerator);
+
+            roomGO.transform.parent = gameObject.transform;
+        }
+
+        private void GenerateTutorialRoom(ref GenerationParam genParam)
+        {
+            GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Tutorial).gameObject);
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+
+            Door entranceDoor = new Door();
+            Door exitDoor = new Door();
+            foreach (Door entranceDoorCandidate in Seed.RandList(doorsGenerator.doors))
+            {
+                if (TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoorCandidate, out exitDoor))
+                {
+                    entranceDoor = entranceDoorCandidate;
+                    break;
+                }
+            }
+
+            InitRoom(roomGO, ref genParam, entranceDoor, exitDoor);
+
+            genParam.AddAvailableDoors(doorsGenerator);
+            Destroy(doorsGenerator);
+
 
             roomGO.transform.parent = gameObject.transform;
         }

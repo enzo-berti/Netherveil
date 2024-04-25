@@ -70,18 +70,19 @@ public class GorgonAttackingState : BaseState<GorgonStateMachine>
         Context.Animator.SetTrigger("Attack");
         float timeToThrow = 0.8f;
         yield return new WaitWhile(() => Context.HasRemovedHead == false);
-
+        Context.HasRemovedHead = false;
         Vector2 pointToReach2D = MathsExtension.GetPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), 1f);
         Vector3 pointToReach3D = new(pointToReach2D.x, Context.Player.transform.position.y, pointToReach2D.y);
         if (NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
         {
             pointToReach3D = hit.position;
-        }   
+        }
 
         if (Context.gameObject != null)
         {
-            GameObject bomb = GameObject.Instantiate(Context.BombPrefab, Context.Hand);
+            GameObject bomb = Context.gameObject.GetComponentInChildren<ExplodingBomb>().gameObject;
             yield return new WaitWhile(() => Context.HasLaunchAnim == false);
+            Context.HasLaunchAnim = false;
             bomb.transform.rotation = Quaternion.identity;
             bomb.transform.parent = null;
 

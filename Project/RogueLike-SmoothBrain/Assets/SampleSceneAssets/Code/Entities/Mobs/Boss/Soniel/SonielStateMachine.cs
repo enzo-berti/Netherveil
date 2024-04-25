@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class SonielStateMachine : Mobs, ISoniel
 {
@@ -15,6 +16,14 @@ public class SonielStateMachine : Mobs, ISoniel
         public Sound death;
     }
 
+    public enum SonielAttacks
+    {
+        CIRCULAR,
+        BERSERK,
+        SPINNING_SWORDS,
+        SAWS
+    }
+
     [HideInInspector]
     public BaseState<SonielStateMachine> currentState;
     private StateFactory<SonielStateMachine> factory;
@@ -23,25 +32,35 @@ public class SonielStateMachine : Mobs, ISoniel
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     Hero player = null;
-    [SerializeField] SonielSounds sounds; 
-    [SerializeField] Collider[] attackColliders;
+    [SerializeField] SonielSounds sounds;
+    [SerializeField] List<NestedList<Collider>> attackColliders;
     [SerializeField] float defaultVisionAngle = 100f;
+    bool phaseTwo = false;
+    bool playerHit = false;
+    float[] attacksRange = { 4f };
 
-    // animation hash
-    int deathHash;
+    // anim hash
+    public int deathHash;
 
     #region getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public Animator Animator { get => animator; }
-    public Hero Player { get => Player; }
+    public List<NestedList<Collider>> Attacks { get => attackColliders; }
+    public Hero Player { get => player; }
+    public bool PhaseTwo { get => phaseTwo; }
+    public bool PlayerHit { get => playerHit; set => playerHit = value; }
+    public float AttackRange { get => Mathf.Max(attacksRange); }
     #endregion
 
     protected override void Start()
     {
+        base.Start();
+
         factory = new StateFactory<SonielStateMachine>(this);
         currentState = factory.GetState<SonielTriggeredState>();
+        animator.SetBool("Walk", true);
 
         // animation hash
         deathHash = Animator.StringToHash("Death");
@@ -51,12 +70,14 @@ public class SonielStateMachine : Mobs, ISoniel
 
     protected override void Update()
     {
+        if (isFreeze || IsSpawning)
+            return;
+
         base.Update();
         currentState.Update();
     }
 
     #region MOB_METHODS
-
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
         ApplyDamagesMob(_value, sounds.hit, Death, notEffectDamage);
@@ -71,7 +92,7 @@ public class SonielStateMachine : Mobs, ISoniel
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        sounds.hit.Play(transform.position);
+        //sounds.hit.Play(transform.position);
     }
 
     public void Death()
@@ -80,7 +101,7 @@ public class SonielStateMachine : Mobs, ISoniel
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
 
-        sounds.death.Play(transform.position);
+        //sounds.death.Play(transform.position);
 
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
@@ -93,7 +114,7 @@ public class SonielStateMachine : Mobs, ISoniel
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
-        sounds.walk.Play(transform.position);
+        //sounds.walk.Play(transform.position);
     }
 
     public void AttackCollide(Collider _collider, bool debugMode = false)
@@ -126,5 +147,95 @@ public class SonielStateMachine : Mobs, ISoniel
             }
         }
     }
+    #endregion
+
+    #region Extra methods
+
+    public void AttackCollide(List<Collider> colliders, bool _kb = false, bool debugMode = true)
+    {
+        if (debugMode)
+        {
+            foreach (Collider collider in colliders)
+            {
+                collider.gameObject.SetActive(true);
+            }
+        }
+
+        Vector3 rayOffset = Vector3.up / 2;
+
+        foreach (Collider attackCollider in colliders)
+        {
+            Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(attackCollider, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
+            if (tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<Hero>() != null)
+                    {
+                        IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
+                        Attack(damageable);
+
+                        if (_kb)
+                        {
+                            //Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
+
+                            //if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
+                            //{
+                            //    knockbackDirection = -knockbackDirection;
+                            //}
+
+                            ApplyKnockback(damageable, this);
+                        }
+
+                        playerHit = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void DisableHitboxes()
+    {
+        foreach (NestedList<Collider> attack in attackColliders)
+        {
+            foreach (Collider attackCollider in attack.data)
+            {
+                attackCollider.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    #endregion
+
+    #region EDITOR
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //if (!Selection.Contains(gameObject))
+        //    return;
+
+        DisplayAttackRange(360, AttackRange, false);
+        DisplayInfos();
+    }
+
+    protected override void DisplayInfos()
+    {
+        Handles.Label(
+        transform.position + transform.up,
+        stats.GetEntityName() +
+        "\n - Health : " + stats.GetValue(Stat.HP) +
+        "\n - Speed : " + stats.GetValue(Stat.SPEED) +
+        "\n - State : " + currentState?.ToString(),
+        new GUIStyle()
+        {
+            alignment = TextAnchor.MiddleLeft,
+            normal = new GUIStyleState()
+            {
+                textColor = Color.black
+            }
+        });
+    }
+#endif
     #endregion
 }

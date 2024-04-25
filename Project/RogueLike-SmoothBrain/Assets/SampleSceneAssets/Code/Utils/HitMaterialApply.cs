@@ -19,9 +19,9 @@ public class HitMaterialApply : MonoBehaviour
         mMaterial = GameResources.Get<Material>("MAT_Entity_Hit");
 
         if (mRenderer == null)
-            mRenderer = GetComponentsInChildren<Renderer>();
+            mRenderer = GetComponentsInChildren<MeshRenderer>();
         else if (mRenderer.Length == 0)
-            mRenderer = GetComponentsInChildren<Renderer>();
+            mRenderer = GetComponentsInChildren<MeshRenderer>();
     }
 
     public void SetAlpha(float alpha)
@@ -29,7 +29,15 @@ public class HitMaterialApply : MonoBehaviour
         if (!IsEnable)
             return;
 
-        mMaterial.SetFloat("_alpha", alpha);
+        foreach (Renderer renderer in mRenderer)
+        {
+            List<Material> materials = new List<Material>(renderer.materials).Where(mat => mat.shader == mMaterial.shader).ToList();
+
+            materials.ForEach(x =>
+            {
+                x.SetFloat("_alpha", alpha);
+            });
+        }
     }
 
     public void SetAlpha(float from, float to, float duration)
