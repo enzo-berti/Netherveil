@@ -62,7 +62,17 @@ public class WindowItemDatabase : EditorWindow
             ItemData item = searchItems[i];
 
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+            
+            EditorGUILayout.BeginVertical(GUILayout.Width(SizeArea));
+            GUI.backgroundColor = new Color(0.62f, 0.114f, 0.82f);
+            
             EditorGUILayout.LabelField(item.idName.SeparateAllCase(), GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+            if (GUILayout.Button("Change id", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true)))
+            {
+                IdNameWindow.OpenWindow();
+            }
+            EditorGUILayout.EndVertical();
+            GUI.backgroundColor = Color.white;
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.price = EditorGUILayout.IntField(item.price, GUILayout.Width(SizeArea / 4), GUILayout.ExpandWidth(true));
@@ -113,5 +123,22 @@ public class WindowItemDatabase : EditorWindow
         string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + (item.Type == ItemData.ItemType.PASSIVE ? "PassiveItems" : "ActiveItems") + $"/{itemName}.cs";
         File.Delete(path);
         AssetDatabase.Refresh();
+    }
+
+    private Texture2D MakeBackgroundTexture(int width, int height, Color color)
+    {
+        Color[] pixels = new Color[width * height];
+
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            pixels[i] = color;
+        }
+
+        Texture2D backgroundTexture = new Texture2D(width, height);
+
+        backgroundTexture.SetPixels(pixels);
+        backgroundTexture.Apply();
+
+        return backgroundTexture;
     }
 }
