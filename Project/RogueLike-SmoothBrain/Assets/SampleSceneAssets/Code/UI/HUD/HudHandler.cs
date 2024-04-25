@@ -64,19 +64,4 @@ public class HudHandler : MonoBehaviour
         GameOver.SetActive(true);
         hud.SetActive(false);
     }
-
-    public void ToggleMap(InputAction.CallbackContext ctx)
-    {
-        mapHUD.Toggle();
-    }
-
-    public void ToggleQuest(InputAction.CallbackContext ctx)
-    {
-        questHUD.Toggle();
-    }
-
-    public void TogglePause(InputAction.CallbackContext ctx)
-    {
-        pauseMenu.Toggle();
-    }
 }

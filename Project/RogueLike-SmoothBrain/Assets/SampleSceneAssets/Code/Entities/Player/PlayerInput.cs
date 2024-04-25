@@ -542,9 +542,9 @@ public class PlayerInput : MonoBehaviour
             map["SpecialAbility"].performed -= SpecialAbilityActivation;
             if (HudHandler.current != null)
             {
-                map["ToggleMap"].performed -= HudHandler.current.ToggleMap;
-                map["ToggleQuest"].performed -= HudHandler.current.ToggleQuest;
-                map["Pause"].started -= HudHandler.current.TogglePause;
+                map["ToggleMap"].performed -= ctx => HudHandler.current.MapHUD.Toggle();
+                map["ToggleQuest"].performed -= ctx => HudHandler.current.QuestHUD.Toggle(); ;
+                map["Pause"].started -= ctx => HudHandler.current.PauseMenu.Toggle();
             }
         }
         else
@@ -562,9 +562,9 @@ public class PlayerInput : MonoBehaviour
             map["SpecialAbility"].performed += SpecialAbilityActivation;
             if (HudHandler.current != null)
             {
-                map["ToggleMap"].performed += HudHandler.current.ToggleMap;
-                map["ToggleQuest"].performed += HudHandler.current.ToggleQuest;
-                map["Pause"].started += HudHandler.current.TogglePause;
+                map["ToggleMap"].performed += ctx => HudHandler.current.MapHUD.Toggle(); ;
+                map["ToggleQuest"].performed += ctx => HudHandler.current.QuestHUD.Toggle();
+                map["Pause"].started += ctx => HudHandler.current.PauseMenu.Toggle();
             }
         }
     }

@@ -1,3 +1,4 @@
+using Map;
 using PostProcessingEffects;
 using System;
 using System.Collections.Generic;
@@ -41,9 +42,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public IAttacker.HitDelegate OnAttackHit { get => onAttackHit; set => onAttackHit = value; }
     public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
-    int currentStep = 0;
     public readonly int STEP_VALUE = 25;
+    public readonly int BENEDICTION_MAX = -4;
+    public readonly int CORRUPTION_MAX = 4;
+    public readonly int MAX_INDEX_ALIGNMENT_TAB = 3;
+
     public bool CanHealFromConsumables { get; set; } = true;
+    bool canLaunchUpgrade = false;
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -84,7 +89,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             attacker.OnAttackHit += attacker.ApplyStatus;
         }
 
+        RoomUtilities.allEnemiesDeadEvents += ChangeStatsBasedOnAlignment;
+        RoomUtilities.allChestOpenEvents += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
+    }
+
+    private void OnDestroy()
+    {
+        RoomUtilities.allEnemiesDeadEvents -= ChangeStatsBasedOnAlignment;
+        RoomUtilities.allChestOpenEvents -= ChangeStatsBasedOnAlignment;
+        stats.onStatChange -= UpgradePlayerStats;
     }
 
     private void OnEnable()
@@ -99,7 +113,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {
-        if(IsInvincibleCount > 0)
+        if (IsInvincibleCount > 0)
         {
             return;
         }
@@ -177,238 +191,208 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         damages += additionalDamages;
 
         OnBeforeApplyDamages?.Invoke(ref damages, damageable);
-        damages = (int)(damages * stats.GetCoeff(Stat.ATK)); 
+        damages = (int)(damages * stats.GetCoeff(Stat.ATK));
         damageable.ApplyDamage(damages, this);
 
         OnAttackHit?.Invoke(damageable, this);
     }
 
     #region Corruption&BenedictionManagement
-    public void UpgradePlayerStats(Stat stat)
+
+    private void UpgradePlayerStats(Stat stat)
     {
         if (stat != Stat.CORRUPTION)
             return;
 
-        float corruptionStat = Stats.GetValue(stat);
-        float corruptionLastValue = Stats.GetLastValue(stat);
-        float diff = corruptionStat - corruptionLastValue;
-
-        ManageCorruptionChangeLessThanStep(corruptionStat, corruptionLastValue, diff);
-        ManageCorruptionChangeMoreThanStep(corruptionStat, corruptionLastValue, diff);
-
-        //ensure that player doesn't die by stat upgrade
-        if (Stats.GetValue(Stat.HP) <= 0f)
-        {
-            Stats.SetValue(Stat.HP, 1f);
-        }
+        canLaunchUpgrade = true;
     }
 
-    private void ManageCorruptionChangeLessThanStep(float corruptionStat, float corruptionLastValue, float diff)
-    {
-        int nextStep = (int)(corruptionStat / STEP_VALUE);
-        bool isMovingPositive = Mathf.Abs(diff) < STEP_VALUE && nextStep > (int)(corruptionLastValue / STEP_VALUE);
-        bool isMovingNegative = Mathf.Abs(diff) < STEP_VALUE && nextStep < (int)(corruptionLastValue / STEP_VALUE);
-
-        if (isMovingPositive && diff > 0)
-        {
-            CorruptionUpgrade(corruptionStat);
-        }
-        else if (isMovingNegative && diff < 0)
-        {
-            BenedictionUpgrade(corruptionStat);
-        }
-        else if (isMovingPositive && corruptionStat < 0)
-        {
-            BenedictionDrawback(corruptionLastValue);
-        }
-        else if (isMovingNegative && corruptionStat > 0)
-        {
-            CorruptionDrawback(corruptionLastValue);
-        }
-    }
-
-    private void ManageCorruptionChangeMoreThanStep(float corruptionStat, float corruptionLastValue, float diff)
-    {
-        float currentValue = corruptionLastValue;
-        int stepDiff = Mathf.Abs((int)(diff / STEP_VALUE));
-        int offset = diff > 0 ? STEP_VALUE : -STEP_VALUE;
-
-        for (int i = 0; i < stepDiff; i++)
-        {
-            bool increaseAtStart = (diff > 0 && currentValue > 0) || (diff < 0 && currentValue <= 0);
-            int currentDiff = (int)(corruptionStat - currentValue);
-            if (increaseAtStart)
-            {
-                currentValue += offset;
-            }
-
-            if (currentValue < 0 && currentDiff > 0)
-            {
-                BenedictionDrawback(currentValue);
-            }
-            else if (currentValue <= 0 && currentDiff < 0)
-            {
-                BenedictionUpgrade(currentValue);
-            }
-            else if (currentValue >= 0 && currentDiff > 0)
-            {
-                CorruptionUpgrade(currentValue);
-            }
-            else if (currentValue > 0 && currentDiff < 0)
-            {
-                CorruptionDrawback(currentValue);
-            }
-
-            if (!increaseAtStart)
-            {
-                currentValue += offset;
-            }
-        }
-    }
-
-    private void CorruptionUpgrade(float corruptionStat)
-    {
-        currentStep++;
-        if (corruptionStat >= Stats.GetMaxValue(Stat.CORRUPTION))
-        {
-            Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
-            CanHealFromConsumables = false;
-            playerController.SpecialAbility = new DamnationVeil();
-            OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        }
-        else
-        {
-            Stats.IncreaseValue(Stat.ATK, 5f);
-            Stats.DecreaseMaxValue(Stat.HP, 15f);
-            Stats.DecreaseValue(Stat.HP, 15f);
-        }
-
-        playerController.LaunchUpgradeAnimation = true;
-
-        HudHandler.current.MessageInfoHUD.Display("You have been <color=purple>cursed</color> !");
-    }
-
-    private void BenedictionUpgrade(float corruptionStat)
-    {
-        currentStep--;
-        if (corruptionStat <= Stats.GetMinValue(Stat.CORRUPTION))
-        {
-            playerController.SpecialAbility = new DivineShield();
-            OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        }
-        else
-        {
-            Stats.IncreaseMaxValue(Stat.HP, 15f);
-            Stats.IncreaseValue(Stat.HP, 15f);
-            Stats.DecreaseValue(Stat.ATK, 5f);
-        }
-
-        playerController.LaunchUpgradeAnimation = true;
-
-        HudHandler.current.MessageInfoHUD.Display("You have been <color=yellow>blessed</color> !");
-    }
-
-    private void BenedictionDrawback(float corruptionLastValue)
-    {
-        if (corruptionLastValue <= Stats.GetMinValue(Stat.CORRUPTION))
-        {
-            playerController.SpecialAbility = null;
-            OnBenedictionMaxDrawback?.Invoke();
-        }
-        else
-        {
-            Stats.DecreaseMaxValue(Stat.HP, 15f);
-            Stats.DecreaseValue(Stat.HP, 15f);
-            Stats.IncreaseValue(Stat.ATK, 5f);
-        }
-
-
-        currentStep++;
-        playerController.LaunchDrawbackAnimation = true;
-
-        HudHandler.current.MessageInfoHUD.Display("You're heading toward the path of <color=yellow>light</color> !");
-    }
-
-    private void CorruptionDrawback(float corruptionLastValue)
-    {
-        if (corruptionLastValue >= Stats.GetMaxValue(Stat.CORRUPTION))
-        {
-            Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
-            CanHealFromConsumables = true;
-            playerController.SpecialAbility = null;
-            OnCorruptionMaxDrawback?.Invoke();
-        }
-        else
-        {
-            Stats.DecreaseValue(Stat.ATK, 5f);
-            Stats.IncreaseMaxValue(Stat.HP, 15f);
-            Stats.IncreaseValue(Stat.HP, 15f);
-        }
-
-        currentStep--;
-        playerController.LaunchDrawbackAnimation = true;
-
-        HudHandler.current.MessageInfoHUD.Display("You're heading toward the path of <color=purple>darkness</color> !");
-    }
-
-    public void UpgradeArmor()
+    public void ChangeStatsBasedOnAlignment()
     {
         int curStep = (int)(Stats.GetValue(Stat.CORRUPTION) / STEP_VALUE);
+        int lastStep = (int)(Stats.GetLastValue(Stat.CORRUPTION) / STEP_VALUE);
+        if (curStep == lastStep || !canLaunchUpgrade)
+            return;
 
-        if(curStep < 0)
+        TriggerAnimAndVFX(curStep, lastStep);
+        ManageDrawbacks(lastStep);
+
+        if (curStep < 0)
         {
-            for (int i = 0; i < Mathf.Abs(currentStep); i++)
-            {
-                foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[i].data)
-                {
-                    armorPiece.SetActive(true);
-                }
-                foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
-                {
-                    armorPiece.SetActive(false);
-                }
-            }
+            BenedictionUpgrade(curStep);
         }
         else if (curStep > 0)
         {
-            for (int i = 0; i < currentStep; i++)
-            {
-                foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[i].data)
-                {
-                    armorPiece.SetActive(true);
-                }
-                foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
-                {
-                    armorPiece.SetActive(false);
-                }
-            }
+            CorruptionUpgrade(curStep);
         }
         else
         {
-            foreach(NestedList<GameObject> armorPiecesList in CorruptionArmorsToActivatePerStep)
+            ReactivateDefaultArmor();
+        }
+    }
+
+    private void ManageDrawbacks(int lastStep)
+    {
+        for (int i = Mathf.Abs(lastStep); i > 0; i--)
+        {
+            if (lastStep < 0) //corruption drawbacks
             {
-                foreach(GameObject armorPiece in armorPiecesList.data)
-                { 
-                    armorPiece.SetActive(false);
+                if (i == CORRUPTION_MAX)
+                {
+                    playerController.SpecialAbility = null;
+                    OnBenedictionMaxDrawback?.Invoke();
+                }
+                else
+                {
+                    Stats.DecreaseMaxValue(Stat.HP, 15f);
+                    Stats.DecreaseValue(Stat.HP, 15f);
+                    Stats.IncreaseValue(Stat.ATK, 5f);
                 }
             }
-
-            foreach (NestedList<GameObject> armorPiecesList in BenedictionArmorsToActivatePerStep)
+            else if (lastStep > 0) //benediction drawbacks
             {
-                foreach (GameObject armorPiece in armorPiecesList.data)
+                if (i == BENEDICTION_MAX)
                 {
-                    armorPiece.SetActive(false);
+                    Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
+                    CanHealFromConsumables = true;
+                    playerController.SpecialAbility = null;
+                    OnCorruptionMaxDrawback?.Invoke();
                 }
-            }
-
-            foreach (NestedList<GameObject> armorPiecesList in NormalArmorsToActivatePerStep)
-            {
-                foreach (GameObject armorPiece in armorPiecesList.data)
+                else
                 {
-                    armorPiece.SetActive(true);
+                    Stats.DecreaseValue(Stat.ATK, 5f);
+                    Stats.IncreaseMaxValue(Stat.HP, 15f);
+                    Stats.IncreaseValue(Stat.HP, 15f);
                 }
             }
         }
+    }
+
+    private void TriggerAnimAndVFX(int curStep, int lastStep)
+    {
+        playerInput.DisableGameplayInputs();
+        animator.ResetTrigger("UpgradingStats");
+        animator.SetTrigger("UpgradingStats");
+        State = (int)Hero.PlayerState.UPGRADING_STATS;
+        canLaunchUpgrade = false;
+
+        bool corruptionUpgradeOnly = curStep > 0 && lastStep >= 0;
+        bool benedictionUpgradeOnly = curStep < 0 && lastStep <= 0;
+        bool hasBenedictionDrawback = curStep >= 0 && lastStep < 0;
+        bool hasCorruptionDrawback = curStep <= 0 && lastStep > 0;
+
+        if (corruptionUpgradeOnly)
+        {
+            playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+        }
+        else if (benedictionUpgradeOnly)
+        {
+            playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+        }
+        else if (hasCorruptionDrawback)
+        {
+            playerController.corruptionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            if (curStep < 0)
+            {
+                playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+            }
+        }
+        else if (hasBenedictionDrawback)
+        {
+            playerController.benedictionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            if (curStep > 0)
+            {
+                playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
+            }
+        }
+    }
+
+    private void BenedictionUpgrade(int curStep)
+    {
+        for (int i = 0; i < Mathf.Abs(curStep); i++)
+        {
+            if (i == MAX_INDEX_ALIGNMENT_TAB)
+            {
+                playerController.SpecialAbility = new DivineShield();
+                OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+            }
+            else
+            {
+                Stats.IncreaseMaxValue(Stat.HP, 15f);
+                Stats.IncreaseValue(Stat.HP, 15f);
+                Stats.DecreaseValue(Stat.ATK, 5f);
+            }
+
+            foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[i].data)
+            {
+                armorPiece.SetActive(true);
+            }
+            foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
+            {
+                armorPiece.SetActive(false);
+            }
+        }
+    }
+
+    private void CorruptionUpgrade(int curStep)
+    {
+        for (int i = 0; i < curStep; i++)
+        {
+            if (i == MAX_INDEX_ALIGNMENT_TAB)
+            {
+                Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
+                CanHealFromConsumables = false;
+                playerController.SpecialAbility = new DamnationVeil();
+                OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+            }
+            else
+            {
+                Stats.IncreaseValue(Stat.ATK, 5f);
+                Stats.DecreaseMaxValue(Stat.HP, 15f);
+                Stats.DecreaseValue(Stat.HP, 15f);
+            }
+
+            foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[i].data)
+            {
+                armorPiece.SetActive(true);
+            }
+            foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
+            {
+                armorPiece.SetActive(false);
+            }
+        }
+    }
+
+    private void ReactivateDefaultArmor()
+    {
+        foreach (NestedList<GameObject> armorPiecesList in CorruptionArmorsToActivatePerStep)
+        {
+            foreach (GameObject armorPiece in armorPiecesList.data)
+            {
+                armorPiece.SetActive(false);
+            }
+        }
+
+        foreach (NestedList<GameObject> armorPiecesList in BenedictionArmorsToActivatePerStep)
+        {
+            foreach (GameObject armorPiece in armorPiecesList.data)
+            {
+                armorPiece.SetActive(false);
+            }
+        }
+
+        foreach (NestedList<GameObject> armorPiecesList in NormalArmorsToActivatePerStep)
+        {
+            foreach (GameObject armorPiece in armorPiecesList.data)
+            {
+                armorPiece.SetActive(true);
+            }
+        }
+    }
+
+    public void DebugCallLaunchUpgrade()
+    {
+        canLaunchUpgrade = true;
     }
     #endregion
 }

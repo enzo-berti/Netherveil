@@ -8,6 +8,7 @@ namespace Map
         None,
 
         Lobby,
+        Tutorial,
         Normal,
         Treasure,
         Challenge,
@@ -19,7 +20,7 @@ namespace Map
 
     public struct RoomData
     {
-        public RoomData(GameObject enemiesContainer)
+        public RoomData(RoomPrefab roomPrefab, GameObject enemiesContainer)
         {
             enemies = new List<GameObject>();
 
@@ -28,7 +29,7 @@ namespace Map
                 enemies.Add(enemy.gameObject);
             }
 
-            Type = RoomType.Normal;
+            Type = roomPrefab.type;
         }
 
         public readonly int NumEnemies

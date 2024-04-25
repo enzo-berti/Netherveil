@@ -37,10 +37,26 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    [Range(0, 1)] public float masterVolumeBarValue = 1f;
-    [Range(0, 1)] public float musicVolumeBarValue = 1f;
-    [Range(0, 1)] public float soundsFXVolumeBarValue = 1f;
-    [Range(0, 1)] public float ambiencesVolumeBarValue = 1f;
+    public float masterVolumeBarValue
+    {
+        get => GetBusVolume(masterBus);
+        set => SetBusVolume(masterBus, value);
+    }
+    public float musicVolumeBarValue
+    {
+        get => GetBusVolume(musicsBus);
+        set => SetBusVolume(musicsBus, value);
+    }
+    public float soundsFXVolumeBarValue
+    {
+        get => GetBusVolume(soundsFXBus);
+        set => SetBusVolume(soundsFXBus, value);
+    }
+    public float ambiencesVolumeBarValue
+    {
+        get => GetBusVolume(ambiencesBus);
+        set => SetBusVolume(ambiencesBus, value);
+    }
 
     [SerializeField] private EventReference buttonClick;
     [SerializeField] private EventReference buttonSelect;
@@ -102,15 +118,23 @@ public class AudioManager : MonoBehaviour
         soundsFXBus = RuntimeManager.GetBus("bus:/SoundsFX");
         ambiencesBus = RuntimeManager.GetBus("bus:/Ambiences");
 
-        SetBusVolumes();
+        masterVolumeBarValue = 1.0f;
+        musicVolumeBarValue = 1.0f;
+        soundsFXVolumeBarValue = 1.0f;
+        ambiencesVolumeBarValue = 1.0f;
     }
 
-    private void SetBusVolumes()
+    private float GetBusVolume(Bus bus)
     {
-        SetBusVolume(masterBus, masterVolumeBarValue);
-        SetBusVolume(musicsBus, musicVolumeBarValue);
-        SetBusVolume(soundsFXBus, soundsFXVolumeBarValue);
-        SetBusVolume(ambiencesBus, ambiencesVolumeBarValue);
+        if (bus.isValid())
+        {
+            bus.getVolume(out float result);
+            return result;
+        }
+        else
+        {
+            throw new Exception("Attempted to set volume on a null bus.");
+        }
     }
 
     private void SetBusVolume(Bus bus, float volume)
