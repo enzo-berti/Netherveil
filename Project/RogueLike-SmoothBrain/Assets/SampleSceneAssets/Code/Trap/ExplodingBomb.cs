@@ -63,7 +63,7 @@ public class ExplodingBomb : MonoBehaviour
         float a = -16, b = 16;
         float c = this.transform.position.y;
         float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, 0).Max();
-        while (timer < timerToReach && transform.position.y > pos.y)
+        while (timer < timerToReach)
         {
             yield return null;
             timer = timer > timerToReach ? timerToReach : timer;
