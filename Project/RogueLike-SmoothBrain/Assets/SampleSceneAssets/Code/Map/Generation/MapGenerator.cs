@@ -140,6 +140,7 @@ namespace Map.Generation
             RoomUtilities.nbRoomByType[RoomType.Boss] = 1;
 
             GenerateLobbyRoom(ref genParam);
+            GenerateTutorialRoom(ref genParam);
             GenerateRooms(ref genParam);
 
             // Generate boss rooms
@@ -218,6 +219,17 @@ namespace Map.Generation
         {
             GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Lobby).gameObject);
 
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+
+            genParam.AddAvailableDoors(doorsGenerator);
+            Destroy(doorsGenerator);
+
+            roomGO.transform.parent = gameObject.transform;
+        }
+
+        private void GenerateTutorialRoom(ref GenerationParam genParam)
+        {
+            GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Tutorial).gameObject);
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
             genParam.AddAvailableDoors(doorsGenerator);
