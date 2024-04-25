@@ -21,13 +21,13 @@ public class UpgradingStatsBehaviour : StateMachineBehaviour
     {
         if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) == Utilities.Hero.Stats.GetMaxValue(Stat.CORRUPTION))
         {
-            DescriptionTab.current.SetTab("Damnation Veil", "On activation ...");
-            DescriptionTab.current.OpenTab();
+            HudHandler.current.DescriptionTab.SetTab("Damnation Veil", "On activation ...");
+            HudHandler.current.DescriptionTab.OpenTab();
         }
         else if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) == Utilities.Hero.Stats.GetMinValue(Stat.CORRUPTION))
         {
-            DescriptionTab.current.SetTab("Divine Shield", "On activation ...");
-            DescriptionTab.current.OpenTab();
+            HudHandler.current.DescriptionTab.SetTab("Divine Shield", "On activation ...");
+            HudHandler.current.DescriptionTab.OpenTab();
         }
 
         GameObject.FindWithTag("Player").GetComponent<PlayerInput>().EnableGameplayInputs();

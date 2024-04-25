@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 1101306274061580682}
   - component: {fileID: 1881092609859121172}
   - component: {fileID: 8195190771632232648}
+  - component: {fileID: 2738558648744903358}
   m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
@@ -174,8 +175,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4594077074668828047}
-  - {fileID: 6620150127694209325}
-  - {fileID: 8486912361219547651}
   m_Father: {fileID: 913159617652512722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2471754574863788268
@@ -285,6 +284,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92d0b0d5def07084c89f865112c0a867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2738558648744903358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2357620331513348111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3933d32392199df49ba127d77a498d8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2598868593268961915
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,6 +368,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6620150127694209325}
+  - component: {fileID: 2935725163919686969}
   m_Layer: 0
   m_Name: StaticProps
   m_TagString: EditorOnly
@@ -516,8 +528,20 @@ Transform:
   - {fileID: 9116489987021066341}
   - {fileID: 789490002470195799}
   - {fileID: 100734995949808257}
-  m_Father: {fileID: 3344715862030989459}
+  m_Father: {fileID: 913159617652512722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2935725163919686969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3338620552132280122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0841406a52a1c104aad4d08396490c7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3876981825554640429
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,6 +620,7 @@ GameObject:
   m_Component:
   - component: {fileID: 913159617652512722}
   - component: {fileID: 5121844387755098991}
+  - component: {fileID: 6259272533226197204}
   m_Layer: 0
   m_Name: DinoChromeRework
   m_TagString: Untagged
@@ -617,6 +642,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3344715862030989459}
+  - {fileID: 6620150127694209325}
+  - {fileID: 8486912361219547651}
   - {fileID: 4298904232612692286}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1322,6 +1349,24 @@ MonoBehaviour:
   texturesDir:
   - {fileID: 2800000, guid: 6e9f59d6b45c83143b7961dbcbf47c76, type: 2}
   texturesShadow: []
+--- !u!114 &6259272533226197204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4479772562648819386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f64fff4eedd564a438366b0e45235b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomObjects:
+  - {fileID: 2357620331513348111}
+  - {fileID: 3338620552132280122}
+  - {fileID: 7073645083660834262}
+  - {fileID: 8760267361295233340}
+  type: 2
 --- !u!1 &5313546904486350948
 GameObject:
   m_ObjectHideFlags: 0
@@ -1549,6 +1594,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8486912361219547651}
+  - component: {fileID: 4801257354234447567}
   m_Layer: 0
   m_Name: Lights
   m_TagString: Untagged
@@ -1585,8 +1631,20 @@ Transform:
   - {fileID: 4521136371254051828}
   - {fileID: 8942792426671950401}
   - {fileID: 3196480229377666006}
-  m_Father: {fileID: 3344715862030989459}
+  m_Father: {fileID: 913159617652512722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4801257354234447567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7073645083660834262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 856e2a545d162ff4e98717ebd329f294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7132016728500232302
 GameObject:
   m_ObjectHideFlags: 0
@@ -1658,9 +1716,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4298904232612692286}
-  - component: {fileID: 596665200749159256}
+  - component: {fileID: 984982704961006768}
   m_Layer: 0
-  m_Name: RoomGenerator
+  m_Name: RoomPresets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1683,7 +1741,7 @@ Transform:
   - {fileID: 8316648856239891265}
   m_Father: {fileID: 913159617652512722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &596665200749159256
+--- !u!114 &984982704961006768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1692,10 +1750,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8760267361295233340}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 997bdd8c100c370469880aadc5490aa3, type: 3}
+  m_Script: {fileID: 11500000, guid: b1250d48f349d2c4a919b3c21fb137a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
 --- !u!1 &9060707906482516959
 GameObject:
   m_ObjectHideFlags: 0
