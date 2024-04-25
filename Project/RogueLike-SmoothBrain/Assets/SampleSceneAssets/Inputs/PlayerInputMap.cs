@@ -623,7 +623,7 @@ namespace Netherveil.Inputs
                 {
                     ""name"": """",
                     ""id"": ""fa8f7929-2e15-42be-aebd-87bd50b8734b"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
