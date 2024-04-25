@@ -60,6 +60,7 @@ public class Drop
 
     private IEnumerator DropMovement(GameObject go, Vector3 pos, float throwTime)
     {
+        if (go == null) yield break;
         float timer = 0;
         Vector3 basePos = go.transform.position;
         Vector3 position3D = Vector3.zero;
