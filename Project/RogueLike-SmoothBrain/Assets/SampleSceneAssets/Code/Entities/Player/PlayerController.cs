@@ -35,8 +35,6 @@ public class PlayerController : MonoBehaviour
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
     public BoxCollider DashAttackCollider { get => dashAttackCollider; }
 
-    public bool LaunchUpgradeAnimation { get; set; } = false;
-    public bool LaunchDrawbackAnimation { get; set; } = false;
     public bool DoneQuestQTThiStage = false;
     public bool DoneQuestQTApprenticeThiStage = false;
 
@@ -64,10 +62,10 @@ public class PlayerController : MonoBehaviour
     public VisualEffect DashVFX;
     public VisualEffect ChargedAttackVFX;
     public VisualEffect SpearLaunchVFX;
-    [SerializeField] VisualEffect corruptionUpgradeVFX;
-    [SerializeField] VisualEffect benedictionUpgradeVFX;
-    [SerializeField] VisualEffect benedictionDrawbackVFX;
-    [SerializeField] VisualEffect corruptionDrawbackVFX;
+    public VisualEffect corruptionUpgradeVFX;
+    public VisualEffect benedictionUpgradeVFX;
+    public VisualEffect benedictionDrawbackVFX;
+    public VisualEffect corruptionDrawbackVFX;
     public VisualEffect DivineShieldVFX;
     public VisualEffect DamnationVeilVFX;
 
@@ -102,10 +100,6 @@ public class PlayerController : MonoBehaviour
 
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
-        RoomUtilities.allEnemiesDeadEvents += LaunchDrawbackVFX;
-        RoomUtilities.allEnemiesDeadEvents += LaunchUpgradeAnim;
-        RoomUtilities.allChestOpenEvents += LaunchDrawbackVFX;
-        RoomUtilities.allChestOpenEvents += LaunchUpgradeAnim;
         RoomUtilities.onFinishStageEvents += ResetStageDependentValues;
     }
 
@@ -117,8 +111,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        RoomUtilities.allEnemiesDeadEvents -= LaunchUpgradeAnim;
-        RoomUtilities.allChestOpenEvents -= LaunchUpgradeAnim;
         RoomUtilities.onFinishStageEvents -= ResetStageDependentValues;
     }
 
@@ -345,46 +337,6 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Miscellaneous
-
-    public void LaunchUpgradeAnim()
-    {
-        if (!LaunchUpgradeAnimation)
-            return;
-
-        playerInput.DisableGameplayInputs();
-        animator.ResetTrigger("UpgradingStats");
-        animator.SetTrigger("UpgradingStats");
-        hero.State = (int)Hero.PlayerState.UPGRADING_STATS;
-        LaunchUpgradeAnimation = false;
-        if (hero.Stats.GetValue(Stat.CORRUPTION) > 0)
-        {
-            corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
-        }
-        else if (hero.Stats.GetValue(Stat.CORRUPTION) < 0)
-        {
-            benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
-        }
-
-        hero.UpgradeArmor();
-    }
-
-    public void LaunchDrawbackVFX()
-    {
-        if (!LaunchDrawbackAnimation || LaunchUpgradeAnimation)
-            return;
-
-        LaunchDrawbackAnimation = false;
-        if (hero.Stats.GetLastValue(Stat.CORRUPTION) > 0)
-        {
-            corruptionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
-        }
-        else if (hero.Stats.GetLastValue(Stat.CORRUPTION) < 0)
-        {
-            benedictionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
-        }
-
-        hero.UpgradeArmor();
-    }
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
     {
