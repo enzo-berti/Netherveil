@@ -17,6 +17,7 @@ namespace Map
         static public Dictionary<RoomType, int> nbRoomByType = new Dictionary<RoomType, int>
         {
             { RoomType.Lobby, 0 },
+            { RoomType.Tutorial, 0 },
             { RoomType.Normal, 0 },
             { RoomType.Treasure, 0 },
             { RoomType.Challenge, 0 },
@@ -43,6 +44,7 @@ namespace Map
         static public Dictionary<RoomType, int> nbEnterRoomByType = new Dictionary<RoomType, int>
         {
             { RoomType.Lobby, 0 },
+            { RoomType.Tutorial, 0 },
             { RoomType.Normal, 0 },
             { RoomType.Treasure, 0 },
             { RoomType.Challenge, 0 },

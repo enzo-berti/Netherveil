@@ -17,6 +17,7 @@ namespace Map.Generation
             nbRoomByType = new Dictionary<RoomType, int>
             {
                 { RoomType.Lobby, 0 },
+                { RoomType.Tutorial, 0 },
                 { RoomType.Normal, nbNormal },
                 { RoomType.Treasure, nbTreasure },
                 { RoomType.Challenge, nbChallenge },
