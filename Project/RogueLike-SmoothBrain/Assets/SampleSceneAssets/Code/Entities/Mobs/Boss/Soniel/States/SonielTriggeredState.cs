@@ -32,6 +32,7 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     protected override void EnterState()
     {
         Context.Animator.SetBool("Walk", true);
+        Context.MoveTo(Context.Player.transform.position);
     }
 
     // This method will be called only once after the last update.
@@ -43,7 +44,17 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        Context.MoveTo(Context.Player.transform.position);
+        if (Context.Agent.hasPath)
+        {
+            Context.MoveTo(Context.Player.transform.position);
+        }
+
+        Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
+
+        if (Context.Agent.remainingDistance > Context.Agent.stoppingDistance)
+        {
+            Context.MoveTo(Context.Player.transform.position);
+        }
     }
 
     // This method will be called on state switch.

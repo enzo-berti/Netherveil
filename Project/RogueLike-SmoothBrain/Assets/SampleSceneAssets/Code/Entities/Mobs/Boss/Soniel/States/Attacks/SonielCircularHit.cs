@@ -18,8 +18,34 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
     public SonielCircularHit(SonielStateMachine currentContext, StateFactory<SonielStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
+    enum CircularStates
+    {
+        DASH,
+        ATTACK,
+        THRUST
+    }
+
+    class CircularAttack
+    {
+        float dashCharge = 0f;
+        float attackCharge = 0f;
+        float thrustCharge = 0f;
+    }
+
+    // anim hash
     int circularHash = Animator.StringToHash("Circular");
+
+    // state
+    CircularStates currentState;
+
+    // timers
     float attackDuration = 0f;
+    float[] circularAttackChargeTimers = new float[3];
+    float[] MAX_CIRCULAR_ATTACK_CHARGE = { 0, 0.2f, 0 };
+
+    // ranges
+    float attackRange = 4f;
+    float dashRange = 10f;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -39,6 +65,12 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
         Context.Animator.ResetTrigger(circularHash);
         Context.Animator.SetTrigger(circularHash);
+
+        currentState = CircularStates.ATTACK;
+        if (Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position) <= attackRange)
+        {
+            currentState = CircularStates.DASH;
+        }
     }
 
     // This method will be called only once after the last update.
