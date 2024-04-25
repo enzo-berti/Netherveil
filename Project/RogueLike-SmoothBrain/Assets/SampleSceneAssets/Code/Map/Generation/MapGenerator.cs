@@ -239,7 +239,6 @@ namespace Map.Generation
             {
                 if (TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoorCandidate, out exitDoor))
                 {
-                    Debug.Log("TA MERE");
                     entranceDoor = entranceDoorCandidate;
                     break;
                 }
