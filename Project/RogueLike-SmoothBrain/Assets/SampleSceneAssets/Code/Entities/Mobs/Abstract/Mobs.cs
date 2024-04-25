@@ -90,6 +90,7 @@ public abstract class Mobs : Entity
 
         animator.speed = 0;
         IsInvincibleCount++;
+        IsKnockbackable = false;
         lifeBar.gameObject.SetActive(false);
         spawningVFX.GetComponent<VFXStopper>().Duration = spawningVFX.GetFloat("Duration") + 0.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
@@ -131,6 +132,7 @@ public abstract class Mobs : Entity
         lifeBar.gameObject.SetActive(true);
         animator.speed = 1;
         IsSpawning = false;
+        IsKnockbackable = true;
     }
 
     protected virtual IEnumerator Brain()
