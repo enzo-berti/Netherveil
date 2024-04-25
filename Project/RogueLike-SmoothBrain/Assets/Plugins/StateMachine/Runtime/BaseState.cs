@@ -8,6 +8,8 @@ namespace StateMachine
         protected T Context => context;
         protected StateFactory<T> Factory => factory;
 
+        private bool isSwitch = false;
+
         public BaseState(T currentContext, StateFactory<T> currentFactory)
         {
             context = currentContext;
@@ -22,13 +24,19 @@ namespace StateMachine
         public void Update()
         {
             CheckSwitchStates();
-            UpdateState();
+
+            if (!isSwitch)
+                UpdateState();
+
+            isSwitch = false;
         }
 
         protected virtual void SwitchState(BaseState<T> newState)
         {
             // current state exits state
             ExitState();
+
+            isSwitch = true;
 
             // new state enters state
             newState.EnterState();

@@ -204,7 +204,7 @@ public abstract class Mobs : Entity
             Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
             randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, _maxTravelDistance);
             randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
-            
+
             if (_avoidWalls)
             {
                 if (Physics.Raycast(_unitPos + new Vector3(0, 1, 0), randomDirection3D.normalized, randomDirection3D.magnitude, LayerMask.GetMask("Map")))
@@ -263,14 +263,16 @@ public abstract class Mobs : Entity
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)stats.GetValue(Stat.ATK_RANGE));
     }
 
-    protected virtual void DisplayAttackRange(float _angle, float _range)
+    protected virtual void DisplayAttackRange(float _angle, float _range, bool _int = true)
     {
+        float range = _int ? (int)_range : _range;
+
         Handles.color = new Color(1, 1, 0.5f, 0.2f);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, (int)_range);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, (int)_range);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, _angle / 2f, range);
+        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -_angle / 2f, range);
 
         Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, (int)_range);
+        Handles.DrawWireDisc(transform.position, Vector3.up, range);
     }
 
     protected virtual void DisplayWanderZone()
