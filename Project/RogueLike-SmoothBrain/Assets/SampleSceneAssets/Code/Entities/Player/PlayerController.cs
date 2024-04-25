@@ -346,7 +346,7 @@ public class PlayerController : MonoBehaviour
 
     #region Miscellaneous
 
-    private void LaunchUpgradeAnim()
+    public void LaunchUpgradeAnim()
     {
         if (!LaunchUpgradeAnimation)
             return;
@@ -364,9 +364,11 @@ public class PlayerController : MonoBehaviour
         {
             benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
         }
+
+        hero.UpgradeArmor();
     }
 
-    private void LaunchDrawbackVFX()
+    public void LaunchDrawbackVFX()
     {
         if (!LaunchDrawbackAnimation || LaunchUpgradeAnimation)
             return;
@@ -380,6 +382,8 @@ public class PlayerController : MonoBehaviour
         {
             benedictionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
         }
+
+        hero.UpgradeArmor();
     }
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)

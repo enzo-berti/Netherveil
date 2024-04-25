@@ -19,31 +19,41 @@ public class Drop
         {
             if (dropInfo.isChanceShared)
             {
-                if (UnityEngine.Random.value <= dropInfo.chance)
-                {
-                    for (int i = 0; i < dropInfo.Quantity; i++)
-                    {
-                        GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
-                        Vector3 pos3D;
-                        Vector2 pos = MathsExtension.GetPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
-                        pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
-                        CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
-                    }
-                }
+                DropChanceShared(position, dropInfo);
             }
             else
             {
-                for (int i = 0; i < dropInfo.Quantity; i++)
-                {
-                    if (UnityEngine.Random.value <= dropInfo.chance)
-                    {
-                        GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
-                        Vector3 pos3D;
-                        Vector2 pos = MathsExtension.GetPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
-                        pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
-                        CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
-                    }
-                }
+                DropBasic(position, dropInfo);
+            }
+        }
+    }
+
+    private void DropBasic(Vector3 position, DropInfo dropInfo)
+    {
+        for (int i = 0; i < dropInfo.Quantity; i++)
+        {
+            if (UnityEngine.Random.value <= dropInfo.chance)
+            {
+                GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
+                Vector3 pos3D;
+                Vector2 pos = MathsExtension.GetPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
+                pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
+                CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
+            }
+        }
+    }
+
+    private void DropChanceShared(Vector3 position, DropInfo dropInfo)
+    {
+        if (UnityEngine.Random.value <= dropInfo.chance)
+        {
+            for (int i = 0; i < dropInfo.Quantity; i++)
+            {
+                GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
+                Vector3 pos3D;
+                Vector2 pos = MathsExtension.GetPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
+                pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
+                CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
             }
         }
     }
@@ -59,6 +69,7 @@ public class Drop
         while (timer < timerToReach)
         {
             yield return null;
+            if (go == null) yield break;
             timer = timer > timerToReach ? timerToReach : timer;
             if (timer < 1.0f)
             {

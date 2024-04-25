@@ -50,7 +50,9 @@ public class DebugForMilestone : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.KeypadDivide))
         {
-            Utilities.Hero.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), QuestTalker.TalkerType.CLERIC, QuestTalker.TalkerGrade.BOSS);
+            //Utilities.Hero.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), QuestTalker.TalkerType.CLERIC, QuestTalker.TalkerGrade.BOSS);
+            Utilities.Player.GetComponent<PlayerController>().LaunchDrawbackVFX();
+            Utilities.Player.GetComponent<PlayerController>().LaunchUpgradeAnim();
         }
     }
 }

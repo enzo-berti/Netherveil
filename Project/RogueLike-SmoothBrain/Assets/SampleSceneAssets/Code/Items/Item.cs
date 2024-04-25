@@ -28,7 +28,7 @@ public class Item : MonoBehaviour
 
     public int Price => price;
 
-    private void Start()
+    private void Awake()
     {
         if (ItemPool == null)
         {
