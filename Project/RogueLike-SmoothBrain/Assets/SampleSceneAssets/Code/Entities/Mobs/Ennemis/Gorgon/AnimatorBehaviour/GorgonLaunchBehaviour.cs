@@ -15,7 +15,6 @@ public class GorgonLaunchBehaviour : StateMachineBehaviour
     {
         if (stateInfo.normalizedTime > timeToRemoveHead)
         {
-            //animator.transform.parent.GetComponent<Gorgon>().HasRemoveHead = true;
             animator.transform.parent.GetComponent<GorgonStateMachine>().HasRemovedHead = true;
         }
         if (stateInfo.normalizedTime > timeToLaunchHead)
