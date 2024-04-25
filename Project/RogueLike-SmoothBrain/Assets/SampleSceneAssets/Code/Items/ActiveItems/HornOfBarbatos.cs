@@ -26,6 +26,7 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     public void Activate()
     {
         Camera.main.GetComponent<CameraUtilities>().ShakeCamera(0.3f, 0.25f, EasingFunctions.EaseInQuint);
+        AudioManager.Instance.PlaySound(AudioManager.Instance.HornOfBarbatosSFX);
         //add sfx here
 
         Hero hero = Utilities.Hero;
