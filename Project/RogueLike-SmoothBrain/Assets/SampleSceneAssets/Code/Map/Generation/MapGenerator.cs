@@ -119,10 +119,6 @@ namespace Map.Generation
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed;
 
-        [SerializeField] private List<GameObject> obstructionsDoor;
-        [SerializeField] private List<GameObject> stairsPrefab;
-        [SerializeField] private GameObject gatePrefab;
-
         private readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
 
         private void Awake()
@@ -289,7 +285,7 @@ namespace Map.Generation
             roomGO.transform.SetParent(gameObject.transform);
 
             // Generate gate
-            GameObject gateGO = Instantiate(gatePrefab, entranceDoor.Position, Quaternion.identity);
+            GameObject gateGO = Instantiate(MapResources.GatePrefab, entranceDoor.Position, Quaternion.identity);
             gateGO.transform.Rotate(0f, entranceDoor.Rotation, 0f);
             gateGO.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
 
@@ -339,7 +335,7 @@ namespace Map.Generation
             {
                 foreach (var door in listDoors.Value)
                 {
-                    GameObject go = Instantiate(Seed.RandList(obstructionsDoor)[0], door.Position, Quaternion.identity);
+                    GameObject go = Instantiate(Seed.RandList(MapResources.ObstructionDoors)[0], door.Position, Quaternion.identity);
                     go.transform.Rotate(0f, door.Rotation, 0f);
                     go.transform.parent = door.parentSkeleton.transform.Find("StaticProps");
                 }
@@ -353,7 +349,7 @@ namespace Map.Generation
             DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
             Door entranceStairs = Seed.RandList(doorsGenerator.doors)[0];
 
-            GameObject go = Instantiate(Seed.RandList(stairsPrefab)[0], entranceStairs.Position, Quaternion.identity);
+            GameObject go = Instantiate(Seed.RandList(MapResources.StairsPrefabs)[0], entranceStairs.Position, Quaternion.identity);
             go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
             go.transform.parent = entranceStairs.parentSkeleton.transform.Find("StaticProps");
 
