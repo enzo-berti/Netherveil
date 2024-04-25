@@ -293,6 +293,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
 
         playerController.LaunchUpgradeAnimation = true;
+
+        HudHandler.current.MessageInfoHUD.Display("You have been <color=purple>cursed</color> !");
     }
 
     private void BenedictionUpgrade(float corruptionStat)
@@ -319,6 +321,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             armorPiece.SetActive(false);
         }
         playerController.LaunchUpgradeAnimation = true;
+
+        HudHandler.current.MessageInfoHUD.Display("You have been <color=yellow>blessed</color> !");
     }
 
     private void BenedictionDrawback(float corruptionLastValue)
@@ -345,6 +349,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
         currentStep++;
         playerController.LaunchDrawbackAnimation = true;
+
+        HudHandler.current.MessageInfoHUD.Display("You're heading toward the path of <color=yellow>light</color> !");
     }
 
     private void CorruptionDrawback(float corruptionLastValue)
@@ -374,6 +380,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         currentStep--;
         playerController.LaunchDrawbackAnimation = true;
+
+        HudHandler.current.MessageInfoHUD.Display("You're heading toward the path of <color=purple>darkness</color> !");
     }
     #endregion
 }
