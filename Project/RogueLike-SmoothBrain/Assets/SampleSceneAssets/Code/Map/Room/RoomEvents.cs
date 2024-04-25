@@ -54,7 +54,7 @@ namespace Map
             allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
 
             // create data of the map
-            roomData = new RoomData(enemies);
+            roomData = new RoomData(roomPrefab.GetComponent<RoomPrefab>(), enemies);
             if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
             {
                 EnterEvents();
@@ -134,6 +134,7 @@ namespace Map
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
                 if (enterToPlayer.magnitude >= other.bounds.size.magnitude)
                 {
+                    Debug.Log("ENTER");
                     EnterEvents();
                 }
             }
@@ -143,6 +144,7 @@ namespace Map
         {
             if (!exitRoomCalled && other.gameObject.CompareTag("Player"))
             {
+                Debug.Log("EXIT");
                 ExitEvents();
             }
         }
