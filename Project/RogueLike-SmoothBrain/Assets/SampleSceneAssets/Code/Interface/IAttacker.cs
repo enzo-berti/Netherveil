@@ -22,7 +22,8 @@ public interface IAttacker
     public void ApplyStatus(IDamageable damageable, IAttacker attacker)
     {
         Entity entity = damageable as Entity;
-        if (entity == null || (entity as Mobs).IsSpawning) return;
+        Mobs mobs = damageable as Mobs;
+        if (entity == null || (mobs != null && mobs.IsSpawning)) return;
         foreach (var status in StatusToApply)
         {
             Status newStatus = status.DeepCopy();
