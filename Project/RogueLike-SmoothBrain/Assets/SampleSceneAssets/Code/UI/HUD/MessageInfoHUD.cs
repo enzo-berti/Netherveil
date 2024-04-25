@@ -50,6 +50,7 @@ public class MessageInfoHUD : MonoBehaviour
 
         textMesh.alpha = 1.0f;
         yield return new WaitForSeconds(durationWait);
+        elapsed = 0.0f;
 
         while (elapsed < durationOut)
         {
