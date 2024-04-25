@@ -1,7 +1,4 @@
-
-using UnityEngine;
-
-public class KnockbackItem : ItemEffect , IPassiveItem 
+public class KnockbackPiston : ItemEffect , IPassiveItem 
 { 
     public void OnRetrieved() 
     {
