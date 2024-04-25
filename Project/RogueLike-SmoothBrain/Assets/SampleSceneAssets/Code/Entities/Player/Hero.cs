@@ -276,10 +276,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         State = (int)Hero.PlayerState.UPGRADING_STATS;
         canLaunchUpgrade = false;
 
-        bool corruptionUpgradeOnly = curStep > 0 && lastStep >= 0;
-        bool benedictionUpgradeOnly = curStep < 0 && lastStep <= 0;
-        bool hasBenedictionDrawback = curStep >= 0 && lastStep < 0;
-        bool hasCorruptionDrawback = curStep <= 0 && lastStep > 0;
+        bool corruptionUpgradeOnly = curStep > 0 && lastStep >= 0 && lastStep < curStep;
+        bool benedictionUpgradeOnly = curStep < 0 && lastStep <= 0 && lastStep > curStep;
+
+        bool hasbenedictionDrawbackNegativeToPositive = curStep >= 0 && lastStep < 0;
+        bool hasbenedictionDrawbackNegativeOnly = curStep < 0 && lastStep <= 0 && lastStep < curStep;
+
+        bool hascorruptionDrawbackPositiveToNegative = curStep <= 0 && lastStep > 0;
+        bool hascorruptionDrawbackPositiveOnly = curStep > 0 && lastStep >= 0 && lastStep > curStep;;
 
         if (corruptionUpgradeOnly)
         {
@@ -289,18 +293,18 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
         }
-        else if (hasCorruptionDrawback)
+        else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
             playerController.corruptionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
-            if (curStep < 0)
+            if (hascorruptionDrawbackPositiveToNegative && curStep < 0)
             {
                 playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             }
         }
-        else if (hasBenedictionDrawback)
+        else if (hasbenedictionDrawbackNegativeToPositive || hasbenedictionDrawbackNegativeOnly)
         {
             playerController.benedictionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
-            if (curStep > 0)
+            if (hasbenedictionDrawbackNegativeToPositive && curStep > 0)
             {
                 playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             }
