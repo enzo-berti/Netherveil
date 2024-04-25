@@ -19,7 +19,7 @@ namespace Map
 
     public struct RoomData
     {
-        public RoomData(GameObject enemiesContainer, Generation.RoomGenerator roomGenerator)
+        public RoomData(GameObject enemiesContainer)
         {
             enemies = new List<GameObject>();
 
@@ -28,7 +28,7 @@ namespace Map
                 enemies.Add(enemy.gameObject);
             }
 
-            Type = roomGenerator.type;
+            Type = RoomType.Normal;
         }
 
         public readonly int NumEnemies

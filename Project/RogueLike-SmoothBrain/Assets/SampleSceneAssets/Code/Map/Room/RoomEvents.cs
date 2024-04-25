@@ -1,3 +1,4 @@
+using Map.Component;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -37,11 +38,12 @@ namespace Map
         private void Start()
         {
             // find room go's
-            room = transform.parent.Find("RoomGenerator").GetChild(0).gameObject;
+            GameObject roomPrefab = transform.parent.gameObject;
+            room = roomPrefab.GetComponentInChildren<RoomPresets>().transform.GetChild(0).gameObject;
             enemies = room.transform.Find("Enemies").gameObject;
             treasures = room.transform.Find("Treasures").gameObject;
             //traps = room.transform.Find("Traps").gameObject;
-            navMeshSurface = transform.parent.GetComponentInChildren<NavMeshSurface>();
+            navMeshSurface = roomPrefab.GetComponentInChildren<NavMeshSurface>();
 
             enemies.SetActive(false);
             gameObject.layer = LayerMask.NameToLayer("Default");
@@ -52,7 +54,7 @@ namespace Map
             allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
 
             // create data of the map
-            roomData = new RoomData(enemies, transform.parent.GetComponentInChildren<Generation.RoomGenerator>());
+            roomData = new RoomData(enemies);
             if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
             {
                 EnterEvents();

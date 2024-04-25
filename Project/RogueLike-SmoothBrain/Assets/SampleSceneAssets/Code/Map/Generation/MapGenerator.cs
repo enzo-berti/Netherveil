@@ -1,3 +1,4 @@
+using Map.Component;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Map.Generation
     public struct GenerationParam
     {
         public Dictionary<RoomType, int> nbRoomByType;
-        public Dictionary<int, List<Door>> availableDoorsByRot;
+        public Dictionary<int, List<Door>> availableDoorsByRotation;
 
         public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
         {
@@ -25,7 +26,7 @@ namespace Map.Generation
                 { RoomType.Boss, 0 },
             };
 
-            availableDoorsByRot = new Dictionary<int, List<Door>>
+            availableDoorsByRotation = new Dictionary<int, List<Door>>
             {
                 { 0, new List<Door>() },
                 { 90, new List<Door>() },
@@ -54,7 +55,7 @@ namespace Map.Generation
             {
                 int count = 0;
 
-                foreach (var list in availableDoorsByRot.Values)
+                foreach (var list in availableDoorsByRotation.Values)
                 {
                     count += list.Count;
                 }
@@ -68,9 +69,9 @@ namespace Map.Generation
             foreach (var door in doorsGenerator.doors)
             {
                 int rotation = (int)Math.Round(door.Rotation);
-                if (availableDoorsByRot.ContainsKey(rotation))
+                if (availableDoorsByRotation.ContainsKey(rotation))
                 {
-                    availableDoorsByRot[rotation].Add(door);
+                    availableDoorsByRotation[rotation].Add(door);
                 }
                 else
                 {
@@ -84,7 +85,7 @@ namespace Map.Generation
         public readonly List<Door> GetFarestDoors()
         {
             List<Door> result = new List<Door>();
-            foreach (var doors in availableDoorsByRot)
+            foreach (var doors in availableDoorsByRotation)
             {
                 result.AddRange(doors.Value);
             }
@@ -95,7 +96,7 @@ namespace Map.Generation
 
         public readonly List<Door> GetFarestDoorsByRot(int rot)
         {
-            List<Door> result = availableDoorsByRot[rot];
+            List<Door> result = availableDoorsByRotation[rot];
 
             result.Sort((a, b) => (int)(b.Position.magnitude - a.Position.magnitude));
             return result;
@@ -103,7 +104,7 @@ namespace Map.Generation
 
         public readonly void RemoveDoor(Door door)
         {
-            foreach (var doors in availableDoorsByRot.Values)
+            foreach (var doors in availableDoorsByRotation.Values)
             {
                 if (doors.Remove(door))
                 {
@@ -141,7 +142,7 @@ namespace Map.Generation
                 Seed.Set(seed);
             }
             
-            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 1));
+            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 0));
         }
 
         private void GenerateMap(GenerationParam genParam)
@@ -154,11 +155,11 @@ namespace Map.Generation
             GenerateRooms(ref genParam);
 
             // Generate boss rooms
-            if (!TryInstantiateRoom(GetRandRoomGO(RoomType.Boss), RoomType.Boss, ref genParam))
+            if (!GenerateRoom(ref genParam, RoomType.Boss))
             {
                 Debug.LogError("Can't find any candidate for boss room");
             }
-
+            
             GenerateObstructionDoors(ref genParam);
         }
 
@@ -209,12 +210,16 @@ namespace Map.Generation
 
         private bool GenerateRoom(ref GenerationParam genParam, RoomType type)
         {
-            foreach (GameObject candidatePrefab in Seed.RandList(GetRoomsGO(type)))
+            foreach (GameObject candidateRoom in Seed.RandList(GetRoomsGO(type)))
             {
-                if (TryInstantiateRoom(candidatePrefab, type, ref genParam))
+                GameObject roomGO = Instantiate(candidateRoom);
+                if (!TryPutRoom(roomGO, ref genParam, out Door entranceDoor, out Door exitDoor))
                 {
-                    return true;
+                    continue;
                 }
+
+                InitRoom(roomGO, ref genParam, entranceDoor, exitDoor);
+                return true;
             }
 
             Debug.LogError("Can't find any candidate for map room");
@@ -224,9 +229,8 @@ namespace Map.Generation
         private void GenerateLobbyRoom(ref GenerationParam genParam)
         {
             GameObject roomGO = Instantiate(GetRandRoomGO(RoomType.Lobby));
-            roomGO.GetComponentInChildren<RoomGenerator>().type = RoomType.Lobby;
 
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
             genParam.AddAvailableDoors(doorsGenerator);
             Destroy(doorsGenerator);
@@ -234,51 +238,48 @@ namespace Map.Generation
             roomGO.transform.parent = gameObject.transform;
         }
 
-        private bool TryInstantiateRoom(GameObject prefabRoom, RoomType type, ref GenerationParam genParam)
+        private bool TryPutRoom(GameObject roomGO, ref GenerationParam genParam, out Door entranceDoor, out Door exitDoor)
         {
-            GameObject roomGO = Instantiate(prefabRoom);
-            roomGO.GetComponentInChildren<RoomGenerator>().type = type;
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
-
-            foreach (Door entranceDoor in Seed.RandList(doorsGenerator.doors))
+            foreach (Door entranceDoorCandidate in Seed.RandList(doorsGenerator.doors))
             {
-                if (TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor))
+                if (TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoorCandidate, out exitDoor))
                 {
-                    InitRoom(roomGO, ref genParam, entranceDoor, exitDoor);
+                    entranceDoor = entranceDoorCandidate;
                     return true;
                 }
             }
 
-            DestroyImmediate(roomGO); // didn't find any spawn for this candidate
+            entranceDoor = new Door();
+            exitDoor = new Door();
+            DestroyImmediate(roomGO);
             return false;
         }
 
         private bool TrySetEntranceDoorPos(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, out Door exitDoor)
         {
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
-
             foreach (int rotation in Seed.RandList(availableRotations))
             {
-                if (!genParam.availableDoorsByRot[rotation].Any())
+                if (!genParam.availableDoorsByRotation[rotation].Any())
                 {
                     continue;
                 }
 
-                float defaultRot = doorsGenerator.transform.parent.parent.rotation.eulerAngles.y;
-                foreach (Door candidateExitDoor in Seed.RandList(genParam.availableDoorsByRot[rotation]))
+                float defaultRot = roomGO.transform.rotation.eulerAngles.y;
+                foreach (Door candidateExitDoor in Seed.RandList(genParam.availableDoorsByRotation[rotation]))
                 {
                     // rotate gameObject entrance door to correspond the exit door
-                    doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
+                    roomGO.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
 
                     // Set position
-                    roomGO.transform.position = entranceDoor.parentSkeleton.transform.parent.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
+                    roomGO.transform.position = entranceDoor.parentSkeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
                     Physics.SyncTransforms(); // need to update physics before doing collision test in the same frame
 
                     // Check collision
                     if (IsRoomCollidingOtherRoom(roomGO, candidateExitDoor))
                     {
-                        doorsGenerator.transform.parent.parent.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
+                        roomGO.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
                         continue; // fail to generate continue to next door candidate
                     }
 
@@ -294,37 +295,38 @@ namespace Map.Generation
         private void InitRoom(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, Door exitDoor)
         {
             // Set parent room
-            roomGO.transform.parent = gameObject.transform;
+            roomGO.transform.SetParent(gameObject.transform);
 
             // Generate gate
             GameObject gateGO = Instantiate(gatePrefab, entranceDoor.Position, Quaternion.identity);
             gateGO.transform.Rotate(0f, entranceDoor.Rotation, 0f);
-            gateGO.transform.parent = roomGO.transform.Find("Skeleton").Find("StaticProps");
+            gateGO.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
 
             // Removed used door
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
             doorsGenerator.RemoveDoor(entranceDoor);
             genParam.RemoveDoor(exitDoor);
-
-            if (roomGO.GetComponentInChildren<RoomGenerator>().type == RoomType.Boss)
-            {
-                GenerateStairs(roomGO);
-            }
 
             // Add the new doors from the new room into the possible candidates
             genParam.AddAvailableDoors(doorsGenerator);
 
+            if (roomGO.GetComponent<RoomPrefab>().type == RoomType.Boss)
+            {
+                GenerateStairs(roomGO);
+            }
+
             // Generate one of the seed room and delete the other's
-            roomGO.GetComponentInChildren<RoomGenerator>().GenerateRoomSeed();
+            roomGO.GetComponentInChildren<RoomPresets>().GenerateRandomPreset();
 
             // SetActive object's of room
-            roomGO.transform.Find("RoomGenerator").GetChild(0).Find("Enemies").gameObject.SetActive(false);
+            roomGO.GetComponentInChildren<NavMeshSurface>().transform.Find("Enemies").gameObject.SetActive(false);
             roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
         }
 
         static private bool IsRoomCollidingOtherRoom(GameObject roomGO, Door exitDoor)
         {
-            BoxCollider roomColliderEnter = roomGO.transform.Find("Skeleton").GetComponent<BoxCollider>();
+            GameObject skeletonGO = roomGO.GetComponentInChildren<Skeleton>().gameObject; 
+            BoxCollider roomColliderEnter = skeletonGO.GetComponent<BoxCollider>();
             BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
 
             // if we find another trigger with the "map" tag then we collide with another room
@@ -372,7 +374,7 @@ namespace Map.Generation
 
         private void GenerateObstructionDoors(ref GenerationParam genParam)
         {
-            foreach (var listDoors in genParam.availableDoorsByRot)
+            foreach (var listDoors in genParam.availableDoorsByRotation)
             {
                 foreach (var door in listDoors.Value)
                 {
@@ -382,7 +384,7 @@ namespace Map.Generation
                 }
             }
 
-            genParam.availableDoorsByRot.Clear();
+            genParam.availableDoorsByRotation.Clear();
         }
 
         private void GenerateStairs(GameObject roomGO)

@@ -73,12 +73,12 @@ namespace Tool
             GameObject lights = new GameObject("Lights");
             lights.transform.parent = skeleton.transform;
 
-            GameObject roomGenerator = new GameObject("RoomGenerator");
-            roomGenerator.transform.parent = roomPrefab.transform;
-            roomGenerator.AddComponent<RoomGenerator>();
+            GameObject roomPreset = new GameObject("RoomPreset");
+            roomPreset.transform.parent = roomPrefab.transform;
+            //roomGenerator.AddComponent<RoomGenerator>();
 
             GameObject roomSeed1 = new GameObject("Room1");
-            roomSeed1.transform.parent = roomGenerator.transform;
+            roomSeed1.transform.parent = roomPreset.transform;
             roomSeed1.AddComponent<NavMeshSurface>();
 
             GameObject traps = new GameObject("Traps");
