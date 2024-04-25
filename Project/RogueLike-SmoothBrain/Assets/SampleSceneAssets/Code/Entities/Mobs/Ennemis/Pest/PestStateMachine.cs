@@ -155,7 +155,7 @@ public class PestStateMachine : Mobs, IPest
         isFreeze = false;
         currentState = factory.GetState<PestDeathState>();
 
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+        //Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
     public void MoveTo(Vector3 posToMove)
