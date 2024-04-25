@@ -28,6 +28,7 @@ public abstract class Quest
 
     public virtual void AcceptQuest()
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
         RoomUtilities.allEnemiesDeadEvents += CheckQuestFinished;
         RoomUtilities.allChestOpenEvents += CheckQuestFinished;
         RoomUtilities.enterEvents += CheckQuestFinished;
@@ -58,6 +59,7 @@ public abstract class Quest
 
     protected virtual void QuestFinished()
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.QuestFinishedSFX);
         player.CurrentQuest = null;
         if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
         {
@@ -88,6 +90,7 @@ public abstract class Quest
 
     protected virtual void QuestLost()
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
         player.CurrentQuest = null;
         //add feedback to show that quest is lost
     }
