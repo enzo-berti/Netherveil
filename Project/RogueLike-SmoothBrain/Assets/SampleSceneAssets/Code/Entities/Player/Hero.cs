@@ -206,8 +206,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void ManageCorruptionChangeLessThanStep(float corruptionStat, float corruptionLastValue, float diff)
     {
         int nextStep = (int)(corruptionStat / STEP_VALUE);
-        bool isMovingPositive = Mathf.Abs(diff) < STEP_VALUE && nextStep > currentStep;
-        bool isMovingNegative = Mathf.Abs(diff) < STEP_VALUE && nextStep < currentStep;
+        bool isMovingPositive = Mathf.Abs(diff) < STEP_VALUE && nextStep > (int)(corruptionLastValue / STEP_VALUE);
+        bool isMovingNegative = Mathf.Abs(diff) < STEP_VALUE && nextStep < (int)(corruptionLastValue / STEP_VALUE);
 
         if (isMovingPositive && diff > 0)
         {
@@ -283,15 +283,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseValue(Stat.HP, 15f);
         }
 
-        foreach(GameObject armorPiece in CorruptionArmorsToActivatePerStep[currentStep -1].data)
-        {
-            armorPiece.SetActive(true);
-        }
-        foreach(GameObject armorPiece in NormalArmorsToActivatePerStep[currentStep -1].data)
-        {
-            armorPiece.SetActive(false);
-        }
-
         playerController.LaunchUpgradeAnimation = true;
 
         HudHandler.current.MessageInfoHUD.Display("You have been <color=purple>cursed</color> !");
@@ -312,14 +303,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.DecreaseValue(Stat.ATK, 5f);
         }
 
-        foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
-        {
-            armorPiece.SetActive(true);
-        }
-        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
-        {
-            armorPiece.SetActive(false);
-        }
         playerController.LaunchUpgradeAnimation = true;
 
         HudHandler.current.MessageInfoHUD.Display("You have been <color=yellow>blessed</color> !");
@@ -339,14 +322,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.IncreaseValue(Stat.ATK, 5f);
         }
 
-        foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
-        {
-            armorPiece.SetActive(false);
-        }
-        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[Mathf.Abs(currentStep) - 1].data)
-        {
-            armorPiece.SetActive(true);
-        }
+
         currentStep++;
         playerController.LaunchDrawbackAnimation = true;
 
@@ -369,19 +345,70 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             Stats.IncreaseValue(Stat.HP, 15f);
         }
 
-        foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[currentStep - 1].data)
-        {
-            armorPiece.SetActive(false);
-        }
-        foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[currentStep - 1].data)
-        {
-            armorPiece.SetActive(true);
-        }
-
         currentStep--;
         playerController.LaunchDrawbackAnimation = true;
 
         HudHandler.current.MessageInfoHUD.Display("You're heading toward the path of <color=purple>darkness</color> !");
+    }
+
+    public void UpgradeArmor()
+    {
+        int curStep = (int)(Stats.GetValue(Stat.CORRUPTION) / STEP_VALUE);
+
+        if(curStep < 0)
+        {
+            for (int i = 0; i < Mathf.Abs(currentStep); i++)
+            {
+                foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[i].data)
+                {
+                    armorPiece.SetActive(true);
+                }
+                foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
+                {
+                    armorPiece.SetActive(false);
+                }
+            }
+        }
+        else if (curStep > 0)
+        {
+            for (int i = 0; i < currentStep; i++)
+            {
+                foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[i].data)
+                {
+                    armorPiece.SetActive(true);
+                }
+                foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
+                {
+                    armorPiece.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            foreach(NestedList<GameObject> armorPiecesList in CorruptionArmorsToActivatePerStep)
+            {
+                foreach(GameObject armorPiece in armorPiecesList.data)
+                { 
+                    armorPiece.SetActive(false);
+                }
+            }
+
+            foreach (NestedList<GameObject> armorPiecesList in BenedictionArmorsToActivatePerStep)
+            {
+                foreach (GameObject armorPiece in armorPiecesList.data)
+                {
+                    armorPiece.SetActive(false);
+                }
+            }
+
+            foreach (NestedList<GameObject> armorPiecesList in NormalArmorsToActivatePerStep)
+            {
+                foreach (GameObject armorPiece in armorPiecesList.data)
+                {
+                    armorPiece.SetActive(true);
+                }
+            }
+        }
     }
     #endregion
 }

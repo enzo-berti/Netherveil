@@ -45,7 +45,7 @@ public class DungeonsLimits : Quest
         if (IsQuestFinished())
             return;
 
-        currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Normal] / RoomUtilities.nbRoomByType[RoomType.Normal] * 100f;
+        currentNumber = RoomUtilities.NbEnterRoom/ RoomUtilities.NbRoom * 100f;
         progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
         QuestUpdated();
     }

@@ -43,7 +43,7 @@ public class Sound
         return false;
     }
 
-    public void Play(bool restart = false)
+    public void Play(bool restart = true)
     {
         if (!CreateInstance(restart))
         {
