@@ -19,9 +19,9 @@ public class HitMaterialApply : MonoBehaviour
         mMaterial = GameResources.Get<Material>("MAT_Entity_Hit");
 
         if (mRenderer == null)
-            mRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+            mRenderer = GetComponentsInChildren<MeshRenderer>();
         else if (mRenderer.Length == 0)
-            mRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+            mRenderer = GetComponentsInChildren<MeshRenderer>();
     }
 
     public void SetAlpha(float alpha)
