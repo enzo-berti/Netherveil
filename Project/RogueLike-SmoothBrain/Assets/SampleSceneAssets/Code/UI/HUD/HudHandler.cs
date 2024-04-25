@@ -4,6 +4,18 @@ using UnityEngine.InputSystem;
 
 public class HudHandler : MonoBehaviour
 {
+    private static HudHandler instance;
+    public static HudHandler current
+    {
+        get
+        {
+            if (instance == null)
+                throw new System.Exception("No HUD Handler in the scene");
+
+            return instance;
+        }
+    }
+
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject GameOver;
     [SerializeField] private PauseMenu pauseMenu;
@@ -16,6 +28,7 @@ public class HudHandler : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         player = FindObjectOfType<Hero>();
     }
 
