@@ -10,6 +10,7 @@ namespace Map
         static private readonly Dictionary<RoomType, List<RoomPrefab>> roomPrefabsByType = new Dictionary<RoomType, List<RoomPrefab>>()
         {
             { RoomType.Lobby, new List<RoomPrefab>() },
+            { RoomType.Tutorial, new List<RoomPrefab>() },
             { RoomType.Normal, new List<RoomPrefab>() },
             { RoomType.Treasure, new List<RoomPrefab>() },
             { RoomType.Challenge, new List <RoomPrefab>() },
