@@ -8,6 +8,7 @@ namespace Map
         None,
 
         Lobby,
+        Tutorial,
         Normal,
         Treasure,
         Challenge,
