@@ -233,22 +233,10 @@ namespace Map.Generation
             GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Tutorial).gameObject);
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
-            Door entranceDoor = new Door();
-            Door exitDoor = new Door();
-            foreach (Door entranceDoorCandidate in Seed.RandList(doorsGenerator.doors))
-            {
-                if (TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoorCandidate, out exitDoor))
-                {
-                    entranceDoor = entranceDoorCandidate;
-                    break;
-                }
-            }
+            Door entranceDoor = doorsGenerator.doors[0];
+            TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
 
             InitRoom(roomGO, ref genParam, entranceDoor, exitDoor);
-
-            genParam.AddAvailableDoors(doorsGenerator);
-            Destroy(doorsGenerator);
-
 
             roomGO.transform.parent = gameObject.transform;
         }
