@@ -64,12 +64,12 @@ public class WindowItemDatabase : EditorWindow
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
             
             EditorGUILayout.BeginVertical(GUILayout.Width(SizeArea));
-            GUI.backgroundColor = new Color(0.62f, 0.114f, 0.82f);
+            GUI.backgroundColor = new Color(0.882f, 0.58f, 1f);
             
             EditorGUILayout.LabelField(item.idName.SeparateAllCase(), GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             if (GUILayout.Button("Change id", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true)))
             {
-                IdNameWindow.OpenWindow();
+                IdNameWindow.OpenWindow(item.idName, database);
             }
             EditorGUILayout.EndVertical();
             GUI.backgroundColor = Color.white;
