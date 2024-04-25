@@ -283,7 +283,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         bool hasbenedictionDrawbackNegativeOnly = curStep < 0 && lastStep <= 0 && lastStep < curStep;
 
         bool hascorruptionDrawbackPositiveToNegative = curStep <= 0 && lastStep > 0;
-        bool hascorruptionDrawbackPositiveOnly = curStep > 0 && lastStep >= 0 && lastStep > curStep;;
+        bool hascorruptionDrawbackPositiveOnly = curStep > 0 && lastStep >= 0 && lastStep > curStep;
 
         if (corruptionUpgradeOnly)
         {
