@@ -12,15 +12,12 @@ public class PlayerInput : MonoBehaviour
 {
     Hero hero;
     Animator animator;
-    HudHandler hudHandler;
     PlayerController controller;
     HitMaterialApply flashMaterial;
     CameraUtilities cameraUtilities;
     PlayerInteractions playerInteractions;
     DialogueTreeRunner dialogueTreeRunner;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
-
-    public HudHandler HudHandler { get => hudHandler; }
 
     public static event Action<Vector3> OnThrowSpear;
     public static event Action OnRetrieveSpear;
@@ -66,7 +63,6 @@ public class PlayerInput : MonoBehaviour
     {
         controller = GetComponent<PlayerController>();
         playerInteractions = GetComponent<PlayerInteractions>();
-        hudHandler = FindObjectOfType<HudHandler>();
         animator = GetComponentInChildren<Animator>();
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
@@ -544,11 +540,11 @@ public class PlayerInput : MonoBehaviour
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
             map["ActiveItem"].performed -= ActiveItemActivation;
             map["SpecialAbility"].performed -= SpecialAbilityActivation;
-            if (hudHandler != null)
+            if (HudHandler.current != null)
             {
-                map["ToggleMap"].performed -= hudHandler.ToggleMap;
-                map["ToggleQuest"].performed -= hudHandler.ToggleQuest;
-                map["Pause"].started -= hudHandler.TogglePause;
+                map["ToggleMap"].performed -= HudHandler.current.ToggleMap;
+                map["ToggleQuest"].performed -= HudHandler.current.ToggleQuest;
+                map["Pause"].started -= HudHandler.current.TogglePause;
             }
         }
         else
@@ -564,11 +560,11 @@ public class PlayerInput : MonoBehaviour
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
             map["ActiveItem"].performed += ActiveItemActivation;
             map["SpecialAbility"].performed += SpecialAbilityActivation;
-            if (hudHandler != null)
+            if (HudHandler.current != null)
             {
-                map["ToggleMap"].performed += hudHandler.ToggleMap;
-                map["ToggleQuest"].performed += hudHandler.ToggleQuest;
-                map["Pause"].started += hudHandler.TogglePause;
+                map["ToggleMap"].performed += HudHandler.current.ToggleMap;
+                map["ToggleQuest"].performed += HudHandler.current.ToggleQuest;
+                map["Pause"].started += HudHandler.current.TogglePause;
             }
         }
     }
