@@ -17,8 +17,21 @@ public class TutoText : MonoBehaviour
         text = GetComponent<TMP_Text>();
         initText = text.text;
         UpdateBindingDisplayString();
-        DeviceManager.OnChangedToKB += UpdateBindingDisplayString;
-        DeviceManager.OnChangedToGamepad += UpdateBindingDisplayString;
+    }
+
+    private void OnEnable()
+    {
+        if(Application.isPlaying)
+        {
+            DeviceManager.OnChangedToKB += UpdateBindingDisplayString;
+            DeviceManager.OnChangedToGamepad += UpdateBindingDisplayString;
+        }
+    }
+
+    private void OnDisable()
+    {
+        DeviceManager.OnChangedToKB -= UpdateBindingDisplayString;
+        DeviceManager.OnChangedToGamepad -= UpdateBindingDisplayString;
     }
 
     private void OnDestroy()
