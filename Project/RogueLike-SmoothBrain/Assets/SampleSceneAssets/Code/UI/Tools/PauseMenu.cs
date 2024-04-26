@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject hud;
+    [SerializeField] private GameObject settings;
 
     public static event Action OnPause;
     public static event Action OnUnpause;
@@ -33,6 +34,7 @@ public class PauseMenu : MonoBehaviour
 
         hud.SetActive(true);
         gameObject.SetActive(false);
+        settings.SetActive(false);
 
         OnUnpause?.Invoke();
     }
@@ -44,7 +46,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Setting()
     {
-
+        settings.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void Menu()
