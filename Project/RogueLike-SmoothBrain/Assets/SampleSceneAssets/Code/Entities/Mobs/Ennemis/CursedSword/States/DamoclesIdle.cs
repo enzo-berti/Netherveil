@@ -26,6 +26,7 @@ public class DamoclesIdle : BaseState<DamoclesStateMachine>
     {
         Context.Stats.SetValue(Stat.SPEED, 5);
         elapsedTimeMovement = Time.time;
+        Context.IsInvincibleCount++;
     }
 
     // This method will be call only one time after the last update.
