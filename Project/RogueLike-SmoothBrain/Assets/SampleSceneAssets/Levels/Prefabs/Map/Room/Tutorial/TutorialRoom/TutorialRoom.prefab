@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 2962361951163583367}
   - component: {fileID: 4597042914804578700}
   - component: {fileID: 617778351444629893}
+  - component: {fileID: 4746675287595501877}
   m_Layer: 0
   m_Name: ChargedAttack
   m_TagString: Untagged
@@ -184,7 +185,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Hold LEFT CLICK and release \nto execute a charged attack"
+  m_text: "Hold ^ and release \nto execute a charged attack"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
   m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
@@ -257,6 +258,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4597042914804578700}
   m_maskType: 0
+--- !u!114 &4746675287595501877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316594425405679970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6407adb651da2074d8452d4fe89b1c3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboardActions:
+  - {fileID: 9038255976473901535, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  gamepadActions:
+  - {fileID: 6678700449244925620, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  displayStringOptions: 4
 --- !u!1 &1443348108880052071
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,6 +332,7 @@ GameObject:
   - component: {fileID: 5222539071392326077}
   - component: {fileID: 4617461235986597894}
   - component: {fileID: 468896354266181147}
+  - component: {fileID: 2556712656575105508}
   m_Layer: 0
   m_Name: DistanceAttack
   m_TagString: Untagged
@@ -425,7 +444,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Press A to launch your spear and \npress A again to retrieve it"
+  m_text: "Press ^ to launch your spear and \npress ^ again to retrieve it"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
   m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
@@ -498,6 +517,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4617461235986597894}
   m_maskType: 0
+--- !u!114 &2556712656575105508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089307673863983765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6407adb651da2074d8452d4fe89b1c3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboardActions:
+  - {fileID: 1554800406601786190, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  gamepadActions:
+  - {fileID: -1763705839297029465, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  displayStringOptions: 4
 --- !u!1 &2358907108006044477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1904,6 +1940,7 @@ GameObject:
   - component: {fileID: 3969079644028570575}
   - component: {fileID: 5665373539405429367}
   - component: {fileID: 1698615379956177862}
+  - component: {fileID: 6469738457756933999}
   m_Layer: 0
   m_Name: Finisher
   m_TagString: Untagged
@@ -2015,7 +2052,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "attack with LEFT CLICK \nto execute a combo"
+  m_text: 'attack with ^
+
+    to execute a combo'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
   m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
@@ -2088,6 +2127,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 5665373539405429367}
   m_maskType: 0
+--- !u!114 &6469738457756933999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4740815057969619019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6407adb651da2074d8452d4fe89b1c3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboardActions:
+  - {fileID: -5619059940619269481, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  gamepadActions:
+  - {fileID: -3079477538957719595, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  displayStringOptions: 4
 --- !u!1 &5223265046771450014
 GameObject:
   m_ObjectHideFlags: 0
@@ -2135,6 +2191,7 @@ GameObject:
   - component: {fileID: 8807399964420551618}
   - component: {fileID: 7094875282860866159}
   - component: {fileID: 7733664749013294230}
+  - component: {fileID: 8131201248281016599}
   m_Layer: 0
   m_Name: DashAttack
   m_TagString: Untagged
@@ -2246,7 +2303,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Dash with SHIFT and attack with \nLEFT CLICK to execute a dash attack"
+  m_text: "Dash with ^ and attack with \n$ to execute a dash attack"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
   m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
@@ -2319,6 +2376,25 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 7094875282860866159}
   m_maskType: 0
+--- !u!114 &8131201248281016599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6328693864295444217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6407adb651da2074d8452d4fe89b1c3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboardActions:
+  - {fileID: -8146422431875045323, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  - {fileID: -5619059940619269481, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  gamepadActions:
+  - {fileID: 891734082333109058, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  - {fileID: -3079477538957719595, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  displayStringOptions: 4
 --- !u!1 &7719788022625378443
 GameObject:
   m_ObjectHideFlags: 0
