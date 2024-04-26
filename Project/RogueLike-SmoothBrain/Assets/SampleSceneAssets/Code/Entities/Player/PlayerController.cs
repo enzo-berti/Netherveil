@@ -84,6 +84,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Item dependent GOs")]
     [SerializeField] Transform leftHandTransform;
+    public Transform LeftHandTransform { get => leftHandTransform; }
 
     private void Awake()
     {
