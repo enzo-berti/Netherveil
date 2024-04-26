@@ -10,7 +10,7 @@ public class ClopsStateMachine : MonoBehaviour
     void Start()
     {
         factory = new StateFactory<ClopsStateMachine>(this);
-        currentState = factory.GetState<ClopsWanderState>();
+        currentState = factory.GetState<ClopsPatrolState>();
     }
 
     void Update()
