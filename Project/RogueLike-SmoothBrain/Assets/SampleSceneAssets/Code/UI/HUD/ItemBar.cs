@@ -14,8 +14,8 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Transform itemPassiveTransform;
     [SerializeField] private GameObject activeFrame;
     [SerializeField] private GameObject specialAbilityFrame;
-    [SerializeField] private Texture damnationVeilIcon;
-    [SerializeField] private Texture divineShieldIcon;
+    [SerializeField] private Sprite backDamnation;
+    [SerializeField] private Sprite backDivine;
     [SerializeField] private Sprite[] rarityBackItemSprite;
     [SerializeField] private Sprite[] backItemActifNormal;
     [SerializeField] private Sprite[] backItemActifCooldown;
@@ -67,12 +67,12 @@ public class ItemBar : MonoBehaviour
         if(ability as DamnationVeil != null)
         {
             specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
-            specialAbilityFrame.GetComponentInChildren<RawImage>().texture = damnationVeilIcon;
+            specialAbilityFrame.GetComponent<Image>().sprite = backDamnation;
         }
         else if (ability as DivineShield != null)
         {
             specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
-            specialAbilityFrame.GetComponentInChildren<RawImage>().texture = divineShieldIcon;
+            specialAbilityFrame.GetComponent<Image>().sprite = backDivine;
         }
     }
 
