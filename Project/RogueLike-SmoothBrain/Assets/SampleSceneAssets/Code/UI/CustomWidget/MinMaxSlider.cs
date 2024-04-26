@@ -8,8 +8,8 @@ using UnityEditor;
 
 public class MinMaxSlider : Selectable
 {
-    public Color positiveColor = Color.blue;
-    public Color negativeColor = Color.red;
+    public Sprite positiveSprite;
+    public Sprite negativeSprite;
     public RectTransform fillRect;
     public float minValue = -1.0f;
     public float maxValue = 1.0f;
@@ -61,7 +61,7 @@ public class MinMaxSlider : Selectable
         float x = mValue > 0 ? curRect.sizeDelta.x * (mValue / maxValue) : curRect.sizeDelta.x * (mValue / minValue);
         fillRect.sizeDelta = new Vector2(x, fillRect.sizeDelta.y);
 
-        fillRect.GetComponent<Image>().color = mValue > 0 ? positiveColor : negativeColor;
+        fillRect.GetComponent<Image>().sprite = mValue > 0 ? positiveSprite : negativeSprite;
     }
 
 #if UNITY_EDITOR
@@ -87,8 +87,8 @@ public class MinMaxSlider : Selectable
 [CustomEditor(typeof(MinMaxSlider))]
 public class MinMaxSliderEditor : SelectableEditor
 {
-    SerializedProperty positiveColor;
-    SerializedProperty negativeColor;
+    SerializedProperty positiveSprite;
+    SerializedProperty negativeSprite;
     SerializedProperty fillRect;
     SerializedProperty minValue;
     SerializedProperty maxValue;
@@ -99,8 +99,8 @@ public class MinMaxSliderEditor : SelectableEditor
     {
         base.OnInspectorGUI();
 
-        positiveColor = serializedObject.FindProperty("positiveColor");
-        negativeColor = serializedObject.FindProperty("negativeColor");
+        positiveSprite = serializedObject.FindProperty("positiveSprite");
+        negativeSprite = serializedObject.FindProperty("negativeSprite");
         fillRect = serializedObject.FindProperty("fillRect");
         minValue = serializedObject.FindProperty("minValue");
         maxValue = serializedObject.FindProperty("maxValue");
@@ -116,8 +116,8 @@ public class MinMaxSliderEditor : SelectableEditor
         EditorGUILayout.Space();
         EditorGUI.BeginChangeCheck();
 
-        EditorGUILayout.PropertyField(positiveColor);
-        EditorGUILayout.PropertyField(negativeColor);
+        EditorGUILayout.PropertyField(positiveSprite);
+        EditorGUILayout.PropertyField(negativeSprite);
 
         EditorGUILayout.Space();
 
