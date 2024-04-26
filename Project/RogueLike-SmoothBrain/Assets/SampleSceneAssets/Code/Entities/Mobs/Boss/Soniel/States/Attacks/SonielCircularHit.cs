@@ -36,7 +36,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
     // timers
     float attackDuration = 0f;
     float[] circularAttackChargeTimers = new float[3];
-    readonly float[] MAX_CIRCULAR_ATTACK_CHARGE = { 0, 0.45f, 0.2f };
+    readonly float[] MAX_CIRCULAR_ATTACK_CHARGE = { 0, 0.5f, 0.5f };
     bool[] attackLaunched = { false, false, false };
 
     // ranges
@@ -46,7 +46,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
     bool attackEnded = false;
 
     // DEBUG
-    bool debugMode = false;
+    bool debugMode = true;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -179,7 +179,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                 Context.Animator.ResetTrigger(circularHash);
                 Context.Animator.SetTrigger(circularHash);
 
-                SwitchState(currentAttack, CircularStates.ATTACK);
+                SwitchAttack(currentAttack, CircularStates.ATTACK);
 
                 // DEBUG
                 Context.DisableHitboxes();
@@ -202,9 +202,9 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
             // à la fin de l'attaque, ...
             if (attackDuration > Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
             {
-                if (Context.PlayerHit && Random.Range(0, 11) >= 5) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur
+                if (Context.PlayerHit && Random.Range(0, 11) >= 0) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur
                 {
-                    SwitchState(currentAttack, CircularStates.THRUST);
+                    SwitchAttack(currentAttack, CircularStates.THRUST);
 
                     Context.Animator.SetBool(thrustHash, true);
 
@@ -254,7 +254,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         return attackLaunched[_currentAttack];
     }
 
-    void SwitchState(int _currentAttack, CircularStates _nextAttack)
+    void SwitchAttack(int _currentAttack, CircularStates _nextAttack)
     {
         attackLaunched[_currentAttack] = false;
         circularAttackChargeTimers[_currentAttack] = 0f;
