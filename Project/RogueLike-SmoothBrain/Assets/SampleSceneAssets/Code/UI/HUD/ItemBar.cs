@@ -99,19 +99,17 @@ public class ItemBar : MonoBehaviour
     {
         if(ability as DamnationVeil != null)
         {
-            specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
             specialAbilityFrame.GetComponent<Image>().sprite = backDamnation;
         }
         else if (ability as DivineShield != null)
         {
-            specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
             specialAbilityFrame.GetComponent<Image>().sprite = backDivine;
         }
     }
 
     private void OnSpecialAbilityRemove()
     {
-        specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(false);
+        specialAbilityFrame.GetComponent<Image>().sprite = rarityBackItemSprite.First();
     }
 
     private GameObject CreateFrame(Transform t)
