@@ -202,7 +202,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
             // à la fin de l'attaque, ...
             if (attackDuration > Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
             {
-                if (Context.PlayerHit && Random.Range(0, 11) >= 5) // lance l'estoc
+                if (Context.PlayerHit && Random.Range(0, 11) >= 5) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur
                 {
                     SwitchState(currentAttack, CircularStates.THRUST);
 
