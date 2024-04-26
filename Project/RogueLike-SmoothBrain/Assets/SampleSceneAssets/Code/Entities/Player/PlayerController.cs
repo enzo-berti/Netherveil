@@ -82,6 +82,10 @@ public class PlayerController : MonoBehaviour
     public EventReference StepDowngradeSFX;
     public EventReference[] AttacksSFX;
 
+    [Header("Item dependent GOs")]
+    [SerializeField] Transform leftHandTransform;
+    public Transform LeftHandTransform { get => leftHandTransform; }
+
     private void Awake()
     {
         hero = GetComponent<Hero>();
@@ -396,9 +400,16 @@ public class PlayerController : MonoBehaviour
 
     public void PlayBloodPouringAnim()
     {
-        hero.State = (int)Hero.PlayerState.POURING_BLOOD;
+        hero.State = (int)Hero.PlayerState.MOTIONLESS;
         animator.ResetTrigger("BloodPouring");
         animator.SetTrigger("BloodPouring");
+    }
+
+    public void PlayLaunchBombAnim()
+    {
+        hero.State = (int)Hero.PlayerState.MOTIONLESS;
+        animator.ResetTrigger("LaunchBomb");
+        animator.SetTrigger("LaunchBomb");
     }
 
     #endregion

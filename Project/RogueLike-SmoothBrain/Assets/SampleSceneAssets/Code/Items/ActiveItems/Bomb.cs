@@ -20,6 +20,7 @@ public class Bomb : ItemEffect, IActiveItem
     public void Activate()
     {
         GameObject player = Utilities.Player;
+        player.GetComponent<PlayerController>().PlayLaunchBombAnim();
         player.GetComponent<PlayerController>().MouseOrientation();
         Vector3 direction = player.transform.forward;
         var bomb = GameObject.Instantiate(bombPf, player.transform.position, Quaternion.identity);

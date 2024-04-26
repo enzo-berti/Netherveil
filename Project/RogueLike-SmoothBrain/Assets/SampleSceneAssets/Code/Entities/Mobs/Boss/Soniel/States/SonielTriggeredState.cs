@@ -30,6 +30,10 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
         {
             SwitchState(Factory.GetState<SonielBerserk>());
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SwitchState(Factory.GetState<SonielSpinningSwords>());
+        }
     }
 
     // This method will be called only once before the update.
