@@ -129,10 +129,10 @@ public class AudioManager : MonoBehaviour
         soundsFXBus = RuntimeManager.GetBus("bus:/SoundsFX");
         ambiencesBus = RuntimeManager.GetBus("bus:/Ambiences");
 
-        masterVolumeBarValue = 1.0f;
-        musicVolumeBarValue = 1.0f;
-        soundsFXVolumeBarValue = 1.0f;
-        ambiencesVolumeBarValue = 1.0f;
+        masterVolumeBarValue = 0.5f;
+        musicVolumeBarValue = 0.5f;
+        soundsFXVolumeBarValue = 0.5f;
+        ambiencesVolumeBarValue = 0.5f;
     }
 
     private float GetBusVolume(Bus bus)
