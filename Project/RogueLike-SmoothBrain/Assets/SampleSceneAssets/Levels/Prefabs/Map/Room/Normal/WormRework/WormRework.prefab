@@ -1236,6 +1236,7 @@ MonoBehaviour:
   - {fileID: 6000511921108200734}
   - {fileID: 7566525211539444560}
   type: 3
+  neighbours: []
 --- !u!1 &3843033629505337511
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,6 +1587,7 @@ GameObject:
   - component: {fileID: 6901019373165668969}
   - component: {fileID: 625291012468219143}
   - component: {fileID: 4367612072227408915}
+  - component: {fileID: 4079221558539363935}
   m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
@@ -1728,6 +1730,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 7e346a1ccbd085e43b45023fd0ee214f, type: 2}
+--- !u!114 &4079221558539363935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5900864591860421037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80873030c8511d4468504a3d6651992b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6000511921108200734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1997,7 +2011,7 @@ GameObject:
   - component: {fileID: 8738905308963169964}
   m_Layer: 0
   m_Name: StaticProps
-  m_TagString: EditorOnly
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123

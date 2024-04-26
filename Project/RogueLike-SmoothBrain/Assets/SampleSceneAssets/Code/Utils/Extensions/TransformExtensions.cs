@@ -21,6 +21,17 @@ public static class TransformExtensions
         return transform.childCount == 0 ? Vector3.zero : sumVector / transform.childCount;
     }
 
+    public static void SetLayerAllChildren(this GameObject gameObject, int layer, bool includeInactive = false)
+    {
+        gameObject.layer = layer;
+
+        var children = gameObject.transform.GetComponentsInChildren<Transform>(includeInactive);
+        foreach (var child in children)
+        {
+            child.gameObject.layer = layer;
+        }
+    }
+
     /// <summary>
     /// Calculates the angle between the launcher and target to be face to face.
     /// You can add an angle threshold to do the test with a cone that matches the angle passed as parameter

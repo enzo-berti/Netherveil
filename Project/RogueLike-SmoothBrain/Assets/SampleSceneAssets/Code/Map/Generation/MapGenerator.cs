@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 namespace Map.Generation
 {
@@ -13,7 +12,7 @@ namespace Map.Generation
         public Dictionary<RoomType, int> nbRoomByType;
         public Dictionary<int, List<Door>> availableDoorsByRotation;
 
-        public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
+        public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0, int nbBoss = 0)
         {
             nbRoomByType = new Dictionary<RoomType, int>
             {
@@ -25,7 +24,7 @@ namespace Map.Generation
                 { RoomType.Merchant, nbMerchant },
                 { RoomType.Secret, nbSecret },
                 { RoomType.MiniBoss, nbMiniBoss },
-                { RoomType.Boss, 0 },
+                { RoomType.Boss, nbBoss },
             };
 
             availableDoorsByRotation = new Dictionary<int, List<Door>>
@@ -120,8 +119,9 @@ namespace Map.Generation
     {
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed;
+        private const float secretRoomchanceToSpawn = 0f;
 
-        private readonly List<int> availableRotations = new List<int>() { 0, 90, 180, 270 };
+        static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
 
         private void Awake()
         {
@@ -131,7 +131,7 @@ namespace Map.Generation
                 Seed.Set(seed);
             }
 
-            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 0));
+            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 1));
         }
 
         private void GenerateMap(GenerationParam genParam)
@@ -143,12 +143,6 @@ namespace Map.Generation
             GenerateLobbyRoom(ref genParam);
             GenerateTutorialRoom(ref genParam);
             GenerateRooms(ref genParam);
-
-            // Generate boss rooms
-            if (!GenerateRoom(ref genParam, RoomType.Boss))
-            {
-                Debug.LogError("Can't find any candidate for boss room");
-            }
 
             GenerateObstructionDoors(ref genParam);
         }
@@ -200,7 +194,7 @@ namespace Map.Generation
 
         private bool GenerateRoom(ref GenerationParam genParam, RoomType type)
         {
-            foreach (RoomPrefab candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
+            foreach (Room candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
             {
                 GameObject roomGO = Instantiate(candidateRoomPrefab.gameObject);
                 if (!TryPutRoom(roomGO, ref genParam, out Door entranceDoor, out Door exitDoor))
@@ -241,7 +235,7 @@ namespace Map.Generation
             roomGO.transform.parent = gameObject.transform;
         }
 
-        private bool TryPutRoom(GameObject roomGO, ref GenerationParam genParam, out Door entranceDoor, out Door exitDoor)
+        static private bool TryPutRoom(GameObject roomGO, ref GenerationParam genParam, out Door entranceDoor, out Door exitDoor)
         {
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
@@ -260,7 +254,7 @@ namespace Map.Generation
             return false;
         }
 
-        private bool TrySetEntranceDoorPos(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, out Door exitDoor)
+        static private bool TrySetEntranceDoorPos(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, out Door exitDoor)
         {
             foreach (int rotation in Seed.RandList(availableRotations))
             {
@@ -295,35 +289,12 @@ namespace Map.Generation
             return false;
         }
 
-        private void InitRoom(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, Door exitDoor)
+        private void ResetGeneration()
         {
-            // Set parent room
-            roomGO.transform.SetParent(gameObject.transform);
-
-            // Generate gate
-            GameObject gateGO = Instantiate(MapResources.GatePrefab, entranceDoor.Position, Quaternion.identity);
-            gateGO.transform.Rotate(0f, entranceDoor.Rotation, 0f);
-            gateGO.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
-
-            // Removed used door
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
-            doorsGenerator.RemoveDoor(entranceDoor);
-            genParam.RemoveDoor(exitDoor);
-
-            // Add the new doors from the new room into the possible candidates
-            genParam.AddAvailableDoors(doorsGenerator);
-
-            if (roomGO.GetComponent<RoomPrefab>().type == RoomType.Boss)
+            for (int i = transform.childCount - 1; i >= 0; i--)
             {
-                GenerateStairs(roomGO);
+                DestroyImmediate(transform.GetChild(i).gameObject);
             }
-
-            // Generate one of the seed room and delete the other's
-            roomGO.GetComponentInChildren<RoomPresets>().GenerateRandomPreset();
-
-            // SetActive object's of room
-            roomGO.GetComponentInChildren<NavMeshSurface>().transform.Find("Enemies").gameObject.SetActive(false);
-            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
         }
 
         static private bool IsRoomCollidingOtherRoom(GameObject roomGO, Door exitDoor)
@@ -337,15 +308,61 @@ namespace Map.Generation
             return colliders.Any();
         }
 
-        private void ResetGeneration()
+        private void InitRoom(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, Door exitDoor)
         {
-            for (int i = transform.childCount - 1; i >= 0; i--)
+            // Set parent room
+            roomGO.transform.SetParent(gameObject.transform);
+
+            // Add room to exitDoor room neighbours
+            Room exitRoom = exitDoor.parentSkeleton.transform.parent.GetComponent<Room>();
+            Room room = roomGO.GetComponent<Room>();
+            exitRoom.neighbours.Add(room);
+            room.neighbours.Add(exitRoom);
+
+            // Generate props
+            GenerateGates(roomGO, entranceDoor);
+            // Stairs
+            if (room.type == RoomType.Boss)
             {
-                DestroyImmediate(transform.GetChild(i).gameObject);
+                GenerateStairs(roomGO);
             }
+
+            // Removed used door
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            doorsGenerator.RemoveDoor(entranceDoor);
+            genParam.RemoveDoor(exitDoor);
+
+            // Add the new doors from the new room into the possible candidates
+            genParam.AddAvailableDoors(doorsGenerator);
+
+            // Generate one of the seed room and delete the other's
+            roomGO.GetComponentInChildren<RoomPresets>().GenerateRandomPreset();
+
+            // SetActive object's of room
+            roomGO.GetComponentInChildren<NavMeshSurface>().transform.Find("Enemies").gameObject.SetActive(false);
+            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
         }
 
-        private void GenerateObstructionDoors(ref GenerationParam genParam)
+        static private void GenerateGates(GameObject roomGO, Door entranceDoor)
+        {
+            GameObject gateGO = Instantiate(MapResources.GatePrefab, entranceDoor.Position, Quaternion.identity);
+            gateGO.transform.Rotate(0f, entranceDoor.Rotation, 0f);
+            gateGO.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
+        }
+
+        static private void GenerateStairs(GameObject roomGO)
+        {
+            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
+            Door entranceStairs = Seed.RandList(doorsGenerator.doors)[0];
+
+            GameObject go = Instantiate(Seed.RandList(MapResources.StairsPrefabs)[0], entranceStairs.Position, Quaternion.identity);
+            go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
+            go.transform.parent = entranceStairs.parentSkeleton.transform.Find("StaticProps");
+
+            doorsGenerator.RemoveDoor(entranceStairs);
+        }
+
+        static private void GenerateObstructionDoors(ref GenerationParam genParam)
         {
             foreach (var listDoors in genParam.availableDoorsByRotation)
             {
@@ -358,18 +375,6 @@ namespace Map.Generation
             }
 
             genParam.availableDoorsByRotation.Clear();
-        }
-
-        private void GenerateStairs(GameObject roomGO)
-        {
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
-            Door entranceStairs = Seed.RandList(doorsGenerator.doors)[0];
-
-            GameObject go = Instantiate(Seed.RandList(MapResources.StairsPrefabs)[0], entranceStairs.Position, Quaternion.identity);
-            go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
-            go.transform.parent = entranceStairs.parentSkeleton.transform.Find("StaticProps");
-
-            doorsGenerator.RemoveDoor(entranceStairs);
         }
     }
 }

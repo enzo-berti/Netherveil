@@ -1,20 +1,8 @@
-// ---[ STATE ] ---
-// replace "ClopsWanderState_STATEMACHINE" by your state machine class name.
-//
-// Here you can see an exemple of the CheckSwitchStates method:
-// protected override void CheckSwitchStates()
-// {
-//      if (isRunning)
-//      {
-//          SwitchState(Factory.GetState<RunningState>());
-//      }
-// }
-
 using StateMachine;
 
-public class ClopsWanderState : BaseState<ClopsStateMachine>
+public class ClopsPatrolState : BaseState<ClopsStateMachine>
 {
-    public ClopsWanderState(ClopsStateMachine currentContext, StateFactory<ClopsStateMachine> currentFactory) : base(currentContext, currentFactory) 
+    public ClopsPatrolState(ClopsStateMachine currentContext, StateFactory<ClopsStateMachine> currentFactory) : base(currentContext, currentFactory) 
     {
 
     }
