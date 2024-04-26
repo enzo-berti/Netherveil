@@ -47,7 +47,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         elapsedRotaTime = Time.time;
         stateEnded = false;
         Context.Stats.SetValue(Stat.SPEED, 3);
-        Context.IsInvincibleCount++;
+        Context.IsInvincibleCount = 1;
     }
 
     // This method will be call only one time after the last update.

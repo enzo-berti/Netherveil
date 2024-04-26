@@ -27,7 +27,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         elapsedTimeMovement = Time.time;
-        Context.IsInvincibleCount--;
+        Context.IsInvincibleCount = 0;
     }
 
     // This method will be called only once after the last update.
