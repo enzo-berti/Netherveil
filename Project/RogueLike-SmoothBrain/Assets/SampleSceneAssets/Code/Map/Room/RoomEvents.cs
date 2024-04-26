@@ -52,6 +52,12 @@ namespace Map
                 c.Unset();
             }
 
+            var roomUI = room.GetComponentInChildren<RoomUI>(true);
+            if (roomUI)
+            {
+                roomUI.gameObject.SetActive(false);
+            }
+
             // set bool to true to not call the events in the room if there is no enemy
             allEnemiesDeadCalled = (enemies.transform.childCount == 0);
             // set bool to true to not call the events in the room if there is no chest
@@ -81,6 +87,12 @@ namespace Map
             foreach (var c in room.GetComponentsInChildren<MapLayer>())
             {
                 c.Set();
+            }
+
+            var roomUI = room.GetComponentInChildren<RoomUI>(true);
+            if (roomUI)
+            {
+                roomUI.gameObject.SetActive(true);
             }
 
             RoomUtilities.roomData = roomData;

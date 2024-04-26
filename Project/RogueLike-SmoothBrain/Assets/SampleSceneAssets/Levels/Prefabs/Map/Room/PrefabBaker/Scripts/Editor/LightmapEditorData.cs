@@ -1,9 +1,9 @@
 ﻿#if UNITY_EDITOR
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
 using UnityEditor;
 
 namespace PrefabLightMapBaker
@@ -14,44 +14,43 @@ namespace PrefabLightMapBaker
 
         static IEnumerable<PropertyInfo> GetProperties()
         {
-            if(_props == null) _props = typeof( LightmapEditorSettings )
-                .GetProperties( BindingFlags.Static | BindingFlags.Public )
-                .Where( p => ! p.GetCustomAttributes( typeof( ObsoleteAttribute ), inherit: true ).Any( ) );
+            if (_props == null) _props = typeof(LightmapEditorSettings)
+                .GetProperties(BindingFlags.Static | BindingFlags.Public)
+                .Where(p => !p.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true).Any());
 
             return _props;
         }
 
-        static Dictionary<string,object> backup = new Dictionary<string, object>();
+        static Dictionary<string, object> backup = new Dictionary<string, object>();
 
         public static bool HasBackup => backup.Count > 0;
 
         public static void Backup()
         {
-            foreach( var p in GetProperties() )
+            foreach (var p in GetProperties())
             {
-                if(backup.ContainsKey( p.Name )) backup[ p.Name ] = p.GetValue( null );
-                else backup.Add( p.Name, p.GetValue( null ) );
+                if (backup.ContainsKey(p.Name)) backup[p.Name] = p.GetValue(null);
+                else backup.Add(p.Name, p.GetValue(null));
             }
         }
 
         public static void Restore()
         {
-            if( ! HasBackup ) return;
+            if (!HasBackup) return;
 
-            foreach( var p in GetProperties() )
+            foreach (var p in GetProperties())
             {
                 var name = p.Name;
-                if( ! backup.ContainsKey( name ) ) continue;
+                if (!backup.ContainsKey(name)) continue;
 
-                p.SetValue( null, backup[ name ] );
+                p.SetValue(null, backup[name]);
 
-                backup.Remove( name );
+                backup.Remove(name);
             }
         }
-        public static new string ToString( )
+        public static new string ToString()
         {
-            return string.Join( ",", GetProperties( ).
-                Select( p => p.Name + ":" + p.GetType( ).ToString( ) + "=" + p.GetValue( null ) ) );
+            return string.Join(",", GetProperties().Select(p => p.Name + ":" + p.GetType().ToString() + "=" + p.GetValue(null)));
         }
 
         public static void SetProfileQuickBake()
