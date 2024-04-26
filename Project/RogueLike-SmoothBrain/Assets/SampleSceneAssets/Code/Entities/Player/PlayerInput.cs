@@ -145,7 +145,7 @@ public class PlayerInput : MonoBehaviour
         scale.x = ChargedAttackCoef * chargedAttackScaleSize * 0.9f;
         scale.z = ChargedAttackCoef * chargedAttackScaleSize * 0.9f;
         controller.ChargedAttack.gameObject.transform.localScale = scale;
-        controller.ChargedAttackVFX.SetFloat("VFX Size",ChargedAttackCoef * chargedAttackVFXMaxSize);
+        controller.ChargedAttackVFX.SetFloat("VFX Size", ChargedAttackCoef * chargedAttackVFXMaxSize);
 
         controller.AttackCollide(controller.ChargedAttack, false);
         chargedAttackMax = false;
@@ -168,10 +168,10 @@ public class PlayerInput : MonoBehaviour
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
-            if(CanReleaseChargedAttack() && !hasLaunchBlink && !flashMaterial.IsEnable)
+            if (CanReleaseChargedAttack() && !hasLaunchBlink && !flashMaterial.IsEnable)
             {
                 flashMaterial.EnableMat();
-                flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1,0, 0.15f, () => flashMaterial.DisableMat()));
+                flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1, 0, 0.15f, () => flashMaterial.DisableMat()));
                 hasLaunchBlink = true;
             }
 
@@ -543,12 +543,9 @@ public class PlayerInput : MonoBehaviour
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
             map["ActiveItem"].performed -= ActiveItemActivation;
             map["SpecialAbility"].performed -= SpecialAbilityActivation;
-            if (HudHandler.current != null)
-            {
-                map["ToggleMap"].performed -= ctx => HudHandler.current.MapHUD.Toggle();
-                map["ToggleQuest"].performed -= ctx => HudHandler.current.QuestHUD.Toggle(); ;
-                map["Pause"].started -= ctx => HudHandler.current.PauseMenu.Toggle();
-            }
+            map["ToggleMap"].performed -= ToggleMap;
+            map["ToggleQuest"].performed -= ToggleQuest;
+            map["Pause"].started -= Pause;
         }
         else
         {
@@ -563,12 +560,9 @@ public class PlayerInput : MonoBehaviour
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
             map["ActiveItem"].performed += ActiveItemActivation;
             map["SpecialAbility"].performed += SpecialAbilityActivation;
-            if (HudHandler.current != null)
-            {
-                map["ToggleMap"].performed += ToggleMap;
-                map["ToggleQuest"].performed += ToggleQuest;
-                map["Pause"].started += Pause;
-            }
+            map["ToggleMap"].performed += ToggleMap;
+            map["ToggleQuest"].performed += ToggleQuest;
+            map["Pause"].started += Pause;
         }
     }
 
