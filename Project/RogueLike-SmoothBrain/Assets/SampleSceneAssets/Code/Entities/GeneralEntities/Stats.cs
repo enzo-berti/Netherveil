@@ -160,7 +160,7 @@ public class Stats
     }
     #endregion
 
-    #region Maths
+    #region ValueChange
     public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue = true)
     {
         int index = stats.FindIndex(x => x.stat == info);
@@ -498,7 +498,9 @@ public class Stats
         {
             if (stats[index].hasCoeff)
             {
+                float baseValue = stats[index].coeff;
                 stats[index].coeff += increasingValue;
+                if (stats[index].value != baseValue) onStatChange?.Invoke(info);
             }
             else
             {
@@ -519,7 +521,9 @@ public class Stats
         {
             if (stats[index].hasCoeff)
             {
+                float baseValue = stats[index].coeff;
                 stats[index].coeff -= decreasingValue;
+                if (stats[index].value != baseValue) onStatChange?.Invoke(info);
             }
             else
             {
@@ -540,7 +544,9 @@ public class Stats
         {
             if (stats[index].hasCoeff)
             {
+                float baseValue = stats[index].coeff;
                 stats[index].coeff *= multipliedValue;
+                if (stats[index].value != baseValue) onStatChange?.Invoke(info);
             }
             else
             {
@@ -561,7 +567,9 @@ public class Stats
         {
             if (stats[index].hasCoeff)
             {
+                float baseValue = stats[index].coeff;
                 stats[index].coeff /= divideValue;
+                if (stats[index].value != baseValue) onStatChange?.Invoke(info);
             }
             else
             {
