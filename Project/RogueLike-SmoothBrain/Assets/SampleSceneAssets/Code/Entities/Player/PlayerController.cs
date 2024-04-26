@@ -82,6 +82,9 @@ public class PlayerController : MonoBehaviour
     public EventReference StepDowngradeSFX;
     public EventReference[] AttacksSFX;
 
+    [Header("Item dependent GOs")]
+    [SerializeField] Transform leftHandTransform;
+
     private void Awake()
     {
         hero = GetComponent<Hero>();
