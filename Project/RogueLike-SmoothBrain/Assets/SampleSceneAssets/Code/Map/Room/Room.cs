@@ -1,12 +1,15 @@
 using Map.Component;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
 {
-    public class RoomPrefab : MonoBehaviour
+    public class Room : MonoBehaviour
     {
         [SerializeField] GameObject[] roomObjects;
         [SerializeField] public RoomType type = RoomType.Normal;
+
+        public List<Room> neighbours = new List<Room>();
 
         private void OnValidate()
         {

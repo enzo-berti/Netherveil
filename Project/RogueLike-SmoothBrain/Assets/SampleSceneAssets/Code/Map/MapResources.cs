@@ -7,20 +7,20 @@ namespace Map
     public class MapResources : MonoBehaviour
     {
         static bool load = false;
-        static private readonly Dictionary<RoomType, List<RoomPrefab>> roomPrefabsByType = new Dictionary<RoomType, List<RoomPrefab>>()
+        static private readonly Dictionary<RoomType, List<Room>> roomPrefabsByType = new Dictionary<RoomType, List<Room>>()
         {
-            { RoomType.Lobby, new List<RoomPrefab>() },
-            { RoomType.Tutorial, new List<RoomPrefab>() },
-            { RoomType.Normal, new List<RoomPrefab>() },
-            { RoomType.Treasure, new List<RoomPrefab>() },
-            { RoomType.Challenge, new List <RoomPrefab>() },
-            { RoomType.Merchant, new List <RoomPrefab>() },
-            { RoomType.Secret, new List <RoomPrefab>() },
-            { RoomType.MiniBoss, new List <RoomPrefab>() },
-            { RoomType.Boss, new List <RoomPrefab>() },
+            { RoomType.Lobby, new List<Room>() },
+            { RoomType.Tutorial, new List<Room>() },
+            { RoomType.Normal, new List<Room>() },
+            { RoomType.Treasure, new List<Room>() },
+            { RoomType.Challenge, new List <Room>() },
+            { RoomType.Merchant, new List <Room>() },
+            { RoomType.Secret, new List <Room>() },
+            { RoomType.MiniBoss, new List <Room>() },
+            { RoomType.Boss, new List <Room>() },
         };
 
-        [SerializeField] public List<RoomPrefab> roomsToLoad;
+        [SerializeField] public List<Room> roomsToLoad;
 
         [SerializeField] private List<GameObject> obstructionDoors;
         [SerializeField] private List<GameObject> stairsPrefabs;
@@ -44,7 +44,7 @@ namespace Map
                 StairsPrefabs = stairsPrefabs;
                 GatePrefab = gatePrefab;
 
-                foreach (RoomPrefab roomPrefab in roomsToLoad)
+                foreach (Room roomPrefab in roomsToLoad)
                 {
                     roomPrefabsByType[roomPrefab.type].Add(roomPrefab);
                 }
@@ -55,9 +55,9 @@ namespace Map
             Destroy(gameObject);
         }
 
-        public static RoomPrefab RandPrefabRoom(RoomType type)
+        public static Room RandPrefabRoom(RoomType type)
         {
-            List<RoomPrefab> roomPrefabs = roomPrefabsByType[type];
+            List<Room> roomPrefabs = roomPrefabsByType[type];
 
             if (roomPrefabs.Count == 0)
             {
@@ -68,7 +68,7 @@ namespace Map
             return roomPrefabs[Seed.Range(0, roomPrefabs.Count)];
         }
 
-        public static List<RoomPrefab> RoomPrefabs(RoomType listType)
+        public static List<Room> RoomPrefabs(RoomType listType)
         {
             return roomPrefabsByType[listType];
         }

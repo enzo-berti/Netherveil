@@ -20,7 +20,7 @@ namespace Map
 
     public struct RoomData
     {
-        public RoomData(RoomPrefab roomPrefab, GameObject enemiesContainer)
+        public RoomData(Room roomPrefab, GameObject enemiesContainer)
         {
             enemies = new List<GameObject>();
 

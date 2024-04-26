@@ -12,7 +12,7 @@ namespace Map.Generation
         public Dictionary<RoomType, int> nbRoomByType;
         public Dictionary<int, List<Door>> availableDoorsByRotation;
 
-        public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0)
+        public GenerationParam(int nbNormal = 0, int nbTreasure = 0, int nbChallenge = 0, int nbMerchant = 0, int nbSecret = 0, int nbMiniBoss = 0, int nbBoss = 0)
         {
             nbRoomByType = new Dictionary<RoomType, int>
             {
@@ -24,7 +24,7 @@ namespace Map.Generation
                 { RoomType.Merchant, nbMerchant },
                 { RoomType.Secret, nbSecret },
                 { RoomType.MiniBoss, nbMiniBoss },
-                { RoomType.Boss, 0 },
+                { RoomType.Boss, nbBoss },
             };
 
             availableDoorsByRotation = new Dictionary<int, List<Door>>
@@ -144,12 +144,6 @@ namespace Map.Generation
             GenerateTutorialRoom(ref genParam);
             GenerateRooms(ref genParam);
 
-            // Generate boss rooms
-            if (!GenerateRoom(ref genParam, RoomType.Boss))
-            {
-                Debug.LogError("Can't find any candidate for boss room");
-            }
-
             GenerateObstructionDoors(ref genParam);
         }
 
@@ -200,7 +194,7 @@ namespace Map.Generation
 
         private bool GenerateRoom(ref GenerationParam genParam, RoomType type)
         {
-            foreach (RoomPrefab candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
+            foreach (Room candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
             {
                 GameObject roomGO = Instantiate(candidateRoomPrefab.gameObject);
                 if (!TryPutRoom(roomGO, ref genParam, out Door entranceDoor, out Door exitDoor))
@@ -319,10 +313,16 @@ namespace Map.Generation
             // Set parent room
             roomGO.transform.SetParent(gameObject.transform);
 
+            // Add room to exitDoor room neighbours
+            Room exitRoom = exitDoor.parentSkeleton.transform.parent.GetComponent<Room>();
+            Room room = roomGO.GetComponent<Room>();
+            exitRoom.neighbours.Add(room);
+            room.neighbours.Add(exitRoom);
+
             // Generate props
             GenerateGates(roomGO, entranceDoor);
             // Stairs
-            if (roomGO.GetComponent<RoomPrefab>().type == RoomType.Boss)
+            if (room.type == RoomType.Boss)
             {
                 GenerateStairs(roomGO);
             }
