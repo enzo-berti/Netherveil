@@ -17,6 +17,8 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Texture damnationVeilIcon;
     [SerializeField] private Texture divineShieldIcon;
     [SerializeField] private Sprite[] rarityBackItemSprite;
+    [SerializeField] private Sprite[] backItemPassiveNormal;
+    [SerializeField] private Sprite[] backItemPassiveCooldown;
 
     private void Start()
     {
@@ -30,7 +32,7 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxUpgrade += OnSpecialAbilityAdd;
         Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
-        IActiveItem.OnActiveItemCooldownStarted += () => StartCoroutine(ActiveItemCooldown());
+        IActiveItem.OnActiveItemCooldownStarted += e => StartCoroutine(ActiveItemCooldown(e));
     }
 
     private void OnDisable()
@@ -40,7 +42,7 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxUpgrade -= OnSpecialAbilityAdd;
         Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
-        IActiveItem.OnActiveItemCooldownStarted -= () => StartCoroutine(ActiveItemCooldown());
+        IActiveItem.OnActiveItemCooldownStarted -= e => StartCoroutine(ActiveItemCooldown(e));
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
@@ -48,7 +50,7 @@ public class ItemBar : MonoBehaviour
         if (itemAdd is IPassiveItem)
         {
             GameObject frame = CreateFrame(itemPassiveTransform);
-            SetFrameItemData(frame, itemAdd);
+            SetFrameItemData(frame, itemAdd, rarityBackItemSprite);
 
             if (itemPassiveTransform.childCount > maxItemDisplay)
                 DestroyImmediate(itemPassiveTransform.GetChild(0).gameObject);
@@ -56,7 +58,7 @@ public class ItemBar : MonoBehaviour
         else if (itemAdd is IActiveItem)
         {
             activeFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
-            SetFrameItemData(activeFrame, itemAdd);
+            SetFrameItemData(activeFrame, itemAdd, rarityBackItemSprite);
         }
     }
 
@@ -84,16 +86,18 @@ public class ItemBar : MonoBehaviour
         return Instantiate(framePf, t);
     }
 
-    private void SetFrameItemData(GameObject frame, ItemEffect itemEffect)
+    private void SetFrameItemData(GameObject frame, ItemEffect itemEffect, Sprite[] spriteArray)
     {
         ItemData data = database.GetItem(itemEffect.Name);
         frame.GetComponentInChildren<RawImage>(true).texture = data.icon;
-        frame.GetComponent<Image>().sprite = rarityBackItemSprite[(int)data.RarityTier];
+        frame.GetComponent<Image>().sprite = spriteArray[(int)data.RarityTier];
     }
 
-    private IEnumerator ActiveItemCooldown()
+    private IEnumerator ActiveItemCooldown(ItemEffect itemEffect)
     {
         float cooldown = 0.0f;
+
+        SetFrameItemData(activeFrame, itemEffect, backItemPassiveCooldown);
         TMP_Text cooldownTextMesh = activeFrame.GetComponentInChildren<TMP_Text>(true);
         cooldownTextMesh.gameObject.SetActive(true);
 
@@ -104,6 +108,7 @@ public class ItemBar : MonoBehaviour
             yield return null;
         }
 
+        SetFrameItemData(activeFrame, itemEffect, backItemPassiveNormal);
         cooldownTextMesh.gameObject.SetActive(false);
     }
 }
