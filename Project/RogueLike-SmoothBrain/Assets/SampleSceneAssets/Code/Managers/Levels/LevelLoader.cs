@@ -6,67 +6,32 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-    public static LevelLoader current;
+    private static LevelLoader instance;
+    public static LevelLoader current
+    {
+        get
+        {
+            if (instance == null)
+                throw new System.Exception("No LevelLoader in the scene !");
 
-    private AsyncOperation asyncOperation;
-    private List<Transition> levelTransitions = new List<Transition>();
+            return instance;
+        }
+    }
+
+    [SerializeField] private Transition transition = null;
 
     private void Awake()
     {
-        current = this;
-
-        foreach (Transform transition in transform)
-        {
-            levelTransitions.Add(transition.GetComponent<Transition>());
-        }
+        instance = this;
     }
 
-    public void LoadScene(string sceneName, int transitionIndex)
+    public void LoadScene(string sceneName, bool transitionActive = false)
     {
         int sceneIndex = GetIndexSceneByName(sceneName);
-
-        LoadScene(sceneIndex, transitionIndex);
+        LoadScene(sceneIndex, transitionActive);
     }
 
-    public void LoadScene(string sceneName, string transitionName)
-    {
-        int sceneIndex = GetIndexSceneByName(sceneName);
-        int transitionIndex = GetIndexTransitionByName(transitionName);
-
-        LoadScene(sceneIndex, transitionIndex);
-    }
-
-    public void LoadScene(int sceneIndex, string transitionName)
-    {
-        int transitionIndex = GetIndexTransitionByName(transitionName);
-
-        LoadScene(sceneIndex, transitionIndex);
-    }
-
-    public void LoadScene(int sceneIndex, int transitionIndex)
-    {
-        if (transitionIndex < 0 || transitionIndex >= levelTransitions.Count)
-        {
-            Debug.LogWarning($"No transition with the index {transitionIndex} !");
-            return;
-        }
-        if (sceneIndex < 0 || sceneIndex >= SceneManager.sceneCountInBuildSettings)
-        {
-            Debug.LogError($"No scene with the index {sceneIndex} !");
-            return;
-        }
-
-        StartCoroutine(LoadSceneRoutine(sceneIndex, transitionIndex));
-    }
-
-    public void LoadScene(string sceneName)
-    {
-        int sceneIndex = GetIndexSceneByName(sceneName);
-
-        LoadScene(sceneIndex);
-    }
-
-    public void LoadScene(int sceneIndex)
+    public void LoadScene(int sceneIndex, bool transitionActive = false)
     {
         if (sceneIndex < 0 || sceneIndex >= SceneManager.sceneCountInBuildSettings)
         {
@@ -74,9 +39,21 @@ public class LevelLoader : MonoBehaviour
             return;
         }
 
-        StartCoroutine(LoadSceneRoutine(sceneIndex));
+        StartCoroutine(LoadSceneRoutine(sceneIndex, transitionActive));
     }
 
+    private IEnumerator LoadSceneRoutine(int sceneIndex, bool transitionActive = false)
+    {
+        if (transitionActive)
+        {
+            transition.Toggle();
+            yield return new WaitUntil(() => transition.TransitionEnd);
+        }
+
+        SceneManager.LoadScene(sceneIndex);
+    }
+
+    #region Utils
     private int GetIndexSceneByName(string name)
     {
         for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
@@ -92,30 +69,5 @@ public class LevelLoader : MonoBehaviour
 
         return -1;
     }
-
-    private int GetIndexTransitionByName(string name)
-    {
-        return levelTransitions.Select(x => x.name).ToList().IndexOf(name);
-    }
-
-    private IEnumerator LoadSceneRoutine(int sceneIndex)
-    {
-        //asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
-        //yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
-        SceneManager.LoadScene(sceneIndex);
-        yield return null;
-    }
-
-    private IEnumerator LoadSceneRoutine(int sceneIndex, int transitionIndex)
-    {
-        //asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
-        //asyncOperation.allowSceneActivation = false;
-
-        yield return levelTransitions[transitionIndex].ToggleTransition(true);
-        //yield return new WaitWhile(() => asyncOperation.progress < 0.9f);
-
-        //asyncOperation.allowSceneActivation = true;
-        SceneManager.LoadScene(sceneIndex);
-        levelTransitions[transitionIndex].ToggleTransition(false);
-    }
+    #endregion
 }
