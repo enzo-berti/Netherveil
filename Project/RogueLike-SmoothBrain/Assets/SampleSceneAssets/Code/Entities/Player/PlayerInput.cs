@@ -39,9 +39,10 @@ public class PlayerInput : MonoBehaviour
     float chargedAttackTime = 0f;
     bool chargedAttackMax = false;
     readonly float CHARGED_ATTACK_MAX_TIME = 1f;
-    readonly float CHARGED_ATTACK_CAN_RELEASE_TIME = 0.2f;
+    readonly float CHARGED_ATTACK_CAN_RELEASE_TIME = 0.35f;
     float chargedAttackScaleSize = 0f;
     float chargedAttackVFXMaxSize = 0f;
+    bool hasLaunchBlink = false;
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
     readonly List<Collider> dashAttackAlreadyAttacked = new();
@@ -138,12 +139,13 @@ public class PlayerInput : MonoBehaviour
     {
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
 
+        hasLaunchBlink = false;
         //set up collider and vfx size based on maintained time of charged attack
         Vector3 scale = controller.ChargedAttack.gameObject.transform.localScale;
-        scale.x = ChargedAttackCoef * chargedAttackScaleSize;
-        scale.z = ChargedAttackCoef * chargedAttackScaleSize;
+        scale.x = ChargedAttackCoef * chargedAttackScaleSize * 0.9f;
+        scale.z = ChargedAttackCoef * chargedAttackScaleSize * 0.9f;
         controller.ChargedAttack.gameObject.transform.localScale = scale;
-        controller.ChargedAttackVFX.SetFloat("VFX Size", chargedAttackVFXMaxSize * 0.33f + ChargedAttackCoef * chargedAttackVFXMaxSize * 0.67f);
+        controller.ChargedAttackVFX.SetFloat("VFX Size", ChargedAttackCoef * chargedAttackVFXMaxSize);
 
         controller.AttackCollide(controller.ChargedAttack, false);
         chargedAttackMax = false;
@@ -166,10 +168,11 @@ public class PlayerInput : MonoBehaviour
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
-            if(CanReleaseChargedAttack() && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= CHARGED_ATTACK_CAN_RELEASE_TIME + 0.01f && !flashMaterial.IsEnable)
+            if (CanReleaseChargedAttack() && !hasLaunchBlink && !flashMaterial.IsEnable)
             {
                 flashMaterial.EnableMat();
-                flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1,0, 0.15f, () => flashMaterial.DisableMat()));
+                flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1, 0, 0.15f, () => flashMaterial.DisableMat()));
+                hasLaunchBlink = true;
             }
 
             if (DeviceManager.Instance.IsPlayingKB())
@@ -540,12 +543,9 @@ public class PlayerInput : MonoBehaviour
             map["ChargedAttack"].canceled -= ChargedAttackCanceled;
             map["ActiveItem"].performed -= ActiveItemActivation;
             map["SpecialAbility"].performed -= SpecialAbilityActivation;
-            if (HudHandler.current != null)
-            {
-                map["ToggleMap"].performed -= ctx => HudHandler.current.MapHUD.Toggle();
-                map["ToggleQuest"].performed -= ctx => HudHandler.current.QuestHUD.Toggle(); ;
-                map["Pause"].started -= ctx => HudHandler.current.PauseMenu.Toggle();
-            }
+            map["ToggleMap"].performed -= ToggleMap;
+            map["ToggleQuest"].performed -= ToggleQuest;
+            map["Pause"].started -= Pause;
         }
         else
         {
@@ -560,13 +560,25 @@ public class PlayerInput : MonoBehaviour
             map["ChargedAttack"].canceled += ChargedAttackCanceled;
             map["ActiveItem"].performed += ActiveItemActivation;
             map["SpecialAbility"].performed += SpecialAbilityActivation;
-            if (HudHandler.current != null)
-            {
-                map["ToggleMap"].performed += ctx => HudHandler.current.MapHUD.Toggle(); ;
-                map["ToggleQuest"].performed += ctx => HudHandler.current.QuestHUD.Toggle();
-                map["Pause"].started += ctx => HudHandler.current.PauseMenu.Toggle();
-            }
+            map["ToggleMap"].performed += ToggleMap;
+            map["ToggleQuest"].performed += ToggleQuest;
+            map["Pause"].started += Pause;
         }
+    }
+
+    private static void Pause(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.PauseMenu.Toggle();
+    }
+
+    private static void ToggleQuest(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.QuestHUD.Toggle();
+    }
+
+    private static void ToggleMap(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.MapHUD.Toggle();
     }
 
     public void DisableGameplayInputs()
