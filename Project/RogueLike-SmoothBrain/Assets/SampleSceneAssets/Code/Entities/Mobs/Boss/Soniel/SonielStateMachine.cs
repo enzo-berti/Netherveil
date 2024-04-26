@@ -45,6 +45,7 @@ public class SonielStateMachine : Mobs, ISoniel
     [SerializeField] GameObject[] swords;
     bool hasArms = true;
     bool[] tiedArms = { true, true };
+    Transform[] originalSwordsTransform = new Transform[2];
 
     // anim hash
     int deathHash;
@@ -76,6 +77,11 @@ public class SonielStateMachine : Mobs, ISoniel
 
         // animation hash
         deathHash = Animator.StringToHash("Death");
+
+        for (int i = 0; i < 2; i++)
+        {
+            originalSwordsTransform[i] = swords[i].transform;
+        }
 
         player = Utilities.Hero;
     }
