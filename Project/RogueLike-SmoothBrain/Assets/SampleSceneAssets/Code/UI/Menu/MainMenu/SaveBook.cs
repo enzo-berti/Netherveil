@@ -7,9 +7,16 @@ public class SaveBook : MonoBehaviour
     [SerializeField] private Transform openTransform;
     [SerializeField] private GameObject closeObject;
     [SerializeField] private GameObject openObject;
-    private float durationMovement = 2.5f;
+    private Animator bookAnimator;
+    private float durationMovementIn = 2.5f;
+    private float durationMovementOut = 1.5f;
 
     private Coroutine routine;
+
+    private void Start()
+    {
+        bookAnimator = openObject.GetComponent<Animator>();
+    }
 
     public void Close()
     {
@@ -30,11 +37,12 @@ public class SaveBook : MonoBehaviour
     private IEnumerator CloseRoutine()
     {
         float elapsed = 0.0f;
+        bookAnimator.SetBool("IsOpen", false);
 
-        while (elapsed < durationMovement)
+        while (elapsed < durationMovementOut)
         {
-            elapsed = Mathf.Min(elapsed + Time.deltaTime, durationMovement);
-            float factor = elapsed / durationMovement;
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, durationMovementOut);
+            float factor = elapsed / durationMovementOut;
             float ease = EasingFunctions.EaseInOutQuad(factor);
             Vector3 resultPosition = Vector3.Lerp(openTransform.position, closeTransform.position, ease);
             Quaternion resultRotation = Quaternion.Lerp(openTransform.rotation, closeTransform.rotation, ease);
@@ -58,10 +66,10 @@ public class SaveBook : MonoBehaviour
     {
         float elapsed = 0.0f;
 
-        while (elapsed < durationMovement)
+        while (elapsed < durationMovementIn)
         {
-            elapsed = Mathf.Min(elapsed + Time.deltaTime, durationMovement);
-            float factor = elapsed / durationMovement;
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, durationMovementIn);
+            float factor = elapsed / durationMovementIn;
             float ease = EasingFunctions.EaseInOutQuad(factor);
             Vector3 resultPosition = Vector3.Lerp(closeTransform.position, openTransform.position, ease);
             Quaternion resultRotation = Quaternion.Lerp(closeTransform.rotation, openTransform.rotation, ease);
@@ -74,6 +82,7 @@ public class SaveBook : MonoBehaviour
 
         closeObject.SetActive(false);
         openObject.SetActive(true);
+        bookAnimator.SetBool("IsOpen", true);
 
         transform.position = openTransform.position;
         transform.rotation = openTransform.rotation;

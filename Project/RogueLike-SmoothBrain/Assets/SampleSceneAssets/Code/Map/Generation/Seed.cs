@@ -74,6 +74,20 @@ namespace Map.Generation
             return result;
         }
 
+        static public T[] RandList<T>(T[] array)
+        {
+            List<T> result = new List<T>();
+
+            int iNoise = Range(0, array.Length);
+            for (int i = 0; i < array.Length; i++)
+            {
+                int index = (i + iNoise) % array.Length;
+                result.Add(array[index]);
+            }
+
+            return result.ToArray();
+        }
+
         static private int SeedToInt()
         {
             int seedToInt = 0;
