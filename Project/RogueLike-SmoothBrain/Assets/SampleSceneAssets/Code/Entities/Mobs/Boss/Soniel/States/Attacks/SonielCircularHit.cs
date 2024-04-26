@@ -36,7 +36,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
     // timers
     float attackDuration = 0f;
     float[] circularAttackChargeTimers = new float[3];
-    readonly float[] MAX_CIRCULAR_ATTACK_CHARGE = { 0, 0.5f, 0.5f };
+    readonly float[] MAX_CIRCULAR_ATTACK_CHARGE = { 0, 0.5f, 0.3f };
     bool[] attackLaunched = { false, false, false };
 
     // ranges
@@ -199,21 +199,28 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                 Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_ATTACK].data, debugMode: debugMode);
             }
 
-            // à la fin de l'attaque, ...
-            if (attackDuration > Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
+            // fix animation
+            if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length - 1f)
             {
                 if (Context.PlayerHit && Random.Range(0, 11) >= 0) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur
                 {
-                    SwitchAttack(currentAttack, CircularStates.THRUST);
-
                     Context.Animator.SetBool(thrustHash, true);
-
-                    Context.PlayerHit = false;
-
-                    // DEBUG
-                    Context.DisableHitboxes();
                 }
-                else attackEnded = true; // sort du state
+
+                // à la fin de l'attaque, ...
+                if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
+                {
+                    if (Context.Animator.GetBool(thrustHash))
+                    {
+                        SwitchAttack(currentAttack, CircularStates.THRUST);
+
+                        Context.PlayerHit = false;
+
+                        // DEBUG
+                        Context.DisableHitboxes();
+                    }
+                    else attackEnded = true; // sort du state
+                }
             }
         }
     }
