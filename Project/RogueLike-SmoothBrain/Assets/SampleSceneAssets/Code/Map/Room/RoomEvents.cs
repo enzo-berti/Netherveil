@@ -134,7 +134,6 @@ namespace Map
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
                 if (enterToPlayer.magnitude >= other.bounds.size.magnitude)
                 {
-                    Debug.Log("ENTER");
                     EnterEvents();
                 }
             }
@@ -144,7 +143,6 @@ namespace Map
         {
             if (!exitRoomCalled && other.gameObject.CompareTag("Player"))
             {
-                Debug.Log("EXIT");
                 ExitEvents();
             }
         }
