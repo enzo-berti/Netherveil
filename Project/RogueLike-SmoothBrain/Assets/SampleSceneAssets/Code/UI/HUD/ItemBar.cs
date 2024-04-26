@@ -17,8 +17,8 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Texture damnationVeilIcon;
     [SerializeField] private Texture divineShieldIcon;
     [SerializeField] private Sprite[] rarityBackItemSprite;
-    [SerializeField] private Sprite[] backItemPassiveNormal;
-    [SerializeField] private Sprite[] backItemPassiveCooldown;
+    [SerializeField] private Sprite[] backItemActifNormal;
+    [SerializeField] private Sprite[] backItemActifCooldown;
 
     private void Start()
     {
@@ -58,7 +58,7 @@ public class ItemBar : MonoBehaviour
         else if (itemAdd is IActiveItem)
         {
             activeFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
-            SetFrameItemData(activeFrame, itemAdd, rarityBackItemSprite);
+            SetFrameItemData(activeFrame, itemAdd, backItemActifNormal);
         }
     }
 
@@ -97,7 +97,7 @@ public class ItemBar : MonoBehaviour
     {
         float cooldown = 0.0f;
 
-        SetFrameItemData(activeFrame, itemEffect, backItemPassiveCooldown);
+        SetFrameItemData(activeFrame, itemEffect, backItemActifCooldown);
         TMP_Text cooldownTextMesh = activeFrame.GetComponentInChildren<TMP_Text>(true);
         cooldownTextMesh.gameObject.SetActive(true);
 
@@ -108,7 +108,7 @@ public class ItemBar : MonoBehaviour
             yield return null;
         }
 
-        SetFrameItemData(activeFrame, itemEffect, backItemPassiveNormal);
+        SetFrameItemData(activeFrame, itemEffect, backItemActifNormal);
         cooldownTextMesh.gameObject.SetActive(false);
     }
 }
