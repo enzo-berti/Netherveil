@@ -7,7 +7,7 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
 
 
 #pragma warning disable CS0414 // Supprimer le warning dans unity
-#pragma warning disable IDE0052 // Supprimer les membres privés non lus
+#pragma warning disable IDE0052 // Supprimer les membres privÃ©s non lus
     //used to display in description, dont delete it
     readonly float displayValue;
 #pragma warning restore IDE0052
@@ -15,7 +15,7 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
 
     public BelzebuthBelt()
     {
-        displayValue = (coefValue -1f) * 100f;
+        displayValue = (coefValue - 1f) * 100f;
     }
 
     public void OnRetrieved()
@@ -25,7 +25,7 @@ public class BelzebuthBelt : ItemEffect, IPassiveItem
         //divide by 5 because the vfx is based on plane scale size, and -0.2 is to make the arrow perfectly at the spear end pos
         player.SpearLaunchVFX.SetFloat("VFX Length", player.GetComponent<Hero>().Stats.GetValue(Stat.ATK_RANGE) / 5f - 0.2f);
 
-        for (int i = 0; i< player.SpearAttacks.Count; ++i)
+        for (int i = 0; i < player.SpearAttacks.Count; ++i)
         {
             foreach (Collider collider in player.SpearAttacks[i].data)
             {
