@@ -42,8 +42,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
     private bool isDeath = false;
 
     // animation hash
-    private int chargeInHash;
-    private int chargeOutHash;
     private int deathHash;
 
     // getters and setters
@@ -75,9 +73,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
 
         // hashing animation
-        chargeInHash = Animator.StringToHash("ChargeIn");
-        chargeOutHash = Animator.StringToHash("ChargeOut");
-        deathHash = Animator.StringToHash("IsDeath");
+        deathHash = Animator.StringToHash("Death");
 
         // opti variables
         maxFrameUpdate = 10;
@@ -166,7 +162,8 @@ public class DamoclesStateMachine : Mobs, IDamocles
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
         damoclesSounds.deathSound.Play(transform.position);
-        animator.SetBool(deathHash, true);
+        animator.ResetTrigger(deathHash);
+        animator.SetTrigger(deathHash);
         isDeath = true;
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
