@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
         //if player has fallen out of map security
         if (transform.position.y < -100f)
         {
-            FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex);
+            LevelLoader.current.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 

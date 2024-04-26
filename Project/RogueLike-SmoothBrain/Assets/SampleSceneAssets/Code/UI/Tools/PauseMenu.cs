@@ -39,7 +39,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ReloadGame()
     {
-        FindObjectOfType<LevelLoader>().LoadScene(SceneManager.GetActiveScene().buildIndex, "Fade");
+        LevelLoader.current.LoadScene(SceneManager.GetActiveScene().buildIndex, true);
     }
 
     public void Setting()
@@ -50,7 +50,7 @@ public class PauseMenu : MonoBehaviour
     public void Menu()
     {
         Time.timeScale = 1f;
-        FindObjectOfType<LevelLoader>().LoadScene("MainMenu", "Fade");
+        LevelLoader.current.LoadScene("MainMenu", true);
     }
 
     public void Quit()
