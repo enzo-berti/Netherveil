@@ -87,7 +87,7 @@ public class WindowItemDatabase : EditorWindow
             GUI.color = Color.red;
             if (GUILayout.Button("X", GUILayout.Width(50)))
             {
-                DeleteInDatabase(item);
+                database.DeleteInDatabase(item);
                 EditorUtility.SetDirty(database);
                 AssetDatabase.SaveAssetIfDirty(database);
             }
@@ -116,29 +116,4 @@ public class WindowItemDatabase : EditorWindow
         searchItems.Sort();
     }
 
-    void DeleteInDatabase(ItemData item)
-    {
-        database.datas.Remove(item);
-        string itemName = item.idName.GetCamelCase();
-        string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + (item.Type == ItemData.ItemType.PASSIVE ? "PassiveItems" : "ActiveItems") + $"/{itemName}.cs";
-        File.Delete(path);
-        AssetDatabase.Refresh();
-    }
-
-    private Texture2D MakeBackgroundTexture(int width, int height, Color color)
-    {
-        Color[] pixels = new Color[width * height];
-
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            pixels[i] = color;
-        }
-
-        Texture2D backgroundTexture = new Texture2D(width, height);
-
-        backgroundTexture.SetPixels(pixels);
-        backgroundTexture.Apply();
-
-        return backgroundTexture;
-    }
 }

@@ -26,6 +26,10 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
         {
             SwitchState(Factory.GetState<SonielCircularHit>());
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SwitchState(Factory.GetState<SonielBerserk>());
+        }
     }
 
     // This method will be called only once before the update.

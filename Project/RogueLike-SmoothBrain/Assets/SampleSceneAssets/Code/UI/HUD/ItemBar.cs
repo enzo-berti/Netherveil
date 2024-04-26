@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ItemBar : MonoBehaviour
@@ -17,12 +18,26 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Sprite backDamnation;
     [SerializeField] private Sprite backDivine;
     [SerializeField] private Sprite[] rarityBackItemSprite;
-    [SerializeField] private Sprite[] backItemActifNormal;
-    [SerializeField] private Sprite[] backItemActifCooldown;
+    [SerializeField] private Sprite[] backItemActiveNormal;
+    [SerializeField] private Sprite[] backItemActiveCooldown;
+    [SerializeField] private TMP_Text cooldownActiveTextMesh;
+    [SerializeField] private TMP_Text keyActiveTextMesh;
+    [SerializeField] private TMP_Text keyAbilityTextMesh;
+
+    [Header("Bidings")]
+    [SerializeField] private InputActionReference keyboardActive;
+    [SerializeField] private InputActionReference keyboardAbility;
+    [SerializeField] private InputActionReference gamepadActive;
+    [SerializeField] private InputActionReference gamepadAbility;
 
     private void Start()
     {
         hero = FindObjectOfType<Hero>();
+
+        if (DeviceManager.Instance.IsPlayingKB())
+            UpdateKeyboardBiding();
+        else
+            UpdateGamepadBiding();
     }
 
     private void OnEnable()
@@ -33,6 +48,8 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted += e => StartCoroutine(ActiveItemCooldown(e));
+        DeviceManager.OnChangedToKB += UpdateKeyboardBiding;
+        DeviceManager.OnChangedToGamepad += UpdateGamepadBiding;
     }
 
     private void OnDisable()
@@ -43,6 +60,26 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted -= e => StartCoroutine(ActiveItemCooldown(e));
+        DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;
+        DeviceManager.OnChangedToGamepad -= UpdateGamepadBiding;
+    }
+
+    private void UpdateKeyboardBiding()
+    {
+        string keyActive = keyboardActive.action.bindings.First().path.Split("/").Last();
+        string keyAbility = keyboardAbility.action.bindings.First().path.Split("/").Last();
+
+        keyActiveTextMesh.text = keyActive.ToUpper();
+        keyAbilityTextMesh.text = keyAbility.ToUpper();
+    }
+
+    private void UpdateGamepadBiding()
+    {
+        string keyActive = gamepadActive.action.bindings.First().path.Split("/").Last();
+        string keyAbility = gamepadAbility.action.bindings.First().path.Split("/").Last();
+
+        keyActiveTextMesh.text = keyActive.ToUpper();
+        keyAbilityTextMesh.text = keyAbility.ToUpper();
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
@@ -58,7 +95,7 @@ public class ItemBar : MonoBehaviour
         else if (itemAdd is IActiveItem)
         {
             activeFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
-            SetFrameItemData(activeFrame, itemAdd, backItemActifNormal);
+            SetFrameItemData(activeFrame, itemAdd, backItemActiveNormal);
         }
     }
 
@@ -66,19 +103,17 @@ public class ItemBar : MonoBehaviour
     {
         if(ability as DamnationVeil != null)
         {
-            specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
             specialAbilityFrame.GetComponent<Image>().sprite = backDamnation;
         }
         else if (ability as DivineShield != null)
         {
-            specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
             specialAbilityFrame.GetComponent<Image>().sprite = backDivine;
         }
     }
 
     private void OnSpecialAbilityRemove()
     {
-        specialAbilityFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(false);
+        specialAbilityFrame.GetComponent<Image>().sprite = rarityBackItemSprite.First();
     }
 
     private GameObject CreateFrame(Transform t)
@@ -97,19 +132,18 @@ public class ItemBar : MonoBehaviour
     {
         float cooldown = 0.0f;
 
-        SetFrameItemData(activeFrame, itemEffect, backItemActifCooldown);
-        TMP_Text cooldownTextMesh = activeFrame.GetComponentInChildren<TMP_Text>(true);
-        cooldownTextMesh.gameObject.SetActive(true);
+        SetFrameItemData(activeFrame, itemEffect, backItemActiveCooldown);
+        cooldownActiveTextMesh.gameObject.SetActive(true);
 
         while (cooldown < hero.Inventory.ActiveItem.Cooldown)
         {
             cooldown = Mathf.Max((hero.Inventory.ActiveItem as ItemEffect).CurrentEnergy, 0.0f);
-            cooldownTextMesh.text = (Mathf.RoundToInt(hero.Inventory.ActiveItem.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
+            cooldownActiveTextMesh.text = (Mathf.RoundToInt(hero.Inventory.ActiveItem.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
             yield return null;
         }
 
-        SetFrameItemData(activeFrame, itemEffect, backItemActifNormal);
-        cooldownTextMesh.gameObject.SetActive(false);
+        SetFrameItemData(activeFrame, itemEffect, backItemActiveNormal);
+        cooldownActiveTextMesh.gameObject.SetActive(false);
     }
 }
 

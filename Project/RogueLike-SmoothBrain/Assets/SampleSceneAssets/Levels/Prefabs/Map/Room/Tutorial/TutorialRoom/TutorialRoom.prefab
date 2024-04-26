@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3787948732070268940}
   - component: {fileID: 4284917847504200939}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -581,7 +581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3962977007460182121
 Transform:
   m_ObjectHideFlags: 0
@@ -1717,6 +1717,7 @@ MonoBehaviour:
   - {fileID: 8250873547159619591}
   - {fileID: 1443348108880052071}
   type: 2
+  neighbours: []
 --- !u!1 &3916329640747244869
 GameObject:
   m_ObjectHideFlags: 0
@@ -1732,6 +1733,7 @@ GameObject:
   - component: {fileID: 4433369691328334572}
   - component: {fileID: 2033924824771884623}
   - component: {fileID: 694006703100575287}
+  - component: {fileID: 8053764651938327366}
   m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
@@ -1872,6 +1874,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92d0b0d5def07084c89f865112c0a867, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8053764651938327366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3916329640747244869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80873030c8511d4468504a3d6651992b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4510182364852025079
@@ -3019,6 +3033,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Dummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777727647793128255, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383435232574077566, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6884,6 +6908,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dummy (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5777727647793128255, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383435232574077566, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8016548620970610884, guid: d5d9050f2392e2b4797d310b533712f3,
         type: 3}
       propertyPath: weakness
@@ -7152,6 +7186,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Dummy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777727647793128255, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383435232574077566, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8016548620970610884, guid: d5d9050f2392e2b4797d310b533712f3,
         type: 3}
@@ -11601,6 +11645,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Dummy (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777727647793128255, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383435232574077566, guid: d5d9050f2392e2b4797d310b533712f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8016548620970610884, guid: d5d9050f2392e2b4797d310b533712f3,
         type: 3}

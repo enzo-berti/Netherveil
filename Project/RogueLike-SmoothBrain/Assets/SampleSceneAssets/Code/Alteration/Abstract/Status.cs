@@ -47,6 +47,7 @@ public abstract class Status
     public abstract bool CanApplyEffect(Entity target);
     public virtual void ApplyEffect(Entity target)
     {
+
         AddStack(1);
         PlayStatus();
         CoroutineManager.Instance.StartCoroutine(ManageStack());

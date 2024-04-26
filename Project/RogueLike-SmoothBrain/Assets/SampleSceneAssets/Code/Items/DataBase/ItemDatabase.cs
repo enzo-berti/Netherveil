@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Windows;
 
 [CreateAssetMenu(menuName = "ItemDatabase")]
 public class ItemDatabase : ScriptableObject
@@ -32,5 +35,30 @@ public class ItemDatabase : ScriptableObject
         }
 
         return Color.white;
+    }
+
+    public void DeleteInDatabase(ItemData item)
+    {
+        datas.Remove(item);
+        string itemName = item.idName.GetCamelCase();
+        string itemType = string.Empty;
+
+        switch (item.Type)
+        {
+            case ItemData.ItemType.PASSIVE:
+                itemType = "PassiveItems";
+                break;
+            case ItemData.ItemType.ACTIVE:
+                itemType = "ActiveItems";
+                break;
+            case ItemData.ItemType.PASSIVE_ACTIVE:
+                itemType = "ActivePassiveItems";
+                break;
+            default:
+                break;
+        }
+        string path = Application.dataPath + "/SampleSceneAssets/Code/Items/" + itemType + $"/{itemName}.cs";
+        File.Delete(path);
+        AssetDatabase.Refresh();
     }
 }
