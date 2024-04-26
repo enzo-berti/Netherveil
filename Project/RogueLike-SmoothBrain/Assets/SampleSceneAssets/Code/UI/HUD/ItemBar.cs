@@ -66,16 +66,20 @@ public class ItemBar : MonoBehaviour
 
     private void UpdateKeyboardBiding()
     {
-        keyActiveTextMesh.text = keyboardActive.action.bindings[0].name;
-        keyAbilityTextMesh.text = keyboardAbility.action.bindings[0].name;
+        string keyActive = keyboardActive.action.bindings.First().path.Split("/").Last();
+        string keyAbility = keyboardAbility.action.bindings.First().path.Split("/").Last();
 
-        Debug.Log($"t : {keyboardActive.action.id}");
+        keyActiveTextMesh.text = keyActive.ToUpper();
+        keyAbilityTextMesh.text = keyAbility.ToUpper();
     }
 
     private void UpdateGamepadBiding()
     {
-        keyActiveTextMesh.text = gamepadActive.action.bindings[0].name;
-        keyAbilityTextMesh.text = gamepadAbility.action.bindings[0].name;
+        string keyActive = gamepadActive.action.bindings.First().path.Split("/").Last();
+        string keyAbility = gamepadAbility.action.bindings.First().path.Split("/").Last();
+
+        keyActiveTextMesh.text = keyActive.ToUpper();
+        keyAbilityTextMesh.text = keyAbility.ToUpper();
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
