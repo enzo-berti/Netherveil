@@ -38,10 +38,17 @@ public class SonielStateMachine : Mobs, ISoniel
     [SerializeField] List<NestedList<Collider>> attackColliders;
     bool phaseTwo = false;
     bool playerHit = false;
-    float[] attacksRange = { 4f };
+    float[] attacksRange = { 4f }; // A changer
+
+    [Header("Spinning Arms")]
+    [SerializeField] Transform[] wrists;
+    [SerializeField] GameObject[] swords;
+    bool hasArms = true;
+    bool[] tiedArms = { true, true };
+    Transform[] originalSwordsTransform = new Transform[2];
 
     // anim hash
-    public int deathHash;
+    int deathHash;
 
     #region getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -53,6 +60,11 @@ public class SonielStateMachine : Mobs, ISoniel
     public bool PhaseTwo { get => phaseTwo; }
     public bool PlayerHit { get => playerHit; set => playerHit = value; }
     public float AttackRange { get => Mathf.Max(attacksRange); }
+
+    // spinning swords
+    public bool HasArms { get => hasArms; set => hasArms = value; }
+    public bool HasLeftArm { get => tiedArms[0]; set => tiedArms[0] = value; }
+    public bool HasRightArm { get => tiedArms[1]; set => tiedArms[1] = value; }
     #endregion
 
     protected override void Start()
@@ -65,6 +77,11 @@ public class SonielStateMachine : Mobs, ISoniel
 
         // animation hash
         deathHash = Animator.StringToHash("Death");
+
+        for (int i = 0; i < 2; i++)
+        {
+            originalSwordsTransform[i] = swords[i].transform;
+        }
 
         player = Utilities.Hero;
     }

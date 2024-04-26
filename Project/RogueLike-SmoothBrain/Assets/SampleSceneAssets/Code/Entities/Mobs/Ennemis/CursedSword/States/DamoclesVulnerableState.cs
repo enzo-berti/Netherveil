@@ -18,15 +18,8 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
         }
         else if (stateEnded)
         {
-            if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE))
-            {
-                SwitchState(Factory.GetState<DamoclesFollowTargetState>());
-            }
-            else
-            {
-                stateEnded = false;
-                SwitchState(Factory.GetState<DamoclesEnGardeState>());
-            }
+            stateEnded = false;
+            SwitchState(Factory.GetState<DamoclesEnGardeState>());
         }
     }
 
@@ -34,6 +27,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         elapsedTimeMovement = Time.time;
+        Context.IsInvincibleCount--;
     }
 
     // This method will be called only once after the last update.
@@ -54,6 +48,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
         //Context.Animator.SetTrigger(Context.);
 
         stateEnded = true;
+        Context.DamoclesSound.destuckSound.Play();
     }
 
     // This method will be called on state switch.
