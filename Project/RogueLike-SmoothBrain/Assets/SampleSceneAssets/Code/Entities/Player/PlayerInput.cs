@@ -565,11 +565,26 @@ public class PlayerInput : MonoBehaviour
             map["SpecialAbility"].performed += SpecialAbilityActivation;
             if (HudHandler.current != null)
             {
-                map["ToggleMap"].performed += ctx => HudHandler.current.MapHUD.Toggle(); ;
-                map["ToggleQuest"].performed += ctx => HudHandler.current.QuestHUD.Toggle();
-                map["Pause"].started += ctx => HudHandler.current.PauseMenu.Toggle();
+                map["ToggleMap"].performed += ToggleMap;
+                map["ToggleQuest"].performed += ToggleQuest;
+                map["Pause"].started += Pause;
             }
         }
+    }
+
+    private static void Pause(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.PauseMenu.Toggle();
+    }
+
+    private static void ToggleQuest(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.QuestHUD.Toggle();
+    }
+
+    private static void ToggleMap(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.MapHUD.Toggle();
     }
 
     public void DisableGameplayInputs()
