@@ -42,6 +42,7 @@ public class PlayerInput : MonoBehaviour
     readonly float CHARGED_ATTACK_CAN_RELEASE_TIME = 0.35f;
     float chargedAttackScaleSize = 0f;
     float chargedAttackVFXMaxSize = 0f;
+    bool hasLaunchBlink = false;
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
     readonly List<Collider> dashAttackAlreadyAttacked = new();
@@ -138,6 +139,7 @@ public class PlayerInput : MonoBehaviour
     {
         ChargedAttackCoef = chargedAttackMax ? 1 : chargedAttackTime / CHARGED_ATTACK_MAX_TIME;
 
+        hasLaunchBlink = false;
         //set up collider and vfx size based on maintained time of charged attack
         Vector3 scale = controller.ChargedAttack.gameObject.transform.localScale;
         scale.x = ChargedAttackCoef * chargedAttackScaleSize * 0.9f /*+1.05f*/;
@@ -166,10 +168,11 @@ public class PlayerInput : MonoBehaviour
         while (chargedAttackTime < CHARGED_ATTACK_MAX_TIME)
         {
             chargedAttackTime += Time.deltaTime;
-            if(CanReleaseChargedAttack() && (chargedAttackTime / CHARGED_ATTACK_MAX_TIME) <= CHARGED_ATTACK_CAN_RELEASE_TIME + 0.01f && !flashMaterial.IsEnable)
+            if(CanReleaseChargedAttack() && !hasLaunchBlink && !flashMaterial.IsEnable)
             {
                 flashMaterial.EnableMat();
                 flashMaterial.SetAlpha(0, 1, 0.15f, () => flashMaterial.SetAlpha(1,0, 0.15f, () => flashMaterial.DisableMat()));
+                hasLaunchBlink = true;
             }
 
             if (DeviceManager.Instance.IsPlayingKB())
