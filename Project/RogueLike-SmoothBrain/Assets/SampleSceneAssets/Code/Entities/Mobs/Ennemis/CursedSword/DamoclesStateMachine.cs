@@ -122,7 +122,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        if (IsInvincibleCount > 0)
+        if (IsInvincibleCount == 0)
         {
             ApplyDamagesMob(_value, damoclesSounds.hitSound, Death, notEffectDamage);
         }

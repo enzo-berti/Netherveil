@@ -151,6 +151,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         {
             isTargetTouched = false;
             stateEnded = true;
+            //son qui fait crash ici
             Context.DamoclesSound.stuckSound.Play(Context.transform.position);
         }
 
