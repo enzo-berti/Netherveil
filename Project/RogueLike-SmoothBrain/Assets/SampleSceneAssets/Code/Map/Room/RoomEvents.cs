@@ -9,7 +9,8 @@ namespace Map
     {
         private RoomData roomData;
 
-        private GameObject room;
+        private Room room;
+        private GameObject roomPreset;
         private GameObject enemies;
         private GameObject treasures;
         //private GameObject traps;
@@ -38,15 +39,18 @@ namespace Map
         private void Start()
         {
             // find room go's
-            GameObject roomPrefab = transform.parent.gameObject;
-            room = roomPrefab.GetComponentInChildren<RoomPresets>().transform.GetChild(0).gameObject;
-            enemies = room.transform.Find("Enemies").gameObject;
-            treasures = room.transform.Find("Treasures").gameObject;
+            room = transform.parent.gameObject.GetComponent<Room>();
+            roomPreset = room.GetComponentInChildren<RoomPresets>().transform.GetChild(0).gameObject;
+            enemies = roomPreset.transform.Find("Enemies").gameObject;
+            treasures = roomPreset.transform.Find("Treasures").gameObject;
             //traps = room.transform.Find("Traps").gameObject;
-            navMeshSurface = roomPrefab.GetComponentInChildren<NavMeshSurface>();
+            navMeshSurface = room.GetComponentInChildren<NavMeshSurface>();
 
             enemies.SetActive(false);
-            gameObject.layer = LayerMask.NameToLayer("Default");
+            foreach (var c in room.GetComponentsInChildren<MapLayer>())
+            {
+                c.Unset();
+            }
 
             // set bool to true to not call the events in the room if there is no enemy
             allEnemiesDeadCalled = (enemies.transform.childCount == 0);
@@ -54,7 +58,7 @@ namespace Map
             allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
 
             // create data of the map
-            roomData = new RoomData(roomPrefab.GetComponent<RoomPrefab>(), enemies);
+            roomData = new RoomData(room, enemies);
             if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
             {
                 EnterEvents();
@@ -74,7 +78,11 @@ namespace Map
             enterRoomCalled = true;
 
             // local events
-            gameObject.layer = LayerMask.NameToLayer("Map");
+            foreach (var c in room.GetComponentsInChildren<MapLayer>())
+            {
+                c.Set();
+            }
+
             RoomUtilities.roomData = roomData;
             RoomUtilities.nbEnterRoomByType[RoomUtilities.roomData.Type] += 1;
             navMeshSurface.enabled = true;
