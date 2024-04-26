@@ -86,7 +86,7 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
                     return;
 
                 elapsedTimeMovement = Time.time;
-                
+
                 curState = State.Slash;
                 slashRoutine = Context.StartCoroutine(SlashCoroutine(Context.Attack2Collider));
                 elapsedTimeMovement = Time.time;
@@ -117,11 +117,9 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
             if (Vector3.Distance(Context.Target.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE) - 1f)
             {
                 Context.MoveTo(previousPos);
-                Debug.Log("non");
             }
             else
             {
-                Debug.Log("oui");
                 stateEnded = true;
             }
         }
@@ -145,6 +143,25 @@ public class DamoclesSlashAttackState : BaseState<DamoclesStateMachine>
         if (player != null)
         {
             Context.Attack(player);
+        }
+        else
+        {
+            int randSound = Random.Range(0, 3);
+
+            switch (randSound)
+            {
+                case 0:
+                    Context.DamoclesSound.slashSound.Play(Context.transform.position);
+                    break;
+                case 1:
+                    Context.DamoclesSound.slashSound2.Play(Context.transform.position);
+                    break;
+                case 2:
+                    Context.DamoclesSound.slashSound3.Play(Context.transform.position);
+                    break;
+                default:
+                    break;
+            }
         }
 
         slashRoutine = null;

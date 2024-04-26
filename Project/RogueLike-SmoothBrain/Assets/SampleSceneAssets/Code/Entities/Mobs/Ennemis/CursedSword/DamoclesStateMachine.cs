@@ -11,12 +11,19 @@ using UnityEditor;
 public class DamoclesStateMachine : Mobs, IDamocles
 {
     [System.Serializable]
-    private class DamoclesSounds
+    public class DamoclesSounds
     {
         public Sound deathSound;
         public Sound takeDamageSound;
+        public Sound blockSound;
+        public Sound blockSound2;
+        public Sound blockSound3;
         public Sound hitSound;
-        public Sound moveSound;
+        public Sound stuckSound;
+        public Sound destuckSound;
+        public Sound slashSound;
+        public Sound slashSound2;
+        public Sound slashSound3;
     }
 
     // state machine variables
@@ -53,6 +60,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
     public bool IsDeath { get => isDeath; }
+    public DamoclesSounds DamoclesSound { get => damoclesSounds; }
 
 
     protected override void Start()
@@ -114,7 +122,30 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        ApplyDamagesMob(_value, damoclesSounds.hitSound, Death, notEffectDamage);
+        if (IsInvincibleCount > 0)
+        {
+            ApplyDamagesMob(_value, damoclesSounds.hitSound, Death, notEffectDamage);
+        }
+        else
+        {
+            int randSound = Random.Range(0, 3);
+
+            switch (randSound)
+            {
+                case 0:
+                    ApplyDamagesMob(_value, damoclesSounds.blockSound, Death, notEffectDamage);
+                    break;
+                case 1:
+                    ApplyDamagesMob(_value, damoclesSounds.blockSound2, Death, notEffectDamage);
+                    break;
+                case 2:
+                    ApplyDamagesMob(_value, damoclesSounds.blockSound3, Death, notEffectDamage);
+                    break;
+                default:
+                    ApplyDamagesMob(_value, damoclesSounds.blockSound, Death, notEffectDamage);
+                    break;
+            }
+        }
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
@@ -147,7 +178,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
             return;
 
         agent.SetDestination(posToMove);
-        damoclesSounds.moveSound.Play(transform.position);
     }
 
     public void Move(Vector3 direction)
@@ -156,7 +186,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
             return;
 
         agent.Move(direction);
-        damoclesSounds.moveSound.Play(transform.position);
     }
     #endregion
 
