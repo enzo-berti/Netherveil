@@ -59,6 +59,9 @@ public class DummyStateMachine : Mobs, IDummy
 
     public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
     {
+        if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
+            return;
+
         if (!triggerAttack)
             _value = 0;
 

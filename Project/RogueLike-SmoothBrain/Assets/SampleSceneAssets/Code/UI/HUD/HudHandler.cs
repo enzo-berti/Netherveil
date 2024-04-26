@@ -15,7 +15,6 @@ public class HudHandler : MonoBehaviour
             return instance;
         }
     }
-
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject GameOver;
     [SerializeField] private TMP_Text BloodTestMesh;
@@ -64,4 +63,5 @@ public class HudHandler : MonoBehaviour
         GameOver.SetActive(true);
         hud.SetActive(false);
     }
+
 }
