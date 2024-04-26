@@ -64,8 +64,4 @@ public class HudHandler : MonoBehaviour
         hud.SetActive(false);
     }
 
-    private void OnDestroy()
-    {
-        Debug.Log("destroy");
-    }
 }
