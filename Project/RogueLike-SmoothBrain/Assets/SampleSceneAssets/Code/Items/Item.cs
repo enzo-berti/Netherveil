@@ -122,7 +122,7 @@ public class Item : MonoBehaviour
 
         }
 
-        float chanceForRarity = Seed.Range(0.0f, 1.0f);
+        float chanceForRarity = Seed.Range();
         float currentChance = 0;
         int indexRarity;
         for (indexRarity = 0; indexRarity < currentRarityWeighting.Count; indexRarity++)
