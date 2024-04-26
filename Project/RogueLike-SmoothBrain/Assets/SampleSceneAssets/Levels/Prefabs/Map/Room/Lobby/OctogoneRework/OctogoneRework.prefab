@@ -2005,6 +2005,7 @@ GameObject:
   - component: {fileID: 831267858397246171}
   - component: {fileID: 4928656635675212536}
   - component: {fileID: 8527889625518412728}
+  - component: {fileID: 7115502100964460373}
   m_Layer: 0
   m_Name: TutoKey
   m_TagString: Untagged
@@ -2118,7 +2119,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Move
 
-    Z/Q/S/D'
+    ^'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
   m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
@@ -2191,6 +2192,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4928656635675212536}
   m_maskType: 0
+--- !u!114 &7115502100964460373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6704644333099885850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6407adb651da2074d8452d4fe89b1c3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboardActions:
+  - {fileID: 1823731571094160212, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  gamepadActions:
+  - {fileID: -4803492900531350020, guid: 265257847d33b76449ed90f675b85193, type: 3}
+  displayStringOptions: 4
 --- !u!1 &6765699168901302690
 GameObject:
   m_ObjectHideFlags: 0
