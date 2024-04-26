@@ -11,10 +11,7 @@ public class AudioSettingsPart : MenuPart
 
     private void Start()
     {
-        mainVolumeSlider.value = AudioManager.Instance.masterVolumeBarValue;
-        SFXVolumeSlider.value = AudioManager.Instance.soundsFXVolumeBarValue;
-        MusicVolumeSlider.value = AudioManager.Instance.musicVolumeBarValue;
-        AmbienceVolumeSlider.value = AudioManager.Instance.ambiencesVolumeBarValue;
+        ResetSliders();
     }
 
     public void ChangeMainVolume(float value)
@@ -35,5 +32,23 @@ public class AudioSettingsPart : MenuPart
     public void ChangeAmbienceVolume(float value)
     {
         AudioManager.Instance.ambiencesVolumeBarValue = value;
+    }
+
+    public void ResetAllVolumes()
+    {
+        AudioManager.Instance.masterVolumeBarValue = 0.5f;
+        AudioManager.Instance.soundsFXVolumeBarValue = 0.5f;
+        AudioManager.Instance.musicVolumeBarValue = 0.5f;
+        AudioManager.Instance.ambiencesVolumeBarValue = 0.5f;
+
+        ResetSliders();
+    }
+
+    private void ResetSliders()
+    {
+        mainVolumeSlider.value = AudioManager.Instance.masterVolumeBarValue;
+        SFXVolumeSlider.value = AudioManager.Instance.soundsFXVolumeBarValue;
+        MusicVolumeSlider.value = AudioManager.Instance.musicVolumeBarValue;
+        AmbienceVolumeSlider.value = AudioManager.Instance.ambiencesVolumeBarValue;
     }
 }

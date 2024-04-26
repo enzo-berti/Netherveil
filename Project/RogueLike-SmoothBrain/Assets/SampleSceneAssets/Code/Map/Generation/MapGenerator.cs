@@ -295,37 +295,6 @@ namespace Map.Generation
             return false;
         }
 
-        private void InitRoom(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, Door exitDoor)
-        {
-            // Set parent room
-            roomGO.transform.SetParent(gameObject.transform);
-
-            // Generate gate
-            GameObject gateGO = Instantiate(MapResources.GatePrefab, entranceDoor.Position, Quaternion.identity);
-            gateGO.transform.Rotate(0f, entranceDoor.Rotation, 0f);
-            gateGO.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
-
-            // Removed used door
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
-            doorsGenerator.RemoveDoor(entranceDoor);
-            genParam.RemoveDoor(exitDoor);
-
-            // Add the new doors from the new room into the possible candidates
-            genParam.AddAvailableDoors(doorsGenerator);
-
-            if (roomGO.GetComponent<RoomPrefab>().type == RoomType.Boss)
-            {
-                GenerateStairs(roomGO);
-            }
-
-            // Generate one of the seed room and delete the other's
-            roomGO.GetComponentInChildren<RoomPresets>().GenerateRandomPreset();
-
-            // SetActive object's of room
-            roomGO.GetComponentInChildren<NavMeshSurface>().transform.Find("Enemies").gameObject.SetActive(false);
-            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
-        }
-
         private void ResetGeneration()
         {
             for (int i = transform.childCount - 1; i >= 0; i--)
@@ -345,6 +314,54 @@ namespace Map.Generation
             return colliders.Any();
         }
 
+        private void InitRoom(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, Door exitDoor)
+        {
+            // Set parent room
+            roomGO.transform.SetParent(gameObject.transform);
+
+            // Generate props
+            GenerateGates(roomGO, entranceDoor);
+            // Stairs
+            if (roomGO.GetComponent<RoomPrefab>().type == RoomType.Boss)
+            {
+                GenerateStairs(roomGO);
+            }
+
+            // Removed used door
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            doorsGenerator.RemoveDoor(entranceDoor);
+            genParam.RemoveDoor(exitDoor);
+
+            // Add the new doors from the new room into the possible candidates
+            genParam.AddAvailableDoors(doorsGenerator);
+
+            // Generate one of the seed room and delete the other's
+            roomGO.GetComponentInChildren<RoomPresets>().GenerateRandomPreset();
+
+            // SetActive object's of room
+            roomGO.GetComponentInChildren<NavMeshSurface>().transform.Find("Enemies").gameObject.SetActive(false);
+            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
+        }
+
+        static private void GenerateGates(GameObject roomGO, Door entranceDoor)
+        {
+            GameObject gateGO = Instantiate(MapResources.GatePrefab, entranceDoor.Position, Quaternion.identity);
+            gateGO.transform.Rotate(0f, entranceDoor.Rotation, 0f);
+            gateGO.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
+        }
+
+        static private void GenerateStairs(GameObject roomGO)
+        {
+            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
+            Door entranceStairs = Seed.RandList(doorsGenerator.doors)[0];
+
+            GameObject go = Instantiate(Seed.RandList(MapResources.StairsPrefabs)[0], entranceStairs.Position, Quaternion.identity);
+            go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
+            go.transform.parent = entranceStairs.parentSkeleton.transform.Find("StaticProps");
+
+            doorsGenerator.RemoveDoor(entranceStairs);
+        }
+
         static private void GenerateObstructionDoors(ref GenerationParam genParam)
         {
             foreach (var listDoors in genParam.availableDoorsByRotation)
@@ -358,18 +375,6 @@ namespace Map.Generation
             }
 
             genParam.availableDoorsByRotation.Clear();
-        }
-
-        static private void GenerateStairs(GameObject roomGO)
-        {
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
-            Door entranceStairs = Seed.RandList(doorsGenerator.doors)[0];
-
-            GameObject go = Instantiate(Seed.RandList(MapResources.StairsPrefabs)[0], entranceStairs.Position, Quaternion.identity);
-            go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
-            go.transform.parent = entranceStairs.parentSkeleton.transform.Find("StaticProps");
-
-            doorsGenerator.RemoveDoor(entranceStairs);
         }
     }
 }
