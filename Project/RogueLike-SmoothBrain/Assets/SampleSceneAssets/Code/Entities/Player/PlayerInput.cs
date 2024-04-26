@@ -142,10 +142,10 @@ public class PlayerInput : MonoBehaviour
         hasLaunchBlink = false;
         //set up collider and vfx size based on maintained time of charged attack
         Vector3 scale = controller.ChargedAttack.gameObject.transform.localScale;
-        scale.x = ChargedAttackCoef * chargedAttackScaleSize * 0.9f /*+1.05f*/;
-        scale.z = ChargedAttackCoef * chargedAttackScaleSize * 0.9f /*+ 1.05f*/;
+        scale.x = ChargedAttackCoef * chargedAttackScaleSize * 0.9f;
+        scale.z = ChargedAttackCoef * chargedAttackScaleSize * 0.9f;
         controller.ChargedAttack.gameObject.transform.localScale = scale;
-        controller.ChargedAttackVFX.SetFloat("VFX Size",ChargedAttackCoef * chargedAttackVFXMaxSize /*+ 0.3f*/);
+        controller.ChargedAttackVFX.SetFloat("VFX Size",ChargedAttackCoef * chargedAttackVFXMaxSize);
 
         controller.AttackCollide(controller.ChargedAttack, false);
         chargedAttackMax = false;
