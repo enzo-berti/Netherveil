@@ -153,7 +153,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        damoclesSounds.hitSound.Play(transform.position);
+        damoclesSounds.slashSound.Play(transform.position);
     }
 
     public void Death()
