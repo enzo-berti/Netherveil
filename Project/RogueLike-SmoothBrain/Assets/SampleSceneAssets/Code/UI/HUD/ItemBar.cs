@@ -9,17 +9,23 @@ using UnityEngine.UI;
 public class ItemBar : MonoBehaviour
 {
     private Hero hero;
+    private int maxItemDisplay = 5;
     [SerializeField] private GameObject framePf;
     [SerializeField] private ItemDatabase database;
-    private int maxItemDisplay = 5;
     [SerializeField] private Transform itemPassiveTransform;
+
     [SerializeField] private GameObject activeFrame;
     [SerializeField] private GameObject specialAbilityFrame;
+
     [SerializeField] private Sprite backDamnation;
     [SerializeField] private Sprite backDivine;
     [SerializeField] private Sprite[] rarityBackItemSprite;
     [SerializeField] private Sprite[] backItemActiveNormal;
     [SerializeField] private Sprite[] backItemActiveCooldown;
+
+    [SerializeField] private Texture damnationTexture;
+    [SerializeField] private Texture divineTexture;
+
     [SerializeField] private TMP_Text cooldownActiveTextMesh;
     [SerializeField] private TMP_Text keyActiveTextMesh;
     [SerializeField] private TMP_Text keyAbilityTextMesh;
@@ -101,19 +107,29 @@ public class ItemBar : MonoBehaviour
 
     private void OnSpecialAbilityAdd(ISpecialAbility ability)
     {
-        if(ability as DamnationVeil != null)
+        Image image = specialAbilityFrame.GetComponent<Image>();
+        RawImage rawImage = specialAbilityFrame.GetComponentInChildren<RawImage>(true);
+        rawImage.gameObject.SetActive(true);
+
+        if (ability as DamnationVeil != null)
         {
-            specialAbilityFrame.GetComponent<Image>().sprite = backDamnation;
+            image.sprite = backDamnation;
+            rawImage.texture = damnationTexture;
         }
         else if (ability as DivineShield != null)
         {
-            specialAbilityFrame.GetComponent<Image>().sprite = backDivine;
+            image.sprite = backDivine;
+            rawImage.texture = divineTexture;
         }
     }
 
     private void OnSpecialAbilityRemove()
     {
-        specialAbilityFrame.GetComponent<Image>().sprite = rarityBackItemSprite.First();
+        Image image = specialAbilityFrame.GetComponent<Image>();
+        RawImage rawImage = specialAbilityFrame.GetComponentInChildren<RawImage>(true);
+
+        image.sprite = rarityBackItemSprite.First();
+        rawImage.gameObject.SetActive(false);
     }
 
     private GameObject CreateFrame(Transform t)
