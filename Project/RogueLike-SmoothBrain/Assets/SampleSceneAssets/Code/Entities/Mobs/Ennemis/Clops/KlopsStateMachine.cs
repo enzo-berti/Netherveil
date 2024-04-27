@@ -2,10 +2,10 @@ using UnityEngine;
 using StateMachine;
 using System.Collections.Generic;
 
-public class ClopsStateMachine : Mobs, IClops
+public class KlopsStateMachine : Mobs, IKlops
 {
     [System.Serializable]
-    public class ClopsSounds
+    public class KlopsSounds
     {
         public Sound deathSound;
         public Sound takeDamageSound;
@@ -14,13 +14,13 @@ public class ClopsStateMachine : Mobs, IClops
 
     [HideInInspector]
     // state machine variables
-    public BaseState<ClopsStateMachine> currentState;
-    private StateFactory<ClopsStateMachine> factory;
+    public BaseState<KlopsStateMachine> currentState;
+    private StateFactory<KlopsStateMachine> factory;
 
     // mobs variables
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
-    [SerializeField] private ClopsSounds clopsSounds;
+    [SerializeField] private KlopsSounds klopsSounds;
     //[SerializeField, Range(0f, 360f)] private float angle = 180.0f;
     //[SerializeField] private BoxCollider attack1Collider;
     //[SerializeField] private BoxCollider attack2Collider;
@@ -35,20 +35,20 @@ public class ClopsStateMachine : Mobs, IClops
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
-    public BaseState<ClopsStateMachine> CurrentState { get => currentState; set => currentState = value; }
+    public BaseState<KlopsStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
     public Transform Target { get => target; set => target = value; }
     public bool IsDeath { get => isDeath; }
-    public ClopsSounds ClopsSound { get => clopsSounds; }
+    public KlopsSounds KlopsSound { get => klopsSounds; }
 
     protected override void Start()
     {
         base.Start();
 
-        factory = new StateFactory<ClopsStateMachine>(this);
+        factory = new StateFactory<KlopsStateMachine>(this);
         // Set currentState here !
-        currentState = factory.GetState<ClopsPatrolState>();
+        currentState = factory.GetState<KlopsPatrolState>();
 
         // common initialization
 
@@ -93,7 +93,7 @@ public class ClopsStateMachine : Mobs, IClops
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        ApplyDamagesMob(_value, clopsSounds.hitSound, Death, notEffectDamage);
+        ApplyDamagesMob(_value, klopsSounds.hitSound, Death, notEffectDamage);
     }
 
     public void Death()
@@ -101,7 +101,7 @@ public class ClopsStateMachine : Mobs, IClops
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
-        clopsSounds.deathSound.Play(transform.position);
+        klopsSounds.deathSound.Play(transform.position);
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
         isDeath = true;
