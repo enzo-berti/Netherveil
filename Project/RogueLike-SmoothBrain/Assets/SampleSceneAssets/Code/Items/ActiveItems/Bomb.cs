@@ -1,9 +1,13 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class Bomb : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 5f;
+    public static bool bombIsThrow;
     private GameObject bombPf;
+    private const float deltaY = 0.5f;
 
 #pragma warning disable CS0414 // Supprimer le warning dans unity
 #pragma warning disable IDE0052 // Supprimer les membres privés non lus
@@ -22,13 +26,24 @@ public class Bomb : ItemEffect, IActiveItem
         GameObject player = Utilities.Player;
         player.GetComponent<PlayerController>().PlayLaunchBombAnim();
         player.GetComponent<PlayerController>().MouseOrientation();
-        Vector3 direction = player.transform.forward;
-        var bomb = GameObject.Instantiate(bombPf, player.transform.position, Quaternion.identity);
-        var explodingBomb = bomb.GetComponent<ExplodingBomb>();
+
+        CoroutineManager.Instance.StartCustom(WaitLaunch(player));
         
+    }
+
+    private IEnumerator WaitLaunch(GameObject player)
+    {
+        Transform hand = player.GetComponent<PlayerController>().LeftHandTransform;
+        Vector3 direction = player.transform.forward;
+        var bomb = GameObject.Instantiate(bombPf, hand);
+        var explodingBomb = bomb.GetComponent<ExplodingBomb>();
+        yield return new WaitUntil(() => bombIsThrow);
+        explodingBomb.gameObject.transform.parent = null;
+        explodingBomb.gameObject.transform.rotation = Quaternion.identity;
         explodingBomb.ThrowToPos(Utilities.Hero, player.transform.position + direction * Utilities.Hero.Stats.GetValue(Stat.ATK_RANGE), 0.5f);
         explodingBomb.SetTimeToExplode(0.5f * 1.5f);
         explodingBomb.SetBlastDamages((int)Utilities.Hero.Stats.GetValue(Stat.ATK));
         explodingBomb.Activate();
+        bombIsThrow = false;
     }
 }
