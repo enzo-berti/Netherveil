@@ -38,6 +38,9 @@ public class DamoclesStateMachine : Mobs, IDamocles
     [SerializeField] private BoxCollider attack1Collider;
     [SerializeField] private BoxCollider attack2Collider;
     [SerializeField] private BoxCollider attack3Collider;
+
+    [Header("Needed transform")]
+    [SerializeField] private Transform damoclesBlade;
     private Transform target;
     private bool isDeath = false;
 
@@ -59,6 +62,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
     public bool IsDeath { get => isDeath; }
     public DamoclesSounds DamoclesSound { get => damoclesSounds; }
+    public Transform DamoclesBlade { get => damoclesBlade; }
 
 
     protected override void Start()

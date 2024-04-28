@@ -26,7 +26,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         }
         else if (stateEnded)
         {
-            nextState = Random.Range(0, 2);
+            nextState = Random.Range(1, 2);
 
             switch (nextState)
             {
