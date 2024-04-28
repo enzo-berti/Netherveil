@@ -7,7 +7,7 @@ public class DamoclesIdle : BaseState<DamoclesStateMachine>
         : base(currentContext, currentFactory) { }
 
     private float elapsedTimeMovement = 0.0f;
-    private float delayBetweenMovement = 1.0f;
+    private float delayBetweenMovement = 2.0f;
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
@@ -42,10 +42,10 @@ public class DamoclesIdle : BaseState<DamoclesStateMachine>
             return;
 
         elapsedTimeMovement = Time.time;
+        Debug.Log("New Point");
+        Vector3 pointToReach3D = MathsExtension.GetPointInCircle(Context.gameObject.transform.position, 5, 20);
 
-        Vector3 direction = Random.insideUnitCircle.normalized;
-
-        Context.MoveTo(Context.transform.position + direction * Context.NormalSpeed);
+        Context.MoveTo(pointToReach3D * Context.NormalSpeed);
     }
 
     // This method will be call on state changement.

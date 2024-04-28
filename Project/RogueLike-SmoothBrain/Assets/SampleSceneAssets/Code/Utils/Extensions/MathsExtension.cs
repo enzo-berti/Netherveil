@@ -14,6 +14,28 @@ public static class MathsExtension
         float radius = Random.Range(0, maxRadius);
         return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
+    public static UnityEngine.Vector3 GetPointInCircle(UnityEngine.Vector3 center, float maxRadius)
+    {
+        UnityEngine.Vector2 center2D = new(center.x, center.z);
+        UnityEngine.Vector2 point2D = GetPointInCircle(center2D, maxRadius);
+        UnityEngine.Vector3 toReturn = new(point2D.x, center.y, point2D.y);
+        return toReturn;
+    }
+
+    public static UnityEngine.Vector2 GetPointInCircle(UnityEngine.Vector2 center, float minRadius, float maxRadius)
+    {
+        float randomValue = Random.Range(0, 2 * Mathf.PI);
+        float radius = Random.Range(minRadius, maxRadius);
+        return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
+    }
+    public static UnityEngine.Vector3 GetPointInCircle(UnityEngine.Vector3 center, float minRadius, float maxRadius)
+    {
+        UnityEngine.Vector2 center2D = new(center.x, center.z);
+        UnityEngine.Vector2 point2D = GetPointInCircle(center2D, minRadius, maxRadius);
+        UnityEngine.Vector3 toReturn = new(point2D.x, center.y, point2D.y);
+        Debug.Log(UnityEngine.Vector3.Distance(center, toReturn));
+        return toReturn;
+    }
 
     public static UnityEngine.Vector2 GetPointOnCone(UnityEngine.Vector2 center, UnityEngine.Vector2 direction, float radius, float angle)
     {
