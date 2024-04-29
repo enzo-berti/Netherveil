@@ -79,10 +79,12 @@ public abstract class Quest
         if (questLost)
         {
             QuestLost();
+            HudHandler.current.MessageInfoHUD.Display($"You lost the quest \"{Datas.idName.SeparateAllCase()}\".");
         }
         else if (IsQuestFinished())
         {
             QuestFinished();
+            HudHandler.current.MessageInfoHUD.Display($"You finished the quest \"{Datas.idName.SeparateAllCase()}\".");
         }
     }
 
