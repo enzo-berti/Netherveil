@@ -9,6 +9,6 @@ public class BuffHUD : MonoBehaviour
     public void AddBuffIcon(Texture texture)
     {
         GameObject buff = Instantiate(buffIconPrefab, buffTransform);
-        buffTransform.GetComponent<RawImage>().texture = texture;
+        buff.GetComponent<RawImage>().texture = texture;
     }
 }

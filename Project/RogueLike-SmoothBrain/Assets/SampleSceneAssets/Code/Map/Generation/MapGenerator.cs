@@ -117,18 +117,28 @@ namespace Map.Generation
 
     public class MapGenerator : MonoBehaviour
     {
+#if UNITY_EDITOR
         [SerializeField] private bool isRandom = true;
-        [SerializeField] private string seed;
-        private const float secretRoomchanceToSpawn = 0f;
+        [SerializeField] private string seed; // For debuging purpose
+#endif
+
+        static private int stage = 0;
 
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
 
         private void Awake()
         {
-            Seed.RandomizeSeed();
-            if (!isRandom)
+            if (stage == 0)
             {
-                Seed.Set(seed);
+                Seed.RandomizeSeed();
+#if UNITY_EDITOR
+                if (!isRandom)
+                {
+                    Seed.Set(seed);
+                }
+
+                seed = Seed.seed;
+#endif
             }
 
             GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));

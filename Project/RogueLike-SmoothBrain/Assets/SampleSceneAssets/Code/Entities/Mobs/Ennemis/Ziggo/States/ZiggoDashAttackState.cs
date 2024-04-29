@@ -1,9 +1,9 @@
 using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
 
-public class ZiggoFollowTargetState : BaseState<ZiggoStateMachine>
+public class ZiggoDashAttackState : BaseState<ZiggoStateMachine>
 {
-    public ZiggoFollowTargetState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
+    public ZiggoDashAttackState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     private float elapsedTimeMovement = 0.0f;
@@ -18,7 +18,7 @@ public class ZiggoFollowTargetState : BaseState<ZiggoStateMachine>
         }
         else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
         {
-            SwitchState(Factory.GetState<ZiggoCirclingState>());
+            SwitchState(Factory.GetState<ZiggoTurnAroundTargetState>());
         }
     }
 
