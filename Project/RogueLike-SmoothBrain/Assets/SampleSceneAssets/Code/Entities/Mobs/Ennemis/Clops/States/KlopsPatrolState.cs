@@ -13,7 +13,7 @@ public class KlopsPatrolState : BaseState<KlopsStateMachine>
 
     protected override void CheckSwitchStates()
     {
-        if (Context.Player != null)
+        if(Context.Target != null)
         {
             SwitchState(Factory.GetState<KlopsMoveState>());
         }
