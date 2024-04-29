@@ -42,7 +42,6 @@ public class SonielStateMachine : Mobs, ISoniel
     [Header("Spinning swords")]
     [SerializeField] Transform[] wrists;
     [SerializeField] SonielProjectile[] swords;
-    bool hasArms = true;
     bool[] tiedArms = { true, true };
     float collisionImmuneTimer = 0f;
     readonly float MAX_COLLISION_IMMUNE_COOLDOWN = 0.3f;
@@ -51,7 +50,7 @@ public class SonielStateMachine : Mobs, ISoniel
     int deathHash;
 
     // DEBUG
-    bool debugMode = true;
+    bool debugMode = false;
 
     #region getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -65,7 +64,6 @@ public class SonielStateMachine : Mobs, ISoniel
     public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
 
     // spinning swords
-    public bool HasArms { get => hasArms; set => hasArms = value; }
     public bool HasLeftArm { get => tiedArms[0]; set => tiedArms[0] = value; }
     public bool HasRightArm { get => tiedArms[1]; set => tiedArms[1] = value; }
     public Transform[] Wrists { get => wrists; }
@@ -102,7 +100,7 @@ public class SonielStateMachine : Mobs, ISoniel
         base.Update();
         currentState.Update();
 
-        if (!hasArms)
+        if (!tiedArms[0] || !tiedArms[1])
         {
             UpdateProjectiles();
         }
@@ -142,6 +140,8 @@ public class SonielStateMachine : Mobs, ISoniel
         for (int i = 0; i < 2; i++)
         {
             swords[i].transform.parent = null;
+            swords[i].enabled = false;
+
             Rigidbody rb = swords[i].GetComponent<Rigidbody>();
             rb.isKinematic = false;
             rb.useGravity = true;

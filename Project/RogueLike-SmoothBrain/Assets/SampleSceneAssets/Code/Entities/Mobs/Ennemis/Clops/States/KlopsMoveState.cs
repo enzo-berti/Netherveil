@@ -1,4 +1,5 @@
 using StateMachine;
+using UnityEngine;
 
 public class KlopsMoveState : BaseState<KlopsStateMachine>
 {
@@ -8,7 +9,29 @@ public class KlopsMoveState : BaseState<KlopsStateMachine>
 
     protected override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        Vector3 meToPlayerVec = (Context.Player.transform.position - Context.transform.position);
+
+        if (!Context.Player)
+        {
+            if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
+            {
+                SwitchState(Factory.GetState<KlopsPatrolState>());
+                return;
+            }
+        }
+        else if (meToPlayerVec.magnitude <= Context.Stats.GetValue(Stat.ATK_RANGE))
+        {
+            if (meToPlayerVec.magnitude <= Context.FleeRange)
+            {
+                SwitchState(Factory.GetState<KlopsFleeState>());
+                return;
+            }
+            else
+            {
+                SwitchState(Factory.GetState<KlopsAttackState>());
+                return;
+            }
+        }
     }
 
     protected override void EnterState()
