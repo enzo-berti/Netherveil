@@ -399,6 +399,7 @@ Transform:
   - {fileID: 2795327838727925454}
   - {fileID: 4574402777992253921}
   - {fileID: 2874659799855492425}
+  - {fileID: 2833442171473954259}
   m_Father: {fileID: 1378612059112917621}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2819107228932577241
@@ -1223,6 +1224,7 @@ MonoBehaviour:
     - {fileID: 4336622302204605675}
     - {fileID: 8299728062014594254}
   VFXWrapper: {fileID: 2553172325082090671}
+  bodyMesh: {fileID: 9024897911565074040}
   SpearAttacksVFX:
   - {fileID: 5873126167550264651}
   - {fileID: 5873126167550264651}
@@ -1239,6 +1241,7 @@ MonoBehaviour:
   DivineShieldVFX: {fileID: 5231877333891943702}
   DamnationVeilVFX: {fileID: 7696305895192340609}
   DashShieldVFX: {fileID: 8478172230037683745}
+  RuneOfSlothVFX: {fileID: 7050474150874602114}
   DashSFX:
     Guid:
       Data1: 1298710530
@@ -2461,6 +2464,86 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2612399077291889389, guid: 4a045e4ba946a6d4f867572633accf4f,
     type: 3}
   m_PrefabInstance: {fileID: 2230604972880647943}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2393367796224249092
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 200325822250048358}
+    m_Modifications:
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136506377040746397, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+        type: 3}
+      propertyPath: m_Name
+      value: VFX_FreezeWave
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8ae630b9bad28324f98b0bd3e82c8c18, type: 3}
+--- !u!4 &2833442171473954259 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 460664521097169111, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+    type: 3}
+  m_PrefabInstance: {fileID: 2393367796224249092}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &7050474150874602114 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 4678857068759357318, guid: 8ae630b9bad28324f98b0bd3e82c8c18,
+    type: 3}
+  m_PrefabInstance: {fileID: 2393367796224249092}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3760639673014104834
 PrefabInstance:
