@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -98,6 +99,19 @@ public abstract class Mobs : Entity
         spawningVFX.GetComponent<VFXStopper>().Duration = spawningVFX.GetFloat("Duration") + 0.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
+
+        Material spawningMat = GameResources.Get<Material>("MAT_VFX_Spawn");
+        SkinnedMeshRenderer[]  renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach (SkinnedMeshRenderer renderer in renderers)
+        {
+            List<Material> materials = new List<Material>(renderer.materials)
+            {
+                spawningMat
+            };
+            renderer.SetMaterials(materials);
+        }
+
+
 
         wanderZone.center = transform.position;
     }
