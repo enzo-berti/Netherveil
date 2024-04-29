@@ -33,13 +33,15 @@ public class SonielProjectile : Projectile
 
     private void OnDisable()
     {
+        Reset();
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         aliveTimer += Time.deltaTime;
-        pickMeUp = aliveTimer >= 3f;
+        if (!pickMeUp)
+            pickMeUp = aliveTimer >= 3f;
 
         if (getBack)
         {

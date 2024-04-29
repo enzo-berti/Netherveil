@@ -87,7 +87,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
         Context.Animator.SetBool(thrustHash, false);
 
-        Context.AttackCooldown = 1.5f + Random.Range(-0.25f, 0.25f);
+        Context.AttackCooldown = 1f + Random.Range(-0.25f, 0.25f);
 
         // DEBUG
         Context.DisableHitboxes();
@@ -158,6 +158,14 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                 Context.MoveTo(Context.transform.position + mobToPlayer.normalized * Mathf.Min(distanceToPlayer, dashRange));
 
                 attackLaunched[currentAttack] = true;
+            }
+            else
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(Context.Player.transform.position, Context.transform.position);
+                lookRotation.x = 0;
+                lookRotation.z = 0;
+
+                Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
             }
         }
         else // effectue l'attaque
