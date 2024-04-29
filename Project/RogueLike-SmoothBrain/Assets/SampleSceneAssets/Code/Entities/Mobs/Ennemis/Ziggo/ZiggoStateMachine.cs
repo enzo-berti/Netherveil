@@ -35,8 +35,6 @@ public class ZiggoStateMachine : Mobs, IZiggo
     private bool isDeath = false;
 
     // animation hash
-    private int chargeInHash;
-    private int chargeOutHash;
     private int deathHash;
 
     // getters and setters
@@ -67,9 +65,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
 
 
         // hashing animation
-        chargeInHash = Animator.StringToHash("ChargeIn");
-        chargeOutHash = Animator.StringToHash("ChargeOut");
-        deathHash = Animator.StringToHash("IsDeath");
+
 
         // opti variables
         maxFrameUpdate = 10;
