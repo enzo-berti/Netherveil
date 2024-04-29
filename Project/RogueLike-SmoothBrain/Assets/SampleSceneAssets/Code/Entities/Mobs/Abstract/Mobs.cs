@@ -49,12 +49,12 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        RoomUtilities.earlyEnterEvents += OnEarlyEnterRoom;
+        RoomUtilities.onEarlyEnter += OnEarlyEnterRoom;
     }
 
     protected virtual void OnDisable()
     {
-        RoomUtilities.earlyEnterEvents -= OnEarlyEnterRoom;
+        RoomUtilities.onEarlyEnter -= OnEarlyEnterRoom;
     }
 
     protected override void Start()

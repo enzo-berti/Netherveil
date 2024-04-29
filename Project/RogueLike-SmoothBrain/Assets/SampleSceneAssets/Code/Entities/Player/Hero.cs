@@ -94,16 +94,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
 
         OnAttackHit += ApplyLifeSteal;
-        RoomUtilities.allEnemiesDeadEvents += ChangeStatsBasedOnAlignment;
-        RoomUtilities.allChestOpenEvents += ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllEnemiesDead += ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllChestOpen += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
     }
 
     private void OnDestroy()
     {
         OnAttackHit -= ApplyLifeSteal;
-        RoomUtilities.allEnemiesDeadEvents -= ChangeStatsBasedOnAlignment;
-        RoomUtilities.allChestOpenEvents -= ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllEnemiesDead -= ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllChestOpen -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
     }
 

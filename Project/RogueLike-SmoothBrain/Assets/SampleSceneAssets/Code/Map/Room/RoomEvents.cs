@@ -76,7 +76,7 @@ namespace Map
             allChestsOpenCalled = true;
 
             // global events
-            RoomUtilities.allChestOpenEvents?.Invoke();
+            RoomUtilities.onAllChestOpen?.Invoke();
         }
 
         private void EnterEvents()
@@ -101,8 +101,8 @@ namespace Map
             enemies.SetActive(true);
 
             // global events
-            RoomUtilities.earlyEnterEvents?.Invoke();
-            RoomUtilities.enterEvents?.Invoke();
+            RoomUtilities.onEarlyEnter?.Invoke();
+            RoomUtilities.onEnter?.Invoke();
         }
 
         private void ExitEvents()
@@ -114,13 +114,15 @@ namespace Map
             enemies.SetActive(false);
 
             // global events
-            RoomUtilities.exitEvents?.Invoke();
+            RoomUtilities.onEarlyExit?.Invoke();
+            RoomUtilities.onExit?.Invoke();
         }
 
         private void AllEnemiesEvents()
         {
             // global events
-            RoomUtilities.allEnemiesDeadEvents?.Invoke();
+            RoomUtilities.onEarlyAllEnemiesDead?.Invoke();
+            RoomUtilities.onAllEnemiesDead?.Invoke();
 
             // local events
             allEnemiesDeadCalled = true;
