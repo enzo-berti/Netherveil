@@ -48,12 +48,12 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         stateEnded = false;
         Context.Stats.SetValue(Stat.SPEED, 3);
         Context.IsInvincibleCount = 1;
+        Context.Animator.SetTrigger("Guard");
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-
     }
 
     // This method will be call every frame.

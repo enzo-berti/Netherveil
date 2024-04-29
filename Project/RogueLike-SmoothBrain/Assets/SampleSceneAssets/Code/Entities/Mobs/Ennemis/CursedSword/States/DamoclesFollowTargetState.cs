@@ -28,6 +28,7 @@ public class DamoclesFollowTargetState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         Context.Stats.SetValue(Stat.SPEED, 5);
+        Context.Animator.SetTrigger("BackToWalk");
     }
 
     // This method will be call only one time after the last update.
