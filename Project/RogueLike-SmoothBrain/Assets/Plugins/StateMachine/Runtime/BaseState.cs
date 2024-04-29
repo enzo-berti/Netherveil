@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace StateMachine
 {
     public abstract class BaseState<T>
@@ -26,7 +28,10 @@ namespace StateMachine
             CheckSwitchStates();
 
             if (!isSwitch)
+            {
                 UpdateState();
+            }
+                
 
             isSwitch = false;
         }

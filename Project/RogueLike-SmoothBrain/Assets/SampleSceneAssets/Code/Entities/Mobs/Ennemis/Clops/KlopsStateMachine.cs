@@ -3,6 +3,7 @@ using StateMachine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using UnityEditor;
 
 public class KlopsStateMachine : Mobs, IKlops
 {
@@ -74,7 +75,6 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         if (isFreeze || IsSpawning)
             return;
-
         base.Update();
 
         currentState.Update();
@@ -140,4 +140,37 @@ public class KlopsStateMachine : Mobs, IKlops
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
+    #region EDITOR
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (!Selection.Contains(gameObject))
+            return;
+
+        DisplayVisionRange(VisionAngle, 3.0f);
+        DisplayAttackRange(VisionAngle);
+        DisplayInfos();
+        DisplayWanderZone();
+    }
+
+    protected override void DisplayInfos()
+    {
+        Handles.Label(
+        transform.position + transform.up,
+        stats.GetEntityName() +
+        "\n - Health : " + stats.GetValue(Stat.HP) +
+        "\n - Speed : " + stats.GetValue(Stat.SPEED) +
+        "\n - State : " + currentState?.ToString(),
+        new GUIStyle()
+        {
+            alignment = TextAnchor.MiddleLeft,
+            normal = new GUIStyleState()
+            {
+                textColor = Color.black
+            }
+        });
+    }
+#endif
+    #endregion
 }
+
