@@ -45,9 +45,6 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
     bool attackEnded = false;
 
-    // DEBUG
-    bool debugMode = true;
-
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -166,7 +163,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
             // vérifie la collision avec la hitbox du dash
             if (!Context.PlayerHit)
             {
-                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_CHARGE].data, debugMode: debugMode);
+                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_CHARGE].data, debugMode: Context.DebugMode);
             }
 
             if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance || Context.PlayerHit)
@@ -182,7 +179,8 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                 SwitchAttack(currentAttack, CircularStates.ATTACK);
 
                 // DEBUG
-                Context.DisableHitboxes();
+                if (Context.DebugMode)
+                    Context.DisableHitboxes();
             }
         }
     }
@@ -196,15 +194,18 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
             // vérifie la collision
             if (!Context.PlayerHit)
             {
-                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_ATTACK].data, debugMode: debugMode);
+                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_ATTACK].data, debugMode: Context.DebugMode);
             }
 
             // fix animation
             if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length - 1f)
             {
-                if (Context.PlayerHit && Random.Range(0, 11) >= 0) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur
+                if (Context.HasLeftArm)
                 {
-                    Context.Animator.SetBool(thrustHash, true);
+                    if (Context.PlayerHit && Random.Range(0, 11) >= 0) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur (et qu'il a son bras gauche)
+                    {
+                        Context.Animator.SetBool(thrustHash, true);
+                    }
                 }
 
                 // à la fin de l'attaque, ...
@@ -217,7 +218,8 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                         Context.PlayerHit = false;
 
                         // DEBUG
-                        Context.DisableHitboxes();
+                        if (Context.DebugMode)
+                            Context.DisableHitboxes();
                     }
                     else attackEnded = true; // sort du state
                 }
@@ -236,7 +238,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
             // vérifie la collision avec la hitbox de l'estoc
             if (!Context.PlayerHit)
             {
-                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_THRUST].data, debugMode: debugMode);
+                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_THRUST].data, debugMode: Context.DebugMode);
             }
 
             if (attackDuration > Context.Animator.GetCurrentAnimatorClipInfo(0).Length)

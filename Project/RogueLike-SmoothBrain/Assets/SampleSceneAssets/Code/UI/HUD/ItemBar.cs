@@ -4,12 +4,14 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Samples.RebindUI;
 using UnityEngine.UI;
 
 public class ItemBar : MonoBehaviour
 {
     private Hero hero;
     private int maxItemDisplay = 5;
+    [SerializeField] private KeybindingsIcons iconsList;
     [SerializeField] private GameObject framePf;
     [SerializeField] private ItemDatabase database;
     [SerializeField] private Transform itemPassiveTransform;
@@ -27,6 +29,8 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Texture divineTexture;
 
     [SerializeField] private TMP_Text cooldownActiveTextMesh;
+    [SerializeField] private Image keyActiveBack;
+    [SerializeField] private Image keyAbilityBack;
     [SerializeField] private TMP_Text keyActiveTextMesh;
     [SerializeField] private TMP_Text keyAbilityTextMesh;
 
@@ -77,6 +81,9 @@ public class ItemBar : MonoBehaviour
 
         keyActiveTextMesh.text = keyActive.ToUpper();
         keyAbilityTextMesh.text = keyAbility.ToUpper();
+
+        keyActiveBack.sprite = iconsList.kb.GetSprite(keyActive);
+        keyAbilityBack.sprite = iconsList.kb.GetSprite(keyAbility);
     }
 
     private void UpdateGamepadBiding()
@@ -86,6 +93,9 @@ public class ItemBar : MonoBehaviour
 
         keyActiveTextMesh.text = keyActive.ToUpper();
         keyAbilityTextMesh.text = keyAbility.ToUpper();
+
+        keyActiveBack.sprite = iconsList.ps4.GetSprite(keyActive);
+        keyAbilityBack.sprite = iconsList.ps4.GetSprite(keyAbility);
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
@@ -149,17 +159,20 @@ public class ItemBar : MonoBehaviour
         float cooldown = 0.0f;
 
         SetFrameItemData(activeFrame, itemEffect, backItemActiveCooldown);
-        cooldownActiveTextMesh.gameObject.SetActive(true);
+        cooldownActiveTextMesh.transform.parent.gameObject.SetActive(true);
+        Image filler = cooldownActiveTextMesh.transform.parent.GetComponent<Image>();
 
         while (cooldown < hero.Inventory.ActiveItem.Cooldown)
         {
+            filler.fillAmount = (hero.Inventory.ActiveItem.Cooldown - cooldown) / hero.Inventory.ActiveItem.Cooldown;
+
             cooldown = Mathf.Max((hero.Inventory.ActiveItem as ItemEffect).CurrentEnergy, 0.0f);
             cooldownActiveTextMesh.text = (Mathf.RoundToInt(hero.Inventory.ActiveItem.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
             yield return null;
         }
 
         SetFrameItemData(activeFrame, itemEffect, backItemActiveNormal);
-        cooldownActiveTextMesh.gameObject.SetActive(false);
+        cooldownActiveTextMesh.transform.parent.gameObject.SetActive(false);
     }
 }
 

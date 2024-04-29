@@ -8,11 +8,13 @@ public class ItemEditor : Editor
     SerializedProperty itemName;
     SerializedProperty databaseProperty;
     SerializedProperty isRandomizedProperty;
+    SerializedProperty auraVFXProperty;
     private void OnEnable()
     {
         itemName = serializedObject.FindProperty("idItemName");
         databaseProperty = serializedObject.FindProperty("database");
         isRandomizedProperty = serializedObject.FindProperty("isRandomized");
+        auraVFXProperty = serializedObject.FindProperty("auraVFX");
         ChosenName = itemName.stringValue;
     }
     public override void OnInspectorGUI()
@@ -38,6 +40,10 @@ public class ItemEditor : Editor
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(databaseProperty, new GUIContent("Database : "));
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(auraVFXProperty);
         EditorGUILayout.EndHorizontal();
 
         itemName.stringValue = ChosenName;

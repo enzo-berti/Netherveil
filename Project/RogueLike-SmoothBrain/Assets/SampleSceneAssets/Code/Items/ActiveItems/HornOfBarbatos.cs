@@ -6,6 +6,9 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 10f;
     private float increaseValue = 0.2f;
+#pragma warning disable IDE0052 // Supprimer les membres privés non lus
+    private readonly float displayValue;
+#pragma warning restore IDE0052 // Supprimer les membres privés non lus
     private List<Stat> avoidedStat = new List<Stat>()
     {
         Stat.CORRUPTION,
@@ -15,6 +18,7 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
 
     public HornOfBarbatos()
     {
+        displayValue = Cooldown;
         RoomUtilities.exitEvents += ResetStat;
     }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.VFX;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
@@ -15,6 +16,7 @@ public class Item : MonoBehaviour
 
     [SerializeField] private bool isRandomized = true;
     [SerializeField] private ItemDatabase database;
+    [SerializeField] VisualEffect auraVFX;
 
     private ItemEffect itemEffect;
     private Color rarityColor = Color.white;
@@ -41,7 +43,8 @@ public class Item : MonoBehaviour
         }
         if (isRandomized)
         {
-            RandomizeItem(this);
+            RandMilestone(this);
+            //RandomizeItem(this);
         }
 
         itemEffect = LoadClass();
@@ -58,6 +61,9 @@ public class Item : MonoBehaviour
 
         itemDescription = GetComponent<ItemDescription>();
         itemDescription.SetDescription(idItemName);
+        auraVFX.SetFloat("Orbs amount", (float)(data.RarityTier + 1));
+        auraVFX.SetVector4("Color", rarityColor);
+        auraVFX.Play();
     }
 
     public static void InvokeOnRetrieved(ItemEffect effect)
@@ -68,6 +74,28 @@ public class Item : MonoBehaviour
     private ItemEffect LoadClass()
     {
         return Assembly.GetExecutingAssembly().CreateInstance(idItemName.GetPascalCase()) as ItemEffect;
+    }
+
+    static public int itemSpawn = 0;
+    static public void RandMilestone(Item item)
+    {
+        switch (itemSpawn)
+        {
+            case 0:
+                item.idItemName = "SpearGhosts";
+                break;
+            case 1:
+                item.idItemName = "SpearStrike";
+                break;
+            case 2:
+                item.idItemName = "ThunderLink";
+                break;
+            default:
+                RandomizeItem(item);
+                break;
+        }
+
+        itemSpawn++;
     }
 
     static public void RandomizeItem(Item item)

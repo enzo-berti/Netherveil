@@ -37,8 +37,9 @@ public class SonielStateMachine : Mobs, ISoniel
     Hero player = null;
     [SerializeField] SonielSounds sounds;
     [SerializeField] List<NestedList<Collider>> attackColliders;
-    bool phaseTwo = true;
+    bool phaseTwo = false;
     bool playerHit = false;
+    float initialHP;
     float[] attacksRange = { 4f }; // A changer
 
     [Header("Spinning swords")]
@@ -47,10 +48,13 @@ public class SonielStateMachine : Mobs, ISoniel
     bool hasArms = true;
     bool[] tiedArms = { true, true };
     float collisionImmuneTimer = 0f;
-    readonly float MAX_COLLISION_IMMUNE_COOLDOWN = 0.2f;
+    readonly float MAX_COLLISION_IMMUNE_COOLDOWN = 0.3f;
 
     // anim hash
     int deathHash;
+
+    // DEBUG
+    bool debugMode = true;
 
     #region getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -69,6 +73,7 @@ public class SonielStateMachine : Mobs, ISoniel
     public bool HasRightArm { get => tiedArms[1]; set => tiedArms[1] = value; }
     public Transform[] Wrists { get => wrists; }
     public SonielProjectile[] Swords { get => swords; }
+    public bool DebugMode { get => debugMode; }
 
     #endregion
 
@@ -84,12 +89,16 @@ public class SonielStateMachine : Mobs, ISoniel
         deathHash = Animator.StringToHash("Death");
 
         player = Utilities.Hero;
+
+        initialHP = stats.GetValue(Stat.HP);
     }
 
     protected override void Update()
     {
         if (isFreeze || IsSpawning)
             return;
+
+        phaseTwo = stats.GetValue(Stat.HP) <= initialHP / 2f;
 
         base.Update();
         currentState.Update();
@@ -129,7 +138,17 @@ public class SonielStateMachine : Mobs, ISoniel
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+        Destroy(transform.parent.gameObject, 4.07f); // j'en ai rien à foutre
+
+        for (int i = 0; i < 2; i++)
+        {
+            swords[i].transform.parent = null;
+            Rigidbody rb = swords[i].GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
+            Destroy(swords[i].gameObject, 4.07f);
+        }
 
         currentState = factory.GetState<SonielDeathState>();
     }
@@ -232,22 +251,26 @@ public class SonielStateMachine : Mobs, ISoniel
     {
         if (collisionImmuneTimer >= MAX_COLLISION_IMMUNE_COOLDOWN)
         {
-            if (!HasLeftArm)
+            if (currentState is not SonielCircularHit)
             {
-                AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_LEFT].data, debugMode: false);
-            }
-            if (!HasRightArm)
-            {
-                AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_RIGHT].data, debugMode: false);
-            }
+                if (!HasLeftArm)
+                {
+                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_LEFT].data, debugMode: debugMode);
+                }
+                if (!HasRightArm)
+                {
+                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_RIGHT].data, debugMode: debugMode);
+                }
 
-            if (PlayerHit)
-            {
-                collisionImmuneTimer = 0f;
-                PlayerHit = false;
+                if (PlayerHit)
+                {
+                    collisionImmuneTimer = 0f;
+                    PlayerHit = false;
 
-                // DEBUG
-                DisableHitboxes();
+                    // DEBUG
+                    if (debugMode)
+                        DisableHitboxes();
+                }
             }
         }
         else collisionImmuneTimer += Time.deltaTime;

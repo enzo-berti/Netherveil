@@ -275,8 +275,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void TriggerAnimAndVFX(int curStep, int lastStep)
     {
         playerInput.DisableGameplayInputs();
-        animator.ResetTrigger("UpgradingStats");
-        animator.SetTrigger("UpgradingStats");
         State = (int)Hero.PlayerState.UPGRADING_STATS;
         canLaunchUpgrade = false;
 
@@ -293,20 +291,32 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+            animator.ResetTrigger("CorruptionUpgrade");
+            animator.SetTrigger("CorruptionUpgrade");
         }
         else if (benedictionUpgradeOnly)
         {
             playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+            animator.ResetTrigger("BenedictionUpgrade");
+            animator.SetTrigger("BenedictionUpgrade");
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
             playerController.corruptionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
+
             if (hascorruptionDrawbackPositiveToNegative && curStep < 0)
             {
                 playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+                animator.ResetTrigger("BenedictionUpgrade");
+                animator.SetTrigger("BenedictionUpgrade");
+            }
+            else
+            {
+                playerInput.EnableGameplayInputs();
+                State = (int)Entity.EntityState.MOVE;
             }
         }
         else if (hasbenedictionDrawbackNegativeToPositive || hasbenedictionDrawbackNegativeOnly)
@@ -317,6 +327,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+                animator.ResetTrigger("CorruptionUpgrade");
+                animator.SetTrigger("CorruptionUpgrade");
+            }
+            else
+            {
+                playerInput.EnableGameplayInputs();
+                State = (int)Entity.EntityState.MOVE;
             }
         }
     }
