@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     public VisualEffect corruptionDrawbackVFX;
     public VisualEffect DivineShieldVFX;
     public VisualEffect DamnationVeilVFX;
+    public VisualEffect DashShieldVFX;
 
     [Header("SFXs")]
     public EventReference DashSFX;
