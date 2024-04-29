@@ -10,9 +10,7 @@
 //      }
 // }
 
-using FMOD;
 using StateMachine; // include all scripts about StateMachines
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class SonielBerserk : BaseState<SonielStateMachine>

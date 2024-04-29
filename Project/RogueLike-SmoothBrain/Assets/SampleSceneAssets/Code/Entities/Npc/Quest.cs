@@ -1,10 +1,8 @@
 using Map;
 using Map.Generation;
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public abstract class Quest
 {
