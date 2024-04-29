@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,6 +15,11 @@ public class PreviewPicture : MonoBehaviour
 
     public void TakePicture()
     {
+        StartCoroutine(TakePictureRoutine());
+    }
+
+    private IEnumerator TakePictureRoutine()
+    {
         DisableAllToPictures();
         GameObject lastObject = null;
 
@@ -26,6 +32,8 @@ public class PreviewPicture : MonoBehaviour
             lastObject = p;
 
             Picture(spritePath, p.name);
+
+            yield return null;
         }
     }
 
