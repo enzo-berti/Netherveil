@@ -3,11 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Map;
+using UnityEngine.EventSystems;
 
 public class GameOver : MonoBehaviour
 {
     private Camera deathCam;
 
+    [SerializeField] private Selectable firstSelect;
     [SerializeField] private Image panel;
     [SerializeField] private Image reload;
     [SerializeField] private TextMeshProUGUI reloadText;
@@ -35,6 +37,8 @@ public class GameOver : MonoBehaviour
 
         DisableAllMob();
         StartCoroutine(IncreaseAlpha());
+
+        EventSystem.current.SetSelectedGameObject(firstSelect.gameObject);
     }
 
     private void DisableAllMob()

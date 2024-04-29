@@ -343,6 +343,11 @@ namespace Map.Generation
             exitRoom.neighbours.Add(room);
             room.neighbours.Add(exitRoom);
 
+            // Removed used door
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            doorsGenerator.RemoveDoor(entranceDoor);
+            genParam.RemoveDoor(exitDoor);
+
             // Generate props
             GenerateGates(roomGO, entranceDoor);
             // Stairs
@@ -350,11 +355,6 @@ namespace Map.Generation
             {
                 GenerateStairs(roomGO);
             }
-
-            // Removed used door
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
-            doorsGenerator.RemoveDoor(entranceDoor);
-            genParam.RemoveDoor(exitDoor);
 
             // Add the new doors from the new room into the possible candidates
             genParam.AddAvailableDoors(doorsGenerator);
