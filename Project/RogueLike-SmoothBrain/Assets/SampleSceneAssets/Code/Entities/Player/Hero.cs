@@ -93,6 +93,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             attacker.OnAttackHit += attacker.ApplyStatus;
         }
 
+        OnAttackHit += ApplyLifeSteal;
         RoomUtilities.allEnemiesDeadEvents += ChangeStatsBasedOnAlignment;
         RoomUtilities.allChestOpenEvents += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
@@ -100,6 +101,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void OnDestroy()
     {
+        OnAttackHit -= ApplyLifeSteal;
         RoomUtilities.allEnemiesDeadEvents -= ChangeStatsBasedOnAlignment;
         RoomUtilities.allChestOpenEvents -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
@@ -200,6 +202,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         damageable.ApplyDamage(damages, this);
 
         OnAttackHit?.Invoke(damageable, this);
+    }
+
+    private void ApplyLifeSteal(IDamageable damageable, IAttacker attacker)
+    {
+        AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
+        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
+        lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
+        FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
+        Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
     }
 
     #region Corruption&BenedictionManagement

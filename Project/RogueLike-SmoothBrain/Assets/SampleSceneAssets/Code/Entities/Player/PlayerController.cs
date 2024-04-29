@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;
+    [SerializeField] SkinnedMeshRenderer bodyMesh;
     public List<VisualEffect> SpearAttacksVFX;
     public VisualEffect DashAttackVFX;
     public VisualEffect HitVFX;
@@ -69,6 +70,8 @@ public class PlayerController : MonoBehaviour
     public VisualEffect DivineShieldVFX;
     public VisualEffect DamnationVeilVFX;
     public VisualEffect DashShieldVFX;
+
+    public SkinnedMeshRenderer BodyMesh { get => bodyMesh; }
 
     [Header("SFXs")]
     public EventReference DashSFX;
