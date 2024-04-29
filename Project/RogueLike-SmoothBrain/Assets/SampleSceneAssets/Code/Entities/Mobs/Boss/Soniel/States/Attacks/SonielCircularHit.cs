@@ -202,9 +202,12 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
             // fix animation
             if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length - 1f)
             {
-                if (Context.PlayerHit && Random.Range(0, 11) >= 0) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur
+                if (Context.HasLeftArm)
                 {
-                    Context.Animator.SetBool(thrustHash, true);
+                    if (Context.PlayerHit && Random.Range(0, 11) >= 0) // lance l'estoc avec 50% de chance s'il a déjà touché le joueur (et qu'il a son bras gauche)
+                    {
+                        Context.Animator.SetBool(thrustHash, true);
+                    }
                 }
 
                 // à la fin de l'attaque, ...
