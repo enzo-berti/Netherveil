@@ -1,11 +1,8 @@
-using UnityEngine;
 using StateMachine; // include all script about stateMachine
-using System.Linq;
-using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine.UIElements;
+using UnityEngine;
 
 public class SonielStateMachine : Mobs, ISoniel
 {
@@ -39,8 +36,8 @@ public class SonielStateMachine : Mobs, ISoniel
     [SerializeField] List<NestedList<Collider>> attackColliders;
     bool phaseTwo = false;
     bool playerHit = false;
+    float attackCooldown = 1f;
     float initialHP;
-    float[] attacksRange = { 4f }; // A changer
 
     [Header("Spinning swords")]
     [SerializeField] Transform[] wrists;
@@ -65,7 +62,7 @@ public class SonielStateMachine : Mobs, ISoniel
     public Hero Player { get => player; }
     public bool PhaseTwo { get => phaseTwo; }
     public bool PlayerHit { get => playerHit; set => playerHit = value; }
-    public float AttackRange { get => Mathf.Max(attacksRange); }
+    public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
 
     // spinning swords
     public bool HasArms { get => hasArms; set => hasArms = value; }
@@ -73,6 +70,8 @@ public class SonielStateMachine : Mobs, ISoniel
     public bool HasRightArm { get => tiedArms[1]; set => tiedArms[1] = value; }
     public Transform[] Wrists { get => wrists; }
     public SonielProjectile[] Swords { get => swords; }
+
+    // DEBUG
     public bool DebugMode { get => debugMode; }
 
     #endregion
@@ -138,7 +137,7 @@ public class SonielStateMachine : Mobs, ISoniel
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
-        Destroy(transform.parent.gameObject, 4.07f); // j'en ai rien à foutre
+        Destroy(transform.parent.gameObject, 4.07f + .5f); // j'en ai rien à foutre
 
         for (int i = 0; i < 2; i++)
         {
@@ -147,7 +146,7 @@ public class SonielStateMachine : Mobs, ISoniel
             rb.isKinematic = false;
             rb.useGravity = true;
             rb.constraints = RigidbodyConstraints.None;
-            Destroy(swords[i].gameObject, 4.07f);
+            Destroy(swords[i].gameObject, 4.07f + .5f);
         }
 
         currentState = factory.GetState<SonielDeathState>();
@@ -285,7 +284,6 @@ public class SonielStateMachine : Mobs, ISoniel
         //if (!Selection.Contains(gameObject))
         //    return;
 
-        DisplayAttackRange(360, AttackRange, false);
         DisplayInfos();
     }
 

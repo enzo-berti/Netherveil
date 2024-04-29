@@ -87,6 +87,8 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
         Context.Animator.SetBool(thrustHash, false);
 
+        Context.AttackCooldown = 1.5f + Random.Range(-0.25f, 0.25f);
+
         // DEBUG
         Context.DisableHitboxes();
     }

@@ -94,6 +94,8 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
 
         Context.Animator.SetBool(throwToIdleHash, true);
 
+        Context.AttackCooldown = 2f + Random.Range(-0.5f, 0.5f);
+
         // DEBUG
         if (Context.DebugMode)
             Context.DisableHitboxes();
