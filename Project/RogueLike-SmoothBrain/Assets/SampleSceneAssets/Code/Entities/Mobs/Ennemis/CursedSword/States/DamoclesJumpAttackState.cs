@@ -35,6 +35,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     private bool jumpRoutineOn;
     private bool returnToPos = false;
     private Vector3 previousPos;
+    private Vector3 previousBladePos;
     private Vector3 jumpTarget;
     Quaternion baseRotation;
     // This method will be call every Update to check and change a state.
@@ -47,6 +48,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         else if (isTargetTouched && stateEnded)
         {
             SwitchState(Factory.GetState<DamoclesEnGardeState>());
+            Debug.Log("test");
         }
         else if (!isTargetTouched && stateEnded)
         {
@@ -63,12 +65,13 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         stateEnded = false;
         isTargetTouched = false;
         Context.Stats.SetValue(Stat.SPEED, 5);
+        Context.Agent.enabled = false;
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-
+        
     }
 
     // This method will be call every frame.
@@ -109,6 +112,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         {
             if (!returnToPos && Context.transform.position != previousPos)
             {
+                Context.Animator.SetTrigger("BackToWalk");
                 returnToPos = true;
                 Context.MoveTo(previousPos);
             }
@@ -132,16 +136,18 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     {
         jumpRoutineOn = true;
         float timer = 0f;
-        float a = -16;
-        float b = 16;
+        float a = -12;
+        float b = -a;
         float c = previousPos.y;
-        while(timer < 1f)
+
+        float timerWanted = MathsExtension.Resolve2ndDegree(a, b, c, -0.25f).Max();
+        Context.Animator.SetTrigger("Jump");
+        
+        while(timer < timerWanted)
         {
-            Vector3 WantedRotation = baseRotation.eulerAngles;
-            WantedRotation.x = Mathf.Lerp(baseRotation.eulerAngles.x, baseRotation.eulerAngles.x + 180, timer);
-            Context.gameObject.transform.rotation = Quaternion.Euler(WantedRotation);
+            Context.gameObject.transform.rotation = baseRotation;
             timer += Time.deltaTime;
-            timer = timer > 1f ? 1f : timer;
+            timer = timer > timerWanted ? timerWanted : timer;
             Vector3 currentPos = Vector3.Lerp(previousPos, posToReach, timer);
             currentPos.y = MathsExtension.SquareFunction(a, b, c, timer);
             Context.transform.position = currentPos;
@@ -154,19 +160,20 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
 
         if (player != null)
         {
-            Context.Attack(player);
+            Context.Attack(player, (Utilities.Player.transform.position - previousPos).normalized);
+            (player as Entity).AddStatus(new Bleeding(5.0f, 1));
             isTargetTouched = true;
-            Debug.Log("targetTouched");
+            Context.Agent.enabled = true;
         }
         else
         {
             isTargetTouched = false;
             stateEnded = true;
-            //son qui fait crash ici
             Context.DamoclesSound.stuckSound.Play(Context.transform.position);
         }
 
         yield return null;
         
     }
+
 }

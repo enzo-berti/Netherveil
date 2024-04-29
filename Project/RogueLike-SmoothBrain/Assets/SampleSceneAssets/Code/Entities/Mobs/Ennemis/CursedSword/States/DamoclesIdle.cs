@@ -27,6 +27,7 @@ public class DamoclesIdle : BaseState<DamoclesStateMachine>
         Context.Stats.SetValue(Stat.SPEED, 5);
         elapsedTimeMovement = Time.time;
         Context.IsInvincibleCount = 1;
+        Context.Animator.SetTrigger("BackToWalk");
     }
 
     // This method will be call only one time after the last update.
@@ -42,8 +43,8 @@ public class DamoclesIdle : BaseState<DamoclesStateMachine>
             return;
 
         elapsedTimeMovement = Time.time;
-        Debug.Log("New Point");
-        Vector3 pointToReach3D = MathsExtension.GetPointInCircle(Context.gameObject.transform.position, 5, 20);
+        
+        Vector3 pointToReach3D = Context.GetRandomPointOnWanderZone(Context.gameObject.transform.position, 2, 5);
 
         Context.MoveTo(pointToReach3D * Context.NormalSpeed);
     }
