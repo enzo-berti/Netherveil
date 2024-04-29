@@ -138,12 +138,16 @@ public class SonielStateMachine : Mobs, ISoniel
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+        Destroy(transform.parent.gameObject, 4.07f); // j'en ai rien à foutre
 
         for (int i = 0; i < 2; i++)
         {
-            if (swords[i].transform.parent == null)
-                Destroy(swords[i].gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+            swords[i].transform.parent = null;
+            Rigidbody rb = swords[i].GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
+            Destroy(swords[i].gameObject, 4.07f);
         }
 
         currentState = factory.GetState<SonielDeathState>();
