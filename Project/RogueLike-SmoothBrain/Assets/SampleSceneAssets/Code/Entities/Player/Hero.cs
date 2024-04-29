@@ -133,6 +133,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 animator.ResetTrigger("ChargedAttackRelease");
                 animator.SetBool("ChargedAttackCasting", false);
                 animator.ResetTrigger("BasicAttack");
+                State = (int)Entity.EntityState.MOVE;
                 AudioManager.Instance.PlaySound(playerController.HitSFX);
                 FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
                 playerController.HitVFX.Play();
