@@ -14,7 +14,7 @@ public class ZiggoSpitAttackState : BaseState<ZiggoStateMachine>
     {
         if (stateEnded)
         {
-            SwitchState(Factory.GetState<ZiggoTurnAroundTargetState>());
+            SwitchState(Factory.GetState<ZiggoDashAttack>());
         }
     }
 
