@@ -84,7 +84,7 @@ namespace Map.Generation
         {
             if (!doors.Remove(door))
             {
-                Debug.LogWarning("Try to set a door state with the wrong GameObject in ", gameObject);
+                Debug.LogWarning("Try to remove a door with the wrong struct", gameObject);
                 return;
             }
         }

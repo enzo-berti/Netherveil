@@ -226,7 +226,7 @@ namespace Map.Generation
                     continue;
                 }
 
-                InitRoom(roomGO, ref genParam, entranceDoor, exitDoor);
+                InitRoom(roomGO, ref genParam, ref entranceDoor, exitDoor);
                 return true;
             }
 
@@ -254,7 +254,7 @@ namespace Map.Generation
             Door entranceDoor = doorsGenerator.doors[0];
             TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
 
-            InitRoom(roomGO, ref genParam, entranceDoor, exitDoor);
+            InitRoom(roomGO, ref genParam, ref entranceDoor, exitDoor);
 
             roomGO.transform.parent = gameObject.transform;
         }
@@ -332,7 +332,7 @@ namespace Map.Generation
             return colliders.Any();
         }
 
-        private void InitRoom(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, Door exitDoor)
+        private void InitRoom(GameObject roomGO, ref GenerationParam genParam, ref Door entranceDoor, Door exitDoor)
         {
             // Set parent room
             roomGO.transform.SetParent(gameObject.transform);
