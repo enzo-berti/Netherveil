@@ -1,9 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
+    [SerializeField] private Selectable firstSelect;
+
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject settings;
 
@@ -26,6 +30,8 @@ public class PauseMenu : MonoBehaviour
         gameObject.SetActive(true);
 
         OnPause?.Invoke();
+
+        EventSystem.current.SetSelectedGameObject(firstSelect.gameObject);
     }
 
     public void Resume()

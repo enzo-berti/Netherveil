@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -23,6 +24,7 @@ public abstract class Mobs : Entity
     public VisualEffect StatSuckerVFX;
     [SerializeField] protected VisualEffect spawningVFX;
     private HitMaterialApply hit;
+    private Material spawningMat;
 
     // opti
     protected int frameToUpdate;
@@ -99,7 +101,40 @@ public abstract class Mobs : Entity
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
 
+        AddSpawningMat();
         wanderZone.center = transform.position;
+    }
+
+    private void AddSpawningMat()
+    {
+        spawningMat = GameResources.Get<Material>("MAT_VFX_Spawn");
+
+        if (GetComponentsInChildren<SkinnedMeshRenderer>().Length == 0)
+        {
+            MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer renderer in renderers)
+            {
+                List<Material> materials = new List<Material>(renderer.materials)
+            {
+                spawningMat
+            };
+                renderer.SetMaterials(materials);
+            }
+        }
+        else
+        {
+            SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+            foreach (SkinnedMeshRenderer renderer in renderers)
+            {
+                List<Material> materials = new List<Material>(renderer.materials)
+            {
+                spawningMat
+            };
+                renderer.SetMaterials(materials);
+            }
+        }
+
+        StartCoroutine(SpawningMatCoroutine());
     }
 
     protected override void Update()
@@ -136,6 +171,46 @@ public abstract class Mobs : Entity
         animator.speed = 1;
         IsSpawning = false;
         IsKnockbackable = true;
+    }
+
+    private IEnumerator SpawningMatCoroutine()
+    {
+        if (GetComponentsInChildren<SkinnedMeshRenderer>().Length == 0)
+        {
+            MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer renderer in renderers)
+            {
+                Material spawningMaterial = renderer.materials.FirstOrDefault(x => x.shader == spawningMat.shader);
+                while (spawningMaterial.GetFloat("_Alpha") > 0f)
+                {
+                    spawningMaterial.SetFloat("_Alpha", spawningMaterial.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
+                    spawningMaterial.SetFloat("_Alpha", Mathf.Max(spawningMaterial.GetFloat("_Alpha"), 0f));;
+                    yield return null;
+                }
+
+                List<Material> materials = new(renderer.materials);
+                materials.RemoveAll(mat => mat.shader == spawningMat.shader);
+                renderer.SetMaterials(materials);
+            }
+        }
+        else
+        {
+            SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+            foreach (SkinnedMeshRenderer renderer in renderers)
+            {
+                Material spawningMaterial = renderer.materials.FirstOrDefault(x => x.shader == spawningMat.shader);
+                while (spawningMaterial.GetFloat("_Alpha") > 0f)
+                {
+                    spawningMaterial.SetFloat("_Alpha", spawningMaterial.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
+                    spawningMaterial.SetFloat("_Alpha", Mathf.Max(spawningMaterial.GetFloat("_Alpha"), 0f));
+                    yield return null;
+                }
+
+                List<Material> materials = new(renderer.materials);
+                materials.RemoveAll(mat => mat.shader == spawningMat.shader);
+                renderer.SetMaterials(materials);
+            }
+        }
     }
 
     protected virtual IEnumerator Brain()

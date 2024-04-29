@@ -13,9 +13,9 @@ public class Outline : MonoBehaviour
         mOutlineMaterial = GameResources.Get<Material>("OutlineShaderMat");
 
         if (mRenderer == null)
-            mRenderer = GetComponentsInChildren<Renderer>();
+            mRenderer = GetComponentsInChildren<MeshRenderer>();
         else if (mRenderer.Length == 0)
-            mRenderer = GetComponentsInChildren<Renderer>();
+            mRenderer = GetComponentsInChildren<MeshRenderer>();
 
         mOutlineMaterial.SetColor("_Outline_Color", outlineColor);
         mOutlineMaterial.SetFloat("_Outline_thickness", outlineThickness);

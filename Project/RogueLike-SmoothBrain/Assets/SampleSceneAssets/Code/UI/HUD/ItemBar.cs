@@ -4,12 +4,14 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Samples.RebindUI;
 using UnityEngine.UI;
 
 public class ItemBar : MonoBehaviour
 {
     private Hero hero;
     private int maxItemDisplay = 5;
+    [SerializeField] private KeybindingsIcons iconsList;
     [SerializeField] private GameObject framePf;
     [SerializeField] private ItemDatabase database;
     [SerializeField] private Transform itemPassiveTransform;
@@ -27,6 +29,8 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Texture divineTexture;
 
     [SerializeField] private TMP_Text cooldownActiveTextMesh;
+    [SerializeField] private Image keyActiveBack;
+    [SerializeField] private Image keyAbilityBack;
     [SerializeField] private TMP_Text keyActiveTextMesh;
     [SerializeField] private TMP_Text keyAbilityTextMesh;
 
@@ -75,8 +79,14 @@ public class ItemBar : MonoBehaviour
         string keyActive = keyboardActive.action.bindings.First().path.Split("/").Last();
         string keyAbility = keyboardAbility.action.bindings.First().path.Split("/").Last();
 
+        keyActiveTextMesh.gameObject.SetActive(true);
+        keyAbilityTextMesh.gameObject.SetActive(true);
+
         keyActiveTextMesh.text = keyActive.ToUpper();
         keyAbilityTextMesh.text = keyAbility.ToUpper();
+
+        keyActiveBack.sprite = iconsList.kb.GetSprite(keyActive);
+        keyAbilityBack.sprite = iconsList.kb.GetSprite(keyAbility);
     }
 
     private void UpdateGamepadBiding()
@@ -84,8 +94,14 @@ public class ItemBar : MonoBehaviour
         string keyActive = gamepadActive.action.bindings.First().path.Split("/").Last();
         string keyAbility = gamepadAbility.action.bindings.First().path.Split("/").Last();
 
+        keyActiveTextMesh.gameObject.SetActive(false);
+        keyAbilityTextMesh.gameObject.SetActive(false);
+
         keyActiveTextMesh.text = keyActive.ToUpper();
         keyAbilityTextMesh.text = keyAbility.ToUpper();
+
+        keyActiveBack.sprite = iconsList.ps4.GetSprite(keyActive);
+        keyAbilityBack.sprite = iconsList.ps4.GetSprite(keyAbility);
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
