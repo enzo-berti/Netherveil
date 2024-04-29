@@ -18,6 +18,7 @@ public class DashShield : ItemEffect , IPassiveItem
     {
         //enable Shield VFX
         GameObject.FindWithTag("Player").GetComponent<Hero>().IsInvincibleCount++;
+        Utilities.Player.GetComponent<PlayerController>().DashShieldVFX.Reinit();
         Utilities.Player.GetComponent<PlayerController>().DashShieldVFX.Play();
     }
 

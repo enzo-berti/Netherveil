@@ -23,7 +23,6 @@ public class Bleeding : OverTimeStatus
 
     public override void OnFinished()
     {
-        throw new System.NotImplementedException();
     }
 
     protected override void Effect()
