@@ -19,12 +19,12 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     public HornOfBarbatos()
     {
         displayValue = Cooldown;
-        RoomUtilities.exitEvents += ResetStat;
+        RoomUtilities.onExit += ResetStat;
     }
 
     ~HornOfBarbatos()
     {
-        RoomUtilities.exitEvents -= ResetStat;
+        RoomUtilities.onExit -= ResetStat;
     }
 
     public void Activate()

@@ -27,9 +27,9 @@ public abstract class Quest
     public virtual void AcceptQuest()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
-        RoomUtilities.allEnemiesDeadEvents += CheckQuestFinished;
-        RoomUtilities.allChestOpenEvents += CheckQuestFinished;
-        RoomUtilities.enterEvents += CheckQuestFinished;
+        RoomUtilities.onAllEnemiesDead += CheckQuestFinished;
+        RoomUtilities.onAllChestOpen += CheckQuestFinished;
+        RoomUtilities.onEnter += CheckQuestFinished;
     }
 
     static public Quest LoadClass(string name, QuestTalker.TalkerType type, QuestTalker.TalkerGrade grade)
@@ -69,9 +69,9 @@ public abstract class Quest
         }
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
 
-        RoomUtilities.allEnemiesDeadEvents -= CheckQuestFinished;
-        RoomUtilities.allChestOpenEvents -= CheckQuestFinished;
-        RoomUtilities.enterEvents -= CheckQuestFinished;
+        RoomUtilities.onAllEnemiesDead -= CheckQuestFinished;
+        RoomUtilities.onAllChestOpen -= CheckQuestFinished;
+        RoomUtilities.onEnter -= CheckQuestFinished;
     }
 
     protected void CheckQuestFinished()

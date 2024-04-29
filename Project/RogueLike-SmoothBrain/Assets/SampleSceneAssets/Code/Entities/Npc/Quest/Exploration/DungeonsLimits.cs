@@ -26,7 +26,7 @@ public class DungeonsLimits : Quest
         }
 
         progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
-        RoomUtilities.enterEvents += UpdateCount;
+        RoomUtilities.onEnter += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -37,7 +37,7 @@ public class DungeonsLimits : Quest
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        RoomUtilities.enterEvents -= UpdateCount;
+        RoomUtilities.onEnter -= UpdateCount;
     }
 
     private void UpdateCount()

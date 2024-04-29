@@ -23,7 +23,7 @@ public class TestOfEndurance : Quest
                 break;
         }
         progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
-        RoomUtilities.allEnemiesDeadEvents += UpdateCount;
+        RoomUtilities.onAllEnemiesDead += UpdateCount;
         Hero.OnTakeDamage += TestHp;
     }
 
@@ -31,14 +31,14 @@ public class TestOfEndurance : Quest
     {
         base.QuestLost();
         Hero.OnTakeDamage -= TestHp;
-        RoomUtilities.allEnemiesDeadEvents -= UpdateCount;
+        RoomUtilities.onAllEnemiesDead -= UpdateCount;
     }
 
     protected override void QuestFinished()
     {
         base.QuestFinished();
         Hero.OnTakeDamage -= TestHp;
-        RoomUtilities.allEnemiesDeadEvents -= UpdateCount;
+        RoomUtilities.onAllEnemiesDead -= UpdateCount;
     }
 
     private void TestHp(int _arg, IAttacker _attacker)
