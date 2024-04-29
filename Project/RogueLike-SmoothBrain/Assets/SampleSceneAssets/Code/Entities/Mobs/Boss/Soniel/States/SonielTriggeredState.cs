@@ -10,7 +10,10 @@
 //      }
 // }
 
+using FMOD;
 using StateMachine; // include all scripts about StateMachines
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SonielTriggeredState : BaseState<SonielStateMachine>
@@ -21,17 +24,12 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Context.AttackCooldown <= 0f)
         {
-            SwitchState(Factory.GetState<SonielCircularHit>());
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SwitchState(Factory.GetState<SonielBerserk>());
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SwitchState(Factory.GetState<SonielSpinningSwords>());
+            List<Type> availableAttacks = GetAvailableAttacks();
+            if (availableAttacks.Count <= 0) return;
+
+            SwitchState(Factory.GetState(availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)]));
         }
     }
 
@@ -53,6 +51,8 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
         Context.MoveTo(Context.Player.transform.position - (Context.Player.transform.position - Context.transform.position).normalized * 2f);
 
         Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
+
+        Context.AttackCooldown -= Time.deltaTime;
     }
 
     // This method will be called on state switch.
@@ -62,4 +62,40 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
+    #region Extra methods
+    List<Type> GetAvailableAttacks()
+    {
+        List<Type> availableAttacks = new();
+
+        if (Context.Swords[0].pickMeUp || Context.Swords[1].pickMeUp)
+        {
+            availableAttacks.Clear();
+            availableAttacks.Add(typeof(SonielSpinningSwords));
+            return availableAttacks;
+        }
+
+        float distanceToPlayer = Vector3.Distance(Context.transform.position, Context.Player.transform.position);
+
+        if (Context.HasRightArm)
+        {
+            if (distanceToPlayer <= 10f)
+            {
+                availableAttacks.Add(typeof(SonielCircularHit));
+            }
+            if (Context.HasLeftArm && distanceToPlayer >= 2f)
+            {
+                availableAttacks.Add(typeof(SonielBerserk));
+            }
+        }
+
+        if (distanceToPlayer >= 7f)
+        {
+            availableAttacks.Add(typeof(SonielSpinningSwords));
+        }
+
+        return availableAttacks;
+    }
+
+    #endregion
 }
