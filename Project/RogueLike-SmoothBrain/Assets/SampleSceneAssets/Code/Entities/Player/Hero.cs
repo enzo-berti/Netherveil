@@ -159,8 +159,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerController.OverridePlayerRotation(210f, true);
         animator.applyRootMotion = true;
         State = (int)EntityState.DEAD;
-        animator.ResetTrigger("Death");
-        animator.SetTrigger("Death");
+        animator.SetBool("IsKnockback", false);
+        animator.SetBool("IsDead", true);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
