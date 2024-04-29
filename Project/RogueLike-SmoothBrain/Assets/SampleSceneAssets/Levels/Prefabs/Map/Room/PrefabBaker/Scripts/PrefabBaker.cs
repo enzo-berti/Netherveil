@@ -47,7 +47,7 @@ namespace PrefabLightMapBaker
             if (!HasBakeData)
             {
                 BakeJustApplied = false;
-                Debug.LogWarning("PrefabBaker doesn't have bake data", this);
+                //Debug.LogWarning("PrefabBaker doesn't have bake data", this);
                 return;
             }
 

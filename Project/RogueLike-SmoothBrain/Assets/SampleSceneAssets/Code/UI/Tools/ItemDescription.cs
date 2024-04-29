@@ -61,7 +61,7 @@ public class ItemDescription : MonoBehaviour
                 else
                 {
                     splitDescription[i] = "N/A";
-                    Debug.LogWarning($"value : {valueToFind}, has not be found");
+                    Debug.LogWarning($"value : {valueToFind}, has not be found", gameObject);
                 }
             }
 
