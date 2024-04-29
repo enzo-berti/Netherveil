@@ -37,8 +37,9 @@ public class SonielStateMachine : Mobs, ISoniel
     Hero player = null;
     [SerializeField] SonielSounds sounds;
     [SerializeField] List<NestedList<Collider>> attackColliders;
-    bool phaseTwo = true;
+    bool phaseTwo = false;
     bool playerHit = false;
+    float initialHP;
     float[] attacksRange = { 4f }; // A changer
 
     [Header("Spinning swords")]
@@ -84,12 +85,16 @@ public class SonielStateMachine : Mobs, ISoniel
         deathHash = Animator.StringToHash("Death");
 
         player = Utilities.Hero;
+
+        initialHP = stats.GetValue(Stat.HP);
     }
 
     protected override void Update()
     {
         if (isFreeze || IsSpawning)
             return;
+
+        phaseTwo = stats.GetValue(Stat.HP) <= initialHP / 2f;
 
         base.Update();
         currentState.Update();
@@ -130,6 +135,12 @@ public class SonielStateMachine : Mobs, ISoniel
         animator.SetTrigger(deathHash);
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (swords[i].transform.parent == null)
+                Destroy(swords[i].gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+        }
 
         currentState = factory.GetState<SonielDeathState>();
     }
@@ -232,22 +243,25 @@ public class SonielStateMachine : Mobs, ISoniel
     {
         if (collisionImmuneTimer >= MAX_COLLISION_IMMUNE_COOLDOWN)
         {
-            if (!HasLeftArm)
+            if (currentState is not SonielCircularHit)
             {
-                AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_LEFT].data, debugMode: false);
-            }
-            if (!HasRightArm)
-            {
-                AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_RIGHT].data, debugMode: false);
-            }
+                if (!HasLeftArm)
+                {
+                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_LEFT].data, debugMode: false);
+                }
+                if (!HasRightArm)
+                {
+                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_RIGHT].data, debugMode: false);
+                }
 
-            if (PlayerHit)
-            {
-                collisionImmuneTimer = 0f;
-                PlayerHit = false;
+                if (PlayerHit)
+                {
+                    collisionImmuneTimer = 0f;
+                    PlayerHit = false;
 
-                // DEBUG
-                DisableHitboxes();
+                    // DEBUG
+                    DisableHitboxes();
+                }
             }
         }
         else collisionImmuneTimer += Time.deltaTime;

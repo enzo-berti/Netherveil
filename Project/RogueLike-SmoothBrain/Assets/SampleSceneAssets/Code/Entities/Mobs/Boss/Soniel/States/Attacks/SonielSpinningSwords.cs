@@ -12,6 +12,7 @@
 
 using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class SonielSpinningSwords : BaseState<SonielStateMachine>
 {
@@ -27,6 +28,7 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
 
     float attackDuration = 0f;
     float timeToRetrieve = 0f;
+    bool retrieved = false;
 
     enum Action
     {
@@ -56,6 +58,7 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
         yPos = Context.transform.position.y + 1f;
         timeToRetrieve = 0f;
         attackDuration = 0f;
+        retrieved = false;
 
         for (int i = 0; i < 2; i++)
         {
@@ -65,6 +68,9 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
         currentAction = GetCurrentAction();
 
         Context.Animator.SetBool(throwToIdleHash, false);
+        Context.Animator.SetBool(getLeftHash, false);
+        Context.Animator.SetBool(getRightHash, false);
+
         if (currentAction == Action.THROW_LEFT || currentAction == Action.RETRIEVE_LEFT)
         {
             Context.Animator.ResetTrigger(throwLeftHash);
@@ -121,8 +127,6 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
         Context.currentState = newState;
     }
 
-
-
     #region Extra methods
     Action GetCurrentAction()
     {
@@ -149,6 +153,15 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
 
     void Throw(int _id)
     {
+        Vector3 direction = Context.Player.transform.position - Context.transform.position;
+        direction.y = 0;
+
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        lookRotation.x = 0;
+        lookRotation.z = 0;
+
+        Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
+
         if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length - 0.6f)
         {
             if (_id == 0) Context.HasLeftArm = false;
@@ -160,10 +173,7 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
             Context.Swords[_id].SetLeft(_id == 0);
             Context.Swords[_id].transform.parent = null;
 
-            Vector3 direction = Context.Player.transform.position - Context.transform.position;
-            direction.y = 0;
             Context.Swords[_id].SetDirection(direction);
-
 
             if (Context.PhaseTwo && _id == 0)
             {
@@ -198,9 +208,9 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
             lookRotation.x = 0;
             lookRotation.z = 0;
 
-            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 3f * Time.deltaTime);
+            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
         }
-        else
+        else if (!retrieved)
         {
             if (_id == 0)
             {
@@ -213,12 +223,21 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
                 Context.Animator.SetBool(getRightHash, true);
             }
 
+
             if (Context.HasLeftArm && Context.HasRightArm)
             {
                 Context.HasArms = true;
             }
 
-            currentAction = Action.NONE;
+            retrieved = true;
+            attackDuration = 0f;
+        }
+        else
+        {
+            if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length - 0.8f)
+            {
+                currentAction = Action.NONE;
+            }
         }
     }
 
