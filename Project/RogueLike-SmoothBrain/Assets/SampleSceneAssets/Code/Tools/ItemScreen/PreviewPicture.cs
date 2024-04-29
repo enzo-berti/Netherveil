@@ -47,7 +47,7 @@ public class PreviewPicture : MonoBehaviour
 
         byte[] bytes = texture.EncodeToPNG();
 
-        System.IO.File.WriteAllBytes($"{path}/{fileName}", bytes);
+        System.IO.File.WriteAllBytes($"{path}/{fileName}.png", bytes);
         AssetDatabase.Refresh();
     }
 }
