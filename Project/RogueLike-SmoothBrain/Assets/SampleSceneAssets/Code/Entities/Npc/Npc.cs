@@ -45,7 +45,7 @@ public abstract class Npc : Entity, IInterractable
 
     public void ToggleRangeImage(bool toggle)
     {
-        float durationScale = 1.0f;
+        float durationScale = 0.15f;
         StopAllCoroutines();
         StartCoroutine(toggle ? rangeImage.rectTransform.UpScaleCoroutine(durationScale) : rangeImage.rectTransform.DownScaleCoroutine(durationScale));
     }
