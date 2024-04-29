@@ -100,7 +100,7 @@ public class SonielStateMachine : Mobs, ISoniel
         base.Update();
         currentState.Update();
 
-        if (!tiedArms[0] || !tiedArms[1])
+        if ((!tiedArms[0] || !tiedArms[1]) && currentState is not SonielDeathState)
         {
             UpdateProjectiles();
         }
