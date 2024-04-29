@@ -8,12 +8,13 @@ public class GraftedProjectile : Projectile
     Vector3 direction;
     Grafted grafted;
     float tempSpeed = -1;
+    float damageCooldown = 0f;
 
     public float Speed
     {
         get { return speed; }
     }
-    
+
     public void SetCollisionImmune(bool _state) { ignoreCollisions = _state; }
     public bool GetCollisionImmune() { return ignoreCollisions; }
 
@@ -53,6 +54,12 @@ public class GraftedProjectile : Projectile
 
         speed = originalSpeed;
         tempSpeed = -1;
+
+        if (damageCooldown > 0)
+            damageCooldown -= Time.deltaTime;
+        else
+            GetComponent<BoxCollider>().enabled = true;
+
     }
 
     public bool OnLauncher(Vector3 _launcher)
@@ -75,13 +82,26 @@ public class GraftedProjectile : Projectile
         if (damageableObject != null && !onTarget && other.CompareTag("Player"))
         {
             damageableObject.ApplyDamage(damage, grafted);
+
             if (!ignoreCollisions)
             {
                 direction = -Vector3.up;
             }
             else
             {
-                grafted.ApplyKnockback(damageableObject, grafted,new Vector3(-direction.z, 0, direction.x).normalized);
+                Vector3 knockbackDirection = new Vector3(-direction.z, 0, direction.x);
+                knockbackDirection.y = 0;
+                knockbackDirection.Normalize();
+
+                if (Vector3.Cross(transform.forward, other.transform.position - transform.position).y > 0)
+                {
+                    knockbackDirection = -knockbackDirection;
+                }
+
+                grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
+                GetComponent<BoxCollider>().enabled = false;
+                damageCooldown = 0.2f;
+                return;
             }
         }
     }
