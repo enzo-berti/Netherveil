@@ -31,6 +31,9 @@
 		<relationship name="timeline">
 			<destination>{08b1478c-ed59-49dd-8785-e23c89b5d72e}</destination>
 		</relationship>
+		<relationship name="banks">
+			<destination>{5d924a80-f735-4acf-b2bc-709167e4145b}</destination>
+		</relationship>
 	</object>
 	<object class="EventMixer" id="{596d91ae-bf81-4e65-9bba-4b9538ca0e8b}">
 		<relationship name="masterBus">
@@ -178,6 +181,7 @@
 		<relationship name="effects">
 			<destination>{33792fc9-73df-42c0-8c35-fc1e0ad1ed86}</destination>
 			<destination>{139d9cb3-e617-47f3-9a60-26f72c4e1587}</destination>
+			<destination>{2cb95725-f768-4075-bd02-73967573c1c5}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{24cd2be3-02ae-4cad-a6b8-23a1c4421320}" />
@@ -225,6 +229,14 @@
 	<object class="MixerBusPanner" id="{7fbcf289-1c0a-48ac-8517-64fd5f13cbac}" />
 	<object class="MixerBusFader" id="{33792fc9-73df-42c0-8c35-fc1e0ad1ed86}" />
 	<object class="SpatialiserEffect" id="{139d9cb3-e617-47f3-9a60-26f72c4e1587}" />
+	<object class="PitchShifterEffect" id="{2cb95725-f768-4075-bd02-73967573c1c5}">
+		<property name="pitch">
+			<value>1</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{06cf4d82-2fc5-4f14-8943-2fa0b4350e4f}</destination>
+		</relationship>
+	</object>
 	<object class="AutomationPoint" id="{10c6b193-c39f-4260-bbef-90ce82d9cbab}">
 		<property name="position">
 			<value>0.55500000000000005</value>
@@ -302,4 +314,12 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{6bdf95e7-c3f0-4020-af98-6c41c0ebb156}" />
+	<object class="RandomizerModulator" id="{06cf4d82-2fc5-4f14-8943-2fa0b4350e4f}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>pitch</value>
+		</property>
+		<property name="amount">
+			<value>20</value>
+		</property>
+	</object>
 </objects>
