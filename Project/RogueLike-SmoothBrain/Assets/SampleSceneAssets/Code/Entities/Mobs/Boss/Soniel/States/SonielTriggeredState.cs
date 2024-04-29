@@ -27,7 +27,7 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
         if (Context.AttackCooldown <= 0f)
         {
             List<Type> availableAttacks = GetAvailableAttacks();
-            if (availableAttacks.Count <= 0) throw new Exception("ALERTE le boss panique");
+            if (availableAttacks.Count <= 0) return;
 
             SwitchState(Factory.GetState(availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)]));
         }
