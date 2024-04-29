@@ -130,6 +130,7 @@ namespace Map.Generation
         {
             if (stage == 0)
             {
+                Item.itemSpawn = 0;
                 Seed.RandomizeSeed();
 #if UNITY_EDITOR
                 if (!isRandom)
@@ -141,7 +142,7 @@ namespace Map.Generation
 #endif
             }
 
-            GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
+            GenerateMap(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
         }
 
         private void GenerateMap(GenerationParam genParam)
