@@ -42,7 +42,8 @@ public class Item : MonoBehaviour
         }
         if (isRandomized)
         {
-            RandomizeItem(this);
+            RandMilestone(this);
+            //RandomizeItem(this);
         }
 
         itemEffect = LoadClass();
@@ -84,6 +85,28 @@ public class Item : MonoBehaviour
     private ItemEffect LoadClass()
     {
         return Assembly.GetExecutingAssembly().CreateInstance(idItemName.GetPascalCase()) as ItemEffect;
+    }
+
+    static public int itemSpawn = 0;
+    static public void RandMilestone(Item item)
+    {
+        switch (itemSpawn)
+        {
+            case 0:
+                item.idItemName = "SpearGhosts";
+                break;
+            case 1:
+                item.idItemName = "SpearStrike";
+                break;
+            case 2:
+                item.idItemName = "ThunderLink";
+                break;
+            default:
+                RandomizeItem(item);
+                break;
+        }
+
+        itemSpawn++;
     }
 
     static public void RandomizeItem(Item item)
