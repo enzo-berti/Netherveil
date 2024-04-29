@@ -20,7 +20,7 @@ public abstract class Projectile : MonoBehaviour, IProjectile
         Destroy(gameObject, lifeTime);
     }
 
-    public void Move(Vector3 _direction)
+    public virtual void Move(Vector3 _direction)
     {
         _direction.Normalize();
         transform.Translate(_direction * speed * Time.deltaTime, Space.World);

@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine.UIElements;
 
 public class SonielStateMachine : Mobs, ISoniel
 {
@@ -22,8 +23,8 @@ public class SonielStateMachine : Mobs, ISoniel
         CIRCULAR_ATTACK,
         CIRCULAR_THRUST,
         BERSERK,
-        SPINNING_SWORDS,
-        SAWS
+        SPINNING_SWORDS_LEFT,
+        SPINNING_SWORDS_RIGHT
     }
 
     [HideInInspector]
@@ -36,16 +37,17 @@ public class SonielStateMachine : Mobs, ISoniel
     Hero player = null;
     [SerializeField] SonielSounds sounds;
     [SerializeField] List<NestedList<Collider>> attackColliders;
-    bool phaseTwo = false;
+    bool phaseTwo = true;
     bool playerHit = false;
     float[] attacksRange = { 4f }; // A changer
 
-    [Header("Spinning Arms")]
+    [Header("Spinning swords")]
     [SerializeField] Transform[] wrists;
-    [SerializeField] GameObject[] swords;
+    [SerializeField] SonielProjectile[] swords;
     bool hasArms = true;
     bool[] tiedArms = { true, true };
-    Transform[] originalSwordsTransform = new Transform[2];
+    float collisionImmuneTimer = 0f;
+    readonly float MAX_COLLISION_IMMUNE_COOLDOWN = 0.2f;
 
     // anim hash
     int deathHash;
@@ -65,6 +67,9 @@ public class SonielStateMachine : Mobs, ISoniel
     public bool HasArms { get => hasArms; set => hasArms = value; }
     public bool HasLeftArm { get => tiedArms[0]; set => tiedArms[0] = value; }
     public bool HasRightArm { get => tiedArms[1]; set => tiedArms[1] = value; }
+    public Transform[] Wrists { get => wrists; }
+    public SonielProjectile[] Swords { get => swords; }
+
     #endregion
 
     protected override void Start()
@@ -78,11 +83,6 @@ public class SonielStateMachine : Mobs, ISoniel
         // animation hash
         deathHash = Animator.StringToHash("Death");
 
-        for (int i = 0; i < 2; i++)
-        {
-            originalSwordsTransform[i] = swords[i].transform;
-        }
-
         player = Utilities.Hero;
     }
 
@@ -93,6 +93,11 @@ public class SonielStateMachine : Mobs, ISoniel
 
         base.Update();
         currentState.Update();
+
+        if (!hasArms)
+        {
+            UpdateProjectiles();
+        }
     }
 
     #region MOB_METHODS
@@ -108,7 +113,7 @@ public class SonielStateMachine : Mobs, ISoniel
 
         onHit?.Invoke(damageable, this);
         damageable.ApplyDamage(damages, this);
-        ApplyKnockback(damageable, this);
+        //ApplyKnockback(damageable, this);
 
         //sounds.hit.Play(transform.position);
     }
@@ -168,7 +173,6 @@ public class SonielStateMachine : Mobs, ISoniel
     #endregion
 
     #region Extra methods
-
     public void AttackCollide(List<Collider> colliders, bool _kb = false, bool debugMode = true)
     {
         if (debugMode)
@@ -195,14 +199,14 @@ public class SonielStateMachine : Mobs, ISoniel
 
                         if (_kb)
                         {
-                            //Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
+                            Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
 
-                            //if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
-                            //{
-                            //    knockbackDirection = -knockbackDirection;
-                            //}
+                            if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
+                            {
+                                knockbackDirection = -knockbackDirection;
+                            }
 
-                            ApplyKnockback(damageable, this);
+                            ApplyKnockback(damageable, this, knockbackDirection);
                         }
 
                         playerHit = true;
@@ -222,6 +226,31 @@ public class SonielStateMachine : Mobs, ISoniel
                 attackCollider.gameObject.SetActive(false);
             }
         }
+    }
+
+    void UpdateProjectiles()
+    {
+        if (collisionImmuneTimer >= MAX_COLLISION_IMMUNE_COOLDOWN)
+        {
+            if (!HasLeftArm)
+            {
+                AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_LEFT].data, debugMode: false);
+            }
+            if (!HasRightArm)
+            {
+                AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_RIGHT].data, debugMode: false);
+            }
+
+            if (PlayerHit)
+            {
+                collisionImmuneTimer = 0f;
+                PlayerHit = false;
+
+                // DEBUG
+                DisableHitboxes();
+            }
+        }
+        else collisionImmuneTimer += Time.deltaTime;
     }
 
     #endregion
