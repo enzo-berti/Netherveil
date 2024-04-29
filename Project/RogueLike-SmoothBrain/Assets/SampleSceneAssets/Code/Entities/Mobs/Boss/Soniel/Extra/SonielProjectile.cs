@@ -39,7 +39,17 @@ public class SonielProjectile : Projectile
     protected override void Update()
     {
         aliveTimer += Time.deltaTime;
-        pickMeUp = aliveTimer >= 0f;
+        pickMeUp = aliveTimer >= 3f;
+
+        if (getBack)
+        {
+            if (Vector3.SqrMagnitude(wrist.position - transform.position) < 4f * 4f)
+            {
+                ignoreCollisions = true;
+                direction = wrist.transform.position - transform.position;
+                direction.y = 0f;
+            }
+        }
 
         if (getBack && ignoreCollisions)
         {
