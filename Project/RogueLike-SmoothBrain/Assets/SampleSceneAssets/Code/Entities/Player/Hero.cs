@@ -1,3 +1,4 @@
+using Fountain;
 using Map;
 using PostProcessingEffects;
 using System;
@@ -96,6 +97,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         OnAttackHit += ApplyLifeSteal;
         RoomUtilities.onAllEnemiesDead += ChangeStatsBasedOnAlignment;
         RoomUtilities.onAllChestOpen += ChangeStatsBasedOnAlignment;
+        FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
     }
 
@@ -104,6 +106,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         OnAttackHit -= ApplyLifeSteal;
         RoomUtilities.onAllEnemiesDead -= ChangeStatsBasedOnAlignment;
         RoomUtilities.onAllChestOpen -= ChangeStatsBasedOnAlignment;
+        FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
     }
 
