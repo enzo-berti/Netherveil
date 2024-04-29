@@ -18,7 +18,7 @@ public class ZiggoWandering : BaseState<ZiggoStateMachine>
         }
         else if (Context.Target != null)
         {
-            SwitchState(Factory.GetState<ZiggoFollowTargetState>());
+            SwitchState(Factory.GetState<ZiggoDashAttackState>());
         }
     }
 
