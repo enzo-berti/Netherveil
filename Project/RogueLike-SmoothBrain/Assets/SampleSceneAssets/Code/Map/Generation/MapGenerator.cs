@@ -131,6 +131,8 @@ namespace Map.Generation
                 Seed.Set(seed);
             }
 
+            seed = Seed.seed;
+
             GenerateMap(new GenerationParam(nbNormal: 8, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
         }
 
