@@ -66,7 +66,7 @@ public class SonielBerserk : BaseState<SonielStateMachine>
 
         Context.PlayerHit = false;
 
-        Context.AttackCooldown = 2f + Random.Range(-0.5f, 0.5f);
+        Context.AttackCooldown = 1f + Random.Range(-0.5f, 0.5f);
 
         // DEBUG
         Context.DisableHitboxes();
