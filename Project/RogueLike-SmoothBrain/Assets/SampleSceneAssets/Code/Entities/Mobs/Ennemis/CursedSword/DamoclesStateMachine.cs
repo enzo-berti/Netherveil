@@ -39,8 +39,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
     [SerializeField] private BoxCollider attack2Collider;
     [SerializeField] private BoxCollider attack3Collider;
 
-    [Header("Needed transform")]
-    [SerializeField] private Transform damoclesBlade;
     private Transform target;
     private bool isDeath = false;
 
@@ -62,7 +60,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
     public bool IsDeath { get => isDeath; }
     public DamoclesSounds DamoclesSound { get => damoclesSounds; }
-    public Transform DamoclesBlade { get => damoclesBlade; }
 
 
     protected override void Start()
@@ -90,7 +87,8 @@ public class DamoclesStateMachine : Mobs, IDamocles
             return;
 
         base.Update();
-
+        if(currentState is not DamoclesIdle)
+            WanderZoneCenter = transform.position;
         currentState.Update();
     }
 
@@ -133,16 +131,13 @@ public class DamoclesStateMachine : Mobs, IDamocles
             switch (randSound)
             {
                 case 0:
-                    ApplyDamagesMob(_value, damoclesSounds.blockSound, Death, notEffectDamage);
+                    damoclesSounds.blockSound.Play(false);
                     break;
                 case 1:
-                    ApplyDamagesMob(_value, damoclesSounds.blockSound2, Death, notEffectDamage);
+                    damoclesSounds.blockSound2.Play(false);
                     break;
                 case 2:
-                    ApplyDamagesMob(_value, damoclesSounds.blockSound3, Death, notEffectDamage);
-                    break;
-                default:
-                    ApplyDamagesMob(_value, damoclesSounds.blockSound, Death, notEffectDamage);
+                    damoclesSounds.blockSound3.Play(false);
                     break;
             }
         }
@@ -159,6 +154,17 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
         damoclesSounds.slashSound.Play(transform.position);
     }
+    public void Attack(IDamageable damageable, Vector3 directionKnockback, int additionalDamages = 0)
+    {
+        int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
+
+        onHit?.Invoke(damageable, this);
+        damageable.ApplyDamage(damages, this);
+        ApplyKnockback(damageable, this, directionKnockback);
+
+        damoclesSounds.slashSound.Play(transform.position);
+    }
 
     public void Death()
     {
@@ -170,7 +176,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
         animator.SetTrigger(deathHash);
         isDeath = true;
 
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
+        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length + 0.2f);
     }
 
     public void MoveTo(Vector3 posToMove)

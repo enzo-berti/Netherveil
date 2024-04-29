@@ -1,4 +1,6 @@
 using StateMachine; // include all scripts about StateMachines
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
@@ -9,6 +11,8 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     private bool stateEnded = false;
     private float elapsedTimeMovement = 0.0f;
     private float vulnerableTime = 4f;
+    private Vector3 basePos;
+    private Vector3 wantedPos;
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -28,11 +32,15 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     {
         elapsedTimeMovement = Time.time;
         Context.IsInvincibleCount = 0;
+        basePos = Context.transform.position;
+        wantedPos = new Vector3(basePos.x, 0f, basePos.z);
+        CoroutineManager.Instance.StartCustom(TryToUnlock());
     }
 
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
+        Context.Agent.enabled = true;
     }
 
     // This method will be called every frame.
@@ -44,9 +52,6 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
 
         elapsedTimeMovement = Time.time;
 
-        //Context.Animator.ResetTrigger(Context.);
-        //Context.Animator.SetTrigger(Context.);
-
         stateEnded = true;
         Context.DamoclesSound.destuckSound.Play();
     }
@@ -57,5 +62,19 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     {
         base.SwitchState(newState);
         Context.currentState = newState;
+    }
+
+    IEnumerator TryToUnlock()
+    {
+        float timer = 0;
+        while (timer < 1.0f)
+        {
+            if (Context == null) yield break;
+            timer += Time.deltaTime / vulnerableTime;
+            Context.transform.position = Vector3.Lerp(basePos, wantedPos, timer);
+            yield return null;
+        }
+        Context.Animator.SetTrigger("BackToWalk");
+        yield break;
     }
 }
