@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ZiggoThrowPuddleState : BaseState<ZiggoStateMachine>
+public class ZiggoSpitAttackState : BaseState<ZiggoStateMachine>
 {
-    public ZiggoThrowPuddleState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
+    public ZiggoSpitAttackState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     private bool stateEnded;
@@ -18,7 +18,7 @@ public class ZiggoThrowPuddleState : BaseState<ZiggoStateMachine>
         }
         else if (stateEnded)
         {
-            SwitchState(Factory.GetState<ZiggoCirclingState>());
+            SwitchState(Factory.GetState<ZiggoTurnAroundTargetState>());
         }
     }
 

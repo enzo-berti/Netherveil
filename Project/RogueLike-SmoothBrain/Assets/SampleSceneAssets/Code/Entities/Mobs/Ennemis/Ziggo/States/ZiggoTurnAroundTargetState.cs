@@ -13,9 +13,9 @@
 using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
 
-public class ZiggoCirclingState : BaseState<ZiggoStateMachine>
+public class ZiggoTurnAroundTargetState : BaseState<ZiggoStateMachine>
 {
-    public ZiggoCirclingState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
+    public ZiggoTurnAroundTargetState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     private int randDir = 0;
@@ -31,11 +31,11 @@ public class ZiggoCirclingState : BaseState<ZiggoStateMachine>
         }
         else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.VISION_RANGE))
         {
-            SwitchState(Factory.GetState<ZiggoFollowTargetState>());
+            SwitchState(Factory.GetState<ZiggoDashAttackState>());
         }
         else if (stateEnded)
         {
-            SwitchState(Factory.GetState<ZiggoThrowPuddleState>());
+            SwitchState(Factory.GetState<ZiggoSpitAttackState>());
         }
     }
 
