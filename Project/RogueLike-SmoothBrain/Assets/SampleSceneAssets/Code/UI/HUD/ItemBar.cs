@@ -149,17 +149,20 @@ public class ItemBar : MonoBehaviour
         float cooldown = 0.0f;
 
         SetFrameItemData(activeFrame, itemEffect, backItemActiveCooldown);
-        cooldownActiveTextMesh.gameObject.SetActive(true);
+        cooldownActiveTextMesh.transform.parent.gameObject.SetActive(true);
+        Image filler = cooldownActiveTextMesh.transform.parent.GetComponent<Image>();
 
         while (cooldown < hero.Inventory.ActiveItem.Cooldown)
         {
+            filler.fillAmount = (hero.Inventory.ActiveItem.Cooldown - cooldown) / hero.Inventory.ActiveItem.Cooldown;
+
             cooldown = Mathf.Max((hero.Inventory.ActiveItem as ItemEffect).CurrentEnergy, 0.0f);
             cooldownActiveTextMesh.text = (Mathf.RoundToInt(hero.Inventory.ActiveItem.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
             yield return null;
         }
 
         SetFrameItemData(activeFrame, itemEffect, backItemActiveNormal);
-        cooldownActiveTextMesh.gameObject.SetActive(false);
+        cooldownActiveTextMesh.transform.parent.gameObject.SetActive(false);
     }
 }
 
