@@ -25,13 +25,9 @@ public class ZiggoTurnAroundTargetState : BaseState<ZiggoStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (Context.IsDeath)
+        if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) > Context.Stats.GetValue(Stat.VISION_RANGE))
         {
-            SwitchState(Factory.GetState<ZiggoDeathState>());
-        }
-        else if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) > Context.Stats.GetValue(Stat.VISION_RANGE))
-        {
-            SwitchState(Factory.GetState<ZiggoDashAttackState>());
+            SwitchState(Factory.GetState<ZiggoTriggeredState>());
         }
         else if (stateEnded)
         {
@@ -57,7 +53,7 @@ public class ZiggoTurnAroundTargetState : BaseState<ZiggoStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        Vector3 direction = (Context.Target.position - Context.transform.position).normalized;
+        Vector3 direction = (Context.Player.transform.position - Context.transform.position).normalized;
 
         if (randDir == 0)
         {

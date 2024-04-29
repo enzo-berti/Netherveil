@@ -209,8 +209,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
         int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
-        FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
-        Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
+        if(lifeIncreasedValue > 0)
+        {
+            FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
+            Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
+        }
     }
 
     #region Corruption&BenedictionManagement

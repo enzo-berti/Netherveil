@@ -1,33 +1,28 @@
 using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
 
-public class ZiggoWandering : BaseState<ZiggoStateMachine>
+public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
 {
-    public ZiggoWandering(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
+    public ZiggoWanderingState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    private float elapsedTimeMovement = 0.0f;
-    private float delayBetweenMovement = 2.0f;
     Vector3 direction;
+    float idleTimer = 0f;
+
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (Context.IsDeath)
+        if (Context.Player != null)
         {
-            SwitchState(Factory.GetState<ZiggoDeathState>());
-        }
-        else if (Context.Target != null)
-        {
-            SwitchState(Factory.GetState<ZiggoDashAttackState>());
+            SwitchState(Factory.GetState<ZiggoTriggeredState>());
         }
     }
 
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-        elapsedTimeMovement = Time.time;
-        direction = Random.insideUnitCircle.normalized;
-        Context.Stats.SetValue(Stat.SPEED, 5);
+
     }
 
     // This method will be called only once after the last update.
@@ -38,14 +33,19 @@ public class ZiggoWandering : BaseState<ZiggoStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        Context.MoveTo(Context.transform.position + direction * 10 * Context.NormalSpeed);
+        if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
+        {
+            idleTimer += Time.deltaTime;
+        }
 
-        // Delay
-        if (Time.time - elapsedTimeMovement < delayBetweenMovement)
-            return;
+        if (idleTimer > 1f)
+        {
+            float minRange = Context.Stats.GetValue(Stat.VISION_RANGE) / 4f;
+            float maxRange = Context.Stats.GetValue(Stat.VISION_RANGE) / 2f;
 
-        elapsedTimeMovement = Time.time;
-        direction = Random.insideUnitCircle.normalized;
+            Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
+            idleTimer = Random.Range(-0.5f, 0.5f);
+        }
     }
 
     // This method will be called on state switch.
