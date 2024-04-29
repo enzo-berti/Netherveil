@@ -12,11 +12,7 @@ public class ZiggoSpitAttackState : BaseState<ZiggoStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (Context.IsDeath)
-        {
-            SwitchState(Factory.GetState<ZiggoDeathState>());
-        }
-        else if (stateEnded)
+        if (stateEnded)
         {
             SwitchState(Factory.GetState<ZiggoTurnAroundTargetState>());
         }
@@ -63,20 +59,20 @@ public class ZiggoSpitAttackState : BaseState<ZiggoStateMachine>
 
         //if (Context.gameObject != null)
         //{
-            //GameObject bomb = GameObject.Instantiate(Context.Stats, Context.Hand);
-            //yield return new WaitWhile(() => Context.HasLaunchAnim == false);
-            //bomb.transform.rotation = Quaternion.identity;
-            //bomb.transform.parent = null;
+        //GameObject bomb = GameObject.Instantiate(Context.Stats, Context.Hand);
+        //yield return new WaitWhile(() => Context.HasLaunchAnim == false);
+        //bomb.transform.rotation = Quaternion.identity;
+        //bomb.transform.parent = null;
 
-            //ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
+        //ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
 
-            //exploBomb.ThrowToPos(Context, pointToReach3D, timeToThrow);
-            //exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
-            //exploBomb.SetBlastDamages((int)Context.Stats.GetValue(Stat.ATK));
-            //exploBomb.Activate();
+        //exploBomb.ThrowToPos(Context, pointToReach3D, timeToThrow);
+        //exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
+        //exploBomb.SetBlastDamages((int)Context.Stats.GetValue(Stat.ATK));
+        //exploBomb.Activate();
 
-            //yield return new WaitForSeconds(0.5f);
-            //attackFinished = true;
+        //yield return new WaitForSeconds(0.5f);
+        //attackFinished = true;
         //}
     }
 }
