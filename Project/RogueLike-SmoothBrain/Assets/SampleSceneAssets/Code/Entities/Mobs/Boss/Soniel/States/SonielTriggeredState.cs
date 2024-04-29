@@ -91,7 +91,7 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
             {
                 if (lastAttack == typeof(SonielCircularHit))
                 {
-                    if (UnityEngine.Random.Range(0, 11) >= 5) // 50% de chance de ne pas refaire la meme attaque
+                    if (UnityEngine.Random.Range(0, 11) >= 3) // 30% de chance de ne pas refaire la meme attaque
                         availableAttacks.Add(typeof(SonielCircularHit));
                 }
                 else
@@ -101,7 +101,7 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
             {
                 if (lastAttack == typeof(SonielBerserk))
                 {
-                    if (UnityEngine.Random.Range(0, 11) >= 5) // 50% de chance de ne pas refaire la meme attaque
+                    if (UnityEngine.Random.Range(0, 11) >= 3) // 30% de chance de ne pas refaire la meme attaque
                         availableAttacks.Add(typeof(SonielBerserk));
                 }
                 else
