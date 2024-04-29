@@ -33,7 +33,7 @@ public class PreviewPicture : MonoBehaviour
 
             Picture(spritePath, p.name);
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
     }
 
