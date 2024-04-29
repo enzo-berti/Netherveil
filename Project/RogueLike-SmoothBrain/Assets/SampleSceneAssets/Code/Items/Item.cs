@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
@@ -58,6 +59,21 @@ public class Item : MonoBehaviour
 
         itemDescription = GetComponent<ItemDescription>();
         itemDescription.SetDescription(idItemName);
+    }
+
+    private void OnEnable()
+    {
+        Item.OnRetrieved += CreateBuffIcon;
+    }
+
+    private void OnDisable()
+    {
+        Item.OnRetrieved -= CreateBuffIcon;
+    }
+
+    public void CreateBuffIcon(ItemEffect item)
+    {
+        HudHandler.current.BuffHUD.AddBuffIcon(database.GetItem(item.Name).icon);
     }
 
     public static void InvokeOnRetrieved(ItemEffect effect)
