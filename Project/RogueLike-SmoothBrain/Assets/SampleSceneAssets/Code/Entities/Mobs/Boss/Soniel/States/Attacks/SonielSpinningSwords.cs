@@ -81,7 +81,6 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
         {
             Context.Animator.ResetTrigger(throwRightHash);
             Context.Animator.SetTrigger(throwRightHash);
-
         }
     }
 
@@ -94,7 +93,7 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
 
         Context.Animator.SetBool(throwToIdleHash, true);
 
-        Context.AttackCooldown = 2f + Random.Range(-0.5f, 0.5f);
+        Context.AttackCooldown = 1f + Random.Range(-0.5f, 0.5f);
 
         // DEBUG
         if (Context.DebugMode)
@@ -171,7 +170,6 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
             if (_id == 0) Context.HasLeftArm = false;
             else Context.HasRightArm = false;
 
-            Context.HasArms = false;
 
             Context.Swords[_id].enabled = true;
             Context.Swords[_id].SetLeft(_id == 0);
@@ -225,12 +223,6 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
             {
                 Context.HasRightArm = true;
                 Context.Animator.SetBool(getRightHash, true);
-            }
-
-
-            if (Context.HasLeftArm && Context.HasRightArm)
-            {
-                Context.HasArms = true;
             }
 
             retrieved = true;

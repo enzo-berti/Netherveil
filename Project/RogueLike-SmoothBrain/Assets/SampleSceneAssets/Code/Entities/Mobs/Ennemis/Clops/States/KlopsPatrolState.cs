@@ -1,4 +1,5 @@
 using StateMachine;
+using UnityEngine;
 
 public class KlopsPatrolState : BaseState<KlopsStateMachine>
 {
@@ -6,23 +7,44 @@ public class KlopsPatrolState : BaseState<KlopsStateMachine>
     {
     }
 
+    bool canMove = false;
+    float idleTimer = 0f;
+    readonly float MAX_IDLE_COOLDOWN = 2f;
+
     protected override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        if (Context.Player != null)
+        {
+            SwitchState(Factory.GetState<KlopsMoveState>());
+        }
     }
 
     protected override void EnterState()
     {
-        throw new System.NotImplementedException();
     }
 
     protected override void ExitState()
     {
-        throw new System.NotImplementedException();
     }
 
     protected override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
+        {
+            canMove = idleTimer >= MAX_IDLE_COOLDOWN;
+
+            if (!canMove)
+            {
+                idleTimer += Time.deltaTime;
+            }
+            else
+            {
+                float minRange = Context.Stats.GetValue(Stat.ATK_RANGE) / 2f;
+                float maxRange = Context.Stats.GetValue(Stat.ATK_RANGE);
+
+                Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
+                idleTimer = Random.Range(-0.5f, 0.5f);
+            }
+        }
     }
 }

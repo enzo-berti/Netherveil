@@ -21,15 +21,23 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     public SonielTriggeredState(SonielStateMachine currentContext, StateFactory<SonielStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
+    Type lastAttack;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
         if (Context.AttackCooldown <= 0f)
         {
             List<Type> availableAttacks = GetAvailableAttacks();
-            if (availableAttacks.Count <= 0) return;
+            if (availableAttacks.Count <= 0)
+            {
+                Context.Swords[1].pickMeUp = true;
+                availableAttacks = GetAvailableAttacks();
+                if (availableAttacks.Count <= 0) throw new Exception("Non tu tbranles là chef");
+            }
 
-            SwitchState(Factory.GetState(availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)]));
+            lastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
+            SwitchState(Factory.GetState(lastAttack));
         }
     }
 
@@ -81,15 +89,27 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
         {
             if (distanceToPlayer <= 10f)
             {
-                availableAttacks.Add(typeof(SonielCircularHit));
+                if (lastAttack == typeof(SonielCircularHit))
+                {
+                    if (UnityEngine.Random.Range(0, 11) >= 3) // 30% de chance de ne pas refaire la meme attaque
+                        availableAttacks.Add(typeof(SonielCircularHit));
+                }
+                else
+                    availableAttacks.Add(typeof(SonielCircularHit));
             }
-            if (Context.HasLeftArm && distanceToPlayer >= 2f)
+            if (Context.HasLeftArm && distanceToPlayer >= 3f)
             {
+                if (lastAttack == typeof(SonielBerserk))
+                {
+                    if (UnityEngine.Random.Range(0, 11) >= 3) // 30% de chance de ne pas refaire la meme attaque
+                        availableAttacks.Add(typeof(SonielBerserk));
+                }
+                else
                 availableAttacks.Add(typeof(SonielBerserk));
             }
         }
 
-        if (distanceToPlayer >= 7f)
+        if (distanceToPlayer >= 4f)
         {
             availableAttacks.Add(typeof(SonielSpinningSwords));
         }
