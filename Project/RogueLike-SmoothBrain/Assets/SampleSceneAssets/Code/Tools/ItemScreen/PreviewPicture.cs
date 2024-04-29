@@ -31,9 +31,9 @@ public class PreviewPicture : MonoBehaviour
             p.SetActive(true);
             lastObject = p;
 
-            Picture(spritePath, p.name);
-
             yield return new WaitForEndOfFrame();
+
+            Picture(spritePath, p.name);
         }
     }
 
