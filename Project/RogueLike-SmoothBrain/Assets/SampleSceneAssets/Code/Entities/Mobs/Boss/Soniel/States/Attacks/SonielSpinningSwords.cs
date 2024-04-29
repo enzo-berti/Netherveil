@@ -26,11 +26,24 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
     int throwToIdleHash = Animator.StringToHash("ThrowToIdle");
 
     float attackDuration = 0f;
+    float timeToRetrieve = 0f;
+
+    enum Action
+    {
+        THROW_LEFT,
+        THROW_RIGHT,
+        RETRIEVE_LEFT,
+        RETRIEVE_RIGHT,
+        NONE
+    }
+    Action currentAction;
+
+    float yPos;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (currentAction == Action.NONE)
         {
             SwitchState(Factory.GetState<SonielTriggeredState>());
         }
@@ -40,25 +53,29 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
     protected override void EnterState()
     {
         Context.Agent.isStopped = true;
+        yPos = Context.transform.position.y + 1f;
+        timeToRetrieve = 0f;
+        attackDuration = 0f;
 
-        if (Context.HasArms)
+        for (int i = 0; i < 2; i++)
         {
-            if (Context.HasLeftArm)
-            {
-                Context.Animator.ResetTrigger(throwLeftHash);
-                Context.Animator.SetTrigger(throwLeftHash);
-
-            }
-            else if (Context.HasRightArm)
-            {
-                Context.Animator.ResetTrigger(throwRightHash);
-                Context.Animator.SetTrigger(throwRightHash);
-            }
+            Context.Swords[i].SetParent(Context.Wrists[i], yPos);
         }
 
+        currentAction = GetCurrentAction();
 
+        Context.Animator.SetBool(throwToIdleHash, false);
+        if (currentAction == Action.THROW_LEFT || currentAction == Action.RETRIEVE_LEFT)
+        {
+            Context.Animator.ResetTrigger(throwLeftHash);
+            Context.Animator.SetTrigger(throwLeftHash);
+        }
+        else if (currentAction != Action.NONE)
+        {
+            Context.Animator.ResetTrigger(throwRightHash);
+            Context.Animator.SetTrigger(throwRightHash);
 
-        //Context.Animator.SetBool(getLeftHash, true);
+        }
     }
 
     // This method will be called only once after the last update.
@@ -67,17 +84,32 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
         Context.Agent.isStopped = false;
         Context.Animator.SetBool(getLeftHash, false);
         Context.Animator.SetBool(getRightHash, false);
+
+        Context.Animator.SetBool(throwToIdleHash, true);
+
+        // DEBUG
+        Context.DisableHitboxes();
     }
 
     // This method will be called every frame.
     protected override void UpdateState()
     {
         attackDuration += Time.deltaTime;
-        if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length)
+
+        switch (currentAction)
         {
-            attackDuration = 0f;
-            Context.Animator.ResetTrigger(throwToIdleHash);
-            Context.Animator.SetTrigger(throwToIdleHash);
+            case Action.THROW_LEFT:
+                Throw(0);
+                break;
+            case Action.THROW_RIGHT:
+                Throw(1);
+                break;
+            case Action.RETRIEVE_LEFT:
+                Retrieve(0);
+                break;
+            case Action.RETRIEVE_RIGHT:
+                Retrieve(1);
+                break;
         }
     }
 
@@ -88,4 +120,108 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
+
+
+    #region Extra methods
+    Action GetCurrentAction()
+    {
+        if (!Context.HasRightArm && Context.Swords[1].pickMeUp)
+        {
+            return Action.RETRIEVE_RIGHT;
+        }
+        else
+        {
+            if (Context.HasLeftArm)
+            {
+                Context.Animator.SetBool(throwToIdleHash, true);
+                return Action.THROW_LEFT;
+            }
+            else if (Context.Swords[0].pickMeUp)
+            {
+                Context.Animator.SetBool(getLeftHash, true);
+                return Action.RETRIEVE_LEFT;
+            }
+        }
+
+        return Action.NONE;
+    }
+
+    void Throw(int _id)
+    {
+        if (attackDuration >= Context.Animator.GetCurrentAnimatorClipInfo(0).Length - 0.6f)
+        {
+            if (_id == 0) Context.HasLeftArm = false;
+            else Context.HasRightArm = false;
+
+            Context.HasArms = false;
+
+            Context.Swords[_id].enabled = true;
+            Context.Swords[_id].SetLeft(_id == 0);
+            Context.Swords[_id].transform.parent = null;
+
+            Vector3 direction = Context.Player.transform.position - Context.transform.position;
+            direction.y = 0;
+            Context.Swords[_id].SetDirection(direction);
+
+
+            if (Context.PhaseTwo && _id == 0)
+            {
+                Context.Animator.ResetTrigger(throwRightHash);
+                Context.Animator.SetTrigger(throwRightHash);
+
+                attackDuration = 0f;
+                currentAction = Action.THROW_RIGHT;
+            }
+            else
+            {
+                currentAction = Action.NONE;
+            }
+        }
+    }
+
+    void Retrieve(int _id)
+    {
+        SonielProjectile sword = Context.Swords[_id];
+
+        if (sword.transform.parent == null)
+        {
+            sword.GetBack();
+
+            timeToRetrieve += Time.deltaTime;
+            if (timeToRetrieve >= 2f)
+            {
+                sword.ForceBack();
+            }
+
+            Quaternion lookRotation = Quaternion.LookRotation(sword.rotationPoint - Context.transform.position);
+            lookRotation.x = 0;
+            lookRotation.z = 0;
+
+            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 3f * Time.deltaTime);
+        }
+        else
+        {
+            if (_id == 0)
+            {
+                Context.HasLeftArm = true;
+                Context.Animator.SetBool(getLeftHash, true);
+            }
+            else
+            {
+                Context.HasRightArm = true;
+                Context.Animator.SetBool(getRightHash, true);
+            }
+
+            if (Context.HasLeftArm && Context.HasRightArm)
+            {
+                Context.HasArms = true;
+            }
+
+            currentAction = Action.NONE;
+        }
+    }
+
+    #endregion
+
 }
