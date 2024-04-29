@@ -18,6 +18,7 @@ public abstract class Quest
     public string progressText = string.Empty;
     static QuestDatabase database;
     public static event Action OnQuestUpdated;
+    public static event Action OnQuestFinished;
     protected Hero player;
     protected QuestTalker.TalkerType talkerType;
     protected QuestTalker.TalkerGrade talkerGrade;
@@ -68,6 +69,7 @@ public abstract class Quest
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
+        OnQuestFinished?.Invoke();
 
         RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;

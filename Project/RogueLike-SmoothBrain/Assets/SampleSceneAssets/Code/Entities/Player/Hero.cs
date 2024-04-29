@@ -98,6 +98,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         RoomUtilities.onAllEnemiesDead += ChangeStatsBasedOnAlignment;
         RoomUtilities.onAllChestOpen += ChangeStatsBasedOnAlignment;
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
+        Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
+        Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
     }
 
@@ -107,6 +109,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         RoomUtilities.onAllEnemiesDead -= ChangeStatsBasedOnAlignment;
         RoomUtilities.onAllChestOpen -= ChangeStatsBasedOnAlignment;
         FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
+        Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
+        Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
     }
 
