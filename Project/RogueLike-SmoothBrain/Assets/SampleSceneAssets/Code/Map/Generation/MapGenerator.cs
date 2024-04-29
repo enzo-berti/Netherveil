@@ -121,8 +121,9 @@ namespace Map.Generation
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed; // For debuging purpose
 #endif
+        public bool generate = false;
 
-        static private int stage = 0;
+        private int stage = 0;
 
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
 
@@ -142,11 +143,24 @@ namespace Map.Generation
 #endif
             }
 
-            GenerateMap(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
+            Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
         }
 
-        private void GenerateMap(GenerationParam genParam)
+        private void Update()
         {
+            if (generate)
+            {
+                Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
+                Utilities.Player.transform.position = Vector3.zero;
+
+                generate = false;
+            }
+        }
+
+        public void Generate(GenerationParam genParam)
+        {
+            stage++;
+
             RoomUtilities.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
             RoomUtilities.nbRoomByType[RoomType.Lobby] = 1;
             RoomUtilities.nbRoomByType[RoomType.Boss] = 1;
@@ -181,7 +195,6 @@ namespace Map.Generation
                 }
                 else
                 {
-                    // TODO : completly redo the order of type generation
                     for (int index = 0; index < genParam.nbRoomByType.Count; index++)
                     {
                         RoomType type = genParam.nbRoomByType.Keys.ElementAt(index);
@@ -300,11 +313,11 @@ namespace Map.Generation
             return false;
         }
 
-        private void ResetGeneration()
+        public void DestroyMap()
         {
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
-                DestroyImmediate(transform.GetChild(i).gameObject);
+                Destroy(transform.GetChild(i).gameObject);
             }
         }
 
@@ -363,12 +376,12 @@ namespace Map.Generation
 
         static private void GenerateStairs(GameObject roomGO)
         {
-            DoorsGenerator doorsGenerator = roomGO.transform.Find("Skeleton").Find("Doors").GetComponent<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<Skeleton>().transform.Find("Doors").GetComponent<DoorsGenerator>();
             Door entranceStairs = Seed.RandList(doorsGenerator.doors)[0];
 
             GameObject go = Instantiate(Seed.RandList(MapResources.StairsPrefabs)[0], entranceStairs.Position, Quaternion.identity);
             go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
-            go.transform.parent = entranceStairs.parentSkeleton.transform.Find("StaticProps");
+            go.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
 
             doorsGenerator.RemoveDoor(entranceStairs);
         }
@@ -381,7 +394,7 @@ namespace Map.Generation
                 {
                     GameObject go = Instantiate(Seed.RandList(MapResources.ObstructionDoors)[0], door.Position, Quaternion.identity);
                     go.transform.Rotate(0f, door.Rotation, 0f);
-                    go.transform.parent = door.parentSkeleton.transform.Find("StaticProps");
+                    go.transform.parent = door.parentSkeleton.transform.parent.GetComponentInChildren<StaticProps>().transform;
                 }
             }
 
