@@ -1,3 +1,4 @@
+using Map.Generation;
 using UnityEngine;
 
 namespace Map
@@ -10,7 +11,10 @@ namespace Map
             {
                 RoomUtilities.onFinishStageEvents?.Invoke();
 
-                LevelLoader.current.LoadScene("InGame");
+                MapGenerator mapGen = FindObjectOfType<MapGenerator>();
+
+                mapGen.DestroyMap();
+                mapGen.generate = true;
             }
         }
     }
