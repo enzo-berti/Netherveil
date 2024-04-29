@@ -10,6 +10,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly List<BoxCollider> thunderLinkColliders = new();
     readonly List<VisualEffect> thunderLinkVFXs = new();
     readonly List<LineRenderer> thunderLinkLineRenderers = new();
+    readonly List<Coroutine> thunderLinkRoutines = new();
     readonly float THUNDERLINK_WAIT_TIME = 0.5f;
     readonly float duration = 3f;
     readonly float chance = 0.2f;
@@ -28,7 +29,11 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void DeleteEletricLinks()
     {
-        CoroutineManager.Instance.StopAllCoroutines();
+        foreach(var coroutine in thunderLinkRoutines)
+        {
+            CoroutineManager.Instance.StopCoroutine(coroutine);
+        }
+        thunderLinkRoutines.Clear();
         thunderLinkColliders.Clear();
 
         for(int i = 0; i< thunderLinkVFXs.Count; i++)
@@ -57,8 +62,8 @@ public class ThunderLink : ItemEffect, IPassiveItem
         thunderLinkLineRenderers.Add(lineRenderer);
 
         spear.SetThunderLinkVFX(vfx, lineRenderer);
-        CoroutineManager.Instance.StartCustom(TriggerElectricLinks(spear));
-        CoroutineManager.Instance.StartCustom(MoveThunderLink(spear));
+        thunderLinkRoutines.Add(CoroutineManager.Instance.StartCoroutine(TriggerElectricLinks(spear)));
+        thunderLinkRoutines.Add(CoroutineManager.Instance.StartCoroutine(MoveThunderLink(spear)));
     }
 
     private IEnumerator TriggerElectricLinks(Spear spear)

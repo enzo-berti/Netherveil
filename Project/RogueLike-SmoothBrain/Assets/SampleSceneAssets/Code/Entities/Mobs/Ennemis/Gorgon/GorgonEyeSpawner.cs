@@ -29,7 +29,7 @@ public class GorgonEyeSpawner : MonoBehaviour
             if (!spawnEyeCoroutineOn)
             {
                 currentEye.gameObject.transform.parent = handPos;
-                CoroutineManager.Instance.StartCustom(SpawnEye());
+               StartCoroutine(SpawnEye());
             }
         }
 

@@ -38,7 +38,7 @@ public class GorgonStateMachine : Mobs, IGorgon
     [SerializeField] GorgonSounds gorgonSounds;
 
     Hero player = null;
-
+    private int deathHash;
     ///
     private bool isDashing = false;
     private bool isSmoothCoroutineOn = false;
@@ -86,6 +86,9 @@ public class GorgonStateMachine : Mobs, IGorgon
 
         factory = new StateFactory<GorgonStateMachine>(this);
         currentState = factory.GetState<GorgonWanderingState>();
+
+        // hashing animation
+        deathHash = Animator.StringToHash("Death");
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
@@ -160,10 +163,12 @@ public class GorgonStateMachine : Mobs, IGorgon
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
+        animator.ResetTrigger(deathHash);
+        animator.SetTrigger(deathHash);
 
         gorgonSounds.deathSFX.Play(transform.position);
 
-        Destroy(transform.parent.gameObject);
+        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
