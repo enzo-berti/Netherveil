@@ -10,6 +10,7 @@
 //      }
 // }
 
+using FMOD;
 using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
@@ -94,7 +95,8 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
         Context.Animator.SetBool(throwToIdleHash, true);
 
         // DEBUG
-        Context.DisableHitboxes();
+        if (Context.DebugMode)
+            Context.DisableHitboxes();
     }
 
     // This method will be called every frame.

@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class HudHandler : MonoBehaviour
 {
@@ -26,12 +25,14 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private MapHUD mapHUD;
     [SerializeField] private DescriptionTabHUD descriptionTab;
     [SerializeField] private MessageInfoHUD messageInfoHUD;
+    [SerializeField] private BuffHUD buffHUD;
 
     public PauseMenu PauseMenu => pauseMenu;
     public QuestHUD QuestHUD => questHUD;
     public MapHUD MapHUD => mapHUD;
     public DescriptionTabHUD DescriptionTab => descriptionTab;
     public MessageInfoHUD MessageInfoHUD => messageInfoHUD;
+    public BuffHUD BuffHUD => buffHUD;
 
     private Hero player;
 

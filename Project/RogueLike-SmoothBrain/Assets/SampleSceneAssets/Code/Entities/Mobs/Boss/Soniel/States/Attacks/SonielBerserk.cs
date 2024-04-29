@@ -84,7 +84,7 @@ public class SonielBerserk : BaseState<SonielStateMachine>
 
             if (!Context.PlayerHit)
             {
-                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.BERSERK].data, debugMode: true);
+                Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.BERSERK].data, debugMode: Context.DebugMode);
             }
 
             if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), Context.transform.forward, 4.5f, LayerMask.GetMask("Map")))
