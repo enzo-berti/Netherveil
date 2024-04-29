@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Windows;
@@ -37,6 +36,7 @@ public class ItemDatabase : ScriptableObject
         return Color.white;
     }
 
+#if UNITY_EDITOR
     public void DeleteInDatabase(ItemData item)
     {
         datas.Remove(item);
@@ -61,4 +61,5 @@ public class ItemDatabase : ScriptableObject
         File.Delete(path);
         AssetDatabase.Refresh();
     }
+#endif
 }
