@@ -11,7 +11,6 @@
 // }
 
 using StateMachine; // include all scripts about StateMachines
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SonielTriggeredState : BaseState<SonielStateMachine>

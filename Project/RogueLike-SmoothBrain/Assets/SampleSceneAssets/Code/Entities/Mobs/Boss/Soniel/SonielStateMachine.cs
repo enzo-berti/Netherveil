@@ -48,10 +48,13 @@ public class SonielStateMachine : Mobs, ISoniel
     bool hasArms = true;
     bool[] tiedArms = { true, true };
     float collisionImmuneTimer = 0f;
-    readonly float MAX_COLLISION_IMMUNE_COOLDOWN = 0.2f;
+    readonly float MAX_COLLISION_IMMUNE_COOLDOWN = 0.3f;
 
     // anim hash
     int deathHash;
+
+    // DEBUG
+    bool debugMode = true;
 
     #region getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -70,6 +73,7 @@ public class SonielStateMachine : Mobs, ISoniel
     public bool HasRightArm { get => tiedArms[1]; set => tiedArms[1] = value; }
     public Transform[] Wrists { get => wrists; }
     public SonielProjectile[] Swords { get => swords; }
+    public bool DebugMode { get => debugMode; }
 
     #endregion
 
@@ -247,11 +251,11 @@ public class SonielStateMachine : Mobs, ISoniel
             {
                 if (!HasLeftArm)
                 {
-                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_LEFT].data, debugMode: false);
+                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_LEFT].data, debugMode: debugMode);
                 }
                 if (!HasRightArm)
                 {
-                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_RIGHT].data, debugMode: false);
+                    AttackCollide(Attacks[(int)SonielAttacks.SPINNING_SWORDS_RIGHT].data, debugMode: debugMode);
                 }
 
                 if (PlayerHit)
@@ -260,7 +264,8 @@ public class SonielStateMachine : Mobs, ISoniel
                     PlayerHit = false;
 
                     // DEBUG
-                    DisableHitboxes();
+                    if (debugMode)
+                        DisableHitboxes();
                 }
             }
         }
