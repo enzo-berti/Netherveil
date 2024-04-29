@@ -167,6 +167,7 @@ public class GorgonStateMachine : Mobs, IGorgon
         animator.SetTrigger(deathHash);
 
         gorgonSounds.deathSFX.Play(transform.position);
+        currentState = factory.GetState<GorgonDeathState>();
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
     }

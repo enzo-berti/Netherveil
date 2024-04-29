@@ -137,6 +137,7 @@ public class KlopsStateMachine : Mobs, IKlops
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
         isDeath = true;
+        currentState = factory.GetState<KlopsDeathState>();
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
