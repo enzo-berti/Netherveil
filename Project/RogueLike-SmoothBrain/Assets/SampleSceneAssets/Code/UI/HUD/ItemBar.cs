@@ -162,7 +162,7 @@ public class ItemBar : MonoBehaviour
         }
 
         SetFrameItemData(activeFrame, itemEffect, backItemActiveNormal);
-        cooldownActiveTextMesh.gameObject.SetActive(false);
+        cooldownActiveTextMesh.transform.parent.gameObject.SetActive(false);
     }
 }
 
