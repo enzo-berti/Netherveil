@@ -165,7 +165,7 @@ public abstract class Entity : MonoBehaviour
         if (distance > 0f)
         {
             Knockback knockbackable = (damageable as MonoBehaviour).GetComponent<Knockback>();
-            if (knockbackable)
+            if (knockbackable && (damageable as MonoBehaviour).GetComponent<Entity>().IsKnockbackable)
             {
                 MonoBehaviour damageableGO = damageable as MonoBehaviour;
                 Vector3 damageablePos = damageableGO.transform.position;
