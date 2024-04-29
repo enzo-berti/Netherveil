@@ -79,6 +79,9 @@ public class ItemBar : MonoBehaviour
         string keyActive = keyboardActive.action.bindings.First().path.Split("/").Last();
         string keyAbility = keyboardAbility.action.bindings.First().path.Split("/").Last();
 
+        keyActiveTextMesh.gameObject.SetActive(true);
+        keyAbilityTextMesh.gameObject.SetActive(true);
+
         keyActiveTextMesh.text = keyActive.ToUpper();
         keyAbilityTextMesh.text = keyAbility.ToUpper();
 
@@ -90,6 +93,9 @@ public class ItemBar : MonoBehaviour
     {
         string keyActive = gamepadActive.action.bindings.First().path.Split("/").Last();
         string keyAbility = gamepadAbility.action.bindings.First().path.Split("/").Last();
+
+        keyActiveTextMesh.gameObject.SetActive(false);
+        keyAbilityTextMesh.gameObject.SetActive(false);
 
         keyActiveTextMesh.text = keyActive.ToUpper();
         keyAbilityTextMesh.text = keyAbility.ToUpper();
