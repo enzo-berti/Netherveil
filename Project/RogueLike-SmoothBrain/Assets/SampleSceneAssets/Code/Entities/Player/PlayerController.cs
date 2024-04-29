@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
     public VisualEffect DamnationVeilVFX;
     public VisualEffect DashShieldVFX;
     public VisualEffect RuneOfSlothVFX;
+    public VisualEffect RuneOfPrideVFX;
 
     public SkinnedMeshRenderer BodyMesh { get => bodyMesh; }
 
