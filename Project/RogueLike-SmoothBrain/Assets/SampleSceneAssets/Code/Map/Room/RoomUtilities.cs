@@ -11,6 +11,7 @@ namespace Map
         static public Action onExit;
         static public Action onEarlyAllEnemiesDead;
         static public Action onAllEnemiesDead;
+        static public Action onEarlyAllChestOpen;
         static public Action onAllChestOpen;
         static public Action onFinishStage;
 

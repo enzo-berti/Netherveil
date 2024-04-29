@@ -76,6 +76,7 @@ namespace Map
             allChestsOpenCalled = true;
 
             // global events
+            RoomUtilities.onEarlyAllChestOpen?.Invoke();
             RoomUtilities.onAllChestOpen?.Invoke();
         }
 
