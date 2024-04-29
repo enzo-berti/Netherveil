@@ -20,19 +20,18 @@ public class ZiggoStateMachine : Mobs, IZiggo
     }
 
     // state machine variables
-    public BaseState<ZiggoStateMachine> currentState;
+    [HideInInspector] public BaseState<ZiggoStateMachine> currentState;
     private StateFactory<ZiggoStateMachine> factory;
 
     // mobs variables
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     [SerializeField] private ZiggoSounds ziggoSounds;
-    [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
+    [SerializeField, Range(0f, 360f)] private float originalVisionAngle = 180.0f;
     [SerializeField] private BoxCollider attack1Collider;
     [SerializeField] private BoxCollider attack2Collider;
     [SerializeField] private BoxCollider attack3Collider;
-    private Transform target;
-    private bool isDeath = false;
+    private Hero player;
 
     // animation hash
     private int deathHash;
@@ -47,10 +46,9 @@ public class ZiggoStateMachine : Mobs, IZiggo
     public BoxCollider Attack1Collider { get => attack1Collider; }
     public BoxCollider Attack2Collider { get => attack2Collider; }
     public BoxCollider Attack3Collider { get => attack3Collider; }
-    public Transform Target { get => target; set => target = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
-    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
-    public bool IsDeath { get => isDeath; }
+    public Hero Player { get => player; }
+    public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE); }
+    public float VisionAngle { get => originalVisionAngle; }
 
 
     protected override void Start()
@@ -58,8 +56,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
         base.Start();
 
         factory = new StateFactory<ZiggoStateMachine>(this);
-        // Set currentState here !
-        currentState = factory.GetState<ZiggoWandering>();
+        currentState = factory.GetState<ZiggoWanderingState>();
 
         // common initialization
 
@@ -80,6 +77,9 @@ public class ZiggoStateMachine : Mobs, IZiggo
         base.Update();
 
         currentState.Update();
+
+        if (currentState is not ZiggoWanderingState)
+            WanderZoneCenter = transform.position;
     }
 
 
@@ -94,15 +94,14 @@ public class ZiggoStateMachine : Mobs, IZiggo
                 continue;
             }
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
-                    .Select(x => x.GetComponent<Entity>())
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, VisionRange, transform.forward, LayerMask.GetMask("Entity"))
+                    .Select(x => x.GetComponent<Hero>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
 
-            Entity targetE = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
-            if (targetE != null)
-                target = targetE.transform;
+            Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
+            player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
 
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
@@ -131,7 +130,8 @@ public class ZiggoStateMachine : Mobs, IZiggo
         Hero.OnKill?.Invoke(this);
         ziggoSounds.deathSound.Play(transform.position);
         animator.SetBool(deathHash, true);
-        isDeath = true;
+
+        currentState = factory.GetState<ZiggoDeathState>();
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
@@ -162,8 +162,8 @@ public class ZiggoStateMachine : Mobs, IZiggo
         //if (!Selection.Contains(gameObject))
         //    return;
 
-        DisplayVisionRange(angle);
-        DisplayAttackRange(angle);
+        DisplayVisionRange(originalVisionAngle);
+        DisplayAttackRange(originalVisionAngle);
         DisplayInfos();
     }
 
