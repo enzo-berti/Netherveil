@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class Knockback : MonoBehaviour
 {
@@ -58,6 +59,9 @@ public class Knockback : MonoBehaviour
         float elapsed = 0f;
         bool canWarp = true;
         isKnockback = true;
+        VFXStopper vfx = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_WallKB"), agent.transform.position, Quaternion.identity).GetComponent<VFXStopper>();
+        vfx.Duration = 1f;
+        vfx.PlayVFX();
 
         startKnockback = transform.position;
         endKnockback = transform.position + direction * distance * distanceFactor;
@@ -96,6 +100,10 @@ public class Knockback : MonoBehaviour
         float duration = distance * distanceFactor / speed;
         bool hitObstacle = false;
         isKnockback = true;
+
+        VFXStopper vfx = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_WallKB"), controller.transform.position, Quaternion.identity).GetComponent<VFXStopper>();
+        vfx.Duration = 1f;
+        vfx.PlayVFX();
 
         while (elapsed < duration && !hitObstacle)
         {
