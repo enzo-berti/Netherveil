@@ -35,7 +35,6 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     private bool jumpRoutineOn;
     private bool returnToPos = false;
     private Vector3 previousPos;
-    private Vector3 previousBladePos;
     private Vector3 jumpTarget;
     Quaternion baseRotation;
     // This method will be call every Update to check and change a state.
@@ -48,7 +47,6 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         else if (isTargetTouched && stateEnded)
         {
             SwitchState(Factory.GetState<DamoclesEnGardeState>());
-            Debug.Log("test");
         }
         else if (!isTargetTouched && stateEnded)
         {

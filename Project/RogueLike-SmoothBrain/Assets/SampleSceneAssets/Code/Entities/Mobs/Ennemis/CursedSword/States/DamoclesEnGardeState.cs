@@ -11,7 +11,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     private bool stateEnded = false;
     private float elapsedTimeMovement = 0.0f;
     private float elapsedRotaTime = 0.0f;
-    private float guardTime = 4f;
+    private float guardTime = 2.5f;
     private float guardRotaTime = 1.5f;
     private float timerForCircle = Mathf.PI;
     private bool isTimerIncreasing = true;
@@ -78,7 +78,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         }
         Context.transform.LookAt(Context.Target.transform.position);
         float posRadiusCircle = Vector3.Distance(Context.transform.position, Context.Target.position);
-        posRadiusCircle = Mathf.Clamp(posRadiusCircle, 0, 5f);
+        posRadiusCircle = Mathf.Clamp(posRadiusCircle, 2f, 5f);
         Context.MoveTo(Context.Target.position.GetPointOnCircle(posRadiusCircle, timerForCircle));
         // Delay
         if (Time.time - elapsedTimeMovement < guardTime)
