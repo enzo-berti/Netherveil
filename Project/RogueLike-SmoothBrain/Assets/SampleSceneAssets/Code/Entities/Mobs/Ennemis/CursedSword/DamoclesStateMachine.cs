@@ -177,7 +177,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
         isDeath = true;
 
         currentState = factory.GetState<DamoclesDeathState>();
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length + 0.2f);
     }
 
     public void MoveTo(Vector3 posToMove)
