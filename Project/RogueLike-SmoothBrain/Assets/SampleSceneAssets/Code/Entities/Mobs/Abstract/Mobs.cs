@@ -284,7 +284,6 @@ public abstract class Mobs : Entity
             return default;
         }
 
-
         Vector3 randomDirection3D = default;
 
         for (int i = 0; i < 3; i++)
@@ -309,9 +308,7 @@ public abstract class Mobs : Entity
             }
         }
 
-        if (_unitPos == wanderZone.center) return transform.forward * _minTravelDistance;
-
-        return (_unitPos - wanderZone.center).normalized * _minTravelDistance;
+        return (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
     }
 
 #if UNITY_EDITOR
