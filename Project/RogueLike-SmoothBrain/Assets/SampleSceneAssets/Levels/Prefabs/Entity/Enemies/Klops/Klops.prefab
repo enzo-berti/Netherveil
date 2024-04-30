@@ -72,6 +72,7 @@ Transform:
   - {fileID: 8923157444827299013}
   - {fileID: 7030396477263149329}
   - {fileID: 2924618361062884393}
+  - {fileID: 1991301359084458009}
   m_Father: {fileID: 2053984163547695490}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &3399092896291152148
@@ -227,7 +228,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 10
+      value: 15
       lastValue: 0
       coeff: 0
       maxValue: 0
@@ -283,14 +284,14 @@ MonoBehaviour:
           Data3: -79602505
           Data4: -551212355
         Path: event:/Enemy/klops/Fire/KlopsFireDeath
-    takeDamageSound:
+    AttackSound:
       reference:
         Guid:
-          Data1: -1892268768
-          Data2: 1078247924
-          Data3: -1212856411
-          Data4: 428177694
-        Path: event:/Enemy/klops/Fire/KlopsFireAttack
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
     hitSound:
       reference:
         Guid:
@@ -310,6 +311,7 @@ MonoBehaviour:
   defaultVisionAngle: 360
   fireballPrefab: {fileID: 3075343138573199242, guid: 73db5c335518cca40ab83f68aec06498,
     type: 3}
+  fireballSpawn: {fileID: 1991301359084458009}
 --- !u!114 &4383119745792196512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,6 +326,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mRenderer:
   - {fileID: 7487448790011693428}
+--- !u!1 &3390904114027281133
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1991301359084458009}
+  m_Layer: 3
+  m_Name: FireballSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1991301359084458009
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3390904114027281133}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.928, z: 0.097}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4216451945149037726}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5563737960957434444
 GameObject:
   m_ObjectHideFlags: 0
