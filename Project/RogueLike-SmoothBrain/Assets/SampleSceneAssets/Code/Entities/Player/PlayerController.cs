@@ -65,8 +65,7 @@ public class PlayerController : MonoBehaviour
     public VisualEffect SpearLaunchVFX;
     public VisualEffect corruptionUpgradeVFX;
     public VisualEffect benedictionUpgradeVFX;
-    public VisualEffect benedictionDrawbackVFX;
-    public VisualEffect corruptionDrawbackVFX;
+    public VisualEffect DrawbackVFX;
     public VisualEffect DivineShieldVFX;
     public VisualEffect DamnationVeilVFX;
     public VisualEffect DashShieldVFX;
