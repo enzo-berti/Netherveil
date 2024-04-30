@@ -104,7 +104,6 @@ public class GlorbStateMachine : Mobs, IGlorb
         if (currentState is not GlorbWanderingState)
         {
             UpdateAttacksTimers();
-            WanderZoneCenter = transform.position;
         }
 
         currentState.Update();

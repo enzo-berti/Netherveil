@@ -110,9 +110,6 @@ public class GorgonStateMachine : Mobs, IGorgon
         if (currentState is not GorgonFleeingState)
             if (fleeCooldown < MAX_FLEE_COOLDOWN) fleeCooldown += Time.deltaTime;
 
-        if (currentState is not GorgonWanderingState)
-            WanderZoneCenter = transform.position;
-
         currentState.Update();
     }
 

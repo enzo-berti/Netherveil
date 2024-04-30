@@ -1,10 +1,8 @@
-using FMODUnity;
 using StateMachine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Collections;
-using UnityEngine.AI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -92,8 +90,6 @@ public class PestStateMachine : Mobs, IPest
         currentState.Update();
 
         if (!CanMove) { dashTimer += Time.deltaTime; }
-
-        if (currentState is not PestWanderingState) { WanderZoneCenter = transform.position; }
     }
 
     #region MOBS METHODS

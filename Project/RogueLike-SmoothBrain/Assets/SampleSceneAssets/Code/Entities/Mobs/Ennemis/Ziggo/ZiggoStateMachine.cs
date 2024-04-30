@@ -227,8 +227,8 @@ public class ZiggoStateMachine : Mobs, IZiggo
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayAttackRange(VisionAngle);

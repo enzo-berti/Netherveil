@@ -28,6 +28,8 @@ public class DamoclesIdle : BaseState<DamoclesStateMachine>
         elapsedTimeMovement = Time.time;
         Context.IsInvincibleCount = 1;
         Context.Animator.SetTrigger("BackToWalk");
+
+        Context.WanderZoneCenter = Context.transform.position;
     }
 
     // This method will be call only one time after the last update.

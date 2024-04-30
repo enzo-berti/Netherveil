@@ -20,7 +20,6 @@ namespace PrefabLightMapBaker
 
         public bool HasBakeData => (renderers?.Length ?? 0) > 0 && (texturesColor?.Length ?? 0) > 0;
 
-        private bool bakeCalled = false;
         public bool BakeApplied
         {
             get
@@ -35,10 +34,31 @@ namespace PrefabLightMapBaker
 
         void Start()
         {
-            BakeApply();
+            //BakeApply();
 
             // Warnning : this will mess up the renderer lightmaps reference
             // // StaticBatchingUtility.Combine( gameObject );
+        }
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            BakeApply();
+        }
+
+
+        void OnEnable()
+        {
+            if (!Application.isPlaying)
+            {
+                BakeApply();
+            }
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         public void BakeApply()
@@ -51,40 +71,12 @@ namespace PrefabLightMapBaker
 
             if (!BakeApplied)
             {
+                Debug.Log("BAAAAAAAKE");
                 if (Utils.Apply(this))
                 {
                     Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene", gameObject);
                 }
             }
-
-            bakeCalled = true;
-        }
-
-        void OnEnable()
-        {
-            if (!Application.isPlaying)
-            {
-                BakeApply();
-            }
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            BakeApply();
-        }
-
-        void OnDisable()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-        public static System.Action onValidate;
-
-        private void OnValidate()
-        {
-            onValidate?.Invoke();
         }
     }
 }

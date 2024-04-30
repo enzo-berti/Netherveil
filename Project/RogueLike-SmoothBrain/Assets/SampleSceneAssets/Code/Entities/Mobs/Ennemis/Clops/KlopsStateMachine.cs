@@ -75,8 +75,8 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         if (isFreeze || IsSpawning)
             return;
+        
         base.Update();
-
         currentState.Update();
     }
 
