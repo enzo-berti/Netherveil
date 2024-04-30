@@ -92,6 +92,9 @@ public class Item : MonoBehaviour
             case 2:
                 item.idItemName = "ThunderLink";
                 break;
+            case 3:
+                item.idItemName = "Bomb";
+                break;
             default:
                 RandomizeItem(item);
                 break;
