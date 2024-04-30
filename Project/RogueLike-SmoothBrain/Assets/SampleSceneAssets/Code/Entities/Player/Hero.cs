@@ -217,11 +217,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ApplyLifeSteal(IDamageable damageable, IAttacker attacker)
     {
-        AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
         int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0)
         {
+            AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
             FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
             Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
         }
