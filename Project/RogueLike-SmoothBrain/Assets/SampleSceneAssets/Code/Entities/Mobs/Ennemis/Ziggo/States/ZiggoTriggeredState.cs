@@ -17,15 +17,19 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
                 SwitchState(Factory.GetState<ZiggoWanderingState>());
             }
         }
-        else
+        else if (Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
         {
+
             if (Context.DashCooldown <= 0f)
             {
-                if (Vector3.Angle(Context.Player.transform.forward, Context.Player.transform.position - Context.transform.position) < 45f / 2f
-                    && Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+                if (Vector3.Angle(Context.Player.transform.forward, Context.Player.transform.position - Context.transform.position) < 45f / 2f)
                 {
                     SwitchState(Factory.GetState<ZiggoDashAttack>());
                 }
+            }
+            if (Context.SpitCooldown <= 0f)
+            {
+                SwitchState(Factory.GetState<ZiggoDashAttack>());
             }
         }
     }
@@ -44,8 +48,6 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
     protected override void UpdateState()
     {
         UpdateAttackCooldowns();
-
-        Debug.Log(Context.Player);
 
         if (Context.Player)
         {

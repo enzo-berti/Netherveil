@@ -8,11 +8,12 @@ public class ZiggoSpitAttackState : BaseState<ZiggoStateMachine>
     public ZiggoSpitAttackState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    private bool stateEnded;
+    private bool attackEnded;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (stateEnded)
+        if (attackEnded)
         {
             SwitchState(Factory.GetState<ZiggoDashAttack>());
         }
@@ -21,19 +22,19 @@ public class ZiggoSpitAttackState : BaseState<ZiggoStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-        stateEnded = false;
+        attackEnded = false;
     }
 
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
+        Context.SpitCooldown = 5f;
     }
 
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        Debug.Log("throw");
-        //fuite
+
     }
 
     // This method will be called on state switch.
@@ -46,33 +47,30 @@ public class ZiggoSpitAttackState : BaseState<ZiggoStateMachine>
 
     private IEnumerator LongRangeAttack()
     {
-        yield return null;
-        //Context.Animator.SetTrigger("Attack");
-        //float timeToThrow = 0.8f;
+        Context.Animator.ResetTrigger("Spit");
+        Context.Animator.SetTrigger("Spit");
+        float timeToThrow = 0.8f;
+        Vector2 pointToReach2D = MathsExtension.GetRandomPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), 1f);
+        Vector3 pointToReach3D = new(pointToReach2D.x, Context.Player.transform.position.y, pointToReach2D.y);
+        if (NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
+        {
+            pointToReach3D = hit.position;
+        }
 
-        //Vector2 pointToReach2D = MathsExtension.GetPointOnCircle(new Vector2(Context.Target.transform.position.x, Context.Target.transform.position.z), 1f);
-        //Vector3 pointToReach3D = new(pointToReach2D.x, Context.Target.transform.position.y, pointToReach2D.y);
-        //if (NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
-        //{
-        //    pointToReach3D = hit.position;
-        //}
+        Context.Projectile.transform.rotation = Quaternion.identity;
+        Context.Projectile.transform.parent = null;
 
-        //if (Context.gameObject != null)
-        //{
-        //GameObject bomb = GameObject.Instantiate(Context.Stats, Context.Hand);
-        //yield return new WaitWhile(() => Context.HasLaunchAnim == false);
-        //bomb.transform.rotation = Quaternion.identity;
-        //bomb.transform.parent = null;
+        ZiggoProjectile exploBomb = Context.Projectile.GetComponent<ZiggoProjectile>();
 
-        //ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
-
-        //exploBomb.ThrowToPos(Context, pointToReach3D, timeToThrow);
+        exploBomb.ThrowToPos(Context, pointToReach3D, timeToThrow);
         //exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
         //exploBomb.SetBlastDamages((int)Context.Stats.GetValue(Stat.ATK));
         //exploBomb.Activate();
 
-        //yield return new WaitForSeconds(0.5f);
-        //attackFinished = true;
-        //}
+        yield return new WaitForSeconds(timeToThrow);
+
+        // splatter
+        attackEnded = true;
     }
 }
+

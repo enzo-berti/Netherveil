@@ -147,15 +147,15 @@ public class ExplodingBomb : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Handles.color = new Color(1, 0, 0, 0.25f);
+        //Handles.color = new Color(1, 0, 0, 0.25f);
 
-        Gizmos.DrawSphere(this.transform.position, BlastDiameter / 2);
+        //Gizmos.DrawSphere(this.transform.position, BlastDiameter / 2);
 
-        Handles.color = Color.white;
-        Handles.Label(transform.position + Vector3.up,
-            $"Bomb" +
-            $"\nActivate : {isActive}" +
-            $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
+        //Handles.color = Color.white;
+        //Handles.Label(transform.position + Vector3.up,
+        //    $"Bomb" +
+        //    $"\nActivate : {isActive}" +
+        //    $"\nBefore explode : {timerBeforeExplode - Time.time + elapsedExplosionTime}");
     }
 #endif
 }

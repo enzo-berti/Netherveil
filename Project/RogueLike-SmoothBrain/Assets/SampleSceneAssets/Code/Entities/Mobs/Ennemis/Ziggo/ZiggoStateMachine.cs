@@ -34,7 +34,6 @@ public class ZiggoStateMachine : Mobs, IZiggo
     private IAttacker.HitDelegate onHit;
     [SerializeField] private ZiggoSounds ziggoSounds;
     [SerializeField, Range(0f, 360f)] private float originalVisionAngle = 180.0f;
-    [SerializeField] Collider[] attackColliders;
 
     private Hero player;
     bool playerHit = false;
@@ -45,6 +44,9 @@ public class ZiggoStateMachine : Mobs, IZiggo
     // attacks
     float dashCooldown = 0f;
     float spitCooldown = 0f;
+    GameObject projectile;
+    [Header("Attacks")]
+    [SerializeField] Collider[] attackColliders;
 
     #region Getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -56,6 +58,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
     public Collider[] AttackColliders { get => attackColliders; }
     public ZiggoSounds Sounds { get => ziggoSounds; }
     public Hero Player { get => player; }
+    public GameObject Projectile { get => projectile; }
     public bool PlayerHit { get => playerHit; set => playerHit = value; }
     public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE) * (currentState is not ZiggoWanderingState ? 1.25f : 1f); }
     public float VisionAngle { get => player ? 360 : originalVisionAngle; }
@@ -70,11 +73,9 @@ public class ZiggoStateMachine : Mobs, IZiggo
         factory = new StateFactory<ZiggoStateMachine>(this);
         currentState = factory.GetState<ZiggoWanderingState>();
 
-        // common initialization
-
-
-        // hashing animation
-
+        // projectile
+        projectile = GetComponentInChildren<ZiggoProjectile>().gameObject;
+        projectile.SetActive(false);
 
         // opti variables
         maxFrameUpdate = 10;
@@ -149,8 +150,6 @@ public class ZiggoStateMachine : Mobs, IZiggo
         animator.SetBool(deathHash, true);
 
         currentState = factory.GetState<ZiggoDeathState>();
-
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
     public void MoveTo(Vector3 posToMove)
