@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
 {
-    Vector3 meToPlayerVec { get { return Context.Player.transform.position - Context.transform.position; } }
-    float minTimeBeforeAttack = 3f;
+    Vector3 meToPlayerVec { get { return Utilities.Player.transform.position - Context.transform.position; } }
+    float minTimeBeforeAttack = 0.5f;
     float currentTimer = 0f;
     public KlopsMoveToPlayerState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
     {
@@ -19,7 +19,7 @@ public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
                 SwitchState(Factory.GetState<KlopsFleeState>());
                 return;
             }
-            else if(currentTimer >= minTimeBeforeAttack)
+            else if(currentTimer >= minTimeBeforeAttack && !Context.Agent.hasPath)
             {
                 SwitchState(Factory.GetState<KlopsAttackState>());
                 return;
@@ -41,7 +41,7 @@ public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
         if (Context == null) return;
         if(!Context.Agent.hasPath && Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE) / 1.5f)
         {
-            Context.MoveTo(MathsExtension.GetRandomPointInCircle(Context.Player.transform.position, Context.FleeRange * 1.2f, Context.Stats.GetValue(Stat.ATK_RANGE) / 1.2f));
+            Context.MoveTo(MathsExtension.GetRandomPointInCircle(Context.Player.transform.position, Context.FleeRange * 1.5f, Context.Stats.GetValue(Stat.ATK_RANGE)));
         }
             
         currentTimer += Time.deltaTime;
