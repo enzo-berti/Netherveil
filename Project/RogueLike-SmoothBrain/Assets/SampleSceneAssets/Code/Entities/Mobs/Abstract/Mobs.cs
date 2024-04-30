@@ -134,7 +134,7 @@ public abstract class Mobs : Entity
             }
         }
 
-        StartCoroutine(SpawningMatCoroutine());
+       SpawningMatManagement();
     }
 
     protected override void Update()
@@ -173,7 +173,7 @@ public abstract class Mobs : Entity
         IsKnockbackable = true;
     }
 
-    private IEnumerator SpawningMatCoroutine()
+    private void SpawningMatManagement()
     {
         if (GetComponentsInChildren<SkinnedMeshRenderer>().Length == 0)
         {
@@ -183,7 +183,6 @@ public abstract class Mobs : Entity
                 Material spawningMaterial = renderer.materials.FirstOrDefault(x => x.shader == spawningMat.shader);
                 StartCoroutine(MatUpdateMeshRenderer(spawningMaterial, renderer));
             }
-            yield return null;
         }
         else
         {
@@ -193,7 +192,6 @@ public abstract class Mobs : Entity
                 Material spawningMaterial = renderer.materials.FirstOrDefault(x => x.shader == spawningMat.shader);
                 StartCoroutine(MatUpdateSkinnedMeshRenderer(spawningMaterial, renderer));
             }
-            yield return null;
         }
     }
 
