@@ -31,6 +31,7 @@ public abstract class Quest
         RoomUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen += CheckQuestFinished;
         RoomUtilities.onEarlyEnter += CheckQuestFinished;
+        Hero.OnQuestObtained += CheckQuestFinished;
     }
 
     static public Quest LoadClass(string name, QuestTalker.TalkerType type, QuestTalker.TalkerGrade grade)
@@ -74,6 +75,7 @@ public abstract class Quest
         RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         RoomUtilities.onEarlyEnter -= CheckQuestFinished;
+        Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
     protected void CheckQuestFinished()

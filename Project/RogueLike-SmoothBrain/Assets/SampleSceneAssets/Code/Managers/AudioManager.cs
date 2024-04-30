@@ -28,11 +28,13 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference questFinishedSFX;
     [SerializeField] EventReference questLostSFX;
     [SerializeField] EventReference hornOfBarbatosSFX;
+    [SerializeField] EventReference pickUpItemSFX;
 
     public EventReference QuestObtainedSFX { get => questObtainedSFX; }
     public EventReference QuestFinishedSFX { get => questFinishedSFX; }
     public EventReference QuestLostSFX { get => questLostSFX; }
     public EventReference HornOfBarbatosSFX { get => hornOfBarbatosSFX; }
+    public EventReference PickUpItemSFX { get => pickUpItemSFX; }
 
     private static AudioManager instance = null;
     public static AudioManager Instance

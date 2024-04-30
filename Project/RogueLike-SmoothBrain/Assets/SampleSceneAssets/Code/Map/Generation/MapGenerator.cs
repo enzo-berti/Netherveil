@@ -179,51 +179,34 @@ namespace Map.Generation
 
             for (int i = 0; i < nbRoom; i++)
             {
-                // if not enough door are available, spawn a normal room by force
-                if (genParam.AvailableDoorsCount <= 1)
+                for (int indexType = 0; indexType < genParam.nbRoomByType.Count; indexType++)
                 {
-                    if (genParam.nbRoomByType[RoomType.Normal] <= 0)
-                    {
-                        Debug.LogError("No doors left to spawn another room");
-                        return false;
-                    }
-                    else if (!GenerateRoom(ref genParam, RoomType.Normal))
-                    {
-                        Debug.LogError("Can't generate room");
-                        return false;
-                    }
-                    genParam.nbRoomByType[RoomType.Normal]--;
-                }
-                else
-                {
-                    for (int index = 0; index < genParam.nbRoomByType.Count; index++)
-                    {
-                        RoomType type = genParam.nbRoomByType.Keys.ElementAt(index);
+                    RoomType type = genParam.nbRoomByType.Keys.ElementAt(indexType);
 
-                        if (genParam.nbRoomByType[type] > 0)
+                    if (genParam.nbRoomByType[type] > 0)
+                    {
+                        switch (type)
                         {
-                            switch (type)
-                            {
-                                case RoomType.Lobby:
-                                    GenerateLobbyRoom(ref genParam);
-                                    break;
-                                case RoomType.Tutorial:
-                                    GenerateTutorialRoom(ref genParam);
-                                    break;
-                                case RoomType.Boss:
-                                    GenerateBossRoom(ref genParam);
-                                    break;
-                                default:
-                                    if (!GenerateRoom(ref genParam, type))
-                                    {
-                                        Debug.LogError("Can't generate room");
-                                        return false;
-                                    }
-                                    break;
-                            }
-
-                            genParam.nbRoomByType[type]--;
+                            case RoomType.Lobby:
+                                GenerateLobbyRoom(ref genParam);
+                                break;
+                            case RoomType.Tutorial:
+                                GenerateTutorialRoom(ref genParam);
+                                break;
+                            case RoomType.Boss:
+                                GenerateBossRoom(ref genParam);
+                                break;
+                            default:
+                                if (!GenerateRoom(ref genParam, type))
+                                {
+                                    Debug.LogError("Can't generate room");
+                                    return false;
+                                }
+                                break;
                         }
+
+                        genParam.nbRoomByType[type]--;
+                        break;
                     }
                 }
             }
