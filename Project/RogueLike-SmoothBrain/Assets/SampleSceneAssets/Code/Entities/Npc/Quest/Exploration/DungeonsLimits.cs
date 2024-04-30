@@ -24,7 +24,7 @@ public class DungeonsLimits : Quest
                 Datas.CorruptionModifierValue += 10;
                 break;
         }
-
+        currentNumber = (int)((float)RoomUtilities.NbEnterRoom / RoomUtilities.NbRoom * 100f);
         progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
         RoomUtilities.onEnter += UpdateCount;
     }

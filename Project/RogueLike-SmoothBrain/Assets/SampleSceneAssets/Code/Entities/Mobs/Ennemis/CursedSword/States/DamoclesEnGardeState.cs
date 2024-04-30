@@ -1,5 +1,6 @@
 using StateMachine; // include all script about stateMachine
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
 {
@@ -10,8 +11,10 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     private bool stateEnded = false;
     private float elapsedTimeMovement = 0.0f;
     private float elapsedRotaTime = 0.0f;
-    private float guardTime = 4f;
+    private float guardTime = 2.5f;
     private float guardRotaTime = 1.5f;
+    private float timerForCircle = Mathf.PI;
+    private bool isTimerIncreasing = true;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -46,7 +49,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         elapsedTimeMovement = Time.time;
         elapsedRotaTime = Time.time;
         stateEnded = false;
-        Context.Stats.SetValue(Stat.SPEED, 3);
+        Context.Stats.SetValue(Stat.SPEED, 7);
         Context.IsInvincibleCount = 1;
         Context.Animator.SetTrigger("Guard");
     }
@@ -62,22 +65,21 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         Vector3 direction = Context.Target.transform.position - Context.transform.position;
         direction.y = 0;
         direction.Normalize();
-
-        Context.transform.LookAt(Context.Target.transform.position);
-
-        if (Time.time - elapsedRotaTime < guardRotaTime)
+       
+        if(isTimerIncreasing)
         {
-            Context.MoveTo(Context.transform.position + new Vector3(-direction.z, 0, direction.x));
+            timerForCircle += Time.deltaTime;
+            if (timerForCircle > 2 * Mathf.PI) isTimerIncreasing = false;
         }
         else
         {
-            Context.MoveTo(Context.transform.position + new Vector3(direction.z, 0, -direction.x));
-            if (Time.time - elapsedRotaTime > guardRotaTime * 2f)
-            {
-                elapsedRotaTime = Time.time;
-            }
+            timerForCircle -= Time.deltaTime;
+            if (timerForCircle < Mathf.PI) isTimerIncreasing = true;
         }
-
+        Context.transform.LookAt(Context.Target.transform.position);
+        float posRadiusCircle = Vector3.Distance(Context.transform.position, Context.Target.position);
+        posRadiusCircle = Mathf.Clamp(posRadiusCircle, 2f, 5f);
+        Context.MoveTo(Context.Target.position.GetPointOnCircle(posRadiusCircle, timerForCircle));
         // Delay
         if (Time.time - elapsedTimeMovement < guardTime)
             return;

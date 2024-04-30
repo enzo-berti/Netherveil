@@ -635,7 +635,7 @@ Transform:
   m_GameObject: {fileID: 4051640495675745330}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.2, y: 14.38, z: -2.07}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1043,7 +1043,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 500
+      value: 10
       lastValue: 0
       coeff: 0
       maxValue: 0
@@ -1111,27 +1111,107 @@ MonoBehaviour:
     hit:
       reference:
         Guid:
-          Data1: -214694489
-          Data2: 1302972210
-          Data3: -1715644025
-          Data4: 1018888436
-        Path: event:/Enemy/Grafted/GraftedHit
+          Data1: -240884254
+          Data2: 1200758190
+          Data3: 1327446462
+          Data4: -370579617
+        Path: event:/Enemy/Soniel/SonielHit
     walk:
       reference:
         Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
+          Data1: -238994275
+          Data2: 1299155090
+          Data3: 1865801655
+          Data4: -1941703736
+        Path: event:/Enemy/Soniel/SonielWalk
     death:
       reference:
         Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
+          Data1: -2095586925
+          Data2: 1105168791
+          Data3: -639971915
+          Data4: -753126068
+        Path: event:/Enemy/Soniel/SonielDeath
+    run:
+      reference:
+        Guid:
+          Data1: 1418350638
+          Data2: 1333481065
+          Data3: 578672037
+          Data4: 1973829608
+        Path: event:/Enemy/Soniel/SonielRun
+    launchSword:
+      reference:
+        Guid:
+          Data1: 1500904096
+          Data2: 1137164440
+          Data3: 813325196
+          Data4: -1232786898
+        Path: event:/Enemy/Soniel/SonielSwordLunch
+    retrieveSword:
+      reference:
+        Guid:
+          Data1: -485781978
+          Data2: 1168590858
+          Data3: -1577505885
+          Data4: -1459300488
+        Path: event:/Enemy/Soniel/SonielSwordRetrieved
+    swordSpinning:
+      reference:
+        Guid:
+          Data1: 406245960
+          Data2: 1333653694
+          Data3: -817734782
+          Data4: -1176903712
+        Path: event:/Enemy/Soniel/SonielSwordSpin
+    swordHitMap:
+      reference:
+        Guid:
+          Data1: 891030832
+          Data2: 1181672028
+          Data3: -1286569078
+          Data4: -7842839
+        Path: event:/Enemy/Soniel/SonielSwordHitMap
+    slash:
+      reference:
+        Guid:
+          Data1: 1779295414
+          Data2: 1089961371
+          Data3: 2012565641
+          Data4: -942219295
+        Path: event:/Enemy/Soniel/SonielSlash
+    slashVoid:
+      reference:
+        Guid:
+          Data1: -2101968022
+          Data2: 1211148835
+          Data3: -2102323552
+          Data4: -2059188561
+        Path: event:/Enemy/Soniel/SonielSlashVoid
+    thrust:
+      reference:
+        Guid:
+          Data1: 182766473
+          Data2: 1224859827
+          Data3: -1260855118
+          Data4: -1878623603
+        Path: event:/Enemy/Soniel/SonielEstoc
+    bossHitMap:
+      reference:
+        Guid:
+          Data1: -365180990
+          Data2: 1285951488
+          Data3: 1039930523
+          Data4: 574840758
+        Path: event:/Enemy/Soniel/SonielHitMap
+    multipleSlash:
+      reference:
+        Guid:
+          Data1: -2101968022
+          Data2: 1211148835
+          Data3: -2102323552
+          Data4: -2059188561
+        Path: event:/Enemy/Soniel/SonielSlashVoid
   attackColliders:
   - data:
     - {fileID: 481474063375686297}
@@ -1522,22 +1602,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.9122874
+      value: -0.8954596
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.1977974
+      value: -0.22738865
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.35047626
+      value: -0.3709115
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.07598843
+      value: 0.09418746
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

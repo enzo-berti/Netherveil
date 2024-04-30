@@ -14,6 +14,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         UPGRADING_STATS,
         MOTIONLESS
     }
+
+    static Color corruptionColor = new Color(0.62f, 0.34f, 0.76f, 1.0f);
+    static Color benedictionColor = Color.yellow;
+
     Animator animator;
     PlayerInput playerInput;
     PlayerController playerController;
@@ -315,7 +319,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             animator.ResetTrigger("CorruptionUpgrade");
             animator.SetTrigger("CorruptionUpgrade");
-            animator.ResetTrigger("BloodPouring");
+            animator.ResetTrigger("PouringBlood");
         }
         else if (benedictionUpgradeOnly)
         {
@@ -323,11 +327,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             animator.ResetTrigger("BenedictionUpgrade");
             animator.SetTrigger("BenedictionUpgrade");
-            animator.ResetTrigger("BloodPouring");
+            animator.ResetTrigger("PouringBlood");
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
-            playerController.corruptionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            playerController.DrawbackVFX.SetBool("Corruption", true);
+            playerController.DrawbackVFX.Play();
             AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
 
             if (hascorruptionDrawbackPositiveToNegative && curStep < 0)
@@ -336,7 +341,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
                 animator.ResetTrigger("BenedictionUpgrade");
                 animator.SetTrigger("BenedictionUpgrade");
-                animator.ResetTrigger("BloodPouring");
+                animator.ResetTrigger("PouringBlood");
             }
             else
             {
@@ -346,7 +351,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
         else if (hasbenedictionDrawbackNegativeToPositive || hasbenedictionDrawbackNegativeOnly)
         {
-            playerController.benedictionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            playerController.DrawbackVFX.SetBool("Corruption", false);
+            playerController.DrawbackVFX.Play();
             AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
             if (hasbenedictionDrawbackNegativeToPositive && curStep > 0)
             {
@@ -354,7 +360,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
                 animator.ResetTrigger("CorruptionUpgrade");
                 animator.SetTrigger("CorruptionUpgrade");
-                animator.ResetTrigger("BloodPouring");
+                animator.ResetTrigger("PouringBlood");
             }
             else
             {
@@ -445,6 +451,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 armorPiece.SetActive(true);
             }
         }
+    }
+
+    public static void CallCorruptionBenedictionText(int value)
+    {
+        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, (value < 0 ? "-" : "+") + $"{Mathf.Abs(value)}" + (value < 0 ? " Benediction" : " Corruption"), 
+            value < 0 ? benedictionColor : corruptionColor);
     }
 
     public void DebugCallLaunchUpgrade()

@@ -11,7 +11,7 @@ public class KlopsStateMachine : Mobs, IKlops
     public class KlopsSounds
     {
         public Sound deathSound;
-        public Sound takeDamageSound;
+        public Sound AttackSound;
         public Sound hitSound;
         public Sound igniteSound;
     }
@@ -50,6 +50,7 @@ public class KlopsStateMachine : Mobs, IKlops
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
     public Transform Target { get => target; set => target = value; }
+    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public bool IsDeath { get => isDeath; }
     public KlopsSounds KlopsSound { get => klopsSounds; }
 
@@ -113,7 +114,7 @@ public class KlopsStateMachine : Mobs, IKlops
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        //clopsSounds.attackSound.Play(transform.position);
+        klopsSounds.AttackSound.Play(transform.position);
     }
 
     public void MoveTo(Vector3 posToMove)

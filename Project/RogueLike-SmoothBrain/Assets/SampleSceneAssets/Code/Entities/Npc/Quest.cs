@@ -31,6 +31,7 @@ public abstract class Quest
         RoomUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen += CheckQuestFinished;
         RoomUtilities.onEarlyEnter += CheckQuestFinished;
+        Hero.OnQuestObtained += CheckQuestFinished;
     }
 
     static public Quest LoadClass(string name, QuestTalker.TalkerType type, QuestTalker.TalkerGrade grade)
@@ -69,11 +70,13 @@ public abstract class Quest
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
+        Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
         OnQuestFinished?.Invoke();
 
         RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         RoomUtilities.onEarlyEnter -= CheckQuestFinished;
+        Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
     protected void CheckQuestFinished()

@@ -33,6 +33,9 @@ public class SonielBerserk : BaseState<SonielStateMachine>
     int rushingHash = Animator.StringToHash("Rushing");
     int stunnedHash = Animator.StringToHash("Stunned");
 
+    //sale menfou
+    float soundTimer = 0f;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -55,6 +58,8 @@ public class SonielBerserk : BaseState<SonielStateMachine>
         Context.Animator.SetTrigger(rushingHash);
 
         Context.Stats.SetCoeffValue(Stat.SPEED, 3f);
+
+        soundTimer = 0.4f;
     }
 
     // This method will be called only once after the last update.
@@ -77,11 +82,27 @@ public class SonielBerserk : BaseState<SonielStateMachine>
     {
         if (currentState == BerserkState.STUNNED)
         {
+            if (!Context.Agent.isStopped)
+            {
+                Context.Sounds.run.Stop();
+                Context.Sounds.multipleSlash.Stop();
+                Context.Sounds.bossHitMap.Play(Context.transform.position);
+            }
+
             Context.Agent.isStopped = true;
             attackDuration += Time.deltaTime;
         }
         else
         {
+            soundTimer += Time.deltaTime;
+            Context.Sounds.run.Play(Context.transform.position);
+
+            if (soundTimer >= 0.4f)
+            {
+                Context.Sounds.multipleSlash.Play(Context.transform.position, true);
+                soundTimer = 0f;
+            }
+
             Context.MoveTo(Context.transform.position + direction * (Context.Agent.stoppingDistance + 0.1f));
 
             if (!Context.PlayerHit)
