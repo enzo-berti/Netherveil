@@ -36,7 +36,7 @@ public class Drop
             {
                 GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
                 Vector3 pos3D;
-                Vector2 pos = MathsExtension.GetPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
+                Vector2 pos = MathsExtension.GetRandomPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
                 pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
                 CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
             }
@@ -51,7 +51,7 @@ public class Drop
             {
                 GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
                 Vector3 pos3D;
-                Vector2 pos = MathsExtension.GetPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
+                Vector2 pos = MathsExtension.GetRandomPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
                 pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
                 CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
             }

@@ -71,7 +71,7 @@ public class GorgonAttackingState : BaseState<GorgonStateMachine>
         float timeToThrow = 0.8f;
         yield return new WaitWhile(() => Context.HasRemovedHead == false);
         Context.HasRemovedHead = false;
-        Vector2 pointToReach2D = MathsExtension.GetPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), 1f);
+        Vector2 pointToReach2D = MathsExtension.GetRandomPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), 1f);
         Vector3 pointToReach3D = new(pointToReach2D.x, Context.Player.transform.position.y, pointToReach2D.y);
         if (NavMesh.SamplePosition(pointToReach3D, out var hit, 3, -1))
         {

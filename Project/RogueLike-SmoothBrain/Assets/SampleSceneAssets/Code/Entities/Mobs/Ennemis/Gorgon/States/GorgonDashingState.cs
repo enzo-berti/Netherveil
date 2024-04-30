@@ -30,7 +30,7 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
         Context.CanLoseAggro = false;
 
         // Take a random point around the player pos in 2D then convert it in 3D
-        Vector2 pointToReach2D = MathsExtension.GetPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), Context.Stats.GetValue(Stat.ATK_RANGE) * 0.9f);
+        Vector2 pointToReach2D = MathsExtension.GetRandomPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), Context.Stats.GetValue(Stat.ATK_RANGE) * 0.9f);
         Vector3 pointToReach3D = new(pointToReach2D.x, Context.transform.position.y, pointToReach2D.y);
 
         // Replace the point on navMesh
@@ -98,7 +98,7 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
                 Vector2 posOnCone = Context.transform.position;
 
                 if (direction != Vector2.zero)
-                    posOnCone = MathsExtension.GetPointOnCone(curPos2D, direction, distance / nbDash, 60);
+                    posOnCone = MathsExtension.GetRandomPointOnCone(curPos2D, direction, distance / nbDash, 60);
 
                 Vector3 posOnCone3D = new(posOnCone.x, Context.transform.position.y, posOnCone.y);
                 if (NavMesh.SamplePosition(posOnCone3D, out var hit, 10, NavMesh.AllAreas))
