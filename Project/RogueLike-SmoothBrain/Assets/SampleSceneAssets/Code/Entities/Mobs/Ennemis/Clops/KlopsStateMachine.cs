@@ -50,6 +50,7 @@ public class KlopsStateMachine : Mobs, IKlops
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
     public Transform Target { get => target; set => target = value; }
+    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
     public bool IsDeath { get => isDeath; }
     public KlopsSounds KlopsSound { get => klopsSounds; }
 
