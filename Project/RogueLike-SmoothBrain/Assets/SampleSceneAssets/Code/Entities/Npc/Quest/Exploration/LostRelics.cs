@@ -9,6 +9,7 @@ public class LostRelics : Quest
     {
         base.AcceptQuest();
 
+        currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Treasure];
         MAX_NUMBER = RoomUtilities.nbRoomByType[RoomType.Treasure];
         progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
         RoomUtilities.onEnter += UpdateCount;
