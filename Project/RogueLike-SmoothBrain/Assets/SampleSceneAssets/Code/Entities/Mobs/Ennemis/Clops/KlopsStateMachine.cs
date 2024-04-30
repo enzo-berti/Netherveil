@@ -27,10 +27,7 @@ public class KlopsStateMachine : Mobs, IKlops
     [SerializeField] private KlopsSounds klopsSounds;
     [SerializeField] float defaultVisionAngle = 360f;
     [SerializeField] GameObject fireballPrefab;
-    //[SerializeField, Range(0f, 360f)] private float angle = 180.0f;
-    //[SerializeField] private BoxCollider attack1Collider;
-    //[SerializeField] private BoxCollider attack2Collider;
-    //[SerializeField] private BoxCollider attack3Collider;
+    [SerializeField] Transform fireballSpawn;
     private Transform target;
     private bool isDeath = false;
     Hero player = null;
@@ -40,8 +37,9 @@ public class KlopsStateMachine : Mobs, IKlops
 
     // getters and setters
     public GameObject FireballPrefab { get => fireballPrefab; }
+    public Transform FireballSpawn { get => fireballSpawn; }
     public float VisionAngle { get => defaultVisionAngle; }
-    public float FleeRange { get => stats.GetValue(Stat.ATK_RANGE) * 0.5f; }
+    public float FleeRange { get => stats.GetValue(Stat.ATK_RANGE) / 3f; }
     public Hero Player { get => player; }
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -97,10 +95,8 @@ public class KlopsStateMachine : Mobs, IKlops
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
-
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
-
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }

@@ -1,4 +1,5 @@
 using StateMachine;
+using UnityEngine;
 
 public class KlopsFleeState : BaseState<KlopsStateMachine>
 {
@@ -8,21 +9,35 @@ public class KlopsFleeState : BaseState<KlopsStateMachine>
 
     protected override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        if (Context.Player == null) return;
+        if(Vector3.Distance(Context.Player.transform.position, Context.transform.position) > Context.FleeRange * 1.5f)
+        {
+            
+            SwitchState(Factory.GetState<KlopsAttackState>());
+        }
     }
 
     protected override void EnterState()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("In flee state");
     }
 
     protected override void ExitState()
     {
-        throw new System.NotImplementedException();
     }
 
     protected override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        if (Context.Player == null) return;
+        Vector3 direction = Context.transform.position - Context.Player.transform.position;
+        direction.Normalize();
+
+        Context.MoveTo(Context.transform.position + direction);
+    }
+
+    protected override void SwitchState(BaseState<KlopsStateMachine> newState)
+    {
+        base.SwitchState(newState);
+        Context.currentState = newState;
     }
 }
