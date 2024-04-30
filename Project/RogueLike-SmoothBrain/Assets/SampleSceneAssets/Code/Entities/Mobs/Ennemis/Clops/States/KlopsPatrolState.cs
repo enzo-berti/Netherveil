@@ -3,14 +3,11 @@ using UnityEngine;
 
 public class KlopsPatrolState : BaseState<KlopsStateMachine>
 {
-    public KlopsPatrolState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
-    {
-    }
+    public KlopsPatrolState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory)
+        : base(currentContext, currentFactory){ }
 
-    bool canMove = false;
-    float idleTimer = 0f;
-    readonly float MAX_IDLE_COOLDOWN = 2f;
-
+    private float elapsedTimeMovement = 0.0f;
+    private float delayBetweenMovement = 2.0f;
     protected override void CheckSwitchStates()
     {
         if (Context.IsDeath)
@@ -25,6 +22,10 @@ public class KlopsPatrolState : BaseState<KlopsStateMachine>
 
     protected override void EnterState()
     {
+        Context.Stats.SetValue(Stat.SPEED, 5);
+        elapsedTimeMovement = Time.time;
+        Context.IsInvincibleCount = 1;
+        Context.Animator.SetTrigger("BackToWalk");
     }
 
     protected override void ExitState()
@@ -33,22 +34,20 @@ public class KlopsPatrolState : BaseState<KlopsStateMachine>
 
     protected override void UpdateState()
     {
-        if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
-        {
-            canMove = idleTimer >= MAX_IDLE_COOLDOWN;
+        // Delay
+        if (Time.time - elapsedTimeMovement < delayBetweenMovement)
+            return;
 
-            if (!canMove)
-            {
-                idleTimer += Time.deltaTime;
-            }
-            else
-            {
-                float minRange = Context.Stats.GetValue(Stat.ATK_RANGE) / 2f;
-                float maxRange = Context.Stats.GetValue(Stat.ATK_RANGE);
+        elapsedTimeMovement = Time.time;
 
-                Context.MoveTo(Context.GetRandomPointOnWanderZone(Context.transform.position, minRange, maxRange));
-                idleTimer = Random.Range(-0.5f, 0.5f);
-            }
-        }
+        Vector3 pointToReach3D = Context.GetRandomPointOnWanderZone(Context.gameObject.transform.position, 2, 5);
+
+        Context.MoveTo(pointToReach3D * Context.NormalSpeed);
+    }
+
+    protected override void SwitchState(BaseState<KlopsStateMachine> newState)
+    {
+        base.SwitchState(newState);
+        Context.currentState = newState;
     }
 }

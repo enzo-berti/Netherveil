@@ -8,6 +8,7 @@ public class TheBuriedSecrets : Quest
     public override void AcceptQuest()
     {
         base.AcceptQuest();
+        currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Secret];
         MAX_NUMBER = RoomUtilities.nbRoomByType[RoomType.Secret];
         progressText = $"NB SECRETS ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
         RoomUtilities.onEnter += UpdateCount;
