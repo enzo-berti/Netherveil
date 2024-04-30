@@ -38,14 +38,11 @@ public class VulcanHunter : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
-        if (IsQuestFinished())
-            return;
-
-        if (damageable as IGorgon != null)
+        if (!IsQuestFinished() && damageable as IGorgon != null)
         {
             currentNumber++;
             progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
-            QuestUpdated();
         }
+        QuestUpdated();
     }
 }

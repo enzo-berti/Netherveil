@@ -168,8 +168,6 @@ public class GorgonStateMachine : Mobs, IGorgon
 
         gorgonSounds.deathSFX.Play(transform.position);
         currentState = factory.GetState<GorgonDeathState>();
-
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)

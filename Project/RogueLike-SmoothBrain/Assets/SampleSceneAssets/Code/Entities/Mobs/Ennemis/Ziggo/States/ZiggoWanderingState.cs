@@ -22,7 +22,7 @@ public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-
+        Context.WanderZoneCenter = Context.transform.position;
     }
 
     // This method will be called only once after the last update.
@@ -36,6 +36,11 @@ public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
         if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
         {
             idleTimer += Time.deltaTime;
+            Context.Sounds.moveSound.Stop();
+        }
+        else
+        {
+            Context.Sounds.moveSound.Play(Context.transform.position);
         }
 
         if (idleTimer > 1f)
