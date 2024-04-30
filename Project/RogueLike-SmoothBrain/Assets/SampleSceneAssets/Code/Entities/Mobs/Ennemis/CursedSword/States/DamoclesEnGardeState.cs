@@ -11,7 +11,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     private bool stateEnded = false;
     private float elapsedTimeMovement = 0.0f;
     private float elapsedRotaTime = 0.0f;
-    private float guardTime = 4f;
+    private float guardTime = 2.5f;
     private float guardRotaTime = 1.5f;
     private float timerForCircle = Mathf.PI;
     private bool isTimerIncreasing = true;
