@@ -7,6 +7,8 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
     public ZiggoTriggeredState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
+    int direction = 1;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -15,6 +17,7 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
             if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
             {
                 SwitchState(Factory.GetState<ZiggoWanderingState>());
+                return;
             }
         }
         else if (Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
@@ -25,11 +28,14 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
                 if (Vector3.Angle(Context.Player.transform.forward, Context.Player.transform.position - Context.transform.position) < 45f / 2f)
                 {
                     SwitchState(Factory.GetState<ZiggoDashAttack>());
+                    return;
                 }
             }
+
             if (Context.SpitCooldown <= 0f)
             {
-                SwitchState(Factory.GetState<ZiggoDashAttack>());
+                SwitchState(Factory.GetState<ZiggoSpitAttack>());
+                return;
             }
         }
     }
@@ -37,11 +43,15 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
+        Context.DashCooldown += 0.5f;
+        Context.SpitCooldown += 0.5f;
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
+        Context.DashCooldown = 0f;
+        Context.SpitCooldown = 0f;
     }
 
     // This method will be call every frame.
@@ -63,7 +73,12 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
             }
             else
             {
-                pointToReach = Context.Player.transform.position + (new Vector3(-mobToPlayer.z, 0, mobToPlayer.x).normalized - mobToPlayer).normalized * Context.Stats.GetValue(Stat.ATK_RANGE) * 0.75f;
+                // dur à lire m'en bat les couilles
+                pointToReach = Context.Player.transform.position + (direction * new Vector3(-mobToPlayer.z, 0, mobToPlayer.x).normalized - mobToPlayer).normalized * Context.Stats.GetValue(Stat.ATK_RANGE) * 0.75f;
+                if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), (pointToReach - Context.transform.position).normalized, (pointToReach - Context.transform.position).magnitude, LayerMask.GetMask("Map")))
+                {
+                    direction = -direction;
+                }
             }
 
             // rotate
