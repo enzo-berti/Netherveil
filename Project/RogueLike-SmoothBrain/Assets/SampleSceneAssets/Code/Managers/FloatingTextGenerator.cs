@@ -31,6 +31,12 @@ static public class FloatingTextGenerator
         newText.SetSize(ACTION_TEXT_SIZE);
     }
 
+    public static void CreateActionText(Vector3 pos, string text,Color customColor, int randScale = 1)
+    {
+        FloatingText newText = CreateText(pos, text, customColor, randScale);
+        newText.SetSize(ACTION_TEXT_SIZE);
+    }
+
     private static void CreateNumberText(int nb, Vector3 pos, Color color, int randScale = 1)
     {
         FloatingText newText = CreateText(pos, nb.ToString(), color, randScale);

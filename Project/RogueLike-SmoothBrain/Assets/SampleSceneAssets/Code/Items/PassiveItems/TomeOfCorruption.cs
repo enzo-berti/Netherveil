@@ -6,6 +6,7 @@ public class TomeOfCorruption : ItemEffect , IPassiveItem
     public void OnRetrieved()
     {
         GameObject.FindWithTag("Player").GetComponent<Hero>().Stats.IncreaseValue(Stat.CORRUPTION, value);
+        Hero.CallCorruptionBenedictionText(value);
     }
 
     public void OnRemove()
