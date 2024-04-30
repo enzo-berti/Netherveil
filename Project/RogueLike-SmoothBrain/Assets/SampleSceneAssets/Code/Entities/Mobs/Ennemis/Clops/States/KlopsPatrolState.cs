@@ -14,24 +14,27 @@ public class KlopsPatrolState : BaseState<KlopsStateMachine>
         {
             SwitchState(Factory.GetState<KlopsDeathState>());
         }
-        else if (Context.Target != null)
+        else if (Context.Player != null)
         {
+            Debug.Log("Go to klops move");
             SwitchState(Factory.GetState<KlopsMoveToPlayerState>());
         }
     }
 
+    // This method will be call only one time before the update.
     protected override void EnterState()
     {
         Context.Stats.SetValue(Stat.SPEED, 5);
         elapsedTimeMovement = Time.time;
-        Context.IsInvincibleCount = 1;
-        Context.Animator.SetTrigger("BackToWalk");
+        Debug.Log("Enter PatrolState");
     }
 
+    // This method will be call only one time after the last update.
     protected override void ExitState()
     {
     }
 
+    // This method will be call every frame.
     protected override void UpdateState()
     {
         // Delay

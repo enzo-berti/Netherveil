@@ -34,7 +34,7 @@ public class Bleeding : OverTimeStatus
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damages, launcher, false);
 
             if (Utilities.IsPlayer(target))
-                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Bleeding);
+                PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Bleeding, false);
         }
     }
 

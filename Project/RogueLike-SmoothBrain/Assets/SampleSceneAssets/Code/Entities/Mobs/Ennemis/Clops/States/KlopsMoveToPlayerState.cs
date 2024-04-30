@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
 {
-    Vector3 meToPlayerVec { get { return Context.Player.transform.position - Context.transform.position; } }
+    Vector3 meToPlayerVec { get { return Utilities.Player.transform.position - Context.transform.position; } }
+    float minTimeBeforeAttack = 0.5f;
+    float currentTimer = 0f;
     public KlopsMoveToPlayerState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
     {
     }
@@ -17,7 +19,7 @@ public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
                 SwitchState(Factory.GetState<KlopsFleeState>());
                 return;
             }
-            else if(meToPlayerVec.magnitude <= Context.Stats.GetValue(Stat.ATK_RANGE))
+            else if(currentTimer >= minTimeBeforeAttack && !Context.Agent.hasPath)
             {
                 SwitchState(Factory.GetState<KlopsAttackState>());
                 return;
@@ -27,6 +29,7 @@ public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
 
     protected override void EnterState()
     {
+        currentTimer = currentTimer >= minTimeBeforeAttack ? currentTimer : 0f;
     }
 
     protected override void ExitState()
@@ -35,7 +38,13 @@ public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
 
     protected override void UpdateState()
     {
-        Context.MoveTo(Context.transform.position + meToPlayerVec.normalized);
+        if (Context == null) return;
+        if(!Context.Agent.hasPath && Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE) / 1.5f)
+        {
+            Context.MoveTo(MathsExtension.GetRandomPointInCircle(Context.Player.transform.position, Context.FleeRange * 1.5f, Context.Stats.GetValue(Stat.ATK_RANGE)));
+        }
+            
+        currentTimer += Time.deltaTime;
     }
 
     protected override void SwitchState(BaseState<KlopsStateMachine> newState)
