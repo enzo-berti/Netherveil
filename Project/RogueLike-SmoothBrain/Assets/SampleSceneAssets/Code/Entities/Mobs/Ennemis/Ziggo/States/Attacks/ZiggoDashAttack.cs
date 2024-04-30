@@ -19,14 +19,15 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
+    bool playerOutOfRange = false;
     Vector3 direction;
     float dashRange;
-
+    bool dashed = false;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (attackEnded)
+        if (attackEnded || playerOutOfRange)
         {
             SwitchState(Context.Player ? Factory.GetState<ZiggoTriggeredState>() : Factory.GetState<ZiggoWanderingState>());
         }
@@ -36,32 +37,75 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
     protected override void EnterState()
     {
         attackEnded = false;
+        playerOutOfRange = false;
 
-        Context.Stats.IncreaseCoeffValue(Stat.SPEED, 2);
+        Vector3 mobPos = Context.transform.position;
+        Vector3 playerPos = Context.Player.transform.position;
 
-        direction = Utilities.Hero.transform.position - Context.transform.position;
-        dashRange = direction.magnitude;
-        direction.y = 0;
-        direction.Normalize();
-
-        Context.Animator.ResetTrigger("Dash");
-        Context.Animator.SetTrigger("Dash");
-
-        Context.MoveTo(Context.transform.position + direction * (dashRange + 1));
+        Context.MoveTo(playerPos - Context.Player.transform.forward * (playerPos - mobPos).magnitude);
     }
 
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
-        Context.Stats.DecreaseCoeffValue(Stat.SPEED, 2);
+        Context.PlayerHit = false;
+        
+        if (!playerOutOfRange)
+        {
+            Context.Stats.DecreaseCoeffValue(Stat.SPEED, 1.5f);
+            Context.DashCooldown = 2f;
+        }
+
+        playerOutOfRange = false;
+        attackEnded = false;
+
+        // DEBUG
+        Context.DisableHitboxes();
     }
 
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        // rotate
+        Quaternion lookRotation = Quaternion.LookRotation(Context.Agent.pathEndPosition, Context.transform.position);
+        lookRotation.x = 0;
+        lookRotation.z = 0;
+        Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 10f * Time.deltaTime);
+
         if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
         {
-            attackEnded = true;
+            if (!dashed)
+            {
+                dashed = true;
+                playerOutOfRange = Vector3.Distance(Context.Player.transform.position, Context.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE) * 1.25f;
+
+                if (!playerOutOfRange)
+                {
+                    direction = Utilities.Hero.transform.position - Context.transform.position;
+                    dashRange = direction.magnitude;
+                    direction.y = 0;
+                    direction.Normalize();
+
+                    Context.Animator.ResetTrigger("Dash");
+                    Context.Animator.SetTrigger("Dash");
+
+                    Context.MoveTo(Context.transform.position + direction * (dashRange + 1));
+
+                    Context.Stats.IncreaseCoeffValue(Stat.SPEED, 1.5f);
+                }
+            }
+            else
+            {
+                attackEnded = true;
+            }
+        }
+
+        if (dashed)
+        {
+            if (!Context.PlayerHit)
+            {
+                Context.AttackCollide(Context.AttackColliders[(int)ZiggoStateMachine.ZiggoAttacks.DASH], true);
+            }
         }
     }
 

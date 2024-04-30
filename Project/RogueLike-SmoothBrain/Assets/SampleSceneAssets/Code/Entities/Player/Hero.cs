@@ -2,8 +2,10 @@ using Fountain;
 using Map;
 using PostProcessingEffects;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -378,6 +380,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.SpecialAbility = new DivineShield();
                 OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+                StartCoroutine(OpenSpecialAbilityTab());
             }
             else
             {
@@ -407,6 +410,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 CanHealFromConsumables = false;
                 playerController.SpecialAbility = new DamnationVeil();
                 OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+                StartCoroutine(OpenSpecialAbilityTab());
             }
             else
             {
@@ -450,6 +454,22 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 armorPiece.SetActive(true);
             }
+        }
+    }
+
+    private IEnumerator OpenSpecialAbilityTab()
+    {
+        if (Stats.GetValue(Stat.CORRUPTION) == Stats.GetMaxValue(Stat.CORRUPTION))
+        {
+            yield return new WaitForSeconds(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration);
+            HudHandler.current.DescriptionTab.SetTab("Damnation Veil", "On activation, creates a damnation zone that applies the damnation effect that doubles the damages received to all enemies touched by the zone.", GameResources.Get<VideoClip>("CorruptionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundCoruption"));
+            HudHandler.current.DescriptionTab.OpenTab();
+        }
+        else if (Stats.GetValue(Stat.CORRUPTION) == Stats.GetMinValue(Stat.CORRUPTION))
+        {
+            yield return new WaitForSeconds(playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().Duration);
+            HudHandler.current.DescriptionTab.SetTab("Divine Shield", "On activation, creates a shield around you that nullifies damages for a small amount of time.", GameResources.Get<VideoClip>("BenedictionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundBenediction"));
+            HudHandler.current.DescriptionTab.OpenTab();
         }
     }
 

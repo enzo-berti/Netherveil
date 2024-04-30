@@ -131,13 +131,13 @@ public class DamoclesStateMachine : Mobs, IDamocles
             switch (randSound)
             {
                 case 0:
-                    damoclesSounds.blockSound.Play(false);
+                    damoclesSounds.blockSound.Play(transform.position, false);
                     break;
                 case 1:
-                    damoclesSounds.blockSound2.Play(false);
+                    damoclesSounds.blockSound2.Play(transform.position, false);
                     break;
                 case 2:
-                    damoclesSounds.blockSound3.Play(false);
+                    damoclesSounds.blockSound3.Play(transform.position, false);
                     break;
             }
         }
