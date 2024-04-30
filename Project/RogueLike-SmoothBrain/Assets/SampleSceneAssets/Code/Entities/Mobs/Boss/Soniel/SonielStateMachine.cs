@@ -164,8 +164,6 @@ public class SonielStateMachine : Mobs, ISoniel
             Destroy(swords[i].gameObject, 4.07f + .5f);
         }
 
-        Destroy(transform.parent.gameObject, 4.07f + .5f); // j'en ai rien à foutre
-
         currentState = factory.GetState<SonielDeathState>();
     }
 
