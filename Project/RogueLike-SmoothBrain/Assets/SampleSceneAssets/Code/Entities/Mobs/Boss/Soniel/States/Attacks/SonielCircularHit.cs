@@ -45,6 +45,9 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
     bool attackEnded = false;
 
+    //vfx
+    bool isSlashPlayed = false;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -64,6 +67,8 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         attackEnded = false;
         Context.Animator.SetBool("Walk", false);
         Context.Animator.SetBool(thrustHash, false);
+
+        isSlashPlayed = false;
 
         if (Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position) > attackRange * attackRange)
         {
@@ -206,7 +211,11 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
         if (IsAttackLaunched(currentAttack)) // effectue l'attaque en elle même
         {
-            
+            if (!isSlashPlayed)
+            {
+                Context.SlashVFX.Play();
+                isSlashPlayed = true;
+            }
 
             // vérifie la collision
             if (!Context.PlayerHit)
@@ -247,7 +256,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                 }
             }
         }
-        else
+        else // rotation
         {
             Quaternion lookRotation = Quaternion.LookRotation(Context.Player.transform.position, Context.transform.position);
             lookRotation.x = 0;

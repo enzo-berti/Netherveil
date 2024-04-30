@@ -36,7 +36,11 @@ public class ZiggoStateMachine : Mobs, IZiggo
     // animation hash
     private int deathHash;
 
-    // getters and setters
+    // attacks
+    float dashCooldown = 0f;
+    float spitCooldown = 0f;
+
+    #region Getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
@@ -49,7 +53,9 @@ public class ZiggoStateMachine : Mobs, IZiggo
     public Hero Player { get => player; }
     public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE) * (currentState is not ZiggoWanderingState ? 1.25f : 1f); }
     public float VisionAngle { get => player ? 360 : originalVisionAngle; }
-
+    public float DashCooldown { get => dashCooldown; set => dashCooldown = value; }
+    public float SpitCooldown { get => spitCooldown; set => spitCooldown = value; }
+    #endregion
 
     protected override void Start()
     {

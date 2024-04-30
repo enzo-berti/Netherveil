@@ -1,51 +1,81 @@
 using System.IO;
 using Unity.AI.Navigation;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Map
 {
     [CustomEditor(typeof(Room))]
     public class RoomEditor : Editor
     {
+        private Room roomScript;
+        private Transform roomPreset;
+        private int currentIndex = 0;
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
             GUILayout.Space(4);
 
-            Room script = target as Room;
+            roomScript = target as Room;
 
             if (GUILayout.Button("Bake rooms"))
             {
-                Transform roomPreset = script.RoomPresets.transform;
-
-                foreach (Transform t in roomPreset.transform)
-                {
-                    NavMeshSurface navMesh = t.GetComponent<NavMeshSurface>();
-
-                    if (navMesh != null)
-                    {
-                        navMesh.BuildNavMesh();
-
-                        NavMeshData navMeshData = navMesh.navMeshData;
-                        if (navMeshData != null)
-                        {
-                            string prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(script.gameObject);
-                            string directory = Path.GetDirectoryName(prefabPath);
-                            string filePath = Path.Combine(directory, $"{script.gameObject.name}-{t.name}.asset");
-
-                            AssetDatabase.CreateAsset(navMeshData, filePath);
-                            AssetDatabase.SaveAssets();
-                        }
-                        else
-                        {
-                            Debug.LogError("NavMesh data is null!");
-                        }
-                    }
-                }
+                BakeAllRooms();
             }
+        }
+
+        private void BakeAllRooms()
+        {
+            foreach (Transform t in roomScript.RoomPresets.transform)
+            {
+                t.gameObject.SetActive(true);
+                BakeRoom(roomScript, t);
+                t.gameObject.SetActive(false);
+            }
+        }
+
+        private void BakeRoom(Room roomScript, Transform transformRoom)
+        {
+            if (transformRoom.TryGetComponent(out NavMeshSurface navMesh))
+            {
+                navMesh.BuildNavMesh();
+
+                if (navMesh.navMeshData != null)
+                {
+                    string prefabPath = GetPrefabPath();
+                    string directory = Path.GetDirectoryName(prefabPath);
+                    string filePath = Path.Combine(directory, $"{roomScript.gameObject.name}-{transformRoom.name}.asset");
+
+                    AssetDatabase.CreateAsset(navMesh.navMeshData, filePath);
+                    EditorUtility.SetDirty(navMesh);
+                    AssetDatabase.SaveAssets();
+                }
+                else
+                {
+                    throw new System.Exception($"NavMesh data of the room \"{transformRoom.name}\" is null!");
+                }
+
+                MakeSceneDirty();
+            }
+        }
+
+        private string GetPrefabPath()
+        {
+            PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
+            if (stage)
+                return stage.assetPath;
+            else
+                return PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(roomScript.transform);
+        }
+
+        private void MakeSceneDirty()
+        {
+            PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
+            if (stage)
+                EditorSceneManager.MarkSceneDirty(stage.scene);
         }
     }
 }
