@@ -18,6 +18,7 @@ public class SonielStateMachine : Mobs, ISoniel
         public Sound swordSpinning;
         public Sound swordHitMap;
         public Sound slash;//
+        public Sound slashVoid;//
         public Sound thrust;//
         public Sound bossHitMap;//
         public Sound multipleSlash;//
