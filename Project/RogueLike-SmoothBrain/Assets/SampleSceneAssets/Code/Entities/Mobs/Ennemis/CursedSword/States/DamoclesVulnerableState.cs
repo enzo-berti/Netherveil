@@ -1,4 +1,5 @@
 using StateMachine; // include all scripts about StateMachines
+using StateMachine; // include all scripts about StateMachines
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -53,7 +54,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
         elapsedTimeMovement = Time.time;
 
         stateEnded = true;
-        Context.DamoclesSound.destuckSound.Play();
+        Context.DamoclesSound.destuckSound.Play(Context.transform.position);
     }
 
     // This method will be called on state switch.
