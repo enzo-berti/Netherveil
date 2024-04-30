@@ -19,7 +19,6 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
-    bool playerOutOfRange = false;
     Vector3 direction;
     float dashRange;
     bool dashed = false;
@@ -27,7 +26,7 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (attackEnded || playerOutOfRange)
+        if (attackEnded)
         {
             SwitchState(Context.Player ? Factory.GetState<ZiggoTriggeredState>() : Factory.GetState<ZiggoWanderingState>());
         }
@@ -37,7 +36,6 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
     protected override void EnterState()
     {
         attackEnded = false;
-        playerOutOfRange = false;
 
         Vector3 mobPos = Context.transform.position;
         Vector3 playerPos = Context.Player.transform.position;
@@ -49,14 +47,10 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
     protected override void ExitState()
     {
         Context.PlayerHit = false;
-        
-        if (!playerOutOfRange)
-        {
-            Context.Stats.DecreaseCoeffValue(Stat.SPEED, 1.5f);
-            Context.DashCooldown = 2f;
-        }
 
-        playerOutOfRange = false;
+        Context.Stats.DecreaseCoeffValue(Stat.SPEED, 1.5f);
+        Context.DashCooldown = 20f;
+
         attackEnded = false;
 
         // DEBUG
@@ -77,22 +71,18 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
             if (!dashed)
             {
                 dashed = true;
-                playerOutOfRange = Vector3.Distance(Context.Player.transform.position, Context.transform.position) > Context.Stats.GetValue(Stat.ATK_RANGE) * 1.25f;
 
-                if (!playerOutOfRange)
-                {
-                    direction = Utilities.Hero.transform.position - Context.transform.position;
-                    dashRange = direction.magnitude;
-                    direction.y = 0;
-                    direction.Normalize();
+                direction = Utilities.Hero.transform.position - Context.transform.position;
+                dashRange = Mathf.Min(direction.magnitude, Context.Stats.GetValue(Stat.ATK_RANGE)) + 1f;
+                direction.y = 0;
+                direction.Normalize();
 
-                    Context.Animator.ResetTrigger("Dash");
-                    Context.Animator.SetTrigger("Dash");
+                Context.Animator.ResetTrigger("Dash");
+                Context.Animator.SetTrigger("Dash");
 
-                    Context.MoveTo(Context.transform.position + direction * (dashRange + 1));
+                Context.MoveTo(Context.transform.position + direction * dashRange);
 
-                    Context.Stats.IncreaseCoeffValue(Stat.SPEED, 1.5f);
-                }
+                Context.Stats.IncreaseCoeffValue(Stat.SPEED, 1.5f);
             }
             else
             {
@@ -105,6 +95,10 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
             if (!Context.PlayerHit)
             {
                 Context.AttackCollide(Context.AttackColliders[(int)ZiggoStateMachine.ZiggoAttacks.DASH], true);
+                if (Context.PlayerHit)
+                {
+                    Context.Sounds.eatSound.Play(Context.transform.position, true);
+                }
             }
         }
     }

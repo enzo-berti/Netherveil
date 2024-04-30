@@ -1,49 +1,51 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class ZiggoProjectile : MonoBehaviour
 {
     Hero player;
-    float flaqueRadius;
-    bool hitGround;
-    float effectCooldown;
+    float effectCooldown = 0f;
+    float flaqueRadius = 0f;
 
     private void OnEnable()
     {
         player = Utilities.Hero;
-        hitGround = false;
+        flaqueRadius = 0f;
     }
 
     private void Update()
     {
         if (effectCooldown <= 0)
         {
-            if (Vector3.SqrMagnitude(player.transform.position - transform.position) < 2f * 2f)
+            if (Vector3.SqrMagnitude(player.transform.position - transform.position) <= flaqueRadius * flaqueRadius)
             {
-                // apply status
                 player.AddStatus(new Poison(2f, 1));
                 effectCooldown = 0.5f;
             }
         }
+        else effectCooldown -= Time.deltaTime;
     }
 
-    public void ThrowToPos(IAttacker attacker, Vector3 pos, float throwTime)
+    public void UpdateRadius()
     {
-        StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
+        flaqueRadius = GetComponentInChildren<Renderer>().bounds.size.x / 2f;
     }
 
-    private IEnumerator ThrowToPosCoroutine(Vector3 pos, float throwTime)
+    public void ThrowToPos(Vector3 pos, float throwTime, float height)
+    {
+        StartCoroutine(ThrowToPosCoroutine(pos, throwTime, height));
+    }
+
+    private IEnumerator ThrowToPosCoroutine(Vector3 pos, float throwTime, float height)
     {
         float timer = 0;
         Vector3 basePos = this.transform.position;
         Vector3 position3D = Vector3.zero;
-        float a = -16, b = 16;
+        float a = -4 * height, b = 4 * height;
         float c = this.transform.position.y;
-        float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, 0).Max();
+        float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, pos.y).Max();
         while (timer < timerToReach)
         {
             yield return null;

@@ -587,30 +587,6 @@ MonoBehaviour:
     center: {x: 0, y: 0, z: 0}
     radius: 8
   ziggoSounds:
-    deathSound:
-      reference:
-        Guid:
-          Data1: -2083524053
-          Data2: 1251020458
-          Data3: 1528845978
-          Data4: -988004970
-        Path: event:/Enemy/Ziggo/ZiggoDeath
-    takeDamageSound:
-      reference:
-        Guid:
-          Data1: 924410159
-          Data2: 1257239988
-          Data3: 201824653
-          Data4: -1909082054
-        Path: event:/Enemy/Ziggo/ZiggoBark
-    hitSound:
-      reference:
-        Guid:
-          Data1: 359716102
-          Data2: 1340975221
-          Data3: -1504621910
-          Data4: -1509656622
-        Path: event:/Enemy/Ziggo/ZiggoBite
     moveSound:
       reference:
         Guid:
@@ -619,6 +595,38 @@ MonoBehaviour:
           Data3: -660705399
           Data4: -1355717232
         Path: event:/Enemy/Ziggo/ZiggoRun
+    deathSound:
+      reference:
+        Guid:
+          Data1: -2083524053
+          Data2: 1251020458
+          Data3: 1528845978
+          Data4: -988004970
+        Path: event:/Enemy/Ziggo/ZiggoDeath
+    hitSound:
+      reference:
+        Guid:
+          Data1: 1000948482
+          Data2: 1145705879
+          Data3: -1544676705
+          Data4: 222577756
+        Path: event:/Enemy/Ziggo/ZiggoThrowAtk
+    eatSound:
+      reference:
+        Guid:
+          Data1: 359716102
+          Data2: 1340975221
+          Data3: -1504621910
+          Data4: -1509656622
+        Path: event:/Enemy/Ziggo/ZiggoBite
+    spitSound:
+      reference:
+        Guid:
+          Data1: 1000948482
+          Data2: 1145705879
+          Data3: -1544676705
+          Data4: 222577756
+        Path: event:/Enemy/Ziggo/ZiggoThrowAtk
   originalVisionAngle: 140
   attackColliders:
   - {fileID: 1612929269699612827}
@@ -663,7 +671,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7755107702242594781}
-  m_LocalRotation: {x: -0.21290179, y: -0.35987654, z: 0.08471494, w: -0.90442526}
+  m_LocalRotation: {x: -0.20741224, y: -0.34291652, z: 0.07791432, w: -0.9128625}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
@@ -765,6 +773,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ZiggoProjectile
       objectReference: {fileID: 0}
+    - target: {fileID: 3511053266741062863, guid: d1035c390027d9644b668129ba20e0f8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582136959439437860, guid: d1035c390027d9644b668129ba20e0f8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4811936196012298943, guid: d1035c390027d9644b668129ba20e0f8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -816,32 +834,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3169421465640913218, guid: d1035c390027d9644b668129ba20e0f8, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3511053266741062863, guid: d1035c390027d9644b668129ba20e0f8,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2651021477245192086}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1035c390027d9644b668129ba20e0f8, type: 3}
---- !u!1 &3759479230140531141 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3511053266741062863, guid: d1035c390027d9644b668129ba20e0f8,
-    type: 3}
-  m_PrefabInstance: {fileID: 330344038214348042}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2651021477245192086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3759479230140531141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15ee897ec1993f34085a10ce9c5788d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5067376820320960437 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4811936196012298943, guid: d1035c390027d9644b668129ba20e0f8,
