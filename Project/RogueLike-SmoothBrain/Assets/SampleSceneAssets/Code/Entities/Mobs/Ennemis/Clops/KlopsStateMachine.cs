@@ -114,7 +114,7 @@ public class KlopsStateMachine : Mobs, IKlops
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        //clopsSounds.attackSound.Play(transform.position);
+        klopsSounds.AttackSound.Play(transform.position);
     }
 
     public void MoveTo(Vector3 posToMove)

@@ -37,4 +37,10 @@ public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
     {
         Context.MoveTo(Context.transform.position + meToPlayerVec.normalized);
     }
+
+    protected override void SwitchState(BaseState<KlopsStateMachine> newState)
+    {
+        base.SwitchState(newState);
+        Context.currentState = newState;
+    }
 }
