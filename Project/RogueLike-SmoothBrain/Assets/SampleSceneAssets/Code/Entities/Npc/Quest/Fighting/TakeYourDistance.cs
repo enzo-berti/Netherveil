@@ -39,10 +39,11 @@ public class TakeYourDistance : Quest
     private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
         if (!IsQuestFinished())
-            return;
+        {
+            currentNumber++;
+            progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
+        }
 
-        currentNumber++;
-        progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
         QuestUpdated();
     }
 }
