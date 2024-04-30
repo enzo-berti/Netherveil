@@ -7,7 +7,7 @@ public class BloodDrop : Consumable
 
     public override void OnRetrieved()
     {
-        player.Inventory.Blood += (int)(bloodQuantity * BloodDropCoeff);
+        player.Inventory.BloodValue += (int)(bloodQuantity * BloodDropCoeff);
         Destroy(gameObject);
     }
 }
