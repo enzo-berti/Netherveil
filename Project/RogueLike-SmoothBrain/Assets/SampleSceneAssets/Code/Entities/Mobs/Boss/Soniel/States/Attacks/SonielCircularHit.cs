@@ -206,12 +206,17 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
         if (IsAttackLaunched(currentAttack)) // effectue l'attaque en elle même
         {
-            Context.Sounds.slash.Play(Context.transform.position);
+            
 
             // vérifie la collision
             if (!Context.PlayerHit)
             {
+                Context.Sounds.slashVoid.Play(Context.transform.position);
                 Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_ATTACK].data, debugMode: Context.DebugMode);
+            }
+            else
+            {
+                Context.Sounds.slash.Play(Context.transform.position);
             }
 
             // fix animation
