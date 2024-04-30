@@ -13,9 +13,13 @@ public class KlopsPatrolState : BaseState<KlopsStateMachine>
 
     protected override void CheckSwitchStates()
     {
-        if(Context.Target != null)
+        if (Context.IsDeath)
         {
-            SwitchState(Factory.GetState<KlopsMoveState>());
+            SwitchState(Factory.GetState<KlopsDeathState>());
+        }
+        else if (Context.Target != null)
+        {
+            SwitchState(Factory.GetState<KlopsMoveToPlayerState>());
         }
     }
 
