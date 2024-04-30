@@ -1,4 +1,5 @@
 using Map;
+using System.Linq;
 using UnityEngine;
 
 public class RuneOfSloth : ItemEffect, IActiveItem
@@ -8,12 +9,16 @@ public class RuneOfSloth : ItemEffect, IActiveItem
     public void Activate()
     {
         Utilities.Player.GetComponent<PlayerController>().PlayVFX(Utilities.Player.GetComponent<PlayerController>().RuneOfSlothVFX);
-        foreach(var enemy in RoomUtilities.roomData.enemies)
-        {
-            if(enemy.TryGetComponent<Mobs>(out var mob))
+        float planeLength = 5f;
+        float radius = (Utilities.Player.GetComponent<PlayerController>().RuneOfSlothVFX.GetFloat("Diameter") * planeLength) / 2f;
+
+        Physics.OverlapSphere(Utilities.Player.transform.position, radius, LayerMask.GetMask("Entity"))
+            .Select(entity => entity.GetComponent<Mobs>())
+            .Where(entity => entity != null)
+            .ToList()
+            .ForEach(currentEntity =>
             {
-                mob.AddStatus(new Freeze(duration, 1));
-            }
-        }
+                currentEntity.AddStatus(new Freeze(duration, 1));
+            });
     }
 } 
