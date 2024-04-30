@@ -67,7 +67,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             }
             else
             {
-                if(!HudHandler.current.QuestHUD.QuestEnable)
+                if (!HudHandler.current.QuestHUD.QuestEnable)
                 {
                     HudHandler.current.QuestHUD.Toggle();
                 }
@@ -216,7 +216,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
         int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
-        if(lifeIncreasedValue > 0)
+        if (lifeIncreasedValue > 0)
         {
             FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
             Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
@@ -315,6 +315,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             animator.ResetTrigger("CorruptionUpgrade");
             animator.SetTrigger("CorruptionUpgrade");
+            animator.ResetTrigger("BloodPouring");
         }
         else if (benedictionUpgradeOnly)
         {
@@ -322,6 +323,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             animator.ResetTrigger("BenedictionUpgrade");
             animator.SetTrigger("BenedictionUpgrade");
+            animator.ResetTrigger("BloodPouring");
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
@@ -334,6 +336,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
                 animator.ResetTrigger("BenedictionUpgrade");
                 animator.SetTrigger("BenedictionUpgrade");
+                animator.ResetTrigger("BloodPouring");
             }
             else
             {
@@ -351,6 +354,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
                 animator.ResetTrigger("CorruptionUpgrade");
                 animator.SetTrigger("CorruptionUpgrade");
+                animator.ResetTrigger("BloodPouring");
             }
             else
             {

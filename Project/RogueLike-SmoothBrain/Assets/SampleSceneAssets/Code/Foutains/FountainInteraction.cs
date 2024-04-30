@@ -66,17 +66,20 @@ namespace Fountain
 
         public void Interract()
         {
-            int price = fountain.BloodPrice;
-            int trade = fountain.ValueTrade;
+            if(hero.State != (int)Hero.PlayerState.MOTIONLESS)
+            {
+                int price = fountain.BloodPrice;
+                int trade = fountain.ValueTrade;
 
-            if (price > hero.Inventory.Blood)
-                return;
+                if (price > hero.Inventory.Blood)
+                    return;
 
-            hero.Inventory.Blood -= price;
-            hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
-            hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
-            FloatingTextGenerator.CreateEffectDamageText(fountain.AbsoluteValueTrade, transform.position, fountain.Color);
-            onAddBenedictionCorruption?.Invoke();
+                hero.Inventory.Blood -= price;
+                hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
+                hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
+                FloatingTextGenerator.CreateEffectDamageText(fountain.AbsoluteValueTrade, transform.position, fountain.Color);
+                onAddBenedictionCorruption?.Invoke();
+            }
         }
     }
 }
