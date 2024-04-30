@@ -55,7 +55,7 @@ public class PestStateMachine : Mobs, IPest
     public float VisionAngle { get => (currentState is PestTriggeredState || currentState is PestAttackingState) && Player != null ? 360 : angle; }
     public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is PestTriggeredState || currentState is PestAttackingState ? 1.25f : 1f); }
     public float idleTimer { set => dashTimer = value; }
-    public float MovementDelay { get => (currentState is PestTriggeredState ? 0.9f : 1.2f); }
+    public float MovementDelay { get => (currentState is PestTriggeredState ? 1.5f : 1.8f); }
     public bool CanMove { get => dashTimer > MovementDelay; }
 
     protected override void Start()
