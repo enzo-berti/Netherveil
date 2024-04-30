@@ -38,11 +38,11 @@ public class MonsterHunter : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
-        if (IsQuestFinished())
-            return;
-
-        currentNumber++;
-        progressText = $"NB MONSTERS KILLED : {currentNumber}/{MAX_NUMBER}";
+        if (!IsQuestFinished())
+        {
+            currentNumber++;
+            progressText = $"NB MONSTERS KILLED : {currentNumber}/{MAX_NUMBER}";
+        }
         QuestUpdated();
     }
 }

@@ -18,17 +18,6 @@ public class UpgradingStatsBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) == Utilities.Hero.Stats.GetMaxValue(Stat.CORRUPTION))
-        {
-            HudHandler.current.DescriptionTab.SetTab("Damnation Veil", "On activation, creates a damnation zone that applies the damnation effect that doubles the damages received to all enemies touched by the zone.", GameResources.Get<VideoClip>("CorruptionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundCoruption"));
-            HudHandler.current.DescriptionTab.OpenTab();
-        }
-        else if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) == Utilities.Hero.Stats.GetMinValue(Stat.CORRUPTION))
-        {
-            HudHandler.current.DescriptionTab.SetTab("Divine Shield", "On activation, creates a shield around you that nullifies damages for a small amount of time.", GameResources.Get<VideoClip>("BenedictionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundBenediction"));
-            HudHandler.current.DescriptionTab.OpenTab();
-        }
-
         GameObject.FindWithTag("Player").GetComponent<PlayerInput>().EnableGameplayInputs();
         GameObject.FindWithTag("Player").GetComponent<Hero>().State = (int)Entity.EntityState.MOVE;
     }

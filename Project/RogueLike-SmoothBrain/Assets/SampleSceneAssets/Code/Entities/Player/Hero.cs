@@ -2,8 +2,10 @@ using Fountain;
 using Map;
 using PostProcessingEffects;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -14,6 +16,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         UPGRADING_STATS,
         MOTIONLESS
     }
+
+    static Color corruptionColor = new Color(0.62f, 0.34f, 0.76f, 1.0f);
+    static Color benedictionColor = Color.yellow;
+
     Animator animator;
     PlayerInput playerInput;
     PlayerController playerController;
@@ -213,11 +219,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ApplyLifeSteal(IDamageable damageable, IAttacker attacker)
     {
-        AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
         int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0)
         {
+            AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
             FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
             Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
         }
@@ -374,6 +380,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.SpecialAbility = new DivineShield();
                 OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+                StartCoroutine(OpenSpecialAbilityTab());
             }
             else
             {
@@ -403,6 +410,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 CanHealFromConsumables = false;
                 playerController.SpecialAbility = new DamnationVeil();
                 OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+                StartCoroutine(OpenSpecialAbilityTab());
             }
             else
             {
@@ -447,6 +455,28 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 armorPiece.SetActive(true);
             }
         }
+    }
+
+    private IEnumerator OpenSpecialAbilityTab()
+    {
+        if (Stats.GetValue(Stat.CORRUPTION) == Stats.GetMaxValue(Stat.CORRUPTION))
+        {
+            yield return new WaitForSeconds(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration);
+            HudHandler.current.DescriptionTab.SetTab("Damnation Veil", "On activation, creates a damnation zone that applies the damnation effect that doubles the damages received to all enemies touched by the zone.", GameResources.Get<VideoClip>("CorruptionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundCoruption"));
+            HudHandler.current.DescriptionTab.OpenTab();
+        }
+        else if (Stats.GetValue(Stat.CORRUPTION) == Stats.GetMinValue(Stat.CORRUPTION))
+        {
+            yield return new WaitForSeconds(playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().Duration);
+            HudHandler.current.DescriptionTab.SetTab("Divine Shield", "On activation, creates a shield around you that nullifies damages for a small amount of time.", GameResources.Get<VideoClip>("BenedictionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundBenediction"));
+            HudHandler.current.DescriptionTab.OpenTab();
+        }
+    }
+
+    public static void CallCorruptionBenedictionText(int value)
+    {
+        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, (value < 0 ? "-" : "+") + $"{Mathf.Abs(value)}" + (value < 0 ? " Benediction" : " Corruption"), 
+            value < 0 ? benedictionColor : corruptionColor);
     }
 
     public void DebugCallLaunchUpgrade()

@@ -70,6 +70,7 @@ public abstract class Quest
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
+        Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
         OnQuestFinished?.Invoke();
 
         RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
@@ -106,6 +107,10 @@ public abstract class Quest
     protected void QuestUpdated()
     {
         OnQuestUpdated?.Invoke();
+        if (IsQuestFinished())
+            progressText = "Quest Completed! Clear the current room to receive rewards!";
+        else if (questLost)
+            progressText = "Quest Lost...";
     }
     static private void InitDescription(ref string description)
     {

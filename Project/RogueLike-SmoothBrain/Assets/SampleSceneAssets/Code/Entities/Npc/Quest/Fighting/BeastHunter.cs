@@ -39,14 +39,11 @@ public class BeastHunter : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
-        if (IsQuestFinished())
-            return;
-
-        if (damageable as IGlorb != null)
+        if (!IsQuestFinished() && damageable as IGlorb != null)
         {
             currentNumber++;
             progressText = $"NB BEASTS KILLED : {currentNumber}/{MAX_NUMBER}";
-            QuestUpdated();
         }
+        QuestUpdated();
     }
 }

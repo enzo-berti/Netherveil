@@ -28,16 +28,11 @@ public class LostRelics : Quest
 
     private void UpdateCount()
     {
-        if (IsQuestFinished())
-            return;
-
-        if (RoomUtilities.roomData.Type == RoomType.Treasure)
+        if (!IsQuestFinished() && RoomUtilities.roomData.Type == RoomType.Treasure)
         {
             currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Treasure];
             progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
-            QuestUpdated();
         }
+        QuestUpdated();
     }
-
-
 }

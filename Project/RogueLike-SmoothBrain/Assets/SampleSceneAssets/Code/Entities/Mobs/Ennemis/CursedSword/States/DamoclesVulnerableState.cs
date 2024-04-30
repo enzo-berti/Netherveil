@@ -10,7 +10,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
 
     private bool stateEnded = false;
     private float elapsedTimeMovement = 0.0f;
-    private float vulnerableTime = 4f;
+    private float vulnerableTime = 2.5f;
     private Vector3 basePos;
     private Vector3 wantedPos;
     // This method will be called every Update to check whether or not to switch states.
@@ -66,7 +66,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
 
     IEnumerator TryToUnlock()
     {
-        float timer = 0;
+        float timer = 0f;
         while (timer < 1.0f)
         {
             if (Context == null) yield break;
