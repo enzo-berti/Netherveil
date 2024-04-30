@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 9180498902099521965}
   - component: {fileID: 2809687177565638626}
-  - component: {fileID: 5386921652106112144}
-  - component: {fileID: 585806159070966723}
   - component: {fileID: 1280273098433524902}
+  - component: {fileID: 108381442422779702}
+  - component: {fileID: 5386921652106112144}
   m_Layer: 0
   m_Name: Small Spikes
   m_TagString: Untagged
@@ -58,52 +58,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.15, y: 1, z: 1.15}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5386921652106112144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4416810091342981910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4da67b788a8f0d45b332659b0032657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spikesUpSFX:
-    Guid:
-      Data1: 1588617630
-      Data2: 1157822035
-      Data3: -2026893395
-      Data4: 1147055645
-    Path: event:/Object/SpikeUp
-  spikesDownSFX:
-    Guid:
-      Data1: -265787221
-      Data2: 1228819901
-      Data3: 1180482235
-      Data4: 1084516570
-    Path: event:/Object/SpikeDown
-  spikesToMove: {fileID: 5980084413317069741}
---- !u!114 &585806159070966723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4416810091342981910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OverrideArea: 1
-  m_Area: 3
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
 --- !u!54 &1280273098433524902
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -131,6 +85,49 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &108381442422779702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416810091342981910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 1.4, y: 0.4, z: 1.4}
+  m_Center: {x: 0, y: 0, z: 0}
+  m_Area: 3
+  m_AffectedAgents: ffffffff
+--- !u!114 &5386921652106112144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416810091342981910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4da67b788a8f0d45b332659b0032657, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spikesUpSFX:
+    Guid:
+      Data1: 1588617630
+      Data2: 1157822035
+      Data3: -2026893395
+      Data4: 1147055645
+    Path: event:/Object/SpikeUp
+  spikesDownSFX:
+    Guid:
+      Data1: -265787221
+      Data2: 1228819901
+      Data3: 1180482235
+      Data4: 1084516570
+    Path: event:/Object/SpikeDown
+  spikesToMove: {fileID: 5980084413317069741}
 --- !u!1001 &6790564876274108156
 PrefabInstance:
   m_ObjectHideFlags: 0
