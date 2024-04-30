@@ -55,7 +55,7 @@ namespace Map
             Destroy(gameObject);
         }
 
-        public static Room RandPrefabRoom(RoomType type)
+        public static Room RandRoomPrefab(RoomType type)
         {
             List<Room> roomPrefabs = roomPrefabsByType[type];
 

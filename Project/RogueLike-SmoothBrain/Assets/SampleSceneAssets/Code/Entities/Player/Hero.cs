@@ -315,7 +315,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             animator.ResetTrigger("CorruptionUpgrade");
             animator.SetTrigger("CorruptionUpgrade");
-            animator.ResetTrigger("BloodPouring");
+            animator.ResetTrigger("PouringBlood");
         }
         else if (benedictionUpgradeOnly)
         {
@@ -323,11 +323,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
             animator.ResetTrigger("BenedictionUpgrade");
             animator.SetTrigger("BenedictionUpgrade");
-            animator.ResetTrigger("BloodPouring");
+            animator.ResetTrigger("PouringBlood");
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
-            playerController.corruptionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            playerController.DrawbackVFX.SetBool("Corruption", true);
+            playerController.DrawbackVFX.Play();
             AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
 
             if (hascorruptionDrawbackPositiveToNegative && curStep < 0)
@@ -336,7 +337,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
                 animator.ResetTrigger("BenedictionUpgrade");
                 animator.SetTrigger("BenedictionUpgrade");
-                animator.ResetTrigger("BloodPouring");
+                animator.ResetTrigger("PouringBlood");
             }
             else
             {
@@ -346,7 +347,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
         else if (hasbenedictionDrawbackNegativeToPositive || hasbenedictionDrawbackNegativeOnly)
         {
-            playerController.benedictionDrawbackVFX.GetComponent<VFXStopper>().PlayVFX();
+            playerController.DrawbackVFX.SetBool("Corruption", false);
+            playerController.DrawbackVFX.Play();
             AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
             if (hasbenedictionDrawbackNegativeToPositive && curStep > 0)
             {
@@ -354,7 +356,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
                 animator.ResetTrigger("CorruptionUpgrade");
                 animator.SetTrigger("CorruptionUpgrade");
-                animator.ResetTrigger("BloodPouring");
+                animator.ResetTrigger("PouringBlood");
             }
             else
             {

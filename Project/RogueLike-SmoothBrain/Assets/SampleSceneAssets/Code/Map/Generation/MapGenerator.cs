@@ -16,7 +16,7 @@ namespace Map.Generation
         {
             nbRoomByType = new Dictionary<RoomType, int>
             {
-                { RoomType.Lobby, 0 },
+                { RoomType.Lobby, 1 },
                 { RoomType.Tutorial, 0 },
                 { RoomType.Normal, nbNormal },
                 { RoomType.Treasure, nbTreasure },
@@ -161,12 +161,13 @@ namespace Map.Generation
         {
             stage++;
 
-            RoomUtilities.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
-            RoomUtilities.nbRoomByType[RoomType.Lobby] = 1;
-            RoomUtilities.nbRoomByType[RoomType.Boss] = 1;
+            if (stage == 1)
+            {
+                genParam.nbRoomByType[RoomType.Lobby] = 1;
+            }
 
-            GenerateLobbyRoom(ref genParam);
-            GenerateTutorialRoom(ref genParam);
+            RoomUtilities.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
+
             GenerateRooms(ref genParam);
 
             GenerateObstructionDoors(ref genParam);
@@ -178,39 +179,56 @@ namespace Map.Generation
 
             for (int i = 0; i < nbRoom; i++)
             {
-                // if not enough door are available, spawn a normal room by force
-                if (genParam.AvailableDoorsCount <= 1)
+                for (int indexType = 0; indexType < genParam.nbRoomByType.Count; indexType++)
                 {
-                    if (genParam.nbRoomByType[RoomType.Normal] <= 0)
-                    {
-                        Debug.LogError("No doors left to spawn another room");
-                        return false;
-                    }
-                    else if (!GenerateRoom(ref genParam, RoomType.Normal))
-                    {
-                        Debug.LogError("Can't generate room");
-                        return false;
-                    }
-                    genParam.nbRoomByType[RoomType.Normal]--;
-                }
-                else
-                {
-                    for (int index = 0; index < genParam.nbRoomByType.Count; index++)
-                    {
-                        RoomType type = genParam.nbRoomByType.Keys.ElementAt(index);
+                    RoomType type = genParam.nbRoomByType.Keys.ElementAt(indexType);
 
-                        if (genParam.nbRoomByType[type] > 0)
+                    if (genParam.nbRoomByType[type] > 0)
+                    {
+                        switch (type)
                         {
-                            if (!GenerateRoom(ref genParam, type))
-                            {
-                                Debug.LogError("Can't generate room");
-                                return false;
-                            }
-                            genParam.nbRoomByType[type]--;
-                            break;
+                            case RoomType.Lobby:
+                                GenerateLobbyRoom(ref genParam);
+                                break;
+                            case RoomType.Tutorial:
+                                GenerateTutorialRoom(ref genParam);
+                                break;
+                            case RoomType.Boss:
+                                GenerateBossRoom(ref genParam);
+                                break;
+                            default:
+                                if (!GenerateRoom(ref genParam, type))
+                                {
+                                    Debug.LogError("Can't generate room");
+                                    return false;
+                                }
+                                break;
                         }
+
+                        genParam.nbRoomByType[type]--;
+                        break;
                     }
                 }
+
+                //// if not enough door are available, spawn a normal room by force
+                //if (genParam.AvailableDoorsCount <= 1)
+                //{
+                //    if (genParam.nbRoomByType[RoomType.Normal] <= 0)
+                //    {
+                //        Debug.LogError("No doors left to spawn another room");
+                //        return false;
+                //    }
+                //    else if (!GenerateRoom(ref genParam, RoomType.Normal))
+                //    {
+                //        Debug.LogError("Can't generate room");
+                //        return false;
+                //    }
+                //    genParam.nbRoomByType[RoomType.Normal]--;
+                //}
+                //else
+                //{
+                //    
+                //}
             }
 
             return true;
@@ -236,7 +254,7 @@ namespace Map.Generation
 
         private void GenerateLobbyRoom(ref GenerationParam genParam)
         {
-            GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Lobby).gameObject);
+            GameObject roomGO = Instantiate(MapResources.RandRoomPrefab(RoomType.Lobby).gameObject);
 
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
@@ -248,7 +266,20 @@ namespace Map.Generation
 
         private void GenerateTutorialRoom(ref GenerationParam genParam)
         {
-            GameObject roomGO = Instantiate(MapResources.RandPrefabRoom(RoomType.Tutorial).gameObject);
+            GameObject roomGO = Instantiate(MapResources.RandRoomPrefab(RoomType.Tutorial).gameObject);
+            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+
+            Door entranceDoor = doorsGenerator.doors[0];
+            TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
+
+            InitRoom(roomGO, ref genParam, ref entranceDoor, exitDoor);
+
+            roomGO.transform.parent = gameObject.transform;
+        }
+
+        private void GenerateBossRoom(ref GenerationParam genParam)
+        {
+            GameObject roomGO = Instantiate(MapResources.RoomPrefabs(RoomType.Boss)[stage - 1].gameObject);
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
             Door entranceDoor = doorsGenerator.doors[0];

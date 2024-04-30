@@ -21,4 +21,10 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
     protected override void UpdateState()
     {
     }
+
+    protected override void SwitchState(BaseState<KlopsStateMachine> newState)
+    {
+        base.SwitchState(newState);
+        Context.currentState = newState;
+    }
 }
