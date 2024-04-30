@@ -29,7 +29,7 @@ namespace PrefabLightMapBaker
                 bool hasDirs = Utils.SceneHasAllLightmaps(texturesDir);
                 bool hasShadows = Utils.SceneHasAllLightmaps(texturesShadow);
 
-                return hasColors && hasDirs && hasShadows && bakeCalled;
+                return hasColors && hasDirs && hasShadows;
             }
         }
 
@@ -40,24 +40,20 @@ namespace PrefabLightMapBaker
             // Warnning : this will mess up the renderer lightmaps reference
             // // StaticBatchingUtility.Combine( gameObject );
         }
-        public bool BakeJustApplied { private set; get; } = false;
 
         public void BakeApply()
         {
             if (!HasBakeData)
             {
-                BakeJustApplied = false;
-                //Debug.LogWarning("PrefabBaker doesn't have bake data", this);
+                Debug.LogWarning("PrefabBaker doesn't have bake data", this);
                 return;
             }
 
             if (!BakeApplied)
             {
-                BakeJustApplied = Utils.Apply(this);
-
-                if (BakeJustApplied)
+                if (Utils.Apply(this))
                 {
-                    //Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
+                    Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene", gameObject);
                 }
             }
 

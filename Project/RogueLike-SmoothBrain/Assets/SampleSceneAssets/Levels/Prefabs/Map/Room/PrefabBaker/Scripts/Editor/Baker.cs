@@ -39,7 +39,6 @@ namespace PrefabLightMapBaker
             // Fetch PrefabVaker components from current active scene 
             EditorUtils.GetAllPrefabs().ForEach(x =>
             {
-
                 // Set all nested object as static for bake
                 EditorUtils.LockForBake(x.gameObject);
 

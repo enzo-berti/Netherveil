@@ -272,23 +272,23 @@ namespace Map.Generation
 
             for (int i = 0; i < doors.Count; i++)
             {
-                Door candidateExitDoor = doors[(5 + i) % doors.Count]; // start the search at index 5
+                Door candidateExitDoor = doors[(5 + i) % doors.Count]; // start the search at index 5a
                 float rotation = candidateExitDoor.Rotation;
 
                 // rotate gameObject entrance door to correspond the exit door
                 roomGO.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
-                
+
                 // Set position
                 roomGO.transform.position = entranceDoor.parentSkeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
                 Physics.SyncTransforms(); // need to update physics before doing collision test in the same frame
-                
+
                 // Check collision
                 if (IsRoomCollidingOtherRoom(roomGO, candidateExitDoor))
                 {
                     roomGO.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
                     continue; // fail to generate continue to next door candidate
                 }
-                
+
                 exitDoor = candidateExitDoor;
                 return true;
             }
