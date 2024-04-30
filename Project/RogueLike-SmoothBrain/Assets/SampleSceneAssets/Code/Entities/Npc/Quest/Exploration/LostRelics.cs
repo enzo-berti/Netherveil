@@ -11,7 +11,7 @@ public class LostRelics : Quest
 
         MAX_NUMBER = RoomUtilities.nbRoomByType[RoomType.Treasure];
         progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
-        RoomUtilities.enterEvents += UpdateCount;
+        RoomUtilities.onEnter += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -22,7 +22,7 @@ public class LostRelics : Quest
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        RoomUtilities.enterEvents -= UpdateCount;
+        RoomUtilities.onEnter -= UpdateCount;
     }
 
     private void UpdateCount()

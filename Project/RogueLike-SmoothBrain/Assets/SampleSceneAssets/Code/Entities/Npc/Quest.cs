@@ -18,6 +18,7 @@ public abstract class Quest
     public string progressText = string.Empty;
     static QuestDatabase database;
     public static event Action OnQuestUpdated;
+    public static event Action OnQuestFinished;
     protected Hero player;
     protected QuestTalker.TalkerType talkerType;
     protected QuestTalker.TalkerGrade talkerGrade;
@@ -27,9 +28,9 @@ public abstract class Quest
     public virtual void AcceptQuest()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
-        RoomUtilities.allEnemiesDeadEvents += CheckQuestFinished;
-        RoomUtilities.allChestOpenEvents += CheckQuestFinished;
-        RoomUtilities.enterEvents += CheckQuestFinished;
+        RoomUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
+        RoomUtilities.onEarlyAllChestOpen += CheckQuestFinished;
+        RoomUtilities.onEarlyEnter += CheckQuestFinished;
     }
 
     static public Quest LoadClass(string name, QuestTalker.TalkerType type, QuestTalker.TalkerGrade grade)
@@ -68,10 +69,11 @@ public abstract class Quest
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
+        OnQuestFinished?.Invoke();
 
-        RoomUtilities.allEnemiesDeadEvents -= CheckQuestFinished;
-        RoomUtilities.allChestOpenEvents -= CheckQuestFinished;
-        RoomUtilities.enterEvents -= CheckQuestFinished;
+        RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
+        RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
+        RoomUtilities.onEarlyEnter -= CheckQuestFinished;
     }
 
     protected void CheckQuestFinished()
@@ -79,12 +81,12 @@ public abstract class Quest
         if (questLost)
         {
             QuestLost();
-            HudHandler.current.MessageInfoHUD.Display($"You lost the quest \"{Datas.idName.SeparateAllCase()}\".");
+            HudHandler.current.MessageInfoHUD.Display($"You lost the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
         }
         else if (IsQuestFinished())
         {
             QuestFinished();
-            HudHandler.current.MessageInfoHUD.Display($"You finished the quest \"{Datas.idName.SeparateAllCase()}\".");
+            HudHandler.current.MessageInfoHUD.Display($"You finished the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
         }
     }
 
@@ -92,7 +94,9 @@ public abstract class Quest
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
         player.CurrentQuest = null;
-        //add feedback to show that quest is lost
+        RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
+        RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
+        RoomUtilities.onEarlyEnter -= CheckQuestFinished;
     }
 
     protected abstract bool IsQuestFinished();

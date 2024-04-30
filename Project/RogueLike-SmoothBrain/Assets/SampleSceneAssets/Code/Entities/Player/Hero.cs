@@ -1,3 +1,4 @@
+using Fountain;
 using Map;
 using PostProcessingEffects;
 using System;
@@ -94,16 +95,22 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
 
         OnAttackHit += ApplyLifeSteal;
-        RoomUtilities.allEnemiesDeadEvents += ChangeStatsBasedOnAlignment;
-        RoomUtilities.allChestOpenEvents += ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllEnemiesDead += ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllChestOpen += ChangeStatsBasedOnAlignment;
+        FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
+        Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
+        Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
     }
 
     private void OnDestroy()
     {
         OnAttackHit -= ApplyLifeSteal;
-        RoomUtilities.allEnemiesDeadEvents -= ChangeStatsBasedOnAlignment;
-        RoomUtilities.allChestOpenEvents -= ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllEnemiesDead -= ChangeStatsBasedOnAlignment;
+        RoomUtilities.onAllChestOpen -= ChangeStatsBasedOnAlignment;
+        FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
+        Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
+        Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
     }
 
@@ -159,8 +166,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerController.OverridePlayerRotation(210f, true);
         animator.applyRootMotion = true;
         State = (int)EntityState.DEAD;
-        animator.ResetTrigger("Death");
-        animator.SetTrigger("Death");
+        animator.SetBool("IsKnockback", false);
+        animator.SetBool("IsDead", true);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)

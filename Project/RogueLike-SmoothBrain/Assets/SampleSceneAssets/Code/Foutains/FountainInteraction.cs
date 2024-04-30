@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Fountain
@@ -10,6 +11,7 @@ namespace Fountain
         private Hero hero;
         private PlayerInteractions interactions;
         private Outline outline;
+        public static event Action onAddBenedictionCorruption;
 
         private bool isSelect = false;
 
@@ -74,6 +76,7 @@ namespace Fountain
             hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
             hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
             FloatingTextGenerator.CreateEffectDamageText(fountain.AbsoluteValueTrade, transform.position, fountain.Color);
+            onAddBenedictionCorruption?.Invoke();
         }
     }
 }

@@ -34,7 +34,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
         Context.IsInvincibleCount = 0;
         basePos = Context.transform.position;
         wantedPos = new Vector3(basePos.x, 0f, basePos.z);
-        CoroutineManager.Instance.StartCustom(TryToUnlock());
+        Context.StartCoroutine(TryToUnlock());
     }
 
     // This method will be called only once after the last update.

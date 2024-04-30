@@ -82,7 +82,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
             Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
             Context.transform.LookAt(positionToLookAt);
             curState = State.Jump;
-            previousPos = Context.gameObject.transform.position;
+            previousPos = Context.gameObject.transform.position;    
             jumpTarget = Context.Target.gameObject.transform.position;
             baseRotation = Context.gameObject.transform.rotation;
         }

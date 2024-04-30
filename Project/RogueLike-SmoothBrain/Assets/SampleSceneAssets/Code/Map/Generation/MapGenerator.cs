@@ -121,7 +121,7 @@ namespace Map.Generation
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed; // For debuging purpose
 #endif
-        public bool generate = false;
+        [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
 
         private int stage = 0;
 
@@ -143,14 +143,14 @@ namespace Map.Generation
 #endif
             }
 
-            Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
+            Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
         }
 
         private void Update()
         {
             if (generate)
             {
-                Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 1, nbMiniBoss: 0, nbBoss: 1));
+                Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
                 Utilities.Player.transform.position = Vector3.zero;
 
                 generate = false;

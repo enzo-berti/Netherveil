@@ -47,8 +47,8 @@ public class ZiggoStateMachine : Mobs, IZiggo
     public BoxCollider Attack2Collider { get => attack2Collider; }
     public BoxCollider Attack3Collider { get => attack3Collider; }
     public Hero Player { get => player; }
-    public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE); }
-    public float VisionAngle { get => originalVisionAngle; }
+    public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE) * (currentState is not ZiggoWanderingState ? 1.25f : 1f); }
+    public float VisionAngle { get => player ? 360 : originalVisionAngle; }
 
 
     protected override void Start()
@@ -162,8 +162,8 @@ public class ZiggoStateMachine : Mobs, IZiggo
         //if (!Selection.Contains(gameObject))
         //    return;
 
-        DisplayVisionRange(originalVisionAngle);
-        DisplayAttackRange(originalVisionAngle);
+        DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayAttackRange(VisionAngle);
         DisplayInfos();
     }
 
