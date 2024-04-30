@@ -252,7 +252,10 @@ namespace Map.Generation
 
         private void GenerateBossRoom(ref GenerationParam genParam)
         {
-            GameObject roomGO = Instantiate(MapResources.RoomPrefabs(RoomType.Boss)[stage - 1].gameObject);
+            var bossPrefabs = MapResources.RoomPrefabs(RoomType.Boss);
+            int bossIndex = stage % bossPrefabs.Count;
+
+            GameObject roomGO = Instantiate(bossPrefabs[bossIndex].gameObject);
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
             Door entranceDoor = doorsGenerator.doors[0];
