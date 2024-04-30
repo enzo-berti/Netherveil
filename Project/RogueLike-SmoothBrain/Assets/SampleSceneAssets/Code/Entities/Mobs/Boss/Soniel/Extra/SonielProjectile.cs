@@ -18,6 +18,9 @@ public class SonielProjectile : Projectile
     bool isLeft = false;
     float acceleration = 0f;
 
+    Sound spinSound;
+    Sound hitMapSound;
+
     // Start is called before the first frame update
     protected override void Awake()
     {
@@ -33,6 +36,7 @@ public class SonielProjectile : Projectile
 
     private void OnDisable()
     {
+        spinSound.Stop();
         Reset();
     }
 
@@ -40,8 +44,11 @@ public class SonielProjectile : Projectile
     protected override void Update()
     {
         aliveTimer += Time.deltaTime;
+
         if (!pickMeUp)
             pickMeUp = aliveTimer >= 3f;
+
+        spinSound.Play(transform.position);
 
         if (getBack)
         {
@@ -101,6 +108,8 @@ public class SonielProjectile : Projectile
     {
         if (!ignoreCollisions)
         {
+            hitMapSound.Play(transform.position);
+
             if (!getBack)
             {
                 //direction = -direction;
@@ -148,6 +157,12 @@ public class SonielProjectile : Projectile
     public void SetLeft(bool _state)
     {
         isLeft = _state;
+    }
+
+    public void SetSounds(Sound _hitmapSound, Sound _spinSound)
+    {
+        hitMapSound = _hitmapSound;
+        spinSound = _spinSound;
     }
 
     public void ForceBack()

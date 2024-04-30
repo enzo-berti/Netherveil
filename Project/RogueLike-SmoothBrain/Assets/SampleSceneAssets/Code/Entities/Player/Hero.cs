@@ -14,6 +14,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         UPGRADING_STATS,
         MOTIONLESS
     }
+
+    static Color corruptionColor = new Color(0.62f, 0.34f, 0.76f, 1.0f);
+    static Color benedictionColor = Color.yellow;
+
     Animator animator;
     PlayerInput playerInput;
     PlayerController playerController;
@@ -213,11 +217,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ApplyLifeSteal(IDamageable damageable, IAttacker attacker)
     {
-        AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
         int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0)
         {
+            AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
             FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
             Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
         }
@@ -447,6 +451,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 armorPiece.SetActive(true);
             }
         }
+    }
+
+    public static void CallCorruptionBenedictionText(int value)
+    {
+        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, (value < 0 ? "-" : "+") + $"{Mathf.Abs(value)}" + (value < 0 ? " Benediction" : " Corruption"), 
+            value < 0 ? benedictionColor : corruptionColor);
     }
 
     public void DebugCallLaunchUpgrade()

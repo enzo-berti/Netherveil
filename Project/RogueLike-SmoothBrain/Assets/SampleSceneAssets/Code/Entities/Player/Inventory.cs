@@ -6,6 +6,33 @@ using UnityEngine;
 [Serializable]
 public class Inventory
 {
+    public class Blood
+    {
+        private int value = 0;
+
+        public int Value
+        {
+            get { return value; }
+        }
+
+        // Override the += operator
+        public static Blood operator +(Blood obj, int increment)
+        {
+            obj.value += increment;
+            FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{increment} Blood", Color.red);
+            return obj;
+        }
+
+        // Override the -= operator
+        public static Blood operator -(Blood obj, int decrement)
+        {
+            obj.value -= decrement;
+            FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"-{decrement} Blood", Color.red);
+            return obj;
+        }
+    }
+
+
     public static GameObject ActiveItemGameObject;
     IActiveItem activeItem = null;
     List<IPassiveItem> passiveItems = new List<IPassiveItem>();
@@ -27,7 +54,8 @@ public class Inventory
     {
         get => activeItem != null;
     }
-    public int Blood = 0;
+    public Blood BloodValue = new Blood();
+
     public int Keys = 0;
 
     private void AddActiveItem(IActiveItem item)
