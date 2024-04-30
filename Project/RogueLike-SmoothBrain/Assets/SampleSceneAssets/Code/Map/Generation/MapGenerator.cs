@@ -91,7 +91,7 @@ namespace Map.Generation
                 result.AddRange(doors.Value);
             }
 
-            result.Sort((a, b) => (int)(b.Position.magnitude - a.Position.magnitude));
+            result.Sort((a, b) => (int)-(b.Position.magnitude - a.Position.magnitude));
             return result;
         }
 
@@ -99,7 +99,7 @@ namespace Map.Generation
         {
             List<Door> result = availableDoorsByRotation[rot];
 
-            result.Sort((a, b) => (int)(b.Position.magnitude - a.Position.magnitude));
+            result.Sort((a, b) => (int)-(b.Position.magnitude - a.Position.magnitude));
             return result;
         }
 
@@ -258,11 +258,79 @@ namespace Map.Generation
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
             Door entranceDoor = doorsGenerator.doors[0];
-            TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
+            TrySetEntranceBossDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
 
             InitRoom(roomGO, ref genParam, ref entranceDoor, exitDoor);
 
             roomGO.transform.parent = gameObject.transform;
+        }
+
+        static private bool TrySetEntranceBossDoorPos(GameObject roomGO, ref GenerationParam genParam, Door entranceDoor, out Door exitDoor)
+        {
+            List<Door> doors = genParam.GetFarestDoors();
+            float defaultRot = roomGO.transform.rotation.eulerAngles.y;
+
+            for (int i = 0; i < doors.Count; i++)
+            {
+                Door candidateExitDoor = doors[(5 + i) % doors.Count]; // start the search at index 5
+                float rotation = candidateExitDoor.Rotation;
+
+                // rotate gameObject entrance door to correspond the exit door
+                roomGO.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
+                
+                // Set position
+                roomGO.transform.position = entranceDoor.parentSkeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
+                Physics.SyncTransforms(); // need to update physics before doing collision test in the same frame
+                
+                // Check collision
+                if (IsRoomCollidingOtherRoom(roomGO, candidateExitDoor))
+                {
+                    roomGO.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
+                    continue; // fail to generate continue to next door candidate
+                }
+                
+                exitDoor = candidateExitDoor;
+                return true;
+            }
+
+            //foreach (int rotation in Seed.RandList(availableRotations))
+            //{
+            //    if (!genParam.availableDoorsByRotation[rotation].Any())
+            //    {
+            //        continue;
+            //    }
+            //
+            //    float defaultRot = roomGO.transform.rotation.eulerAngles.y;
+            //
+            //    List<Door> doors = genParam.GetFarestDoorsByRot(rotation);
+            //    int randIndex = Seed.Range(doors.Count / 2, doors.Count);
+            //    Debug.Log(doors.Count + " " + randIndex);
+            //    for (int i = 0; i < doors.Count; i++)
+            //    {
+            //        Debug.Log((randIndex + i) % doors.Count);
+            //        Door candidateExitDoor = doors[(randIndex + i) % doors.Count];
+            //
+            //        // rotate gameObject entrance door to correspond the exit door
+            //        roomGO.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
+            //
+            //        // Set position
+            //        roomGO.transform.position = entranceDoor.parentSkeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
+            //        Physics.SyncTransforms(); // need to update physics before doing collision test in the same frame
+            //
+            //        // Check collision
+            //        if (IsRoomCollidingOtherRoom(roomGO, candidateExitDoor))
+            //        {
+            //            roomGO.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
+            //            continue; // fail to generate continue to next door candidate
+            //        }
+            //
+            //        exitDoor = candidateExitDoor;
+            //        return true;
+            //    }
+            //}
+
+            exitDoor = new Door();
+            return false;
         }
 
         static private bool TryPutRoom(GameObject roomGO, ref GenerationParam genParam, out Door entranceDoor, out Door exitDoor)
