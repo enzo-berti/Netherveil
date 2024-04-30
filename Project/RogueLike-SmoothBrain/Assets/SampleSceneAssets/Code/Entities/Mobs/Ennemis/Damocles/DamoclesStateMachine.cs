@@ -87,8 +87,6 @@ public class DamoclesStateMachine : Mobs, IDamocles
             return;
 
         base.Update();
-        if(currentState is not DamoclesIdle)
-            WanderZoneCenter = transform.position;
         currentState.Update();
     }
 

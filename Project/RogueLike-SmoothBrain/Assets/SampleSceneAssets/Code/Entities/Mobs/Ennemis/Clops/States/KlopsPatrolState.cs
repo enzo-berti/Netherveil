@@ -24,6 +24,8 @@ public class KlopsPatrolState : BaseState<KlopsStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
+        Context.WanderZoneCenter = Context.transform.position;
+
         Context.Stats.SetValue(Stat.SPEED, 5);
         elapsedTimeMovement = Time.time;
         Debug.Log("Enter PatrolState");

@@ -37,6 +37,7 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
+        Context.WanderZoneCenter = Context.transform.position;
     }
 
     // This method will be called only once after the last update.
