@@ -1,12 +1,8 @@
-using System.ComponentModel;
 using System.IO;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
-using static Cinemachine.CinemachineCore;
 
 namespace Map
 {
@@ -59,7 +55,7 @@ namespace Map
                 }
                 else
                 {
-                    Debug.LogError($"NavMesh data of the room \"{transformRoom.name}\" is null!");
+                    throw new System.Exception($"NavMesh data of the room \"{transformRoom.name}\" is null!");
                 }
 
                 MakeSceneDirty();
