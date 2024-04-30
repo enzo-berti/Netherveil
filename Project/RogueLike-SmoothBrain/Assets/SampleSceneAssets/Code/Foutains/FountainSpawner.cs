@@ -1,3 +1,4 @@
+using Map.Generation;
 using UnityEngine;
 
 public class FountainSpawner : MonoBehaviour
@@ -6,6 +7,6 @@ public class FountainSpawner : MonoBehaviour
 
     private void Start()
     {
-        Instantiate(fountains[Random.Range(0, fountains.Length)], transform);
+        Instantiate(fountains[Seed.Range(0, fountains.Length)], transform);
     }
 }

@@ -1,3 +1,4 @@
+using Map.Generation;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,14 @@ public class TutoText : MonoBehaviour
 
     void Start()
     {
+        // Temporaire
+        MapGenerator mapGen = FindAnyObjectByType<MapGenerator>();
+        if (mapGen.stage > 1)
+        {
+            Destroy(gameObject);
+        }
+        //
+
         text = GetComponent<TMP_Text>();
         initText = text.text;
         UpdateBindingDisplayString();
