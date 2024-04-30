@@ -407,8 +407,8 @@ public class PlayerController : MonoBehaviour
     public void PlayBloodPouringAnim()
     {
         hero.State = (int)Hero.PlayerState.MOTIONLESS;
-        animator.ResetTrigger("BloodPouring");
-        animator.SetTrigger("BloodPouring");
+        animator.ResetTrigger("PouringBlood");
+        animator.SetTrigger("PouringBlood");
     }
 
     public void PlayLaunchBombAnim()

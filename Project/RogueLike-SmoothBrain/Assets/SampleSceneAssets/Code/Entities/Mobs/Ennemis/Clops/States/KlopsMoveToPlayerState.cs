@@ -1,10 +1,10 @@
 using StateMachine;
 using UnityEngine;
 
-public class KlopsMoveState : BaseState<KlopsStateMachine>
+public class KlopsMoveToPlayerState : BaseState<KlopsStateMachine>
 {
     Vector3 meToPlayerVec { get { return Context.Player.transform.position - Context.transform.position; } }
-    public KlopsMoveState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
+    public KlopsMoveToPlayerState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
     {
     }
 
