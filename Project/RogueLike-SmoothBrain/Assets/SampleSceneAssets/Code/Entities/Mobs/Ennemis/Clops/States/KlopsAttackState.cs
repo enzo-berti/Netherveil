@@ -7,6 +7,8 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
     float timeBeforeChangeState = 1.5f;
     float currentTime = 0f;
     bool hasShot = false;
+    // Grosse flemme sorry
+    bool hasAnim = false;
     public KlopsAttackState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
     {
     }
@@ -24,6 +26,7 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         currentTime = 0f;
 
         hasShot = false;
+        hasAnim = false;
         endState = false;
     }
 
@@ -35,7 +38,14 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
     {
         currentTime += Time.deltaTime;
         Context.transform.LookAt(Utilities.Player.transform);
-        if(!hasShot && currentTime >= 0.2f)
+        if(!hasAnim && currentTime >= 0.2f)
+        {
+           
+            Context.Animator.ResetTrigger("Attack");
+            Context.Animator.SetTrigger("Attack");
+            hasAnim = true;
+        }
+        if(!hasShot && currentTime >= 0.3f)
         {
             GameObject fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
             fireball.GetComponent<Fireball>().direction = Utilities.Player.transform.position - Context.transform.position;
