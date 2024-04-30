@@ -11,13 +11,19 @@ using UnityEditor;
 public class ZiggoStateMachine : Mobs, IZiggo
 {
     [System.Serializable]
-    private class ZiggoSounds
+    public class ZiggoSounds
     {
         public Sound deathSound;
         public Sound takeDamageSound;
         public Sound hitSound;
         public Sound moveSound;
     }
+
+    public enum ZiggoAttacks
+    {
+        DASH,
+        SPIT
+    };
 
     // state machine variables
     [HideInInspector] public BaseState<ZiggoStateMachine> currentState;
@@ -28,28 +34,34 @@ public class ZiggoStateMachine : Mobs, IZiggo
     private IAttacker.HitDelegate onHit;
     [SerializeField] private ZiggoSounds ziggoSounds;
     [SerializeField, Range(0f, 360f)] private float originalVisionAngle = 180.0f;
-    [SerializeField] private BoxCollider attack1Collider;
-    [SerializeField] private BoxCollider attack2Collider;
-    [SerializeField] private BoxCollider attack3Collider;
+    [SerializeField] Collider[] attackColliders;
+
     private Hero player;
+    bool playerHit = false;
 
     // animation hash
     private int deathHash;
 
-    // getters and setters
+    // attacks
+    float dashCooldown = 0f;
+    float spitCooldown = 0f;
+
+    #region Getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public BaseState<ZiggoStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
-    public BoxCollider Attack1Collider { get => attack1Collider; }
-    public BoxCollider Attack2Collider { get => attack2Collider; }
-    public BoxCollider Attack3Collider { get => attack3Collider; }
+    public Collider[] AttackColliders { get => attackColliders; }
+    public ZiggoSounds Sounds { get => ziggoSounds; }
     public Hero Player { get => player; }
+    public bool PlayerHit { get => playerHit; set => playerHit = value; }
     public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE) * (currentState is not ZiggoWanderingState ? 1.25f : 1f); }
     public float VisionAngle { get => player ? 360 : originalVisionAngle; }
-
+    public float DashCooldown { get => dashCooldown; set => dashCooldown = value; }
+    public float SpitCooldown { get => spitCooldown; set => spitCooldown = value; }
+    #endregion
 
     protected override void Start()
     {
@@ -78,8 +90,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
 
         currentState.Update();
 
-        if (currentState is not ZiggoWanderingState)
-            WanderZoneCenter = transform.position;
+        animator.SetBool("Walk", agent.remainingDistance > agent.stoppingDistance);
     }
 
 
@@ -110,6 +121,12 @@ public class ZiggoStateMachine : Mobs, IZiggo
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
         ApplyDamagesMob(_value, ziggoSounds.hitSound, Death, notEffectDamage);
+
+        if (currentState is ZiggoWanderingState || currentState is ZiggoTriggeredState)
+        {
+            currentState = factory.GetState<ZiggoTriggeredState>();
+            player = Utilities.Hero;
+        }
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
@@ -151,7 +168,46 @@ public class ZiggoStateMachine : Mobs, IZiggo
             return;
 
         agent.Move(direction);
-        ziggoSounds.moveSound.Play(transform.position);
+    }
+
+    public void AttackCollide(Collider _collider, bool debugMode = false)
+    {
+        if (debugMode)
+        {
+            _collider.gameObject.SetActive(true);
+        }
+
+        Collider[] tab = null;
+
+        if (_collider is CapsuleCollider)
+            tab = PhysicsExtensions.CapsuleOverlap(_collider as CapsuleCollider, LayerMask.GetMask("Entity"));
+        else if (_collider is BoxCollider)
+            tab = PhysicsExtensions.BoxOverlap(_collider as BoxCollider, LayerMask.GetMask("Entity"));
+        else
+            Debug.LogError("Type de collider non reconnu.");
+
+        if (tab != null)
+        {
+            if (tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != gameObject && col.gameObject.CompareTag("Player"))
+                    {
+                        Attack(col.gameObject.GetComponent<IDamageable>());
+                        playerHit = true;
+                    }
+                }
+            }
+        }
+    }
+
+    public void DisableHitboxes()
+    {
+        foreach (Collider attackCollider in attackColliders)
+        {
+            attackCollider.gameObject.SetActive(false);
+        }
     }
     #endregion
 

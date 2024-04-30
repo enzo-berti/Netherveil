@@ -51,11 +51,11 @@ public class TestOfEndurance : Quest
 
     private void UpdateCount()
     {
-        if (IsQuestFinished() || questLost)
-            return;
-
-        currentSurvivedRoom++;
-        progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
+        if (!IsQuestFinished() && !questLost)
+        {
+            currentSurvivedRoom++;
+            progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
+        }
         QuestUpdated();
     }
 

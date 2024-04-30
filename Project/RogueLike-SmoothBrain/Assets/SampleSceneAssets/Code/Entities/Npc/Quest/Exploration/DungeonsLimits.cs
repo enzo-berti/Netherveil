@@ -42,13 +42,12 @@ public class DungeonsLimits : Quest
 
     private void UpdateCount()
     {
-        if (IsQuestFinished())
-            return;
+        if (!IsQuestFinished())
+        {
+            currentNumber = (int)((float)RoomUtilities.NbEnterRoom / RoomUtilities.NbRoom * 100f);
+            progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
+        }
 
-        Debug.Log("NB ENTER ROOM : " + RoomUtilities.NbEnterRoom);
-        currentNumber = (int)((float)RoomUtilities.NbEnterRoom/ RoomUtilities.NbRoom * 100f);
-        Debug.Log("Current Number : " + currentNumber);
-        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
         QuestUpdated();
     }
 }

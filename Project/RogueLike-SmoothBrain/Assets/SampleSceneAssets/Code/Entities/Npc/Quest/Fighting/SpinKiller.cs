@@ -48,16 +48,16 @@ public class SpinKiller : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
-        if (IsQuestFinished())
-            return;
-
-        Entity monster = (damageable as Entity);
-        if (asDoAnChargedAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
+        if (!IsQuestFinished())
         {
-            currentNumber++;
-            progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
-            QuestUpdated();
+            Entity monster = (damageable as Entity);
+            if (asDoAnChargedAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
+            {
+                currentNumber++;
+                progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
+            }
+            asDoAnChargedAttack = false;
         }
-        asDoAnChargedAttack = false;
+        QuestUpdated();
     }
 }

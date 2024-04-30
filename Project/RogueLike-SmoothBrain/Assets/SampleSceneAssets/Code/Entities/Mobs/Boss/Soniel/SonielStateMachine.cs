@@ -3,15 +3,26 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class SonielStateMachine : Mobs, ISoniel
 {
     [Serializable]
     public class SonielSounds
     {
-        public Sound hit;
-        public Sound walk;
-        public Sound death;
+        public Sound hit;//
+        public Sound walk;//
+        public Sound death;//
+        public Sound run;//
+        public Sound launchSword;
+        public Sound retrieveSword;
+        public Sound swordSpinning;
+        public Sound swordHitMap;
+        public Sound slash;//
+        public Sound slashVoid;//
+        public Sound thrust;//
+        public Sound bossHitMap;//
+        public Sound multipleSlash;//
     }
 
     public enum SonielAttacks
@@ -33,6 +44,7 @@ public class SonielStateMachine : Mobs, ISoniel
     private IAttacker.HitDelegate onHit;
     Hero player = null;
     [SerializeField] SonielSounds sounds;
+    public VisualEffect SlashVFX;
     [SerializeField] List<NestedList<Collider>> attackColliders;
     bool phaseTwo = false;
     bool playerHit = false;
@@ -57,6 +69,7 @@ public class SonielStateMachine : Mobs, ISoniel
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public Animator Animator { get => animator; }
+    public SonielSounds Sounds { get => sounds; }
     public List<NestedList<Collider>> Attacks { get => attackColliders; }
     public Hero Player { get => player; }
     public bool PhaseTwo { get => phaseTwo; }
@@ -88,6 +101,10 @@ public class SonielStateMachine : Mobs, ISoniel
         player = Utilities.Hero;
 
         initialHP = stats.GetValue(Stat.HP);
+
+        // null ref de con
+        swords[0].SetSounds(sounds.swordHitMap, sounds.swordSpinning);
+        swords[1].SetSounds(sounds.swordHitMap, sounds.swordSpinning);
     }
 
     protected override void Update()
@@ -121,7 +138,7 @@ public class SonielStateMachine : Mobs, ISoniel
         damageable.ApplyDamage(damages, this);
         //ApplyKnockback(damageable, this);
 
-        //sounds.hit.Play(transform.position);
+        sounds.hit.Play(transform.position);
     }
 
     public void Death()
@@ -130,12 +147,10 @@ public class SonielStateMachine : Mobs, ISoniel
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
 
-        //sounds.death.Play(transform.position);
+        sounds.death.Play(transform.position);
 
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
-
-        Destroy(transform.parent.gameObject, 4.07f + .5f); // j'en ai rien à foutre
 
         for (int i = 0; i < 2; i++)
         {
@@ -155,7 +170,6 @@ public class SonielStateMachine : Mobs, ISoniel
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
-        //sounds.walk.Play(transform.position);
     }
 
     public void AttackCollide(Collider _collider, bool debugMode = false)

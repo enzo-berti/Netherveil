@@ -45,6 +45,9 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
     bool attackEnded = false;
 
+    //vfx
+    bool isSlashPlayed = false;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -64,6 +67,8 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         attackEnded = false;
         Context.Animator.SetBool("Walk", false);
         Context.Animator.SetBool(thrustHash, false);
+
+        isSlashPlayed = false;
 
         if (Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position) > attackRange * attackRange)
         {
@@ -167,9 +172,12 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
                 Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
             }
+
         }
         else // effectue l'attaque
         {
+            Context.Sounds.run.Play(Context.transform.position);
+
             // vérifie la collision avec la hitbox du dash
             if (!Context.PlayerHit)
             {
@@ -186,6 +194,8 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                 Context.Animator.ResetTrigger(circularHash);
                 Context.Animator.SetTrigger(circularHash);
 
+                Context.Sounds.run.Stop();
+
                 SwitchAttack(currentAttack, CircularStates.ATTACK);
 
                 // DEBUG
@@ -201,10 +211,21 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
         if (IsAttackLaunched(currentAttack)) // effectue l'attaque en elle même
         {
+            if (!isSlashPlayed)
+            {
+                Context.SlashVFX.Play();
+                isSlashPlayed = true;
+            }
+
             // vérifie la collision
             if (!Context.PlayerHit)
             {
+                Context.Sounds.slashVoid.Play(Context.transform.position);
                 Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.CIRCULAR_ATTACK].data, debugMode: Context.DebugMode);
+            }
+            else
+            {
+                Context.Sounds.slash.Play(Context.transform.position);
             }
 
             // fix animation
@@ -235,6 +256,14 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
                 }
             }
         }
+        else // rotation
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(Context.Player.transform.position, Context.transform.position);
+            lookRotation.x = 0;
+            lookRotation.z = 0;
+
+            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
+        }
     }
 
     void Thrust()
@@ -243,6 +272,8 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
 
         if (IsAttackLaunched(currentAttack))
         {
+            Context.Sounds.thrust.Play(Context.transform.position);
+
             Context.Animator.SetBool(thrustHash, false);
 
             // vérifie la collision avec la hitbox de l'estoc

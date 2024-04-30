@@ -168,8 +168,6 @@ public class GlorbStateMachine : Mobs, IGlorb
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
-        Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
-
         currentState = factory.GetState<GlorbDeathState>();
     }
 
