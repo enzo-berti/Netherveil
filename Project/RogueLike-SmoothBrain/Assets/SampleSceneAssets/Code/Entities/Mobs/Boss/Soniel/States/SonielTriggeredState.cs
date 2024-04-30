@@ -14,6 +14,7 @@ using FMOD;
 using StateMachine; // include all scripts about StateMachines
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SonielTriggeredState : BaseState<SonielStateMachine>
@@ -51,6 +52,7 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     protected override void ExitState()
     {
         Context.Animator.SetBool("Walk", false);
+        Context.Sounds.walk.Stop();
     }
 
     // This method will be called every frame.
@@ -58,7 +60,17 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
     {
         Context.MoveTo(Context.Player.transform.position - (Context.Player.transform.position - Context.transform.position).normalized * 2f);
 
-        Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
+        if (Context.Agent.remainingDistance > Context.Agent.stoppingDistance)
+        {
+            Context.Animator.SetBool("Walk", true);
+            Context.Sounds.walk.Play(Context.transform.position, false);
+        }
+        else
+        {
+            Context.Animator.SetBool("Walk", false);
+            Context.Sounds.walk.Stop();
+        }
+
 
         Context.AttackCooldown -= Time.deltaTime;
     }

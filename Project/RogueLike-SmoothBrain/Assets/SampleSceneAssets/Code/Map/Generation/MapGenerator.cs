@@ -209,26 +209,6 @@ namespace Map.Generation
                         break;
                     }
                 }
-
-                //// if not enough door are available, spawn a normal room by force
-                //if (genParam.AvailableDoorsCount <= 1)
-                //{
-                //    if (genParam.nbRoomByType[RoomType.Normal] <= 0)
-                //    {
-                //        Debug.LogError("No doors left to spawn another room");
-                //        return false;
-                //    }
-                //    else if (!GenerateRoom(ref genParam, RoomType.Normal))
-                //    {
-                //        Debug.LogError("Can't generate room");
-                //        return false;
-                //    }
-                //    genParam.nbRoomByType[RoomType.Normal]--;
-                //}
-                //else
-                //{
-                //    
-                //}
             }
 
             return true;
