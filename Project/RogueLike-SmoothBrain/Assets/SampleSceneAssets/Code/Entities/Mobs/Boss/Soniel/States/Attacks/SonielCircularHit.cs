@@ -213,7 +213,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         {
             if (!isSlashPlayed)
             {
-                // play slash ici
+                Context.SlashVFX.Play();
                 isSlashPlayed = true;
             }
 
