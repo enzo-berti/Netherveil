@@ -170,6 +170,7 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
             if (_id == 0) Context.HasLeftArm = false;
             else Context.HasRightArm = false;
 
+            Context.Sounds.launchSword.Play(Context.transform.position, true);
 
             Context.Swords[_id].enabled = true;
             Context.Swords[_id].SetLeft(_id == 0);
@@ -224,6 +225,8 @@ public class SonielSpinningSwords : BaseState<SonielStateMachine>
                 Context.HasRightArm = true;
                 Context.Animator.SetBool(getRightHash, true);
             }
+
+            Context.Sounds.retrieveSword.Play(Context.transform.position, true);
 
             retrieved = true;
             attackDuration = 0f;
