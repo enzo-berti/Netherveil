@@ -146,8 +146,6 @@ namespace Map.Generation
             if (generate)
             {
                 Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
-                Utilities.Player.transform.position = Vector3.zero;
-
                 generate = false;
             }
         }
