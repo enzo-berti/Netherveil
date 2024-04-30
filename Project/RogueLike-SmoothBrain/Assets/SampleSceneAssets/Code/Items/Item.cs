@@ -11,6 +11,7 @@ using UnityEngine.VFX;
 public class Item : MonoBehaviour
 {
     public static event Action<ItemEffect> OnRetrieved;
+    public static event Action OnLateRetrieved;
     public static float priceCoef = 1.0f;
     public static List<List<ItemData>> ItemPool;
 
@@ -69,6 +70,7 @@ public class Item : MonoBehaviour
     public static void InvokeOnRetrieved(ItemEffect effect)
     {
         OnRetrieved?.Invoke(effect);
+        OnLateRetrieved?.Invoke();
     }
 
     private ItemEffect LoadClass()

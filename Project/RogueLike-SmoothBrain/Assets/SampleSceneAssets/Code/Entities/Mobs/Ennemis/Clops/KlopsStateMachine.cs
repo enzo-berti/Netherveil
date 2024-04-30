@@ -11,8 +11,9 @@ public class KlopsStateMachine : Mobs, IKlops
     public class KlopsSounds
     {
         public Sound deathSound;
-        public Sound takeDamageSound;
+        public Sound AttackSound;
         public Sound hitSound;
+        public Sound igniteSound;
     }
 
     [HideInInspector]
@@ -137,6 +138,7 @@ public class KlopsStateMachine : Mobs, IKlops
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
         isDeath = true;
+        currentState = factory.GetState<KlopsDeathState>();
 
         Destroy(transform.parent.gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }

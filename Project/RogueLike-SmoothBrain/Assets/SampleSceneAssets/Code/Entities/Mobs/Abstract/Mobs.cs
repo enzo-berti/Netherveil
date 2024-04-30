@@ -49,12 +49,12 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        RoomUtilities.earlyEnterEvents += OnEarlyEnterRoom;
+        RoomUtilities.onEarlyEnter += OnEarlyEnterRoom;
     }
 
     protected virtual void OnDisable()
     {
-        RoomUtilities.earlyEnterEvents -= OnEarlyEnterRoom;
+        RoomUtilities.onEarlyEnter -= OnEarlyEnterRoom;
     }
 
     protected override void Start()
@@ -181,17 +181,9 @@ public abstract class Mobs : Entity
             foreach (MeshRenderer renderer in renderers)
             {
                 Material spawningMaterial = renderer.materials.FirstOrDefault(x => x.shader == spawningMat.shader);
-                while (spawningMaterial.GetFloat("_Alpha") > 0f)
-                {
-                    spawningMaterial.SetFloat("_Alpha", spawningMaterial.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
-                    spawningMaterial.SetFloat("_Alpha", Mathf.Max(spawningMaterial.GetFloat("_Alpha"), 0f));;
-                    yield return null;
-                }
-
-                List<Material> materials = new(renderer.materials);
-                materials.RemoveAll(mat => mat.shader == spawningMat.shader);
-                renderer.SetMaterials(materials);
+                StartCoroutine(MatUpdateMeshRenderer(spawningMaterial, renderer));
             }
+            yield return null;
         }
         else
         {
@@ -199,17 +191,9 @@ public abstract class Mobs : Entity
             foreach (SkinnedMeshRenderer renderer in renderers)
             {
                 Material spawningMaterial = renderer.materials.FirstOrDefault(x => x.shader == spawningMat.shader);
-                while (spawningMaterial.GetFloat("_Alpha") > 0f)
-                {
-                    spawningMaterial.SetFloat("_Alpha", spawningMaterial.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
-                    spawningMaterial.SetFloat("_Alpha", Mathf.Max(spawningMaterial.GetFloat("_Alpha"), 0f));
-                    yield return null;
-                }
-
-                List<Material> materials = new(renderer.materials);
-                materials.RemoveAll(mat => mat.shader == spawningMat.shader);
-                renderer.SetMaterials(materials);
+                StartCoroutine(MatUpdateSkinnedMeshRenderer(spawningMaterial, renderer));
             }
+            yield return null;
         }
     }
 
@@ -236,6 +220,34 @@ public abstract class Mobs : Entity
         hit.SetAlpha(0.0f);
 
         hit.DisableMat();
+    }
+
+    private IEnumerator MatUpdateMeshRenderer(Material spawnMat, MeshRenderer renderer)
+    {
+        while (spawnMat.GetFloat("_Alpha") > 0f)
+        {
+            spawnMat.SetFloat("_Alpha", spawnMat.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
+            spawnMat.SetFloat("_Alpha", Mathf.Max(spawnMat.GetFloat("_Alpha"), 0f));
+            yield return null;
+        }
+
+        List<Material> materials = new(renderer.materials);
+        materials.RemoveAll(mat => mat.shader == spawningMat.shader);
+        renderer.SetMaterials(materials);
+    }
+
+    private IEnumerator MatUpdateSkinnedMeshRenderer(Material spawnMat, SkinnedMeshRenderer renderer)
+    {
+        while (spawnMat.GetFloat("_Alpha") > 0f)
+        {
+            spawnMat.SetFloat("_Alpha", spawnMat.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
+            spawnMat.SetFloat("_Alpha", Mathf.Max(spawnMat.GetFloat("_Alpha"), 0f));
+            yield return null;
+        }
+
+        List<Material> materials = new(renderer.materials);
+        materials.RemoveAll(mat => mat.shader == spawningMat.shader);
+        renderer.SetMaterials(materials);
     }
 
     protected void ApplyDamagesMob(int _value, Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)

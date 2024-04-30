@@ -23,7 +23,7 @@ public class DummyStateMachine : Mobs, IDummy
     [SerializeField] private Weakness weakness;
     [SerializeField] private GameObject objectToDestroy;
 
-    private bool triggerAttack;
+    private bool triggerAttack = false;
 
     protected override void Start()
     {
@@ -48,19 +48,13 @@ public class DummyStateMachine : Mobs, IDummy
         triggerAttack = true;
     }
 
-    private void CanTakeDamage(int _value)
-    {
-        if (triggerAttack)
-        {
-            Stats.DecreaseValue(Stat.HP, _value, true);
-        }
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-    }
-
     public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
     {
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
+        {
+            triggerAttack = false;
             return;
+        }
 
         if (!triggerAttack)
             _value = 0;
@@ -76,7 +70,12 @@ public class DummyStateMachine : Mobs, IDummy
 
         dummySounds.hitSound.Play(transform.position, true);
 
-        CanTakeDamage(_value);
+        if (triggerAttack)
+        {
+            Stats.DecreaseValue(Stat.HP, _value, true);
+        }
+        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+
         triggerAttack = false;
         if (stats.GetValue(Stat.HP) <= 0)
         {

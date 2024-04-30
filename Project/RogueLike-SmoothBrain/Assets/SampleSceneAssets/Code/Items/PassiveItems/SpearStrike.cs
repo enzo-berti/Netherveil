@@ -23,8 +23,8 @@ public class SpearStrike : ItemEffect , IPassiveItem
         GameObject thunderstrikeVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ThunderStrike"));
         thunderstrikeCollider.SetActive(false);
 
-        thunderstrikeVFX.transform.position = spear.transform.position;
-        thunderstrikeCollider.transform.position = spear.transform.position;
+        thunderstrikeVFX.transform.position = new Vector3(spear.transform.position.x, hero.transform.position.y, spear.transform.position.z);
+        thunderstrikeCollider.transform.position = new Vector3(spear.transform.position.x, hero.transform.position.y, spear.transform.position.z);
         //thunderstrikeCollider.SetActive(true);
 
         thunderstrikeVFX.GetComponent<VisualEffect>().Play();

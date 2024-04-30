@@ -47,10 +47,9 @@ namespace Map.Generation
             return random.Next(minInclusive, maxExclusive);
         }
 
-        // Dead function to rework
+        // TODO : make it function lmao
         static public float Range(float minInclusive, float maxExclusive)
         {
-            UnityEngine.Debug.Log((float)random.NextDouble());
             return (float)random.NextDouble() % (maxExclusive - minInclusive) + minInclusive;
         }
 
