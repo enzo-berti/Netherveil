@@ -11,8 +11,9 @@ public class KlopsStateMachine : Mobs, IKlops
     public class KlopsSounds
     {
         public Sound deathSound;
-        public Sound takeDamageSound;
+        public Sound AttackSound;
         public Sound hitSound;
+        public Sound igniteSound;
     }
 
     [HideInInspector]

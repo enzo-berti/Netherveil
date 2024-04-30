@@ -146,7 +146,7 @@ namespace Map.Generation
             Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (generate)
             {
