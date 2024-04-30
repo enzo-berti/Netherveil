@@ -18,6 +18,7 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private GameObject GameOver;
     [SerializeField] private TMP_Text BloodTestMesh;
     [SerializeField] private MinMaxSlider corruptionSlider;
+    [SerializeField] private TMP_Text corruptionText;
 
     [Header("HUD parts")]
     [SerializeField] private PauseMenu pauseMenu;
@@ -46,6 +47,7 @@ public class HudHandler : MonoBehaviour
     {
         BloodTestMesh.text = player.Inventory.BloodValue.Value.ToString();
         corruptionSlider.value = player.Stats.GetValue(Stat.CORRUPTION);
+        corruptionText.text = Mathf.Abs(player.Stats.GetValue(Stat.CORRUPTION)).ToString();
     }
 
     private void OnEnable()
