@@ -792,7 +792,17 @@ MonoBehaviour:
   isFreeze: 0
   IsInvincibleCount: 0
   drop:
-    dropList: []
+    dropList:
+    - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
+        type: 3}
+      chance: 0.3
+      Quantity: 1
+      isChanceShared: 0
+    - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
+        type: 3}
+      chance: 1
+      Quantity: 5
+      isChanceShared: 0
   StatSuckerVFX: {fileID: 431182382120843853}
   spawningVFX: {fileID: 7823679997978139708}
   wanderZone:
@@ -832,9 +842,7 @@ MonoBehaviour:
           Data4: 1343401324
         Path: event:/Enemy/Pest/PestAttack
   originalVisionAngle: 180
-  attack1Collider: {fileID: 1612929269699612827}
-  attack2Collider: {fileID: 1748380737417645954}
-  attack3Collider: {fileID: 7441729582214193227}
+  attackColliders: []
 --- !u!114 &6694454470416022707
 MonoBehaviour:
   m_ObjectHideFlags: 0
