@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class SonielStateMachine : Mobs, ISoniel
 {
@@ -43,6 +44,7 @@ public class SonielStateMachine : Mobs, ISoniel
     private IAttacker.HitDelegate onHit;
     Hero player = null;
     [SerializeField] SonielSounds sounds;
+    public VisualEffect SlashVFX;
     [SerializeField] List<NestedList<Collider>> attackColliders;
     bool phaseTwo = false;
     bool playerHit = false;
