@@ -44,6 +44,9 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
         direction.y = 0;
         direction.Normalize();
 
+        Context.Animator.ResetTrigger("Dash");
+        Context.Animator.SetTrigger("Dash");
+
         Context.MoveTo(Context.transform.position + direction * (dashRange + 1));
     }
 

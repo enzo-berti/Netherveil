@@ -61,6 +61,13 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
                 pointToReach = Context.Player.transform.position + (new Vector3(-mobToPlayer.z, 0, mobToPlayer.x).normalized - mobToPlayer).normalized * Context.Stats.GetValue(Stat.ATK_RANGE) * 0.9f;
             }
 
+            // rotate
+            Quaternion lookRotation = Quaternion.LookRotation(pointToReach, Context.transform.position);
+            lookRotation.x = 0;
+            lookRotation.z = 0;
+
+            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
+
             Context.MoveTo(pointToReach);
         }
     }
