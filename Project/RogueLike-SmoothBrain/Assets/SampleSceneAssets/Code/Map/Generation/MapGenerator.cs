@@ -117,10 +117,9 @@ namespace Map.Generation
 
     public class MapGenerator : MonoBehaviour
     {
-#if UNITY_EDITOR
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed; // For debuging purpose
-#endif
+
         [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
 
         private int stage = 0;
@@ -129,19 +128,15 @@ namespace Map.Generation
 
         private void Awake()
         {
-            if (stage == 0)
-            {
-                Item.itemSpawn = 0;
-                Seed.RandomizeSeed();
-#if UNITY_EDITOR
-                if (!isRandom)
-                {
-                    Seed.Set(seed);
-                }
+            Item.itemSpawn = 0;
+            Seed.RandomizeSeed();
 
-                seed = Seed.seed;
-#endif
+            if (!isRandom)
+            {
+                Seed.Set(seed);
             }
+
+            seed = Seed.seed;
 
             Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
         }
@@ -163,7 +158,7 @@ namespace Map.Generation
 
             if (stage == 1)
             {
-                genParam.nbRoomByType[RoomType.Lobby] = 1;
+                genParam.nbRoomByType[RoomType.Tutorial] = 1;
             }
 
             RoomUtilities.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
