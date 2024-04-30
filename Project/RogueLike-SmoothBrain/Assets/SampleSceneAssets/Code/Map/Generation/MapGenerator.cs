@@ -121,7 +121,7 @@ namespace Map.Generation
         [SerializeField] private string seed; // For debuging purpose
 
         [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
-        public int stage = 0; // BOURRIN 2
+        [HideInInspector] public int stage = 0; // BOURRIN 2
 
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
 
