@@ -55,7 +55,6 @@ namespace PrefabLightMapBaker
                 return;
             }
 #endif
-
             if (!Application.isPlaying || SceneManager.loadedSceneCount > 0)
             {
                 BakeApply();
