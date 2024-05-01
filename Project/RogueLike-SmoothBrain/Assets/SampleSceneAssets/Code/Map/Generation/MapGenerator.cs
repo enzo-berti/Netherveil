@@ -162,7 +162,7 @@ namespace Map.Generation
                 genParam.nbRoomByType[RoomType.Tutorial] = 1;
             }
 
-            RoomUtilities.nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
+            MapUtilities.SetDatas(genParam);
 
             GenerateRooms(ref genParam);
 

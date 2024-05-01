@@ -17,8 +17,8 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
     public void OnRetrieved()
     {
-        RoomUtilities.onEnter += StealStats;
-        RoomUtilities.onExit += ResetStats;
+        MapUtilities.onEnter += StealStats;
+        MapUtilities.onExit += ResetStats;
 
         for(int i = 0; i< (int)StolenStats.NB; i++)
         {
@@ -28,14 +28,14 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        RoomUtilities.onEnter -= StealStats;
-        RoomUtilities.onExit -= ResetStats;
+        MapUtilities.onEnter -= StealStats;
+        MapUtilities.onExit -= ResetStats;
     }
 
     private void StealStats()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        foreach (GameObject enemy in RoomUtilities.roomData.enemies)
+        foreach (GameObject enemy in MapUtilities.currentRoomData.enemies)
         {
             Mobs mob = enemy.GetComponent<Mobs>();
             mob.StatSuckerVFX.GetComponent<VFXStopper>().Duration = 1f;

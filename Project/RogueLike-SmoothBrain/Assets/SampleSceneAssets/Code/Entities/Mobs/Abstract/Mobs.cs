@@ -50,12 +50,12 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        RoomUtilities.onEarlyEnter += OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter += OnEarlyEnterRoom;
     }
 
     protected virtual void OnDisable()
     {
-        RoomUtilities.onEarlyEnter -= OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter -= OnEarlyEnterRoom;
     }
 
     protected override void Start()
@@ -152,7 +152,7 @@ public abstract class Mobs : Entity
         if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -100f)
         {
             GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
-            RoomUtilities.roomData.enemies.Add(clone);
+            MapUtilities.currentRoomData.enemies.Add(clone);
         }
     }
 

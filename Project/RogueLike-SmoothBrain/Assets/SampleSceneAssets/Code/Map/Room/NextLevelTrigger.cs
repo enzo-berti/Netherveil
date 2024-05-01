@@ -9,7 +9,7 @@ namespace Map
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                RoomUtilities.onFinishStage?.Invoke();
+                MapUtilities.onFinishStage?.Invoke();
 
                 MapGenerator mapGen = FindObjectOfType<MapGenerator>();
 

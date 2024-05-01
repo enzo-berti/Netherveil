@@ -28,9 +28,9 @@ public abstract class Quest
     public virtual void AcceptQuest()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
-        RoomUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
-        RoomUtilities.onEarlyAllChestOpen += CheckQuestFinished;
-        RoomUtilities.onEnter += CheckQuestFinished;
+        MapUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
+        MapUtilities.onEarlyAllChestOpen += CheckQuestFinished;
+        MapUtilities.onEnter += CheckQuestFinished;
         Hero.OnQuestObtained += CheckQuestFinished;
     }
 
@@ -74,9 +74,9 @@ public abstract class Quest
         Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
         OnQuestFinished?.Invoke();
 
-        RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
-        RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        RoomUtilities.onEnter -= CheckQuestFinished;
+        MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
+        MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
+        MapUtilities.onEnter -= CheckQuestFinished;
         Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
@@ -98,9 +98,9 @@ public abstract class Quest
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
         player.CurrentQuest = null;
-        RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
-        RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        RoomUtilities.onEnter -= CheckQuestFinished;
+        MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
+        MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
+        MapUtilities.onEnter -= CheckQuestFinished;
         Hero.OnQuestObtained -= CheckQuestFinished;
     }
 

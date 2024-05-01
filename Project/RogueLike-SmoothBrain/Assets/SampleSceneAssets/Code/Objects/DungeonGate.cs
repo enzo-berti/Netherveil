@@ -17,14 +17,14 @@ public class DungeonGate : MonoBehaviour
 
     private void Start()
     {
-        RoomUtilities.onEnter += Close;
-        RoomUtilities.onAllEnemiesDead += Open;
+        MapUtilities.onEnter += Close;
+        MapUtilities.onAllEnemiesDead += Open;
     }
 
     private void OnDestroy()
     {
-        RoomUtilities.onEnter -= Close;
-        RoomUtilities.onAllEnemiesDead -= Open;
+        MapUtilities.onEnter -= Close;
+        MapUtilities.onAllEnemiesDead -= Open;
     }
 
     private void Open()
@@ -35,7 +35,7 @@ public class DungeonGate : MonoBehaviour
 
     private void Close()
     {
-        if (RoomUtilities.roomData.enemies.Count <= 0)
+        if (MapUtilities.currentRoomData.enemies.Count <= 0)
         {
             return;
         }
