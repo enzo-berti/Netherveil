@@ -42,7 +42,7 @@ public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
             Context.Sounds.moveSound.Play(Context.transform.position);
         }
 
-        if (idleTimer > 1f)
+        if (idleTimer >= 1f)
         {
             float minRange = Context.Stats.GetValue(Stat.VISION_RANGE) / 4f;
             float maxRange = Context.Stats.GetValue(Stat.VISION_RANGE) / 2f;

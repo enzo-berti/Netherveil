@@ -25,11 +25,9 @@ public class KlopsStateMachine : Mobs, IKlops
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     [SerializeField] private KlopsSounds klopsSounds;
-    [SerializeField] float defaultVisionAngle = 360f;
+    [SerializeField] float defaultVisionAngle = 145f;
     [SerializeField] GameObject fireballPrefab;
     [SerializeField] Transform fireballSpawn;
-    private Transform target;
-    private bool isDeath = false;
     Hero player = null;
 
     // animation hash
@@ -38,8 +36,9 @@ public class KlopsStateMachine : Mobs, IKlops
     // getters and setters
     public GameObject FireballPrefab { get => fireballPrefab; }
     public Transform FireballSpawn { get => fireballSpawn; }
-    public float VisionAngle { get => defaultVisionAngle; }
-    public float FleeRange { get => stats.GetValue(Stat.ATK_RANGE) / 3f; }
+    public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE) * (currentState is not KlopsWanderingState ? 1.25f : 1f); }
+    public float VisionAngle { get => player ? 360 : defaultVisionAngle; }
+    public float FleeRange { get => stats.GetValue(Stat.ATK_RANGE); }
     public Hero Player { get => player; }
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -47,9 +46,6 @@ public class KlopsStateMachine : Mobs, IKlops
     public BaseState<KlopsStateMachine> CurrentState { get => currentState; set => currentState = value; }
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
-    public Transform Target { get => target; set => target = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
-    public bool IsDeath { get => isDeath; }
     public KlopsSounds KlopsSound { get => klopsSounds; }
 
     protected override void Start()
@@ -57,11 +53,7 @@ public class KlopsStateMachine : Mobs, IKlops
         base.Start();
 
         factory = new StateFactory<KlopsStateMachine>(this);
-        // Set currentState here !
-        currentState = factory.GetState<KlopsPatrolState>();
-
-        // common initialization
-
+        currentState = factory.GetState<KlopsWanderingState>();
 
         // hashing animation
         deathHash = Animator.StringToHash("Death");
@@ -75,7 +67,7 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         if (isFreeze || IsSpawning)
             return;
-        
+
         base.Update();
         currentState.Update();
     }
@@ -90,7 +82,7 @@ public class KlopsStateMachine : Mobs, IKlops
                 continue;
             }
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, VisionRange, transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Hero>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -135,6 +127,12 @@ public class KlopsStateMachine : Mobs, IKlops
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
         ApplyDamagesMob(_value, klopsSounds.hitSound, Death, notEffectDamage);
+
+        if (currentState is KlopsWanderingState || currentState is KlopsTriggeredState)
+        {
+            currentState = factory.GetState<KlopsTriggeredState>();
+            player = Utilities.Hero;
+        }
     }
 
     public void Death()
@@ -143,9 +141,10 @@ public class KlopsStateMachine : Mobs, IKlops
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
         klopsSounds.deathSound.Play(transform.position);
+
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
-        isDeath = true;
+
         currentState = factory.GetState<KlopsDeathState>();
 
         Animator.ResetTrigger("Death");
@@ -156,10 +155,10 @@ public class KlopsStateMachine : Mobs, IKlops
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!Selection.Contains(gameObject))
-            return;
+        //if (!Selection.Contains(gameObject))
+        //    return;
 
-        DisplayVisionRange(VisionAngle, 3.0f);
+        DisplayVisionRange(VisionAngle, VisionRange);
         DisplayVisionRange(360f, 2f);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();

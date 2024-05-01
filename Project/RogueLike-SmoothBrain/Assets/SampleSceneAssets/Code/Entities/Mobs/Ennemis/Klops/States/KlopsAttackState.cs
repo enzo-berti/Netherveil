@@ -15,9 +15,9 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
 
     protected override void CheckSwitchStates()
     {
-        if(endState)
+        if (endState)
         {
-            SwitchState(Factory.GetState<KlopsPatrolState>());
+            SwitchState(Factory.GetState<KlopsWanderingState>());
         }
     }
 
@@ -28,26 +28,29 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         hasShot = false;
         hasAnim = false;
         endState = false;
+
+        Context.Agent.isStopped = true;
     }
 
     protected override void ExitState()
     {
+        Context.Agent.isStopped = false;
     }
 
     protected override void UpdateState()
     {
         currentTime += Time.deltaTime;
         Context.transform.LookAt(Utilities.Player.transform);
-        if(!hasAnim && currentTime >= 0.2f)
+        if (!hasAnim && currentTime >= 0.2f)
         {
-           
             Context.Animator.ResetTrigger("Attack");
             Context.Animator.SetTrigger("Attack");
             hasAnim = true;
         }
-        if(!hasShot && currentTime >= 0.3f)
+        if (!hasShot && currentTime >= 0.3f)
         {
             GameObject fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
+            Context.KlopsSound.AttackSound.Play(Context.transform.position);
             fireball.GetComponent<Fireball>().direction = Utilities.Player.transform.position - Context.transform.position;
             fireball.transform.LookAt(Utilities.Player.transform);
             hasShot = true;
@@ -56,7 +59,6 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         {
             endState = true;
         }
-        
     }
 
     protected override void SwitchState(BaseState<KlopsStateMachine> newState)
