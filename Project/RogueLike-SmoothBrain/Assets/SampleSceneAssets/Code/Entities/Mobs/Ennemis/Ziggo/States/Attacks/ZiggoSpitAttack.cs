@@ -90,11 +90,16 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         yield return new WaitForSeconds(timeToThrow);
 
         projectile.PoisonBallVFX.gameObject.SetActive(false);
+        projectile.PoisonPuddleVFX.transform.parent = null;
+        projectile.PoisonPuddleVFX.transform.position = new Vector3(projectile.transform.position.x, Utilities.Player.transform.position.y, projectile.transform.position.z);
+        projectile.PoisonPuddleVFX.transform.localScale = Vector3.one;
+
         projectile.PoisonPuddleVFX.SetFloat("Duration", puddleDuration);
-        //this is because vfx size is based on plane size which is 5 unity units
+        //this is because vfx is based on plane size so 1 plane size equals 5 unity units
         float planeLength = 5f;
-        projectile.PoisonPuddleVFX.SetFloat("Diameter", projectile.FlaqueRadius * 2 / planeLength);
+        projectile.PoisonPuddleVFX.SetFloat("Diameter", projectile.FlaqueRadius * 2f / planeLength);
         projectile.PoisonPuddleVFX.Play();
+
         // Splatter
         float maxDiameter = 20f;
         float maxThickness = 0.2f;
@@ -115,13 +120,11 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
 
         } while (Context.Projectile.transform.localScale.x != maxDiameter || Context.Projectile.transform.localScale.y != maxThickness);
 
-
-        projectile.UpdateRadius();
-
         attackEnded = true;
         yield return new WaitForSeconds(puddleDuration);
 
         projectile.PoisonPuddleVFX.Stop();
+        projectile.PoisonPuddleVFX.transform.parent = Context.Projectile.transform;
         projectile.PoisonBallVFX.gameObject.SetActive(true);
         Context.Projectile.transform.parent = originalParent;
         Context.Projectile.transform.localPosition = Vector3.zero;

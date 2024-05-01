@@ -8,7 +8,7 @@ public class ZiggoProjectile : MonoBehaviour
 {
     Hero player;
     float effectCooldown = 0f;
-    float flaqueRadius = 0f;
+    [SerializeField] float flaqueRadius = 0f;
 
     public float FlaqueRadius { get => flaqueRadius; }
     public VisualEffect PoisonPuddleVFX;
@@ -17,7 +17,6 @@ public class ZiggoProjectile : MonoBehaviour
     private void OnEnable()
     {
         player = Utilities.Hero;
-        flaqueRadius = 0f;
     }
 
     private void Update()
@@ -31,11 +30,6 @@ public class ZiggoProjectile : MonoBehaviour
             }
         }
         else effectCooldown -= Time.deltaTime;
-    }
-
-    public void UpdateRadius()
-    {
-        flaqueRadius = GetComponentInChildren<Renderer>().bounds.size.x / 2f;
     }
 
     public void ThrowToPos(Vector3 pos, float throwTime, float height)

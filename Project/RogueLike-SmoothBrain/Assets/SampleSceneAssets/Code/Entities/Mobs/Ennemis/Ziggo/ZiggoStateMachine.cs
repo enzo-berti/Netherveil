@@ -79,7 +79,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
         currentState = factory.GetState<ZiggoWanderingState>();
 
         // projectile
-        projectile = GetComponentInChildren<ZiggoProjectile>().gameObject;
+        projectile = GetComponentInChildren<ZiggoProjectile>(includeInactive: true).gameObject;
         projectile.SetActive(false);
 
         // anim hash
