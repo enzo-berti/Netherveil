@@ -27,12 +27,15 @@ public class Fireball : MonoBehaviour, IAttacker
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<Hero>(out var hero))
+        if (other.TryGetComponent<Hero>(out var hero))
         {
             Attack(hero);
             Destroy(gameObject);
         }
-
+        else if (other.gameObject.tag != "Enemy")
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
