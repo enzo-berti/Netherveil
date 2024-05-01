@@ -23,5 +23,6 @@ public class GorgonDeathState : BaseState<GorgonStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        Context.Agent.isStopped = true;
     }
 }

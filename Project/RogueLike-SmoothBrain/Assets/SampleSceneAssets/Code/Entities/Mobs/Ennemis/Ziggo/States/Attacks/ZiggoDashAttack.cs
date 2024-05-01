@@ -94,7 +94,7 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
         {
             if (!Context.PlayerHit)
             {
-                Context.AttackCollide(Context.AttackColliders[(int)ZiggoStateMachine.ZiggoAttacks.DASH], true);
+                Context.AttackCollide(Context.AttackColliders[(int)ZiggoStateMachine.ZiggoAttacks.DASH], false);
                 if (Context.PlayerHit)
                 {
                     Context.Sounds.eatSound.Play(Context.transform.position, true);
