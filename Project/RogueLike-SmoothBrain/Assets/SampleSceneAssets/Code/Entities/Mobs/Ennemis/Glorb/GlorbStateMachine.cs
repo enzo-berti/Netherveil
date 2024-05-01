@@ -129,6 +129,15 @@ public class GlorbStateMachine : Mobs, IGlorb
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
 
+            if (!player)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    player = tempPlayer;
+                }
+            }
+
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
@@ -216,6 +225,7 @@ public class GlorbStateMachine : Mobs, IGlorb
             return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayVisionRange(360f, 2f);
         DisplayAttackRange(VisionAngle, AttackRange);
         DisplayInfos();
         DisplayWanderZone();

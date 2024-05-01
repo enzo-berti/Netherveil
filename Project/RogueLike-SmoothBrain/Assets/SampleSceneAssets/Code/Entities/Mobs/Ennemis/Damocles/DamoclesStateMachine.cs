@@ -112,6 +112,15 @@ public class DamoclesStateMachine : Mobs, IDamocles
             if (targetE != null)
                 target = targetE.transform;
 
+            if (!target)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    target = tempPlayer.transform;
+                }
+            }
+
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
@@ -202,6 +211,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
         //    return;
 
         DisplayVisionRange(angle);
+        DisplayVisionRange(360f, 2f);
         DisplayAttackRange(angle);
         DisplayInfos();
     }

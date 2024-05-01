@@ -95,8 +95,19 @@ public class KlopsStateMachine : Mobs, IKlops
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
+
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
+
+            if (!player)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    player = tempPlayer;
+                }
+            }
+
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
@@ -140,6 +151,7 @@ public class KlopsStateMachine : Mobs, IKlops
         Animator.ResetTrigger("Death");
         Animator.SetTrigger("Death");
     }
+
     #region EDITOR
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -148,6 +160,7 @@ public class KlopsStateMachine : Mobs, IKlops
             return;
 
         DisplayVisionRange(VisionAngle, 3.0f);
+        DisplayVisionRange(360f, 2f);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
         DisplayWanderZone();

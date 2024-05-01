@@ -116,6 +116,15 @@ public class PestStateMachine : Mobs, IPest
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity ? playerEntity.transform : null;
 
+            if (!player)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    player = tempPlayer.transform;
+                }
+            }
+
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
@@ -174,6 +183,7 @@ public class PestStateMachine : Mobs, IPest
             return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayVisionRange(360f, 2f);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
         DisplayWanderZone();
