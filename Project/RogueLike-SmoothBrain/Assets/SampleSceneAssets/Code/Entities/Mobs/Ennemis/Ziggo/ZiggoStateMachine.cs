@@ -3,6 +3,7 @@ using StateMachine; // include all script about stateMachine
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using UnityEngine.VFX;
 
 #if UNITY_EDITOR
 using UnityEditor;

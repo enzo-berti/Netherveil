@@ -2,12 +2,17 @@ using System.Collections;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class ZiggoProjectile : MonoBehaviour
 {
     Hero player;
     float effectCooldown = 0f;
     float flaqueRadius = 0f;
+
+    public float FlaqueRadius { get => flaqueRadius; }
+    public VisualEffect PoisonPuddleVFX;
+    public VisualEffect PoisonBallVFX;
 
     private void OnEnable()
     {

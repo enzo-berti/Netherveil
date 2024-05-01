@@ -9,6 +9,7 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         : base(currentContext, currentFactory) { }
 
     private bool attackEnded;
+    private float puddleDuration = 1.5f;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -88,6 +89,12 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
 
         yield return new WaitForSeconds(timeToThrow);
 
+        projectile.PoisonBallVFX.gameObject.SetActive(false);
+        projectile.PoisonPuddleVFX.SetFloat("Duration", puddleDuration);
+        //this is because vfx size is based on plane size which is 5 unity units
+        float planeLength = 5f;
+        projectile.PoisonPuddleVFX.SetFloat("Diameter", projectile.FlaqueRadius * 2 / planeLength);
+        projectile.PoisonPuddleVFX.Play();
         // Splatter
         float maxDiameter = 20f;
         float maxThickness = 0.2f;
@@ -112,8 +119,10 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         projectile.UpdateRadius();
 
         attackEnded = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(puddleDuration);
 
+        projectile.PoisonPuddleVFX.Stop();
+        projectile.PoisonBallVFX.gameObject.SetActive(true);
         Context.Projectile.transform.parent = originalParent;
         Context.Projectile.transform.localPosition = Vector3.zero;
         Context.Projectile.transform.localScale = Vector3.one;
