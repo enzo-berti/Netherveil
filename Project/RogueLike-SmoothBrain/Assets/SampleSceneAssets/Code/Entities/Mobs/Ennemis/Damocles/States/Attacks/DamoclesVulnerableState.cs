@@ -1,7 +1,5 @@
 using StateMachine; // include all scripts about StateMachines
-using StateMachine; // include all scripts about StateMachines
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
@@ -17,11 +15,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        if (Context.IsDeath)
-        {
-            SwitchState(Factory.GetState<DamoclesDeathState>());
-        }
-        else if (stateEnded)
+        if (stateEnded)
         {
             stateEnded = false;
             SwitchState(Factory.GetState<DamoclesEnGardeState>());
