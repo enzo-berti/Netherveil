@@ -67,7 +67,6 @@ namespace Map
             roomData = new RoomData(room, enemies);
             if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
             {
-                Debug.Log("huh?");
                 EnterEvents();
             }
         }
@@ -101,7 +100,7 @@ namespace Map
 
             MapUtilities.currentRoomData = roomData;
             MapUtilities.nbEnterRoomByType[MapUtilities.currentRoomData.Type] += 1;
-            Debug.Log(MapUtilities.nbEnterRoomByType[MapUtilities.currentRoomData.Type] + " " + MapUtilities.currentRoomData.Type);
+
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
 
