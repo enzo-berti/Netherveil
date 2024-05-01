@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.SceneManagement;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace PrefabLightMapBaker
@@ -48,6 +49,13 @@ namespace PrefabLightMapBaker
 
         void OnEnable()
         {
+#if UNITY_EDITOR
+            if (PrefabStageUtility.GetCurrentPrefabStage())
+            {
+                return;
+            }
+#endif
+
             if (!Application.isPlaying || SceneManager.loadedSceneCount > 0)
             {
                 BakeApply();
