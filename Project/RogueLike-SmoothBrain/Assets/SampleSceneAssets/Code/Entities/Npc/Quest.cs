@@ -30,7 +30,7 @@ public abstract class Quest
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
         RoomUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen += CheckQuestFinished;
-        RoomUtilities.onEarlyEnter += CheckQuestFinished;
+        RoomUtilities.onEnter += CheckQuestFinished;
         Hero.OnQuestObtained += CheckQuestFinished;
     }
 
@@ -69,13 +69,14 @@ public abstract class Quest
         {
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
+
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
         Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
         OnQuestFinished?.Invoke();
 
         RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        RoomUtilities.onEarlyEnter -= CheckQuestFinished;
+        RoomUtilities.onEnter -= CheckQuestFinished;
         Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
@@ -99,7 +100,8 @@ public abstract class Quest
         player.CurrentQuest = null;
         RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        RoomUtilities.onEarlyEnter -= CheckQuestFinished;
+        RoomUtilities.onEnter -= CheckQuestFinished;
+        Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
     protected abstract bool IsQuestFinished();

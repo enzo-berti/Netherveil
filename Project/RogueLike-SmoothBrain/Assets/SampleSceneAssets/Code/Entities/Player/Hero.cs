@@ -101,8 +101,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
 
         OnAttackHit += ApplyLifeSteal;
-        RoomUtilities.onAllEnemiesDead += ChangeStatsBasedOnAlignment;
-        RoomUtilities.onAllChestOpen += ChangeStatsBasedOnAlignment;
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
@@ -112,8 +110,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void OnDestroy()
     {
         OnAttackHit -= ApplyLifeSteal;
-        RoomUtilities.onAllEnemiesDead -= ChangeStatsBasedOnAlignment;
-        RoomUtilities.onAllChestOpen -= ChangeStatsBasedOnAlignment;
         FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
