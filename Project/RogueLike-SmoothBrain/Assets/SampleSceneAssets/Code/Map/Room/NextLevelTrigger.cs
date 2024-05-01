@@ -13,6 +13,12 @@ namespace Map
 
                 MapGenerator mapGen = FindObjectOfType<MapGenerator>();
 
+                if (mapGen.stage == 2)
+                {
+                    FindObjectOfType<LevelLoader>().LoadScene("endScreen", true);
+                    return;
+                }
+
                 mapGen.DestroyMap();
                 mapGen.generate = true;
             }
