@@ -37,6 +37,9 @@ public class PestStateMachine : Mobs, IPest
     private int chargeOutHash;
     private int deathHash;
 
+    // charge attaque
+    [SerializeField] float attackChargeDuration = 0.65f;
+
     // getters and setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -55,6 +58,7 @@ public class PestStateMachine : Mobs, IPest
     public float idleTimer { set => dashTimer = value; }
     public float MovementDelay { get => (currentState is PestTriggeredState ? 1.5f : 1.8f); }
     public bool CanMove { get => dashTimer > MovementDelay; }
+    public float AttackChargeDuration { get => attackChargeDuration; }
 
     protected override void Start()
     {

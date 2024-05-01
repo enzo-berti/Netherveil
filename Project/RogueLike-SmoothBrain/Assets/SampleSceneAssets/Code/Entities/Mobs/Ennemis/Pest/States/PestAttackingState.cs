@@ -20,7 +20,6 @@ public class PestAttackingState : BaseState<PestStateMachine>
     private State curState = State.Start;
     private float elapsedTimeState = 0.0f;
 
-    private float chargeDuration = 0.65f;
     private float rechargeDuration = 0.5f;
 
     private float dashDistance = 0.0f;
@@ -89,7 +88,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
         else if (curState == State.Charge)
         {
             elapsedTimeState += Time.deltaTime;
-            if (elapsedTimeState >= chargeDuration)
+            if (elapsedTimeState >= Context.AttackChargeDuration)
             {
                 elapsedTimeState = 0.0f;
                 curState = State.Dash;
@@ -110,7 +109,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
                 Context.Animator.ResetTrigger(Context.ChargeOutHash);
                 Context.Animator.SetTrigger(Context.ChargeOutHash);
             }
-            else if (elapsedTimeState <= chargeDuration - 0.2f)
+            else if (elapsedTimeState <= Context.AttackChargeDuration - 0.2f)
             {
                 Vector3 positionToLookAt = new Vector3(playerPos.x, Context.transform.position.y, playerPos.z);
                 LookAt(positionToLookAt, 10f);
