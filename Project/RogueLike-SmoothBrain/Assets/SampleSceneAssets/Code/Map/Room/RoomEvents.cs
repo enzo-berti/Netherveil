@@ -67,6 +67,7 @@ namespace Map
             roomData = new RoomData(room, enemies);
             if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
             {
+                Debug.Log("huh?");
                 EnterEvents();
             }
         }
@@ -85,11 +86,13 @@ namespace Map
             enterRoomCalled = true;
 
             // local events
+            // set all elements to the map layer now that we can see them
             foreach (var c in room.GetComponentsInChildren<MapLayer>())
             {
                 c.Set();
             }
 
+            // activate ui
             var roomUI = room.GetComponentInChildren<RoomUI>(true);
             if (roomUI)
             {
@@ -98,6 +101,7 @@ namespace Map
 
             MapUtilities.currentRoomData = roomData;
             MapUtilities.nbEnterRoomByType[MapUtilities.currentRoomData.Type] += 1;
+            Debug.Log(MapUtilities.nbEnterRoomByType[MapUtilities.currentRoomData.Type] + " " + MapUtilities.currentRoomData.Type);
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
 
@@ -121,12 +125,12 @@ namespace Map
 
         private void AllEnemiesEvents()
         {
+            // local events
+            allEnemiesDeadCalled = true;
+
             // global events
             MapUtilities.onEarlyAllEnemiesDead?.Invoke();
             MapUtilities.onAllEnemiesDead?.Invoke();
-
-            // local events
-            allEnemiesDeadCalled = true;
         }
 
         private void FixedUpdate()

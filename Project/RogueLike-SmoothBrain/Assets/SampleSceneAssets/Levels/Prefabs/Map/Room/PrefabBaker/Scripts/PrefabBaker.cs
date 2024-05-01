@@ -71,10 +71,9 @@ namespace PrefabLightMapBaker
 
             if (!BakeApplied)
             {
-                Debug.Log("BAAAAAAAKE");
                 if (Utils.Apply(this))
                 {
-                    Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene", gameObject);
+                    //Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene", gameObject);
                 }
             }
         }
