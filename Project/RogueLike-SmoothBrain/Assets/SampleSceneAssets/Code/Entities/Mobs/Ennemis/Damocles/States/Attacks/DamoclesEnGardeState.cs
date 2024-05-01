@@ -16,24 +16,35 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
 
     float travelledTime = 0f;
     int directionFactor = 1;
+    float stateTimer;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) >= Context.Stats.GetValue(Stat.VISION_RANGE) * 2 / 3)
-        {
-            SwitchState(Factory.GetState<DamoclesTriggeredState>());
-        }
-        else if (stateEnded)
+        if (stateEnded)
         {
             SwitchState(Factory.GetState<DamoclesJumpAttackState>());
+            return;
         }
+
+        if (Context.Player)
+        {
+            if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) >= Context.Stats.GetValue(Stat.VISION_RANGE) * 2 / 3)
+            {
+                SwitchState(Factory.GetState<DamoclesTriggeredState>());
+            }
+        }
+        else
+        {
+            SwitchState(Factory.GetState<DamoclesWanderingState>());
+        }
+
     }
 
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-        elapsedTimeMovement = Time.time;
+        stateTimer = 0f;
         stateEnded = false;
         Context.Stats.IncreaseValue(Stat.SPEED, 2);
         Context.IsInvincibleCount = 1;
@@ -49,7 +60,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
-
+        stateTimer += Time.deltaTime;
         //if (isTimerIncreasing)
         //{
         //    timerForCircle += Time.deltaTime;
@@ -81,12 +92,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         }
         Context.MoveTo(Context.Player.transform.position + playerToMob + new Vector3(-playerToMob.normalized.z, 0, playerToMob.normalized.x) * directionFactor);
 
-        // Delay
-        if (Time.time - elapsedTimeMovement < guardTime)
-            return;
-
-        elapsedTimeMovement = Time.time;
-        stateEnded = true;
+        stateEnded = stateTimer >= guardTime;
     }
 
     // This method will be call on state changement.

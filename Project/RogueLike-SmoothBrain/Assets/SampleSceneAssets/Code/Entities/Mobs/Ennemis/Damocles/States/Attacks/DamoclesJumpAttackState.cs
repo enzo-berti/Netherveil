@@ -49,7 +49,6 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
             stateEnded = false;
             SwitchState(Factory.GetState<DamoclesVulnerableState>());
         }
-
     }
 
     // This method will be call only one time before the update.

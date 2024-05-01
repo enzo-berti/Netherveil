@@ -121,7 +121,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     {
         if (IsInvincibleCount == 0)
         {
-            ApplyDamagesMob(_value, damoclesSounds.hitSound, Death, notEffectDamage);
+            ApplyDamagesMob(_value, damoclesSounds.takeDamageSound, Death, notEffectDamage);
         }
         else
         {

@@ -17,14 +17,17 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     {
         if (stateEnded)
         {
-            stateEnded = false;
-            SwitchState(Factory.GetState<DamoclesEnGardeState>());
+            if (Context.Player)
+                SwitchState(Factory.GetState<DamoclesTriggeredState>());
+            else
+                SwitchState(Factory.GetState<DamoclesWanderingState>());
         }
     }
 
     // This method will be called only once before the update.
     protected override void EnterState()
     {
+        stateEnded = false;
         elapsedTimeMovement = Time.time;
         Context.IsInvincibleCount = 0;
         basePos = Context.transform.position;
