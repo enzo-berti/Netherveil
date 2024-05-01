@@ -18,6 +18,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
         public Sound hitSound;
         public Sound eatSound;
         public Sound spitSound;
+        public Sound splatterSound;
     }
 
     public enum ZiggoAttacks

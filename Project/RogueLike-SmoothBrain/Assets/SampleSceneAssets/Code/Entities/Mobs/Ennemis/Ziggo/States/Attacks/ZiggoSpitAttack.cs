@@ -94,6 +94,8 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         float coeff = 20 / (1 - maxThickness);
         float speed = 3f;
 
+        Context.Sounds.splatterSound.Play(Context.Projectile.transform.position);
+
         do
         {
             yield return null;
@@ -105,6 +107,7 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
             Context.Projectile.transform.localScale = scale;
 
         } while (Context.Projectile.transform.localScale.x != maxDiameter || Context.Projectile.transform.localScale.y != maxThickness);
+
 
         projectile.UpdateRadius();
 
