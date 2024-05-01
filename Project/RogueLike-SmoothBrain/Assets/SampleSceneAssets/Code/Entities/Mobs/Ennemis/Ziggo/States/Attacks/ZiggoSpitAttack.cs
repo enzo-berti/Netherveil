@@ -128,7 +128,7 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         projectile.PoisonBallVFX.gameObject.SetActive(true);
         Context.Projectile.transform.parent = originalParent;
         Context.Projectile.transform.localPosition = Vector3.zero;
-        Context.Projectile.transform.localScale = Vector3.one;
+        Context.Projectile.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         Context.Projectile.SetActive(false);
     }
 }
