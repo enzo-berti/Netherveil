@@ -25,9 +25,9 @@ public class DungeonsLimits : Quest
                 break;
         }
 
-        currentNumber = (int)((float)RoomUtilities.NbEnterRoom / RoomUtilities.NbRoom * 100f);
+        currentNumber = (int)((float)MapUtilities.NbEnterRoom / MapUtilities.NbRoom * 100f);
         progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
-        RoomUtilities.onEarlyEnter += UpdateCount;
+        MapUtilities.onEarlyEnter += UpdateCount;
         UpdateCount();
     }
 
@@ -39,14 +39,14 @@ public class DungeonsLimits : Quest
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        RoomUtilities.onEarlyEnter -= UpdateCount;
+        MapUtilities.onEarlyEnter -= UpdateCount;
     }
 
     private void UpdateCount()
     {
         if (!IsQuestFinished())
         {
-            currentNumber = (int)((float)RoomUtilities.NbEnterRoom / RoomUtilities.NbRoom * 100f);
+            currentNumber = (int)((float)MapUtilities.NbEnterRoom / MapUtilities.NbRoom * 100f);
             progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
         }
 

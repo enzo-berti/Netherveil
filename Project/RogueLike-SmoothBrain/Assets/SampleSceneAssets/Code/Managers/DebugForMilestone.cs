@@ -13,14 +13,14 @@ public class DebugForMilestone : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Keypad2))
         {
-            foreach(var enemy in RoomUtilities.roomData.enemies)
+            foreach(var enemy in MapUtilities.currentRoomData.enemies)
             {
                 if (enemy != null)
                 {
                     enemy.GetComponentInChildren<IDamageable>().Death();
                 }
             }
-            RoomUtilities.roomData.enemies.Clear();
+            MapUtilities.currentRoomData.enemies.Clear();
         }
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {

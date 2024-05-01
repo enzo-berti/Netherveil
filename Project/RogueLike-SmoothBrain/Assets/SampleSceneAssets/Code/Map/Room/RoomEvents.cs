@@ -76,8 +76,8 @@ namespace Map
             allChestsOpenCalled = true;
 
             // global events
-            RoomUtilities.onEarlyAllChestOpen?.Invoke();
-            RoomUtilities.onAllChestOpen?.Invoke();
+            MapUtilities.onEarlyAllChestOpen?.Invoke();
+            MapUtilities.onAllChestOpen?.Invoke();
         }
 
         private void EnterEvents()
@@ -96,14 +96,14 @@ namespace Map
                 roomUI.gameObject.SetActive(true);
             }
 
-            RoomUtilities.roomData = roomData;
-            RoomUtilities.nbEnterRoomByType[RoomUtilities.roomData.Type] += 1;
+            MapUtilities.currentRoomData = roomData;
+            MapUtilities.nbEnterRoomByType[MapUtilities.currentRoomData.Type] += 1;
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
 
             // global events
-            RoomUtilities.onEarlyEnter?.Invoke();
-            RoomUtilities.onEnter?.Invoke();
+            MapUtilities.onEarlyEnter?.Invoke();
+            MapUtilities.onEnter?.Invoke();
         }
 
         private void ExitEvents()
@@ -115,15 +115,15 @@ namespace Map
             enemies.SetActive(false);
 
             // global events
-            RoomUtilities.onEarlyExit?.Invoke();
-            RoomUtilities.onExit?.Invoke();
+            MapUtilities.onEarlyExit?.Invoke();
+            MapUtilities.onExit?.Invoke();
         }
 
         private void AllEnemiesEvents()
         {
             // global events
-            RoomUtilities.onEarlyAllEnemiesDead?.Invoke();
-            RoomUtilities.onAllEnemiesDead?.Invoke();
+            MapUtilities.onEarlyAllEnemiesDead?.Invoke();
+            MapUtilities.onAllEnemiesDead?.Invoke();
 
             // local events
             allEnemiesDeadCalled = true;
