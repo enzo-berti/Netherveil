@@ -679,7 +679,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7755107702242594781}
-  m_LocalRotation: {x: -0.23903453, y: -0.37829724, z: 0.10177626, w: -0.88847923}
+  m_LocalRotation: {x: -0.1981928, y: -0.3328485, z: 0.071773246, w: -0.91911924}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
@@ -869,11 +869,48 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3511053266741062863, guid: d1035c390027d9644b668129ba20e0f8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6060314955054506424}
   m_SourcePrefab: {fileID: 100100000, guid: d1035c390027d9644b668129ba20e0f8, type: 3}
+--- !u!2083052967 &243836547776321622 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 574162959129392476, guid: d1035c390027d9644b668129ba20e0f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 330344038214348042}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3759479230140531141 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3511053266741062863, guid: d1035c390027d9644b668129ba20e0f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 330344038214348042}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6060314955054506424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3759479230140531141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ee897ec1993f34085a10ce9c5788d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flaqueRadius: 0
+  PoisonPuddleVFX: {fileID: 243836547776321622}
+  PoisonBallVFX: {fileID: 7662357586842977573}
 --- !u!4 &5067376820320960437 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4811936196012298943, guid: d1035c390027d9644b668129ba20e0f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 330344038214348042}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &7662357586842977573 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 7981424758613125167, guid: d1035c390027d9644b668129ba20e0f8,
     type: 3}
   m_PrefabInstance: {fileID: 330344038214348042}
   m_PrefabAsset: {fileID: 0}
