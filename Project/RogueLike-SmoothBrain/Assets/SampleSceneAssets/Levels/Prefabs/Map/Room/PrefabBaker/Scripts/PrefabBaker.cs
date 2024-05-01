@@ -48,7 +48,7 @@ namespace PrefabLightMapBaker
 
         void OnEnable()
         {
-            if (!Application.isPlaying)
+            if (!Application.isPlaying || SceneManager.loadedSceneCount > 0)
             {
                 BakeApply();
             }
@@ -69,11 +69,13 @@ namespace PrefabLightMapBaker
                 return;
             }
 
+            Debug.Log("wow");
+
             if (!BakeApplied)
             {
                 if (Utils.Apply(this))
                 {
-                    //Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene", gameObject);
+                    Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene", gameObject);
                 }
             }
         }
