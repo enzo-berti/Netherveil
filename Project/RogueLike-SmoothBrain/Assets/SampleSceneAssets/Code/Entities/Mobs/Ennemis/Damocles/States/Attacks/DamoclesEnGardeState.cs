@@ -69,7 +69,10 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         Vector3 playerToMob = Context.transform.position - Context.Player.transform.position;
         playerToMob.y = 0f;
 
-        Context.transform.LookAt(Context.Player.transform.position);
+        Vector3 lookPosition = Context.Player.transform.position;
+        lookPosition.y = Context.transform.position.y;
+        Context.transform.LookAt(lookPosition);
+
         travelledTime += Time.deltaTime;
         if (travelledTime >= 1f)
         {

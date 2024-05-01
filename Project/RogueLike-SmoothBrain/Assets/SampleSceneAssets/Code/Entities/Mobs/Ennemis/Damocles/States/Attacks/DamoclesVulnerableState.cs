@@ -28,7 +28,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
         elapsedTimeMovement = Time.time;
         Context.IsInvincibleCount = 0;
         basePos = Context.transform.position;
-        wantedPos = new Vector3(basePos.x, 0f, basePos.z);
+        wantedPos = new Vector3(basePos.x, Utilities.Hero.transform.position.y, basePos.z);
         Context.StartCoroutine(TryToUnlock());
     }
 
