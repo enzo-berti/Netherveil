@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3432769091263615657}
   - component: {fileID: 2556291432144467190}
   - component: {fileID: 350844310803928559}
+  - component: {fileID: 2255973383980248591}
   m_Layer: 0
   m_Name: VFX_PoisonPuddle
   m_TagString: Untagged
@@ -120,3 +121,21 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &2255973383980248591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3524256824821264529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93677b87523a3ae448f869b9f85f39b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: 2556291432144467190}
+  destroyOnStop: 0
+  destroyDurationDelay: 0
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
