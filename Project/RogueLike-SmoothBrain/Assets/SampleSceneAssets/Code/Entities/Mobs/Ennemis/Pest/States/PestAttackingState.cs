@@ -51,7 +51,10 @@ public class PestAttackingState : BaseState<PestStateMachine>
     {
         curState = State.Start;
         elapsedTimeState = 0.0f;
+        dashDistance = 0f;
+        attackEnded = false;
         playerPos = Context.Player.position;
+        dashRoutine = null;
     }
 
     // This method will be call only one time after the last update.
@@ -84,6 +87,7 @@ public class PestAttackingState : BaseState<PestStateMachine>
 
             Context.Animator.ResetTrigger(Context.ChargeInHash);
             Context.Animator.SetTrigger(Context.ChargeInHash);
+            elapsedTimeState = 0f;
         }
         else if (curState == State.Charge)
         {

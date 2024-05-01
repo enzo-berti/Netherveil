@@ -60,6 +60,8 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
     protected override void ExitState()
     {
         Context.Agent.isStopped = false;
+        stompDelay = 0f;
+        punchDelay = 0f;
     }
 
     // This method will be call every frame.

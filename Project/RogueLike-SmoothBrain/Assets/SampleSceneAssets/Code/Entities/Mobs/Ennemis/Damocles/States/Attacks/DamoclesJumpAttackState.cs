@@ -40,11 +40,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        if (Context.IsDeath)
-        {
-            SwitchState(Factory.GetState<DamoclesDeathState>());
-        }
-        else if (isTargetTouched && stateEnded)
+        if (isTargetTouched && stateEnded)
         {
             SwitchState(Factory.GetState<DamoclesEnGardeState>());
         }
@@ -69,7 +65,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-        
+
     }
 
     // This method will be call every frame.
@@ -77,18 +73,18 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
     {
         if (curState == State.Start)
         {
-            Vector3 positionToLookAt = new Vector3(Context.Target.position.x, Context.transform.position.y, Context.Target.position.z);
+            Vector3 positionToLookAt = new Vector3(Context.Player.transform.position.x, Context.transform.position.y, Context.Player.transform.position.z);
             Context.transform.LookAt(positionToLookAt);
             curState = State.Jump;
-            previousPos = Context.gameObject.transform.position;    
-            jumpTarget = Context.Target.gameObject.transform.position;
+            previousPos = Context.gameObject.transform.position;
+            jumpTarget = Context.Player.gameObject.transform.position;
             baseRotation = Context.gameObject.transform.rotation;
         }
         else if (curState == State.RunIn)
         {
             Context.MoveTo(jumpTarget);
 
-            if (Vector3.Distance(Context.transform.position, Context.Target.transform.position) < Context.Stats.GetValue(Stat.ATK_RANGE) / 2)
+            if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) < Context.Stats.GetValue(Stat.ATK_RANGE) / 2)
             {
                 Context.Stats.SetValue(Stat.SPEED, 3);
                 curState = State.Jump;
@@ -98,7 +94,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         {
             if (!jumpRoutineOn)
             {
-               Context.StartCoroutine(JumpCoroutine(jumpTarget));
+                Context.StartCoroutine(JumpCoroutine(jumpTarget));
             }
             if (isTargetTouched)
             {
@@ -138,10 +134,10 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         float b = -a;
         float c = previousPos.y;
 
-        float timerWanted = MathsExtension.Resolve2ndDegree(a, b, c, -0.25f).Max();
+        float timerWanted = MathsExtension.Resolve2ndDegree(a, b, c, posToReach.y - 0.25f).Max();
         Context.Animator.SetTrigger("Jump");
-        
-        while(timer < timerWanted)
+
+        while (timer < timerWanted)
         {
             Context.gameObject.transform.rotation = baseRotation;
             timer += Time.deltaTime;
@@ -171,7 +167,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         }
 
         yield return null;
-        
+
     }
 
 }

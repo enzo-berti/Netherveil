@@ -34,13 +34,12 @@ public class DamoclesStateMachine : Mobs, IDamocles
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     [SerializeField] private DamoclesSounds damoclesSounds;
-    [SerializeField, Range(0f, 360f)] private float angle = 180.0f;
+    [SerializeField, Range(0f, 360f)] private float defaultVisionAngle = 180.0f;
     [SerializeField] private BoxCollider attack1Collider;
     [SerializeField] private BoxCollider attack2Collider;
     [SerializeField] private BoxCollider attack3Collider;
 
-    private Transform target;
-    private bool isDeath = false;
+    private Hero player;
 
     // animation hash
     private int deathHash;
@@ -55,23 +54,17 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public BoxCollider Attack1Collider { get => attack1Collider; }
     public BoxCollider Attack2Collider { get => attack2Collider; }
     public BoxCollider Attack3Collider { get => attack3Collider; }
-    public Transform Target { get => target; set => target = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 10.0f; }
-    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
-    public bool IsDeath { get => isDeath; }
+    public Hero Player { get => player; }
     public DamoclesSounds DamoclesSound { get => damoclesSounds; }
-
+    public float VisionAngle { get => currentState is DamoclesWanderingState || (currentState is DamoclesTriggeredState && !player) ? defaultVisionAngle : 360f; }
+    public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is not DamoclesWanderingState ? 1.25f : 1f); }
 
     protected override void Start()
     {
         base.Start();
 
         factory = new StateFactory<DamoclesStateMachine>(this);
-        // Set currentState here !
-        currentState = factory.GetState<DamoclesIdle>();
-
-        // common initialization
-
+        currentState = factory.GetState<DamoclesWanderingState>();
 
         // hashing animation
         deathHash = Animator.StringToHash("Death");
@@ -102,22 +95,21 @@ public class DamoclesStateMachine : Mobs, IDamocles
                 continue;
             }
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, angle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, defaultVisionAngle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
                     .ToArray();
 
-            Entity targetE = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
-            if (targetE != null)
-                target = targetE.transform;
+            Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
+            player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
 
-            if (!target)
+            if (!player)
             {
                 Hero tempPlayer = Utilities.Hero;
                 if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
                 {
-                    target = tempPlayer.transform;
+                    player = tempPlayer;
                 }
             }
 
@@ -178,10 +170,11 @@ public class DamoclesStateMachine : Mobs, IDamocles
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Hero.OnKill?.Invoke(this);
+
         damoclesSounds.deathSound.Play(transform.position);
+
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
-        isDeath = true;
 
         currentState = factory.GetState<DamoclesDeathState>();
     }
@@ -210,9 +203,9 @@ public class DamoclesStateMachine : Mobs, IDamocles
         //if (!Selection.Contains(gameObject))
         //    return;
 
-        DisplayVisionRange(angle);
+        DisplayVisionRange(VisionAngle, VisionRange);
         DisplayVisionRange(360f, 2f);
-        DisplayAttackRange(angle);
+        DisplayAttackRange(VisionAngle);
         DisplayInfos();
     }
 
