@@ -126,6 +126,16 @@ public class ZiggoStateMachine : Mobs, IZiggo
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
 
+
+            if (!player)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    player = tempPlayer;
+                }
+            }
+
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
@@ -232,6 +242,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
             return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayVisionRange(360f, 2f);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
     }
