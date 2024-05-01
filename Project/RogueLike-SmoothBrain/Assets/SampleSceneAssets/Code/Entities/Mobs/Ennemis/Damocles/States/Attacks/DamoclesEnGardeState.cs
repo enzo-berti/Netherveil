@@ -90,6 +90,12 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
             travelledTime = 0f;
             directionFactor = -directionFactor;
         }
+
+        if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), new Vector3(-playerToMob.normalized.z, 0, playerToMob.normalized.x), directionFactor, LayerMask.GetMask("Map")))
+        {
+            directionFactor = -directionFactor;
+        }
+
         Context.MoveTo(Context.Player.transform.position + playerToMob + new Vector3(-playerToMob.normalized.z, 0, playerToMob.normalized.x) * directionFactor);
 
         stateEnded = stateTimer >= guardTime;
