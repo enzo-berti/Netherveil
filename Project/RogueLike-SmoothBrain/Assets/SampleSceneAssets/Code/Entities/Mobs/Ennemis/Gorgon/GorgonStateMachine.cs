@@ -39,6 +39,8 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     Hero player = null;
     private int deathHash;
+    Coroutine dashCoroutine;
+
     ///
     private bool isDashing = false;
     private bool isSmoothCoroutineOn = false;
@@ -65,6 +67,7 @@ public class GorgonStateMachine : Mobs, IGorgon
     //private float DistanceToFlee { get => stats.GetValue(Stat.ATK_RANGE) / 1.5f; }
     public GameObject BombPrefab { get => bombPrefab; }
     public Transform Hand { get => hand; }
+    public Coroutine DashCoroutine { get => dashCoroutine; set => dashCoroutine = value; }
     public float VisionAngle { get => !canLoseAggro ? 360 : (currentState is GorgonTriggeredState || currentState is GorgonAttackingState) && player != null ? 360 : defaultVisionAngle; }
     public float VisionRange { get => !canLoseAggro ? Stats.GetValue(Stat.VISION_RANGE) * 1.25f : Stats.GetValue(Stat.VISION_RANGE) * (currentState is GorgonTriggeredState || currentState is GorgonAttackingState ? 1.25f : 1f); }
     public bool CanLoseAggro { set => canLoseAggro = value; }
@@ -173,6 +176,8 @@ public class GorgonStateMachine : Mobs, IGorgon
         animator.SetTrigger(deathHash);
 
         gorgonSounds.deathSFX.Play(transform.position);
+        if (dashCoroutine != null) StopCoroutine(dashCoroutine);
+
         currentState = factory.GetState<GorgonDeathState>();
     }
 
