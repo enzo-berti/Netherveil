@@ -85,7 +85,7 @@ public class ZiggoTriggeredState : BaseState<ZiggoStateMachine>
             Quaternion lookRotation = Quaternion.LookRotation(pointToReach, Context.transform.position);
             lookRotation.x = 0;
             lookRotation.z = 0;
-            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
+            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 20f * Time.deltaTime);
 
             Context.MoveTo(pointToReach);
         }
