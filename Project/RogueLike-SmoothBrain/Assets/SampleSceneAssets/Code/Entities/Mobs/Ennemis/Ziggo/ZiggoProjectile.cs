@@ -25,11 +25,20 @@ public class ZiggoProjectile : MonoBehaviour
         {
             if (Vector3.SqrMagnitude(player.transform.position - transform.position) <= flaqueRadius * flaqueRadius)
             {
-                player.AddStatus(new Poison(2f, 1));
+                Physics.OverlapSphere(transform.position, flaqueRadius, LayerMask.GetMask("Entity"))
+                    .Select(entity => entity.GetComponent<Hero>())
+                    .Where(entity => entity != null)
+                    .ToList()
+                    .ForEach(currentEntity =>
+                    {
+                        currentEntity.AddStatus(new Poison(2f, 1));
+                    });
+
                 effectCooldown = 0.5f;
             }
         }
         else effectCooldown -= Time.deltaTime;
+
     }
 
     public void ThrowToPos(Vector3 pos, float throwTime, float height)
