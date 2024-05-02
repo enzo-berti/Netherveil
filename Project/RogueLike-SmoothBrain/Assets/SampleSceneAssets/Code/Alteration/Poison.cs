@@ -9,6 +9,7 @@ public class Poison : OverTimeStatus
     {
         isStackable = true;
         frequency = duration/baseStack;
+        vfxName = "VFX_Poison";
     }
 
     public override bool CanApplyEffect(Entity target)
@@ -41,7 +42,6 @@ public class Poison : OverTimeStatus
 
     protected override void PlayStatus()
     {
-        PlayVfx("VFX_Poison");
         AddStack(baseStack - 1);
     }
 }

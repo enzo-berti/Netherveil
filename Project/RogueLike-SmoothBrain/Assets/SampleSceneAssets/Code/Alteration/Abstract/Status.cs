@@ -13,13 +13,14 @@ public abstract class Status
     public IAttacker launcher = null;
     public Entity target;
     private VisualEffect VFX;
+    protected string vfxName;
     public Status(float _duration, float _chance)
     {
         this.duration = _duration;
         this.statusChance = _chance;
         this.isFinished = false;
     }
-
+   
     public abstract Status DeepCopy();
 
     #region Properties
@@ -47,7 +48,6 @@ public abstract class Status
     public abstract bool CanApplyEffect(Entity target);
     public virtual void ApplyEffect(Entity target)
     {
-
         AddStack(1);
         PlayStatus();
         CoroutineManager.Instance.StartCoroutine(ManageStack());
@@ -65,8 +65,8 @@ public abstract class Status
     public int Stack { get => stack; }
     public virtual void AddStack(int nb)
     {
-        OnAddStack?.Invoke();
-
+        if ((isStackable && stack < maxStack) || stack < 1)
+            OnAddStack?.Invoke();
     }
     public void RemoveStack(int nb)
     {

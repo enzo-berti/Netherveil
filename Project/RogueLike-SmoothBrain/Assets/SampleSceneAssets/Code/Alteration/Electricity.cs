@@ -11,6 +11,7 @@ public class Electricity : OverTimeStatus
     {
         isStackable = false;
         frequency = 1.0f;
+        vfxName = "VFX_Electricity";
     }
     public override bool CanApplyEffect(Entity target)
     {
@@ -52,6 +53,5 @@ public class Electricity : OverTimeStatus
 
     protected override void PlayStatus()
     {
-        PlayVfx("VFX_Electricity");
     }
 }

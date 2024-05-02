@@ -10,6 +10,7 @@ public class Freeze : ConstantStatus
     public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
+        vfxName = "VFX_Frozen";
     }
 
     public override Status DeepCopy()
@@ -32,6 +33,7 @@ public class Freeze : ConstantStatus
     public override void OnFinished()
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
+        Debug.Log(baseAgentSpeed);
         target.isFreeze = false;
         target.GetComponentInChildren<Animator>().speed = 1;
         Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
@@ -62,7 +64,6 @@ public class Freeze : ConstantStatus
     
     private void PlayVFX()
     {
-        PlayVfx("VFX_Frozen");
 
         freezeMat = GameResources.Get<Material>("OutlineShaderMat");
         Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();

@@ -11,6 +11,7 @@ public class Fire : OverTimeStatus
     {
         frequency = 0.5f;
         isStackable = false;
+        vfxName = "VFX_Fire";
     }
     protected override void Effect()
     {
@@ -43,6 +44,5 @@ public class Fire : OverTimeStatus
     protected override void PlayStatus()
     {
         OnFire?.Invoke();
-        PlayVfx("VFX_Fire");
     }
 }
