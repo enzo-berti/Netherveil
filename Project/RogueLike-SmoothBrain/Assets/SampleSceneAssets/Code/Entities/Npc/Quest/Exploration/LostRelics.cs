@@ -9,10 +9,10 @@ public class LostRelics : Quest
     {
         base.AcceptQuest();
 
-        currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Treasure];
-        MAX_NUMBER = RoomUtilities.nbRoomByType[RoomType.Treasure];
+        currentNumber = MapUtilities.nbEnterRoomByType[RoomType.Treasure];
+        MAX_NUMBER = MapUtilities.nbRoomByType[RoomType.Treasure];
         progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
-        RoomUtilities.onEnter += UpdateCount;
+        MapUtilities.onEnter += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -23,14 +23,14 @@ public class LostRelics : Quest
     protected override void QuestFinished()
     {
         base.QuestFinished();
-        RoomUtilities.onEnter -= UpdateCount;
+        MapUtilities.onEnter -= UpdateCount;
     }
 
     private void UpdateCount()
     {
-        if (!IsQuestFinished() && RoomUtilities.roomData.Type == RoomType.Treasure)
+        if (!IsQuestFinished() && MapUtilities.currentRoomData.Type == RoomType.Treasure)
         {
-            currentNumber = RoomUtilities.nbEnterRoomByType[RoomType.Treasure];
+            currentNumber = MapUtilities.nbEnterRoomByType[RoomType.Treasure];
             progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
         }
         QuestUpdated();

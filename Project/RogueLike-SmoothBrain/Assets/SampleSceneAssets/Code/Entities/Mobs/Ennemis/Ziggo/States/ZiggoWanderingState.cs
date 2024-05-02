@@ -6,9 +6,7 @@ public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
     public ZiggoWanderingState(ZiggoStateMachine currentContext, StateFactory<ZiggoStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    Vector3 direction;
     float idleTimer = 0f;
-
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -23,6 +21,7 @@ public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
     protected override void EnterState()
     {
         Context.WanderZoneCenter = Context.transform.position;
+        idleTimer = Random.Range(-0.5f, 0.5f);
     }
 
     // This method will be called only once after the last update.
@@ -43,7 +42,7 @@ public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
             Context.Sounds.moveSound.Play(Context.transform.position);
         }
 
-        if (idleTimer > 1f)
+        if (idleTimer >= 1f)
         {
             float minRange = Context.Stats.GetValue(Stat.VISION_RANGE) / 4f;
             float maxRange = Context.Stats.GetValue(Stat.VISION_RANGE) / 2f;

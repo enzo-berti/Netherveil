@@ -25,6 +25,7 @@ public class TearOfZeus : ItemEffect, IPassiveItem
     private void DropTear(Vector3 playerPos)
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        AudioManager.Instance.PlaySound(AudioManager.Instance.ThunderstrikeSFX, playerPos);
 
         thunderstrikeVFX.transform.position = playerPos;
         thunderstrikeCollider.transform.position = playerPos;

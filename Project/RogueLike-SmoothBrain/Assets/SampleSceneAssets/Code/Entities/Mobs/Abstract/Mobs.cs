@@ -7,6 +7,7 @@ using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -49,12 +50,12 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        RoomUtilities.onEarlyEnter += OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter += OnEarlyEnterRoom;
     }
 
     protected virtual void OnDisable()
     {
-        RoomUtilities.onEarlyEnter -= OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter -= OnEarlyEnterRoom;
     }
 
     protected override void Start()
@@ -134,7 +135,7 @@ public abstract class Mobs : Entity
             }
         }
 
-       SpawningMatManagement();
+        SpawningMatManagement();
     }
 
     protected override void Update()
@@ -151,7 +152,7 @@ public abstract class Mobs : Entity
         if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -100f)
         {
             GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
-            RoomUtilities.roomData.enemies.Add(clone);
+            MapUtilities.currentRoomData.enemies.Add(clone);
         }
     }
 
@@ -287,9 +288,8 @@ public abstract class Mobs : Entity
 
         for (int i = 0; i < 3; i++)
         {
-            bool validPoint = true;
-
             Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
+            randomDirection2D.Normalize();
             randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, _maxTravelDistance);
             randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
 
@@ -297,17 +297,18 @@ public abstract class Mobs : Entity
             {
                 if (Physics.Raycast(_unitPos + new Vector3(0, 1, 0), randomDirection3D.normalized, randomDirection3D.magnitude, LayerMask.GetMask("Map")))
                 {
-                    validPoint = false;
+                    wanderZone.center = transform.position;
+                    continue;
                 }
             }
 
-            if ((_unitPos + randomDirection3D - wanderZone.center).sqrMagnitude < wanderZone.radius * wanderZone.radius && validPoint)
+            if ((_unitPos + randomDirection3D - wanderZone.center).sqrMagnitude < wanderZone.radius * wanderZone.radius)
             {
                 return _unitPos + randomDirection3D;
             }
         }
 
-        return (_unitPos - wanderZone.center).normalized * _minTravelDistance;
+        return (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
     }
 
 #if UNITY_EDITOR

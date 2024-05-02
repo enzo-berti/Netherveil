@@ -93,7 +93,10 @@ public class ControlsSettingsPart : MenuPart
     public void BackKeybinding()
     {
         GlobalPart.part.SetActive(true);
-        currentKeysPart.part.SetActive(false);
+
+        if (currentKeysPart != null) 
+            currentKeysPart.part.SetActive(false);
+
         EventSystem.current.SetSelectedGameObject(GlobalPart.firstSelection);
     }
 }

@@ -9,9 +9,15 @@ namespace Map
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                RoomUtilities.onFinishStage?.Invoke();
+                MapUtilities.onFinishStage?.Invoke();
 
                 MapGenerator mapGen = FindObjectOfType<MapGenerator>();
+
+                if (mapGen.stage == 2)
+                {
+                    FindObjectOfType<LevelLoader>().LoadScene("endScreen", true);
+                    return;
+                }
 
                 mapGen.DestroyMap();
                 mapGen.generate = true;

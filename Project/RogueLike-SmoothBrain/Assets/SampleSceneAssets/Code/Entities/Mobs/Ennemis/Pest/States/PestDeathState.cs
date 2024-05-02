@@ -13,7 +13,7 @@ public class PestDeathState : BaseState<PestStateMachine>
 
     protected override void EnterState()
     {
-        Context.Agent.enabled = false;
+        Context.Agent.isStopped = false;
     }
 
     protected override void ExitState()
@@ -23,7 +23,7 @@ public class PestDeathState : BaseState<PestStateMachine>
 
     protected override void UpdateState()
     {
-
+        Context.Agent.isStopped = true;
     }
 
     protected override void SwitchState(BaseState<PestStateMachine> newState)

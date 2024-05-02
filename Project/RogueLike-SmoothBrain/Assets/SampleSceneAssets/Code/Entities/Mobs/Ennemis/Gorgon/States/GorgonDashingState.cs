@@ -9,7 +9,6 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
         : base(currentContext, currentFactory) { }
 
     bool dashLaunched = false;
-    Coroutine dashCoroutine = null;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -38,7 +37,7 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
         pointToReach3D = hit.position;
 
         List<Vector3> listDashes = GetDashesPath(pointToReach3D, 3);
-        dashCoroutine = Context.StartCoroutine(Context.DashToPos(listDashes));
+        Context.DashCoroutine = Context.StartCoroutine(Context.DashToPos(listDashes));
 
         dashLaunched = true;
     }
@@ -49,7 +48,7 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
         dashLaunched = false;
         Context.CanLoseAggro = true;
         Context.DashCooldown = 0f;
-        Context.StopCoroutine(dashCoroutine);
+        Context.StopCoroutine(Context.DashCoroutine);
     }
 
     // This method will be called every frame.

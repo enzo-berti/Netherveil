@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
 
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
-        RoomUtilities.onFinishStage += ResetStageDependentValues;
+        MapUtilities.onFinishStage += ResetStageDependentValues;
     }
 
     private void ResetStageDependentValues()
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        RoomUtilities.onFinishStage -= ResetStageDependentValues;
+        MapUtilities.onFinishStage -= ResetStageDependentValues;
     }
 
     private void Update()

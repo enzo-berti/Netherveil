@@ -43,7 +43,7 @@ public class GameOver : MonoBehaviour
 
     private void DisableAllMob()
     {
-        foreach (GameObject enemy in RoomUtilities.roomData.enemies)
+        foreach (GameObject enemy in MapUtilities.currentRoomData.enemies)
         {
             if (enemy != null)
             {

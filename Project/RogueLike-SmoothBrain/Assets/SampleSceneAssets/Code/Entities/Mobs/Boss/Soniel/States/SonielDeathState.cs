@@ -24,6 +24,7 @@ public class SonielDeathState : BaseState<SonielStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        Context.Agent.isStopped = true;
     }
 
     // This method will be called on state switch.

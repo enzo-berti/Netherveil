@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+#endif
+
 namespace PrefabLightMapBaker
 {
     [ExecuteInEditMode]
@@ -20,7 +24,6 @@ namespace PrefabLightMapBaker
 
         public bool HasBakeData => (renderers?.Length ?? 0) > 0 && (texturesColor?.Length ?? 0) > 0;
 
-        private bool bakeCalled = false;
         public bool BakeApplied
         {
             get
@@ -29,49 +32,16 @@ namespace PrefabLightMapBaker
                 bool hasDirs = Utils.SceneHasAllLightmaps(texturesDir);
                 bool hasShadows = Utils.SceneHasAllLightmaps(texturesShadow);
 
-                return hasColors && hasDirs && hasShadows && bakeCalled;
+                return hasColors && hasDirs && hasShadows;
             }
         }
 
         void Start()
         {
-            BakeApply();
+            //BakeApply();
 
             // Warnning : this will mess up the renderer lightmaps reference
             // // StaticBatchingUtility.Combine( gameObject );
-        }
-        public bool BakeJustApplied { private set; get; } = false;
-
-        public void BakeApply()
-        {
-            if (!HasBakeData)
-            {
-                BakeJustApplied = false;
-                //Debug.LogWarning("PrefabBaker doesn't have bake data", this);
-                return;
-            }
-
-            if (!BakeApplied)
-            {
-                BakeJustApplied = Utils.Apply(this);
-
-                if (BakeJustApplied)
-                {
-                    //Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene");
-                }
-            }
-
-            bakeCalled = true;
-        }
-
-        void OnEnable()
-        {
-            if (!Application.isPlaying)
-            {
-                BakeApply();
-            }
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -79,16 +49,44 @@ namespace PrefabLightMapBaker
             BakeApply();
         }
 
+
+        void OnEnable()
+        {
+#if UNITY_EDITOR
+            if (PrefabStageUtility.GetCurrentPrefabStage())
+            {
+                return;
+            }
+#endif
+            if (!Application.isPlaying || SceneManager.loadedSceneCount > 0)
+            {
+                BakeApply();
+                return;
+            }
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
         void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        public static System.Action onValidate;
-
-        private void OnValidate()
+        public void BakeApply()
         {
-            onValidate?.Invoke();
+            if (!HasBakeData)
+            {
+                Debug.LogWarning("PrefabBaker doesn't have bake data", this);
+                return;
+            }
+
+            if (!BakeApplied)
+            {
+                if (Utils.Apply(this))
+                {
+                    //Debug.Log("[PrefabBaker] Addeded prefab lightmap data to current scene", gameObject);
+                }
+            }
         }
     }
 }

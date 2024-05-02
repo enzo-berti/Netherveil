@@ -1,10 +1,8 @@
-using FMODUnity;
 using StateMachine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Collections;
-using UnityEngine.AI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -39,6 +37,9 @@ public class PestStateMachine : Mobs, IPest
     private int chargeOutHash;
     private int deathHash;
 
+    // charge attaque
+    [SerializeField] float attackChargeDuration = 0.65f;
+
     // getters and setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -57,6 +58,7 @@ public class PestStateMachine : Mobs, IPest
     public float idleTimer { set => dashTimer = value; }
     public float MovementDelay { get => (currentState is PestTriggeredState ? 1.5f : 1.8f); }
     public bool CanMove { get => dashTimer > MovementDelay; }
+    public float AttackChargeDuration { get => attackChargeDuration; }
 
     protected override void Start()
     {
@@ -92,8 +94,6 @@ public class PestStateMachine : Mobs, IPest
         currentState.Update();
 
         if (!CanMove) { dashTimer += Time.deltaTime; }
-
-        if (currentState is not PestWanderingState) { WanderZoneCenter = transform.position; }
     }
 
     #region MOBS METHODS
@@ -115,6 +115,15 @@ public class PestStateMachine : Mobs, IPest
 
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity ? playerEntity.transform : null;
+
+            if (!player)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    player = tempPlayer.transform;
+                }
+            }
 
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
@@ -174,6 +183,7 @@ public class PestStateMachine : Mobs, IPest
             return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayVisionRange(360f, 2f);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
         DisplayWanderZone();

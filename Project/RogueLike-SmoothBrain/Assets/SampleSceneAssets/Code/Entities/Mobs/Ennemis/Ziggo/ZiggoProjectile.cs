@@ -1,49 +1,59 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.WSA;
+using UnityEngine.VFX;
 
 public class ZiggoProjectile : MonoBehaviour
 {
     Hero player;
-    float flaqueRadius;
-    bool hitGround;
-    float effectCooldown;
+    float effectCooldown = 0f;
+    [SerializeField] float flaqueRadius = 0f;
+
+    public float FlaqueRadius { get => flaqueRadius; }
+    public VisualEffect PoisonPuddleVFX;
+    public VisualEffect PoisonBallVFX;
 
     private void OnEnable()
     {
         player = Utilities.Hero;
-        hitGround = false;
     }
 
     private void Update()
     {
         if (effectCooldown <= 0)
         {
-            if (Vector3.SqrMagnitude(player.transform.position - transform.position) < 2f * 2f)
+            if (Vector3.SqrMagnitude(player.transform.position - transform.position) <= flaqueRadius * flaqueRadius)
             {
-                // apply status
-                player.AddStatus(new Poison(2f, 1));
+                Physics.OverlapSphere(transform.position, flaqueRadius, LayerMask.GetMask("Entity"))
+                    .Select(entity => entity.GetComponent<Hero>())
+                    .Where(entity => entity != null)
+                    .ToList()
+                    .ForEach(currentEntity =>
+                    {
+                        currentEntity.AddStatus(new Poison(2f, 1));
+                    });
+
                 effectCooldown = 0.5f;
             }
         }
+        else effectCooldown -= Time.deltaTime;
+
     }
 
-    public void ThrowToPos(IAttacker attacker, Vector3 pos, float throwTime)
+    public void ThrowToPos(Vector3 pos, float throwTime, float height)
     {
-        StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
+        StartCoroutine(ThrowToPosCoroutine(pos, throwTime, height));
     }
 
-    private IEnumerator ThrowToPosCoroutine(Vector3 pos, float throwTime)
+    private IEnumerator ThrowToPosCoroutine(Vector3 pos, float throwTime, float height)
     {
         float timer = 0;
         Vector3 basePos = this.transform.position;
         Vector3 position3D = Vector3.zero;
-        float a = -16, b = 16;
+        float a = -4 * height, b = 4 * height;
         float c = this.transform.position.y;
-        float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, 0).Max();
+        float timerToReach = MathsExtension.Resolve2ndDegree(a, b, c, pos.y).Max();
         while (timer < timerToReach)
         {
             yield return null;

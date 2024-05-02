@@ -39,6 +39,8 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     Hero player = null;
     private int deathHash;
+    Coroutine dashCoroutine;
+
     ///
     private bool isDashing = false;
     private bool isSmoothCoroutineOn = false;
@@ -65,6 +67,7 @@ public class GorgonStateMachine : Mobs, IGorgon
     //private float DistanceToFlee { get => stats.GetValue(Stat.ATK_RANGE) / 1.5f; }
     public GameObject BombPrefab { get => bombPrefab; }
     public Transform Hand { get => hand; }
+    public Coroutine DashCoroutine { get => dashCoroutine; set => dashCoroutine = value; }
     public float VisionAngle { get => !canLoseAggro ? 360 : (currentState is GorgonTriggeredState || currentState is GorgonAttackingState) && player != null ? 360 : defaultVisionAngle; }
     public float VisionRange { get => !canLoseAggro ? Stats.GetValue(Stat.VISION_RANGE) * 1.25f : Stats.GetValue(Stat.VISION_RANGE) * (currentState is GorgonTriggeredState || currentState is GorgonAttackingState ? 1.25f : 1f); }
     public bool CanLoseAggro { set => canLoseAggro = value; }
@@ -110,9 +113,6 @@ public class GorgonStateMachine : Mobs, IGorgon
         if (currentState is not GorgonFleeingState)
             if (fleeCooldown < MAX_FLEE_COOLDOWN) fleeCooldown += Time.deltaTime;
 
-        if (currentState is not GorgonWanderingState)
-            WanderZoneCenter = transform.position;
-
         currentState.Update();
     }
 
@@ -143,6 +143,15 @@ public class GorgonStateMachine : Mobs, IGorgon
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
 
+            if (!player)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    player = tempPlayer;
+                }
+            }
+
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
@@ -167,6 +176,8 @@ public class GorgonStateMachine : Mobs, IGorgon
         animator.SetTrigger(deathHash);
 
         gorgonSounds.deathSFX.Play(transform.position);
+        if (dashCoroutine != null) StopCoroutine(dashCoroutine);
+
         currentState = factory.GetState<GorgonDeathState>();
     }
 
@@ -192,6 +203,7 @@ public class GorgonStateMachine : Mobs, IGorgon
             return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayVisionRange(360, 2f);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
         DisplayWanderZone();

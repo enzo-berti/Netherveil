@@ -24,7 +24,7 @@ public class ZiggoDeathState : BaseState<ZiggoStateMachine>
 
     protected override void UpdateState()
     {
-
+        Context.Agent.isStopped = true;
     }
 
     protected override void SwitchState(BaseState<ZiggoStateMachine> newState)

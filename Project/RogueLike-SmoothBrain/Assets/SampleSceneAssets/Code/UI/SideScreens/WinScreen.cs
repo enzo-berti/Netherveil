@@ -1,83 +1,125 @@
 using System.Collections;
-using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using Map;
 
 public class WinScreen : MonoBehaviour
 {
-    [SerializeField] private Image blackPanel;
-    [SerializeField] private Image buttonPanel;
-    [SerializeField] private Image menu;
-    [SerializeField] private TextMeshProUGUI menuText;
-    [SerializeField] private Image quit;
-    [SerializeField] private TextMeshProUGUI quitText;
-    [SerializeField] private TextMeshProUGUI WinText;
-    [SerializeField] private TextMeshProUGUI EndText;
-    [SerializeField] private TextMeshProUGUI EndText2;
-    [SerializeField] private TextMeshProUGUI EndText3;
+    [SerializeField] private Graphic textMesh1;
+    [SerializeField] private Graphic textMesh2;
+    [SerializeField] private Graphic textMesh3;
+    [SerializeField] private Graphic textMesh4;
+    [SerializeField] private GameObject buttonsObject;
 
-    private void OnEnable()
+    private IEnumerator Start()
     {
-        Color clearColor = new Color(1, 1, 1, 0);
-        buttonPanel.color *= clearColor;
-        blackPanel.color *= clearColor;
-        menu.color *= clearColor;
-        menuText.color *= clearColor;
-        quit.color *= clearColor;
-        quitText.color *= clearColor;
-        WinText.color *= clearColor;
-        EndText.color *= clearColor;
-        EndText2.color *= clearColor;
-        EndText3.color *= clearColor;
+        Color baseColorText1 = textMesh1.color;
+        baseColorText1.a = 1.0f;
+        Color baseTransparencyText1 = baseColorText1;
+        baseTransparencyText1.a = 0.0f;
+        textMesh1.color = baseTransparencyText1;
 
-        DisableAllMob();
-        IncreaseAlpha();
-    }
+        Color baseColorText2 = textMesh2.color;
+        baseColorText2.a = 1.0f;
+        Color baseTransparencyText2 = baseColorText2;
+        baseTransparencyText2.a = 0.0f;
+        textMesh2.color = baseTransparencyText2;
 
-    private void DisableAllMob()
-    {
-        foreach (GameObject enemy in RoomUtilities.roomData.enemies)
+        Color baseColorText3 = textMesh3.color;
+        baseColorText3.a = 1.0f;
+        Color baseTransparencyText3 = baseColorText3;
+        baseTransparencyText3.a = 0.0f;
+        textMesh3.color = baseTransparencyText3;
+
+        Color baseColorText4 = textMesh4.color;
+        baseColorText4.a = 1.0f;
+        Color baseTransparencyText4 = baseColorText4;
+        baseTransparencyText4.a = 0.0f;
+        textMesh4.color = baseTransparencyText4;
+
+        buttonsObject.SetActive(false);
+
+        yield return new WaitForSeconds(1.0f);
+
+        float elapsed = 0.0f;
+        float duration = 3.14f;
+
+        while (elapsed < duration)
         {
-            if (enemy != null)
-            {
-                enemy.SetActive(false);
-            }
-        }
-    }
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+            float ease = Mathf.Sin(factor * Mathf.PI);
 
-    void IncreaseAlpha()
-    {
-        StartCoroutine(ModifyElementAlpha(blackPanel,0f, 1f));
-        StartCoroutine(ModifyElementAlpha(EndText, 1.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(EndText, 3.5f, 0f));
-        StartCoroutine(ModifyElementAlpha(EndText2, 2.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(EndText2, 4.5f, 0f));
-        StartCoroutine(ModifyElementAlpha(EndText3, 3.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(EndText3, 5.5f, 0f));
-        StartCoroutine(ModifyElementAlpha(WinText, 6.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(menu, 7.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(menuText, 7.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(quit, 7.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(quitText, 7.5f, 1f));
-        StartCoroutine(ModifyElementAlpha(buttonPanel, 7.5f, 1f));
-    }
+            textMesh1.color = Color.Lerp(baseTransparencyText1, baseColorText1, ease);
 
-    IEnumerator ModifyElementAlpha(Graphic element, float timeToWait, float targetAlpha)
-    {
-        yield return new WaitForSeconds(timeToWait);
-
-        float duration = 2.0f;
-        float elapsedTime = 0f;
-        Color initialColor = element.color;
-        Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime * 1.5f;
-            float t = Mathf.Clamp01(elapsedTime / duration);
-            element.color = Color.Lerp(initialColor, targetColor, t);
             yield return null;
         }
+
+        yield return new WaitForSeconds(1.0f);
+
+        elapsed = 0.0f;
+        duration = 3.14f;
+
+        while (elapsed < duration)
+        {
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+            float ease = Mathf.Sin(factor * Mathf.PI);
+
+            textMesh2.color = Color.Lerp(baseTransparencyText2, baseColorText2, ease);
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1.0f);
+
+        elapsed = 0.0f;
+        duration = 3.14f;
+
+        while (elapsed < duration)
+        {
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+            float ease = Mathf.Sin(factor * Mathf.PI);
+
+            textMesh3.color = Color.Lerp(baseTransparencyText3, baseColorText3, ease);
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1.0f);
+
+        elapsed = 0.0f;
+        duration = 1.2f;
+
+        while (elapsed < duration)
+        {
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+            float ease = EasingFunctions.EaseOutSin(factor);
+
+            textMesh4.color = Color.Lerp(baseTransparencyText4, baseColorText4, ease);
+
+            yield return null;
+        }
+
+        buttonsObject.SetActive(true);
+    }
+
+    public void LoadMenu()
+    {
+        LevelLoader.current.LoadScene("MainMenu", true);
+    }
+
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        if (EditorApplication.isPlaying)
+        {
+            EditorApplication.isPlaying = false;
+        }
+#else
+        Application.Quit();
+#endif
     }
 }

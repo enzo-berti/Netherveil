@@ -3,6 +3,7 @@ using StateMachine; // include all script about stateMachine
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using UnityEngine.VFX;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -13,10 +14,12 @@ public class ZiggoStateMachine : Mobs, IZiggo
     [System.Serializable]
     public class ZiggoSounds
     {
-        public Sound deathSound;
-        public Sound takeDamageSound;
-        public Sound hitSound;
         public Sound moveSound;
+        public Sound deathSound;
+        public Sound hitSound;
+        public Sound eatSound;
+        public Sound spitSound;
+        public Sound splatterSound;
     }
 
     public enum ZiggoAttacks
@@ -47,6 +50,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
     GameObject projectile;
     [Header("Attacks")]
     [SerializeField] Collider[] attackColliders;
+    Coroutine spitAttackCoroutine = null;
 
     #region Getters/setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -59,6 +63,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
     public ZiggoSounds Sounds { get => ziggoSounds; }
     public Hero Player { get => player; }
     public GameObject Projectile { get => projectile; }
+    public Coroutine SpitAttackCoroutine { set => spitAttackCoroutine = value; }
     public bool PlayerHit { get => playerHit; set => playerHit = value; }
     public float VisionRange { get => stats.GetValue(Stat.VISION_RANGE) * (currentState is not ZiggoWanderingState ? 1.25f : 1f); }
     public float VisionAngle { get => player ? 360 : originalVisionAngle; }
@@ -74,8 +79,15 @@ public class ZiggoStateMachine : Mobs, IZiggo
         currentState = factory.GetState<ZiggoWanderingState>();
 
         // projectile
-        projectile = GetComponentInChildren<ZiggoProjectile>().gameObject;
+        projectile = GetComponentInChildren<ZiggoProjectile>(includeInactive: true).gameObject;
         projectile.SetActive(false);
+
+        // anim hash
+        deathHash = Animator.StringToHash("Death");
+
+        // cooldowns
+        dashCooldown = 0f;
+        spitCooldown = 0f;
 
         // opti variables
         maxFrameUpdate = 10;
@@ -115,6 +127,16 @@ public class ZiggoStateMachine : Mobs, IZiggo
             Entity playerEntity = nearbyEntities.FirstOrDefault(x => x.GetComponent<Hero>());
             player = playerEntity != null ? playerEntity.GetComponent<Hero>() : null;
 
+
+            if (!player)
+            {
+                Hero tempPlayer = Utilities.Hero;
+                if (Vector3.SqrMagnitude(tempPlayer.transform.position - transform.position) <= 4f)
+                {
+                    player = tempPlayer;
+                }
+            }
+
             yield return new WaitUntil(() => Time.frameCount % maxFrameUpdate == frameToUpdate);
         }
     }
@@ -139,7 +161,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        ziggoSounds.hitSound.Play(transform.position);
+        ziggoSounds.eatSound.Play(transform.position);
     }
 
     public void Death()
@@ -148,6 +170,9 @@ public class ZiggoStateMachine : Mobs, IZiggo
         Hero.OnKill?.Invoke(this);
         ziggoSounds.deathSound.Play(transform.position);
         animator.SetBool(deathHash, true);
+
+        Destroy(projectile);
+        if (spitAttackCoroutine != null) StopCoroutine(spitAttackCoroutine);
 
         currentState = factory.GetState<ZiggoDeathState>();
     }
@@ -214,10 +239,11 @@ public class ZiggoStateMachine : Mobs, IZiggo
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
+        DisplayVisionRange(360f, 2f);
         DisplayAttackRange(VisionAngle);
         DisplayInfos();
     }

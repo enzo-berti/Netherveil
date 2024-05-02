@@ -28,9 +28,9 @@ public abstract class Quest
     public virtual void AcceptQuest()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
-        RoomUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
-        RoomUtilities.onEarlyAllChestOpen += CheckQuestFinished;
-        RoomUtilities.onEarlyEnter += CheckQuestFinished;
+        MapUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
+        MapUtilities.onEarlyAllChestOpen += CheckQuestFinished;
+        MapUtilities.onEnter += CheckQuestFinished;
         Hero.OnQuestObtained += CheckQuestFinished;
     }
 
@@ -69,13 +69,14 @@ public abstract class Quest
         {
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
+
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
         Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
         OnQuestFinished?.Invoke();
 
-        RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
-        RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        RoomUtilities.onEarlyEnter -= CheckQuestFinished;
+        MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
+        MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
+        MapUtilities.onEnter -= CheckQuestFinished;
         Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
@@ -97,9 +98,10 @@ public abstract class Quest
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
         player.CurrentQuest = null;
-        RoomUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
-        RoomUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        RoomUtilities.onEarlyEnter -= CheckQuestFinished;
+        MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
+        MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
+        MapUtilities.onEnter -= CheckQuestFinished;
+        Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
     protected abstract bool IsQuestFinished();

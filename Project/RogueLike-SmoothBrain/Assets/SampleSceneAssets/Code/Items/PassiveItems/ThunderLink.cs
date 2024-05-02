@@ -77,6 +77,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
             spear.SpearThrowCollider.gameObject.SetActive(false);
             yield return new WaitForSeconds(THUNDERLINK_WAIT_TIME / 2f);
 
+            AudioManager.Instance.PlaySound(AudioManager.Instance.ThunderlinkSFX);
             spear.ThunderLinkLineRenderer.gameObject.SetActive(true);
             //spear.SpearThrowCollider.gameObject.SetActive(true);
             spear.ScaleColliderToVector((spear.transform.position - Utilities.Player.transform.position));

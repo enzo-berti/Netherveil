@@ -24,6 +24,7 @@ public class GlorbDeathState : BaseState<GlorbStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
+        Context.Agent.isStopped = true;
     }
 
     // This method will be call on state changement.

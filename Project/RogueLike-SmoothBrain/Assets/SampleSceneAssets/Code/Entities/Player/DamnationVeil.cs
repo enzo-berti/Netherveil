@@ -5,11 +5,13 @@ public class DamnationVeil : ISpecialAbility
 {
     public float Cooldown { get; set; } = 30f;
     public float CurrentEnergy { get; set; } = 0;
-    private const float radius = 10f;
+    private readonly float radius = 10f;
 
     public DamnationVeil()
     {
         CurrentEnergy = Cooldown;
+        float planeLength = 5f;
+        radius = (Utilities.Player.GetComponent<PlayerController>().DamnationVeilVFX.GetFloat("Diameter") * planeLength) / 2f;
     }
     public void Activate()
     {

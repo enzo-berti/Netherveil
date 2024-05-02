@@ -33,7 +33,8 @@ public class GlorbWanderingState : BaseState<GlorbStateMachine>
     // This method will be call only one time before the update.
     protected override void EnterState()
     {
-
+        Context.WanderZoneCenter = Context.transform.position;
+        idleTimer = Random.Range(-0.5f, 0.5f);
     }
 
     // This method will be call only one time after the last update.
