@@ -57,7 +57,6 @@ public class Inventory
     public Blood BloodValue = new Blood();
 
     public int Keys = 0;
-
     private void AddActiveItem(IActiveItem item)
     {
         if (activeItem != null)
@@ -76,6 +75,22 @@ public class Inventory
     {
         item.OnRemove();
         passiveItems.Remove(item);
+    }
+
+    public void RemoveAllItems(Vector3 _)
+    {
+        if(passiveItems.Count > 0)
+        {
+            foreach(var item in passiveItems)
+            {
+                RemoveItem(item);
+            }
+        }
+        if(activeItem != null)
+        {
+            (activeItem as IPassiveItem)?.OnRemove();
+            activeItem = null;
+        }
     }
     public void AddItem(Item item)
     {

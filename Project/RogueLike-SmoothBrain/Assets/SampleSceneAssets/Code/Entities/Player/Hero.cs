@@ -105,6 +105,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
+        OnDeath += Inventory.RemoveAllItems;
     }
 
     private void OnDestroy()
@@ -114,6 +115,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
+        OnDeath -= Inventory.RemoveAllItems;
     }
 
     private void OnEnable()
