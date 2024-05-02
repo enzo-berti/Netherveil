@@ -107,11 +107,14 @@ public class ZiggoStateMachine : Mobs, IZiggo
 
         if (agent.hasPath)
         {
+            Vector3 posToLookAt = agent.pathEndPosition;
+            posToLookAt.y = transform.position.y;
+
             // rotate
-            Quaternion lookRotation = Quaternion.LookRotation(agent.pathEndPosition, transform.position);
+            Quaternion lookRotation = Quaternion.LookRotation(posToLookAt, transform.position);
             lookRotation.x = 0;
             lookRotation.z = 0;
-            transform.localRotation = Quaternion.Slerp(transform.rotation, lookRotation, 10f * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 10f * Time.deltaTime);
         }
     }
 
