@@ -63,11 +63,11 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        // rotate
-        Quaternion lookRotation = Quaternion.LookRotation(pointToGo, Context.transform.position);
-        lookRotation.x = 0;
-        lookRotation.z = 0;
-        Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 20f * Time.deltaTime);
+        //// rotate
+        //Quaternion lookRotation = Quaternion.LookRotation(pointToGo, Context.transform.position);
+        //lookRotation.x = 0;
+        //lookRotation.z = 0;
+        //Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 20f * Time.deltaTime);
 
         if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
         {

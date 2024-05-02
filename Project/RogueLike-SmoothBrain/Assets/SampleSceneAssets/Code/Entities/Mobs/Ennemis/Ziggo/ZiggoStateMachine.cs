@@ -104,6 +104,15 @@ public class ZiggoStateMachine : Mobs, IZiggo
         currentState.Update();
 
         animator.SetBool("Walk", agent.remainingDistance > agent.stoppingDistance);
+
+        if (agent.hasPath)
+        {
+            // rotate
+            Quaternion lookRotation = Quaternion.LookRotation(agent.pathEndPosition, transform.position);
+            lookRotation.x = 0;
+            lookRotation.z = 0;
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 10f * Time.deltaTime);
+        }
     }
 
 
