@@ -58,6 +58,14 @@ public class Inventory
 
     public int Keys = 0;
 
+    public Inventory()
+    {
+        Utilities.Hero.OnDeath += RemoveAllItems;
+    }
+    ~Inventory()
+    {
+        Utilities.Hero.OnDeath -= RemoveAllItems;
+    }
     private void AddActiveItem(IActiveItem item)
     {
         if (activeItem != null)
@@ -76,6 +84,22 @@ public class Inventory
     {
         item.OnRemove();
         passiveItems.Remove(item);
+    }
+
+    public void RemoveAllItems(Vector3 _)
+    {
+        if(passiveItems.Count > 0)
+        {
+            foreach(var item in passiveItems)
+            {
+                RemoveItem(item);
+            }
+        }
+        if(activeItem != null)
+        {
+            (activeItem as IPassiveItem)?.OnRemove();
+            activeItem = null;
+        }
     }
     public void AddItem(Item item)
     {
