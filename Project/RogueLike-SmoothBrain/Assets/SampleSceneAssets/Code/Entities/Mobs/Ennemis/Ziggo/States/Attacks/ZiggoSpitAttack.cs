@@ -43,11 +43,11 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
     {
         if (Context.Player)
         {
-            //// rotate
-            //Quaternion lookRotation = Quaternion.LookRotation(Context.Player.transform.position, Context.transform.position);
-            //lookRotation.x = 0;
-            //lookRotation.z = 0;
-            //Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 5f * Time.deltaTime);
+            // rotate
+            Quaternion lookRotation = Quaternion.LookRotation(Context.Player.transform.position, Context.transform.position);
+            lookRotation.x = 0;
+            lookRotation.z = 0;
+            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 10f * Time.deltaTime);
         }
     }
 
