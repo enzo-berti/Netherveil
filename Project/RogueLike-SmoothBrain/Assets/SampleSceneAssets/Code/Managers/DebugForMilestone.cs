@@ -7,17 +7,21 @@ public class DebugForMilestone : MonoBehaviour
     public float benedictionDelta = 1;
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             Utilities.Hero.Stats.IncreaseValue(Stat.HP, 1000000);
         }
-        if(Input.GetKeyDown(KeyCode.Keypad2))
+        if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            foreach(var enemy in MapUtilities.currentRoomData.enemies)
+            foreach (var enemy in MapUtilities.currentRoomData.enemies)
             {
                 if (enemy != null)
                 {
-                    enemy.GetComponentInChildren<IDamageable>().Death();
+                    var test = enemy.GetComponentInChildren<IDamageable>();
+                    if (test != null)
+                    {
+                        test.Death();
+                    }
                 }
             }
             MapUtilities.currentRoomData.enemies.Clear();
@@ -62,7 +66,7 @@ public class DebugForMilestone : MonoBehaviour
             Utilities.Hero.DebugCallLaunchUpgrade();
             Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
-        if(Input.GetKeyDown(KeyCode.KeypadDivide))
+        if (Input.GetKeyDown(KeyCode.KeypadDivide))
         {
             Utilities.Hero.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), QuestTalker.TalkerType.CLERIC, QuestTalker.TalkerGrade.BOSS);
         }
