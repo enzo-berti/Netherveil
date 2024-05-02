@@ -20,7 +20,6 @@ public class Fireball : MonoBehaviour, IAttacker
     {
         Destroy(gameObject, 3.0f);
 
-        //radius = GetComponentInChildren<Renderer>().bounds.size.y / 2f;
         radius = GetComponent<CapsuleCollider>().radius;
     }
 

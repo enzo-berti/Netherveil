@@ -10,19 +10,19 @@ public class SonielStateMachine : Mobs, ISoniel
     [Serializable]
     public class SonielSounds
     {
-        public Sound hit;//
-        public Sound walk;//
-        public Sound death;//
-        public Sound run;//
+        public Sound hit;
+        public Sound walk;
+        public Sound death;
+        public Sound run;
         public Sound launchSword;
         public Sound retrieveSword;
         public Sound swordSpinning;
         public Sound swordHitMap;
-        public Sound slash;//
-        public Sound slashVoid;//
-        public Sound thrust;//
-        public Sound bossHitMap;//
-        public Sound multipleSlash;//
+        public Sound slash;
+        public Sound slashVoid;
+        public Sound thrust;
+        public Sound bossHitMap;
+        public Sound multipleSlash;
     }
 
     public enum SonielAttacks
@@ -148,6 +148,9 @@ public class SonielStateMachine : Mobs, ISoniel
         Hero.OnKill?.Invoke(this);
 
         sounds.death.Play(transform.position);
+        sounds.walk.Stop();
+        sounds.run.Stop();
+        sounds.multipleSlash.Stop();
 
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
