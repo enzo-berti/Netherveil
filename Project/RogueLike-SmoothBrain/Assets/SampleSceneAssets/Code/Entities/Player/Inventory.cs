@@ -57,15 +57,6 @@ public class Inventory
     public Blood BloodValue = new Blood();
 
     public int Keys = 0;
-
-    public Inventory()
-    {
-        Utilities.Hero.OnDeath += RemoveAllItems;
-    }
-    ~Inventory()
-    {
-        Utilities.Hero.OnDeath -= RemoveAllItems;
-    }
     private void AddActiveItem(IActiveItem item)
     {
         if (activeItem != null)
