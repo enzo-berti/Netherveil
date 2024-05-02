@@ -111,7 +111,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
             Quaternion lookRotation = Quaternion.LookRotation(agent.pathEndPosition, transform.position);
             lookRotation.x = 0;
             lookRotation.z = 0;
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 10f * Time.deltaTime);
+            transform.localRotation = Quaternion.Slerp(transform.rotation, lookRotation, 10f * Time.deltaTime);
         }
     }
 
