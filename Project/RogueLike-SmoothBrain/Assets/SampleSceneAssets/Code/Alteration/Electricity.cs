@@ -46,7 +46,9 @@ public class Electricity : OverTimeStatus
         isStunCoroutineOn = true;
         entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
         target.Stats.SetValue(Stat.SPEED, 0);
+        target.GetComponentInChildren<Animator>().speed = 0;
         yield return new WaitForSeconds(stunTime);
+        target.GetComponentInChildren<Animator>().speed = 1;
         target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
         isStunCoroutineOn = false;
     }
