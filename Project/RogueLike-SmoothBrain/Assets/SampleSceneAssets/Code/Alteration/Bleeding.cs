@@ -12,7 +12,7 @@ public class Bleeding : OverTimeStatus
         isStackable = true;
         maxStack = 3;
         frequency = 1.0f;
-
+        vfxName = "VFX_Bleeding";
     }
     public override Status DeepCopy()
     {
@@ -45,6 +45,5 @@ public class Bleeding : OverTimeStatus
 
     protected override void PlayStatus()
     {
-        PlayVfx("VFX_Bleeding");
     }
 }

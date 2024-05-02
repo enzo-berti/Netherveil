@@ -48,6 +48,7 @@ public abstract class OverTimeStatus : Status
                 stopTimes.Add(duration + currentTime + frequency * stopTimes.Count);
             }
         }
+        PlayVfx(vfxName);
 
     }
     private IEnumerator UpdateEffect()

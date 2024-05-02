@@ -23,7 +23,7 @@ public interface IAttacker
     {
         Entity entity = damageable as Entity;
         Mobs mobs = damageable as Mobs;
-        if (entity == null || (mobs != null && mobs.IsSpawning)) return;
+        if (entity == null || (mobs != null && mobs.IsSpawning) || entity.IsInvincibleCount > 0) return;
         foreach (var status in StatusToApply)
         {
             Status newStatus = status.DeepCopy();

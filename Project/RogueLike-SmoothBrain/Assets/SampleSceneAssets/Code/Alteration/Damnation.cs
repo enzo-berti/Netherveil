@@ -5,6 +5,7 @@ public class Damnation : ConstantStatus
     public Damnation(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
+        vfxName = "VFX_DamnationDot";
     }
 
     public override bool CanApplyEffect(Entity target)
@@ -34,14 +35,9 @@ public class Damnation : ConstantStatus
 
     protected override void PlayStatus()
     {
-        PlayVFX();
         PlayPostProcessing();
     }
 
-    private void PlayVFX()
-    {
-        PlayVfx("VFX_DamnationDot");
-    }
 
     private void PlayPostProcessing()
     {
