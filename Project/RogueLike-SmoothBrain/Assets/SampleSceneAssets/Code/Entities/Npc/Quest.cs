@@ -24,6 +24,7 @@ public abstract class Quest
     protected QuestTalker.TalkerGrade talkerGrade;
     protected QuestDifficulty difficulty;
     protected bool questLost = false;
+    public QuestTalker.TalkerType TalkerType { get => talkerType; }
 
     public virtual void AcceptQuest()
     {
