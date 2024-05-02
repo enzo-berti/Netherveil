@@ -42,7 +42,7 @@ public abstract class Quest
         quest.talkerType = type;
         quest.talkerGrade = grade;
         quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)Seed.Range(0, (int)QuestDifficulty.NB) : QuestDifficulty.MEDIUM;
-        InitDescription(ref quest.Datas.Description);
+        InitDescription(ref quest.Datas.Description, quest);
         return quest;
     }
 
@@ -114,7 +114,7 @@ public abstract class Quest
         else if (questLost)
             progressText = "Quest Lost...";
     }
-    static private void InitDescription(ref string description)
+    static private void InitDescription(ref string description, Quest data)
     {
         string finalDescription = string.Empty;
         char[] separators = new char[] { ' ', '\n' };
@@ -123,6 +123,7 @@ public abstract class Quest
         {
             finalDescription += test + ' ';
         }
+
         description = finalDescription;
     }
 
