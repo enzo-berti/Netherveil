@@ -41,14 +41,7 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        if (Context.Player)
-        {
-            // rotate
-            Quaternion lookRotation = Quaternion.LookRotation(Context.Player.transform.position, Context.transform.position);
-            lookRotation.x = 0;
-            lookRotation.z = 0;
-            Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 10f * Time.deltaTime);
-        }
+
     }
 
     // This method will be called on state switch.
