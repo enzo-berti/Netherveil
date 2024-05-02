@@ -63,7 +63,7 @@ public class ZoomMap : MonoBehaviour
     {
         if (DeviceManager.Instance.IsPlayingKB())
         {
-            CollidMouseScreen();
+            //CollidMouseScreen(); ça bug de bz
         }
         else
         {

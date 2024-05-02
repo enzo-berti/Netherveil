@@ -39,7 +39,7 @@ namespace Fountain
 
         private void SetText(Fountain fountain)
         {
-            string type = fountain.Type == FountainType.Blessing ? "<color=#00F0FF>blessing</color>" : "<color=#9E57C1>corruption</color>";
+            string type = fountain.Type == FountainType.Blessing ? "<color=yellow>benediction</color>" : "<color=purple>corruption</color>";
             string blood = $"<color=red>{fountain.BloodPrice} blood{(fountain.BloodPrice > 1 ? "s" : string.Empty)}</color>";
             string trade = $"<color=yellow>{fountain.AbsoluteValueTrade}</color>";
 

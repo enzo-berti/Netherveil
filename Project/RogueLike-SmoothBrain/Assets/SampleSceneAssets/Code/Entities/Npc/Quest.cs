@@ -24,6 +24,7 @@ public abstract class Quest
     protected QuestTalker.TalkerGrade talkerGrade;
     protected QuestDifficulty difficulty;
     protected bool questLost = false;
+    public QuestTalker.TalkerType TalkerType { get => talkerType; }
 
     public virtual void AcceptQuest()
     {
@@ -42,7 +43,7 @@ public abstract class Quest
         quest.talkerType = type;
         quest.talkerGrade = grade;
         quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)Seed.Range(0, (int)QuestDifficulty.NB) : QuestDifficulty.MEDIUM;
-        InitDescription(ref quest.Datas.Description);
+        InitDescription(ref quest.Datas.Description, quest);
         return quest;
     }
 
@@ -108,13 +109,13 @@ public abstract class Quest
 
     protected void QuestUpdated()
     {
-        OnQuestUpdated?.Invoke();
         if (IsQuestFinished())
             progressText = "Quest Completed! Clear the current room to receive rewards!";
         else if (questLost)
             progressText = "Quest Lost...";
+        OnQuestUpdated?.Invoke();
     }
-    static private void InitDescription(ref string description)
+    static private void InitDescription(ref string description, Quest data)
     {
         string finalDescription = string.Empty;
         char[] separators = new char[] { ' ', '\n' };
@@ -123,6 +124,7 @@ public abstract class Quest
         {
             finalDescription += test + ' ';
         }
+
         description = finalDescription;
     }
 
