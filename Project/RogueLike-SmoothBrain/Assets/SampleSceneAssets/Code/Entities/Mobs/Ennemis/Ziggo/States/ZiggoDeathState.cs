@@ -14,7 +14,7 @@ public class ZiggoDeathState : BaseState<ZiggoStateMachine>
 
     protected override void EnterState()
     {
-
+        Context.Projectile.GetComponent<ZiggoProjectile>().PoisonPuddleVFX.Stop();
     }
 
     protected override void ExitState()

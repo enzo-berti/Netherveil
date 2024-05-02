@@ -31,7 +31,7 @@ public class ZiggoProjectile : MonoBehaviour
                     .ToList()
                     .ForEach(currentEntity =>
                     {
-                        currentEntity.AddStatus(new Poison(2f, 1));
+                        currentEntity.AddStatus(new Poison(1f, 1));
                     });
 
                 effectCooldown = 0.5f;

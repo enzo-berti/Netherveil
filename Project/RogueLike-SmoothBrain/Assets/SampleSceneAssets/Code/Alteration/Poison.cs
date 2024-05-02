@@ -8,7 +8,7 @@ public class Poison : OverTimeStatus
     public Poison(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = true;
-        frequency = duration/baseStack;
+        frequency = _duration - 0.001f;
         vfxName = "VFX_Poison";
     }
 
