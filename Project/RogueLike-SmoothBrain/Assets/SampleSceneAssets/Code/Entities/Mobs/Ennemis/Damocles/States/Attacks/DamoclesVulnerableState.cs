@@ -39,6 +39,7 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     protected override void ExitState()
     {
         Context.Agent.enabled = true;
+        Context.Player = Utilities.Hero;
     }
 
     // This method will be called every frame.

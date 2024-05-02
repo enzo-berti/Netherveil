@@ -110,7 +110,7 @@ public class SonielBerserk : BaseState<SonielStateMachine>
                 Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.BERSERK].data, debugMode: Context.DebugMode);
             }
 
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), Context.transform.forward, 4.5f, LayerMask.GetMask("Map")))
+            if (Physics.Raycast(Context.transform.position + new Vector3(0, 0.2f, 0), Context.transform.forward, 4.5f, LayerMask.GetMask("Map")))
             {
                 Context.Animator.ResetTrigger(stunnedHash);
                 Context.Animator.SetTrigger(stunnedHash);

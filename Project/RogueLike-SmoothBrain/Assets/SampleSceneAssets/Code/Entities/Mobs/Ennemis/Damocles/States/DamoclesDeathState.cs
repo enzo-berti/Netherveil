@@ -22,7 +22,7 @@ public class DamoclesDeathState : BaseState<DamoclesStateMachine>
 
     protected override void UpdateState()
     {
-        Context.Agent.isStopped = true;
+
     }
 
     protected override void SwitchState(BaseState<DamoclesStateMachine> newState)

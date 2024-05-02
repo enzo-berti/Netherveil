@@ -104,6 +104,18 @@ public class ZiggoStateMachine : Mobs, IZiggo
         currentState.Update();
 
         animator.SetBool("Walk", agent.remainingDistance > agent.stoppingDistance);
+
+        if (agent.hasPath)
+        {
+            Vector3 posToLookAt = agent.pathEndPosition;
+            posToLookAt.y = transform.position.y;
+
+            // rotate
+            //Quaternion lookRotation = Quaternion.LookRotation(posToLookAt, transform.position);
+            //lookRotation.x = 0;
+            //lookRotation.z = 0;
+            //transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 10f * Time.deltaTime);
+        }
     }
 
 
@@ -174,6 +186,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
         Destroy(projectile);
         if (spitAttackCoroutine != null) StopCoroutine(spitAttackCoroutine);
 
+        Projectile.GetComponent<ZiggoProjectile>().PoisonPuddleVFX.Stop();
         currentState = factory.GetState<ZiggoDeathState>();
     }
 

@@ -14,7 +14,7 @@ public class ZiggoDeathState : BaseState<ZiggoStateMachine>
 
     protected override void EnterState()
     {
-
+        
     }
 
     protected override void ExitState()

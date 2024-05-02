@@ -11,29 +11,45 @@ public class Fireball : MonoBehaviour, IAttacker
     public List<Status> StatusToApply => statusToApply;
     public float FireballSpeed = 2f;
 
+    float radius = 0f;
+
     public IAttacker.AttackDelegate OnAttack { get; set; }
     public IAttacker.HitDelegate OnAttackHit { get; set; }
 
     void Start()
     {
-        Destroy(gameObject, 5.0f);
+        Destroy(gameObject, 3.0f);
+
+        //radius = GetComponentInChildren<Renderer>().bounds.size.y / 2f;
+        radius = GetComponent<CapsuleCollider>().radius;
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.transform.position += direction.normalized * Time.deltaTime * FireballSpeed;
+        transform.position += direction.normalized * Time.deltaTime * FireballSpeed;
+
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, radius);
+        if (hits.Length > 0)
+        {
+            foreach (var hit in hits)
+            {
+                if (((1 << hit.collider.gameObject.layer) & LayerMask.GetMask("Map")) != 0)
+                {
+                    Destroy(gameObject);
+                    break;
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Hero>(out var hero))
+        Hero hero = (other.GetComponentInParent<Hero>());
+
+        if (hero)
         {
             Attack(hero);
-            Destroy(gameObject);
-        }
-        else if (other.gameObject.tag != "Enemy")
-        {
             Destroy(gameObject);
         }
     }
