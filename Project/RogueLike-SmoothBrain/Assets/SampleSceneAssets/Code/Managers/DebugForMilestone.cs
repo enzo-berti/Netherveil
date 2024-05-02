@@ -22,10 +22,10 @@ public class DebugForMilestone : MonoBehaviour
             }
             MapUtilities.currentRoomData.enemies.Clear();
         }
-        //if (Input.GetKeyDown(KeyCode.Keypad3))
-        //{
-        //    Utilities.Hero.Death();
-        //}
+        if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            Utilities.Hero.Inventory.BloodValue += 100;
+        }
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             Utilities.Hero.Stats.IncreaseValue(Stat.CORRUPTION, corruptionDelta);
