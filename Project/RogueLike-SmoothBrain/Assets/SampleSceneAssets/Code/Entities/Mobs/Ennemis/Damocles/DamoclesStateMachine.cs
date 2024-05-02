@@ -54,7 +54,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     public BoxCollider Attack1Collider { get => attack1Collider; }
     public BoxCollider Attack2Collider { get => attack2Collider; }
     public BoxCollider Attack3Collider { get => attack3Collider; }
-    public Hero Player { get => player; }
+    public Hero Player { get => player; set => player = value; }
     public DamoclesSounds DamoclesSound { get => damoclesSounds; }
     public float VisionAngle { get => currentState is DamoclesWanderingState || (currentState is DamoclesTriggeredState && !player) ? defaultVisionAngle : 360f; }
     public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is not DamoclesWanderingState ? 1.25f : 1f); }
@@ -200,8 +200,8 @@ public class DamoclesStateMachine : Mobs, IDamocles
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayVisionRange(360f, 2f);

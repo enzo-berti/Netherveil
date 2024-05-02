@@ -155,8 +155,8 @@ public class KlopsStateMachine : Mobs, IKlops
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //if (!Selection.Contains(gameObject))
-        //    return;
+        if (!Selection.Contains(gameObject))
+            return;
 
         DisplayVisionRange(VisionAngle, VisionRange);
         DisplayVisionRange(360f, 2f);
