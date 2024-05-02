@@ -186,6 +186,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
         Destroy(projectile);
         if (spitAttackCoroutine != null) StopCoroutine(spitAttackCoroutine);
 
+        Projectile.GetComponent<ZiggoProjectile>().PoisonPuddleVFX.Stop();
         currentState = factory.GetState<ZiggoDeathState>();
     }
 
