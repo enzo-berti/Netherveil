@@ -7,6 +7,7 @@ public class QuestHUD : MonoBehaviour
     private Hero player;
     [SerializeField] private TMP_Text description;
     [SerializeField] private TMP_Text title;
+    [SerializeField] private TMP_Text rewardText;
     [SerializeField] private TMP_Text progressText;
 
 
@@ -21,6 +22,7 @@ public class QuestHUD : MonoBehaviour
 
         title.SetText(string.Empty);
         description.SetText(string.Empty);
+        rewardText.SetText(string.Empty);
         progressText.SetText(string.Empty);
     }
 
@@ -69,8 +71,13 @@ public class QuestHUD : MonoBehaviour
 
         if(hasQuest)
         {
+            string rewardName = player.CurrentQuest.Datas.CorruptionModifierValue > 0 ? "<color=#9E57C1>corruption</color>" : "<color=#00F0FF>blessing</color>";
+            int absValue = Mathf.Abs(player.CurrentQuest.Datas.CorruptionModifierValue);
+
+
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);
+            rewardText.SetText($"\nRewards: {absValue} {rewardName}");
             progressText.SetText(player.CurrentQuest.progressText);
 
             description.GetComponent<ContentSizeFitter>().SetLayoutVertical();
