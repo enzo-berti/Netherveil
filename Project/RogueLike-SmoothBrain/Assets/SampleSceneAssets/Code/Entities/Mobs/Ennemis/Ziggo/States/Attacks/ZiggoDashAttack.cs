@@ -23,6 +23,8 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
     float dashRange;
     bool dashed = false;
 
+    Vector3 pointToGo;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -40,7 +42,8 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
         Vector3 mobPos = Context.transform.position;
         Vector3 playerPos = Context.Player.transform.position;
 
-        Context.MoveTo(playerPos - Context.Player.transform.forward * (playerPos - mobPos).magnitude);
+        pointToGo = playerPos - Context.Player.transform.forward * (playerPos - mobPos).magnitude;
+        Context.MoveTo(pointToGo);
     }
 
     // This method will be called only once after the last update.
@@ -61,10 +64,10 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
     protected override void UpdateState()
     {
         // rotate
-        Quaternion lookRotation = Quaternion.LookRotation(Context.Agent.pathEndPosition, Context.transform.position);
+        Quaternion lookRotation = Quaternion.LookRotation(pointToGo, Context.transform.position);
         lookRotation.x = 0;
         lookRotation.z = 0;
-        Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 10f * Time.deltaTime);
+        Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, 20f * Time.deltaTime);
 
         if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
         {
@@ -80,7 +83,8 @@ public class ZiggoDashAttack : BaseState<ZiggoStateMachine>
                 Context.Animator.ResetTrigger("Dash");
                 Context.Animator.SetTrigger("Dash");
 
-                Context.MoveTo(Context.transform.position + direction * dashRange);
+                pointToGo = Context.transform.position + direction * dashRange;
+                Context.MoveTo(pointToGo);
 
                 Context.Stats.IncreaseCoeffValue(Stat.SPEED, 1.5f);
             }
