@@ -57,6 +57,9 @@
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{f8fcf8fc-3746-430f-819b-fe4b93793be7}">
+		<property name="minimumDistance">
+			<value>8.19999981</value>
+		</property>
 		<property name="maximumDistance">
 			<value>150</value>
 		</property>
@@ -94,16 +97,19 @@
 	<object class="MixerBusPanner" id="{2be6b67c-2930-4f84-a4e6-3b08340473f5}" />
 	<object class="SingleSound" id="{d3c15a2c-4b64-4191-81c7-da17435cae76}">
 		<property name="length">
-			<value>0.34637931034466934</value>
+			<value>0.3529710591133019</value>
 		</property>
 		<property name="timelockedOffset">
-			<value>13.990147783251222</value>
+			<value>14.000387931034551</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{b1da65b8-84fa-437f-bf26-8bb5a07c3165}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{9f1f51aa-ada7-43dc-ac9e-43677a34985d}">
+		<property name="volume">
+			<value>-18.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -138,6 +144,17 @@
 	<object class="PitchShifterEffect" id="{f2eaef79-08eb-49f6-8141-4e0176d7d8d7}">
 		<property name="pitch">
 			<value>1.07999992</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{38705242-c388-4b3d-bf46-5df1414ddfae}</destination>
+		</relationship>
+	</object>
+	<object class="RandomizerModulator" id="{38705242-c388-4b3d-bf46-5df1414ddfae}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>pitch</value>
+		</property>
+		<property name="amount">
+			<value>6.66666698</value>
 		</property>
 	</object>
 </objects>

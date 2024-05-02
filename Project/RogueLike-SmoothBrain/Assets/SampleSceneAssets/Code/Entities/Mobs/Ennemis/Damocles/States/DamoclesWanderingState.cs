@@ -36,6 +36,7 @@ public class DamoclesWanderingState : BaseState<DamoclesStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
+        Context.IsInvincibleCount = 1;
         if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
         {
             idleTimer += Time.deltaTime;
