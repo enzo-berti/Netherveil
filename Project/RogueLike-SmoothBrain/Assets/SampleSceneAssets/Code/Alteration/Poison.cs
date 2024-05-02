@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class Poison : OverTimeStatus
 {
-    private static readonly int baseStack = 15;
+    private static readonly int baseStack = 3;
     static Color poisonColor = new Color(0.047f, 0.58f, 0.047f);
     public Poison(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = true;
-        frequency = 0.5f;
-        duration = frequency;
+        frequency = duration/baseStack;
     }
 
     public override bool CanApplyEffect(Entity target)
