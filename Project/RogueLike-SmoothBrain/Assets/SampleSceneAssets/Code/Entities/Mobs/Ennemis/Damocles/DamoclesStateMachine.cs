@@ -176,7 +176,8 @@ public class DamoclesStateMachine : Mobs, IDamocles
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
-        agent.isStopped = true;
+        if(agent.enabled)
+            agent.isStopped = true;
 
         currentState = factory.GetState<DamoclesDeathState>();
     }
