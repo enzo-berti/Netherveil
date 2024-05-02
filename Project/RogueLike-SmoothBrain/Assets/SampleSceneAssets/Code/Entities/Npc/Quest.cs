@@ -109,11 +109,11 @@ public abstract class Quest
 
     protected void QuestUpdated()
     {
-        OnQuestUpdated?.Invoke();
         if (IsQuestFinished())
             progressText = "Quest Completed! Clear the current room to receive rewards!";
         else if (questLost)
             progressText = "Quest Lost...";
+        OnQuestUpdated?.Invoke();
     }
     static private void InitDescription(ref string description, Quest data)
     {
