@@ -16,7 +16,7 @@ public class Fireball : MonoBehaviour, IAttacker
 
     void Start()
     {
-        Destroy(gameObject, 5.0f);
+        Destroy(gameObject, 2.0f);
     }
 
     // Update is called once per frame
@@ -32,10 +32,6 @@ public class Fireball : MonoBehaviour, IAttacker
         if (hero)
         {
             Attack(hero);
-            Destroy(gameObject);
-        }
-        else if (other.gameObject.tag != "Enemy")
-        {
             Destroy(gameObject);
         }
     }
