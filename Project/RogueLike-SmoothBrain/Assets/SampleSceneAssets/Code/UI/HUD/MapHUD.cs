@@ -13,9 +13,8 @@ public class MapHUD : MonoBehaviour
 
     private void Start()
     {
-        MiniMapCam[] miniMapCams = FindObjectsOfType<MiniMapCam>(true).OrderBy(x => x.GetComponent<Camera>().orthographicSize).ToArray();
-        minimapCam = miniMapCams[0].gameObject;
-        bigmapCam = miniMapCams[1].gameObject;
+        minimapCam = FindObjectOfType<MiniMapCam>(true).gameObject;
+        bigmapCam = FindObjectOfType<BigMapCam>(true).gameObject;
     }
 
     public void Toggle()
