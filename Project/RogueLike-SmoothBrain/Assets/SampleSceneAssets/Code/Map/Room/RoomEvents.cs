@@ -36,6 +36,19 @@ namespace Map
             }
         }
 
+        private void OnDestroy()
+        {
+            MapUtilities.onEarlyExit = null;
+            MapUtilities.onEarlyEnter = null;
+            MapUtilities.onEnter = null;
+            MapUtilities.onExit = null;
+            MapUtilities.onAllChestOpen = null;
+            MapUtilities.onEarlyAllChestOpen = null;
+            MapUtilities.onAllEnemiesDead = null;
+            MapUtilities.onEarlyAllEnemiesDead = null;
+            MapUtilities.onFinishStage = null;
+        }
+
         private void Start()
         {
             // find room go's

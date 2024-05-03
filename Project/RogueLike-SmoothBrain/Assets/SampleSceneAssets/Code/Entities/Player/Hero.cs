@@ -125,6 +125,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         OnCorruptionMaxUpgrade = null;
         OnBenedictionMaxUpgrade = null;
         OnKill = null;
+        OnBeforeApplyDamages = null;
 
         FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
