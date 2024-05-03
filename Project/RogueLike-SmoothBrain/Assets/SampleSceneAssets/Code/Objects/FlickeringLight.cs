@@ -23,6 +23,6 @@ public class FlickeringLight : MonoBehaviour
         if (lightobject == null)
             return;
 
-        lightobject.intensity = startIntensity + Mathf.Sin(Time.time * timeFactor) * offset + Random.Range(-randomOffset, randomOffset);
+        lightobject.intensity = startIntensity + Mathf.Sin(Time.time * timeFactor * Time.timeScale) * offset + Random.Range(-randomOffset, randomOffset);
     }
 }
