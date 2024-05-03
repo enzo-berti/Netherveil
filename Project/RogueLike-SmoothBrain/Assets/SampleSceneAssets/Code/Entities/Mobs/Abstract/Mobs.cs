@@ -83,13 +83,17 @@ public abstract class Mobs : Entity
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());
 
-        Vector3 pos = this.transform.parent.localPosition;
-        Quaternion rot = this.transform.parent.localRotation;
-        this.transform.parent.localRotation = Quaternion.identity;
-        this.transform.parent.position = Vector3.zero;
-        this.transform.parent.localPosition = Vector3.zero;
-        this.transform.localPosition = pos;
-        this.transform.localRotation = rot;
+        Vector3 pos = transform.parent.localPosition;
+        Quaternion rot = transform.parent.localRotation;
+        transform.parent.localRotation = Quaternion.identity;
+        transform.parent.position = Vector3.zero;
+        transform.parent.localPosition = Vector3.zero;
+        transform.localPosition = pos;
+        transform.localRotation = rot;
+        
+        if(this is not IDummy)
+            transform.rotation *= Camera.main.transform.rotation;
+
 
         StatSuckerVFX.SetVector3("Attract Target", GameObject.FindWithTag("Player").transform.position + Vector3.up);
         StatSuckerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXPositionBinderCustom>().ToArray()[0].Target = GameObject.FindWithTag("Player").transform;

@@ -25,6 +25,9 @@ public class TutoText : MonoBehaviour
 
         text = GetComponent<TMP_Text>();
         initText = text.text;
+
+        PauseMenu.OnUnpause += UpdateBindingDisplayString;
+
         UpdateBindingDisplayString();
     }
 
@@ -41,12 +44,14 @@ public class TutoText : MonoBehaviour
     {
         DeviceManager.OnChangedToKB -= UpdateBindingDisplayString;
         DeviceManager.OnChangedToGamepad -= UpdateBindingDisplayString;
+        PauseMenu.OnUnpause -= UpdateBindingDisplayString;
     }
 
     private void OnDestroy()
     {
         DeviceManager.OnChangedToKB -= UpdateBindingDisplayString;
         DeviceManager.OnChangedToGamepad -= UpdateBindingDisplayString;
+        PauseMenu.OnUnpause -= UpdateBindingDisplayString;
     }
 
     private void UpdateBindingDisplayString()
