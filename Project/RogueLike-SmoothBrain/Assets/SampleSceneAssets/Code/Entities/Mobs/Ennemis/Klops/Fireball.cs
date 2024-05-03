@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fireball : MonoBehaviour, IAttacker
+public class Fireball : MonoBehaviour
 {
     // Start is called before the first frame update
     public Vector3 direction = Vector3.zero;
@@ -13,8 +13,7 @@ public class Fireball : MonoBehaviour, IAttacker
 
     float radius = 0f;
 
-    public IAttacker.AttackDelegate OnAttack { get; set; }
-    public IAttacker.HitDelegate OnAttackHit { get; set; }
+    public Mobs launcher = null;
 
     void Start()
     {
@@ -49,12 +48,13 @@ public class Fireball : MonoBehaviour, IAttacker
         if (hero)
         {
             Attack(hero);
+            hero.AddStatus(new Fire(3f, 1f), launcher as IAttacker);
             Destroy(gameObject);
         }
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
-        damageable.ApplyDamage(10, this);
+        damageable.ApplyDamage(10, launcher as IAttacker);
     }
 }

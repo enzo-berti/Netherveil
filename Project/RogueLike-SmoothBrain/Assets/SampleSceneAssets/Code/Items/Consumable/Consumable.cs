@@ -28,7 +28,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
     private void FloatingAnimation()
     {
         Vector3 updatePos = model.transform.position;
-        updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
+        updatePos.y += Mathf.Sin(Time.time * Time.timeScale) * 0.0009f;
         model.transform.position = updatePos;
         model.transform.Rotate(new Vector3(0, 50f * Time.deltaTime, 0));
     }
@@ -41,7 +41,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
         float distance = Vector2.Distance(player.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2());
         if (distance <= player.Stats.GetValue(Stat.CATCH_RADIUS))
         {
-            lerpTimer += Time.deltaTime / 10f;
+            lerpTimer += Time.deltaTime / 5.5f;
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, lerpTimer);
             if (distance <= 1f)
             {

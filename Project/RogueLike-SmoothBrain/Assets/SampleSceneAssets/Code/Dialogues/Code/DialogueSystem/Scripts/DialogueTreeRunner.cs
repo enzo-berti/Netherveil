@@ -168,7 +168,7 @@ public class DialogueTreeRunner : MonoBehaviour
         dialogueMesh.text = string.Empty;
         foreach (var letter in dialogue)
         {
-            yield return new WaitForSecondsRealtime(letterDelay);
+            yield return new WaitForSeconds(letterDelay);
             dialogueMesh.text += letter;
         }
         dialogueMesh.text = dialogue;
