@@ -28,6 +28,7 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Texture damnationTexture;
     [SerializeField] private Texture divineTexture;
 
+    [SerializeField] private TMP_Text cooldownSpecialAbilityTextMesh;
     [SerializeField] private TMP_Text cooldownActiveTextMesh;
     [SerializeField] private Image keyActiveBack;
     [SerializeField] private Image keyAbilityBack;
@@ -58,6 +59,7 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted += ActiveItemCooldown;
+        ISpecialAbility.OnSpecialAbilityActivated += SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB += UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad += UpdateGamepadBiding;
     }
@@ -70,6 +72,7 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted -= ActiveItemCooldown;
+        ISpecialAbility.OnSpecialAbilityActivated -= SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad -= UpdateGamepadBiding;
     }
@@ -164,6 +167,12 @@ public class ItemBar : MonoBehaviour
     {
         StartCoroutine(ActiveItemCooldownCoroutine(itemEffect));
     }
+
+    private void SpecialAbilityCooldown()
+    {
+        StartCoroutine(SpecialAbilityCooldownCoroutine());
+    }
+
     private IEnumerator ActiveItemCooldownCoroutine(ItemEffect itemEffect)
     {
         float cooldown = 0.0f;
@@ -183,6 +192,26 @@ public class ItemBar : MonoBehaviour
 
         SetFrameItemData(activeFrame, itemEffect, backItemActiveNormal);
         cooldownActiveTextMesh.transform.parent.gameObject.SetActive(false);
+    }
+
+    private IEnumerator SpecialAbilityCooldownCoroutine()
+    {
+        float cooldown = 0.0f;
+        ISpecialAbility specialAbility = Utilities.Player.GetComponent<PlayerController>().SpecialAbility;
+
+        cooldownSpecialAbilityTextMesh.transform.parent.gameObject.SetActive(true);
+        Image filler = cooldownSpecialAbilityTextMesh.transform.parent.GetComponent<Image>();
+
+        while (cooldown < specialAbility.Cooldown)
+        {
+            filler.fillAmount = (specialAbility.Cooldown - cooldown) / specialAbility.Cooldown;
+
+            cooldown = Mathf.Max(specialAbility.CurrentEnergy, 0.0f);
+            cooldownActiveTextMesh.text = (Mathf.RoundToInt(specialAbility.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
+            yield return null;
+        }
+
+        cooldownSpecialAbilityTextMesh.transform.parent.gameObject.SetActive(false);
     }
 }
 

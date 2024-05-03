@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,6 +6,8 @@ public interface ISpecialAbility
 {
     public float Cooldown { get; set; }
     public float CurrentEnergy { get; set; }
+
+    public static event Action OnSpecialAbilityActivated;
 
     public void Activate();
 

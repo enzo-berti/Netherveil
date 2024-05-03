@@ -10,6 +10,7 @@ public class ItemDescription : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text descriptionText;
     [SerializeField] private TMP_Text priceText;
+    [SerializeField] private TMP_Text activePassiveText;
     private Item item;
     private float scaleDuration = 0.25f;
 
@@ -24,6 +25,8 @@ public class ItemDescription : MonoBehaviour
         {
             priceText.text = "Cost: " + item.Price + " Bloods";
         }
+
+        activePassiveText.text = (item as IPassiveItem) != null ? "Passive" : "Active";
 
         ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;
 
