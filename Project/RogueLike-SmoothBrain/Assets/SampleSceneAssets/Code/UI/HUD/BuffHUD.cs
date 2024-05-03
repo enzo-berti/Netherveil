@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class BuffHUD : MonoBehaviour
 {
@@ -9,14 +10,18 @@ public class BuffHUD : MonoBehaviour
 
     private void OnEnable()
     {
-        Item.OnRetrieved += item => AddBuffIcon(GameResources.Get<ItemDatabase>("ItemDatabase").GetItem(item.Name).icon);
+        Item.OnRetrieved += AddBuffIcon;
     }
 
     private void OnDisable()
     {
-        Item.OnRetrieved -= item => AddBuffIcon(GameResources.Get<ItemDatabase>("ItemDatabase").GetItem(item.Name).icon);
+        Item.OnRetrieved -= AddBuffIcon;
     }
 
+    public void AddBuffIcon(ItemEffect itemEffect)
+    {
+        AddBuffIcon(GameResources.Get<ItemDatabase>("ItemDatabase").GetItem(itemEffect.Name).icon);
+    }
     public void AddBuffIcon(Texture texture)
     {
         AddBuffIcon(texture, defaultTimeToDestroy);
