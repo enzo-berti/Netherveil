@@ -49,6 +49,7 @@ public class Fireball : MonoBehaviour, IAttacker
         if (hero)
         {
             Attack(hero);
+            hero.AddStatus(new Fire(3f, 1f));
             Destroy(gameObject);
         }
     }
