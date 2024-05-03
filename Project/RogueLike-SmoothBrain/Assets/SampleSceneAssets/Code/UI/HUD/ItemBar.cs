@@ -207,7 +207,7 @@ public class ItemBar : MonoBehaviour
             filler.fillAmount = (specialAbility.Cooldown - cooldown) / specialAbility.Cooldown;
 
             cooldown = Mathf.Max(specialAbility.CurrentEnergy, 0.0f);
-            cooldownActiveTextMesh.text = (Mathf.RoundToInt(specialAbility.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
+            cooldownSpecialAbilityTextMesh.text = (Mathf.RoundToInt(specialAbility.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
             yield return null;
         }
 

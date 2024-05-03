@@ -16,6 +16,7 @@ public class DivineShield : ISpecialAbility
 
     public void Activate()
     {
+        ISpecialAbility.OnSpecialAbilityActivated?.Invoke();
         PlayerController playerController = Utilities.Player.GetComponent<PlayerController>();
         playerController.DivineShieldVFX.SetFloat("Duration", duration);
         playerController.DivineShieldVFX.Play();

@@ -7,7 +7,7 @@ public interface ISpecialAbility
     public float Cooldown { get; set; }
     public float CurrentEnergy { get; set; }
 
-    public static event Action OnSpecialAbilityActivated;
+    public static Action OnSpecialAbilityActivated;
 
     public void Activate();
 
