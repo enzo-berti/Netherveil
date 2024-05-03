@@ -48,6 +48,8 @@ public class Spear : MonoBehaviour
 
     private void OnDestroy()
     {
+        OnPlacedInHand = null;
+        OnPlacedInWorld = null;
         if (trail) Destroy(trail);
         StopAllCoroutines();
     }

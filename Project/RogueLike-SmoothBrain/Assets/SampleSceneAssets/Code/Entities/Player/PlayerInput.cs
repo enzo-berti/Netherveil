@@ -85,6 +85,11 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDestroy()
     {
+        OnThrowSpear = null;
+        OnEndDash = null;
+        OnRetrieveSpear = null;
+        OnStartDash = null;
+
         hero.OnChangeState -= ResetForceReturnToMove;
         PauseMenu.OnPause -= DisableGameplayInputs;
         PauseMenu.OnUnpause -= EnableGameplayInputs;

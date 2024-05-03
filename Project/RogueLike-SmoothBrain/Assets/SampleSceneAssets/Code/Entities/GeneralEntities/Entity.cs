@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.VFX;
-using System.Collections;
-using static UnityEngine.EventSystems.EventTrigger;
 
 #if UNITY_EDITOR
 using UnityEditor;

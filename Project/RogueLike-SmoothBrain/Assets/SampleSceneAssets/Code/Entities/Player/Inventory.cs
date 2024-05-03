@@ -81,9 +81,9 @@ public class Inventory
     {
         if(passiveItems.Count > 0)
         {
-            foreach(var item in passiveItems)
+            for(int i = passiveItems.Count -1; i >= 0; --i)
             {
-                RemoveItem(item);
+                RemoveItem(passiveItems[i]);
             }
         }
         if(activeItem != null)

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Map;
+using UnityEngine.InputSystem;
 
 public class RuneOfPride : ItemEffect, IPassiveItem
 {
@@ -15,18 +16,18 @@ public class RuneOfPride : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        Hero.OnKill -= ctx => Berserk();
+        Hero.OnKill -= Berserk;
         MapUtilities.onEnter -= Reset;
     }
 
     public void OnRetrieved() 
     {
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        Hero.OnKill += ctx => Berserk();
+        Hero.OnKill += Berserk;
         MapUtilities.onEnter += Reset;
     } 
 
-    private void Berserk()
+    private void Berserk(IDamageable damageable)
     {
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         if (nbBoost * boostValue > MAX_BOOST) return;
