@@ -225,7 +225,6 @@ public abstract class Entity : MonoBehaviour
                 this.AppliedStatusList.Add(status);
                 return true;
             }
-            Debug.Log("MissChance");
             return false;
         }
     }
