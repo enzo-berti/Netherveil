@@ -30,7 +30,6 @@ public class DamoclesTriggeredState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         Context.Animator.SetTrigger("BackToWalk");
-        Debug.Log("EnterState");
         Context.IsInvincibleCount = 1;
     }
 

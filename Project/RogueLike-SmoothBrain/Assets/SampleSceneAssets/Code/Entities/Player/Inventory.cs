@@ -99,6 +99,11 @@ public class Inventory
         {
             if (activeItem == null)
             {
+                if(item.gameObject.TryGetComponent<ItemInteractionMerchant>(out var itemInteraction) && itemInteraction.enabled)
+                {
+                    item.gameObject.AddComponent<ItemInteraction>();
+                    itemInteraction.enabled = false;
+                }
                 ActiveItemGameObject = GameObject.Instantiate(item.gameObject);
                 ActiveItemGameObject.SetActive(false);
             }
@@ -106,9 +111,18 @@ public class Inventory
             {
                 var go = GameObject.Instantiate(ActiveItemGameObject, item.gameObject.transform.position, Quaternion.identity);
                 go.SetActive(true);
+                go.GetComponent<Item>().idItemName = item.idItemName;
+                go.GetComponentInChildren<ItemDescription>().RemovePriceText();
+                go.GetComponent<Item>().CreateItem();
                 go.GetComponent<Item>().ItemEffect.HasBeenRetreived = true;
                 go.GetComponent<Item>().ItemEffect.CurrentEnergy = (activeItem as ItemEffect).CurrentEnergy;
+                go.name = "item";
                 GameObject.Destroy(ActiveItemGameObject);
+                if (item.gameObject.TryGetComponent<ItemInteractionMerchant>(out var itemInteraction) && itemInteraction.enabled)
+                {
+                    item.gameObject.AddComponent<ItemInteraction>();
+                    itemInteraction.enabled = false;
+                }
                 ActiveItemGameObject = GameObject.Instantiate(item.gameObject);
                 ActiveItemGameObject.SetActive(false);
             }
@@ -116,7 +130,6 @@ public class Inventory
 
             if (!itemEffect.HasBeenRetreived)
             {
-                Debug.Log("First pick");
                 itemEffect.CurrentEnergy = (itemEffect as IActiveItem).Cooldown;
             }
             else
@@ -126,7 +139,6 @@ public class Inventory
                     CoroutineManager.Instance.StartCustom((itemEffect as IActiveItem).WaitToUse());
                 }
             }
-            Debug.Log(itemEffect.CurrentEnergy);
         }
         else if (itemEffect as IPassiveItem != null)
         {
