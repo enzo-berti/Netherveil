@@ -44,7 +44,7 @@ public class SaveManager : MonoBehaviour
             return;
         }
 
-
+        Load();
     }
 
     public bool SelectSave(int saveSelected)
@@ -53,7 +53,7 @@ public class SaveManager : MonoBehaviour
         return false;
     }
 
-    private void Load(int saveIndex)
+    private void Load()
     {
 
     }
