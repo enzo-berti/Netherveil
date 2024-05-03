@@ -23,7 +23,6 @@ public class Freeze : ConstantStatus
     {
         if (target != null)
         {
-            Debug.Log(target.Stats.GetValue(Stat.SPEED));
             baseAgentSpeed = target.Stats.GetValue(Stat.SPEED);
             target.Stats.SetValue(Stat.SPEED, 0);
             target.isFreeze = true;
@@ -33,7 +32,6 @@ public class Freeze : ConstantStatus
     public override void OnFinished()
     {
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
-        Debug.Log(baseAgentSpeed);
         target.isFreeze = false;
         target.GetComponentInChildren<Animator>().speed = 1;
         Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();

@@ -42,31 +42,22 @@ public class Item : MonoBehaviour
                 ItemPool.Add(database.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).ToList());
             }
         }
-        if (isRandomized)
-        {
-            RandMilestone(this);
-            //RandomizeItem(this);
-        }
-
-        itemEffect = LoadClass();
-
-        ItemData data = database.GetItem(idItemName);
-        Material matToRender = data.mat;
-        Mesh meshToRender = data.mesh;
-        price = data.price;
-
-        rarityColor = database.GetItemRarityColor(idItemName);
-
-        this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : this.GetComponentInChildren<MeshRenderer>().material;
-        this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : this.GetComponentInChildren<MeshFilter>().mesh;
-
-        itemDescription = GetComponent<ItemDescription>();
-        itemDescription.SetDescription(idItemName);
-        auraVFX.SetFloat("Orbs amount", (float)(data.RarityTier + 1));
-        auraVFX.SetVector4("Color", rarityColor);
-        auraVFX.Play();
+        
     }
+    private void Start()
+    {
+        if(itemEffect == null)
+        {
+            if (isRandomized)
+            {
+                RandMilestone(this);
+                //RandomizeItem(this);
 
+            }
+            CreateItem();
+        }
+        
+    }
     public static void InvokeOnRetrieved(ItemEffect effect)
     {
         OnRetrieved?.Invoke(effect);
@@ -189,5 +180,26 @@ public class Item : MonoBehaviour
         }
         int indexRandom = UnityEngine.Random.Range(0, allItems.Count - 1);
         idItemName = allItems[indexRandom];
+    }
+
+    public void CreateItem()
+    {
+        itemEffect = LoadClass();
+
+        ItemData data = database.GetItem(idItemName);
+        Material matToRender = data.mat;
+        Mesh meshToRender = data.mesh;
+        price = data.price;
+
+        rarityColor = database.GetItemRarityColor(idItemName);
+
+        this.GetComponentInChildren<MeshRenderer>().material = matToRender != null ? matToRender : this.GetComponentInChildren<MeshRenderer>().material;
+        this.GetComponentInChildren<MeshFilter>().mesh = meshToRender != null ? meshToRender : this.GetComponentInChildren<MeshFilter>().mesh;
+
+        itemDescription = GetComponent<ItemDescription>();
+        itemDescription.SetDescription(idItemName);
+        auraVFX.SetFloat("Orbs amount", (float)(data.RarityTier + 1));
+        auraVFX.SetVector4("Color", rarityColor);
+        auraVFX.Play();
     }
 }
