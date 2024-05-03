@@ -110,12 +110,29 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void OnDestroy()
     {
-        OnAttackHit -= ApplyLifeSteal;
+        OnAttackHit = null;
+        OnDeath = null;
+        OnBasicAttack = null;
+        OnFinisherAttack = null;
+        OnChargedAttack = null;
+        OnDashAttack = null;
+        OnSpearAttack = null;
+        OnTakeDamage = null;
+        OnQuestObtained = null;
+        OnQuestFinished = null;
+        OnBenedictionMaxDrawback = null;
+        OnCorruptionMaxDrawback = null;
+        OnCorruptionMaxUpgrade = null;
+        OnBenedictionMaxUpgrade = null;
+        OnKill = null;
+        OnBeforeApplyDamages = null;
+
         FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
-        OnDeath -= Inventory.RemoveAllItems;
+
+       Inventory.RemoveAllItems(Vector3.zero);
     }
 
     private void OnEnable()
@@ -180,21 +197,21 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         if (playerInput.LaunchedChargedAttack)
         {
-            damages += (int)(PlayerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
-            ApplyKnockback(damageable, this, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef,
-                stats.GetValue(Stat.KNOCKBACK_COEFF) * PlayerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
+            damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+            ApplyKnockback(damageable, this, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * playerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef,
+                stats.GetValue(Stat.KNOCKBACK_COEFF) * playerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
             OnChargedAttack?.Invoke(damageable, this);
         }
-        else if (playerController.ComboCount == PlayerController.MAX_COMBO_COUNT - 1)
+        else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT - 1)
         {
-            damages += PlayerController.FINISHER_DAMAGES;
+            damages += playerController.FINISHER_DAMAGES;
             DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
             ApplyKnockback(damageable, this);
             OnFinisherAttack?.Invoke(damageable, this);
         }
         else if (playerController.Spear.IsThrowing || playerController.Spear.IsThrown)
         {
-            damages += PlayerController.SPEAR_DAMAGES;
+            damages += playerController.SPEAR_DAMAGES;
             OnSpearAttack?.Invoke(damageable, this);
         }
         else if (playerInput.LaunchedDashAttack)
@@ -473,7 +490,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public static void CallCorruptionBenedictionText(int value)
     {
-        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, (value < 0 ? "-" : "+") + $"{Mathf.Abs(value)}" + (value < 0 ? " Benediction" : " Corruption"), 
+        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, (value < 0 ? "-" : "+") + $"{Mathf.Abs(value)}" + (value < 0 ? " Benediction" : " Corruption"),
             value < 0 ? benedictionColor : corruptionColor);
     }
 

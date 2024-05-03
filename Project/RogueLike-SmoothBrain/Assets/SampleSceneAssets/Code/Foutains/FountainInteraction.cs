@@ -71,10 +71,10 @@ namespace Fountain
                 int price = fountain.BloodPrice;
                 int trade = fountain.ValueTrade;
 
-                if (price > hero.Inventory.BloodValue.Value)
+                if (price > hero.Inventory.Blood.Value)
                     return;
 
-                hero.Inventory.BloodValue -= price;
+                hero.Inventory.Blood -= price;
                 hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
                 hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
                 Hero.CallCorruptionBenedictionText(fountain.ValueTrade);

@@ -28,7 +28,7 @@ public class DebugForMilestone : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {
-            Utilities.Hero.Inventory.BloodValue += 100;
+            Utilities.Hero.Inventory.Blood += 100;
         }
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
