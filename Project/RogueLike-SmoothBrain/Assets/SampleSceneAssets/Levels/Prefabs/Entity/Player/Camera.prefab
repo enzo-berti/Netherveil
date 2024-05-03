@@ -55,7 +55,6 @@ GameObject:
   - component: {fileID: 8283015209921068595}
   - component: {fileID: 3643265592366561555}
   - component: {fileID: 3783688006918872503}
-  - component: {fileID: 4638214093653374941}
   - component: {fileID: 8263756419043740393}
   m_Layer: 0
   m_Name: BigmapCam
@@ -174,18 +173,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!114 &4638214093653374941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 968553973604642444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f105885c1ef0b942ac34694c0159b23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8263756419043740393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16af4d0451f96ca42aab191f23fd1663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapRect: {fileID: 0}
 --- !u!1 &1978636766046406454
 GameObject:
   m_ObjectHideFlags: 0
