@@ -22,7 +22,7 @@ public class ItemDescription : MonoBehaviour
 
         if (priceText != null)
         {
-            priceText.text = item.Price + " Bloods";
+            priceText.text = "Cost: " + item.Price + " Bloods";
         }
 
         ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;

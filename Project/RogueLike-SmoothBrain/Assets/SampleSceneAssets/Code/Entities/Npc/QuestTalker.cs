@@ -36,11 +36,6 @@ public class QuestTalker : Npc
 
     public override void Interract()
     {
-        TriggerDialogue();
-    }
-
-    private void TriggerDialogue()
-    {
         if (dialogueTreeRunner.IsStarted)
         {
             dialogueTreeRunner.UpdateDialogue();
