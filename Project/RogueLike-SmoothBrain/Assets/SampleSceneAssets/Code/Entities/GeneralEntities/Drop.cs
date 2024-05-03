@@ -30,7 +30,7 @@ public class Drop
 
     private void DropBasic(Vector3 position, DropInfo dropInfo)
     {
-        for (int i = 0; i < dropInfo.Quantity; i++)
+        for (int i = 0; i < dropInfo.quantity; i++)
         {
             if (UnityEngine.Random.value <= dropInfo.chance)
             {
@@ -47,7 +47,7 @@ public class Drop
     {
         if (UnityEngine.Random.value <= dropInfo.chance)
         {
-            for (int i = 0; i < dropInfo.Quantity; i++)
+            for (int i = 0; i < dropInfo.quantity; i++)
             {
                 GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
                 Vector3 pos3D;

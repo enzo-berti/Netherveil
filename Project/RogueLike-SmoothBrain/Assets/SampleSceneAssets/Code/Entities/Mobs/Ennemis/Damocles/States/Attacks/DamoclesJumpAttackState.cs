@@ -30,7 +30,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         Jump,
         Backward
     }
-
+    private readonly float jumpTime = 0.75f;
     private State curState = State.Start;
     private bool jumpRoutineOn;
     private bool returnToPos = false;
@@ -139,7 +139,7 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         while (timer < timerWanted)
         {
             Context.gameObject.transform.rotation = baseRotation;
-            timer += Time.deltaTime;
+            timer += Time.deltaTime / jumpTime;
             timer = timer > timerWanted ? timerWanted : timer;
             Vector3 currentPos = Vector3.Lerp(previousPos, posToReach, timer);
             currentPos.y = MathsExtension.SquareFunction(a, b, c, timer);

@@ -12,6 +12,7 @@
 
 using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SonielBerserk : BaseState<SonielStateMachine>
 {
@@ -33,6 +34,8 @@ public class SonielBerserk : BaseState<SonielStateMachine>
     int rushingHash = Animator.StringToHash("Rushing");
     int stunnedHash = Animator.StringToHash("Stunned");
 
+    CapsuleCollider hitbox = null;
+
     //sale menfou
     float soundTimer = 0f;
 
@@ -49,6 +52,8 @@ public class SonielBerserk : BaseState<SonielStateMachine>
     protected override void EnterState()
     {
         currentState = BerserkState.RUSHING;
+
+        hitbox = Context.GetComponent<CapsuleCollider>();
 
         direction = Context.Player.transform.position - Context.transform.position;
         direction.y = 0;
@@ -110,7 +115,9 @@ public class SonielBerserk : BaseState<SonielStateMachine>
                 Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.BERSERK].data, debugMode: Context.DebugMode);
             }
 
-            if (Physics.Raycast(Context.transform.position + new Vector3(0, 0.2f, 0), Context.transform.forward, 4.5f, LayerMask.GetMask("Map")))
+            var path = new NavMeshPath();
+            Context.Agent.CalculatePath(Context.transform.position + direction * (Context.Agent.stoppingDistance + 0.1f), path);
+            if (path.status == NavMeshPathStatus.PathInvalid || Context.Agent.velocity.sqrMagnitude <= 0f)
             {
                 Context.Animator.ResetTrigger(stunnedHash);
                 Context.Animator.SetTrigger(stunnedHash);

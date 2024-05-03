@@ -79,4 +79,14 @@ public class ItemDescription : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(toggle ? canvasRectTransform.UpScaleCoroutine(scaleDuration, 0.01f) : canvasRectTransform.DownScaleCoroutine(scaleDuration, 0.01f));
     }
+
+    public void RemovePriceText()
+    {
+        if(priceText != null)
+        {
+            priceText.text = string.Empty;
+            priceText = null;
+        }
+       
+    }
 }
