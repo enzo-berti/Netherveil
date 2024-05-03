@@ -5,12 +5,6 @@ using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private MeshButton[] meshButtons;
-    private FloatingTextMainMenu[] floatingTexts;
-
-    private void Start()
-    {
-        floatingTexts = FindObjectsOfType<FloatingTextMainMenu>();
-    }
 
     public void StartGame()
     {
@@ -32,7 +26,6 @@ public class MainMenu : MonoBehaviour
     public void SetEnableMainMenu(bool enable)
     {
         SetEnableAllMeshButton(enable);
-        SetFadeAllFloatingTexts(enable);
     }
 
     private void SetEnableAllMeshButton(bool enable)
@@ -40,14 +33,6 @@ public class MainMenu : MonoBehaviour
         foreach (MeshButton meshButton in meshButtons)
         {
             meshButton.enabled = enable;
-        }
-    }
-
-    private void SetFadeAllFloatingTexts(bool enable)
-    {
-        foreach (FloatingTextMainMenu ft in floatingTexts)
-        {
-            ft.FadeFloatingTexts(enable);
         }
     }
 }

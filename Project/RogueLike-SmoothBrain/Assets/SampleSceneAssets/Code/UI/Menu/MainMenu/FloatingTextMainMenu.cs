@@ -19,22 +19,23 @@ public class FloatingTextMainMenu : MonoBehaviour
         if (routine != null)
             StopCoroutine(routine);
 
-        routine = StartCoroutine(FadeFloatingText(toggle));
+        if (toggle && m_Text.alpha != 1.0f)
+            routine = StartCoroutine(FadeFloatingText(0.0f, 1.0f));
+        else if (m_Text.alpha != 0.0f)
+            routine = StartCoroutine(FadeFloatingText(1.0f, 0.0f));
     }
 
-    private IEnumerator FadeFloatingText(bool toggle)
+    private IEnumerator FadeFloatingText(float from, float to)
     {
         float elapsed = 0;
-        float fadeFrom = toggle ? 0f : 1f;
-        float fadeTo = toggle ? 1f : 0f;
 
-        m_Text.alpha = fadeFrom;
+        m_Text.alpha = from;
         while (elapsed < fadeTime)
         {
             yield return null;
             elapsed = Mathf.Min(elapsed + Time.deltaTime, fadeTime);
-            m_Text.alpha = Mathf.Lerp(fadeFrom, fadeTo, elapsed / fadeTime);
+            m_Text.alpha = Mathf.Lerp(from, to, elapsed / fadeTime);
         }
-        m_Text.alpha = fadeTo;
+        m_Text.alpha = to;
     }
 }
