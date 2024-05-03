@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool dashWithMouse = true;
+
     private void Awake()
     {
         if (instance == null)
