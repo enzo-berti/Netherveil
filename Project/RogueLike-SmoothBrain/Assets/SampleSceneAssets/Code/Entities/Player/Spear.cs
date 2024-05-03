@@ -63,7 +63,7 @@ public class Spear : MonoBehaviour
         if (placedInWorld)
         {
             Vector3 updatePos = meshRenderer.transform.position;
-            updatePos.y += Mathf.Sin(Time.time) * 0.0009f;
+            updatePos.y += Mathf.Sin(Time.time * Time.timeScale) * 0.0009f;
             meshRenderer.transform.position = updatePos;
             meshRenderer.transform.Rotate(new Vector3(0, 50f * Time.deltaTime, 0));
         }

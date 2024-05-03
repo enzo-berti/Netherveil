@@ -246,7 +246,7 @@ public class PlayerInput : MonoBehaviour
 
         ResetComboWhenMoving(ctx);
 
-        if(true)
+        if(!GameManager.Instance.dashWithMouse)
         {
             if (Direction != Vector2.zero)
             {
