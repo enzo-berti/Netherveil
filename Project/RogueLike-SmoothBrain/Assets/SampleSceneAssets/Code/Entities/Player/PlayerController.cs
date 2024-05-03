@@ -48,11 +48,13 @@ public class PlayerController : MonoBehaviour
 
     //attack values
     public int ComboCount { get; set; } = 0;
-    public static readonly int FINISHER_DAMAGES = 10;
-    public static readonly int SPEAR_DAMAGES = 5;
-    public static readonly int CHARGED_ATTACK_DAMAGES = 75;
-    public static readonly int MAX_COMBO_COUNT = 3;
-    public static readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
+    public readonly int MAX_COMBO_COUNT = 3;
+
+    public int FINISHER_DAMAGES { get; private set; }
+    public int SPEAR_DAMAGES { get; private set; }
+    public int CHARGED_ATTACK_DAMAGES { get; private set; }
+
+    public readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
 
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;
@@ -94,6 +96,9 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         hero = GetComponent<Hero>();
+        FINISHER_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 2);
+        SPEAR_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK));
+        CHARGED_ATTACK_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 10);
     }
 
     private void Start()

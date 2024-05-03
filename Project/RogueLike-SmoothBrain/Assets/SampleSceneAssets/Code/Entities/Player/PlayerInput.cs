@@ -241,15 +241,23 @@ public class PlayerInput : MonoBehaviour
 
         ResetComboWhenMoving(ctx);
 
-        if (Direction != Vector2.zero)
+        if(true)
         {
-            DashDir = Direction.ToCameraOrientedVec3().normalized;
+            if (Direction != Vector2.zero)
+            {
+                DashDir = Direction.ToCameraOrientedVec3().normalized;
+            }
+            else
+            {
+                DashDir = transform.forward;
+            }
+            controller.OverridePlayerRotation(Quaternion.LookRotation(DashDir).eulerAngles.y, true);
         }
         else
         {
+            controller.RotatePlayerToDeviceAndMargin();
             DashDir = transform.forward;
         }
-        controller.OverridePlayerRotation(Quaternion.LookRotation(DashDir).eulerAngles.y, true);
 
         animator.ResetTrigger("Dash");
         animator.SetTrigger("Dash");
@@ -396,7 +404,7 @@ public class PlayerInput : MonoBehaviour
         {
             animator.SetTrigger("BasicAttack");
             hero.State = (int)Entity.EntityState.ATTACK;
-            controller.ComboCount = (++controller.ComboCount) % PlayerController.MAX_COMBO_COUNT;
+            controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
         }
 
         attackQueue = false;

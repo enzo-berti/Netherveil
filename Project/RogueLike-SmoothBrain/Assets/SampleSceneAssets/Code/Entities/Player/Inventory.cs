@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class Inventory
 {
-    public class Blood
+    public class BloodClass
     {
         private int value = 0;
 
@@ -16,7 +16,7 @@ public class Inventory
         }
 
         // Override the += operator
-        public static Blood operator +(Blood obj, int increment)
+        public static BloodClass operator +(BloodClass obj, int increment)
         {
             obj.value += increment;
             FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{increment} Blood", Color.red);
@@ -24,7 +24,7 @@ public class Inventory
         }
 
         // Override the -= operator
-        public static Blood operator -(Blood obj, int decrement)
+        public static BloodClass operator -(BloodClass obj, int decrement)
         {
             obj.value -= decrement;
             FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"-{decrement} Blood", Color.red);
@@ -54,7 +54,7 @@ public class Inventory
     {
         get => activeItem != null;
     }
-    public Blood BloodValue = new Blood();
+    public BloodClass Blood = new BloodClass();
 
     public int Keys = 0;
     private void AddActiveItem(IActiveItem item)

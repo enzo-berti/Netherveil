@@ -45,7 +45,7 @@ public class HudHandler : MonoBehaviour
 
     private void Update()
     {
-        BloodTestMesh.text = player.Inventory.BloodValue.Value.ToString();
+        BloodTestMesh.text = player.Inventory.Blood.Value.ToString();
         corruptionSlider.value = player.Stats.GetValue(Stat.CORRUPTION);
         corruptionText.text = Mathf.Abs(player.Stats.GetValue(Stat.CORRUPTION)).ToString();
     }
