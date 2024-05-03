@@ -16,7 +16,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Toggle()
     {
-        if (gameObject.activeSelf)
+        if (gameObject.activeSelf || settings.gameObject.activeSelf)
             Resume();
         else
             Pause();
@@ -24,6 +24,9 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        if (settings.gameObject.activeSelf)
+            return;
+
         Time.timeScale = 0.0f;
 
         hud.SetActive(false);
