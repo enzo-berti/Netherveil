@@ -90,6 +90,10 @@ public abstract class Mobs : Entity
         this.transform.parent.localPosition = Vector3.zero;
         this.transform.localPosition = pos;
         this.transform.localRotation = rot;
+        
+        if(this is not IDummy)
+            this.transform.rotation *= Camera.main.transform.rotation;
+
 
         StatSuckerVFX.SetVector3("Attract Target", GameObject.FindWithTag("Player").transform.position + Vector3.up);
         StatSuckerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXPositionBinderCustom>().ToArray()[0].Target = GameObject.FindWithTag("Player").transform;
