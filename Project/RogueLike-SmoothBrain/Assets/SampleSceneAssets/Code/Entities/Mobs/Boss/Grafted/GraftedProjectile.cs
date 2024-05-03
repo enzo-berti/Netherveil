@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GraftedProjectile : Projectile
@@ -9,6 +10,8 @@ public class GraftedProjectile : Projectile
     Grafted grafted;
     float tempSpeed = -1;
     float damageCooldown = 0f;
+
+    [SerializeField] List<GameObject> projectileList = new List<GameObject>();
 
     public float Speed
     {
@@ -26,6 +29,8 @@ public class GraftedProjectile : Projectile
     protected override void Awake()
     {
         damage = 5;
+        GameObject go = Instantiate(projectileList[UnityEngine.Random.Range(0, projectileList.Count)], transform);
+        go.GetComponent<Collider>().isTrigger = true;
     }
 
     public void Initialize(Grafted _grafted)
@@ -58,7 +63,7 @@ public class GraftedProjectile : Projectile
         if (damageCooldown > 0)
             damageCooldown -= Time.deltaTime;
         else
-            GetComponent<BoxCollider>().enabled = true;
+            GetComponentInChildren<BoxCollider>().enabled = true;
 
     }
 
@@ -83,12 +88,12 @@ public class GraftedProjectile : Projectile
         {
             damageableObject.ApplyDamage(damage, grafted);
 
-            if (!ignoreCollisions)
-            {
-                direction = -Vector3.up;
-            }
-            else
-            {
+            //if (!ignoreCollisions)
+            //{
+            //    direction = -Vector3.up;
+            //}
+            //else
+            //{
                 Vector3 knockbackDirection = new Vector3(-direction.z, 0, direction.x);
                 knockbackDirection.y = 0;
                 knockbackDirection.Normalize();
@@ -99,10 +104,10 @@ public class GraftedProjectile : Projectile
                 }
 
                 grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
-                GetComponent<BoxCollider>().enabled = false;
+                GetComponentInChildren<BoxCollider>().enabled = false;
                 damageCooldown = 0.2f;
                 return;
-            }
+            //}
         }
     }
 }
