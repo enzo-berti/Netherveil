@@ -112,8 +112,10 @@ public class DialogueTreeRunner : MonoBehaviour
                 newChoiceButton.transform.GetComponentInChildren<TMP_Text>().text = choiceData.option;
                 newChoiceButton.onClick.AddListener(() =>
                 {
+                    StopAllCoroutines();
                     tree.Process(choiceData.child);
                     isLaunched = false;
+                    isRunning = false;
                     UpdateDialogue();
                 });
 
