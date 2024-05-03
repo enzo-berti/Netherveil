@@ -33,7 +33,7 @@ public class TutoText : MonoBehaviour
 
     private void OnEnable()
     {
-        if(Application.isPlaying)
+        if (Application.isPlaying)
         {
             DeviceManager.OnChangedToKB += UpdateBindingDisplayString;
             DeviceManager.OnChangedToGamepad += UpdateBindingDisplayString;
@@ -59,19 +59,19 @@ public class TutoText : MonoBehaviour
         List<InputActionReference> actionRefs = GetCurrentAction();
 
         int nbDifferentTexts = 0;
-        for(int i = 0; i < actionRefs.Count; i++)
+        for (int i = 0; i < actionRefs.Count; i++)
         {
             if (actionRefs[i].action.GetBindingDisplayString(displayStringOptions) != text.text)
                 nbDifferentTexts++;
         }
 
-        if(nbDifferentTexts > 0)
+        if (nbDifferentTexts > 0)
         {
             string textString = initText;
-            textString = textString.Replace("^", GetDisplayString(actionRefs[0]));
-            if(textString.Contains("$"))
+            textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0]).GetCamelCase() + "\">");
+            if (textString.Contains("$"))
             {
-                textString = textString.Replace("$", GetDisplayString(actionRefs[1]));
+                textString = textString.Replace("$", "<sprite name=\"" + GetDisplayString(actionRefs[1]).GetCamelCase() + "\">");
             }
             text.text = textString;
         }
@@ -109,5 +109,19 @@ public class TutoText : MonoBehaviour
         }
 
         return displayString;
+    }
+
+    private string GetControlPath(InputActionReference actionRef)
+    {
+        // Get display string from action.
+        var action = actionRef != null ? actionRef.action : null;
+
+        if (action != null)
+        {
+            action.GetBindingDisplayString(0, out _, out string controlPath, displayStringOptions);
+            return controlPath;
+        }
+
+        return "error";
     }
 }
