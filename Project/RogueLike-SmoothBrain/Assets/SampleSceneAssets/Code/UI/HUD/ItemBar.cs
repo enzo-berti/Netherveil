@@ -57,7 +57,7 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxUpgrade += OnSpecialAbilityAdd;
         Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
-        IActiveItem.OnActiveItemCooldownStarted += e => StartCoroutine(ActiveItemCooldown(e));
+        IActiveItem.OnActiveItemCooldownStarted += ActiveItemCooldown;
         DeviceManager.OnChangedToKB += UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad += UpdateGamepadBiding;
     }
@@ -69,7 +69,7 @@ public class ItemBar : MonoBehaviour
         Hero.OnCorruptionMaxUpgrade -= OnSpecialAbilityAdd;
         Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
         Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
-        IActiveItem.OnActiveItemCooldownStarted -= e => StartCoroutine(ActiveItemCooldown(e));
+        IActiveItem.OnActiveItemCooldownStarted -= ActiveItemCooldown;
         DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad -= UpdateGamepadBiding;
     }
@@ -160,7 +160,11 @@ public class ItemBar : MonoBehaviour
         frame.GetComponent<Image>().sprite = spriteArray[(int)data.RarityTier];
     }
 
-    private IEnumerator ActiveItemCooldown(ItemEffect itemEffect)
+    private void ActiveItemCooldown(ItemEffect itemEffect)
+    {
+        StartCoroutine(ActiveItemCooldownCoroutine(itemEffect));
+    }
+    private IEnumerator ActiveItemCooldownCoroutine(ItemEffect itemEffect)
     {
         float cooldown = 0.0f;
 
