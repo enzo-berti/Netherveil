@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
 using UnityEngine.UI;
 
@@ -62,6 +63,7 @@ public class ItemBar : MonoBehaviour
         ISpecialAbility.OnSpecialAbilityActivated += SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB += UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad += UpdateGamepadBiding;
+        PauseMenu.OnUnpause += UpdateBinding;
     }
 
     private void OnDisable()
@@ -75,6 +77,19 @@ public class ItemBar : MonoBehaviour
         ISpecialAbility.OnSpecialAbilityActivated -= SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad -= UpdateGamepadBiding;
+        PauseMenu.OnUnpause -= UpdateBinding;
+    }
+
+    private void UpdateBinding()
+    {
+        if(DeviceManager.Instance.IsPlayingKB())
+        {
+            UpdateKeyboardBiding();
+        }
+        else
+        {
+            UpdateGamepadBiding();
+        }
     }
 
     private void UpdateKeyboardBiding()
@@ -103,8 +118,16 @@ public class ItemBar : MonoBehaviour
         keyActiveTextMesh.text = keyActive.ToUpper();
         keyAbilityTextMesh.text = keyAbility.ToUpper();
 
-        keyActiveBack.sprite = iconsList.ps4.GetSprite(keyActive);
-        keyAbilityBack.sprite = iconsList.ps4.GetSprite(keyAbility);
+        if(DeviceManager.Instance.CurrentDevice is DualShockGamepad)
+        {
+            keyActiveBack.sprite = iconsList.ps4.GetSprite(keyActive);
+            keyAbilityBack.sprite = iconsList.ps4.GetSprite(keyAbility);
+        }
+        else
+        {
+            keyActiveBack.sprite = iconsList.xbox.GetSprite(keyActive);
+            keyAbilityBack.sprite = iconsList.xbox.GetSprite(keyAbility);
+        }
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
