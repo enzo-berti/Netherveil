@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DummyStateMachine : Mobs, IDummy
@@ -46,6 +47,13 @@ public class DummyStateMachine : Mobs, IDummy
     private void TriggerAttackBool(IDamageable _damageable, IAttacker _attacker)
     {
         triggerAttack = true;
+        StartCoroutine(DesactiveTheTrigger(.1f));
+    }
+
+    IEnumerator DesactiveTheTrigger(float _time)
+    {
+        yield return new WaitForSeconds(_time);
+        triggerAttack = false;
     }
 
     public void ApplyDamage(int _value, IAttacker attacker, bool hasAnimation = true)
