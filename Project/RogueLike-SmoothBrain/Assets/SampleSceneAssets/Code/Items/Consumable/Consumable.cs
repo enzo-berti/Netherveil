@@ -7,6 +7,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
     protected Hero player;
     protected GameObject model;
     float lerpTimer = 0f;
+    readonly float ATTRACTION_DISTANCE = 6f;
 
     private void Awake()
     {
@@ -39,7 +40,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
             return;
 
         float distance = Vector2.Distance(player.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2());
-        if (distance <= player.Stats.GetValue(Stat.CATCH_RADIUS))
+        if (distance <= ATTRACTION_DISTANCE)
         {
             lerpTimer += Time.deltaTime / 5.5f;
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, lerpTimer);
