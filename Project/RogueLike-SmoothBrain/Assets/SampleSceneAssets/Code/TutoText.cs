@@ -68,10 +68,30 @@ public class TutoText : MonoBehaviour
         if (nbDifferentTexts > 0)
         {
             string textString = initText;
-            textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0]).GetCamelCase() + "\">");
-            if (textString.Contains("$"))
+
+            if (actionRefs[0].action.name == "Movement")
             {
-                textString = textString.Replace("$", "<sprite name=\"" + GetDisplayString(actionRefs[1]).GetCamelCase() + "\">");
+                textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0], 1).GetCamelCase() + "\">");
+                if (textString.Contains("$"))
+                {
+                    textString = textString.Replace("$", "<sprite name=\"" + GetDisplayString(actionRefs[0], 3).GetCamelCase() + "\">");
+                }
+                if (textString.Contains("%"))
+                {
+                    textString = textString.Replace("%", "<sprite name=\"" + GetDisplayString(actionRefs[0], 2).GetCamelCase() + "\">");
+                }
+                if (textString.Contains("*"))
+                {
+                    textString = textString.Replace("*", "<sprite name=\"" + GetDisplayString(actionRefs[0], 4).GetCamelCase() + "\">");
+                }
+            }
+            else
+            {
+                textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0]).GetCamelCase() + "\">");
+                if (textString.Contains("$"))
+                {
+                    textString = textString.Replace("$", "<sprite name=\"" + GetDisplayString(actionRefs[1]).GetCamelCase() + "\">");
+                }
             }
             text.text = textString;
         }
@@ -89,7 +109,7 @@ public class TutoText : MonoBehaviour
         }
     }
 
-    private string GetDisplayString(InputActionReference actionRef)
+    private string GetDisplayString(InputActionReference actionRef, int bindingIndex = 0)
     {
         // Get display string from action.
         var action = actionRef != null ? actionRef.action : null;
@@ -103,25 +123,11 @@ public class TutoText : MonoBehaviour
             }
             else
             {
-                string displayStringTMP = action.GetBindingDisplayString(0, out _, out string controlPath, displayStringOptions);
-                displayString = displayStringTMP.Length == 1 || displayStringTMP.Contains("MB") || actionRef.action.name == "Movement" ? displayStringTMP : controlPath;
+                string displayStringTMP = action.GetBindingDisplayString(bindingIndex, out _, out string controlPath, displayStringOptions);
+                displayString = displayStringTMP.Length == 1 ? displayStringTMP : controlPath;
             }
         }
 
         return displayString;
-    }
-
-    private string GetControlPath(InputActionReference actionRef)
-    {
-        // Get display string from action.
-        var action = actionRef != null ? actionRef.action : null;
-
-        if (action != null)
-        {
-            action.GetBindingDisplayString(0, out _, out string controlPath, displayStringOptions);
-            return controlPath;
-        }
-
-        return "error";
     }
 }
