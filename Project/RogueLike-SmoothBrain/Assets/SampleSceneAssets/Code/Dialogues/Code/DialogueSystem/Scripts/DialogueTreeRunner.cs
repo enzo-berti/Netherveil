@@ -149,14 +149,14 @@ public class DialogueTreeRunner : MonoBehaviour
             if (isRunning)
             {
                 StopAllCoroutines();
-                dialogueMesh.text = eventN.dialogueData.dialogue;
+                dialogueMesh.text = quest.dialogueData.dialogue;
                 isRunning = false;
             }
             else if (!isLaunched)
             {
-                SetDialogue(eventN.dialogueData.dialogue);
-                SetIllustration(eventN.dialogueData.illustration);
-                SetName(eventN.dialogueData.name);
+                SetDialogue(quest.dialogueData.dialogue);
+                SetIllustration(quest.dialogueData.illustration);
+                SetName(quest.dialogueData.name);
             }
             else if (isLaunched && !isRunning)
             {
