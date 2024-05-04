@@ -305,7 +305,7 @@ namespace Netherveil.Inputs
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""133bdb3c-dbcb-4413-9585-dfa8cd5a932c"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
