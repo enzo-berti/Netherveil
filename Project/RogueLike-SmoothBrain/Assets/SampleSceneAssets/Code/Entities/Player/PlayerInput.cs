@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour
     public static event Action OnRetrieveSpear;
     public static event Action OnStartDash;
     public static event Action<Vector3> OnEndDash;
+    public static event Action<Vector3> OnEndDashAttack;
 
     Coroutine dashCoroutine = null;
     Coroutine chargedAttackCoroutine = null;
@@ -48,6 +49,7 @@ public class PlayerInput : MonoBehaviour
     readonly List<Collider> dashAttackAlreadyAttacked = new();
     bool applyVibrationsDashAttack = true;
     public bool LaunchedDashAttack { get; private set; } = false;
+    private bool triggeredDashAttack = false;
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
@@ -89,6 +91,7 @@ public class PlayerInput : MonoBehaviour
         OnEndDash = null;
         OnRetrieveSpear = null;
         OnStartDash = null;
+        OnEndDashAttack = null;
 
         hero.OnChangeState -= ResetForceReturnToMove;
         PauseMenu.OnPause -= DisableGameplayInputs;
@@ -236,6 +239,7 @@ public class PlayerInput : MonoBehaviour
         {
             animator.ResetTrigger("DashAttack");
             animator.SetTrigger("DashAttack");
+            triggeredDashAttack = true;
         }
     }
 
@@ -354,11 +358,15 @@ public class PlayerInput : MonoBehaviour
 
     public void EndOfDashAnimation()
     {
-        RestartDashCoroutine();
-        controller.DashVFX.Stop();
-        hero.State = (int)Entity.EntityState.MOVE;
-        controller.ResetValues();
-        OnEndDash?.Invoke(transform.position);
+        if(!triggeredDashAttack)
+        {
+            RestartDashCoroutine();
+            controller.DashVFX.Stop();
+            hero.State = (int)Entity.EntityState.MOVE;
+            controller.ResetValues();
+            OnEndDash?.Invoke(transform.position);
+        }
+        triggeredDashAttack = false;
     }
 
     public void StartChargedAttackCasting()
@@ -444,6 +452,9 @@ public class PlayerInput : MonoBehaviour
     {
         hero.State = (int)Entity.EntityState.MOVE;
         controller.ResetValues();
+        RestartDashCoroutine();
+        controller.DashVFX.Stop();
+        OnEndDashAttack?.Invoke(transform.position);
         LaunchedDashAttack = false;
     }
 
