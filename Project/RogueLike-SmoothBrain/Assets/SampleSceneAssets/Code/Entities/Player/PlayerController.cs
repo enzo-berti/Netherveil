@@ -161,6 +161,8 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         MapUtilities.onFinishStage -= ResetStageDependentValues;
+        Spear.OnPlacedInHand = null;
+        Spear.OnPlacedInWorld = null;
     }
 
     private void Update()
