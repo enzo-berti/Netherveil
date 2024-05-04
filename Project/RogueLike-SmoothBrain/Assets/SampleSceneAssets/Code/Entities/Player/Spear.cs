@@ -8,6 +8,7 @@ public class Spear : MonoBehaviour
 {
     Transform player;
     Hero hero;
+    PlayerController playerController;
     Transform parent = null;
     Animator playerAnimator;
     public static event Action<Spear> OnPlacedInWorld;
@@ -58,8 +59,8 @@ public class Spear : MonoBehaviour
 
     void Update()
     {
-        playerAnimator.SetBool("SpearThrowing", IsThrowing);
-        playerAnimator.SetBool("SpearThrown", IsThrown);
+        playerAnimator.SetBool(playerController.SpearThrowingHash, IsThrowing);
+        playerAnimator.SetBool(playerController.SpearThrownHash, IsThrown);
 
 
         if (placedInWorld)

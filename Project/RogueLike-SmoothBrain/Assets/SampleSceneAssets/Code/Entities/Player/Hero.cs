@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.Video;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
@@ -160,9 +161,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 DeviceManager.Instance.ForceStopVibrations();
                 playerController.ResetValues();
-                animator.ResetTrigger("ChargedAttackRelease");
-                animator.SetBool("ChargedAttackCasting", false);
-                animator.ResetTrigger("BasicAttack");
+                animator.ResetTrigger(playerController.ChargedAttackReleaseHash);
+                animator.SetBool(playerController.ChargedAttackCastingHash, false);
+                animator.ResetTrigger(playerController.BasicAttackHash);
                 State = (int)Entity.EntityState.MOVE;
                 AudioManager.Instance.PlaySound(playerController.HitSFX);
                 FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
@@ -187,8 +188,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerController.OverridePlayerRotation(210f, true);
         animator.applyRootMotion = true;
         State = (int)EntityState.DEAD;
-        animator.SetBool("IsKnockback", false);
-        animator.SetBool("IsDead", true);
+        animator.SetBool(playerController.IsKnockbackHash, false);
+        animator.SetBool(playerController.IsDeadHash, true);
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)
@@ -334,17 +335,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-            animator.ResetTrigger("CorruptionUpgrade");
-            animator.SetTrigger("CorruptionUpgrade");
-            animator.ResetTrigger("PouringBlood");
+            animator.ResetTrigger(playerController.CorruptionUpgradeHash);
+            animator.SetTrigger(playerController.CorruptionUpgradeHash);
+            animator.ResetTrigger(playerController.PouringBloodHash);
         }
         else if (benedictionUpgradeOnly)
         {
             playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-            animator.ResetTrigger("BenedictionUpgrade");
-            animator.SetTrigger("BenedictionUpgrade");
-            animator.ResetTrigger("PouringBlood");
+            animator.ResetTrigger(playerController.BenedictionUpgradeHash);
+            animator.SetTrigger(playerController.BenedictionUpgradeHash);
+            animator.ResetTrigger(playerController.PouringBloodHash);
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
@@ -356,9 +357,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-                animator.ResetTrigger("BenedictionUpgrade");
-                animator.SetTrigger("BenedictionUpgrade");
-                animator.ResetTrigger("PouringBlood");
+                animator.ResetTrigger(playerController.BenedictionUpgradeHash);
+                animator.SetTrigger(playerController.BenedictionUpgradeHash);
+                animator.ResetTrigger(playerController.PouringBloodHash);
             }
             else
             {
@@ -375,9 +376,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-                animator.ResetTrigger("CorruptionUpgrade");
-                animator.SetTrigger("CorruptionUpgrade");
-                animator.ResetTrigger("PouringBlood");
+                animator.ResetTrigger(playerController.CorruptionUpgradeHash);
+                animator.SetTrigger(playerController.CorruptionUpgradeHash);
+                animator.ResetTrigger(playerController.PouringBloodHash);
             }
             else
             {

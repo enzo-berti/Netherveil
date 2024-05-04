@@ -56,6 +56,23 @@ public class PlayerController : MonoBehaviour
 
     public readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
 
+    //animator hashs
+    public int SpeedHash { get; private set; }
+    public int IsDeadHash { get; private set; }
+    public int IsKnockbackHash { get; private set; }
+    public int DashHash { get; private set; }
+    public int DashAttackHash { get; private set; }
+    public int BasicAttackHash { get; private set; }
+    public int ComboCountHash { get; private set; }
+    public int SpearThrowingHash { get; private set; }
+    public int SpearThrownHash { get; private set; }
+    public int ChargedAttackReleaseHash { get; private set; }
+    public int ChargedAttackCastingHash { get; private set; }
+    public int LaunchBombHash { get; private set; }
+    public int CorruptionUpgradeHash { get; private set; }
+    public int BenedictionUpgradeHash { get; private set; }
+    public int PouringBloodHash { get; private set; }
+
     [Header("VFXs")]
     [SerializeField] GameObject VFXWrapper;
     [SerializeField] SkinnedMeshRenderer bodyMesh;
@@ -117,6 +134,22 @@ public class PlayerController : MonoBehaviour
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
         MapUtilities.onFinishStage += ResetStageDependentValues;
+
+        SpeedHash = Animator.StringToHash("Speed");
+        IsDeadHash = Animator.StringToHash("IsDead");
+        IsKnockbackHash = Animator.StringToHash("IsKnockback");
+        DashHash = Animator.StringToHash("Dash");
+        DashAttackHash = Animator.StringToHash("DashAttack");
+        BasicAttackHash = Animator.StringToHash("BasicAttack");
+        ComboCountHash = Animator.StringToHash("ComboCount");
+        SpearThrowingHash = Animator.StringToHash("SpearThrowing");
+        SpearThrownHash = Animator.StringToHash("SpearThrown");
+        ChargedAttackReleaseHash = Animator.StringToHash("ChargedAttackRelease");
+        ChargedAttackCastingHash = Animator.StringToHash("ChargedAttackCasting");
+        LaunchBombHash = Animator.StringToHash("LaunchBomb");
+        CorruptionUpgradeHash = Animator.StringToHash("CorruptionUpgrade");
+        BenedictionUpgradeHash = Animator.StringToHash("BenedictionUpgrade");
+        PouringBloodHash = Animator.StringToHash("PouringBlood");
     }
 
     private void ResetStageDependentValues()
@@ -158,8 +191,8 @@ public class PlayerController : MonoBehaviour
             magnitudeCoef = 0f;
         }
 
-        animator.SetFloat("Speed", playerInput.Direction.magnitude * magnitudeCoef, 0.1f, Time.deltaTime);
-        animator.SetInteger("ComboCount", ComboCount);
+        animator.SetFloat(SpeedHash, playerInput.Direction.magnitude * magnitudeCoef, 0.1f, Time.deltaTime);
+        animator.SetInteger(ComboCountHash, ComboCount);
     }
 
     #region BasicMovements
@@ -411,15 +444,15 @@ public class PlayerController : MonoBehaviour
     public void PlayBloodPouringAnim()
     {
         hero.State = (int)Hero.PlayerState.MOTIONLESS;
-        animator.ResetTrigger("PouringBlood");
-        animator.SetTrigger("PouringBlood");
+        animator.ResetTrigger(PouringBloodHash);
+        animator.SetTrigger(PouringBloodHash);
     }
 
     public void PlayLaunchBombAnim()
     {
         hero.State = (int)Hero.PlayerState.MOTIONLESS;
-        animator.ResetTrigger("LaunchBomb");
-        animator.SetTrigger("LaunchBomb");
+        animator.ResetTrigger(LaunchBombHash);
+        animator.SetTrigger(LaunchBombHash);
     }
 
     #endregion

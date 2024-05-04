@@ -48,7 +48,7 @@ public class Knockback : MonoBehaviour
         }
         else if (characterController != null && hero.State != (int)Entity.EntityState.DEAD)
         {
-            animator.SetBool("IsKnockback", true);
+            animator.SetBool(Utilities.Player.GetComponent<PlayerController>().IsKnockbackHash, true);
             hero.State = (int)Hero.PlayerState.KNOCKBACK;
             knockbackRoutine = StartCoroutine(ApplyKnockback(characterController, attacker, direction, distance, speed));
         }
@@ -130,7 +130,7 @@ public class Knockback : MonoBehaviour
         {
             controller.enabled = true;
             hero.State = (int)Entity.EntityState.MOVE;
-            animator.SetBool("IsKnockback", false);
+            animator.SetBool(Utilities.Player.GetComponent<PlayerController>().IsKnockbackHash, false);
         }
         knockbackRoutine = null;
         isKnockback = false;
