@@ -19,6 +19,7 @@ public class Spear : MonoBehaviour
     GameObject trail;
 
     Quaternion initLocalRotation;
+    Quaternion initMeshRotation;
     Vector3 initLocalPosition;
 
     Vector3 spearPosition;
@@ -44,6 +45,7 @@ public class Spear : MonoBehaviour
         initLocalPosition = transform.localPosition;
         playerAnimator = player.GetComponentInChildren<Animator>();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
+        initMeshRotation = this.GetComponentInChildren<MeshRenderer>().gameObject.transform.localRotation;
     }
 
     private void OnDestroy()
@@ -90,6 +92,7 @@ public class Spear : MonoBehaviour
         transform.SetParent(parent, true);
         // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
         transform.SetLocalPositionAndRotation(initLocalPosition, initLocalRotation);
+        this.GetComponentInChildren<MeshRenderer>().gameObject.transform.localRotation = initMeshRotation;
         parent = null;
         meshRenderer.enabled = true;
         IsThrowing = false;
