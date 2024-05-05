@@ -386,7 +386,7 @@ namespace Netherveil.Inputs
                     ""name"": ""CamLookAway"",
                     ""type"": ""Value"",
                     ""id"": ""863d1bec-c2de-4858-887a-f608b6e4651b"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true

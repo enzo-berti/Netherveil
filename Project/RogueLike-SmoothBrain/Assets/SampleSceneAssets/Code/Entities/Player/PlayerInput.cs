@@ -444,6 +444,7 @@ public class PlayerInput : MonoBehaviour
 
     public void UpdateDashAttackAnimation()
     {
+        hero.State = (int)Hero.PlayerState.DASH;
         controller.UpdateVFXWrapperTransform();
         controller.ApplyCollide(controller.DashAttackCollider, dashAttackAlreadyAttacked, ref applyVibrationsDashAttack, false);
     }
@@ -451,11 +452,11 @@ public class PlayerInput : MonoBehaviour
     public void EndOfDashAttackAnimation()
     {
         hero.State = (int)Entity.EntityState.MOVE;
-        controller.ResetValues();
         RestartDashCoroutine();
         controller.DashVFX.Stop();
-        OnEndDashAttack?.Invoke(transform.position);
         LaunchedDashAttack = false;
+        controller.ResetValues();
+        OnEndDashAttack?.Invoke(transform.position);
     }
 
     #endregion

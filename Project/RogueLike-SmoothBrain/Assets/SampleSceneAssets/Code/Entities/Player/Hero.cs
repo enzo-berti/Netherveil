@@ -237,7 +237,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     {
         int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
-        if (lifeIncreasedValue > 0 && (damageable as MonoBehaviour).TryGetComponent(out Mobs mob) && !mob.IsSpawning)
+        if (lifeIncreasedValue > 0 && (damageable as Mobs) != null && !(damageable as Mobs).IsSpawning)
         {
             AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
             FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);

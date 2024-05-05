@@ -76,10 +76,10 @@ public abstract class Mobs : Entity
         OnDeath += cts => ClearStatus();
         OnDeath += drop.DropLoot;
 
-        if (this is IAttacker attacker)
-        {
-            attacker.OnAttackHit += attacker.ApplyStatus;
-        }
+        //if (this is IAttacker attacker)
+        //{
+        //    attacker.OnAttackHit += attacker.ApplyStatus;
+        //}
 
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());

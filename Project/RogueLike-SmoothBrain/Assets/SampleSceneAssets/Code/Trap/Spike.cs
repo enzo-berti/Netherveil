@@ -16,14 +16,13 @@ public class Spike : MonoBehaviour
     [SerializeField] GameObject spikesToMove;
     private int damage;
     private float waitUntilTimer;
-    List<IDamageable> entitiesToDealDamage;
+    List<IDamageable> entitiesToDealDamage = new List<IDamageable>();
     private float timerCheckEntitiesList;
 
     private void Awake()
     {
         startPosY = spikesToMove.transform.position.y;
         endPosY = spikesToMove.transform.position.y + Mathf.Abs(spikesToMove.transform.localPosition.y);
-        entitiesToDealDamage = new List<IDamageable>();
         waitUntilTimer = 3f;
         damage = 10;
         isOut = false;
@@ -54,12 +53,15 @@ public class Spike : MonoBehaviour
 
             List<IDamageable> entitiesToKeep = new List<IDamageable>();
 
-            foreach (IDamageable entity in entitiesToDealDamage)
+            if(entitiesToDealDamage != null && entitiesToDealDamage.Count > 0)
             {
-                IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
-                if (damageable != null && entity == damageable)
+                foreach (IDamageable entity in entitiesToDealDamage)
                 {
-                    entitiesToKeep.Add(entity);
+                    IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
+                    if (damageable != null && entity == damageable)
+                    {
+                        entitiesToKeep.Add(entity);
+                    }
                 }
             }
 
@@ -89,7 +91,10 @@ public class Spike : MonoBehaviour
 
     private void Update()
     {
-        entitiesToDealDamage.RemoveAll(x => (x as MonoBehaviour) == null);
+        if(entitiesToDealDamage != null && entitiesToDealDamage.Count > 0)
+        {
+            entitiesToDealDamage.RemoveAll(x => (x as MonoBehaviour) == null);
+        }
         timerCheckEntitiesList += Time.deltaTime;
     }
 
