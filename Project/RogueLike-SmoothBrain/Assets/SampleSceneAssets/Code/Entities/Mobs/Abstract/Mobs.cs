@@ -48,6 +48,7 @@ public abstract class Mobs : Entity
     public float DamageTakenMultiplicator { get; set; } = 1f;
     public Vector3 WanderZoneCenter { get => wanderZone.center; set => wanderZone.center = value; }
     public int WanderZoneRadius { get => wanderZone.radius; set => wanderZone.radius = value; }
+    public EnemyLifeBar LifeBar { get => lifeBar; }
 
     protected virtual void OnEnable()
     {
@@ -173,7 +174,7 @@ public abstract class Mobs : Entity
     {
         IsInvincibleCount--;
         spawningVFX.Stop();
-        lifeBar.gameObject.SetActive(true);
+        //lifeBar.gameObject.SetActive(true);
         animator.speed = 1;
         IsSpawning = false;
         IsKnockbackable = true;
@@ -262,6 +263,12 @@ public abstract class Mobs : Entity
 
         _value = (int)(_value * DamageTakenMultiplicator);
         Stats.DecreaseValue(Stat.HP, _value, false);
+
+        if (!lifeBar.gameObject.activeInHierarchy)
+        {
+            lifeBar.gameObject.SetActive(true);
+        }
+
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (notEffectDamage)
