@@ -321,13 +321,15 @@ MonoBehaviour:
     - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
         type: 3}
       chance: 0.33
-      Quantity: 1
+      quantity: 0
       isChanceShared: 0
+      decreasingValuePerDrop: 0
     - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
         type: 3}
       chance: 1
-      Quantity: 5
+      quantity: 0
       isChanceShared: 0
+      decreasingValuePerDrop: 0
   StatSuckerVFX: {fileID: 3361516864154606131}
   spawningVFX: {fileID: 7518701894529714449}
   wanderZone:
@@ -1048,11 +1050,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyLifebarCanva
       objectReference: {fileID: 0}
-    - target: {fileID: 406469051128394454, guid: 5c88c906649771a43bd23b9c1322fdf2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1152,21 +1149,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5662773921335967175, guid: 5c88c906649771a43bd23b9c1322fdf2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7228402893422998607, guid: 5c88c906649771a43bd23b9c1322fdf2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209317438256755233, guid: 5c88c906649771a43bd23b9c1322fdf2,
-        type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
