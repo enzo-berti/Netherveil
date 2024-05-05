@@ -95,7 +95,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
                 continue;
             }
 
-            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, defaultVisionAngle, (int)stats.GetValue(Stat.VISION_RANGE), transform.forward, LayerMask.GetMask("Entity"))
+            nearbyEntities = PhysicsExtensions.OverlapVisionCone(transform.position, VisionAngle, VisionRange, transform.forward, LayerMask.GetMask("Entity"))
                     .Select(x => x.GetComponent<Entity>())
                     .Where(x => x != null && x != this)
                     .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -140,6 +140,13 @@ public class DamoclesStateMachine : Mobs, IDamocles
                     break;
             }
         }
+
+        if (currentState is DamoclesWanderingState || currentState is DamoclesTriggeredState)
+        {
+            currentState = factory.GetState<DamoclesTriggeredState>();
+            player = Utilities.Hero;
+        }
+
     }
 
     public void Attack(IDamageable damageable, int additionalDamages = 0)

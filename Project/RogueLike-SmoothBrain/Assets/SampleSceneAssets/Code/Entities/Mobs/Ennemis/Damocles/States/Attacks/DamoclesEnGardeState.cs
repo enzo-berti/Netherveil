@@ -9,10 +9,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         : base(currentContext, currentFactory) { }
 
     private bool stateEnded = false;
-    private float elapsedTimeMovement = 0.0f;
     private float guardTime = 1.5f;
-    //private float timerForCircle = Mathf.PI;
-    //private bool isTimerIncreasing = true;
 
     float travelledTime = 0f;
     int directionFactor = 1;
@@ -21,24 +18,21 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
     {
-        if (stateEnded)
+        if (!Context.Player)
         {
-            SwitchState(Factory.GetState<DamoclesJumpAttackState>());
-            return;
+            SwitchState(Factory.GetState<DamoclesWanderingState>());
         }
-
-        if (Context.Player)
+        else if (stateEnded)
         {
             if (Vector3.Distance(Context.transform.position, Context.Player.transform.position) >= Context.Stats.GetValue(Stat.VISION_RANGE) * 2 / 3)
             {
                 SwitchState(Factory.GetState<DamoclesTriggeredState>());
             }
+            else
+            {
+                SwitchState(Factory.GetState<DamoclesJumpAttackState>());
+            }
         }
-        else
-        {
-            SwitchState(Factory.GetState<DamoclesWanderingState>());
-        }
-
     }
 
     // This method will be call only one time before the update.
@@ -61,21 +55,6 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
     protected override void UpdateState()
     {
         stateTimer += Time.deltaTime;
-        //if (isTimerIncreasing)
-        //{
-        //    timerForCircle += Time.deltaTime;
-        //    if (timerForCircle > 2 * Mathf.PI) isTimerIncreasing = false;
-        //}
-        //else
-        //{
-        //    timerForCircle -= Time.deltaTime;
-        //    if (timerForCircle < Mathf.PI) isTimerIncreasing = true;
-        //}
-        //Context.transform.LookAt(Context.Player.transform.position);
-        //float posRadiusCircle = Vector3.Distance(Context.transform.position, Context.Player.transform.position);
-        //posRadiusCircle = Mathf.Clamp(posRadiusCircle, 2f, 5f);
-        //Context.MoveTo(Context.Player.transform.position.GetPointOnCircle(posRadiusCircle, timerForCircle));
-
 
         Vector3 playerToMob = Context.transform.position - Context.Player.transform.position;
         playerToMob.y = 0f;
