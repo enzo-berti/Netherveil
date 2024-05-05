@@ -20,7 +20,6 @@ public class ExplodingBomb : MonoBehaviour
     [SerializeField] private LayerMask damageLayer;
     private bool isActive;
     private bool isMoving => throwRoutine != null;
-    private float elapsedExplosionTime;
     private Coroutine throwRoutine;
     private Coroutine explosionRoutine;
     IAttacker launcher = null;
@@ -43,12 +42,6 @@ public class ExplodingBomb : MonoBehaviour
     public void SetBlastDamages(int damages)
     {
         blastDamage = damages;
-    }
-
-    void Update()
-    {
-        if (isActive)
-            UpdateTimerExplosion();
     }
 
     private IEnumerator ThrowToPosCoroutine(Vector3 pos, float throwTime)
@@ -85,17 +78,16 @@ public class ExplodingBomb : MonoBehaviour
         StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
     }
 
-    void UpdateTimerExplosion()
-    {
-        if (elapsedExplosionTime + timerBeforeExplode < Time.time)
-            Explode();
-    }
-
     public void Activate()
     {
         isActive = true;
-        elapsedExplosionTime = Time.time;
+        StartCoroutine(ActivateRoutine());
+    }
 
+    private IEnumerator ActivateRoutine()
+    {
+        yield return new WaitForSeconds(timerBeforeExplode);
+        Explode();
     }
 
     public void Explode()

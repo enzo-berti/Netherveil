@@ -20,7 +20,6 @@ public class PoisonousPuddle : MonoBehaviour
     [SerializeField] private LayerMask damageLayer;
     private bool isActive;
     private bool isMoving => throwRoutine != null;
-    private float elapsedOnFieldTime;
     private Coroutine throwRoutine;
     private Coroutine impactRoutine;
     IAttacker launcher = null;
@@ -43,12 +42,6 @@ public class PoisonousPuddle : MonoBehaviour
     public void SetImpactDamages(int damages)
     {
         impactDamage = damages;
-    }
-
-    void Update()
-    {
-        if (isActive)
-            UpdateTimerExplosion();
     }
 
     private IEnumerator ThrowToPosCoroutine(Vector3 pos, float throwTime)
@@ -85,23 +78,22 @@ public class PoisonousPuddle : MonoBehaviour
         StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
     }
 
-    void UpdateTimerExplosion()
-    {
-        if (elapsedOnFieldTime + timerBeforeRemoved < Time.time)
-            Impact();
-    }
-
     public void Activate()
     {
         isActive = true;
-        elapsedOnFieldTime = Time.time;
-
+        StartCoroutine(ActivateRoutine());
     }
 
     public void Impact()
     {
         if (impactRoutine == null)
             impactRoutine = StartCoroutine(ImpactRoutine());
+    }
+
+    private IEnumerator ActivateRoutine()
+    {
+        yield return new WaitForSeconds(timerBeforeRemoved);
+        Impact();
     }
 
     private IEnumerator ImpactRoutine()
@@ -134,16 +126,6 @@ public class PoisonousPuddle : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public void ApplyDamage(int _value, bool isCrit = false, bool hasAnimation = true)
-    {
-        Activate();
-    }
-
-    public void Death()
-    {
-        throw new System.NotImplementedException();
-    }
-
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -155,7 +137,7 @@ public class PoisonousPuddle : MonoBehaviour
         Handles.Label(transform.position + Vector3.up,
             $"Bomb" +
             $"\nActivate : {isActive}" +
-            $"\nBefore explode : {timerBeforeRemoved - Time.time + elapsedOnFieldTime}");
+            $"\nBefore explode : {timerBeforeRemoved}");
     }
 #endif
 }
