@@ -39,6 +39,7 @@ public class GorgonWanderingState : BaseState<GorgonStateMachine>
     {
         Context.WanderZoneCenter = Context.transform.position;
         idleTimer = Random.Range(-0.5f, 0.5f);
+        if (Context.LifeBar.gameObject.activeInHierarchy) Context.LifeBar.FadeOutOpacity(0.5f, 0.25f);
     }
 
     // This method will be called only once after the last update.

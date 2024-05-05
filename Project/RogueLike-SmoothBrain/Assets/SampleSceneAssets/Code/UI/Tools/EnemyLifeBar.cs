@@ -7,10 +7,14 @@ public class EnemyLifeBar : MonoBehaviour
     [Header("Gameobjects & Components")]
     [SerializeField] private Image lifeBarSlider;
     [SerializeField] private Image damageBarSlider;
+    [SerializeField] private Image background;
     private RectTransform barRect;
 
     private float maxValue;
     private float value;
+
+    float alpha;
+    Coroutine fadeCoroutine;
 
     [Header("Parameters")]
     [SerializeField, MinMaxSlider(20.0f, 500.0f)] private Vector2 barSizeClamp = new Vector2(100.0f, 300.0f);
@@ -25,6 +29,12 @@ public class EnemyLifeBar : MonoBehaviour
     private void Awake()
     {
         barRect = GetComponent<RectTransform>();
+        alpha = 1f;
+    }
+
+    private void OnDestroy()
+    {
+        if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
     }
 
     public void SetMaxValue(float value)
@@ -33,10 +43,13 @@ public class EnemyLifeBar : MonoBehaviour
 
         // update size life bar
         ResizeLifeBar();
+
     }
-    
+
     public void ValueChanged(float value)
     {
+        TriggerHealthBar();
+
         // update life bar
         this.value = value;
         lifeBarSlider.fillAmount = FactorValue;
@@ -73,5 +86,60 @@ public class EnemyLifeBar : MonoBehaviour
         }
 
         damageRoutine = null;
+    }
+
+    public void FadeOutOpacity(float _alpha, float _duration)
+    {
+        fadeCoroutine = StartCoroutine(FadeCoroutine(_alpha, _duration));
+    }
+
+    public void TriggerHealthBar()
+    {
+        alpha = 1f;
+        UpdateAlpha();
+
+        damageBarSlider.enabled = true;
+    }
+
+    void UpdateAlpha()
+    {
+        Color lifebarColor = lifeBarSlider.color;
+        lifebarColor.a = alpha;
+        lifeBarSlider.color = lifebarColor;
+
+        Color backgroundColor = background.color;
+        backgroundColor.a = alpha;
+        background.color = backgroundColor;
+    }
+
+    IEnumerator FadeCoroutine(float _desiredAlpha, float _duration)
+    {
+        float timer = 0f;
+        float alphaDifference = _desiredAlpha - alpha;
+        float initialAlpha = alpha;
+
+        damageBarSlider.gameObject.SetActive(false);
+
+        while (alpha != _desiredAlpha)
+        {
+            timer += Time.deltaTime;
+
+            alpha = initialAlpha + alphaDifference * (timer / _duration);
+            UpdateAlpha();
+
+            if (timer >= _duration)
+            {
+                alpha = _desiredAlpha;
+                UpdateAlpha();
+                yield break;
+            }
+
+            yield return null;
+        }
+
+        if (alpha >= 1f)
+        {
+            damageBarSlider.gameObject.SetActive(true);
+        }
     }
 }

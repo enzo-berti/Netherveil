@@ -20,9 +20,8 @@ public class KlopsWanderingState : BaseState<KlopsStateMachine>
     protected override void EnterState()
     {
         Context.WanderZoneCenter = Context.transform.position;
-
-        Context.Stats.SetValue(Stat.SPEED, 5);
         idleTimer = Random.Range(-0.5f, 0.5f);
+        if (Context.LifeBar.gameObject.activeInHierarchy) Context.LifeBar.FadeOutOpacity(0.5f, 0.25f);
     }
 
     // This method will be call only one time after the last update.
