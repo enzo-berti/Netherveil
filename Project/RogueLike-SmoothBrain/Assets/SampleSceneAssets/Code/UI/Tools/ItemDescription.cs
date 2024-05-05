@@ -26,7 +26,7 @@ public class ItemDescription : MonoBehaviour
             priceText.text = "Cost: " + item.Price + " Bloods";
         }
 
-        activePassiveText.text = (item as IPassiveItem) != null ? "Passive" : "Active";
+        activePassiveText.text = (item.ItemEffect as IPassiveItem) != null ? "Passive" : "Active";
 
         ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;
 
