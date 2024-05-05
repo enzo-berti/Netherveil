@@ -163,9 +163,9 @@ public class DialogueTreeRunner : MonoBehaviour
                 if (TalkerNPC != null)
                 {
                     if (string.IsNullOrEmpty(quest.questTag))
-                        player.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), TalkerNPC.Type, TalkerNPC.Grade);
+                        player.CurrentQuest = Quest.LoadClass(TalkerNPC.GetQuestName(), TalkerNPC);
                     else
-                        player.CurrentQuest = Quest.LoadClass(quest.questTag, TalkerNPC.Type, TalkerNPC.Grade);
+                        player.CurrentQuest = Quest.LoadClass(quest.questTag, TalkerNPC);
                 }
 
                 tree.Process(quest.child);

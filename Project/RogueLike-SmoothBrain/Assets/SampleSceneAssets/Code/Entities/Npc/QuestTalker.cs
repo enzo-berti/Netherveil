@@ -1,4 +1,5 @@
 using DialogueSystem.Runtime;
+using Map.Generation;
 using UnityEngine;
 
 public class QuestTalker : Npc
@@ -10,6 +11,7 @@ public class QuestTalker : Npc
     [SerializeField] protected DialogueTree alreadyDoneQuestDT;
     protected DialogueTreeRunner dialogueTreeRunner;
     protected Hero player;
+    static QuestDatabase database;
     public enum TalkerType
     {
         CLERIC,
@@ -26,6 +28,21 @@ public class QuestTalker : Npc
     [SerializeField] protected TalkerGrade grade;
     public TalkerType Type => type;
     public TalkerGrade Grade => grade;
+    public Quest.QuestDifficulty QuestDifficulty { get; private set; }
+    public int QuestIndex { get; private set; }
+
+    protected override void Awake()
+    {
+        if (database == null)
+        {
+            database = GameResources.Get<QuestDatabase>("QuestDatabase");
+        }
+
+        QuestIndex = Seed.Range(0, database.datas.Count);
+
+        QuestDifficulty = database.GetQuest(database.datas[QuestIndex].idName).HasDifferentGrades ? 
+            (Quest.QuestDifficulty)Seed.Range(0, (int)Quest.QuestDifficulty.NB) : Quest.QuestDifficulty.MEDIUM;
+    }
 
     protected override void Start()
     {
@@ -77,5 +94,10 @@ public class QuestTalker : Npc
             return true;
         }
         return false;
+    }
+
+    public string GetQuestName()
+    {
+        return database.datas[QuestIndex].idName;
     }
 }
