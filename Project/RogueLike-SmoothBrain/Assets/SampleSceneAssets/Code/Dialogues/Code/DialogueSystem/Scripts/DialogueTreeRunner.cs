@@ -13,6 +13,7 @@ public class DialogueTreeRunner : MonoBehaviour
     [SerializeField] private TMP_Text nameMesh;
     [SerializeField] private TMP_Text dialogueMesh;
     [SerializeField] private Transform choiceTab;
+    public Image NameBackgroundImage;
 
     [Header("Parameters")]
     private DialogueTree tree;

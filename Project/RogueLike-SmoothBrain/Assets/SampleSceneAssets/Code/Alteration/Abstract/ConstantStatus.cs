@@ -35,7 +35,8 @@ public abstract class ConstantStatus : Status
             {
                 stopTimes.Add(duration + currentTime);
             }
+            PlayVfx(vfxName);
         }
-        PlayVfx(vfxName);
+        
     }
 }

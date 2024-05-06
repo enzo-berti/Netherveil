@@ -50,6 +50,7 @@ public class SonielStateMachine : Mobs, ISoniel
     bool playerHit = false;
     float attackCooldown = 1f;
     float initialHP;
+    CameraUtilities cameraUtilities;
 
     [Header("Spinning swords")]
     [SerializeField] Transform[] wrists;
@@ -75,6 +76,7 @@ public class SonielStateMachine : Mobs, ISoniel
     public bool PhaseTwo { get => phaseTwo; }
     public bool PlayerHit { get => playerHit; set => playerHit = value; }
     public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
+    public CameraUtilities CameraUtilities { get => cameraUtilities; }
 
     // spinning swords
     public bool HasLeftArm { get => tiedArms[0]; set => tiedArms[0] = value; }
@@ -101,6 +103,8 @@ public class SonielStateMachine : Mobs, ISoniel
         player = Utilities.Hero;
 
         initialHP = stats.GetValue(Stat.HP);
+
+        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
         // null ref de con
         swords[0].SetSounds(sounds.swordHitMap, sounds.swordSpinning);
@@ -173,37 +177,6 @@ public class SonielStateMachine : Mobs, ISoniel
     public void MoveTo(Vector3 posToMove)
     {
         agent.SetDestination(posToMove);
-    }
-
-    public void AttackCollide(Collider _collider, bool debugMode = false)
-    {
-        if (debugMode)
-        {
-            _collider.gameObject.SetActive(true);
-        }
-
-        Collider[] tab = null;
-
-        if (_collider is CapsuleCollider)
-            tab = PhysicsExtensions.CapsuleOverlap(_collider as CapsuleCollider, LayerMask.GetMask("Entity"));
-        else if (_collider is BoxCollider)
-            tab = PhysicsExtensions.BoxOverlap(_collider as BoxCollider, LayerMask.GetMask("Entity"));
-        else
-            Debug.LogError("Type de collider non reconnu.");
-
-        if (tab != null)
-        {
-            if (tab.Length > 0)
-            {
-                foreach (Collider col in tab)
-                {
-                    if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != gameObject)
-                    {
-                        Attack(col.gameObject.GetComponent<IDamageable>());
-                    }
-                }
-            }
-        }
     }
     #endregion
 

@@ -11,7 +11,7 @@ public class CameraUtilities : MonoBehaviour
     private float startingIntensity;
     static public bool toggleScreenShake = true;
 
-    [HideInInspector]public float defaultFOV;
+    [HideInInspector] public float defaultFOV;
 
     private void Start()
     {
@@ -46,7 +46,7 @@ public class CameraUtilities : MonoBehaviour
 
     public void ShakeCamera(float _intensity, float _time, Func<float, float> easingFunction)
     {
-        if(toggleScreenShake)
+        if (toggleScreenShake)
         {
             CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
             cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = _intensity;

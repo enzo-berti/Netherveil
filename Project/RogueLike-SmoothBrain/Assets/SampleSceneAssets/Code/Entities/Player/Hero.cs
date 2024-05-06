@@ -19,8 +19,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         MOTIONLESS
     }
 
-    static Color corruptionColor = new Color(0.62f, 0.34f, 0.76f, 1.0f);
-    static Color benedictionColor = Color.yellow;
+    public static Color corruptionColor = new Color(0.62f, 0.34f, 0.76f, 1.0f);
+    public static Color corruptionColor2 = new Color(0.4f, 0.08f, 0.53f);
+    public static Color benedictionColor = Color.yellow;
+    public static Color benedictionColor2 = new Color(0.89f, 0.75f, 0.14f);
 
     Animator animator;
     PlayerInput playerInput;

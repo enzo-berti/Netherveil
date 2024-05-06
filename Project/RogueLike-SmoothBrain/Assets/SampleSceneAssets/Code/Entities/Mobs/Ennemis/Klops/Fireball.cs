@@ -2,14 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fireball : MonoBehaviour
+public class Fireball : MonoBehaviour, IReflectable
 {
     // Start is called before the first frame update
-    public Vector3 direction = Vector3.zero;
+    private Vector3 direction = Vector3.zero;
 
     public List<Status> statusToApply = new List<Status>();
     public List<Status> StatusToApply => statusToApply;
+
+    public Vector3 Direction { get => direction; set => direction = value; }
+    public bool IsReflected { get; set; }
+
     public float FireballSpeed = 2f;
+
 
     float radius = 0f;
 
@@ -20,12 +25,15 @@ public class Fireball : MonoBehaviour
         Destroy(gameObject, 3.0f);
 
         radius = GetComponent<CapsuleCollider>().radius;
+        Vector3 dir = direction;
+        dir.y = 0;
+        direction = dir;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += direction.normalized * Time.deltaTime * FireballSpeed;
+        transform.position += Direction.normalized * Time.deltaTime * FireballSpeed;
 
         RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, radius);
         if (hits.Length > 0)
@@ -43,13 +51,27 @@ public class Fireball : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Hero hero = (other.GetComponentInParent<Hero>());
 
-        if (hero)
+
+        if (!IsReflected)
         {
-            Attack(hero);
-            hero.AddStatus(new Fire(3f, 1f), launcher as IAttacker);
-            Destroy(gameObject);
+            Hero hero = other.GetComponentInParent<Hero>();
+            if (hero)
+            {
+                Attack(hero);
+                hero.AddStatus(new Fire(3f, 1f), launcher as IAttacker);
+                Destroy(gameObject);
+            }
+        }
+        else if (IsReflected)
+        {
+            Mobs mobs = other.GetComponentInParent<Mobs>();
+            if (mobs)
+            {
+                Attack(mobs as IDamageable);
+                mobs.AddStatus(new Fire(3f, 1f), launcher as IAttacker);
+                Destroy(gameObject);
+            }
         }
     }
 
