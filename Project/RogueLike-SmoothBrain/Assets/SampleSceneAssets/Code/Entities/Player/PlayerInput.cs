@@ -645,6 +645,8 @@ public class PlayerInput : MonoBehaviour
         chargedAttackMax = false;
         chargedAttackTime = 0f;
         LaunchedDashAttack = false;
+        triggeredDashAttack = false;
+        controller.DashVFX.Stop();
         animator.ResetTrigger(controller.DashAttackHash);
     }
 
