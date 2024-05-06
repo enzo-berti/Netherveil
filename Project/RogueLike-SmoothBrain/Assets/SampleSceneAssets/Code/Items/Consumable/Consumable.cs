@@ -43,7 +43,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, lerpTimer);
             if (distance <= 1f)
             {
-                AudioManager.Instance.PlaySound(AudioManager.Instance.PickUpItemSFX);
+                AudioManager.Instance.PlaySound(AudioManager.Instance.PickUpCollectibleSFX);
                 OnRetrieved();
             }
         }
