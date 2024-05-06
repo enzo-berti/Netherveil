@@ -28,6 +28,7 @@ public class ZiggoWanderingState : BaseState<ZiggoStateMachine>
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
+        if (Context.LifeBar.gameObject.activeInHierarchy) Context.LifeBar.TriggerHealthBar();
     }
 
     // This method will be called every frame.

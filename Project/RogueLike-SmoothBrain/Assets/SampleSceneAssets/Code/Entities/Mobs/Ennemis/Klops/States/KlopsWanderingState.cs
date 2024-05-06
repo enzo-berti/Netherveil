@@ -27,6 +27,7 @@ public class KlopsWanderingState : BaseState<KlopsStateMachine>
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
+        if (Context.LifeBar.gameObject.activeInHierarchy) Context.LifeBar.TriggerHealthBar();
     }
 
     // This method will be call every frame.

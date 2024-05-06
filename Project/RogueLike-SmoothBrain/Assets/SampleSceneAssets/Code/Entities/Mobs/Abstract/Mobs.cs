@@ -96,7 +96,6 @@ public abstract class Mobs : Entity
         if (this is not IDummy)
             transform.rotation *= Camera.main.transform.rotation;
 
-
         StatSuckerVFX.SetVector3("Attract Target", GameObject.FindWithTag("Player").transform.position + Vector3.up);
         StatSuckerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXPositionBinderCustom>().ToArray()[0].Target = GameObject.FindWithTag("Player").transform;
 
@@ -322,30 +321,6 @@ public abstract class Mobs : Entity
 
         return (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
     }
-
-    // pete smr
-
-    //public bool HitMap(Collider _collider)
-    //{
-    //    Collider[] collidedObjects;
-    //    if (_collider is CapsuleCollider)
-    //        collidedObjects = PhysicsExtensions.CapsuleOverlap(_collider as CapsuleCollider);
-    //    else if (_collider is SphereCollider)
-    //        collidedObjects = PhysicsExtensions.SphereOverlap(_collider as SphereCollider);
-    //    else if (_collider is BoxCollider)
-    //        collidedObjects = PhysicsExtensions.BoxOverlap(_collider as BoxCollider);
-    //    else throw new Exception("unknown collider");
-
-    //    foreach (Collider collider in collidedObjects)
-    //    {
-    //        if (((1 << collider.gameObject.layer) & LayerMask.GetMask("Entity")) == 0)
-    //        {
-    //            return true;
-    //        }
-    //    }
-
-    //    return false;
-    //}
 
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)
