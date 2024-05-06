@@ -102,7 +102,7 @@ public class QuestHUD : MonoBehaviour
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);
             rewardText.SetText($"\nReward: {absValue} {rewardName}");
-            progressText.SetText(player.CurrentQuest.progressText);
+            progressText.SetText(player.CurrentQuest.progressText + "\n" + (int)player.CurrentQuest.CurrentQuestTimer + "seconds remainig");
 
             description.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         }

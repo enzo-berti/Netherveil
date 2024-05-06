@@ -36,9 +36,8 @@ public class DungeonsLimits : Quest
         return currentNumber >= COMPLETION_POURCENTAGE;
     }
 
-    protected override void QuestFinished()
+    protected override void ResetQuestValues()
     {
-        base.QuestFinished();
         MapUtilities.onEarlyEnter -= UpdateCount;
     }
 

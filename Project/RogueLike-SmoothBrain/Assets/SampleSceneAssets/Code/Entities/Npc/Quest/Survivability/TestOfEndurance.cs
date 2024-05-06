@@ -27,18 +27,10 @@ public class TestOfEndurance : Quest
         Hero.OnTakeDamage += TestHp;
     }
 
-    protected override void QuestLost()
+    protected override void ResetQuestValues()
     {
-        base.QuestLost();
-        Hero.OnTakeDamage -= TestHp;
         MapUtilities.onAllEnemiesDead -= UpdateCount;
-    }
-
-    protected override void QuestFinished()
-    {
-        base.QuestFinished();
         Hero.OnTakeDamage -= TestHp;
-        MapUtilities.onAllEnemiesDead -= UpdateCount;
     }
 
     private void TestHp(int _arg, IAttacker _attacker)

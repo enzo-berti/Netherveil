@@ -25,6 +25,7 @@ public abstract class Quest
     protected QuestTalker.TalkerGrade talkerGrade;
     protected QuestDifficulty difficulty;
     protected bool questLost = false;
+    public float CurrentQuestTimer { get; protected set; }
     public int CorruptionModifierValue { get; protected set; } = 0;
     public QuestTalker.TalkerType TalkerType { get => talkerType; }
     public QuestDifficulty Difficulty { get => difficulty; }
@@ -67,7 +68,7 @@ public abstract class Quest
         return database.datas[indexRandom].idName;
     }
 
-    protected virtual void QuestFinished()
+    protected void QuestFinished()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestFinishedSFX);
         player.CurrentQuest = null;
@@ -90,6 +91,8 @@ public abstract class Quest
         Hero.OnQuestObtained -= CheckQuestFinished;
     }
 
+    protected abstract void ResetQuestValues();
+
     protected void CheckQuestFinished()
     {
         if (questLost)
@@ -104,7 +107,7 @@ public abstract class Quest
         }
     }
 
-    protected virtual void QuestLost()
+    protected void QuestLost()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
         player.CurrentQuest = null;
