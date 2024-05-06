@@ -97,10 +97,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerController = GetComponent<PlayerController>();
         GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
 
-        if (this is IAttacker attacker)
-        {
-            attacker.OnAttackHit += attacker.ApplyStatus;
-        }
+        
 
         OnKill += ApplyLifeSteal;
         OnAttackHit += CorruptionNerf;

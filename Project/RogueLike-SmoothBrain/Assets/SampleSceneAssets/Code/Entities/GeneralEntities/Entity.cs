@@ -82,6 +82,10 @@ public abstract class Entity : MonoBehaviour
         OnDeath += ctx => ClearStatus();
 
         entitySpawn++;
+        if (this is IAttacker attacker)
+        {
+            attacker.OnAttackHit += attacker.ApplyStatus;
+        }
     }
 
     protected virtual void Update()
