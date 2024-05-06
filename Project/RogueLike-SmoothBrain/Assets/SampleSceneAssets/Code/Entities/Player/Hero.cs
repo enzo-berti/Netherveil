@@ -228,7 +228,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ApplyLifeSteal(IDamageable damageable)
     {
-        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * (damageable as Mobs).Stats.GetMaxValue(Stat.HP) * 0.25f);
+        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * (damageable as Mobs).Stats.GetMaxValue(Stat.HP) * 0.75f);
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0 && (damageable as Mobs) != null && !(damageable as Mobs).IsSpawning)
         {
