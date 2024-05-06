@@ -107,7 +107,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
-        OnDeath += Inventory.RemoveAllItems;
+        //OnDeath += Inventory.RemoveAllItems;
     }
 
     private void OnDestroy()
@@ -134,7 +134,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
 
-       Inventory.RemoveAllItems(Vector3.zero);
+       //Inventory.RemoveAllItems(Vector3.zero);
     }
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
@@ -286,6 +286,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ManageDrawbacks(int lastStep)
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.LostLevelSFX,transform.position);
         for (int i = Mathf.Abs(lastStep); i > 0; i--)
         {
             if (lastStep < 0) // benediction drawbacks
@@ -396,6 +397,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void BenedictionUpgrade(int curStep)
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelBenedictionSFX, transform.position);
         for (int i = 0; i < Mathf.Abs(curStep); i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
@@ -424,6 +426,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void CorruptionUpgrade(int curStep)
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelCorruptionSFX,transform.position);
         for (int i = 0; i < curStep; i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)

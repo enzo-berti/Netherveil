@@ -21,7 +21,7 @@ public class SpearStrike : ItemEffect , IPassiveItem
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
         GameObject thunderstrikeCollider = GameObject.Instantiate(GameResources.Get<GameObject>("ThunderstrikeCollide"));
         GameObject thunderstrikeVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ThunderStrike"));
-        AudioManager.Instance.PlaySound(AudioManager.Instance.ThunderstrikeSFX, spear.transform.position);
+        AudioManager.Instance.PlayThunders(spear.transform.position);
         thunderstrikeCollider.SetActive(false);
 
         thunderstrikeVFX.transform.position = new Vector3(spear.transform.position.x, hero.transform.position.y, spear.transform.position.z);

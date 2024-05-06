@@ -121,6 +121,7 @@ namespace DialogueSystem.Editor
                         QuestDialogueNode dialogue = tree.CreateNode(nodeView.type) as QuestDialogueNode;
                         dialogue.dialogueData = eventNodeView.DialogueData;
                         dialogue.questTag = eventNodeView.QuestTag;
+                        dialogue.difficulty = eventNodeView.Difficulty;
                         dialogue.GUID = nodeView.GUID;
                         dialogue.position = nodeView.GetPosition().position;
                         continue;

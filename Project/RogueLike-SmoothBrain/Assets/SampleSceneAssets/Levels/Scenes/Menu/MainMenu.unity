@@ -15,11 +15,11 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+  m_FogColor: {r: 0.14901961, g: 0.21176472, b: 0.29803923, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.005
-  m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_FogDensity: 0.003
+  m_LinearFogStart: -100
+  m_LinearFogEnd: 1000.01
   m_AmbientSkyColor: {r: 0.55951625, g: 0.501513, b: 0.6603774, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: eac2ef371405749e0bd050b4c3272f16, type: 2}
-  m_HaloStrength: 0.5
+  m_HaloStrength: 0.483
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -21493,6 +21493,16 @@ PrefabInstance:
       objectReference: {fileID: 1427797113}
     - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
         type: 3}
+      propertyPath: onHoverExit.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2042492467}
@@ -21506,6 +21516,71 @@ PrefabInstance:
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
       objectReference: {fileID: 957177335}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverExit.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverExit.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 6209690362402482983}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 6209690362402482983}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverExit.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverExit.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: FadeFloatingTexts
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: FadeFloatingTexts
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverExit.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: FloatingTextMainMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: FloatingTextMainMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverExit.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,
+        type: 3}
+      propertyPath: onHoverEnter.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 344829975908848820, guid: 4c074058f31ac8747b9c6d317e6bc813,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -22155,6 +22230,18 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 4c074058f31ac8747b9c6d317e6bc813, type: 3}
+--- !u!114 &6209690362402482983 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5776511820824484012, guid: 4c074058f31ac8747b9c6d317e6bc813,
+    type: 3}
+  m_PrefabInstance: {fileID: 6209690362402482982}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713a5c4d3171e63459cfd2cd86c22479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6343107098872313068 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114339753135346320, guid: 4c074058f31ac8747b9c6d317e6bc813,

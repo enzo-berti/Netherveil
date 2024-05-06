@@ -145,6 +145,7 @@ namespace DialogueSystem.Editor
                 viewNode.GUID = node.GUID;
                 viewNode.DialogueData = quest.dialogueData;
                 viewNode.QuestTag = quest.questTag;
+                viewNode.Difficulty = quest.difficulty;
                 viewNode.SetPosition(new Rect(position, defaultNodeSize));
                 AddElement(viewNode);
                 return viewNode;
