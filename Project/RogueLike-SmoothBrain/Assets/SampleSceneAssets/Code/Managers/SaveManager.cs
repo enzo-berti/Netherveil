@@ -35,11 +35,18 @@ public class SaveManager : MonoBehaviour
             Destroy(instance);
             return;
         }
+
+        SceneManager.sceneLoaded += CheckIfLoad;
     }
 
-    private void OnLevelWasLoaded(int level)
+    private void OnDestroy()
     {
-        if (level != SceneManager.GetSceneByName("InGame").buildIndex || selectedSave < 0)
+        SceneManager.sceneLoaded -= CheckIfLoad;
+    }
+
+    private void CheckIfLoad(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        if (scene.buildIndex != SceneManager.GetSceneByName("InGame").buildIndex || selectedSave < 0)
         {
             return;
         }
