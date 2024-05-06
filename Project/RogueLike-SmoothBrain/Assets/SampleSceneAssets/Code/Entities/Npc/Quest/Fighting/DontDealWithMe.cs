@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class DontDealWithMe : Quest
 {
     int currentNumber = 0;
@@ -12,13 +15,16 @@ public class DontDealWithMe : Quest
         {
             case QuestDifficulty.EASY:
                 MAX_NUMBER = 10;
+                timeToFinishQuest = 600f;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 15;
+                timeToFinishQuest = 450f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 20;
+                timeToFinishQuest = 300f;
                 CorruptionModifierValue += 10;
                 break;
         }

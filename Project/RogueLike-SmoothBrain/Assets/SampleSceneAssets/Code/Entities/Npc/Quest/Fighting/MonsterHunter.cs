@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class MonsterHunter : Quest
 {
     int currentNumber = 0;
@@ -11,13 +14,16 @@ public class MonsterHunter : Quest
         {
             case QuestDifficulty.EASY:
                 MAX_NUMBER = 10;
+                timeToFinishQuest = 450f;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 15;
                 CorruptionModifierValue += 5;
+                timeToFinishQuest = 300f;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 20;
+                timeToFinishQuest = 200f;
                 CorruptionModifierValue += 10;
                 break;
         } 

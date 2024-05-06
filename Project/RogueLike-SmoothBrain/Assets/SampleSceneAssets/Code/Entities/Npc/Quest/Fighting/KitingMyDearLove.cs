@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class KitingMyDearLove : Quest 
 {
     int currentNumber = 0;
@@ -12,13 +15,16 @@ public class KitingMyDearLove : Quest
         {
             case QuestDifficulty.EASY:
                 MAX_NUMBER = 5;
+                timeToFinishQuest = 400f;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 8;
+                timeToFinishQuest = 250f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 10;
+                timeToFinishQuest = 180f;
                 CorruptionModifierValue += 10;
                 break;
         }

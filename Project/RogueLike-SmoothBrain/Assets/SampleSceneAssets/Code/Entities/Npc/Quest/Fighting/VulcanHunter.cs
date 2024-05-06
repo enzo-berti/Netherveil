@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class VulcanHunter : Quest
 {
     int currentNumber = 0;
@@ -10,14 +13,17 @@ public class VulcanHunter : Quest
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
+                timeToFinishQuest = 600f;
                 MAX_NUMBER = 2;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 4;
+                timeToFinishQuest = 450f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 6;
+                timeToFinishQuest = 300f;
                 CorruptionModifierValue += 10;
                 break;
         }
