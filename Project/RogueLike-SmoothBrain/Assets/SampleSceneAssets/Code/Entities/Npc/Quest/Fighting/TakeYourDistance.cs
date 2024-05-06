@@ -14,11 +14,11 @@ public class TakeYourDistance : Quest
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 15;
-                Datas.CorruptionModifierValue += 5;
+                CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 20;
-                Datas.CorruptionModifierValue += 10;
+                CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";

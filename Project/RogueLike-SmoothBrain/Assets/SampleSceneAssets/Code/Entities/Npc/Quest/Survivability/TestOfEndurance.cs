@@ -14,11 +14,11 @@ public class TestOfEndurance : Quest
                 NB_ROOM_SURVIVING = 2;
                 break;
             case QuestDifficulty.MEDIUM:
-                Datas.CorruptionModifierValue += 5;
+                CorruptionModifierValue += 5;
                 NB_ROOM_SURVIVING = 4;
                 break;
             case QuestDifficulty.HARD:
-                Datas.CorruptionModifierValue += 10;
+                CorruptionModifierValue += 10;
                 NB_ROOM_SURVIVING = 6;
                 break;
         }

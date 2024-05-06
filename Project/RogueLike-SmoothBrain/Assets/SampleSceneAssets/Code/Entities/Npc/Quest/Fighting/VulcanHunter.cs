@@ -14,11 +14,11 @@ public class VulcanHunter : Quest
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 4;
-                Datas.CorruptionModifierValue += 5;
+                CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 6;
-                Datas.CorruptionModifierValue += 10;
+                CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
