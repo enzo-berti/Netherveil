@@ -39,6 +39,8 @@ public class SonielBerserk : BaseState<SonielStateMachine>
     //sale menfou
     float soundTimer = 0f;
 
+    float playerRadius;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -63,6 +65,8 @@ public class SonielBerserk : BaseState<SonielStateMachine>
         Context.Animator.SetTrigger(rushingHash);
 
         Context.Stats.SetCoeffValue(Stat.SPEED, 3f);
+
+        playerRadius = Context.Player.GetComponent<CharacterController>().radius;
 
         soundTimer = 0.4f;
     }
@@ -122,17 +126,6 @@ public class SonielBerserk : BaseState<SonielStateMachine>
             Context.Agent.CalculatePath(Context.transform.position + direction * (Context.Agent.stoppingDistance + 0.1f), path);
             if (path.status != NavMeshPathStatus.PathComplete || Context.Agent.velocity.sqrMagnitude <= 0f)
             {
-                //return;
-                //RaycastHit hit;
-                //if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), Context.Agent.destination - Context.transform.position, out hit, 1f, LayerMask.GetMask("Entity")))
-                //{
-                //    Debug.Log(hit.transform.gameObject.name);
-                //    if (hit.transform != Context.transform)
-                //    {
-
-                //        return;
-                //    }
-                //}
                 Context.Animator.ResetTrigger(stunnedHash);
                 Context.Animator.SetTrigger(stunnedHash);
 
