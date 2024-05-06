@@ -23,6 +23,7 @@ public class SonielStateMachine : Mobs, ISoniel
         public Sound thrust;
         public Sound bossHitMap;
         public Sound multipleSlash;
+        public Sound music;
     }
 
     public enum SonielAttacks
@@ -62,6 +63,8 @@ public class SonielStateMachine : Mobs, ISoniel
     // anim hash
     int deathHash;
 
+    GameObject gameMusic;
+
     // DEBUG
     bool debugMode = false;
 
@@ -93,6 +96,11 @@ public class SonielStateMachine : Mobs, ISoniel
     {
         base.Start();
 
+        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(false);
+        }
         factory = new StateFactory<SonielStateMachine>(this);
         currentState = factory.GetState<SonielTriggeredState>();
         animator.SetBool("Walk", true);
@@ -109,12 +117,19 @@ public class SonielStateMachine : Mobs, ISoniel
         // null ref de con
         swords[0].SetSounds(sounds.swordHitMap, sounds.swordSpinning);
         swords[1].SetSounds(sounds.swordHitMap, sounds.swordSpinning);
+
+        sounds.music.Play(false);
     }
 
     protected override void Update()
     {
         if (isFreeze || IsSpawning)
             return;
+
+        if (sounds.music.GetState() == FMOD.Studio.PLAYBACK_STATE.STOPPING)
+        {
+            sounds.music.Play(false);
+        }
 
         phaseTwo = stats.GetValue(Stat.HP) <= initialHP / 2f;
 
@@ -155,6 +170,9 @@ public class SonielStateMachine : Mobs, ISoniel
         sounds.walk.Stop();
         sounds.run.Stop();
         sounds.multipleSlash.Stop();
+
+        if (gameMusic != null)
+            gameMusic.SetActive(true);
 
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);

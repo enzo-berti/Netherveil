@@ -10,11 +10,9 @@
 //      }
 // }
 
-using FMOD;
 using StateMachine; // include all scripts about StateMachines
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SonielTriggeredState : BaseState<SonielStateMachine>
