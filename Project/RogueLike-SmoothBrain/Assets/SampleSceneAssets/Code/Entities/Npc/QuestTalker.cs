@@ -38,8 +38,8 @@ public class QuestTalker : Npc
             database = GameResources.Get<QuestDatabase>("QuestDatabase");
         }
 
-        //QuestIndex = Seed.Range(0, database.datas.Count);
-        QuestIndex = database.datas.FindIndex(x => x.idName == "BeastHunter");
+        QuestIndex = Seed.Range(0, database.datas.Count);
+        //QuestIndex = database.datas.FindIndex(x => x.idName == "BeastHunter");
     }
 
     protected override void Start()
