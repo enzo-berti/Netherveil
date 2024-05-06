@@ -110,10 +110,12 @@ public class SonielProjectile : Projectile
 
             if (!getBack)
             {
-                //direction = -direction;
+                //direction = -direction; // fais demi tour
                 Vector3 normal = collision.contacts[0].normal;
+                normal.y = 0f;
                 float angle = Vector3.Angle(normal, -direction);
 
+                // le random range est là pour éviter que si le projectile est lancé perpendiculairement à la surface sur laquelle il rebondit il fasse des allers-retours à l'infini
                 direction = Quaternion.Euler(0, -angle + Random.Range(-10f, 10f), 0) * normal;
             }
             else
