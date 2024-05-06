@@ -160,7 +160,7 @@ public class PestStateMachine : Mobs, IPest
     {
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
-        Hero.OnKill?.Invoke(this);
+        Utilities.Hero.OnKill?.Invoke(this);
         pestSounds.deathSound.Play(transform.position);
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);

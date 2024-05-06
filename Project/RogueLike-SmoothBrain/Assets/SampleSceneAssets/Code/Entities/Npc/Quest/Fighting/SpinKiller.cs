@@ -29,8 +29,8 @@ public class SpinKiller : Quest
                 break;
         }
         progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnChargedAttack += SetBool;
-        Hero.OnKill += UpdateCount;
+        Utilities.Hero.OnChargedAttack += SetBool;
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -40,8 +40,8 @@ public class SpinKiller : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnChargedAttack -= SetBool;
-        Hero.OnKill -= UpdateCount;
+        Utilities.Hero.OnChargedAttack -= SetBool;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 
     private void SetBool(IDamageable damageable, IAttacker attacker)

@@ -28,7 +28,7 @@ public class BeastHunter : Quest
                 break;
         }
         progressText = $"NB BEASTS KILLED : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnKill += UpdateCount;
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -47,6 +47,6 @@ public class BeastHunter : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnKill -= UpdateCount;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 }

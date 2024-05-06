@@ -4,16 +4,16 @@ public class DashShield : ItemEffect , IPassiveItem
 {
     public void OnRetrieved() 
     {
-        PlayerInput.OnStartDash += ApplyShield;
-        PlayerInput.OnEndDash += RemoveShield;
-        PlayerInput.OnEndDashAttack += RemoveShield;
+        Utilities.PlayerInput.OnStartDash += ApplyShield;
+        Utilities.PlayerInput.OnEndDash += RemoveShield;
+        Utilities.PlayerInput.OnEndDashAttack += RemoveShield;
     } 
  
     public void OnRemove() 
     {
-        PlayerInput.OnStartDash -= ApplyShield;
-        PlayerInput.OnEndDash -= RemoveShield;
-        PlayerInput.OnEndDashAttack -= RemoveShield;
+        Utilities.PlayerInput.OnStartDash -= ApplyShield;
+        Utilities.PlayerInput.OnEndDash -= RemoveShield;
+        Utilities.PlayerInput.OnEndDashAttack -= RemoveShield;
     } 
  
     private void ApplyShield()

@@ -29,8 +29,8 @@ public class KitingMyDearLove : Quest
                 break;
         }
         progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnSpearAttack += SetBool;
-        Hero.OnKill += UpdateCount;
+        Utilities.Hero.OnSpearAttack += SetBool;
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -40,8 +40,8 @@ public class KitingMyDearLove : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnSpearAttack -= SetBool;
-        Hero.OnKill -= UpdateCount;
+        Utilities.Hero.OnSpearAttack -= SetBool;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 
     private void SetBool(IDamageable damageable, IAttacker attacker)

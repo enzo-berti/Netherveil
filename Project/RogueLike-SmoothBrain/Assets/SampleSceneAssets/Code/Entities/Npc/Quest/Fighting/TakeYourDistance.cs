@@ -28,7 +28,7 @@ public class TakeYourDistance : Quest
                 break;
         }
         progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnSpearAttack += UpdateCount;
+        Utilities.Hero.OnSpearAttack += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -38,7 +38,7 @@ public class TakeYourDistance : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnSpearAttack -= UpdateCount;
+        Utilities.Hero.OnSpearAttack -= UpdateCount;
     }
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)

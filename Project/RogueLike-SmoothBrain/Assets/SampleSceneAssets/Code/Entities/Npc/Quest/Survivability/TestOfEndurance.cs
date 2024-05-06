@@ -24,13 +24,13 @@ public class TestOfEndurance : Quest
         }
         progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
         MapUtilities.onAllEnemiesDead += UpdateCount;
-        Hero.OnTakeDamage += TestHp;
+        Utilities.Hero.OnTakeDamage += TestHp;
     }
 
     protected override void ResetQuestValues()
     {
         MapUtilities.onAllEnemiesDead -= UpdateCount;
-        Hero.OnTakeDamage -= TestHp;
+        Utilities.Hero.OnTakeDamage -= TestHp;
     }
 
     private void TestHp(int _arg, IAttacker _attacker)

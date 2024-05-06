@@ -29,7 +29,7 @@ public class DontDealWithMe : Quest
                 break;
         }
         progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnChargedAttack += UpdateCount;
+        Utilities.Hero.OnChargedAttack += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -39,7 +39,7 @@ public class DontDealWithMe : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnChargedAttack -= UpdateCount;
+        Utilities.Hero.OnChargedAttack -= UpdateCount;
     }
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)

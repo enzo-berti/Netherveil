@@ -28,7 +28,7 @@ public class MonsterHunter : Quest
                 break;
         } 
         progressText = $"NB MONSTERS KILLED : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnKill += UpdateCount;
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -38,7 +38,7 @@ public class MonsterHunter : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnKill -= UpdateCount;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 
     private void UpdateCount(IDamageable damageable)

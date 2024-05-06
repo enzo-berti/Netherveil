@@ -44,7 +44,7 @@ public abstract class Quest
         MapUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen += CheckQuestFinished;
         MapUtilities.onEnter += CheckQuestFinished;
-        Hero.OnQuestObtained += CheckQuestFinished;
+        Utilities.Hero.OnQuestObtained += CheckQuestFinished;
     }
 
     public void LateAcceptQuest()
@@ -75,7 +75,7 @@ public abstract class Quest
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         MapUtilities.onEnter -= CheckQuestFinished;
-        Hero.OnQuestObtained -= CheckQuestFinished;
+        Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
 
         if (timeManagerRoutine != null)
             CoroutineManager.Instance.StopCoroutine(timeManagerRoutine);
@@ -93,7 +93,7 @@ public abstract class Quest
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         MapUtilities.onEnter -= CheckQuestFinished;
-        Hero.OnQuestObtained -= CheckQuestFinished;
+        Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
 
         if (timeManagerRoutine != null)
             CoroutineManager.Instance.StopCoroutine(timeManagerRoutine);

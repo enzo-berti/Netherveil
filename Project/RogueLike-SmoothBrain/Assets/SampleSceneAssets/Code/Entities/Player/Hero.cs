@@ -29,29 +29,28 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     PlayerController playerController;
     public Inventory Inventory { get; private set; } = new Inventory();
 
-    private static event Action<IDamageable> onKill;
-
+    private event Action<IDamageable> onKill;
     private event IAttacker.AttackDelegate onAttack;
     private event IAttacker.HitDelegate onAttackHit;
-    public static event Action<int, IAttacker> OnTakeDamage;
-    public static event Action<IDamageable, IAttacker> OnBasicAttack;
-    public static event Action<IDamageable, IAttacker> OnDashAttack;
-    public static event Action<IDamageable, IAttacker> OnSpearAttack;
-    public static event Action<IDamageable, IAttacker> OnChargedAttack;
-    public static event Action<IDamageable, IAttacker> OnFinisherAttack;
-    public static event Action OnQuestObtained;
-    public static event Action OnQuestFinished;
-    public static event Action<ISpecialAbility> OnBenedictionMaxUpgrade;
-    public static event Action<ISpecialAbility> OnCorruptionMaxUpgrade;
-    public static event Action OnBenedictionMaxDrawback;
-    public static event Action OnCorruptionMaxDrawback;
+    public event Action<int, IAttacker> OnTakeDamage;
+    public event Action<IDamageable, IAttacker> OnBasicAttack;
+    public event Action<IDamageable, IAttacker> OnDashAttack;
+    public event Action<IDamageable, IAttacker> OnSpearAttack;
+    public event Action<IDamageable, IAttacker> OnChargedAttack;
+    public event Action<IDamageable, IAttacker> OnFinisherAttack;
+    public event Action OnQuestObtained;
+    public event Action OnQuestFinished;
+    public event Action<ISpecialAbility> OnBenedictionMaxUpgrade;
+    public event Action<ISpecialAbility> OnCorruptionMaxUpgrade;
+    public event Action OnBenedictionMaxDrawback;
+    public event Action OnCorruptionMaxDrawback;
 
     public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
-    public static event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
+    public event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
 
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onAttackHit; set => onAttackHit = value; }
-    public static Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
+    public Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
     public readonly int STEP_VALUE = 25;
     public readonly int BENEDICTION_MAX = -4;
@@ -117,23 +116,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void OnDestroy()
     {
-        OnAttackHit = null;
-        OnDeath = null;
-        OnBasicAttack = null;
-        OnFinisherAttack = null;
-        OnChargedAttack = null;
-        OnDashAttack = null;
-        OnSpearAttack = null;
-        OnTakeDamage = null;
-        OnQuestObtained = null;
-        OnQuestFinished = null;
-        OnBenedictionMaxDrawback = null;
-        OnCorruptionMaxDrawback = null;
-        OnCorruptionMaxUpgrade = null;
-        OnBenedictionMaxUpgrade = null;
-        OnKill = null;
-        OnBeforeApplyDamages = null;
-
         FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;

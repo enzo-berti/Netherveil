@@ -164,7 +164,7 @@ public class SonielStateMachine : Mobs, ISoniel
     {
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
-        Hero.OnKill?.Invoke(this);
+        Utilities.Hero.OnKill?.Invoke(this);
 
         sounds.death.Play(transform.position);
         sounds.walk.Stop();

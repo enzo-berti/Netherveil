@@ -98,16 +98,16 @@ public class DummyStateMachine : Mobs, IDummy
         switch (weakness)
         {
             case Weakness.COMBO_FINISH:
-                Hero.OnFinisherAttack += TriggerAttackBool;
+                Utilities.Hero.OnFinisherAttack += TriggerAttackBool;
                 break;
             case Weakness.CHARGED_ATTACK:
-                Hero.OnChargedAttack += TriggerAttackBool;
+                Utilities.Hero.OnChargedAttack += TriggerAttackBool;
                 break;
             case Weakness.DISTANCE_ATTACK:
-                Hero.OnSpearAttack += TriggerAttackBool;
+                Utilities.Hero.OnSpearAttack += TriggerAttackBool;
                 break;
             case Weakness.DASH_ATTACK:
-                Hero.OnDashAttack += TriggerAttackBool;
+                Utilities.Hero.OnDashAttack += TriggerAttackBool;
                 break;
         }
     }
@@ -117,16 +117,16 @@ public class DummyStateMachine : Mobs, IDummy
         switch (weakness)
         {
             case Weakness.COMBO_FINISH:
-                Hero.OnFinisherAttack -= TriggerAttackBool;
+                Utilities.Hero.OnFinisherAttack -= TriggerAttackBool;
                 break;
             case Weakness.CHARGED_ATTACK:
-                Hero.OnChargedAttack -= TriggerAttackBool;
+                Utilities.Hero.OnChargedAttack -= TriggerAttackBool;
                 break;
             case Weakness.DISTANCE_ATTACK:
-                Hero.OnSpearAttack -= TriggerAttackBool;
+                Utilities.Hero.OnSpearAttack -= TriggerAttackBool;
                 break;
             case Weakness.DASH_ATTACK:
-                Hero.OnDashAttack -= TriggerAttackBool;
+                Utilities.Hero.OnDashAttack -= TriggerAttackBool;
                 break;
         }
     }

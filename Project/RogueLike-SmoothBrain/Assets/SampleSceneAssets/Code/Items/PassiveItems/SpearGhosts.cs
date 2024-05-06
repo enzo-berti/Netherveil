@@ -22,8 +22,8 @@ public class SpearGhosts : ItemEffect , IPassiveItem
             spearVFX.transform.rotation));
         }
 
-        PlayerInput.OnThrowSpear += ThrowSpearGhosts;
-        PlayerInput.OnRetrieveSpear += RetrieveSpearGhosts;
+        Utilities.PlayerInput.OnThrowSpear += ThrowSpearGhosts;
+        Utilities.PlayerInput.OnRetrieveSpear += RetrieveSpearGhosts;
         Spear.OnPlacedInHand += DestroySpearGhosts;
     }
 
@@ -37,8 +37,8 @@ public class SpearGhosts : ItemEffect , IPassiveItem
         spearThrowWrappers.Clear();
         spearVFXs.Clear();
 
-        PlayerInput.OnThrowSpear -= ThrowSpearGhosts;
-        PlayerInput.OnRetrieveSpear -= RetrieveSpearGhosts;
+        Utilities.PlayerInput.OnThrowSpear -= ThrowSpearGhosts;
+        Utilities.PlayerInput.OnRetrieveSpear -= RetrieveSpearGhosts;
         Spear.OnPlacedInHand -= DestroySpearGhosts;
     } 
 

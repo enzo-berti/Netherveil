@@ -5,12 +5,12 @@ public class SneakyDagger : ItemEffect , IPassiveItem
     readonly int attackValue = 15;
     public void OnRetrieved() 
     {
-        Hero.OnBeforeApplyDamages += ExtraSneakyDamages;
+        Utilities.Hero.OnBeforeApplyDamages += ExtraSneakyDamages;
     }
 
     public void OnRemove() 
     {
-        Hero.OnBeforeApplyDamages -= ExtraSneakyDamages;
+        Utilities.Hero.OnBeforeApplyDamages -= ExtraSneakyDamages;
     }
 
     private void ExtraSneakyDamages(ref int damages, IDamageable target)

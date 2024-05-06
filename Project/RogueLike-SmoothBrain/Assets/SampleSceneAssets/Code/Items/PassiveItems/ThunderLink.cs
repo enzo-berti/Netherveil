@@ -18,13 +18,13 @@ public class ThunderLink : ItemEffect, IPassiveItem
     public void OnRetrieved()
     {
         Spear.OnPlacedInWorld += CreateEletricLinks;
-        PlayerInput.OnRetrieveSpear += DeleteEletricLinks;
+        Utilities.PlayerInput.OnRetrieveSpear += DeleteEletricLinks;
     }
 
     public void OnRemove()
     {
         Spear.OnPlacedInWorld -= CreateEletricLinks;
-        PlayerInput.OnRetrieveSpear -= DeleteEletricLinks;
+        Utilities.PlayerInput.OnRetrieveSpear -= DeleteEletricLinks;
     }
 
     private void DeleteEletricLinks()

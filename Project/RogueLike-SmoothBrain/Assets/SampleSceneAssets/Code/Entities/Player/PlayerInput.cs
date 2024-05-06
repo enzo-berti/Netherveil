@@ -19,11 +19,11 @@ public class PlayerInput : MonoBehaviour
     DialogueTreeRunner dialogueTreeRunner;
     UnityEngine.InputSystem.PlayerInput playerInputMap;
 
-    public static event Action<Vector3> OnThrowSpear;
-    public static event Action OnRetrieveSpear;
-    public static event Action OnStartDash;
-    public static event Action<Vector3> OnEndDash;
-    public static event Action<Vector3> OnEndDashAttack;
+    public event Action<Vector3> OnThrowSpear;
+    public event Action OnRetrieveSpear;
+    public event Action OnStartDash;
+    public event Action<Vector3> OnEndDash;
+    public event Action<Vector3> OnEndDashAttack;
 
     Coroutine dashCoroutine = null;
     Coroutine chargedAttackCoroutine = null;
@@ -87,12 +87,6 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDestroy()
     {
-        OnThrowSpear = null;
-        OnEndDash = null;
-        OnRetrieveSpear = null;
-        OnStartDash = null;
-        OnEndDashAttack = null;
-
         hero.OnChangeState -= ResetForceReturnToMove;
         PauseMenu.OnPause -= DisableGameplayInputs;
         PauseMenu.OnUnpause -= EnableGameplayInputs;
