@@ -149,13 +149,13 @@ MonoBehaviour:
   stats:
     stats:
     - stat: 0
-      hasMaxStat: 0
+      hasMaxStat: 1
       hasMinStat: 0
       hasCoeff: 0
       value: 50
       lastValue: 0
       coeff: 0
-      maxValue: 0
+      maxValue: 50
       minValue: 0
       overload: 0
       underload: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
       hasMaxStat: 0
       hasMinStat: 0
       hasCoeff: 0
-      value: 15
+      value: 12
       lastValue: 0
       coeff: 0
       maxValue: 0
@@ -246,6 +246,13 @@ MonoBehaviour:
       maxQuantity: 3
       minQuantity: 1
       isChanceShared: 0
+      decreasingValuePerDrop: 0.25
+    - loot: {fileID: 5047629768900978217, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      chance: 1
+      maxQuantity: 1
+      minQuantity: 1
+      isChanceShared: 1
       decreasingValuePerDrop: 0.25
   StatSuckerVFX: {fileID: 1476983985636707180}
   spawningVFX: {fileID: 7763913137845430889}
@@ -330,8 +337,8 @@ Transform:
   m_GameObject: {fileID: 4043230366547309803}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 2}
-  m_LocalScale: {x: 0.8, y: 1, z: 4}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2023448527380647107}
@@ -625,22 +632,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8931477
+      value: -0.8451849
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.23630619
+      value: -0.25741273
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.36995393
+      value: -0.44808182
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09788123
+      value: 0.13646948
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

@@ -40,6 +40,8 @@ public class PestStateMachine : Mobs, IPest
     // charge attaque
     [SerializeField] float attackChargeDuration = 0.65f;
 
+    bool playerHit = false;
+
     // getters and setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -59,6 +61,7 @@ public class PestStateMachine : Mobs, IPest
     public float MovementDelay { get => (currentState is PestTriggeredState ? 1.5f : 1.8f); }
     public bool CanMove { get => dashTimer > MovementDelay; }
     public float AttackChargeDuration { get => attackChargeDuration; }
+    public bool PlayerHit { get => playerHit; set => playerHit = value; }
 
     protected override void Start()
     {
@@ -147,7 +150,7 @@ public class PestStateMachine : Mobs, IPest
 
         onHit?.Invoke(damageable, this);
         damageable.ApplyDamage(damages, this);
-        ApplyKnockback(damageable, this);
+        //ApplyKnockback(damageable, this);
 
         pestSounds.attackHitSound.Play(transform.position);
     }
