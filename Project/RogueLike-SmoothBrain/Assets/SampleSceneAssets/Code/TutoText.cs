@@ -70,7 +70,7 @@ public class TutoText : MonoBehaviour
         {
             string textString = initText;
 
-            if (actionRefs[0].action.name == "Movement")
+            if (actionRefs[0].action.name == "Movement" && DeviceManager.Instance.IsPlayingKB())
             {
                 textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0], 1).GetCamelCase() + "\">");
                 if (textString.Contains("$"))
@@ -85,6 +85,13 @@ public class TutoText : MonoBehaviour
                 {
                     textString = textString.Replace("*", "<sprite name=\"" + GetDisplayString(actionRefs[0], 4).GetCamelCase() + "\">");
                 }
+            }
+            else if (actionRefs[0].action.name == "Movement" && !DeviceManager.Instance.IsPlayingKB())
+            {
+                textString = textString.Replace("^", "<sprite name=\"" + "leftStickPress" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox")  + "\">");
+                textString = textString.Replace("$", string.Empty);
+                textString = textString.Replace("%", string.Empty);
+                textString = textString.Replace("*", string.Empty);
             }
             else
             {
@@ -122,11 +129,11 @@ public class TutoText : MonoBehaviour
             displayString = GetAppropriateKeyString(actionRef, bindingIndex);
             if (!DeviceManager.Instance.IsPlayingKB() && DeviceManager.Instance.CurrentDevice is DualShockGamepad)
             {
-                displayString += "ps";
+                displayString += "_ps";
             }
             else if (!DeviceManager.Instance.IsPlayingKB())
             {
-                displayString += "xbox";
+                displayString += "_xbox";
             }
         }
 
