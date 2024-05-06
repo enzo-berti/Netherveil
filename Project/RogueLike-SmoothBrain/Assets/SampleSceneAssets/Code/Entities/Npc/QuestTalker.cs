@@ -40,7 +40,7 @@ public class QuestTalker : Npc
 
         QuestIndex = Seed.Range(0, database.datas.Count);
 
-        QuestDifficulty = database.GetQuest(database.datas[QuestIndex].idName).HasDifferentGrades ? 
+        QuestDifficulty = database.GetQuest(database.datas[QuestIndex].idName).HasDifferentGrades ?
             (Quest.QuestDifficulty)Seed.Range(0, (int)Quest.QuestDifficulty.NB) : Quest.QuestDifficulty.MEDIUM;
     }
 
@@ -80,12 +80,13 @@ public class QuestTalker : Npc
             dialogue = alreadyDoneQuestDT;
         }
 
+        dialogueTreeRunner.NameBackgroundImage.color = type == TalkerType.CLERIC ? Hero.benedictionColor2 : Hero.corruptionColor2;
         dialogueTreeRunner.StartDialogue(dialogue, this);
     }
 
     protected bool PlayerInvestedInOppositeWay()
     {
-        if(type == TalkerType.CLERIC && player.Stats.GetValue(Stat.CORRUPTION) >= player.STEP_VALUE)
+        if (type == TalkerType.CLERIC && player.Stats.GetValue(Stat.CORRUPTION) >= player.STEP_VALUE)
         {
             return true;
         }
