@@ -107,7 +107,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
-        OnDeath += Inventory.RemoveAllItems;
+        //OnDeath += Inventory.RemoveAllItems;
     }
 
     private void OnDestroy()
@@ -134,7 +134,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
 
-       Inventory.RemoveAllItems(Vector3.zero);
+       //Inventory.RemoveAllItems(Vector3.zero);
     }
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
