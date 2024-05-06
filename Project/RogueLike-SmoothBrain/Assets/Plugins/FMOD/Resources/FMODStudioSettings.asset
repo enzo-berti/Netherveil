@@ -283,8 +283,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: 
-  sourceBankPath: 
+  sourceProjectPath: ../Fmod/RogueLikeFmod.fspro
+  sourceBankPath: ../Fmod/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -305,8 +305,12 @@ MonoBehaviour:
   VirtualChannelSettings: []
   RealChannelSettings: []
   Plugins: []
-  MasterBanks: []
-  Banks: []
+  MasterBanks:
+  - Master
+  Banks:
+  - Ambient
+  - InGame
+  - Menu
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
@@ -322,12 +326,12 @@ MonoBehaviour:
   HideSetupWizard: 1
   LastEventReferenceScanVersion: 131608
   Platforms:
-  - {fileID: -7089407548657930805}
-  - {fileID: 6415902199420456784}
-  - {fileID: -5846463436662869164}
-  - {fileID: -7714579668456357709}
   - {fileID: -9044916615750457607}
+  - {fileID: -7714579668456357709}
+  - {fileID: -7089407548657930805}
+  - {fileID: -5846463436662869164}
   - {fileID: 5474261758373446826}
+  - {fileID: 6415902199420456784}
   - {fileID: 7114809302452738008}
   MigratedPlatforms: 080000000900000005000000060000000a0000000200000001000000
 --- !u!114 &5474261758373446826
@@ -461,9 +465,9 @@ MonoBehaviour:
     HasValue: 0
   displaySortOrder: 0
   childIdentifiers:
-  - 52eb9df5db46521439908db3a29a1bbb
-  - b7716510a1f36934c87976f3a81dbf3d
   - c88d16e5272a4e241b0ef0ac2e53b73d
+  - b7716510a1f36934c87976f3a81dbf3d
+  - 52eb9df5db46521439908db3a29a1bbb
   - fd7c55dab0fce234b8c25f6ffca523c1
   - 2c5177b11d81d824dbb064f9ac8527da
   codecChannels:
