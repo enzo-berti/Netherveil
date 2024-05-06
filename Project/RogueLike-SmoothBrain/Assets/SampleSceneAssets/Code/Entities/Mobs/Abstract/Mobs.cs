@@ -7,8 +7,6 @@ using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine.ProBuilder.Shapes;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -37,8 +35,7 @@ public abstract class Mobs : Entity
     [Serializable]
     public struct Zone
     {
-        [HideInInspector]
-        public Vector3 center;
+        [HideInInspector] public Vector3 center;
         public int radius;
     }
     [SerializeField] protected Zone wanderZone = new() { radius = 8 };
@@ -114,6 +111,7 @@ public abstract class Mobs : Entity
     private void AddSpawningMat()
     {
         spawningMat = GameResources.Get<Material>("MAT_VFX_Spawn");
+        spawningMat = GameResources.Get<Material>("MAT_VFX_Spawn");
 
         if (GetComponentsInChildren<SkinnedMeshRenderer>().Length == 0)
         {
@@ -121,9 +119,9 @@ public abstract class Mobs : Entity
             foreach (MeshRenderer renderer in renderers)
             {
                 List<Material> materials = new List<Material>(renderer.materials)
-            {
-                spawningMat
-            };
+                {
+                    spawningMat
+                };
                 renderer.SetMaterials(materials);
             }
         }
@@ -133,9 +131,10 @@ public abstract class Mobs : Entity
             foreach (SkinnedMeshRenderer renderer in renderers)
             {
                 List<Material> materials = new List<Material>(renderer.materials)
-            {
-                spawningMat
-            };
+                {
+                    spawningMat
+                };
+
                 renderer.SetMaterials(materials);
             }
         }

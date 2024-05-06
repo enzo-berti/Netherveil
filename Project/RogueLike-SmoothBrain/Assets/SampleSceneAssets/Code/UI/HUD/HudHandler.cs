@@ -27,6 +27,7 @@ public class HudHandler : MonoBehaviour
     [SerializeField] private DescriptionTabHUD descriptionTab;
     [SerializeField] private MessageInfoHUD messageInfoHUD;
     [SerializeField] private BuffHUD buffHUD;
+    [SerializeField] private ItemBar itemBar;
 
     public PauseMenu PauseMenu => pauseMenu;
     public QuestHUD QuestHUD => questHUD;
@@ -34,6 +35,7 @@ public class HudHandler : MonoBehaviour
     public DescriptionTabHUD DescriptionTab => descriptionTab;
     public MessageInfoHUD MessageInfoHUD => messageInfoHUD;
     public BuffHUD BuffHUD => buffHUD;
+    public ItemBar ItemBar => itemBar;
 
     private Hero player;
 

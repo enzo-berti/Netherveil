@@ -11,6 +11,8 @@ public class ExplodingBomb : MonoBehaviour
     [SerializeField] private GameObject VFXObject;
     [SerializeField] private VisualEffect VFX;
     [SerializeField] private Sound bombSFX;
+    [SerializeField] private Sound bombMonsterSFX;
+    public Type type;
     [Header("Bomb Parameter")]
     [SerializeField] private bool activateOnAwake;
     [SerializeField] private float timerBeforeExplode;
@@ -23,6 +25,12 @@ public class ExplodingBomb : MonoBehaviour
     private Coroutine throwRoutine;
     private Coroutine explosionRoutine;
     IAttacker launcher = null;
+
+    public enum Type
+    {
+        ITEM,
+        MONSTER
+    }
 
     private void Start()
     {
@@ -108,7 +116,16 @@ public class ExplodingBomb : MonoBehaviour
             });
 
         graphics.SetActive(false);
-        bombSFX.Play(this.transform.position);
+        switch (type)
+        {
+            case Type.ITEM:
+                bombSFX.Play(this.transform.position);
+                break;
+            case Type.MONSTER:
+                bombMonsterSFX.Play(this.transform.position);
+                break;
+        }
+        
         float timer = VFX.GetFloat("ExplosionTime");
 
         while (timer > 0f)
