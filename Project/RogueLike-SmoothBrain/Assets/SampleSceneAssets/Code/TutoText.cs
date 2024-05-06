@@ -88,7 +88,7 @@ public class TutoText : MonoBehaviour
             }
             else if (actionRefs[0].action.name == "Movement" && !DeviceManager.Instance.IsPlayingKB())
             {
-                textString = textString.Replace("^", "<sprite name=\"" + "leftStickPress" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox")  + "\">");
+                textString = textString.Replace("^", "<sprite name=\"" + "leftStick" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox")  + "\">");
                 textString = textString.Replace("$", string.Empty);
                 textString = textString.Replace("%", string.Empty);
                 textString = textString.Replace("*", string.Empty);
