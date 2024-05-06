@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Video;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {
@@ -102,6 +103,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
 
         OnKill += ApplyLifeSteal;
+        OnAttackHit += CorruptionNerf;
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
@@ -136,16 +138,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
        Inventory.RemoveAllItems(Vector3.zero);
     }
 
-    private void OnEnable()
-    {
-        OnTakeDamage += (dam, atk) => PostProcessingEffectManager.current.Play(Effect.Hit, false);
-    }
-
-    private void OnDisable()
-    {
-        OnTakeDamage -= (dam, atk) => PostProcessingEffectManager.current.Play(Effect.Hit, false);
-    }
-
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {
         if (IsInvincibleCount > 0)
@@ -167,6 +159,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 State = (int)Entity.EntityState.MOVE;
                 AudioManager.Instance.PlaySound(playerController.HitSFX);
                 FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
+                PostProcessingEffectManager.current.Play(Effect.Hit, false);
                 playerController.HitVFX.Play();
             }
 
@@ -235,13 +228,26 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ApplyLifeSteal(IDamageable damageable)
     {
-        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetMaxValue(Stat.HP) * 0.25f);
+        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * (damageable as Mobs).Stats.GetMaxValue(Stat.HP) * 0.25f);
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0 && (damageable as Mobs) != null && !(damageable as Mobs).IsSpawning)
         {
             AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
             FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
             Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
+        }
+    }
+
+    private void CorruptionNerf(IDamageable damageable, IAttacker attacker)
+    {
+        if(Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE)
+        {
+            int value = (int)(stats.GetMaxValue(Stat.HP) * 0.01f);
+            stats.DecreaseValue(Stat.HP, value);
+            AudioManager.Instance.PlaySound(playerController.HitSFX);
+            FloatingTextGenerator.CreateEffectDamageText(value, transform.position, Color.red);
+            playerController.HitVFX.Play();
+            PostProcessingEffectManager.current.Play(Effect.Hit, false);
         }
     }
 
