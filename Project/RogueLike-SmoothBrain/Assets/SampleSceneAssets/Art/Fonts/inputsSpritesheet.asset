@@ -1,5 +1,46 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!21 &-1196368760424186223
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Sprite
+  m_Shader: {fileID: 4800000, guid: cf81c85f95fe47e1a27f6ae460cf182c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 83f05d92e7785674ba74677a681fbdb0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _CullMode: 0
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,7 +54,7 @@ MonoBehaviour:
   m_Name: inputsSpritesheet
   m_EditorClassIdentifier: 
   hashCode: 1608964899
-  material: {fileID: 8331230674593286186}
+  material: {fileID: -1196368760424186223}
   materialHashCode: 0
   m_Version: 1.1.0
   m_FaceInfo:
@@ -104,8 +145,8 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 10
     m_Scale: 1
-    m_Name: leftStickPress_Gamepad
-    m_HashCode: -1917621410
+    m_Name: leftStickPress_xbox
+    m_HashCode: 515086568
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 11
@@ -182,14 +223,14 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 23
     m_Scale: 1
-    m_Name: inputsSpritesheet_25
-    m_HashCode: -1773033189
+    m_Name: start_xbox
+    m_HashCode: -636588334
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 24
     m_Scale: 1
-    m_Name: rightShoulder_Gamepad
-    m_HashCode: -383075750
+    m_Name: rightShoulder_xbox
+    m_HashCode: 1031619948
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 25
@@ -380,8 +421,8 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 56
     m_Scale: 1
-    m_Name: rightStickPress_Gamepad
-    m_HashCode: 1171663429
+    m_Name: rightStickPress_xbox
+    m_HashCode: -272260525
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 57
@@ -482,8 +523,8 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 73
     m_Scale: 1
-    m_Name: inputsSpritesheet_77
-    m_HashCode: -1773033220
+    m_Name: select_xbox
+    m_HashCode: -1715617990
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 74
@@ -560,14 +601,14 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 86
     m_Scale: 1
-    m_Name: buttonWest_Gamepad
-    m_HashCode: -1074832953
+    m_Name: buttonWest_xbox
+    m_HashCode: 506408593
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 87
     m_Scale: 1
-    m_Name: leftShoulder_DualShockGamepad
-    m_HashCode: -2106547167
+    m_Name: leftShoulder_ps
+    m_HashCode: -1419400455
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 88
@@ -578,68 +619,68 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 89
     m_Scale: 1
-    m_Name: buttonEast_DualShockGamepad
-    m_HashCode: 1767449265
+    m_Name: buttonEast_ps
+    m_HashCode: -208595607
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 90
     m_Scale: 1
-    m_Name: buttonSouth_DualShockGamepad
-    m_HashCode: 1199950695
+    m_Name: buttonSouth_ps
+    m_HashCode: -172131393
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 91
     m_Scale: 1
-    m_Name: start
-    m_HashCode: 134904608
+    m_Name: start_ps
+    m_HashCode: -951077508
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 92
     m_Scale: 1
-    m_Name: buttonNorth_Gamepad
-    m_HashCode: -980152995
+    m_Name: buttonNorth_xbox
+    m_HashCode: 449474123
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 93
     m_Scale: 1
-    m_Name: leftStickPress_DualShockGamepad
-    m_HashCode: 972510302
+    m_Name: leftStickPress_ps
+    m_HashCode: -2121375226
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 94
     m_Scale: 1
-    m_Name: dpad_DualShockGamepad
-    m_HashCode: 1258905557
+    m_Name: dpad_ps
+    m_HashCode: 1580324557
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 95
     m_Scale: 1
-    m_Name: DpadDown_DualShockGamepad
-    m_HashCode: -370097049
+    m_Name: DpadDown_ps
+    m_HashCode: 1165538495
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 96
     m_Scale: 1
-    m_Name: DpadLeft_DualShockGamepad
-    m_HashCode: -573498706
+    m_Name: DpadLeft_ps
+    m_HashCode: -1906315722
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 97
     m_Scale: 1
-    m_Name: DpadRight_DualShockGamepad
-    m_HashCode: -628724043
+    m_Name: DpadRight_ps
+    m_HashCode: 2023437165
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 98
     m_Scale: 1
-    m_Name: DpadUp_DualShockGamepad
-    m_HashCode: 2025011088
+    m_Name: DpadUp_ps
+    m_HashCode: 861839304
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 99
     m_Scale: 1
-    m_Name: rightShoulder_DualShockGamepad
-    m_HashCode: -990305574
+    m_Name: rightShoulder_ps
+    m_HashCode: -776012158
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 100
@@ -668,26 +709,26 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 104
     m_Scale: 1
-    m_Name: buttonWest_DualShockGamepad
-    m_HashCode: -1577236057
+    m_Name: buttonWest_ps
+    m_HashCode: 1802852863
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 105
     m_Scale: 1
-    m_Name: buttonNorth_DualShockGamepad
-    m_HashCode: 134236029
+    m_Name: buttonNorth_ps
+    m_HashCode: -1048679643
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 106
     m_Scale: 1
-    m_Name: rightStickPress_DualShockGamepad
-    m_HashCode: 772770661
+    m_Name: rightStickPress_ps
+    m_HashCode: 1924400445
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 107
     m_Scale: 1
-    m_Name: select
-    m_HashCode: 167878536
+    m_Name: select_ps
+    m_HashCode: -1378016044
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 108
@@ -800,8 +841,8 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 126
     m_Scale: 1
-    m_Name: leftShoulder_Gamepad
-    m_HashCode: -1923208703
+    m_Name: leftShoulder_xbox
+    m_HashCode: 460822295
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 127
@@ -818,44 +859,44 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 129
     m_Scale: 1
-    m_Name: buttonSouth_Gamepad
-    m_HashCode: -1476529913
+    m_Name: buttonSouth_xbox
+    m_HashCode: 1527165009
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 130
     m_Scale: 1
-    m_Name: buttonEast_Gamepad
-    m_HashCode: -1680105839
+    m_Name: buttonEast_xbox
+    m_HashCode: 472376711
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 131
     m_Scale: 1
-    m_Name: dpad_Gamepad
-    m_HashCode: 78400117
+    m_Name: dpad_xbox
+    m_HashCode: -1308715037
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 132
     m_Scale: 1
-    m_Name: DpadDown_Gamepad
-    m_HashCode: -89863673
+    m_Name: DpadDown_xbox
+    m_HashCode: -2039207599
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 133
     m_Scale: 1
-    m_Name: DpadLeft_Gamepad
-    m_HashCode: 926327022
+    m_Name: DpadLeft_xbox
+    m_HashCode: -1508343528
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 134
     m_Scale: 1
-    m_Name: DpadUp_Gamepad
-    m_HashCode: -690266928
+    m_Name: DpadUp_xbox
+    m_HashCode: -2055107546
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 135
     m_Scale: 1
-    m_Name: RightDown_Gamepad
-    m_HashCode: -455553738
+    m_Name: RightDown_xbox
+    m_HashCode: 596951744
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -3035,44 +3076,3 @@ MonoBehaviour:
     sprite: {fileID: 408671784, guid: 83f05d92e7785674ba74677a681fbdb0, type: 3}
   spriteInfoList: []
   fallbackSpriteAssets: []
---- !u!21 &8331230674593286186
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: TextMeshPro/Sprite
-  m_Shader: {fileID: 4800000, guid: cf81c85f95fe47e1a27f6ae460cf182c, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 83f05d92e7785674ba74677a681fbdb0, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _CullMode: 0
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
