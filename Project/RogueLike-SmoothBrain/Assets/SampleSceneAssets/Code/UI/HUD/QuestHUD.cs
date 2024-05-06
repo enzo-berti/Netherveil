@@ -9,6 +9,7 @@ public class QuestHUD : MonoBehaviour
     [SerializeField] private TMP_Text title;
     [SerializeField] private TMP_Text rewardText;
     [SerializeField] private TMP_Text progressText;
+    [SerializeField] private TMP_Text difficultyText;
 
 
     [SerializeField] private RectTransform questTransform;
@@ -73,6 +74,30 @@ public class QuestHUD : MonoBehaviour
         {
             string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? "<color=purple>Corruption</color>" : "<color=yellow>Benediction</color>";
             int absValue = Mathf.Abs(player.CurrentQuest.CorruptionModifierValue);
+
+            if(player.CurrentQuest.Datas.HasDifferentGrades)
+            {
+                switch (player.CurrentQuest.Difficulty)
+                {
+                    case Quest.QuestDifficulty.EASY:
+                        difficultyText.SetText("<color=green>Easy</color>");
+                        break;
+                    case Quest.QuestDifficulty.MEDIUM:
+                        difficultyText.SetText("<color=yellow>Medium</color>");
+                        break;
+                    case Quest.QuestDifficulty.HARD:
+                        difficultyText.SetText("<color=red>Hard</color>");
+                        break;
+                    default:
+                        difficultyText.SetText("ERROR");
+                        break;
+                }
+            }
+            else
+            {
+                difficultyText.SetText(string.Empty);
+            }
+
 
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);

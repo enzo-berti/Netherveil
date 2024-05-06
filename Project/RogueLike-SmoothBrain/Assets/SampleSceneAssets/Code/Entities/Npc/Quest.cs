@@ -27,6 +27,7 @@ public abstract class Quest
     protected bool questLost = false;
     public int CorruptionModifierValue { get; protected set; } = 0;
     public QuestTalker.TalkerType TalkerType { get => talkerType; }
+    public QuestDifficulty Difficulty { get => difficulty; }
 
     public virtual void AcceptQuest()
     {
