@@ -1,44 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7349450836971254885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
-  m_Name: ChoiceDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: dc7f22ce-419e-41ba-a722-2437a2a5864f
-  position: {x: 260, y: 62}
-  dialogueData: {fileID: 11400000, guid: a21599b75c768c141a2beff5634fdf34, type: 2}
-  options:
-  - option: Yes
-    child: {fileID: -697709679328211669}
-  - option: No
-    child: {fileID: 2024394636766456798}
-  - option: What's Corruption?
-    child: {fileID: -6523619697992872030}
---- !u!114 &-6523619697992872030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 3eeb233f-86c1-494d-8672-2fb1f225bd9e
-  position: {x: 604, y: 190}
-  dialogueData: {fileID: 11400000, guid: ace56a1b67c2dc043a1b988218839b88, type: 2}
-  child: {fileID: -158562187823030879}
---- !u!114 &-3840289988775284698
+--- !u!114 &-7934086225156108374
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,9 +13,9 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   GUID: 1a1beb0a-dbc7-46a2-be56-347d9e3decd3
-  position: {x: 72, y: 72}
-  child: {fileID: -7349450836971254885}
---- !u!114 &-697709679328211669
+  position: {x: 80, y: 80}
+  child: {fileID: 5859401147653121242}
+--- !u!114 &-7358102114265436019
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,12 +27,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
   m_Name: QuestDialogueNode
   m_EditorClassIdentifier: 
-  GUID: 856d4336-ae4a-413c-9fe4-cd6d3c49bdd9
-  position: {x: 620, y: -174}
+  GUID: ccc40b55-cfe7-4ab8-8c6f-101620e29a82
+  position: {x: 1000, y: -265}
   dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
   child: {fileID: 0}
   questTag: 
---- !u!114 &-158562187823030879
+--- !u!114 &-6955677120152094656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 9e05c41d-8c0a-42f2-b2b8-dea341b3e684
+  position: {x: 1631, y: 122}
+  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &-6108086031508243999
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -83,54 +62,14 @@ MonoBehaviour:
   m_Name: ChoiceDialogueNode
   m_EditorClassIdentifier: 
   GUID: b07c71e0-e6ec-467d-8fc3-eba4a81db6d7
-  position: {x: 967, y: 120}
+  position: {x: 975, y: 128}
   dialogueData: {fileID: 11400000, guid: 2f385cdfd5190cb45aa867d5bfdf0827, type: 2}
   options:
   - option: Yes
-    child: {fileID: 1467125617358184879}
+    child: {fileID: 6502639120082490319}
   - option: No
-    child: {fileID: 7376372725177752932}
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
-  m_Name: ShamanClassicDT
-  m_EditorClassIdentifier: 
-  root: {fileID: -3840289988775284698}
-  nodes:
-  - {fileID: -3840289988775284698}
-  - {fileID: -7349450836971254885}
-  - {fileID: -697709679328211669}
-  - {fileID: 2024394636766456798}
-  - {fileID: -6523619697992872030}
-  - {fileID: -158562187823030879}
-  - {fileID: 7376372725177752932}
-  - {fileID: 1467125617358184879}
-  currentNode: {fileID: 0}
---- !u!114 &1467125617358184879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
-  m_Name: QuestDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 97198b87-39cd-45d2-83b3-c531de1af8af
-  position: {x: 1288, y: 55}
-  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
-  child: {fileID: 0}
-  questTag: 
---- !u!114 &2024394636766456798
+    child: {fileID: 8832401810084327446}
+--- !u!114 &-4559676585135597011
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,10 +82,189 @@ MonoBehaviour:
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
   GUID: bece73a0-7ab2-4229-a395-52ee5535d8a0
-  position: {x: 616, y: -9}
+  position: {x: 624, y: -1}
   dialogueData: {fileID: 11400000, guid: 39cff87bc5d4e3e4a812b704150be7d5, type: 2}
   child: {fileID: 0}
---- !u!114 &7376372725177752932
+--- !u!114 &-3297641076028532966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 33693f79-bc93-40da-9e67-13e2c611426c
+  position: {x: 1643, y: -143}
+  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &-3202336570165724192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: daf3771f-875a-4b04-8778-381a5e4a211e
+  position: {x: 650, y: -202}
+  dialogueData: {fileID: 11400000, guid: 08f294cb47e48c9409cdb0bc42779de5, type: 2}
+  options:
+  - option: Easy
+    child: {fileID: 5623381349736921629}
+  - option: Medium
+    child: {fileID: -7358102114265436019}
+  - option: Hard
+    child: {fileID: -2766465238577713883}
+--- !u!114 &-2766465238577713883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: d790418e-1f6f-4995-86bc-ace6fc1a1af1
+  position: {x: 1000, y: -143}
+  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &-734469040382204137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 2f905a8b-186a-4b42-8b3f-d3c73c6778c7
+  position: {x: 1635, y: -4}
+  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
+  m_Name: ShamanClassicDT
+  m_EditorClassIdentifier: 
+  root: {fileID: -7934086225156108374}
+  nodes:
+  - {fileID: -7934086225156108374}
+  - {fileID: 5859401147653121242}
+  - {fileID: -4559676585135597011}
+  - {fileID: 8668661295933285384}
+  - {fileID: -6108086031508243999}
+  - {fileID: 8832401810084327446}
+  - {fileID: -3202336570165724192}
+  - {fileID: 5623381349736921629}
+  - {fileID: -2766465238577713883}
+  - {fileID: -7358102114265436019}
+  - {fileID: 6502639120082490319}
+  - {fileID: -3297641076028532966}
+  - {fileID: -734469040382204137}
+  - {fileID: -6955677120152094656}
+  currentNode: {fileID: 0}
+--- !u!114 &5623381349736921629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: ca40257e-5028-4f65-960c-cbbe692009a2
+  position: {x: 1000, y: -383}
+  dialogueData: {fileID: 11400000, guid: 5c295c3a146ce904cbfcaf5a96e3b4c5, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &5859401147653121242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: dc7f22ce-419e-41ba-a722-2437a2a5864f
+  position: {x: 268, y: 70}
+  dialogueData: {fileID: 11400000, guid: a21599b75c768c141a2beff5634fdf34, type: 2}
+  options:
+  - option: Yes
+    child: {fileID: -3202336570165724192}
+  - option: No
+    child: {fileID: -4559676585135597011}
+  - option: What's Corruption?
+    child: {fileID: 8668661295933285384}
+--- !u!114 &6502639120082490319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 636a01f8-ed12-4410-b629-561531847284
+  position: {x: 1296, y: 33}
+  dialogueData: {fileID: 11400000, guid: 08f294cb47e48c9409cdb0bc42779de5, type: 2}
+  options:
+  - option: Easy
+    child: {fileID: -3297641076028532966}
+  - option: Medium
+    child: {fileID: -734469040382204137}
+  - option: Hard
+    child: {fileID: -6955677120152094656}
+--- !u!114 &8668661295933285384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
+  m_Name: SimpleDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 3eeb233f-86c1-494d-8672-2fb1f225bd9e
+  position: {x: 612, y: 198}
+  dialogueData: {fileID: 11400000, guid: ace56a1b67c2dc043a1b988218839b88, type: 2}
+  child: {fileID: -6108086031508243999}
+--- !u!114 &8832401810084327446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -159,6 +277,6 @@ MonoBehaviour:
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
   GUID: 28908c1d-eb04-4797-aa6e-4e9771dad019
-  position: {x: 1292, y: 197}
+  position: {x: 1300, y: 205}
   dialogueData: {fileID: 11400000, guid: 39cff87bc5d4e3e4a812b704150be7d5, type: 2}
   child: {fileID: 0}
