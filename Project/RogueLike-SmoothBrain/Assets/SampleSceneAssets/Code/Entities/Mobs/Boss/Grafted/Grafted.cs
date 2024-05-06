@@ -126,6 +126,8 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     [SerializeField] VisualEffect tripleThrustVFX;
     bool dashVFXPlayed = false;
 
+    CameraUtilities cameraUtilities;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -174,13 +176,12 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
     {
         base.Awake();
         gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
     }
 
     protected override void Start()
     {
         base.Start();
-
-
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
@@ -227,49 +228,49 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 }
 
                 // Attacks
-                //if (attackCooldown > 0)
-                //{
-                //    attackState = AttackState.IDLE;
-                //    attackCooldown -= Time.deltaTime;
-                //    if (attackCooldown < 0) attackCooldown = 0;
-                //}
-                //else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
-                //{
-                //    lastAttack = currentAttack;
-                //    currentAttack = ChooseAttack();
+                if (attackCooldown > 0)
+                {
+                    attackState = AttackState.IDLE;
+                    attackCooldown -= Time.deltaTime;
+                    if (attackCooldown < 0) attackCooldown = 0;
+                }
+                else if (attackCooldown == 0 && currentAttack == Attacks.NONE)
+                {
+                    lastAttack = currentAttack;
+                    currentAttack = ChooseAttack();
 
-                //    switch (currentAttack)
-                //    {
-                //        case Attacks.RANGE:
-                //            animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
-                //            break;
+                    switch (currentAttack)
+                    {
+                        case Attacks.RANGE:
+                            animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                            break;
 
-                //        case Attacks.THRUST:
-                //            animator.SetBool(thrustHash, true);
-                //            break;
+                        case Attacks.THRUST:
+                            animator.SetBool(thrustHash, true);
+                            break;
 
-                //        case Attacks.DASH:
-                //            animator.SetBool(dashHash, true);
-                //            break;
-                //    }
-                //}
+                        case Attacks.DASH:
+                            animator.SetBool(dashHash, true);
+                            break;
+                    }
+                }
 
                 // DEBUG (commenter tt ce qui est sous "// Attacks" et décommenter ça)
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    currentAttack = Attacks.THRUST;
-                    animator.SetBool(thrustHash, true);
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    currentAttack = Attacks.DASH;
-                    animator.SetBool(dashHash, true);
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-                    currentAttack = Attacks.RANGE;
-                    animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
-                }
+                //if (Input.GetKeyDown(KeyCode.Alpha1))
+                //{
+                //    currentAttack = Attacks.THRUST;
+                //    animator.SetBool(thrustHash, true);
+                //}
+                //else if (Input.GetKeyDown(KeyCode.Alpha2))
+                //{
+                //    currentAttack = Attacks.DASH;
+                //    animator.SetBool(dashHash, true);
+                //}
+                //else if (Input.GetKeyDown(KeyCode.Alpha3))
+                //{
+                //    currentAttack = Attacks.RANGE;
+                //    animator.SetBool(hasProjectile ? throwingHash : retrievingHash, true);
+                //}
 
                 switch (currentAttack)
                 {
@@ -491,6 +492,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     attackState = AttackState.ATTACKING;
 
                     bossSounds.thrustSound.Play(transform.position, true);
+
+                    DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.25f);
+                    cameraUtilities.ShakeCamera(0.3f, 0.25f, EasingFunctions.EaseInQuint);
                 }
                 break;
 
@@ -577,6 +581,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                 bossSounds.stretchSound.Play(transform.position);
                 dashVFX.GetComponent<VFXStopper>().PlayVFX();
                 dashVFXPlayed = true;
+
+                DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.3f);
+                cameraUtilities.ShakeCamera(0.5f, 0.3f, EasingFunctions.EaseInQuint);
             }
         }
 

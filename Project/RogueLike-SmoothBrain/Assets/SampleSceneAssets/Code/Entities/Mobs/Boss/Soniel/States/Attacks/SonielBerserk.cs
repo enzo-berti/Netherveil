@@ -92,6 +92,9 @@ public class SonielBerserk : BaseState<SonielStateMachine>
                 Context.Sounds.run.Stop();
                 Context.Sounds.multipleSlash.Stop();
                 Context.Sounds.bossHitMap.Play(Context.transform.position);
+
+                DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.5f);
+                Context.CameraUtilities.ShakeCamera(0.5f, 0.5f, EasingFunctions.EaseInQuint);
             }
 
             Context.Agent.isStopped = true;
