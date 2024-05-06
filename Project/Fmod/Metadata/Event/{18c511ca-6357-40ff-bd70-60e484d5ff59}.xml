@@ -53,12 +53,15 @@
 			<destination>{a111c248-c0bc-4005-a2cf-19116aaafa3e}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{a9d5df6b-a892-4c1e-8439-e389f38971cf}</destination>
+			<destination>{73a555f9-1dc6-4f3c-85b9-85fae98334b0}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{3785cf30-adad-4cec-8d40-cc52ba92d53f}">
+		<property name="minimumDistance">
+			<value>8</value>
+		</property>
 		<property name="maximumDistance">
-			<value>200</value>
+			<value>100</value>
 		</property>
 	</object>
 	<object class="MarkerTrack" id="{f60a5f54-8aa8-4dc7-9cea-0e47aa4f5a18}" />
@@ -101,6 +104,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{6b658883-b8f0-4664-aa42-6d3994013e6e}">
+		<property name="volume">
+			<value>-5.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -118,6 +124,8 @@
 		<relationship name="effects">
 			<destination>{4d4e6f85-6be2-4e0a-9dc7-0adb24f8b446}</destination>
 			<destination>{3d82de58-bbfe-49bb-8216-86ac72e57dd1}</destination>
+			<destination>{c8d958e1-7283-4235-ab39-af73e8b78de0}</destination>
+			<destination>{839f25d7-8f3e-4093-a58d-d417a1d29af5}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{68e54a47-fbe6-4541-904a-f001058023b0}" />
@@ -130,5 +138,24 @@
 	<object class="MixerBusPanner" id="{921626a7-4767-49b9-86ee-dae5f824d1ca}" />
 	<object class="MixerBusFader" id="{4d4e6f85-6be2-4e0a-9dc7-0adb24f8b446}" />
 	<object class="SpatialiserEffect" id="{3d82de58-bbfe-49bb-8216-86ac72e57dd1}" />
+	<object class="ThreeEQEffect" id="{c8d958e1-7283-4235-ab39-af73e8b78de0}">
+		<property name="lowGain">
+			<value>3.5</value>
+		</property>
+		<property name="midGain">
+			<value>-7.5</value>
+		</property>
+		<property name="highGain">
+			<value>4.5</value>
+		</property>
+	</object>
+	<object class="ChorusEffect" id="{839f25d7-8f3e-4093-a58d-d417a1d29af5}">
+		<property name="rate">
+			<value>0.359999985</value>
+		</property>
+		<property name="depth">
+			<value>20.5</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{df3c0683-e075-4559-b29d-49e836fb28e1}" />
 </objects>
