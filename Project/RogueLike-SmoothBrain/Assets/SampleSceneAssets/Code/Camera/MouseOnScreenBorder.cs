@@ -1,6 +1,5 @@
 using Netherveil.Inputs;
 using UnityEngine;
-using static Entity;
 
 public class MouseOnScreenBorder : MonoBehaviour
 {
@@ -9,30 +8,17 @@ public class MouseOnScreenBorder : MonoBehaviour
     private float smoothTime = 0.2f;
     private Transform playerTransform;
     private PlayerInput playerInput;
-    private PlayerInputMap inputs;
+    private UnityEngine.InputSystem.PlayerInput playerInputComponent;
+
     private Hero player;
+    //ce script ne devrait pas créer une nouvelle input map ça n'a pas de sens
 
-    private void OnEnable()
-    {
-        inputs.Enable();
-    }
-
-
-    private void OnDisable()
-    {
-        inputs.Disable();
-    }
-
-    private void Awake()
-    {
-        inputs = new PlayerInputMap();
-    }
-
-    void Start()
+    void Awake()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         playerInput = playerTransform.gameObject.GetComponent<PlayerInput>();
+        playerInputComponent = playerTransform.gameObject.GetComponent<UnityEngine.InputSystem.PlayerInput>();
     }
 
     void FixedUpdate()
@@ -80,7 +66,7 @@ public class MouseOnScreenBorder : MonoBehaviour
 
     private void CollideJoystickScreen()
     {
-        Vector2 joyStickInput = inputs.Gamepad.CamLookAway.ReadValue<Vector2>();
+        Vector2 joyStickInput = playerInputComponent.actions.FindActionMap("Gamepad", throwIfNotFound: true)["CamLookAway"].ReadValue<Vector2>();
         Vector3 offsetX = Vector3.zero;
         Vector3 offsetY = Vector3.zero;
         float offsetDistCam = 2f;
@@ -108,7 +94,7 @@ public class MouseOnScreenBorder : MonoBehaviour
 
     private void ChangeOffsetPos()
     {
-        if (targetPosition != playerTransform.position && playerInput.Direction == Vector2.zero && player.State != (int)EntityState.DEAD)
+        if (targetPosition != playerTransform.position && playerInput.Direction == Vector2.zero && player.State != (int)Entity.EntityState.DEAD)
         {
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
         }

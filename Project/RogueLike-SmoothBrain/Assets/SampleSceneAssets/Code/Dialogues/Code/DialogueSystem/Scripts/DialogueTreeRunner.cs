@@ -112,8 +112,10 @@ public class DialogueTreeRunner : MonoBehaviour
                 newChoiceButton.transform.GetComponentInChildren<TMP_Text>().text = choiceData.option;
                 newChoiceButton.onClick.AddListener(() =>
                 {
+                    StopAllCoroutines();
                     tree.Process(choiceData.child);
                     isLaunched = false;
+                    isRunning = false;
                     UpdateDialogue();
                 });
 
@@ -147,23 +149,23 @@ public class DialogueTreeRunner : MonoBehaviour
             if (isRunning)
             {
                 StopAllCoroutines();
-                dialogueMesh.text = eventN.dialogueData.dialogue;
+                dialogueMesh.text = quest.dialogueData.dialogue;
                 isRunning = false;
             }
             else if (!isLaunched)
             {
-                SetDialogue(eventN.dialogueData.dialogue);
-                SetIllustration(eventN.dialogueData.illustration);
-                SetName(eventN.dialogueData.name);
+                SetDialogue(quest.dialogueData.dialogue);
+                SetIllustration(quest.dialogueData.illustration);
+                SetName(quest.dialogueData.name);
             }
             else if (isLaunched && !isRunning)
             {
                 if (TalkerNPC != null)
                 {
                     if (string.IsNullOrEmpty(quest.questTag))
-                        player.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), TalkerNPC.Type, TalkerNPC.Grade);
+                        player.CurrentQuest = Quest.LoadClass(TalkerNPC.GetQuestName(), TalkerNPC);
                     else
-                        player.CurrentQuest = Quest.LoadClass(quest.questTag, TalkerNPC.Type, TalkerNPC.Grade);
+                        player.CurrentQuest = Quest.LoadClass(quest.questTag, TalkerNPC);
                 }
 
                 tree.Process(quest.child);

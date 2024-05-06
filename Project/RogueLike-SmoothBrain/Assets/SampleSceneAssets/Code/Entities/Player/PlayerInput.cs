@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour
     public static event Action OnRetrieveSpear;
     public static event Action OnStartDash;
     public static event Action<Vector3> OnEndDash;
+    public static event Action<Vector3> OnEndDashAttack;
 
     Coroutine dashCoroutine = null;
     Coroutine chargedAttackCoroutine = null;
@@ -48,6 +49,7 @@ public class PlayerInput : MonoBehaviour
     readonly List<Collider> dashAttackAlreadyAttacked = new();
     bool applyVibrationsDashAttack = true;
     public bool LaunchedDashAttack { get; private set; } = false;
+    private bool triggeredDashAttack = false;
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
@@ -89,6 +91,7 @@ public class PlayerInput : MonoBehaviour
         OnEndDash = null;
         OnRetrieveSpear = null;
         OnStartDash = null;
+        OnEndDashAttack = null;
 
         hero.OnChangeState -= ResetForceReturnToMove;
         PauseMenu.OnPause -= DisableGameplayInputs;
@@ -111,15 +114,15 @@ public class PlayerInput : MonoBehaviour
         if (!CanCastChargedAttack())
             return;
 
-        animator.SetBool("ChargedAttackCasting", true);
+        animator.SetBool(controller.ChargedAttackCastingHash, true);
         hero.State = (int)Entity.EntityState.ATTACK;
         LaunchedChargedAttack = true;
     }
 
     private void ChargedAttackCanceled(InputAction.CallbackContext ctx)
     {
-        animator.ResetTrigger("ChargedAttackRelease");
-        animator.SetBool("ChargedAttackCasting", false);
+        animator.ResetTrigger(controller.ChargedAttackReleaseHash);
+        animator.SetBool(controller.ChargedAttackCastingHash, false);
 
         if (!LaunchedChargedAttack)
             return;
@@ -128,7 +131,7 @@ public class PlayerInput : MonoBehaviour
         {
             StopChargedAttackCoroutine();
             controller.ComboCount = 0;
-            animator.SetTrigger("ChargedAttackRelease");
+            animator.SetTrigger(controller.ChargedAttackReleaseHash);
         }
         else
         {
@@ -223,8 +226,8 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                animator.ResetTrigger("BasicAttack");
-                animator.SetTrigger("BasicAttack");
+                animator.ResetTrigger(controller.BasicAttackHash);
+                animator.SetTrigger(controller.BasicAttackHash);
             }
             hero.State = (int)Entity.EntityState.ATTACK;
         }
@@ -234,8 +237,9 @@ public class PlayerInput : MonoBehaviour
         }
         else if (CanDashAttack())
         {
-            animator.ResetTrigger("DashAttack");
-            animator.SetTrigger("DashAttack");
+            animator.ResetTrigger(controller.DashAttackHash);
+            animator.SetTrigger(controller.DashAttackHash);
+            triggeredDashAttack = true;
         }
     }
 
@@ -264,8 +268,8 @@ public class PlayerInput : MonoBehaviour
             DashDir = transform.forward;
         }
 
-        animator.ResetTrigger("Dash");
-        animator.SetTrigger("Dash");
+        animator.ResetTrigger(controller.DashHash);
+        animator.SetTrigger(controller.DashHash);
     }
 
     private IEnumerator DashCoroutine()
@@ -354,11 +358,15 @@ public class PlayerInput : MonoBehaviour
 
     public void EndOfDashAnimation()
     {
-        RestartDashCoroutine();
-        controller.DashVFX.Stop();
-        hero.State = (int)Entity.EntityState.MOVE;
-        controller.ResetValues();
-        OnEndDash?.Invoke(transform.position);
+        if(!triggeredDashAttack)
+        {
+            RestartDashCoroutine();
+            controller.DashVFX.Stop();
+            hero.State = (int)Entity.EntityState.MOVE;
+            controller.ResetValues();
+            OnEndDash?.Invoke(transform.position);
+        }
+        triggeredDashAttack = false;
     }
 
     public void StartChargedAttackCasting()
@@ -394,7 +402,7 @@ public class PlayerInput : MonoBehaviour
     /// </summary>
     public void EndOfBasicAttack()
     {
-        animator.ResetTrigger("BasicAttack");
+        animator.ResetTrigger(controller.BasicAttackHash);
 
         if (!attackQueue)
         {
@@ -407,7 +415,7 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            animator.SetTrigger("BasicAttack");
+            animator.SetTrigger(controller.BasicAttackHash);
             hero.State = (int)Entity.EntityState.ATTACK;
             controller.ComboCount = (++controller.ComboCount) % controller.MAX_COMBO_COUNT;
         }
@@ -436,6 +444,7 @@ public class PlayerInput : MonoBehaviour
 
     public void UpdateDashAttackAnimation()
     {
+        hero.State = (int)Hero.PlayerState.DASH;
         controller.UpdateVFXWrapperTransform();
         controller.ApplyCollide(controller.DashAttackCollider, dashAttackAlreadyAttacked, ref applyVibrationsDashAttack, false);
     }
@@ -443,8 +452,11 @@ public class PlayerInput : MonoBehaviour
     public void EndOfDashAttackAnimation()
     {
         hero.State = (int)Entity.EntityState.MOVE;
-        controller.ResetValues();
+        RestartDashCoroutine();
+        controller.DashVFX.Stop();
         LaunchedDashAttack = false;
+        controller.ResetValues();
+        OnEndDashAttack?.Invoke(transform.position);
     }
 
     #endregion
@@ -633,7 +645,7 @@ public class PlayerInput : MonoBehaviour
         chargedAttackMax = false;
         chargedAttackTime = 0f;
         LaunchedDashAttack = false;
-        animator.ResetTrigger("DashAttack");
+        animator.ResetTrigger(controller.DashAttackHash);
     }
 
     private void StopChargedAttackCoroutine()

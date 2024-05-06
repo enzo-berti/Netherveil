@@ -48,6 +48,7 @@ public abstract class Mobs : Entity
     public float DamageTakenMultiplicator { get; set; } = 1f;
     public Vector3 WanderZoneCenter { get => wanderZone.center; set => wanderZone.center = value; }
     public int WanderZoneRadius { get => wanderZone.radius; set => wanderZone.radius = value; }
+    public EnemyLifeBar LifeBar { get => lifeBar; }
 
     protected virtual void OnEnable()
     {
@@ -76,10 +77,10 @@ public abstract class Mobs : Entity
         OnDeath += cts => ClearStatus();
         OnDeath += drop.DropLoot;
 
-        if (this is IAttacker attacker)
-        {
-            attacker.OnAttackHit += attacker.ApplyStatus;
-        }
+        //if (this is IAttacker attacker)
+        //{
+        //    attacker.OnAttackHit += attacker.ApplyStatus;
+        //}
 
         StartCoroutine(EntityDetection());
         StartCoroutine(Brain());
@@ -94,7 +95,6 @@ public abstract class Mobs : Entity
 
         if (this is not IDummy)
             transform.rotation *= Camera.main.transform.rotation;
-
 
         StatSuckerVFX.SetVector3("Attract Target", GameObject.FindWithTag("Player").transform.position + Vector3.up);
         StatSuckerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXPositionBinderCustom>().ToArray()[0].Target = GameObject.FindWithTag("Player").transform;
@@ -173,7 +173,7 @@ public abstract class Mobs : Entity
     {
         IsInvincibleCount--;
         spawningVFX.Stop();
-        lifeBar.gameObject.SetActive(true);
+        //lifeBar.gameObject.SetActive(true);
         animator.speed = 1;
         IsSpawning = false;
         IsKnockbackable = true;
@@ -262,6 +262,12 @@ public abstract class Mobs : Entity
 
         _value = (int)(_value * DamageTakenMultiplicator);
         Stats.DecreaseValue(Stat.HP, _value, false);
+
+        if (!lifeBar.gameObject.activeInHierarchy)
+        {
+            lifeBar.gameObject.SetActive(true);
+        }
+
         lifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         if (notEffectDamage)
@@ -315,30 +321,6 @@ public abstract class Mobs : Entity
 
         return (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
     }
-
-    // pete smr
-
-    //public bool HitMap(Collider _collider)
-    //{
-    //    Collider[] collidedObjects;
-    //    if (_collider is CapsuleCollider)
-    //        collidedObjects = PhysicsExtensions.CapsuleOverlap(_collider as CapsuleCollider);
-    //    else if (_collider is SphereCollider)
-    //        collidedObjects = PhysicsExtensions.SphereOverlap(_collider as SphereCollider);
-    //    else if (_collider is BoxCollider)
-    //        collidedObjects = PhysicsExtensions.BoxOverlap(_collider as BoxCollider);
-    //    else throw new Exception("unknown collider");
-
-    //    foreach (Collider collider in collidedObjects)
-    //    {
-    //        if (((1 << collider.gameObject.layer) & LayerMask.GetMask("Entity")) == 0)
-    //        {
-    //            return true;
-    //        }
-    //    }
-
-    //    return false;
-    //}
 
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)

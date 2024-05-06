@@ -8,10 +8,11 @@ public class Spear : MonoBehaviour
 {
     Transform player;
     Hero hero;
+    PlayerController playerController;
     Transform parent = null;
     Animator playerAnimator;
-    public static event Action<Spear> OnPlacedInWorld;
-    public static event Action OnPlacedInHand;
+    public static Action<Spear> OnPlacedInWorld;
+    public static Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
     public VisualEffect PhantomSpearVFX { get; set; }
@@ -19,6 +20,7 @@ public class Spear : MonoBehaviour
     GameObject trail;
 
     Quaternion initLocalRotation;
+    Quaternion initMeshRotation;
     Vector3 initLocalPosition;
 
     Vector3 spearPosition;
@@ -38,26 +40,26 @@ public class Spear : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        SpearThrowCollider = player.GetComponent<PlayerController>().SpearThrowCollider;
+        playerController = player.GetComponent<PlayerController>();
+        SpearThrowCollider = playerController.SpearThrowCollider;
         hero = player.GetComponent<Hero>();
         initLocalRotation = transform.localRotation;
         initLocalPosition = transform.localPosition;
         playerAnimator = player.GetComponentInChildren<Animator>();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
+        initMeshRotation = meshRenderer.gameObject.transform.localRotation;
     }
 
     private void OnDestroy()
     {
-        OnPlacedInHand = null;
-        OnPlacedInWorld = null;
         if (trail) Destroy(trail);
         StopAllCoroutines();
     }
 
     void Update()
     {
-        playerAnimator.SetBool("SpearThrowing", IsThrowing);
-        playerAnimator.SetBool("SpearThrown", IsThrown);
+        playerAnimator.SetBool(playerController.SpearThrowingHash, IsThrowing);
+        playerAnimator.SetBool(playerController.SpearThrownHash, IsThrown);
 
 
         if (placedInWorld)
@@ -90,6 +92,7 @@ public class Spear : MonoBehaviour
         transform.SetParent(parent, true);
         // On réinit la local pos et la local rotation pour que la lance soit parfaitement dans la main du joueur comme elle l'était
         transform.SetLocalPositionAndRotation(initLocalPosition, initLocalRotation);
+        meshRenderer.gameObject.transform.localRotation = initMeshRotation;
         parent = null;
         meshRenderer.enabled = true;
         IsThrowing = false;

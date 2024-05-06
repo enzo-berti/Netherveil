@@ -305,7 +305,7 @@ namespace Netherveil.Inputs
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""133bdb3c-dbcb-4413-9585-dfa8cd5a932c"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -386,7 +386,7 @@ namespace Netherveil.Inputs
                     ""name"": ""CamLookAway"",
                     ""type"": ""Value"",
                     ""id"": ""863d1bec-c2de-4858-887a-f608b6e4651b"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true

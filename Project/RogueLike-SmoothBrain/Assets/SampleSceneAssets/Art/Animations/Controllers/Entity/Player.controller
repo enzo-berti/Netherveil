@@ -995,6 +995,7 @@ AnimatorState:
   - {fileID: -7023733099839187105}
   - {fileID: 8642793286471900131}
   - {fileID: 9094243798610479772}
+  - {fileID: 7370270113810329016}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -2342,6 +2343,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc8dc728b35001942a5d3c97f43dfe8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1101 &7370270113810329016
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: DashAttack
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -7980712156338871944}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.902439
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1101 &7573280796222504432
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

@@ -17,7 +17,10 @@ public class BloodPouringBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (!animator.GetBool("PouringBlood") && !animator.GetBool("CorruptionUpgrade") && !animator.GetBool("BenedictionUpgrade"))
+        PlayerController controller = Utilities.Player.GetComponent<PlayerController>();
+        if (!animator.GetBool(controller.PouringBloodHash) 
+            && !animator.GetBool(controller.CorruptionUpgradeHash) 
+            && !animator.GetBool(controller.BenedictionUpgradeHash))
         {
             Utilities.Hero.State = (int)Entity.EntityState.MOVE;
         }

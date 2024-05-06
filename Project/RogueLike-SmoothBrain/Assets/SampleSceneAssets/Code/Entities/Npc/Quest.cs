@@ -35,14 +35,19 @@ public abstract class Quest
         Hero.OnQuestObtained += CheckQuestFinished;
     }
 
-    static public Quest LoadClass(string name, QuestTalker.TalkerType type, QuestTalker.TalkerGrade grade)
+    static public Quest LoadClass(string name, QuestTalker questTalker)
     {
+        if (database == null)
+        {
+            database = GameResources.Get<QuestDatabase>("QuestDatabase");
+        }
+
         Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
         quest.Datas = database.GetQuest(name);
         quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        quest.talkerType = type;
-        quest.talkerGrade = grade;
-        quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)Seed.Range(0, (int)QuestDifficulty.NB) : QuestDifficulty.MEDIUM;
+        quest.talkerType = questTalker.Type;
+        quest.talkerGrade = questTalker.Grade;
+        quest.difficulty = questTalker.QuestDifficulty;
         InitDescription(ref quest.Datas.Description, quest);
         return quest;
     }
@@ -54,7 +59,7 @@ public abstract class Quest
             database = GameResources.Get<QuestDatabase>("QuestDatabase");
         }
 
-        int indexRandom = Seed.Range(0, database.datas.Count);
+        int indexRandom = UnityEngine.Random.Range(0, database.datas.Count);
         return database.datas[indexRandom].idName;
     }
 
