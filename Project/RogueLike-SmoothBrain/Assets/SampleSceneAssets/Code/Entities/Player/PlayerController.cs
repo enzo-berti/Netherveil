@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
+using System.ComponentModel.Design;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -290,6 +291,16 @@ public class PlayerController : MonoBehaviour
                     alreadyAttacked.Add(col);
                     hero.Attack(col.gameObject.GetComponent<IDamageable>());
                 }
+                else if(col.gameObject.GetComponent<IReflectable>() != null && !alreadyAttacked.Contains(col))
+                {
+                    if (applyVibrations && !playerInput.LaunchedChargedAttack)
+                    {
+                        DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
+                        applyVibrations = false;
+                    }
+                    alreadyAttacked.Add(col);
+                    col.gameObject.GetComponent<IReflectable>().Reflect();
+                }
             }
         }
     }
@@ -352,7 +363,7 @@ public class PlayerController : MonoBehaviour
     public void OrientationErrorMargin(float visionConeRange)
     {
         Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, ATTACK_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
-        .Where(x => !x.CompareTag("Player") && x.GetComponent<Transform>() != null)
+        .Where(x => !x.CompareTag("Player") && x.GetComponent<Transform>() != null && x.GetComponent<IReflectable>() == null)
         .Select(x => x.GetComponent<Transform>())
         .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
         .FirstOrDefault();

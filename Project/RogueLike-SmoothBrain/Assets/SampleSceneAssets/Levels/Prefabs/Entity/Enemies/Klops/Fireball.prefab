@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 8242836168091522864}
   - component: {fileID: 5394559933284905609}
   - component: {fileID: 8601816335358097945}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Fireball
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,8 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32348b5d59a1337448d761b911940374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: {x: 0, y: 0, z: 0}
   FireballSpeed: 11
+  launcher: {fileID: 0}
 --- !u!54 &8601816335358097945
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -163,6 +163,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VFX_FireBall
+      objectReference: {fileID: 0}
+    - target: {fileID: 717470894643645433, guid: 4619986e93983f74cb744e5975604765,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2043897564760777683, guid: 4619986e93983f74cb744e5975604765,
         type: 3}

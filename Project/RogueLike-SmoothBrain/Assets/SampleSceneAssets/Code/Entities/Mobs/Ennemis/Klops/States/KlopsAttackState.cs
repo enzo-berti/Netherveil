@@ -51,7 +51,7 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         {
             GameObject fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
             Context.KlopsSound.AttackSound.Play(Context.transform.position);
-            fireball.GetComponent<Fireball>().direction = Utilities.Player.transform.position - Context.transform.position;
+            fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
             fireball.GetComponent<Fireball>().launcher = Context;
             fireball.transform.LookAt(Utilities.Player.transform);
             hasShot = true;

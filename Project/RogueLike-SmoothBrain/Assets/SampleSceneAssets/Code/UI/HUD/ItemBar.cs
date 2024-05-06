@@ -1,15 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class ItemBar : MonoBehaviour
 {
@@ -121,9 +116,6 @@ public class ItemBar : MonoBehaviour
         {
             ItemFrame frame = Instantiate(framePf, itemPassiveTransform);
             frame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
-
-            if (itemPassiveTransform.childCount > maxItemDisplay)
-                DestroyImmediate(itemPassiveTransform.GetChild(0).gameObject);
         }
         else if (itemAdd is IActiveItem)
         {
@@ -182,5 +174,34 @@ public class ItemBar : MonoBehaviour
         }
 
         frame.ToggleCooldown(false);
+    }
+
+    public void Toggle(bool toggle)
+    {
+        RectTransform rectTransform = itemPassiveTransform.GetComponent<RectTransform>();
+
+        if (toggle)
+        {
+            StartCoroutine(MovementRoutine(rectTransform, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), Vector3.zero, 0.1f));
+        }
+        else
+        {
+            StartCoroutine(MovementRoutine(rectTransform, Vector3.zero, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), 0.1f));
+        }
+    }
+
+    private IEnumerator MovementRoutine(RectTransform toMove, Vector3 from, Vector3 to, float duration)
+    {
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+
+            toMove.anchoredPosition = Vector3.Lerp(from, to, factor);
+
+            yield return null;
+        }
     }
 }
