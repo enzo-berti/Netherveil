@@ -30,6 +30,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference hornOfBarbatosSFX;
     [SerializeField] EventReference pickUpItemSFX;
     [SerializeField] EventReference thunderstrikeSFX;
+    [SerializeField] EventReference thunderstrike2SFX;
+    [SerializeField] EventReference thunderstrike3SFX;
     [SerializeField] EventReference thunderlinkSFX;
     [SerializeField] EventReference gateOpenSFX;
     [SerializeField] EventReference gateCloseSFX;
@@ -40,6 +42,8 @@ public class AudioManager : MonoBehaviour
     public EventReference HornOfBarbatosSFX { get => hornOfBarbatosSFX; }
     public EventReference PickUpItemSFX { get => pickUpItemSFX; }
     public EventReference ThunderstrikeSFX { get => thunderstrikeSFX; }
+    public EventReference Thunderstrike2SFX { get => thunderstrike2SFX; }
+    public EventReference Thunderstrike3SFX { get => thunderstrike3SFX; }
     public EventReference ThunderlinkSFX { get => thunderlinkSFX; }
     public EventReference GateOpenSFX { get => gateOpenSFX; }
     public EventReference GateCloseSFX { get => gateCloseSFX; }
@@ -209,6 +213,32 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance PlaySound(EventReference reference, Vector3 worldPosition)
     {
+        EventInstance result = PlaySound(reference);
+        result.set3DAttributes(worldPosition.To3DAttributes());
+        audioInstances.Add(result);
+
+        return result;
+    }
+
+    public EventInstance PlayThunders(Vector3 worldPosition)
+    {
+        int randomThunder = 0;
+        EventReference reference = ThunderstrikeSFX;
+        randomThunder = UnityEngine.Random.Range(0, 3);
+
+        switch (randomThunder)
+        {
+            case 0:
+                reference = ThunderstrikeSFX;
+                break;
+            case 1:
+                reference = Thunderstrike2SFX;
+                break;
+            case 2:
+                reference = Thunderstrike3SFX;
+                break;
+        }
+
         EventInstance result = PlaySound(reference);
         result.set3DAttributes(worldPosition.To3DAttributes());
         audioInstances.Add(result);
