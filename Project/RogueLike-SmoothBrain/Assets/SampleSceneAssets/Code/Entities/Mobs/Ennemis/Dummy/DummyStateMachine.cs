@@ -31,6 +31,8 @@ public class DummyStateMachine : Mobs, IDummy
         base.Start();
         hitHash = Animator.StringToHash("Hit");
 
+        lifeBar.gameObject.SetActive(true);
+
         triggerAttack = false;
 
         Subscribe();
