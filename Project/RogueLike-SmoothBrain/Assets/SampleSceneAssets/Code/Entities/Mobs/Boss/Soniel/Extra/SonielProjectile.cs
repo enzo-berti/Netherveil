@@ -30,8 +30,6 @@ public class SonielProjectile : Projectile
     private void OnEnable()
     {
         Reset();
-        //originalRota = transform.localRotation;
-        //originalPos = transform.localPosition;
     }
 
     private void OnDisable()

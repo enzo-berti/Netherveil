@@ -120,8 +120,19 @@ public class SonielBerserk : BaseState<SonielStateMachine>
 
             var path = new NavMeshPath();
             Context.Agent.CalculatePath(Context.transform.position + direction * (Context.Agent.stoppingDistance + 0.1f), path);
-            if (path.status == NavMeshPathStatus.PathInvalid || Context.Agent.velocity.sqrMagnitude <= 0f)
+            if (path.status != NavMeshPathStatus.PathComplete || Context.Agent.velocity.sqrMagnitude <= 0f)
             {
+                //return;
+                //RaycastHit hit;
+                //if (Physics.Raycast(Context.transform.position + new Vector3(0, 1, 0), Context.Agent.destination - Context.transform.position, out hit, 1f, LayerMask.GetMask("Entity")))
+                //{
+                //    Debug.Log(hit.transform.gameObject.name);
+                //    if (hit.transform != Context.transform)
+                //    {
+
+                //        return;
+                //    }
+                //}
                 Context.Animator.ResetTrigger(stunnedHash);
                 Context.Animator.SetTrigger(stunnedHash);
 
