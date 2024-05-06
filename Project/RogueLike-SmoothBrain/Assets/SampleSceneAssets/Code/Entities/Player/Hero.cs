@@ -240,7 +240,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void CorruptionNerf(IDamageable damageable, IAttacker attacker)
     {
-        if(Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE)
+        if(Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE && !(damageable as Mobs).IsSpawning)
         {
             int value = (int)(stats.GetMaxValue(Stat.HP) * 0.01f);
             stats.DecreaseValue(Stat.HP, value);
@@ -307,13 +307,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 if (i == CORRUPTION_MAX)
                 {
-                    Stats.DecreaseValue(Stat.LIFE_STEAL, 0.15f);
+                    Stats.DecreaseValue(Stat.LIFE_STEAL, 0.05f);
                     CanHealFromConsumables = true;
                     playerController.SpecialAbility = null;
                     OnCorruptionMaxDrawback?.Invoke();
                 }
                 else
                 {
+                    Stats.DecreaseValue(Stat.LIFE_STEAL, 0.05f);
                     Stats.DecreaseValue(Stat.ATK, 5f);
                     Stats.IncreaseMaxValue(Stat.HP, 15f);
                     Stats.IncreaseValue(Stat.HP, 15f);
@@ -428,7 +429,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
             {
-                Stats.IncreaseValue(Stat.LIFE_STEAL, 0.15f);
+                Stats.IncreaseValue(Stat.LIFE_STEAL, 0.05f);
                 CanHealFromConsumables = false;
                 playerController.SpecialAbility = new DamnationVeil();
                 OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
@@ -436,6 +437,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             }
             else
             {
+                Stats.IncreaseValue(Stat.LIFE_STEAL, 0.05f);
                 Stats.IncreaseValue(Stat.ATK, 5f);
                 Stats.DecreaseMaxValue(Stat.HP, 15f);
                 Stats.DecreaseValue(Stat.HP, 15f);

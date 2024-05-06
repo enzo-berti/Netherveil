@@ -213,13 +213,13 @@ MonoBehaviour:
   stats:
     stats:
     - stat: 0
-      hasMaxStat: 0
+      hasMaxStat: 1
       hasMinStat: 0
       hasCoeff: 0
       value: 750
       lastValue: 0
       coeff: 0
-      maxValue: 0
+      maxValue: 750
       minValue: 0
       overload: 0
       underload: 0
@@ -300,7 +300,8 @@ MonoBehaviour:
     - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
         type: 3}
       chance: 1
-      quantity: 0
+      maxQuantity: 0
+      minQuantity: 0
       isChanceShared: 0
       decreasingValuePerDrop: 0
   StatSuckerVFX: {fileID: 6293110322402977416}
