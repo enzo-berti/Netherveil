@@ -26,9 +26,22 @@ public class ScrollRectExtension : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(Input.mouseScrollDelta.y < 0)
+        {
+            scrollRect.verticalNormalizedPosition -= 0.1f;
+        }
+        else if(Input.mouseScrollDelta.y > 0)
+        {
+            scrollRect.verticalNormalizedPosition += 0.1f;
+        }
+    }
+
     public void OnSelect(BaseEventData eventData)
     {
-        SnapTo(eventData.selectedObject.GetComponent<RectTransform>());
+        if(!DeviceManager.Instance.IsPlayingKB()) SnapTo(eventData.selectedObject.GetComponent<RectTransform>());
+
     }
 
     public void SnapTo(RectTransform target)
