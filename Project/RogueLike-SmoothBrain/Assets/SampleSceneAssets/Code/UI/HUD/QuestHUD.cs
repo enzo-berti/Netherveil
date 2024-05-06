@@ -71,12 +71,12 @@ public class QuestHUD : MonoBehaviour
 
         if(hasQuest)
         {
-            string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? "<color=purple>corruption</color>" : "<color=yellow>benediction</color>";
+            string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? "<color=purple>Corruption</color>" : "<color=yellow>Benediction</color>";
             int absValue = Mathf.Abs(player.CurrentQuest.CorruptionModifierValue);
 
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);
-            rewardText.SetText($"\nRewards: {absValue} {rewardName}");
+            rewardText.SetText($"\nReward: {absValue} {rewardName}");
             progressText.SetText(player.CurrentQuest.progressText);
 
             description.GetComponent<ContentSizeFitter>().SetLayoutVertical();
