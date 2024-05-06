@@ -39,6 +39,7 @@ public abstract class OverTimeStatus : Status
 
     public sealed override void AddStack(int nb)
     {
+        base.AddStack(nb);
         if ((isStackable && stack < maxStack) || stack < 1)
         {
             nb = isStackable ? nb : 1;
@@ -47,8 +48,9 @@ public abstract class OverTimeStatus : Status
             {
                 stopTimes.Add(duration + currentTime + frequency * stopTimes.Count);
             }
+            PlayVfx(vfxName);
         }
-        PlayVfx(vfxName);
+        
 
     }
     private IEnumerator UpdateEffect()
