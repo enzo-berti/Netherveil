@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class KitingMyDearLove : Quest 
 {
     int currentNumber = 0;
@@ -12,19 +15,22 @@ public class KitingMyDearLove : Quest
         {
             case QuestDifficulty.EASY:
                 MAX_NUMBER = 5;
+                timeToFinishQuest = 400f;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 8;
+                timeToFinishQuest = 250f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 10;
+                timeToFinishQuest = 180f;
                 CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnSpearAttack += SetBool;
-        Hero.OnKill += UpdateCount;
+        Utilities.Hero.OnSpearAttack += SetBool;
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -34,8 +40,8 @@ public class KitingMyDearLove : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnSpearAttack -= SetBool;
-        Hero.OnKill -= UpdateCount;
+        Utilities.Hero.OnSpearAttack -= SetBool;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 
     private void SetBool(IDamageable damageable, IAttacker attacker)

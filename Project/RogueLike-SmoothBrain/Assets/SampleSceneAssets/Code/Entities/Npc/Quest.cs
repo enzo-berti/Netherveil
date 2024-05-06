@@ -2,6 +2,7 @@ using DialogueSystem.Runtime;
 using Map;
 using Map.Generation;
 using System;
+using System.Collections;
 using System.Reflection;
 using UnityEngine;
 
@@ -25,10 +26,17 @@ public abstract class Quest
     protected QuestTalker.TalkerGrade talkerGrade;
     protected QuestDifficulty difficulty;
     protected bool questLost = false;
+
+    private Coroutine timeManagerRoutine = null;
+    protected float timeToFinishQuest;
+
     public float CurrentQuestTimer { get; protected set; }
     public int CorruptionModifierValue { get; protected set; } = 0;
     public QuestTalker.TalkerType TalkerType { get => talkerType; }
     public QuestDifficulty Difficulty { get => difficulty; }
+
+    protected abstract bool IsQuestFinished();
+    protected abstract void ResetQuestValues();
 
     public virtual void AcceptQuest()
     {
@@ -36,36 +44,15 @@ public abstract class Quest
         MapUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen += CheckQuestFinished;
         MapUtilities.onEnter += CheckQuestFinished;
-        Hero.OnQuestObtained += CheckQuestFinished;
+        Utilities.Hero.OnQuestObtained += CheckQuestFinished;
     }
 
-    static public Quest LoadClass(string name, QuestDialogueDifficulty difficulty, QuestTalker questTalker)
+    public void LateAcceptQuest()
     {
-        if (database == null)
+        if(Datas.LimitedTime)
         {
-            database = GameResources.Get<QuestDatabase>("QuestDatabase");
+           timeManagerRoutine = CoroutineManager.Instance.StartCoroutine(TimeToFinishRoutine());
         }
-
-        Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
-        quest.Datas = database.GetQuest(name);
-        quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
-        quest.talkerType = questTalker.Type;
-        quest.talkerGrade = questTalker.Grade;
-        quest.CorruptionModifierValue = quest.Datas.CorruptionModifierValue;
-        quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)difficulty : QuestDifficulty.MEDIUM;
-        InitDescription(ref quest.Datas.Description, quest);
-        return quest;
-    }
-
-    static public string GetRandomQuestName()
-    {
-        if (database == null)
-        {
-            database = GameResources.Get<QuestDatabase>("QuestDatabase");
-        }
-
-        int indexRandom = UnityEngine.Random.Range(0, database.datas.Count);
-        return database.datas[indexRandom].idName;
     }
 
     protected void QuestFinished()
@@ -88,11 +75,41 @@ public abstract class Quest
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         MapUtilities.onEnter -= CheckQuestFinished;
-        Hero.OnQuestObtained -= CheckQuestFinished;
+        Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
+
+        if (timeManagerRoutine != null)
+            CoroutineManager.Instance.StopCoroutine(timeManagerRoutine);
+        timeManagerRoutine = null;
+
         HudHandler.current.MessageInfoHUD.Display($"You finished the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
     }
 
-    protected abstract void ResetQuestValues();
+    protected void QuestLost()
+    {
+        player.CurrentQuest = null;
+        questLost = true;
+        QuestUpdated();
+        AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
+        MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
+        MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
+        MapUtilities.onEnter -= CheckQuestFinished;
+        Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
+
+        if (timeManagerRoutine != null)
+            CoroutineManager.Instance.StopCoroutine(timeManagerRoutine);
+        timeManagerRoutine = null;
+
+        HudHandler.current.MessageInfoHUD.Display($"You lost the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
+    }
+
+    protected void QuestUpdated()
+    {
+        if (IsQuestFinished())
+            HudHandler.current.QuestHUD.LostOrFinishedText.SetText("Quest Completed! Clear the current room to receive rewards!");
+        else if (questLost)
+            HudHandler.current.QuestHUD.LostOrFinishedText.SetText("Quest Lost...");
+        OnQuestUpdated?.Invoke();
+    }
 
     protected void CheckQuestFinished()
     {
@@ -106,28 +123,56 @@ public abstract class Quest
         }
     }
 
-    protected void QuestLost()
+    private IEnumerator TimeToFinishRoutine()
     {
-        AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
-        player.CurrentQuest = null;
-        MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
-        MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        MapUtilities.onEnter -= CheckQuestFinished;
-        Hero.OnQuestObtained -= CheckQuestFinished;
-        HudHandler.current.MessageInfoHUD.Display($"You lost the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
+        CurrentQuestTimer = timeToFinishQuest;
+        while (CurrentQuestTimer > 0)
+        {
+            if (player == null)
+            {
+                timeManagerRoutine = null;
+                yield break;
+            }
+
+            CurrentQuestTimer -= Time.deltaTime;
+            QuestUpdated();
+            yield return null;
+        }
+        QuestLost();
+        yield break;
     }
 
-    protected abstract bool IsQuestFinished();
-
-    protected void QuestUpdated()
+    #region STATIC_METHODS
+    static public Quest LoadClass(string name, QuestDialogueDifficulty difficulty, QuestTalker questTalker)
     {
-        if (IsQuestFinished())
-            progressText = "Quest Completed! Clear the current room to receive rewards!";
-        else if (questLost)
-            progressText = "Quest Lost...";
-        OnQuestUpdated?.Invoke();
+        if (database == null)
+        {
+            database = GameResources.Get<QuestDatabase>("QuestDatabase");
+        }
+
+        Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
+        quest.Datas = database.GetQuest(name);
+        quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        quest.talkerType = questTalker.Type;
+        quest.talkerGrade = questTalker.Grade;
+        quest.CorruptionModifierValue = quest.Datas.CorruptionModifierValue;
+        quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)difficulty : QuestDifficulty.MEDIUM;
+        InitDescription(ref quest.Datas.Description);
+        return quest;
     }
-    static private void InitDescription(ref string description, Quest data)
+
+    static public string GetRandomQuestName()
+    {
+        if (database == null)
+        {
+            database = GameResources.Get<QuestDatabase>("QuestDatabase");
+        }
+
+        int indexRandom = UnityEngine.Random.Range(0, database.datas.Count);
+        return database.datas[indexRandom].idName;
+    }
+
+    static private void InitDescription(ref string description)
     {
         string finalDescription = string.Empty;
         char[] separators = new char[] { ' ', '\n' };
@@ -139,5 +184,5 @@ public abstract class Quest
 
         description = finalDescription;
     }
-
+    #endregion
 }

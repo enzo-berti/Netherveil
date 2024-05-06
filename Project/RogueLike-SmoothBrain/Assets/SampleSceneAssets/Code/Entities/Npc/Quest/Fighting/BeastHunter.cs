@@ -6,8 +6,6 @@ public class BeastHunter : Quest
 {
     int currentNumber = 0;
     int MAX_NUMBER;
-    float timeToFinishQuest;
-    Coroutine timeManagerRoutine = null;
 
     public override void AcceptQuest()
     {
@@ -25,13 +23,12 @@ public class BeastHunter : Quest
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
-                timeToFinishQuest = 10f;
+                timeToFinishQuest = 300f;
                 CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB BEASTS KILLED : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnKill += UpdateCount;
-        timeManagerRoutine = CoroutineManager.Instance.StartCoroutine(TimeToFinishRoutine());
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -48,25 +45,8 @@ public class BeastHunter : Quest
         }
     }
 
-    private IEnumerator TimeToFinishRoutine()
-    {
-        CurrentQuestTimer = timeToFinishQuest;
-        while(CurrentQuestTimer > 0)
-        {
-            CurrentQuestTimer -= Time.deltaTime;
-            QuestUpdated();
-            yield return null;
-        }
-        QuestLost();
-        yield break;
-    }
-
     protected override void ResetQuestValues()
     {
-        Hero.OnKill -= UpdateCount;
-        if (timeManagerRoutine != null)
-            CoroutineManager.Instance.StopCoroutine(timeManagerRoutine);
-
-        timeManagerRoutine = null;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 }

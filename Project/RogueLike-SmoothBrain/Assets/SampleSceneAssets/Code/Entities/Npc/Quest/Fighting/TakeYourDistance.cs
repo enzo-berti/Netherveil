@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class TakeYourDistance : Quest
 {
     int currentNumber = 0;
@@ -11,18 +14,21 @@ public class TakeYourDistance : Quest
         {
             case QuestDifficulty.EASY:
                 MAX_NUMBER = 10;
+                timeToFinishQuest = 600f;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 15;
+                timeToFinishQuest = 450f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 20;
+                timeToFinishQuest = 300f;
                 CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnSpearAttack += UpdateCount;
+        Utilities.Hero.OnSpearAttack += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -32,7 +38,7 @@ public class TakeYourDistance : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnSpearAttack -= UpdateCount;
+        Utilities.Hero.OnSpearAttack -= UpdateCount;
     }
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)

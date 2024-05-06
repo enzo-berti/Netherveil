@@ -295,7 +295,7 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
                     deathTimer = Time.deltaTime;
                     if (bossSounds.deathSound.GetState() != PLAYBACK_STATE.PLAYING)
                     {
-                        Hero.OnKill?.Invoke(this);
+                        Utilities.Hero.OnKill?.Invoke(this);
                         OnDeath?.Invoke(transform.position);
                         bossSounds.StopAllSounds();
                         Destroy(transform.parent.gameObject);

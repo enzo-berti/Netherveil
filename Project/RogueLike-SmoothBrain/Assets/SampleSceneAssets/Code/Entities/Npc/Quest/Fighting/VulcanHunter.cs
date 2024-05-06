@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class VulcanHunter : Quest
 {
     int currentNumber = 0;
@@ -10,19 +13,22 @@ public class VulcanHunter : Quest
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
+                timeToFinishQuest = 600f;
                 MAX_NUMBER = 2;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 4;
+                timeToFinishQuest = 450f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 6;
+                timeToFinishQuest = 300f;
                 CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnKill += UpdateCount;
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -32,7 +38,7 @@ public class VulcanHunter : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnKill -= UpdateCount;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 
     private void UpdateCount(IDamageable damageable)

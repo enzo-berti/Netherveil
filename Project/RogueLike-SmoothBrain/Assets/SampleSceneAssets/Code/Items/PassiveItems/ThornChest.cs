@@ -6,12 +6,12 @@ public class ThornChest : ItemEffect, IPassiveItem
 
     public void OnRetrieved()
     {
-        Hero.OnTakeDamage += ThornDamages;
+        Utilities.Hero.OnTakeDamage += ThornDamages;
     }
 
     public void OnRemove()
     {
-        Hero.OnTakeDamage -= ThornDamages;
+        Utilities.Hero.OnTakeDamage -= ThornDamages;
     }
 
     private void ThornDamages(int damageValue, IAttacker attacker)

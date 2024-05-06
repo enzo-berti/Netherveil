@@ -174,7 +174,7 @@ public class GlorbStateMachine : Mobs, IGlorb
     {
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
-        Hero.OnKill?.Invoke(this);
+        Utilities.Hero.OnKill?.Invoke(this);
 
         glorbSounds.deathSFX.Play(transform.position);
 

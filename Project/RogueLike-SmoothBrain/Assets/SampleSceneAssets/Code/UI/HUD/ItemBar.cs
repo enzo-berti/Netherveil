@@ -50,10 +50,10 @@ public class ItemBar : MonoBehaviour
     private void OnEnable()
     {
         Item.OnRetrieved += OnItemAdd;
-        Hero.OnBenedictionMaxUpgrade += OnSpecialAbilityAdd;
-        Hero.OnCorruptionMaxUpgrade += OnSpecialAbilityAdd;
-        Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
-        Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
+        Utilities.Hero.OnBenedictionMaxUpgrade += OnSpecialAbilityAdd;
+        Utilities.Hero.OnCorruptionMaxUpgrade += OnSpecialAbilityAdd;
+        Utilities.Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
+        Utilities.Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted += ActiveItemCooldown;
         ISpecialAbility.OnSpecialAbilityActivated += SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB += UpdateKeyboardBiding;
@@ -64,10 +64,10 @@ public class ItemBar : MonoBehaviour
     private void OnDisable()
     {
         Item.OnRetrieved -= OnItemAdd;
-        Hero.OnBenedictionMaxUpgrade -= OnSpecialAbilityAdd;
-        Hero.OnCorruptionMaxUpgrade -= OnSpecialAbilityAdd;
-        Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
-        Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
+        Utilities.Hero.OnBenedictionMaxUpgrade -= OnSpecialAbilityAdd;
+        Utilities.Hero.OnCorruptionMaxUpgrade -= OnSpecialAbilityAdd;
+        Utilities.Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
+        Utilities.Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted -= ActiveItemCooldown;
         ISpecialAbility.OnSpecialAbilityActivated -= SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;

@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 public class SpinKiller : Quest
@@ -14,19 +15,22 @@ public class SpinKiller : Quest
         {
             case QuestDifficulty.EASY:
                 MAX_NUMBER = 2;
+                timeToFinishQuest = 600f;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 4;
+                timeToFinishQuest = 450f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 6;
+                timeToFinishQuest = 300f;
                 CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
-        Hero.OnChargedAttack += SetBool;
-        Hero.OnKill += UpdateCount;
+        Utilities.Hero.OnChargedAttack += SetBool;
+        Utilities.Hero.OnKill += UpdateCount;
     }
 
     protected override bool IsQuestFinished()
@@ -36,8 +40,8 @@ public class SpinKiller : Quest
 
     protected override void ResetQuestValues()
     {
-        Hero.OnChargedAttack -= SetBool;
-        Hero.OnKill -= UpdateCount;
+        Utilities.Hero.OnChargedAttack -= SetBool;
+        Utilities.Hero.OnKill -= UpdateCount;
     }
 
     private void SetBool(IDamageable damageable, IAttacker attacker)

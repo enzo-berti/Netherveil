@@ -139,7 +139,7 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
-        Hero.OnKill?.Invoke(this);
+        Utilities.Hero.OnKill?.Invoke(this);
         klopsSounds.deathSound.Play(transform.position);
 
         animator.ResetTrigger(deathHash);

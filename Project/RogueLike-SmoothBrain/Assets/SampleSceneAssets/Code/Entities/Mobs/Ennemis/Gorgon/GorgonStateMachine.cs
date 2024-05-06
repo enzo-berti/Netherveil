@@ -171,7 +171,7 @@ public class GorgonStateMachine : Mobs, IGorgon
     {
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
-        Hero.OnKill?.Invoke(this);
+        Utilities.Hero.OnKill?.Invoke(this);
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 

@@ -17,4 +17,5 @@ public class QuestData
     [Multiline] public string Description;
     public int CorruptionModifierValue;
     public bool HasDifferentGrades;
+    public bool LimitedTime;
 }

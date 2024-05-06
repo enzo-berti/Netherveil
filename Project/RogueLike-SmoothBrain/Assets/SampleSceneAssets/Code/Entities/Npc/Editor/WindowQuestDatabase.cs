@@ -47,6 +47,7 @@ public class WindowQuestDatabase : EditorWindow
         EditorGUILayout.LabelField("Type", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("CorruptionModifierValue", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("HasDifferentGrades", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("LimitedTime", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Description", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.EndHorizontal();
 
@@ -62,6 +63,7 @@ public class WindowQuestDatabase : EditorWindow
             quest.CorruptionModifierValue = EditorGUILayout.IntField(quest.CorruptionModifierValue, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             GUILayout.Space(150f);
             quest.HasDifferentGrades = EditorGUILayout.Toggle(quest.HasDifferentGrades, GUILayout.Width(0),GUILayout.ExpandWidth(true));
+            quest.LimitedTime = EditorGUILayout.Toggle(quest.LimitedTime, GUILayout.Width(0),GUILayout.ExpandWidth(true));
             quest.Description = EditorGUILayout.TextArea(quest.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
             GUI.color = Color.red;
             if (GUILayout.Button("X", GUILayout.Width(50)))

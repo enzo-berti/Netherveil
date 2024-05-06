@@ -176,7 +176,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     {
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
-        Hero.OnKill?.Invoke(this);
+        Utilities.Hero.OnKill?.Invoke(this);
 
         damoclesSounds.deathSound.Play(transform.position);
 

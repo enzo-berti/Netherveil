@@ -12,14 +12,14 @@ public class TearOfZeus : ItemEffect, IPassiveItem
         thunderstrikeVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ThunderStrike"));
         thunderstrikeCollider.SetActive(false);
 
-        PlayerInput.OnEndDash += DropTear;
+        Utilities.PlayerInput.OnEndDash += DropTear;
     }
 
     public void OnRemove()
     {
         GameObject.Destroy(thunderstrikeCollider);
         GameObject.Destroy(thunderstrikeVFX);
-        PlayerInput.OnEndDash -= DropTear;
+        Utilities.PlayerInput.OnEndDash -= DropTear;
     }
 
     private void DropTear(Vector3 playerPos)
