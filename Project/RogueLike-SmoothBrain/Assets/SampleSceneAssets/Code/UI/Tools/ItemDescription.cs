@@ -23,7 +23,7 @@ public class ItemDescription : MonoBehaviour
 
         if (priceText != null)
         {
-            priceText.text = "Cost: " + item.Price + " Bloods";
+            priceText.text = "Cost: " + item.Price + " Bloods" + "<sprite name=\"blood\">";
         }
 
         activePassiveText.text = (item.ItemEffect as IPassiveItem) != null ? "Passive" : "Active";

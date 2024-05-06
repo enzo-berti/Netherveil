@@ -40,6 +40,8 @@ public class PestStateMachine : Mobs, IPest
     // charge attaque
     [SerializeField] float attackChargeDuration = 0.65f;
 
+    bool playerHit = false;
+
     // getters and setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -51,14 +53,14 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
     public Transform Player { get => player; set => player = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 5.0f; }
-    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
+    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 2f; }
     public float VisionAngle { get => (currentState is PestTriggeredState || currentState is PestAttackingState) && Player != null ? 360 : angle; }
     public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is PestTriggeredState || currentState is PestAttackingState ? 1.25f : 1f); }
     public float idleTimer { set => dashTimer = value; }
     public float MovementDelay { get => (currentState is PestTriggeredState ? 1.5f : 1.8f); }
     public bool CanMove { get => dashTimer > MovementDelay; }
     public float AttackChargeDuration { get => attackChargeDuration; }
+    public bool PlayerHit { get => playerHit; set => playerHit = value; }
 
     protected override void Start()
     {
@@ -77,6 +79,8 @@ public class PestStateMachine : Mobs, IPest
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
+        
+        idleTimer = MovementDelay / 2f;
 
         OnFreeze += PestStateMachine_OnFreeze;
     }
@@ -147,7 +151,7 @@ public class PestStateMachine : Mobs, IPest
 
         onHit?.Invoke(damageable, this);
         damageable.ApplyDamage(damages, this);
-        ApplyKnockback(damageable, this);
+        //ApplyKnockback(damageable, this);
 
         pestSounds.attackHitSound.Play(transform.position);
     }

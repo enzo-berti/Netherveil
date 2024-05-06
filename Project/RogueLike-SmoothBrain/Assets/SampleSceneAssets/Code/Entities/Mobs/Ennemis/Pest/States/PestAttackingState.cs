@@ -66,8 +66,14 @@ public class PestAttackingState : BaseState<PestStateMachine>
             dashRoutine = null;
         }
 
+        Context.idleTimer = Context.MovementDelay / 2f;
+
         Context.Animator.ResetTrigger("Cancel");
         Context.Animator.SetTrigger("Cancel");
+        Context.Animator.ResetTrigger("Cancel");
+
+        Context.Animator.ResetTrigger(Context.ChargeInHash);
+        Context.Animator.ResetTrigger(Context.ChargeOutHash);
     }
 
     // This method will be call every frame.
@@ -83,11 +89,12 @@ public class PestAttackingState : BaseState<PestStateMachine>
             Vector3 positionToLookAt = new Vector3(playerPos.x, Context.transform.position.y, playerPos.z);
             LookAt(positionToLookAt, 10f);
 
-            curState = State.Charge;
+            elapsedTimeState = 0f;
 
             Context.Animator.ResetTrigger(Context.ChargeInHash);
             Context.Animator.SetTrigger(Context.ChargeInHash);
-            elapsedTimeState = 0f;
+
+            curState = State.Charge;
         }
         else if (curState == State.Charge)
         {
@@ -95,23 +102,13 @@ public class PestAttackingState : BaseState<PestStateMachine>
             if (elapsedTimeState >= Context.AttackChargeDuration)
             {
                 elapsedTimeState = 0.0f;
-                curState = State.Dash;
 
                 dashDistance = Vector3.Distance(playerPos, Context.transform.position);
                 dashDistance = Mathf.Clamp(dashDistance, 0f, Context.Stats.GetValue(Stat.ATK_RANGE));
 
-                Vector3 curScale = Context.AttackCollider.transform.localScale;
-                curScale.z = dashDistance;
-                Context.AttackCollider.transform.localScale = curScale;
-
-                Vector3 curPos = Context.AttackCollider.transform.localPosition;
-                curPos.z = dashDistance / 2.0f;
-                Context.AttackCollider.transform.localPosition = curPos;
-
                 dashRoutine = Context.StartCoroutine(DashCoroutine(dashDistance, Context.DashSpeed));
 
-                Context.Animator.ResetTrigger(Context.ChargeOutHash);
-                Context.Animator.SetTrigger(Context.ChargeOutHash);
+                curState = State.Dash;
             }
             else if (elapsedTimeState <= Context.AttackChargeDuration - 0.2f)
             {
@@ -132,34 +129,31 @@ public class PestAttackingState : BaseState<PestStateMachine>
             if (elapsedTimeState >= rechargeDuration)
             {
                 elapsedTimeState = 0.0f;
-                curState = State.Start;
                 attackEnded = true;
+                curState = State.Start;
             }
         }
     }
 
     private IEnumerator DashCoroutine(float distance, float speed)
     {
+        if (distance <= 2f) { distance = 2f; }
+
         float timeElapsed = 0f;
         Vector3 startPosition = Context.transform.position;
         Vector3 dashTarget = Context.transform.position + Context.transform.forward * distance;
 
-        IDamageable player = PhysicsExtensions.CheckAttackCollideRayCheck(Context.AttackCollider, Context.transform.position, "Player", LayerMask.GetMask("Entity"))
-                                              .Select(x => x.GetComponent<IDamageable>())
-                                              .Where(x => x != null)
-                                              .FirstOrDefault();
-
-        if (player != null)
-        {
-            Context.Attack(player);
-        }
-
         float duration = distance / speed;
         bool isOnNavMesh = true;
+
+        bool chargedOutAttack = false;
 
         while (timeElapsed < duration && isOnNavMesh)
         {
             yield return null;
+
+            if (!Context.PlayerHit)
+                AttackCollide(Context.AttackCollider, debugMode: false);
 
             timeElapsed += Time.deltaTime;
             float t = Mathf.Clamp01(timeElapsed / duration);
@@ -167,11 +161,19 @@ public class PestAttackingState : BaseState<PestStateMachine>
 
             if (isOnNavMesh = NavMesh.SamplePosition(warpPosition, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
             {
+                if (!chargedOutAttack)
+                {
+                    chargedOutAttack = true;
+                    Context.Animator.ResetTrigger(Context.ChargeOutHash);
+                    Context.Animator.SetTrigger(Context.ChargeOutHash);
+                }
                 Context.Agent.Warp(hit.position);
             }
         }
 
+        elapsedTimeState = 0f;
         dashRoutine = null;
+        Context.PlayerHit = false;
     }
 
     // This method will be call on state changement.
@@ -190,6 +192,38 @@ public class PestAttackingState : BaseState<PestStateMachine>
         lookRotation.z = 0;
 
         Context.transform.rotation = Quaternion.Slerp(Context.transform.rotation, lookRotation, _speed * Time.deltaTime);
+    }
+
+    public void AttackCollide(Collider _collider, bool debugMode = false)
+    {
+        if (debugMode)
+        {
+            _collider.gameObject.SetActive(false);
+        }
+
+        Collider[] tab = null;
+
+        if (_collider is CapsuleCollider)
+            tab = PhysicsExtensions.CapsuleOverlap(_collider as CapsuleCollider, LayerMask.GetMask("Entity"));
+        else if (_collider is BoxCollider)
+            tab = PhysicsExtensions.BoxOverlap(_collider as BoxCollider, LayerMask.GetMask("Entity"));
+        else
+            Debug.LogError("Type de collider non reconnu.");
+
+        if (tab != null)
+        {
+            if (tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != Context.gameObject)
+                    {
+                        Context.Attack(col.gameObject.GetComponent<IDamageable>());
+                        Context.PlayerHit = true;
+                    }
+                }
+            }
+        }
     }
     #endregion
 }
