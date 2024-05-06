@@ -1,8 +1,6 @@
 using System;
 using TMPro;
 using UnityEngine.UI;
-using System.Linq;
-using static UnityEngine.InputSystem.InputBinding;
 
 ////TODO: have updateBindingUIEvent receive a control path string, too (in addition to the device layout name)
 

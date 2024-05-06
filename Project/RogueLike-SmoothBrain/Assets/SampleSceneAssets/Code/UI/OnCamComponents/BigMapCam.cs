@@ -37,12 +37,12 @@ public class BigMapCam : MonoBehaviour
     private void MoveCam()
     {
         if (DeviceManager.Instance.IsPlayingKB())
-            CollidMouseScreen();
+            CollideMouseScreen();
         else
             CollideJoystickScreen();
     }
 
-    private void CollidMouseScreen()
+    private void CollideMouseScreen()
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(mapRect, Input.mousePosition, null, out Vector2 localPoint);
         localPoint /= mapRect.sizeDelta / 2.0f;
