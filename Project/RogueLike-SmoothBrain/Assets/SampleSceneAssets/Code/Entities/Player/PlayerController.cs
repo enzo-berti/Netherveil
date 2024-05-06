@@ -417,6 +417,15 @@ public class PlayerController : MonoBehaviour
 
     public void PlayVFX(VisualEffect VFX)
     {
+
+        ChargedAttackVFX.Stop();
+        foreach(VisualEffect effect in SpearAttacksVFX)
+        {
+            effect.Stop();
+        }
+
+        DashAttackVFX.Stop();
+        SpearLaunchVFX.Stop();
         VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
         VFX.Play();
     }

@@ -31,6 +31,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference pickUpItemSFX;
     [SerializeField] EventReference thunderstrikeSFX;
     [SerializeField] EventReference thunderlinkSFX;
+    [SerializeField] EventReference gateOpenSFX;
+    [SerializeField] EventReference gateCloseSFX;
 
     public EventReference QuestObtainedSFX { get => questObtainedSFX; }
     public EventReference QuestFinishedSFX { get => questFinishedSFX; }
@@ -39,6 +41,8 @@ public class AudioManager : MonoBehaviour
     public EventReference PickUpItemSFX { get => pickUpItemSFX; }
     public EventReference ThunderstrikeSFX { get => thunderstrikeSFX; }
     public EventReference ThunderlinkSFX { get => thunderlinkSFX; }
+    public EventReference GateOpenSFX { get => gateOpenSFX; }
+    public EventReference GateCloseSFX { get => gateCloseSFX; }
 
     private static AudioManager instance = null;
     public static AudioManager Instance
