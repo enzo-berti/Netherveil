@@ -29,7 +29,7 @@ namespace DialogueSystem.Editor
             styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/QuestDialogueNodeView.uss"));
             AddPort(Direction.Input, Port.Capacity.Single, "previous dialogue");
             AddPort(Direction.Output, Port.Capacity.Single, "next dialogue");
-            title = "Event Dialogue";
+            title = "Quest Dialogue";
 
             // Querry
             eventTagField = this.Q<TextField>("QuestTag-field");
