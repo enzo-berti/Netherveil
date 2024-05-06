@@ -61,8 +61,6 @@ public class QuestHUD : MonoBehaviour
 
     private void OnDisable()
     {
-        Utilities.Hero.OnQuestObtained -= UpdateUI;
-        Utilities.Hero.OnQuestFinished -= UpdateUI;
         Quest.OnQuestUpdated -= UpdateUI;
     }
 

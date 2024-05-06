@@ -20,8 +20,8 @@ public class ExplodingBomb : MonoBehaviour
     private float BlastDiameter { get => blastDiameter; }
     [SerializeField] private int blastDamage;
     [SerializeField] private LayerMask damageLayer;
-    private bool isActive;
-    private bool isMoving => throwRoutine != null;
+    //private bool isActive;
+    //private bool isMoving => throwRoutine != null;
     private Coroutine throwRoutine;
     private Coroutine explosionRoutine;
     IAttacker launcher = null;
@@ -88,7 +88,7 @@ public class ExplodingBomb : MonoBehaviour
 
     public void Activate()
     {
-        isActive = true;
+        //isActive = true;
         StartCoroutine(ActivateRoutine());
     }
 

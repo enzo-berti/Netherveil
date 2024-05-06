@@ -10,8 +10,8 @@ namespace Map
     public class RoomEditor : Editor
     {
         private Room roomScript;
-        private Transform roomPreset;
-        private int currentIndex = 0;
+        //private Transform roomPreset;
+        //private int currentIndex = 0;
 
         public override void OnInspectorGUI()
         {

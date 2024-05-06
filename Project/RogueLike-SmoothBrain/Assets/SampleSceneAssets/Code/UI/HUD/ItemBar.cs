@@ -64,10 +64,6 @@ public class ItemBar : MonoBehaviour
     private void OnDisable()
     {
         Item.OnRetrieved -= OnItemAdd;
-        Utilities.Hero.OnBenedictionMaxUpgrade -= OnSpecialAbilityAdd;
-        Utilities.Hero.OnCorruptionMaxUpgrade -= OnSpecialAbilityAdd;
-        Utilities.Hero.OnCorruptionMaxDrawback -= OnSpecialAbilityRemove;
-        Utilities.Hero.OnBenedictionMaxDrawback -= OnSpecialAbilityRemove;
         IActiveItem.OnActiveItemCooldownStarted -= ActiveItemCooldown;
         ISpecialAbility.OnSpecialAbilityActivated -= SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;
@@ -90,10 +86,12 @@ public class ItemBar : MonoBehaviour
     private void UpdateKeyboardBiding()
     {
         string keyActive = keyboardActive.action.bindings.First().path.Split("/").Last();
-        specialItemFrame.SetKey(iconsList.kb.GetSprite(keyActive), keyActive.ToUpper());
+        if(specialItemFrame != null)
+            specialItemFrame.SetKey(iconsList.kb.GetSprite(keyActive), keyActive.ToUpper());
 
         string keyAbility = keyboardAbility.action.bindings.First().path.Split("/").Last();
-        specialAbilityFrame.SetKey(iconsList.kb.GetSprite(keyAbility), keyAbility.ToUpper());
+        if (specialAbilityFrame != null)
+            specialAbilityFrame.SetKey(iconsList.kb.GetSprite(keyAbility), keyAbility.ToUpper());
     }
 
     private void UpdateGamepadBiding()
