@@ -61,7 +61,7 @@
 			<value>8.5</value>
 		</property>
 		<property name="maximumDistance">
-			<value>200</value>
+			<value>100</value>
 		</property>
 	</object>
 	<object class="MarkerTrack" id="{ef2ad300-1c5e-4542-ba56-4c83d7f60190}" />
@@ -110,6 +110,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{4cd1bda6-a14c-4b23-b926-3c9f8d3ec738}">
+		<property name="volume">
+			<value>-3.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -128,6 +131,7 @@
 			<destination>{d8187a1c-822b-4a3a-a8a9-1b399cf84dfe}</destination>
 			<destination>{d9bb0993-4a17-4687-9d22-222de6c64679}</destination>
 			<destination>{68eafaaf-f0de-4b09-a985-f3e48d3dba67}</destination>
+			<destination>{4e093bfa-ad31-4a4d-be87-59ca9fa0775d}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{2e43311c-cde5-4ee9-b698-fb3c2835ce56}" />
@@ -143,6 +147,14 @@
 	<object class="PitchShifterEffect" id="{68eafaaf-f0de-4b09-a985-f3e48d3dba67}">
 		<property name="pitch">
 			<value>0.899999976</value>
+		</property>
+	</object>
+	<object class="ThreeEQEffect" id="{4e093bfa-ad31-4a4d-be87-59ca9fa0775d}">
+		<property name="lowGain">
+			<value>2.5</value>
+		</property>
+		<property name="midGain">
+			<value>-5</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{96e46c5f-7f15-45dc-9874-f834476bc3ea}" />

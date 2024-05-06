@@ -83,6 +83,9 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
 
                 Context.Sounds.shockwaveSFX.Play(Context.transform.position, true);
 
+                DeviceManager.Instance.ApplyVibrations(0.3f, 0.3f, 0.25f);
+                Context.CameraUtilities.ShakeCamera(0.3f, 0.25f, EasingFunctions.EaseInQuint);
+
                 Context.VFX.PlayVFX();
                 Context.AttackCollide(Context.AttackColliders[(int)Attacks.SPECIAL]);
                 currentAttack = Attacks.NONE;

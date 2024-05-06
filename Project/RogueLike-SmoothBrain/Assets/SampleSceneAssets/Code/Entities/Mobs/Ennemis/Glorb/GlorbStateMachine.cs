@@ -49,6 +49,8 @@ public class GlorbStateMachine : Mobs, IGlorb
     int deathHash;
     int walkHash;
 
+    CameraUtilities cameraUtilities;
+
     #region Getters/Setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -59,6 +61,7 @@ public class GlorbStateMachine : Mobs, IGlorb
     public VFXStopper VFX { get => vfxStopper; }
     public Animator Animator { get => animator; }
     public GlorbSounds Sounds { get => glorbSounds; }
+    public CameraUtilities CameraUtilities { get => cameraUtilities; }
     public float VisionAngle { get => (currentState is GlorbTriggeredState || currentState is GlorbAttackingState) && Player != null ? 360 : defaultVisionAngle; }
     public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is GlorbTriggeredState || currentState is GlorbAttackingState ? 1.25f : 1f); }
     public bool IsSpeAttackAvailable { get => speAttackAvailable; }
@@ -84,6 +87,8 @@ public class GlorbStateMachine : Mobs, IGlorb
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
+
+        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
         OnFreeze += GlorbStateMachine_OnFreeze;
     }
