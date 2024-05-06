@@ -355,7 +355,21 @@ MonoBehaviour:
   isFreeze: 0
   IsInvincibleCount: 0
   drop:
-    dropList: []
+    dropList:
+    - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
+        type: 3}
+      chance: 0.33
+      maxQuantity: 1
+      minQuantity: 1
+      isChanceShared: 1
+      decreasingValuePerDrop: 0
+    - loot: {fileID: 5701135458905784499, guid: ca723f9c57de8ba47b3c50013b09ac94,
+        type: 3}
+      chance: 1
+      maxQuantity: 5
+      minQuantity: 3
+      isChanceShared: 0
+      decreasingValuePerDrop: 0.2
   StatSuckerVFX: {fileID: 431182382120843853}
   spawningVFX: {fileID: 7823679997978139708}
   wanderZone:
@@ -941,22 +955,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8488052
+      value: -0.8935057
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.2448769
+      value: -0.2349486
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.4502164
+      value: -0.37010223
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.1298856
+      value: 0.0973189
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

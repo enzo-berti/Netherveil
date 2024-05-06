@@ -15,7 +15,8 @@ public class DropInfoDrawer : PropertyDrawer
     }
     SerializedProperty lootProperty;
     SerializedProperty chanceProperty;
-    SerializedProperty quantityProperty;
+    SerializedProperty maxQuantityProperty;
+    SerializedProperty minQuantityProperty;
 
     SerializedProperty isChanceSharedProperty;
     SerializedProperty decreasingValueProperty;
@@ -29,25 +30,36 @@ public class DropInfoDrawer : PropertyDrawer
         EditorGUI.BeginProperty(position, label, property);
         lootProperty = property.FindPropertyRelative("loot");
         chanceProperty = property.FindPropertyRelative("chance");
-        quantityProperty = property.FindPropertyRelative("quantity");
+        maxQuantityProperty = property.FindPropertyRelative("maxQuantity");
+        minQuantityProperty = property.FindPropertyRelative("minQuantity");
+        if(maxQuantityProperty.intValue < minQuantityProperty.intValue) maxQuantityProperty.intValue = minQuantityProperty.intValue;
         isChanceSharedProperty = property.FindPropertyRelative("isChanceShared");
         decreasingValueProperty = property.FindPropertyRelative("decreasingValuePerDrop");
-        label.text = lootProperty.objectReferenceValue.name;
+        if(lootProperty.objectReferenceValue != null)
+        {
+            label.text = lootProperty.objectReferenceValue.name;
+        }
+        else
+        {
+            label.text = "None";
+        }
+        
         Rect foldoutBox = new Rect(position.min.x, position.min.y, position.size.x, EditorGUIUtility.singleLineHeight);
         property.isExpanded = EditorGUI.Foldout(foldoutBox, property.isExpanded, label);
-        if(property.isExpanded)
+        bool shared = isChanceSharedProperty.boolValue;
+        if (property.isExpanded)
         {
             DrawMember(position, lootProperty);
             DrawMember(position, chanceProperty, SerializeType.RANGE);
-            DrawMember(position, quantityProperty);
+            if(!shared) DrawMember(position, minQuantityProperty);
+            DrawMember(position, maxQuantityProperty);
             DrawMember(position, isChanceSharedProperty);
-            if(!isChanceSharedProperty.boolValue)
-            {
-                DrawMember(position, decreasingValueProperty, SerializeType.RANGE);
-            }
+            if(!shared) DrawMember(position, decreasingValueProperty, SerializeType.RANGE);
         }
-
         EditorGUI.EndProperty();
+        property.serializedObject.ApplyModifiedProperties();
+        if(GUI.changed) EditorUtility.SetDirty(property.serializedObject.targetObject);
+
     }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
@@ -55,7 +67,7 @@ public class DropInfoDrawer : PropertyDrawer
         if (property.isExpanded)
         {
             totalLine += 4;
-            if (!property.FindPropertyRelative("isChanceShared").boolValue) totalLine += 1;
+            if (!property.FindPropertyRelative("isChanceShared").boolValue) totalLine += 2;
         }
         return (EditorGUIUtility.singleLineHeight + 2) * totalLine;
     }
@@ -74,10 +86,10 @@ public class DropInfoDrawer : PropertyDrawer
         switch(type)
         {
             case SerializeType.INT:
-                propertyToDraw.intValue = EditorGUI.IntField(drawArea, new GUIContent(propertyToDraw.name), propertyToDraw.intValue);
+                propertyToDraw.intValue = EditorGUI.IntField(drawArea, new GUIContent(propertyToDraw.name.SeparateAllCase()), propertyToDraw.intValue);
                 break;
             case SerializeType.RANGE:
-                propertyToDraw.floatValue = EditorGUI.Slider(drawArea, new GUIContent(propertyToDraw.name), propertyToDraw.floatValue, 0, 1);
+                propertyToDraw.floatValue = EditorGUI.Slider(drawArea, new GUIContent(propertyToDraw.name.SeparateAllCase()), propertyToDraw.floatValue, 0, 1);
                 break;
             default:
                 EditorGUI.PropertyField(drawArea, propertyToDraw);
