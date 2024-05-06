@@ -11,5 +11,6 @@ public class SettingsMenu : MenuHandler
     private void Start()
     {
         OpenMenu(0);
+
     }
 }

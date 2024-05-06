@@ -11,4 +11,10 @@ public interface IReflectable
         Direction = -Direction;
         IsReflected = true;
     }
+
+    public void Reflect(Vector3 direction)
+    {
+        Direction = direction;
+        IsReflected = true;
+    }
 }

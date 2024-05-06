@@ -299,7 +299,11 @@ public class PlayerController : MonoBehaviour
                         applyVibrations = false;
                     }
                     alreadyAttacked.Add(col);
-                    col.gameObject.GetComponent<IReflectable>().Reflect();
+
+                    Vector3 direction = col.transform.position - transform.position;
+                    direction.y = 0f;
+                    direction.Normalize();
+                    col.gameObject.GetComponent<IReflectable>().Reflect(direction);
                 }
             }
         }
