@@ -53,12 +53,15 @@
 			<destination>{81c7f109-727f-4893-a063-2888b3df7767}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{a9d5df6b-a892-4c1e-8439-e389f38971cf}</destination>
+			<destination>{73a555f9-1dc6-4f3c-85b9-85fae98334b0}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{884bbb0b-5847-4e55-b819-f7e6ab7b8ffc}">
+		<property name="minimumDistance">
+			<value>8</value>
+		</property>
 		<property name="maximumDistance">
-			<value>200</value>
+			<value>100</value>
 		</property>
 	</object>
 	<object class="MarkerTrack" id="{94d72085-2812-4a25-96e0-996f295869d2}" />
@@ -159,6 +162,8 @@
 		<relationship name="effects">
 			<destination>{5b41c957-1c98-40ea-8098-807272d7b5da}</destination>
 			<destination>{45e1af51-be2a-41b5-a522-bf55da707153}</destination>
+			<destination>{fbea2ccd-2e63-4c1b-be56-f3e39b74f481}</destination>
+			<destination>{e059524f-9857-4fe5-b22c-03d72820d446}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{44ba8c7e-9d91-4ddf-86df-7e0fb14ee723}" />
@@ -179,6 +184,19 @@
 	<object class="MixerBusPanner" id="{b0b92141-3296-4956-8c2f-453007b45176}" />
 	<object class="MixerBusFader" id="{5b41c957-1c98-40ea-8098-807272d7b5da}" />
 	<object class="SpatialiserEffect" id="{45e1af51-be2a-41b5-a522-bf55da707153}" />
+	<object class="ThreeEQEffect" id="{fbea2ccd-2e63-4c1b-be56-f3e39b74f481}">
+		<property name="lowGain">
+			<value>-1</value>
+		</property>
+	</object>
+	<object class="ChorusEffect" id="{e059524f-9857-4fe5-b22c-03d72820d446}">
+		<property name="rate">
+			<value>0.579999983</value>
+		</property>
+		<property name="depth">
+			<value>25</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{a482b40e-d901-4187-825c-7a7666f81591}">
 		<property name="position">
 			<value>1.5500000000000003</value>
