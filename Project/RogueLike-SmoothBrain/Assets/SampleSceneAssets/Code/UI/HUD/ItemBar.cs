@@ -6,35 +6,35 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class ItemBar : MonoBehaviour
 {
     private Hero hero;
     private int maxItemDisplay = 5;
+
+    [Header("General")]
     [SerializeField] private KeybindingsIcons iconsList;
-    [SerializeField] private GameObject framePf;
     [SerializeField] private ItemDatabase database;
     [SerializeField] private Transform itemPassiveTransform;
+    [SerializeField] private ItemFrame framePf;
 
-    [SerializeField] private GameObject activeFrame;
-    [SerializeField] private GameObject specialAbilityFrame;
-
+    [Header("Backgrounds")]
     [SerializeField] private Sprite backDamnation;
     [SerializeField] private Sprite backDivine;
     [SerializeField] private Sprite[] rarityBackItemSprite;
     [SerializeField] private Sprite[] backItemActiveNormal;
-    [SerializeField] private Sprite[] backItemActiveCooldown;
 
-    [SerializeField] private Texture damnationTexture;
-    [SerializeField] private Texture divineTexture;
+    [Header("Sprites")]
+    [SerializeField] private Sprite damnationSprite;
+    [SerializeField] private Sprite divineSprite;
 
-    [SerializeField] private TMP_Text cooldownSpecialAbilityTextMesh;
-    [SerializeField] private TMP_Text cooldownActiveTextMesh;
-    [SerializeField] private Image keyActiveBack;
-    [SerializeField] private Image keyAbilityBack;
-    [SerializeField] private TMP_Text keyActiveTextMesh;
-    [SerializeField] private TMP_Text keyAbilityTextMesh;
+    [Header("Specials frames")]
+    [SerializeField] private SpecialItemFrame specialAbilityFrame;
+    [SerializeField] private SpecialItemFrame specialItemFrame;
 
     [Header("Bidings")]
     [SerializeField] private InputActionReference keyboardActive;
@@ -95,159 +95,92 @@ public class ItemBar : MonoBehaviour
     private void UpdateKeyboardBiding()
     {
         string keyActive = keyboardActive.action.bindings.First().path.Split("/").Last();
+        specialItemFrame.SetKey(iconsList.kb.GetSprite(keyActive), keyActive.ToUpper());
+
         string keyAbility = keyboardAbility.action.bindings.First().path.Split("/").Last();
-
-        keyActiveTextMesh.gameObject.SetActive(true);
-        keyAbilityTextMesh.gameObject.SetActive(true);
-
-        keyActiveTextMesh.text = keyActive.ToUpper();
-        keyAbilityTextMesh.text = keyAbility.ToUpper();
-
-        keyActiveBack.sprite = iconsList.kb.GetSprite(keyActive);
-        keyAbilityBack.sprite = iconsList.kb.GetSprite(keyAbility);
+        specialAbilityFrame.SetKey(iconsList.kb.GetSprite(keyAbility), keyAbility.ToUpper());
     }
 
     private void UpdateGamepadBiding()
     {
         string keyActive = gamepadActive.action.bindings.First().path.Split("/").Last();
+        Sprite activeSprite = DeviceManager.Instance.CurrentDevice is DualShockGamepad ? iconsList.ps4.GetSprite(keyActive) : iconsList.xbox.GetSprite(keyActive);
+        specialItemFrame.SetKey(activeSprite, keyActive.ToUpper());
+
         string keyAbility = gamepadAbility.action.bindings.First().path.Split("/").Last();
-
-        keyActiveTextMesh.gameObject.SetActive(false);
-        keyAbilityTextMesh.gameObject.SetActive(false);
-
-        keyActiveTextMesh.text = keyActive.ToUpper();
-        keyAbilityTextMesh.text = keyAbility.ToUpper();
-
-        if(DeviceManager.Instance.CurrentDevice is DualShockGamepad)
-        {
-            keyActiveBack.sprite = iconsList.ps4.GetSprite(keyActive);
-            keyAbilityBack.sprite = iconsList.ps4.GetSprite(keyAbility);
-        }
-        else
-        {
-            keyActiveBack.sprite = iconsList.xbox.GetSprite(keyActive);
-            keyAbilityBack.sprite = iconsList.xbox.GetSprite(keyAbility);
-        }
+        Sprite abilitySprite = DeviceManager.Instance.CurrentDevice is DualShockGamepad ? iconsList.ps4.GetSprite(keyAbility) : iconsList.xbox.GetSprite(keyAbility);
+        specialAbilityFrame.SetKey(abilitySprite, keyAbility.ToUpper());
     }
 
     private void OnItemAdd(ItemEffect itemAdd)
     {
+        ItemData data = database.GetItem(itemAdd.Name);
+        Sprite item = Sprite.Create((Texture2D)data.icon, new Rect(0.0f, 0.0f, data.icon.width, data.icon.height), new Vector2(0.5f, 0.5f), 100.0f);
+
         if (itemAdd is IPassiveItem)
         {
-            GameObject frame = CreateFrame(itemPassiveTransform);
-            SetFrameItemData(frame, itemAdd, rarityBackItemSprite);
+            ItemFrame frame = Instantiate(framePf, itemPassiveTransform);
+            frame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
 
             if (itemPassiveTransform.childCount > maxItemDisplay)
                 DestroyImmediate(itemPassiveTransform.GetChild(0).gameObject);
         }
         else if (itemAdd is IActiveItem)
         {
-            activeFrame.GetComponentInChildren<RawImage>(true).gameObject.SetActive(true);
-            SetFrameItemData(activeFrame, itemAdd, backItemActiveNormal);
+            specialItemFrame.SetFrame(backItemActiveNormal[(int)data.RarityTier], item);
         }
     }
 
     private void OnSpecialAbilityAdd(ISpecialAbility ability)
     {
-        Image image = specialAbilityFrame.GetComponent<Image>();
-        RawImage rawImage = specialAbilityFrame.GetComponentInChildren<RawImage>(true);
-        rawImage.gameObject.SetActive(true);
 
         if (ability as DamnationVeil != null)
         {
-            image.sprite = backDamnation;
-            rawImage.texture = damnationTexture;
+            specialAbilityFrame.SetFrame(backDamnation, damnationSprite);
         }
         else if (ability as DivineShield != null)
         {
-            image.sprite = backDivine;
-            rawImage.texture = divineTexture;
+            specialAbilityFrame.SetFrame(backDivine, divineSprite);
         }
     }
 
     private void OnSpecialAbilityRemove()
     {
-        Image image = specialAbilityFrame.GetComponent<Image>();
-        RawImage rawImage = specialAbilityFrame.GetComponentInChildren<RawImage>(true);
-
-        image.sprite = rarityBackItemSprite.First();
-        rawImage.gameObject.SetActive(false);
-    }
-
-    private GameObject CreateFrame(Transform t)
-    {
-        return Instantiate(framePf, t);
-    }
-
-    private void SetFrameItemData(GameObject frame, ItemEffect itemEffect, Sprite[] spriteArray)
-    {
-        ItemData data = database.GetItem(itemEffect.Name);
-        frame.GetComponentInChildren<RawImage>(true).texture = data.icon;
-        frame.GetComponent<Image>().sprite = spriteArray[(int)data.RarityTier];
+        specialAbilityFrame.SetFrame(rarityBackItemSprite.First(), null);
     }
 
     private void ActiveItemCooldown(ItemEffect itemEffect)
     {
-        StartCoroutine(ActiveItemCooldownCoroutine(itemEffect));
+        ItemData data = database.GetItem(itemEffect.Name);
+        Sprite item = Sprite.Create((Texture2D)data.icon, new Rect(0.0f, 0.0f, data.icon.width, data.icon.height), new Vector2(0.5f, 0.5f), 100.0f);
+        specialItemFrame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
+
+        float cooldown = (itemEffect as IActiveItem).Cooldown;
+
+        StartCoroutine(CooldownRoutine(cooldown, specialItemFrame));
     }
 
     private void SpecialAbilityCooldown()
     {
-        StartCoroutine(SpecialAbilityCooldownCoroutine());
+        float cooldown = Utilities.Player.GetComponent<PlayerController>().SpecialAbility.Cooldown;
+
+        StartCoroutine(CooldownRoutine(cooldown, specialAbilityFrame));
     }
 
-    private IEnumerator ActiveItemCooldownCoroutine(ItemEffect itemEffect)
+    private IEnumerator CooldownRoutine(float duration, SpecialItemFrame frame)
     {
-        float cooldown = 0.0f;
+        float elapsed = 0.0f;
 
-        SetFrameItemData(activeFrame, itemEffect, backItemActiveCooldown);
-        cooldownActiveTextMesh.transform.parent.gameObject.SetActive(true);
-        Image filler = cooldownActiveTextMesh.transform.parent.GetComponent<Image>();
+        frame.ToggleCooldown(true);
 
-        while (cooldown < hero.Inventory.ActiveItem.Cooldown)
+        while (elapsed < duration)
         {
-            filler.fillAmount = (hero.Inventory.ActiveItem.Cooldown - cooldown) / hero.Inventory.ActiveItem.Cooldown;
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            frame.SetCooldown(elapsed, duration);
 
-            cooldown = Mathf.Max((hero.Inventory.ActiveItem as ItemEffect).CurrentEnergy, 0.0f);
-            cooldownActiveTextMesh.text = (Mathf.RoundToInt(hero.Inventory.ActiveItem.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
             yield return null;
         }
 
-        SetFrameItemData(activeFrame, itemEffect, backItemActiveNormal);
-        cooldownActiveTextMesh.transform.parent.gameObject.SetActive(false);
-    }
-
-    private IEnumerator SpecialAbilityCooldownCoroutine()
-    {
-        float cooldown = 0.0f;
-        ISpecialAbility specialAbility = Utilities.Player.GetComponent<PlayerController>().SpecialAbility;
-
-        cooldownSpecialAbilityTextMesh.transform.parent.gameObject.SetActive(true);
-        Image filler = cooldownSpecialAbilityTextMesh.transform.parent.GetComponent<Image>();
-
-        while (cooldown < specialAbility.Cooldown)
-        {
-            filler.fillAmount = (specialAbility.Cooldown - cooldown) / specialAbility.Cooldown;
-
-            cooldown = Mathf.Max(specialAbility.CurrentEnergy, 0.0f);
-            cooldownSpecialAbilityTextMesh.text = (Mathf.RoundToInt(specialAbility.Cooldown) - Mathf.RoundToInt(cooldown)).ToString();
-            yield return null;
-        }
-
-        cooldownSpecialAbilityTextMesh.transform.parent.gameObject.SetActive(false);
-    }
-}
-
-static class ItemsExtensions
-{
-    static public IEnumerable<T> TakeLast<T>(this IEnumerable<T> source, int N)
-    {
-        while (N > source.Count())
-        {
-            N--;
-        }
-
-        //Debug.Log(source.Count() - N);
-        return source.Skip(Mathf.Max(0, source.Count() - N));
+        frame.ToggleCooldown(false);
     }
 }

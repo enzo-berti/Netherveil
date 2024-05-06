@@ -70,6 +70,9 @@ public class GorgonAttackingState : BaseState<GorgonStateMachine>
     #region Extra methods
     private IEnumerator LongRangeAttack()
     {
+        if (!Context.Player)
+            yield break;
+
         Context.Animator.SetTrigger("Attack");
         float timeToThrow = 0.8f;
         yield return new WaitWhile(() => Context.HasRemovedHead == false);

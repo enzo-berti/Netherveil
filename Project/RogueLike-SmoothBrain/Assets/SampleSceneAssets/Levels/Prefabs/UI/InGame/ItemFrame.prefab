@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7359551277175067353}
   - component: {fileID: 4807545118059125119}
-  - component: {fileID: 8036410859670247947}
+  - component: {fileID: 1299183173965647417}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -45,7 +45,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2017643677553016881}
   m_CullTransparentMesh: 1
---- !u!114 &8036410859670247947
+--- !u!114 &1299183173965647417
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,7 +54,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2017643677553016881}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -65,13 +65,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8148095238335871915
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,6 +87,7 @@ GameObject:
   - component: {fileID: 3852334533622124381}
   - component: {fileID: 4791918469658869529}
   - component: {fileID: 281406761108253413}
+  - component: {fileID: 7521844664242942893}
   m_Layer: 5
   m_Name: ItemFrame
   m_TagString: Untagged
@@ -163,3 +167,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 1
+--- !u!114 &7521844664242942893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8148095238335871915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 165ef18efdefa304180700fea46c7f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  background: {fileID: 4791918469658869529}
+  item: {fileID: 1299183173965647417}
