@@ -28,6 +28,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference questFinishedSFX;
     [SerializeField] EventReference questLostSFX;
     [SerializeField] EventReference hornOfBarbatosSFX;
+    [SerializeField] EventReference pickUpCollectibleSFX;
     [SerializeField] EventReference pickUpItemSFX;
     [SerializeField] EventReference thunderstrikeSFX;
     [SerializeField] EventReference thunderstrike2SFX;
@@ -40,6 +41,7 @@ public class AudioManager : MonoBehaviour
     public EventReference QuestFinishedSFX { get => questFinishedSFX; }
     public EventReference QuestLostSFX { get => questLostSFX; }
     public EventReference HornOfBarbatosSFX { get => hornOfBarbatosSFX; }
+    public EventReference PickUpCollectibleSFX { get => pickUpCollectibleSFX; }
     public EventReference PickUpItemSFX { get => pickUpItemSFX; }
     public EventReference ThunderstrikeSFX { get => thunderstrikeSFX; }
     public EventReference Thunderstrike2SFX { get => thunderstrike2SFX; }

@@ -62,6 +62,7 @@ public class Item : MonoBehaviour
     {
         OnRetrieved?.Invoke(effect);
         OnLateRetrieved?.Invoke();
+        AudioManager.Instance.PlaySound(AudioManager.Instance.PickUpItemSFX,Utilities.Player.transform.position);
     }
 
     private ItemEffect LoadClass()
