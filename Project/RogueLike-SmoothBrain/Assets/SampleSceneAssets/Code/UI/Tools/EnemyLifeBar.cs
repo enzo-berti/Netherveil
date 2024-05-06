@@ -95,6 +95,8 @@ public class EnemyLifeBar : MonoBehaviour
 
     public void TriggerHealthBar()
     {
+        if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
+
         alpha = 1f;
         UpdateAlpha();
 
