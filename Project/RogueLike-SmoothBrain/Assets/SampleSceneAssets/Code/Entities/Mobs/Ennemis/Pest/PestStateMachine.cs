@@ -53,8 +53,7 @@ public class PestStateMachine : Mobs, IPest
     public int ChargeOutHash { get => chargeOutHash; }
     public BoxCollider AttackCollider { get => attackCollider; }
     public Transform Player { get => player; set => player = value; }
-    public float NormalSpeed { get => Stats.GetValue(Stat.SPEED) / 5.0f; }
-    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 1.2f; }
+    public float DashSpeed { get => Stats.GetValue(Stat.SPEED) * 2f; }
     public float VisionAngle { get => (currentState is PestTriggeredState || currentState is PestAttackingState) && Player != null ? 360 : angle; }
     public float VisionRange { get => Stats.GetValue(Stat.VISION_RANGE) * (currentState is PestTriggeredState || currentState is PestAttackingState ? 1.25f : 1f); }
     public float idleTimer { set => dashTimer = value; }
@@ -80,6 +79,8 @@ public class PestStateMachine : Mobs, IPest
 
         // opti variables
         frameToUpdate = entitySpawn % maxFrameUpdate;
+        
+        idleTimer = MovementDelay / 2f;
 
         OnFreeze += PestStateMachine_OnFreeze;
     }

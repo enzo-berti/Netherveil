@@ -56,30 +56,8 @@ public class BigMapCam : MonoBehaviour
     private void CollideJoystickScreen()
     {
         Gamepad gamepad = DeviceManager.Instance.CurrentDevice as Gamepad;
+        Vector2 joyStickInput = gamepad.rightStick.value;
 
-        Vector2 joyStickInput = gamepad.leftStick.value;
-        Vector3 offsetX = Vector3.zero;
-        Vector3 offsetY = Vector3.zero;
-        float offsetDistCam = 200f;
-
-        if (joyStickInput.x > 0.5f)
-        {
-            offsetX = Camera.main.transform.right * offsetDistCam;
-        }
-        else if (joyStickInput.x < -0.5f)
-        {
-            offsetX = -Camera.main.transform.right * offsetDistCam;
-        }
-
-        if (joyStickInput.y > 0.5f)
-        {
-            offsetY = Camera.main.transform.up * offsetDistCam;
-        }
-        else if (joyStickInput.y < -0.5f)
-        {
-            offsetY = -Camera.main.transform.up * offsetDistCam;
-        }
-
-        targetPosition = playerTransform.position + offsetX + offsetY;
+        transform.position = Vector3.Lerp(transform.position, playerTransform.position + new Vector3(joyStickInput.x * 100.0f, 0.0f, joyStickInput.y * 50.0f), Time.deltaTime * 20.0f);
     }
 }
