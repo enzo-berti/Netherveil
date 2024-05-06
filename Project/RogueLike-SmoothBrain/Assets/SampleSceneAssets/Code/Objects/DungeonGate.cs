@@ -1,10 +1,13 @@
+using FMODUnity;
 using Map;
 using System.Threading.Tasks;
 using UnityEngine;
+using static HoudiniEngineUnity.HEU_Curve;
 
 public class DungeonGate : MonoBehaviour
 {
     private Material material;
+    private float soundPlayDistance;
     [SerializeField] private BoxCollider boxCollider;
 
     private void Awake()
@@ -19,6 +22,7 @@ public class DungeonGate : MonoBehaviour
     {
         MapUtilities.onEnter += Close;
         MapUtilities.onAllEnemiesDead += Open;
+        soundPlayDistance = 5f;
     }
 
     private void OnDestroy()
@@ -27,9 +31,18 @@ public class DungeonGate : MonoBehaviour
         MapUtilities.onAllEnemiesDead -= Open;
     }
 
+    private void GateSound(EventReference _sound)
+    {
+        if (Vector2.Distance(transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2()) <= soundPlayDistance)
+        {
+            AudioManager.Instance.PlaySound(_sound, transform.position);
+        }
+    }
+
     private void Open()
     {
         boxCollider.enabled = false;
+        GateSound(AudioManager.Instance.GateOpenSFX);
         DisolveGate();
     }
 
@@ -41,6 +54,7 @@ public class DungeonGate : MonoBehaviour
         }
 
         boxCollider.enabled = true;
+        GateSound(AudioManager.Instance.GateCloseSFX);
         AppearGate();
     }
 
