@@ -73,6 +73,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
             if (value == null)
             {
+                if (HudHandler.current.QuestHUD.QuestEnable)
+                {
+                    HudHandler.current.QuestHUD.Toggle();
+                }
                 OnQuestFinished?.Invoke();
             }
             else

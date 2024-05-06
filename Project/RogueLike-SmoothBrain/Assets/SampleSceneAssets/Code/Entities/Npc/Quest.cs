@@ -89,6 +89,7 @@ public abstract class Quest
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         MapUtilities.onEnter -= CheckQuestFinished;
         Hero.OnQuestObtained -= CheckQuestFinished;
+        HudHandler.current.MessageInfoHUD.Display($"You finished the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
     }
 
     protected abstract void ResetQuestValues();
@@ -98,12 +99,10 @@ public abstract class Quest
         if (questLost)
         {
             QuestLost();
-            HudHandler.current.MessageInfoHUD.Display($"You lost the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
         }
         else if (IsQuestFinished())
         {
             QuestFinished();
-            HudHandler.current.MessageInfoHUD.Display($"You finished the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
         }
     }
 
@@ -115,6 +114,7 @@ public abstract class Quest
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         MapUtilities.onEnter -= CheckQuestFinished;
         Hero.OnQuestObtained -= CheckQuestFinished;
+        HudHandler.current.MessageInfoHUD.Display($"You lost the quest <color=yellow>\"{Datas.idName.SeparateAllCase()}\"</color>.");
     }
 
     protected abstract bool IsQuestFinished();
