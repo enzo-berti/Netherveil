@@ -99,37 +99,35 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
         {
             if (distanceToPlayer <= 10f)
             {
-                if (lastAttack == typeof(SonielCircularHit))
-                {
-                    if (UnityEngine.Random.Range(0, 10) < 1) // 90% de chance de ne pas refaire la meme attaque
-                        availableAttacks.Add(typeof(SonielCircularHit));
-                }
-                else
-                    availableAttacks.Add(typeof(SonielCircularHit));
+                availableAttacks.Add(typeof(SonielCircularHit));
             }
 
-            if (Context.HasLeftArm)
+            if (Context.HasLeftArm && distanceToPlayer > Context.Agent.stoppingDistance + 0.1f)
             {
-                if (lastAttack == typeof(SonielBerserk))
-                {
-                    if (UnityEngine.Random.Range(0, 10) < 1) // 90% de chance de ne pas refaire la meme attaque
-                        availableAttacks.Add(typeof(SonielBerserk));
-                }
-                else
-                    availableAttacks.Add(typeof(SonielBerserk));
+                availableAttacks.Add(typeof(SonielBerserk));
             }
         }
-
         if (distanceToPlayer >= 4f)
         {
             availableAttacks.Add(typeof(SonielSpinningSwords));
         }
 
-        if (availableAttacks.Count <= 0)
+
+        if (availableAttacks.Count <= 0 && Context.HasRightArm)
         {
             availableAttacks.Add(typeof(SonielCircularHit));
         }
 
+        if (availableAttacks.Count > 1)
+        {
+            if (availableAttacks.Contains(lastAttack))
+            {
+                if (UnityEngine.Random.Range(0, 10) < 5) // 50% de chance d'enlever l'attaque qu'il a déjà faite de la liste des attaques dispo
+                {
+                    availableAttacks.Remove(lastAttack);
+                }
+            }
+        }
 
         return availableAttacks;
     }
