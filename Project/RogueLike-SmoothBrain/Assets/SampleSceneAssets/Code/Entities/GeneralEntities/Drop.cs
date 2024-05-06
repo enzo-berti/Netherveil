@@ -30,7 +30,9 @@ public class Drop
 
     private void DropBasic(Vector3 position, DropInfo dropInfo)
     {
-        for (int i = 0; i < dropInfo.quantity; i++)
+        float baseChance = dropInfo.chance;
+        if (!DropChanceShared(position, dropInfo)) return;
+        for (int i = dropInfo.minQuantity; i <= dropInfo.maxQuantity; i++)
         {
             if (UnityEngine.Random.value <= dropInfo.chance)
             {
@@ -42,13 +44,20 @@ public class Drop
                 dropInfo.chance -= dropInfo.decreasingValuePerDrop;
             }
         }
+        dropInfo.chance = baseChance;
     }
 
-    private void DropChanceShared(Vector3 position, DropInfo dropInfo)
+    /// <summary>
+    /// Drop a certain amount of drop once
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="dropInfo"></param>
+    /// <returns>True if it has dropped, else false</returns>
+    private bool DropChanceShared(Vector3 position, DropInfo dropInfo)
     {
         if (UnityEngine.Random.value <= dropInfo.chance)
         {
-            for (int i = 0; i < dropInfo.quantity; i++)
+            for (int i = 0; i < dropInfo.maxQuantity; i++)
             {
                 GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
                 Vector3 pos3D;
@@ -56,7 +65,9 @@ public class Drop
                 pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
                 CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
             }
+            return true;
         }
+        return false;
     }
 
     private IEnumerator DropMovement(GameObject go, Vector3 pos, float throwTime)
@@ -96,6 +107,7 @@ public class DropDrawerUIE : PropertyDrawer
     {
         dropProperty = property.FindPropertyRelative("dropList");
         EditorGUILayout.PropertyField(dropProperty, label);
+        if (GUI.changed) EditorUtility.SetDirty(property.serializedObject.targetObject);
     }
 }
 #endif

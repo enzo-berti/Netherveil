@@ -413,10 +413,11 @@ public class EntityDrawer : Editor
             {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty(fieldToDisplay));
             }
-            catch
+            catch(Exception e)
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("No GUI implemented for : " + fieldToDisplay);
+                Debug.LogWarning(e);
                 EditorGUILayout.EndHorizontal();
             }
 
