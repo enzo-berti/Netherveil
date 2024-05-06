@@ -28,7 +28,6 @@ public class QuestTalker : Npc
     [SerializeField] protected TalkerGrade grade;
     public TalkerType Type => type;
     public TalkerGrade Grade => grade;
-    public Quest.QuestDifficulty QuestDifficulty { get; private set; }
     public int QuestIndex { get; private set; }
 
     protected override void Awake()
@@ -39,9 +38,6 @@ public class QuestTalker : Npc
         }
 
         QuestIndex = Seed.Range(0, database.datas.Count);
-
-        QuestDifficulty = database.GetQuest(database.datas[QuestIndex].idName).HasDifferentGrades ?
-            (Quest.QuestDifficulty)Seed.Range(0, (int)Quest.QuestDifficulty.NB) : Quest.QuestDifficulty.MEDIUM;
     }
 
     protected override void Start()

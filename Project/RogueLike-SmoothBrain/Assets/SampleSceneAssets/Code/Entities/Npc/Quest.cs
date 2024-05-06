@@ -1,3 +1,4 @@
+using DialogueSystem.Runtime;
 using Map;
 using Map.Generation;
 using System;
@@ -14,7 +15,7 @@ public abstract class Quest
         NB
     }
 
-    public QuestData Datas { get; protected set; }
+    public QuestData Datas { get; private set; }
     public string progressText = string.Empty;
     static QuestDatabase database;
     public static event Action OnQuestUpdated;
@@ -24,6 +25,7 @@ public abstract class Quest
     protected QuestTalker.TalkerGrade talkerGrade;
     protected QuestDifficulty difficulty;
     protected bool questLost = false;
+    public int CorruptionModifierValue { get; protected set; } = 0;
     public QuestTalker.TalkerType TalkerType { get => talkerType; }
 
     public virtual void AcceptQuest()
@@ -35,7 +37,7 @@ public abstract class Quest
         Hero.OnQuestObtained += CheckQuestFinished;
     }
 
-    static public Quest LoadClass(string name, QuestTalker questTalker)
+    static public Quest LoadClass(string name, QuestDialogueDifficulty difficulty, QuestTalker questTalker)
     {
         if (database == null)
         {
@@ -47,7 +49,8 @@ public abstract class Quest
         quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         quest.talkerType = questTalker.Type;
         quest.talkerGrade = questTalker.Grade;
-        quest.difficulty = questTalker.QuestDifficulty;
+        quest.CorruptionModifierValue = quest.Datas.CorruptionModifierValue;
+        quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)difficulty : QuestDifficulty.MEDIUM;
         InitDescription(ref quest.Datas.Description, quest);
         return quest;
     }
@@ -76,8 +79,8 @@ public abstract class Quest
             player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
         }
 
-        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
-        Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -Datas.CorruptionModifierValue : Datas.CorruptionModifierValue);
+        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -CorruptionModifierValue :CorruptionModifierValue);
+        Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -CorruptionModifierValue : CorruptionModifierValue);
         OnQuestFinished?.Invoke();
 
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
@@ -125,7 +128,7 @@ public abstract class Quest
         string finalDescription = string.Empty;
         char[] separators = new char[] { ' ', '\n' };
         string[] splitDescription = description.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-        foreach(var test in splitDescription)
+        foreach (var test in splitDescription)
         {
             finalDescription += test + ' ';
         }

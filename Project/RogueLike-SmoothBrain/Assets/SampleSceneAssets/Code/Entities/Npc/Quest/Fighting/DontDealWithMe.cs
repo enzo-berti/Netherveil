@@ -15,11 +15,11 @@ public class DontDealWithMe : Quest
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 15;
-                Datas.CorruptionModifierValue += 5;
+                CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 20;
-                Datas.CorruptionModifierValue += 10;
+                CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";

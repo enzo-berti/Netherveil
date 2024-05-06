@@ -72,8 +72,7 @@ public class QuestHUD : MonoBehaviour
         if(hasQuest)
         {
             string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? "<color=purple>corruption</color>" : "<color=yellow>benediction</color>";
-            int absValue = Mathf.Abs(player.CurrentQuest.Datas.CorruptionModifierValue);
-
+            int absValue = Mathf.Abs(player.CurrentQuest.CorruptionModifierValue);
 
             title.SetText(player.CurrentQuest.Datas.idName);
             description.SetText(player.CurrentQuest.Datas.Description);

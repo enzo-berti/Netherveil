@@ -15,11 +15,11 @@ public class KitingMyDearLove : Quest
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 8;
-                Datas.CorruptionModifierValue += 5;
+                CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 10;
-                Datas.CorruptionModifierValue += 10;
+                CorruptionModifierValue += 10;
                 break;
         }
         progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";

@@ -17,11 +17,11 @@ public class DungeonsLimits : Quest
                 break;
             case QuestDifficulty.MEDIUM:
                 COMPLETION_POURCENTAGE = 85;
-                Datas.CorruptionModifierValue += 5;
+                CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 COMPLETION_POURCENTAGE = 100;
-                Datas.CorruptionModifierValue += 10;
+                CorruptionModifierValue += 10;
                 break;
         }
 
