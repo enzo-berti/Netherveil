@@ -1,152 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7410980544970866849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
-  position: {x: 584, y: 186}
-  dialogueData: {fileID: 11400000, guid: af03db8786c3ad84e90cae354adbdb5c, type: 2}
-  child: {fileID: 0}
---- !u!114 &-7137751612803616418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
-  m_Name: ChoiceDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 7e0f8f25-ab6b-47dc-9eea-112808384411
-  position: {x: 931, y: 251}
-  dialogueData: {fileID: 11400000, guid: 3b82f759ccaba124ca84931eaf68717c, type: 2}
-  options:
-  - option: Yes
-    child: {fileID: 4002811208214517976}
-  - option: No
-    child: {fileID: 8257503639930638534}
---- !u!114 &-3007256196225197017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
-  m_Name: QuestDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 83d104ff-5807-4416-b692-18e4126282fb
-  position: {x: 585, y: 50}
-  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
-  child: {fileID: 0}
-  questTag: 
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
-  m_Name: ClericClassicDT
-  m_EditorClassIdentifier: 
-  root: {fileID: 1709701866705720281}
-  nodes:
-  - {fileID: 1709701866705720281}
-  - {fileID: -3007256196225197017}
-  - {fileID: -7410980544970866849}
-  - {fileID: 5370021587545486368}
-  - {fileID: 8257503639930638534}
-  - {fileID: 1878226412885274095}
-  - {fileID: -7137751612803616418}
-  - {fileID: 4002811208214517976}
-  currentNode: {fileID: 0}
---- !u!114 &1709701866705720281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
-  m_Name: RootNode
-  m_EditorClassIdentifier: 
-  GUID: f562f3af-0217-4d30-be09-e1ba76cca47d
-  position: {x: 72, y: 72}
-  child: {fileID: 5370021587545486368}
---- !u!114 &1878226412885274095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
-  m_Name: SimpleDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 71d8a993-1057-48d8-8380-0fb2ff2d71e6
-  position: {x: 581, y: 336}
-  dialogueData: {fileID: 11400000, guid: ea21ce327321d9b46b3c2cb9702480d7, type: 2}
-  child: {fileID: -7137751612803616418}
---- !u!114 &4002811208214517976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
-  m_Name: QuestDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: 720c964f-6c88-4efb-837a-ba6297739b20
-  position: {x: 1284, y: 174}
-  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
-  child: {fileID: 0}
-  questTag: 
---- !u!114 &5370021587545486368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
-  m_Name: ChoiceDialogueNode
-  m_EditorClassIdentifier: 
-  GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
-  position: {x: 231, y: 194}
-  dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
-  options:
-  - option: Yes
-    child: {fileID: -3007256196225197017}
-  - option: No
-    child: {fileID: -7410980544970866849}
-  - option: What's Benediction?
-    child: {fileID: 1878226412885274095}
---- !u!114 &8257503639930638534
+--- !u!114 &-6825313964371583530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -159,6 +13,270 @@ MonoBehaviour:
   m_Name: SimpleDialogueNode
   m_EditorClassIdentifier: 
   GUID: 9a9bb249-e26c-483a-91ee-4503495a5c16
-  position: {x: 1265, y: 330}
+  position: {x: 1281, y: 346}
   dialogueData: {fileID: 11400000, guid: af03db8786c3ad84e90cae354adbdb5c, type: 2}
   child: {fileID: 0}
+--- !u!114 &-4697713353970930943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
+  m_Name: SimpleDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 71d8a993-1057-48d8-8380-0fb2ff2d71e6
+  position: {x: 597, y: 352}
+  dialogueData: {fileID: 11400000, guid: ea21ce327321d9b46b3c2cb9702480d7, type: 2}
+  child: {fileID: 215173412375544049}
+--- !u!114 &-3871542973398518888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 83d104ff-5807-4416-b692-18e4126282fb
+  position: {x: 898, y: -231}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &-2707864067632555470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: dcb2007c-96a5-491c-8800-3a16f4d707c6
+  position: {x: 572, y: -54}
+  dialogueData: {fileID: 11400000, guid: e2dfc19716cbae648a7ef123cca5932d, type: 2}
+  options:
+  - option: Easy
+    child: {fileID: -3871542973398518888}
+  - option: Medium
+    child: {fileID: 3937055004339251057}
+  - option: Hard
+    child: {fileID: 3692737734919383119}
+--- !u!114 &-576651530601540833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: fda7eea1-bfba-4dbb-8ca9-c0b66b26b721
+  position: {x: 247, y: 210}
+  dialogueData: {fileID: 11400000, guid: bc03eff137324514e8356acd300503f7, type: 2}
+  options:
+  - option: Yes
+    child: {fileID: -2707864067632555470}
+  - option: No
+    child: {fileID: 6154025209905919360}
+  - option: What's Benediction?
+    child: {fileID: -4697713353970930943}
+--- !u!114 &-538718425301342292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d03c4b7ab31864489ac955099dd5df0, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  GUID: f562f3af-0217-4d30-be09-e1ba76cca47d
+  position: {x: 88, y: 88}
+  child: {fileID: -576651530601540833}
+--- !u!114 &-159414829796822883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 7637b83b-bcc6-438d-952a-df97764a3d1e
+  position: {x: 1285, y: 158}
+  dialogueData: {fileID: 11400000, guid: e2dfc19716cbae648a7ef123cca5932d, type: 2}
+  options:
+  - option: Easy
+    child: {fileID: 9066453917810365391}
+  - option: Medium
+    child: {fileID: 8881370917890817515}
+  - option: Hard
+    child: {fileID: 7220109169885604730}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d70125057260524b857b1a4e58dfb68, type: 3}
+  m_Name: ClericClassicDT
+  m_EditorClassIdentifier: 
+  root: {fileID: -538718425301342292}
+  nodes:
+  - {fileID: -538718425301342292}
+  - {fileID: 6154025209905919360}
+  - {fileID: -576651530601540833}
+  - {fileID: -6825313964371583530}
+  - {fileID: -4697713353970930943}
+  - {fileID: 215173412375544049}
+  - {fileID: -3871542973398518888}
+  - {fileID: 3937055004339251057}
+  - {fileID: 3692737734919383119}
+  - {fileID: 8881370917890817515}
+  - {fileID: 7220109169885604730}
+  - {fileID: 9066453917810365391}
+  - {fileID: -2707864067632555470}
+  - {fileID: -159414829796822883}
+  currentNode: {fileID: 0}
+--- !u!114 &215173412375544049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00801a837757b774cad08675f27e4427, type: 3}
+  m_Name: ChoiceDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 7e0f8f25-ab6b-47dc-9eea-112808384411
+  position: {x: 947, y: 267}
+  dialogueData: {fileID: 11400000, guid: 3b82f759ccaba124ca84931eaf68717c, type: 2}
+  options:
+  - option: Yes
+    child: {fileID: -159414829796822883}
+  - option: No
+    child: {fileID: -6825313964371583530}
+--- !u!114 &3692737734919383119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: c8fa674c-c848-41f8-b343-30fc234796a8
+  position: {x: 898, y: 40}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &3937055004339251057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 8326cffd-34ac-493f-8408-5744865d2b36
+  position: {x: 895, y: -85}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &6154025209905919360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc74533ba5306bf48b9792e9176d940d, type: 3}
+  m_Name: SimpleDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 1745cdea-0391-47a6-85ea-888ed60058e8
+  position: {x: 600, y: 202}
+  dialogueData: {fileID: 11400000, guid: af03db8786c3ad84e90cae354adbdb5c, type: 2}
+  child: {fileID: 0}
+--- !u!114 &7220109169885604730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: ca742b08-a068-4b28-a9ab-c42bf000b643
+  position: {x: 1598, y: 220}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &8881370917890817515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 3422f6fa-56e3-4712-873c-d696ac279e48
+  position: {x: 1609, y: 96}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  questTag: 
+--- !u!114 &9066453917810365391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346333fec61c90f43a021a83ddcaf270, type: 3}
+  m_Name: QuestDialogueNode
+  m_EditorClassIdentifier: 
+  GUID: 720c964f-6c88-4efb-837a-ba6297739b20
+  position: {x: 1608, y: -30}
+  dialogueData: {fileID: 11400000, guid: de4af11616c6ebd4b803e071c3cbc96d, type: 2}
+  child: {fileID: 0}
+  questTag: 

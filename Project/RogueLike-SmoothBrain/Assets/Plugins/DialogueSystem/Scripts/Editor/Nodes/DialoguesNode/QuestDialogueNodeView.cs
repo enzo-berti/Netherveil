@@ -17,11 +17,23 @@ namespace DialogueSystem.Editor
             set
             {
                 questTag = value;
-                eventTagField.value = value;
+                questTagField.value = value;
             }
         }
 
-        private TextField eventTagField;
+        private QuestDialogueDifficulty difficulty;
+        public QuestDialogueDifficulty Difficulty
+        {
+            get => difficulty;
+            set
+            {
+                difficulty = value;
+                difficultyField.value = value;
+            }
+        }
+
+        private TextField questTagField;
+        private EnumField difficultyField;
 
         public QuestDialogueNodeView(GraphView graphView)
             : base("Assets/Plugins/DialogueSystem/Scripts/Editor/UIBuilder/QuestDialogueNodeView.uxml", graphView)
@@ -32,8 +44,11 @@ namespace DialogueSystem.Editor
             title = "Quest Dialogue";
 
             // Querry
-            eventTagField = this.Q<TextField>("QuestTag-field");
-            eventTagField.RegisterValueChangedCallback(evt => QuestTag = evt.newValue);
+            questTagField = this.Q<TextField>("QuestTag-field");
+            questTagField.RegisterValueChangedCallback(evt => QuestTag = evt.newValue);
+
+            difficultyField = this.Q<EnumField>("Difficulty-field");
+            difficultyField.RegisterValueChangedCallback(evt => Difficulty = (QuestDialogueDifficulty)evt.newValue);
         }
     }
 }
