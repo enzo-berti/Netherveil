@@ -30,9 +30,8 @@ public class VulcanHunter : Quest
         return currentNumber >= MAX_NUMBER;
     }
 
-    protected override void QuestFinished()
+    protected override void ResetQuestValues()
     {
-        base.QuestFinished();
         Hero.OnKill -= UpdateCount;
     }
 

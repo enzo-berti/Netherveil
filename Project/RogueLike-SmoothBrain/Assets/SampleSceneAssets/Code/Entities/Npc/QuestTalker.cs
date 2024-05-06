@@ -1,5 +1,6 @@
 using DialogueSystem.Runtime;
 using Map.Generation;
+using System.Linq;
 using UnityEngine;
 
 public class QuestTalker : Npc
@@ -37,7 +38,8 @@ public class QuestTalker : Npc
             database = GameResources.Get<QuestDatabase>("QuestDatabase");
         }
 
-        QuestIndex = Seed.Range(0, database.datas.Count);
+        //QuestIndex = Seed.Range(0, database.datas.Count);
+        QuestIndex = database.datas.FindIndex(x => x.idName == "BeastHunter");
     }
 
     protected override void Start()
