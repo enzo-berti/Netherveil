@@ -101,7 +101,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             attacker.OnAttackHit += attacker.ApplyStatus;
         }
 
-        OnAttackHit += ApplyLifeSteal;
+        OnKill += ApplyLifeSteal;
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
@@ -233,9 +233,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         OnAttackHit?.Invoke(damageable, this);
     }
 
-    private void ApplyLifeSteal(IDamageable damageable, IAttacker attacker)
+    private void ApplyLifeSteal(IDamageable damageable)
     {
-        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetValue(Stat.ATK));
+        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * Stats.GetMaxValue(Stat.HP) * 0.25f);
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0 && (damageable as Mobs) != null && !(damageable as Mobs).IsSpawning)
         {
