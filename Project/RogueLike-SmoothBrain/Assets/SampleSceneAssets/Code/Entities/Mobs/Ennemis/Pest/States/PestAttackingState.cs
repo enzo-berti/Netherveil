@@ -66,6 +66,8 @@ public class PestAttackingState : BaseState<PestStateMachine>
             dashRoutine = null;
         }
 
+        Context.idleTimer = Context.MovementDelay / 2f;
+
         Context.Animator.ResetTrigger("Cancel");
         Context.Animator.SetTrigger("Cancel");
         Context.Animator.ResetTrigger("Cancel");
@@ -135,6 +137,8 @@ public class PestAttackingState : BaseState<PestStateMachine>
 
     private IEnumerator DashCoroutine(float distance, float speed)
     {
+        if (distance <= 2f) { distance = 2f; }
+
         float timeElapsed = 0f;
         Vector3 startPosition = Context.transform.position;
         Vector3 dashTarget = Context.transform.position + Context.transform.forward * distance;
@@ -147,7 +151,6 @@ public class PestAttackingState : BaseState<PestStateMachine>
         while (timeElapsed < duration && isOnNavMesh)
         {
             yield return null;
-
 
             if (!Context.PlayerHit)
                 AttackCollide(Context.AttackCollider, debugMode: false);

@@ -26,7 +26,6 @@ public class PestWanderingState : BaseState<PestStateMachine>
     protected override void EnterState()
     {
         Context.WanderZoneCenter = Context.transform.position;
-        Context.idleTimer = Context.MovementDelay / 2f;
         if (Context.LifeBar.gameObject.activeInHierarchy) Context.LifeBar.FadeOutOpacity(0.5f, 0.25f);
     }
 
