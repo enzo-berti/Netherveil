@@ -19,8 +19,6 @@ public class MainMenu : MonoBehaviour
     }
     public void Quit()
     {
-        DeviceManager.OnChangedToGamepad -= SetSelect;
-        DeviceManager.OnChangedToKB -= SetUnselect;
 #if UNITY_EDITOR
         if (EditorApplication.isPlaying)
         {
@@ -30,17 +28,27 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
-
+    private void Update()
+    {
+        if(EventSystem.current.currentSelectedGameObject != null)
+            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+        else
+        {
+            Debug.Log("null current");
+        }
+    }
     public void SetEnableMainMenu(bool enable)
     {
         SetEnableAllMeshButton(enable);
         if(enable)
         {
+            Debug.Log("enable");
             DeviceManager.OnChangedToGamepad += SetSelect;
             DeviceManager.OnChangedToKB += SetUnselect;
         }
         else
         {
+            Debug.Log("disable");
             DeviceManager.OnChangedToGamepad -= SetSelect;
             DeviceManager.OnChangedToKB -= SetUnselect;
         }
@@ -56,10 +64,10 @@ public class MainMenu : MonoBehaviour
 
     private void SetSelect()
     {
-        EventSystem.current.SetSelectedGameObject(selectable.gameObject);
+        if(EventSystem.current != null) EventSystem.current.SetSelectedGameObject(selectable.gameObject);
     }
     private void SetUnselect()
     {
-        EventSystem.current.SetSelectedGameObject(null);
+        if(EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
     }
 }
