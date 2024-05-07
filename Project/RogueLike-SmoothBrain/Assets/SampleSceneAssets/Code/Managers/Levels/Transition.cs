@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class Transition : MonoBehaviour
 {
+    [SerializeField] private bool playOnAwake = true;
+
     private event Action onTransitionEnd;
 
     private Animator animator;
@@ -16,6 +18,11 @@ public class Transition : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
+        if (playOnAwake)
+        {
+            animator.SetBool("Transit", false);
+        }
     }
 
     private void OnEnable()
