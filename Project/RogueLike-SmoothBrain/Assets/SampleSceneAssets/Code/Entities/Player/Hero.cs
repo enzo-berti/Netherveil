@@ -472,13 +472,23 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (Stats.GetValue(Stat.CORRUPTION) == Stats.GetMaxValue(Stat.CORRUPTION))
         {
             yield return new WaitForSeconds(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration);
-            HudHandler.current.DescriptionTab.SetTab("Damnation Veil", "On activation, creates a damnation zone that applies the damnation effect that doubles the damages received to all enemies touched by the zone.", GameResources.Get<VideoClip>("CorruptionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundCoruption"));
+
+            HudHandler.current.DescriptionTab.SetTab("<color=#44197c><b>Damnation Veil</b></color>", 
+                "On activation, creates a <color=purple><b>damnation zone</b></color> that applies the <color=purple><b>damnation effect</b></color> " +
+                "that <color=red>doubles the damages</color> received to all enemies touched by the zone.",
+                GameResources.Get<VideoClip>("CorruptionVideo"), 
+                GameResources.Get<Sprite>("SpecialAbilityBackgroundCoruption"));
+
             HudHandler.current.DescriptionTab.OpenTab();
         }
         else if (Stats.GetValue(Stat.CORRUPTION) == Stats.GetMinValue(Stat.CORRUPTION))
         {
             yield return new WaitForSeconds(playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().Duration);
-            HudHandler.current.DescriptionTab.SetTab("Divine Shield", "On activation, creates a shield around you that nullifies damages for a small amount of time.", GameResources.Get<VideoClip>("BenedictionVideo"), GameResources.Get<Sprite>("SpecialAbilityBackgroundBenediction"));
+
+            HudHandler.current.DescriptionTab.SetTab("<color=yellow><b>Divine Shield</b></color>",
+                "On activation, creates a <color=#a52a2aff><b>shield</b></color> around you that <color=#a52a2aff><b>nullifies damages</b></color> for a small amount of time.", 
+                GameResources.Get<VideoClip>("BenedictionVideo"), 
+                GameResources.Get<Sprite>("SpecialAbilityBackgroundBenediction"));
             HudHandler.current.DescriptionTab.OpenTab();
         }
     }
