@@ -76,7 +76,13 @@ public class WindowItemDatabase : EditorWindow
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.price = EditorGUILayout.IntField(item.price, GUILayout.Width(SizeArea / 4), GUILayout.ExpandWidth(true));
+            EditorGUILayout.BeginVertical();
             item.Description = EditorGUILayout.TextArea(item.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
+            if (GUILayout.Button("Edit description", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true)))
+            {
+                TextEditor.OpenWindow(item);
+            }
+            EditorGUILayout.EndVertical();
             item.icon = (Texture)EditorGUILayout.ObjectField("", item.icon, typeof(Texture), false, GUILayout.Width(SizeArea/3), GUILayout.ExpandWidth(true));
             if(item.icon == null)
             {
