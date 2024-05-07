@@ -15,7 +15,6 @@ public class RecordPlayer : MonoBehaviour
     void Start()
     {
         MusicNote.Pause();
-        EVENT_CALLBACK MusicEndCallbackDelegate = new EVENT_CALLBACK(FMODCallback);
     }
 
     private void OnTriggerEnter(Collider collide)
@@ -29,11 +28,17 @@ public class RecordPlayer : MonoBehaviour
 
     void Update()
     {
-        IsMusicPlaying = eventMusic.isValid();
-
-        if (Input.GetKeyUp(KeyCode.E) && IsCollide == true && IsMusicPlaying == false) 
+       
+        if (Input.GetKeyUp(KeyCode.E) && IsCollide == true && !IsMusicPlaying) 
         {
             playMusic();
+        }
+        
+        eventMusic.getPlaybackState(out PLAYBACK_STATE playbackState);
+        IsMusicPlaying = playbackState == PLAYBACK_STATE.PLAYING;
+        if (playbackState == PLAYBACK_STATE.STOPPING)
+        {
+            MusicNote.Stop();
         }
     }
 
@@ -41,24 +46,7 @@ public class RecordPlayer : MonoBehaviour
     {
         eventMusic = AudioManager.Instance.PlaySound(AllMyTearsMusic);
         MusicNote.Play();
-        IsMusicPlaying = true;
-        eventMusic.setCallback(FMODCallback, EVENT_CALLBACK_TYPE.STOPPED);
+        eventMusic.getPlaybackState(out PLAYBACK_STATE playbackState);
+        IsMusicPlaying = playbackState == PLAYBACK_STATE.PLAYING;
     }
-
-    private FMOD.RESULT FMODCallback(EVENT_CALLBACK_TYPE type, IntPtr instancePtr, IntPtr parameterPtr)
-    {
-        // Cast the instance pointer to EventInstance
-        EventInstance instance = new EventInstance(instancePtr);
-
-        if (type == EVENT_CALLBACK_TYPE.STOPPED)
-        {
-            Debug.Log("Sound finished playing!");
-            MusicNote.Stop();
-            IsMusicPlaying = false;
-        }
-        instance.release();
-        return FMOD.RESULT.OK;
-    }
-
-
 }

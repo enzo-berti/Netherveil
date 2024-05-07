@@ -13,6 +13,8 @@ namespace Fountain
         [SerializeField] private FountainType type = FountainType.Blessing;
         [SerializeField] private int bloodPrice = 10;
         [SerializeField] private int valueTrade = 1;
+        public Sound fountaineSFX;
+        public Sound altarSFX;
 
         public FountainType Type => type;
         public int BloodPrice => bloodPrice;

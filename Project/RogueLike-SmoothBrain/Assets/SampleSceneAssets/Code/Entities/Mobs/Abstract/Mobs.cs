@@ -298,8 +298,7 @@ public abstract class Mobs : Entity
 
         for (int i = 0; i < 3; i++)
         {
-            Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle;
-            randomDirection2D.Normalize();
+            Vector2 randomDirection2D = UnityEngine.Random.insideUnitCircle.normalized;
             randomDirection2D *= UnityEngine.Random.Range(_minTravelDistance, _maxTravelDistance);
             randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
 
@@ -318,7 +317,7 @@ public abstract class Mobs : Entity
             }
         }
 
-        return (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
+        return transform.position + (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
     }
 
 #if UNITY_EDITOR
