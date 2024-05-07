@@ -12,6 +12,7 @@ public class Spear : MonoBehaviour
     Transform parent = null;
     Animator playerAnimator;
     public static Action<Spear> OnPlacedInWorld;
+    public static Action<Spear> OnLatePlacedInWorld;
     public static Action OnPlacedInHand;
 
     [SerializeField] GameObject trailPf;
@@ -31,6 +32,7 @@ public class Spear : MonoBehaviour
     readonly float SPEAR_SPEED = 5000f;
     readonly float SPEAR_WAIT_TIME = 0.15f;
     bool placedInWorld = false;
+    public static int NbSpears = 1;
 
     LineRenderer thunderlinkLineRenderer;
     public LineRenderer ThunderLinkLineRenderer { get => thunderlinkLineRenderer; }
@@ -122,6 +124,7 @@ public class Spear : MonoBehaviour
         placedInWorld = true;
 
         OnPlacedInWorld?.Invoke(this);
+        OnLatePlacedInWorld?.Invoke(this);
     }
 
     public void Throw(Vector3 _posToReach)

@@ -18,6 +18,7 @@ public class DamnationVeil : ISpecialAbility
         PlayerController playerController = Utilities.Player.GetComponent<PlayerController>();
         playerController.PlayVFX(playerController.DamnationVeilVFX);
         ISpecialAbility.OnSpecialAbilityActivated?.Invoke();
+        AudioManager.Instance.PlaySound(AudioManager.Instance.DamnationVeilSFX, Utilities.Player.transform.position);
 
         Physics.OverlapSphere(Utilities.Player.transform.position, radius, LayerMask.GetMask("Entity"))
             .Select(entity => entity.GetComponent<Mobs>())

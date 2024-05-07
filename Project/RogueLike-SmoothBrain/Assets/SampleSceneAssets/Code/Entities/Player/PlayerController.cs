@@ -164,6 +164,7 @@ public class PlayerController : MonoBehaviour
         MapUtilities.onFinishStage -= ResetStageDependentValues;
         Spear.OnPlacedInHand = null;
         Spear.OnPlacedInWorld = null;
+        Spear.OnLatePlacedInWorld = null;
     }
 
     private void Update()

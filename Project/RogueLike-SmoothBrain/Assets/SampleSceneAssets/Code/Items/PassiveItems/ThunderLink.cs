@@ -10,14 +10,19 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly List<BoxCollider> thunderLinkColliders = new();
     readonly List<VisualEffect> thunderLinkVFXs = new();
     readonly List<LineRenderer> thunderLinkLineRenderers = new();
-    readonly List<Coroutine> thunderLinkRoutines = new();
-    readonly float THUNDERLINK_WAIT_TIME = 0.5f;
+    readonly List<Spear> spears = new();
+    Coroutine thunderlinkRoutine = null;
+    Coroutine moveRoutine = null;
+    readonly float THUNDERLINK_WAIT_TIME = 1f;
     readonly float duration = 3f;
     readonly float chance = 0.2f;
-
+    float timer = 0f;
+    bool fadeLink = false;
+    bool allSpearsSet = false;
     public void OnRetrieved()
     {
         Spear.OnPlacedInWorld += CreateEletricLinks;
+        Spear.OnLatePlacedInWorld += WaitAllSpearsSpawned;
         Utilities.PlayerInput.OnRetrieveSpear += DeleteEletricLinks;
     }
 
@@ -29,14 +34,12 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void DeleteEletricLinks()
     {
-        foreach(var coroutine in thunderLinkRoutines)
-        {
-            CoroutineManager.Instance.StopCoroutine(coroutine);
-        }
-        thunderLinkRoutines.Clear();
+        CoroutineManager.Instance.StopCoroutine(thunderlinkRoutine);
+        CoroutineManager.Instance.StopCoroutine(moveRoutine);
+        spears.Clear();
         thunderLinkColliders.Clear();
 
-        for(int i = 0; i< thunderLinkVFXs.Count; i++)
+        for (int i = 0; i < thunderLinkVFXs.Count; i++)
         {
             GameObject.Destroy(thunderLinkVFXs[i].gameObject);
             GameObject.Destroy(thunderLinkLineRenderers[i].gameObject);
@@ -58,30 +61,77 @@ public class ThunderLink : ItemEffect, IPassiveItem
         thunderLinkVFXs.Add(vfx);
 
         LineRenderer lineRenderer = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ThunderLinkLine").GetComponent<LineRenderer>());
-        lineRenderer.gameObject.SetActive(false);
+        lineRenderer.widthMultiplier = 0f;
         thunderLinkLineRenderers.Add(lineRenderer);
 
         spear.SetThunderLinkVFX(vfx, lineRenderer);
-        thunderLinkRoutines.Add(CoroutineManager.Instance.StartCoroutine(TriggerElectricLinks(spear)));
-        thunderLinkRoutines.Add(CoroutineManager.Instance.StartCoroutine(MoveThunderLink(spear)));
+        spears.Add(spear);
+        thunderlinkRoutine = CoroutineManager.Instance.StartCoroutine(TriggerElectricLinks());
+        moveRoutine = CoroutineManager.Instance.StartCoroutine(MoveThunderLink());
     }
 
-    private IEnumerator TriggerElectricLinks(Spear spear)
+    private void WaitAllSpearsSpawned(Spear spear)
+    {
+        allSpearsSet = true;
+    }
+
+    private IEnumerator TriggerElectricLinks()
     {
         Hero player = Utilities.Hero;
+        yield return new WaitUntil(() => allSpearsSet == true);
+        foreach (Spear spear in spears)
+        {
+            spear.ThunderLinkLineRenderer.widthMultiplier = 1f;
+        }
+        timer = THUNDERLINK_WAIT_TIME;
+        fadeLink = true;
+        ApplyDamages(player);
+        yield return null;
 
         while (true)
         {
-            yield return new WaitForSeconds(THUNDERLINK_WAIT_TIME / 2f);
-            spear.ThunderLinkLineRenderer.gameObject.SetActive(false);
-            spear.SpearThrowCollider.gameObject.SetActive(false);
-            yield return new WaitForSeconds(THUNDERLINK_WAIT_TIME / 2f);
+            if (!fadeLink)
+            {
+                timer += Time.deltaTime /2f;
+                foreach (Spear spear in spears)
+                {
+                    spear.ThunderLinkLineRenderer.widthMultiplier = Mathf.Min(EasingFunctions.EaseOutCubic(timer), 1f);
+                }
 
+                if (timer >= THUNDERLINK_WAIT_TIME)
+                {
+                    timer = THUNDERLINK_WAIT_TIME;
+                    fadeLink = true;
+                    ApplyDamages(player);
+                }
+                yield return null;
+            }
+            else
+            {
+                timer -= Time.deltaTime /2f;
+                foreach (Spear spear in spears)
+                {
+                    spear.ThunderLinkLineRenderer.widthMultiplier = Mathf.Max(EasingFunctions.EaseOutCubic(timer), 0f);
+                    if (spear.ThunderLinkLineRenderer.widthMultiplier <= 0.01f)
+                    {
+                        spear.ThunderLinkLineRenderer.widthMultiplier = 0f;
+                        timer = 0f;
+                        fadeLink = false;
+                    }
+                }
+
+                yield return null;
+            }
+        }
+    }
+
+    private void ApplyDamages(Hero player)
+    {
+        foreach (Spear spear in spears)
+        {
             AudioManager.Instance.PlaySound(AudioManager.Instance.ThunderlinkSFX, spear.transform.position);
-            spear.ThunderLinkLineRenderer.gameObject.SetActive(true);
-            //spear.SpearThrowCollider.gameObject.SetActive(true);
-            spear.ScaleColliderToVector((spear.transform.position - Utilities.Player.transform.position));
-            spear.SpearThrowCollider.transform.parent.LookAt(spear.transform.position);
+            spear.ThunderLinkLineRenderer.widthMultiplier = 1f;
+            spear.SpearThrowCollider.gameObject.SetActive(true);
 
             Collider[] colliders = spear.SpearThrowCollider.BoxOverlap();
 
@@ -89,26 +139,28 @@ public class ThunderLink : ItemEffect, IPassiveItem
             {
                 foreach (var collider in colliders)
                 {
-                    if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
+                    if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject)
                     {
-                        player.Attack(entity);
-                        if((entity as MonoBehaviour).TryGetComponent(out Entity mob))
-                        {
-                            mob.AddStatus(new Electricity(duration, chance), player);
-                        }
+                        player.Attack(entity as IDamageable);
+                        entity.AddStatus(new Electricity(duration, chance), player);
                     }
                 }
             }
         }
     }
 
-    private IEnumerator MoveThunderLink(Spear spear)
+    private IEnumerator MoveThunderLink()
     {
-        while(true)
+        while (true)
         {
-            spear.ThunderLinkVFX.transform.position = Utilities.Player.transform.position + Vector3.up;
-            spear.ThunderLinkLineRenderer.SetPosition(0, Utilities.Player.transform.position + Vector3.up);
-            spear.ThunderLinkLineRenderer.SetPosition(1, new Vector3(spear.transform.position.x, Utilities.Player.transform.position.y + 1, spear.transform.position.z));
+            foreach (Spear spear in spears)
+            {
+                spear.ThunderLinkVFX.transform.position = Utilities.Player.transform.position + Vector3.up;
+                spear.ThunderLinkLineRenderer.SetPosition(0, Utilities.Player.transform.position + Vector3.up);
+                spear.ThunderLinkLineRenderer.SetPosition(1, new Vector3(spear.transform.position.x, Utilities.Player.transform.position.y + 1, spear.transform.position.z));
+                spear.ScaleColliderToVector((spear.transform.position - Utilities.Player.transform.position));
+                spear.SpearThrowCollider.transform.parent.LookAt(spear.transform.position);
+            }
             yield return null;
         }
     }
