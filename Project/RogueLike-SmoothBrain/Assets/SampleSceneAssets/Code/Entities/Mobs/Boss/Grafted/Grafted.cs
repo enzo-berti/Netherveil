@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using static GlorbStateMachine;
 
-public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
+public class Grafted : Mobs, IGrafted
 {
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
