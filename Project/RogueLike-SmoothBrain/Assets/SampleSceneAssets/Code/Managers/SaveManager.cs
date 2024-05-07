@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Text;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
@@ -32,6 +30,7 @@ public class SaveManager : MonoBehaviour
 
     private int selectedSave = -1;
     public string DirectoryPath { private set; get; } = string.Empty;
+    public bool HasData { private set; get; }
 
     private void Awake()
     {
@@ -50,12 +49,16 @@ public class SaveManager : MonoBehaviour
         {
             Directory.CreateDirectory(Application.persistentDataPath + "/Save");
         }
+
+        HasData = false;
+
+        SelectSave(1);
     }
 
     public void SelectSave(int selectedSave)
     {
         this.selectedSave = selectedSave;
-        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString();
+        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + "/";
 
         if (!Directory.Exists(DirectoryPath))
         {
@@ -65,17 +68,18 @@ public class SaveManager : MonoBehaviour
 
     public void Save()
     {
+        Debug.Log("Saving game");
         onSave?.Invoke(DirectoryPath);
     }
 
-    const string exampleFile = "/Player.s";
+    const string filePath = "/Player.s";
     public void ExampleLoad()
     {
         string directoryPath = SaveManager.instance.DirectoryPath;
 
-        if (File.Exists(directoryPath + exampleFile))
+        if (File.Exists(directoryPath + filePath))
         {
-            using (var stream = File.Open(directoryPath + exampleFile, FileMode.Open))
+            using (var stream = File.Open(directoryPath + filePath, FileMode.Open))
             {
                 using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
                 {
@@ -90,7 +94,7 @@ public class SaveManager : MonoBehaviour
 
     public void ExampleSave(string directoryPath)
     {
-        using (var stream = File.Open(directoryPath + exampleFile, FileMode.Create))
+        using (var stream = File.Open(directoryPath + filePath, FileMode.Create))
         {
             using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
             {
