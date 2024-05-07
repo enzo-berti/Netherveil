@@ -216,7 +216,8 @@ public class PestAttackingState : BaseState<PestStateMachine>
             {
                 foreach (Collider col in tab)
                 {
-                    if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != Context.gameObject)
+                    //if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != Context.gameObject)
+                    if (col.CompareTag("Player"))
                     {
                         Context.Attack(col.gameObject.GetComponent<IDamageable>());
                         Context.PlayerHit = true;

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,7 +27,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public delegate int OnSave(ref string saveContent);
+    public delegate int OnSave(string filePath);
     public OnSave onSave; 
 
     private int selectedSave = -1;
@@ -49,23 +50,6 @@ public class SaveManager : MonoBehaviour
         {
             Directory.CreateDirectory(Application.persistentDataPath + "Save");
         }
-
-        SceneManager.sceneLoaded += CheckCanLoad;
-    }
-
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= CheckCanLoad;
-    }
-
-    private void CheckCanLoad(Scene scene, LoadSceneMode loadSceneMode)
-    {
-        if (scene.buildIndex != SceneManager.GetSceneByName("InGame").buildIndex || selectedSave < 0)
-        {
-            return;
-        }
-
-        Load();
     }
 
     public void SelectSave(int selectedSave)
@@ -79,16 +63,31 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    private void Load()
-    {
-        Debug.Log("LOAD");
-    }
-
     public void Save()
     {
-        string saveContent = "";
-        onSave?.Invoke(ref saveContent);
-
-        File.WriteAllText(filePath, saveContent);
+        onSave?.Invoke(filePath);
     }
+
+#if UNITY_EDTIOR
+    public void ExampleLoad(string fileName)
+    {
+
+    }
+
+    public void ExampleSave(string fileName)
+    {
+        using (var stream = File.Open(fileName, FileMode.Create))
+        {
+            using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+            {
+                writer.Write(1.250F);
+                writer.Write(@"c:\Temp");
+                writer.Write(10);
+                writer.Write(true);
+            }
+
+            stream.Close();
+        }
+    }
+#endif
 }
