@@ -74,6 +74,15 @@ namespace Fountain
                 if (price > hero.Inventory.Blood.Value)
                     return;
 
+                if (fountain.Type == FountainType.Blessing)
+                {
+                    fountain.fountaineSFX.Play(transform.position);
+                }
+                else
+                {
+                    fountain.altarSFX.Play(transform.position);
+                }
+
                 hero.Inventory.Blood -= price;
                 hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
                 hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
