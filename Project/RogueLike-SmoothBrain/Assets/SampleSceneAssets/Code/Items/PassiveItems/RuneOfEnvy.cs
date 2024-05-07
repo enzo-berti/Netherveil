@@ -35,8 +35,15 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
     private void StealStats()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
+
+        if (MapUtilities.currentRoomData.enemies.Count > 0)
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.RuneOfEnvySFX);
+        }
+
         foreach (GameObject enemy in MapUtilities.currentRoomData.enemies)
         {
+            
             Mobs mob = enemy.GetComponent<Mobs>();
             mob.StatSuckerVFX.GetComponent<VFXStopper>().Duration = 1f;
             mob.StatSuckerVFX.GetComponent<VFXStopper>().PlayVFX();
