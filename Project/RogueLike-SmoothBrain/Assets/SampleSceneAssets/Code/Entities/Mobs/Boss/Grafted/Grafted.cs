@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
+using static GlorbStateMachine;
 
 public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 {
@@ -328,6 +329,9 @@ public class Grafted : Mobs, IAttacker, IDamageable, IMovable, IBlastable
 
     public void Death()
     {
+        animator.speed = 1;
+        OnDeath?.Invoke(transform.position);
+        Utilities.Hero.OnKill?.Invoke(this);
         deathTimer = 0.5f;
         MoveTo(transform.position);
         animator.SetBool(dyingHash, true);
