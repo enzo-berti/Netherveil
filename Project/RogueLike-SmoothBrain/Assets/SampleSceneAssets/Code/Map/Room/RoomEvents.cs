@@ -135,7 +135,7 @@ namespace Map
             MapUtilities.onExit?.Invoke();
         }
 
-        private void AllEnemiesEvents()
+        private void AllEnemiesDeadEvents()
         {
             // local events
             allEnemiesDeadCalled = true;
@@ -143,13 +143,15 @@ namespace Map
             // global events
             MapUtilities.onEarlyAllEnemiesDead?.Invoke();
             MapUtilities.onAllEnemiesDead?.Invoke();
+
+            SaveManager.Instance.Save();
         }
 
-        private void FixedUpdate()
+        private void LateUpdate()
         {
             if (!allEnemiesDeadCalled && enemies.transform.childCount == 0)
             {
-                AllEnemiesEvents();
+                AllEnemiesDeadEvents();
             }
 
             if (!allChestsOpenCalled && treasures.GetComponentsInChildren<Item>().Count() == 0)

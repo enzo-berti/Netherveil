@@ -126,6 +126,8 @@ public class SonielStateMachine : Mobs, ISoniel
         if (isFreeze || IsSpawning)
             return;
 
+        base.Update();
+
         if (sounds.music.GetState() == FMOD.Studio.PLAYBACK_STATE.STOPPING)
         {
             sounds.music.Play(false);
@@ -133,7 +135,6 @@ public class SonielStateMachine : Mobs, ISoniel
 
         phaseTwo = stats.GetValue(Stat.HP) <= initialHP / 2f;
 
-        base.Update();
         currentState.Update();
 
         if ((!tiedArms[0] || !tiedArms[1]) && currentState is not SonielDeathState)
@@ -170,6 +171,7 @@ public class SonielStateMachine : Mobs, ISoniel
         sounds.walk.Stop();
         sounds.run.Stop();
         sounds.multipleSlash.Stop();
+        sounds.music.Stop();
 
         if (gameMusic != null)
             gameMusic.SetActive(true);

@@ -2,7 +2,9 @@ using Map.Component;
 using PrefabLightMapBaker;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -125,23 +127,63 @@ namespace Map.Generation
         [HideInInspector] public int stage = 0; // BOURRIN 2
 
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
+        const string fileName = "Map.save";
 
         private void Awake()
         {
-            //GameObject roomGO = Instantiate(MapResources.RandRoomPrefab(RoomType.Tutorial).gameObject);
-            //roomGO.transform.position = new Vector3(10029, 293, 2039);
-
-            Item.itemSpawn = 0;
-            Seed.RandomizeSeed();
-            
-            if (!isRandom)
+            if (SaveManager.Instance.HasData)
             {
-                Seed.Set(seed);
+                LoadSave();
             }
-            
+            else
+            {
+                Seed.RandomizeSeed();
+
+                if (!isRandom)
+                {
+                    Seed.Set(seed);
+                }
+            }
+
             seed = Seed.seed;
-            
             Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
+            
+            SaveManager.Instance.onSave += Save;
+        }
+
+        private void LoadSave()
+        {
+            string filePath = SaveManager.Instance.DirectoryPath + fileName;
+
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            using (var stream = File.Open(filePath, FileMode.Open))
+            {
+                using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+                {
+                    Seed.seed = reader.ReadString();
+                    //stage = reader.ReadInt32();
+                }
+            }
+        }
+
+        private void Save(string directoryPath)
+        {
+            string filePath = SaveManager.Instance.DirectoryPath + fileName;
+
+            using (var stream = File.Open(filePath, FileMode.Create))
+            {
+                using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+                {
+                    writer.Write(Seed.seed);
+                    //writer.Write(stage);
+                }
+
+                stream.Close();
+            }
         }
 
         private void LateUpdate()
