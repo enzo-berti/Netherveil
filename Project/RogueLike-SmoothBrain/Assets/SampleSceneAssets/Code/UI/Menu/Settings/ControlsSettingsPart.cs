@@ -62,6 +62,8 @@ public class ControlsSettingsPart : MenuPart
         buttonKeybinding.navigation = nav;
 
         buttonKeybindingTextMesh.text = "Keyboard";
+
+        BackKeybinding();
     }
 
     private void OnGamepadEnable()
@@ -78,6 +80,8 @@ public class ControlsSettingsPart : MenuPart
         buttonKeybinding.navigation = nav;
 
         buttonKeybindingTextMesh.text = "Gamepad";
+
+        BackKeybinding();
     }
 
     public void ToggleVibrations(bool toggle)
@@ -111,8 +115,8 @@ public class ControlsSettingsPart : MenuPart
     {
         GlobalPart.part.SetActive(true);
 
-        if (currentKeysPart != null) 
-            currentKeysPart.part.SetActive(false);
+        KeyboardKeysPart.part.SetActive(false);
+        GamepadKeysPart.part.SetActive(false);
 
         EventSystem.current.SetSelectedGameObject(GlobalPart.firstSelection);
     }
