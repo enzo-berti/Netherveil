@@ -22,6 +22,7 @@ public class DivineShield : ISpecialAbility
         playerController.DivineShieldVFX.Play();
         playerController.SpecialAbilityCoroutine = playerController.StartCoroutine(DisableDivineShield());
         Utilities.Hero.IsInvincibleCount++;
+        AudioManager.Instance.PlaySound(AudioManager.Instance.DivineShieldSFX, Utilities.Player.transform.position);
     }
 
     IEnumerator DisableDivineShield()
