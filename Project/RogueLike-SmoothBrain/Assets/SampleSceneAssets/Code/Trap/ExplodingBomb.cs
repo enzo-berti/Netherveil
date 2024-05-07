@@ -107,7 +107,7 @@ public class ExplodingBomb : MonoBehaviour
     private IEnumerator ExplodeRoutine()
     {
         Physics.OverlapSphere(this.transform.position, BlastDiameter / 2f - BlastDiameter / 8f, damageLayer)
-            .Select(entity => entity.GetComponent<IBlastable>())
+            .Select(entity => entity.GetComponent<Hero>())
             .Where(entity => entity != null)
             .ToList()
             .ForEach(currentEntity =>
