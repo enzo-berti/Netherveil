@@ -163,7 +163,7 @@ public class TutoText : MonoBehaviour
             case "space": return controlPath;
             case "enter": return controlPath;
             case "tab": return controlPath;
-            //case "backquote": return controlPath;
+            case "backquote": return controlPath;
             //case "quote": return controlPath;
             //case "semicolon": return controlPath;
             //case "comma": return controlPath;
