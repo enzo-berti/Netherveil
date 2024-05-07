@@ -8,8 +8,8 @@ public class SaveBook : MonoBehaviour
     [SerializeField] private GameObject closeObject;
     [SerializeField] private GameObject openObject;
     private Animator bookAnimator;
-    private float durationMovementIn = 2.5f;
-    private float durationMovementOut = 1.5f;
+    private float durationMovementIn = 1.0f;
+    private float durationMovementOut = 1.0f;
 
     private Coroutine routine;
 

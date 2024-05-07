@@ -19,10 +19,10 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
         public KeyboardIconsSprites kb;
         public MouseIconsSprites mouse;
 
-        protected void OnEnable()
+        protected void Start()
         {
             // Hook into all updateBindingUIEvents on all RebindActionUI components in our hierarchy.
-            var rebindUIComponents = transform.GetComponentsInChildren<RebindActionUI>();
+            var rebindUIComponents = FindObjectsOfType<RebindActionUI>(true);
             foreach (var component in rebindUIComponents)
             {
                 component.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
@@ -86,16 +86,16 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 case "enter": return controlPath;
                 case "tab": return controlPath;
                 case "backquote": return controlPath;
-                case "quote": return controlPath;
-                case "semicolon": return controlPath;
-                case "comma": return controlPath;
-                case "period": return controlPath;
-                case "slash": return controlPath;
-                case "backslash": return controlPath;
-                case "leftBracket": return controlPath;
-                case "rightBracket": return controlPath;
-                case "minus": return controlPath;
-                case "equals": return controlPath;
+                //case "quote": return controlPath;
+                //case "semicolon": return controlPath;
+                //case "comma": return controlPath;
+                //case "period": return controlPath;
+                //case "slash": return controlPath;
+                //case "backslash": return controlPath;
+                //case "leftBracket": return controlPath;
+                //case "rightBracket": return controlPath;
+                //case "minus": return controlPath;
+                //case "equals": return controlPath;
                 case "upArrow": return controlPath;
                 case "downArrow": return controlPath;
                 case "leftArrow": return controlPath;
