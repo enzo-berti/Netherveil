@@ -12,8 +12,6 @@ public class SaveMenu : MonoBehaviour
     private void Start()
     {
         collider = GetComponent<Collider>();
-        DeviceManager.OnChangedToGamepad += SetSelect;
-        DeviceManager.OnChangedToKB += SetUnselect;
     }
     public void EnableMenu()
     {
@@ -39,10 +37,10 @@ public class SaveMenu : MonoBehaviour
 
     private void SetSelect()
     {
-        EventSystem.current.SetSelectedGameObject(selectable.gameObject);
+        if(EventSystem.current != null) EventSystem.current.SetSelectedGameObject(selectable.gameObject);
     }
     private void SetUnselect()
     {
-        EventSystem.current.SetSelectedGameObject(null);
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
     }
 }
