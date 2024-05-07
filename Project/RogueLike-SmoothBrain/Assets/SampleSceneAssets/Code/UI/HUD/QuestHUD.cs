@@ -71,7 +71,12 @@ public class QuestHUD : MonoBehaviour
         if (hasQuest)
         {
             lostOrFinishedText.SetText(string.Empty);
-            string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? "<color=purple>Corruption</color>" : "<color=yellow>Benediction</color>";
+            float initialSize = rewardText.fontSize;
+
+            string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? 
+                $"<sprite name=\"corruption\">" : 
+                $"<sprite name=\"benediction\">";
+
             int absValue = Mathf.Abs(player.CurrentQuest.CorruptionModifierValue);
 
             if (player.CurrentQuest.Datas.HasDifferentGrades)

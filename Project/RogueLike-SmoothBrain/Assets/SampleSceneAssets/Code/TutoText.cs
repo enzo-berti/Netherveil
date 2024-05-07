@@ -14,7 +14,7 @@ public class TutoText : MonoBehaviour
     string initText = string.Empty;
     TMP_Text text;
 
-    void Start()
+    void Awake()
     {
         // Temporaire
         MapGenerator mapGen = FindAnyObjectByType<MapGenerator>();
@@ -41,13 +41,6 @@ public class TutoText : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-        DeviceManager.OnChangedToKB -= UpdateBindingDisplayString;
-        DeviceManager.OnChangedToGamepad -= UpdateBindingDisplayString;
-        PauseMenu.OnUnpause -= UpdateBindingDisplayString;
-    }
-
     private void OnDestroy()
     {
         DeviceManager.OnChangedToKB -= UpdateBindingDisplayString;
@@ -59,50 +52,68 @@ public class TutoText : MonoBehaviour
     {
         List<InputActionReference> actionRefs = GetCurrentAction();
 
-        int nbDifferentTexts = 0;
-        for (int i = 0; i < actionRefs.Count; i++)
-        {
-            if (actionRefs[i].action.GetBindingDisplayString(displayStringOptions) != text.text)
-                nbDifferentTexts++;
-        }
+        //bool textNeedUpdate = false;
+        //if (actionRefs[0].action.name == "Movement" && DeviceManager.Instance.IsPlayingKB())
+        //{
+        //    for (int i = 1; i < actionRefs[0].action.bindings.Count; i++)
+        //    {
+        //        if (!text.text.Contains(GetDisplayString(actionRefs[0], i).GetCamelCase()))
+        //            textNeedUpdate = true;
+        //    }
+        //}
+        //else if (actionRefs[0].action.name == "Movement" && !DeviceManager.Instance.IsPlayingKB())
+        //{
+        //    if (!text.text.Contains("leftStick" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox")))
+        //        textNeedUpdate = true;
+        //}
+        //else
+        //{
+        //    textNeedUpdate = true;
+        //}
 
-        if (nbDifferentTexts > 0)
-        {
+        //if (textNeedUpdate)
+        //{
             string textString = initText;
 
             if (actionRefs[0].action.name == "Movement" && DeviceManager.Instance.IsPlayingKB())
             {
-                textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0], 1).GetCamelCase() + "\">");
-                if (textString.Contains("$"))
+                if (textString.Contains("^") && !textString.Contains("\"^^\""))
+                {
+                    textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0], 1).GetCamelCase() + "\">");
+                }
+                if (textString.Contains("$") && !textString.Contains("\"$\""))
                 {
                     textString = textString.Replace("$", "<sprite name=\"" + GetDisplayString(actionRefs[0], 3).GetCamelCase() + "\">");
                 }
-                if (textString.Contains("%"))
+                if (textString.Contains("%") && !textString.Contains("\"%\""))
                 {
                     textString = textString.Replace("%", "<sprite name=\"" + GetDisplayString(actionRefs[0], 2).GetCamelCase() + "\">");
                 }
-                if (textString.Contains("*"))
+                if (textString.Contains("*") && !textString.Contains("\"*\""))
                 {
                     textString = textString.Replace("*", "<sprite name=\"" + GetDisplayString(actionRefs[0], 4).GetCamelCase() + "\">");
                 }
             }
             else if (actionRefs[0].action.name == "Movement" && !DeviceManager.Instance.IsPlayingKB())
             {
-                textString = textString.Replace("^", "<sprite name=\"" + "leftStick" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox")  + "\">");
+                textString = textString.Replace("^", "<sprite name=\"" + "leftStick" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox") + "\">");
                 textString = textString.Replace("$", string.Empty);
                 textString = textString.Replace("%", string.Empty);
                 textString = textString.Replace("*", string.Empty);
             }
             else
             {
-                textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0]).GetCamelCase() + "\">");
-                if (textString.Contains("$"))
+                if (textString.Contains("^") && !textString.Contains("\"^^\""))
+                {
+                    textString = textString.Replace("^", "<sprite name=\"" + GetDisplayString(actionRefs[0]).GetCamelCase() + "\">");
+                }
+                if (textString.Contains("$") && !textString.Contains("\"$\""))
                 {
                     textString = textString.Replace("$", "<sprite name=\"" + GetDisplayString(actionRefs[1]).GetCamelCase() + "\">");
                 }
             }
             text.text = textString;
-        }
+        //}
     }
 
     private List<InputActionReference> GetCurrentAction()
@@ -153,16 +164,16 @@ public class TutoText : MonoBehaviour
             case "enter": return controlPath;
             case "tab": return controlPath;
             case "backquote": return controlPath;
-            case "quote": return controlPath;
-            case "semicolon": return controlPath;
-            case "comma": return controlPath;
-            case "period": return controlPath;
-            case "slash": return controlPath;
-            case "backslash": return controlPath;
-            case "leftBracket": return controlPath;
-            case "rightBracket": return controlPath;
-            case "minus": return controlPath;
-            case "equals": return controlPath;
+            //case "quote": return controlPath;
+            //case "semicolon": return controlPath;
+            //case "comma": return controlPath;
+            //case "period": return controlPath;
+            //case "slash": return controlPath;
+            //case "backslash": return controlPath;
+            //case "leftBracket": return controlPath;
+            //case "rightBracket": return controlPath;
+            //case "minus": return controlPath;
+            //case "equals": return controlPath;
             case "upArrow": return controlPath;
             case "downArrow": return controlPath;
             case "leftArrow": return controlPath;

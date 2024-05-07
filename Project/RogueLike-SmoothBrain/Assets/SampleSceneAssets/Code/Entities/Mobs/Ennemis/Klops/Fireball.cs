@@ -51,8 +51,6 @@ public class Fireball : MonoBehaviour, IReflectable
 
     private void OnTriggerEnter(Collider other)
     {
-
-
         if (!IsReflected)
         {
             Hero hero = other.GetComponentInParent<Hero>();

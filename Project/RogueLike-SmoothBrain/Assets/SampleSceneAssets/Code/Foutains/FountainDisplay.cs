@@ -13,11 +13,15 @@ namespace Fountain
         [SerializeField] private TMP_Text displayTextMesh;
         private Coroutine displayRoutine;
         private float displayDuration = 0.2f;
+        private float originalSize;
+        private float iconSize;
 
         private void Start()
         {
             fountain = GetComponent<Fountain>();
 
+            originalSize = displayTextMesh.fontSize;
+            iconSize = originalSize + 10;
             rectTransform.localScale = Vector3.zero;
         }
 
@@ -39,11 +43,16 @@ namespace Fountain
 
         private void SetText(Fountain fountain)
         {
-            string type = fountain.Type == FountainType.Blessing ? "<color=yellow>benediction</color>" : "<color=purple>corruption</color>";
-            string blood = $"<color=red>{fountain.BloodPrice} blood{(fountain.BloodPrice > 1 ? "s" : string.Empty)}</color>";
-            string trade = $"<color=yellow>{fountain.AbsoluteValueTrade}</color>";
+            string blood = $"<color=red>{fountain.BloodPrice} <size={iconSize}></color><sprite name=\"blood\"><size={originalSize}>";
 
-            displayTextMesh.text = $"Use {blood} to gain {trade} of {type}.";
+            string value = fountain.Type == FountainType.Blessing ? $"<color=yellow>{fountain.AbsoluteValueTrade}</color>" : 
+                $"<color=purple>{fountain.AbsoluteValueTrade}</color>";
+
+            string trade = value + " " + 
+                (fountain.Type == FountainType.Blessing ? $"<size={iconSize}><sprite name=\"benediction\"><size={originalSize}>" :
+                $"<size={iconSize}><sprite name=\"corruption\"><size={originalSize}>");
+
+            displayTextMesh.text = $"Use {blood} to gain {trade}.";
         }
     }
 }

@@ -212,7 +212,8 @@ public class GlorbStateMachine : Mobs, IGlorb
             {
                 foreach (Collider col in tab)
                 {
-                    if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != gameObject)
+                    //if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != gameObject)
+                    if (col.CompareTag("Player"))
                     {
                         Attack(col.gameObject.GetComponent<IDamageable>());
                     }
