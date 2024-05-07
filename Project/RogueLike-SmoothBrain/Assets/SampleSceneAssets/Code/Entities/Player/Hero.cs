@@ -1,13 +1,10 @@
 using Fountain;
-using Map;
 using PostProcessingEffects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.Video;
-using static UnityEngine.Rendering.DebugUI;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable
 {

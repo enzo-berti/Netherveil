@@ -21,6 +21,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
             spearVFXs.Add(GameObject.Instantiate(spearVFX, spearVFX.transform.position,
             spearVFX.transform.rotation));
         }
+        Spear.NbSpears += 2;
 
         Utilities.PlayerInput.OnThrowSpear += ThrowSpearGhosts;
         Utilities.PlayerInput.OnRetrieveSpear += RetrieveSpearGhosts;
@@ -36,6 +37,8 @@ public class SpearGhosts : ItemEffect , IPassiveItem
         }
         spearThrowWrappers.Clear();
         spearVFXs.Clear();
+
+        Spear.NbSpears -= 2;
 
         Utilities.PlayerInput.OnThrowSpear -= ThrowSpearGhosts;
         Utilities.PlayerInput.OnRetrieveSpear -= RetrieveSpearGhosts;
