@@ -8,6 +8,7 @@ public class RuneOfSloth : ItemEffect, IActiveItem
     private readonly float duration = 7;
     public void Activate()
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.RuneOfSlothSFX,Utilities.Player.transform.position);
         Utilities.Player.GetComponent<PlayerController>().PlayVFX(Utilities.Player.GetComponent<PlayerController>().RuneOfSlothVFX);
         float planeLength = 5f;
         float radius = (Utilities.Player.GetComponent<PlayerController>().RuneOfSlothVFX.GetFloat("Diameter") * planeLength) / 2f;

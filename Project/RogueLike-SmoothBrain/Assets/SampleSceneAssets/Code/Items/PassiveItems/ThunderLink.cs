@@ -131,7 +131,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
         {
             AudioManager.Instance.PlaySound(AudioManager.Instance.ThunderlinkSFX, spear.transform.position);
             spear.ThunderLinkLineRenderer.widthMultiplier = 1f;
-            spear.SpearThrowCollider.gameObject.SetActive(true);
+            //spear.SpearThrowCollider.gameObject.SetActive(true);
 
             Collider[] colliders = spear.SpearThrowCollider.BoxOverlap();
 

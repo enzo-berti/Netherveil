@@ -229,7 +229,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
             {
                 foreach (Collider col in tab)
                 {
-                    if (col.gameObject.GetComponent<IDamageable>() != null && col.gameObject != gameObject && col.gameObject.CompareTag("Player"))
+                    if (col.gameObject.CompareTag("Player"))
                     {
                         Attack(col.gameObject.GetComponent<IDamageable>());
                         playerHit = true;
