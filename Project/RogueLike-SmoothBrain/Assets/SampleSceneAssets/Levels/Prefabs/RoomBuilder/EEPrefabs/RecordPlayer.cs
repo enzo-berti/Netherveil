@@ -1,10 +1,6 @@
 using FMOD.Studio;
 using FMODUnity;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Serialization;
 using UnityEngine;
 
 public class RecordPlayer : MonoBehaviour
