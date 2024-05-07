@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,11 +27,11 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public delegate int OnSave(ref string saveContent);
+    public delegate void OnSave(string directoryPath);
     public OnSave onSave; 
 
     private int selectedSave = -1;
-    private string filePath = string.Empty;
+    public string DirectoryPath { private set; get; } = string.Empty;
 
     private void Awake()
     {
@@ -45,50 +46,61 @@ public class SaveManager : MonoBehaviour
             return;
         }
 
-        if (!Directory.Exists(Application.persistentDataPath + "Save"))
+        if (!Directory.Exists(Application.persistentDataPath + "/Save"))
         {
-            Directory.CreateDirectory(Application.persistentDataPath + "Save");
+            Directory.CreateDirectory(Application.persistentDataPath + "/Save");
         }
-
-        SceneManager.sceneLoaded += CheckCanLoad;
-    }
-
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= CheckCanLoad;
-    }
-
-    private void CheckCanLoad(Scene scene, LoadSceneMode loadSceneMode)
-    {
-        if (scene.buildIndex != SceneManager.GetSceneByName("InGame").buildIndex || selectedSave < 0)
-        {
-            return;
-        }
-
-        Load();
     }
 
     public void SelectSave(int selectedSave)
     {
         this.selectedSave = selectedSave;
-        filePath = Application.persistentDataPath + "Save/" + "save" + selectedSave.ToString() + ".s";
+        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString();
 
-        if (!File.Exists(filePath))
+        if (!Directory.Exists(DirectoryPath))
         {
-            File.Create(filePath);
+            Directory.CreateDirectory(DirectoryPath);
         }
-    }
-
-    private void Load()
-    {
-        Debug.Log("LOAD");
     }
 
     public void Save()
     {
-        string saveContent = "";
-        onSave?.Invoke(ref saveContent);
+        onSave?.Invoke(DirectoryPath);
+    }
 
-        File.WriteAllText(filePath, saveContent);
+    const string exampleFile = "/Player.s";
+    public void ExampleLoad()
+    {
+        string directoryPath = SaveManager.instance.DirectoryPath;
+
+        if (File.Exists(directoryPath + exampleFile))
+        {
+            using (var stream = File.Open(directoryPath + exampleFile, FileMode.Open))
+            {
+                using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+                {
+                    Debug.Log(reader.ReadSingle());
+                    Debug.Log(reader.ReadString());
+                    Debug.Log(reader.ReadInt32());
+                    Debug.Log(reader.ReadBoolean());
+                }
+            }
+        }
+    }
+
+    public void ExampleSave(string directoryPath)
+    {
+        using (var stream = File.Open(directoryPath + exampleFile, FileMode.Create))
+        {
+            using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+            {
+                writer.Write(1.250F);
+                writer.Write(@"c:\Temp");
+                writer.Write(10);
+                writer.Write(true);
+            }
+
+            stream.Close();
+        }
     }
 }

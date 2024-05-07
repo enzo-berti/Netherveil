@@ -63,6 +63,4 @@ public class KitingMyDearLove : Quest
         }
         QuestUpdated();
     }
-
-
 } 
