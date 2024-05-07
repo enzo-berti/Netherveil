@@ -21,6 +21,7 @@ public class TutoText : MonoBehaviour
         if (mapGen.stage > 1)
         {
             Destroy(gameObject);
+            return;
         }
         //
 
@@ -28,17 +29,10 @@ public class TutoText : MonoBehaviour
         initText = text.text;
 
         PauseMenu.OnUnpause += UpdateBindingDisplayString;
+        DeviceManager.OnChangedToKB += UpdateBindingDisplayString;
+        DeviceManager.OnChangedToGamepad += UpdateBindingDisplayString;
 
         UpdateBindingDisplayString();
-    }
-
-    private void OnEnable()
-    {
-        if (Application.isPlaying)
-        {
-            DeviceManager.OnChangedToKB += UpdateBindingDisplayString;
-            DeviceManager.OnChangedToGamepad += UpdateBindingDisplayString;
-        }
     }
 
     private void OnDestroy()
@@ -52,27 +46,6 @@ public class TutoText : MonoBehaviour
     {
         List<InputActionReference> actionRefs = GetCurrentAction();
 
-        //bool textNeedUpdate = false;
-        //if (actionRefs[0].action.name == "Movement" && DeviceManager.Instance.IsPlayingKB())
-        //{
-        //    for (int i = 1; i < actionRefs[0].action.bindings.Count; i++)
-        //    {
-        //        if (!text.text.Contains(GetDisplayString(actionRefs[0], i).GetCamelCase()))
-        //            textNeedUpdate = true;
-        //    }
-        //}
-        //else if (actionRefs[0].action.name == "Movement" && !DeviceManager.Instance.IsPlayingKB())
-        //{
-        //    if (!text.text.Contains("leftStick" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox")))
-        //        textNeedUpdate = true;
-        //}
-        //else
-        //{
-        //    textNeedUpdate = true;
-        //}
-
-        //if (textNeedUpdate)
-        //{
             string textString = initText;
 
             if (actionRefs[0].action.name == "Movement" && DeviceManager.Instance.IsPlayingKB())
@@ -113,7 +86,7 @@ public class TutoText : MonoBehaviour
                 }
             }
             text.text = textString;
-        //}
+        
     }
 
     private List<InputActionReference> GetCurrentAction()
@@ -156,6 +129,13 @@ public class TutoText : MonoBehaviour
         var action = actionRef != null ? actionRef.action : null;
         string bindingDisplayString = action.GetBindingDisplayString(bindingIndex, out _, out string controlPath, displayStringOptions);
 
+        Debug.Log(controlPath);
+
+        //OEM represents keys specific to specific keyboard layout or even manufacturers so there are too many different things it can be so
+        //we just ignore it display a placeholder icon key
+        if(controlPath.Contains("OEM"))
+            return controlPath;
+
         switch (controlPath)
         {
             //keyboard bindings
@@ -173,7 +153,7 @@ public class TutoText : MonoBehaviour
             //case "leftBracket": return controlPath;
             //case "rightBracket": return controlPath;
             //case "minus": return controlPath;
-            //case "equals": return controlPath;
+            case "equals": return controlPath;
             case "upArrow": return controlPath;
             case "downArrow": return controlPath;
             case "leftArrow": return controlPath;
