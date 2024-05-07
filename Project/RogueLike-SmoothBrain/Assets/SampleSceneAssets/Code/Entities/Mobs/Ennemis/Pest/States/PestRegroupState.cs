@@ -47,7 +47,7 @@ public class PestRegroupState : BaseState<PestStateMachine>
                 Vector3 averagePos = Vector3.zero;
                 foreach (IPest pest in pests)
                 {
-                    averagePos += (pest as MonoBehaviour).transform.position * Random.Range(0.5f, 1.5f);
+                    averagePos += (pest as MonoBehaviour).transform.position;
                 }
                 averagePos /= pests.Count();
 
@@ -55,8 +55,8 @@ public class PestRegroupState : BaseState<PestStateMachine>
                 foreach (IPest pest in pests)
                 {
                     Vector3 direction = ((pest as MonoBehaviour).transform.position - Context.transform.position).normalized;
-                    float distance = 1 - Vector3.Distance(Context.transform.position, (pest as MonoBehaviour).transform.position);
-                    avoidPos += direction * distance * Random.Range(0.5f, 1.5f);
+                    float distance = Vector3.Distance(Context.transform.position, (pest as MonoBehaviour).transform.position);
+                    avoidPos += direction * (1 / distance);
                 }
                 avoidPos /= pests.Count();
 
