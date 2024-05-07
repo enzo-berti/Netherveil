@@ -8,58 +8,6 @@
 
 //public class GraftedCopy : Mobs, IGrafted
 //{
-
-//    protected override void OnEnable()
-//    {
-//        base.OnEnable();
-//        // jouer l'anim de début de combat
-
-//        // mettre la cam entre le joueur et le boss
-
-//        //StartCoroutine(Brain());
-//        if (gameMusic != null)
-//        {
-//            gameMusic.SetActive(false);
-//        }
-//        bossSounds.introSound.Play(transform.position);
-//        bossSounds.music.Play();
-//    }
-
-//    protected override void OnDisable()
-//    {
-//        base.OnDisable();
-//        if (gameMusic != null)
-//        {
-//            gameMusic.SetActive(true);
-//        }
-//        bossSounds.introSound.Stop();
-//        bossSounds.music.Stop();
-
-//        bossSounds.StopAllSounds();
-
-//        StopAllCoroutines();
-//    }
-
-//    private void OnDestroy()
-//    {
-//        // remettre la camera au dessus du joueur
-//        if (gameMusic != null)
-//        {
-//            gameMusic.SetActive(true);
-//        }
-
-//        if (projectile) Destroy(projectile.gameObject);
-
-//        StopAllCoroutines();
-//    }
-
-//    protected override void Awake()
-//    {
-//        base.Awake();
-//        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
-//        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
-//    }
-
 //    protected override void Start()
 //    {
 //        base.Start();
@@ -587,16 +535,4 @@
 //        attackCooldown = _time;
 //        attackCooldown += Random.Range(-_randomMargin, _randomMargin);
 //    }
-
-//#if UNITY_EDITOR
-//    private void OnDrawGizmos()
-//    {
-//        if (!Selection.Contains(gameObject))
-//            return;
-
-//        DisplayVisionRange(visionAngle);
-//        DisplayAttackRange(visionAngle);
-//        DisplayInfos();
-//    }
-//#endif
 //}
