@@ -22,7 +22,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
     public void OnRetrieved()
     {
         Spear.OnPlacedInWorld += CreateEletricLinks;
-        Spear.OnLatePlacedInWorld += test;
+        Spear.OnLatePlacedInWorld += WaitAllSpearsSpawned;
         Utilities.PlayerInput.OnRetrieveSpear += DeleteEletricLinks;
     }
 
@@ -70,7 +70,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
         moveRoutine = CoroutineManager.Instance.StartCoroutine(MoveThunderLink());
     }
 
-    private void test(Spear spear)
+    private void WaitAllSpearsSpawned(Spear spear)
     {
         allSpearsSet = true;
     }
