@@ -50,13 +50,13 @@ public class ItemDescription : MonoBehaviour
                 {
                     var memberValue = valueInfo.GetValue(itemEffect);
 
-                    if(splitCurrent.Length > 1 && splitCurrent[1] == "%")
+                    if (splitCurrent.Length > 1 && splitCurrent[1].Contains("%"))
                     {
                         memberValue = Convert.ToSingle(valueInfo.GetValue(itemEffect)) * 100;
                     }
 
                     splitDescription[i] = memberValue.ToString();
-                    for(int j = 1; j < splitCurrent.Length; j++)
+                    for (int j = 1; j < splitCurrent.Length; j++)
                     {
                         splitDescription[i] += splitCurrent[j];
                     }
@@ -82,11 +82,11 @@ public class ItemDescription : MonoBehaviour
 
     public void RemovePriceText()
     {
-        if(priceText != null)
+        if (priceText != null)
         {
             priceText.text = string.Empty;
             priceText = null;
         }
-       
+
     }
 }

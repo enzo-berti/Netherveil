@@ -1,8 +1,6 @@
 using FMOD.Studio;
 using FMODUnity;
-using System;
 using UnityEngine;
-
 public class RecordPlayer : MonoBehaviour
 {
 
