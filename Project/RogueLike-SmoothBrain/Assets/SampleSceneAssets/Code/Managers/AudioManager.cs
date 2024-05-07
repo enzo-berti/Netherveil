@@ -42,6 +42,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference allMyTearsMusic;
     [SerializeField] EventReference itemBuySFX;
     [SerializeField] EventReference damnationVeilSFX;
+    [SerializeField] EventReference divineShieldSFX;
 
     public EventReference QuestObtainedSFX { get => questObtainedSFX; }
     public EventReference QuestFinishedSFX { get => questFinishedSFX; }
@@ -61,6 +62,7 @@ public class AudioManager : MonoBehaviour
     public EventReference AllMyTearsMusic { get => allMyTearsMusic; }
     public EventReference ItemBuySFX { get => itemBuySFX; }
     public EventReference DamnationVeilSFX { get => damnationVeilSFX; }
+    public EventReference DivineShieldSFX { get => divineShieldSFX; }
 
     private static AudioManager instance = null;
     public static AudioManager Instance
