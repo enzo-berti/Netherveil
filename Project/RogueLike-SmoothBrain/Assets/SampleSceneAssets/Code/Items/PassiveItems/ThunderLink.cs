@@ -141,7 +141,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
                 {
                     if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject)
                     {
-                        player.Attack(entity as IDamageable);
+                        player.Attack(entity as IDamageable, -Utilities.PlayerController.SPEAR_DAMAGES);
                         entity.AddStatus(new Electricity(duration, chance), player);
                     }
                 }
