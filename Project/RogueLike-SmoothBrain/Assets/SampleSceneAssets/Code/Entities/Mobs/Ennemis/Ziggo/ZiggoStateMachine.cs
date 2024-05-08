@@ -178,6 +178,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
 
     public void Death()
     {
+        animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Utilities.Hero.OnKill?.Invoke(this);
         ziggoSounds.deathSound.Play(transform.position);
