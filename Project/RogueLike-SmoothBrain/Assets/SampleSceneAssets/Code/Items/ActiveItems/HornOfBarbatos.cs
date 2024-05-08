@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HornOfBarbatos : ItemEffect, IActiveItem
 {
-    public float Cooldown { get; set; } = 10f;
+    public float Cooldown { get; set; } = 35f;
     private float increaseValue = 0.2f;
 #pragma warning disable IDE0052 // Supprimer les membres privés non lus
     private readonly float displayValue;
