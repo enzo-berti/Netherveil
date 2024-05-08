@@ -72,12 +72,14 @@ public class TextEditor : EditorWindow
     private void AddColor()
     {
         VisualElement root = rootVisualElement;
+        // Get uxml field
         var descriptionField = root.Q<TextField>("Description");
         var colorPicker = root.Q<ColorField>("ColorPicker");
-        Debug.Log("first : " + firstSelect + " second : " + lastSelect);
         Color color = colorPicker.value;
-        Debug.Log(color.ToHexString());
+        int delta = descriptionField.value.Length;
         descriptionField.value = descriptionField.value.Insert(firstSelect, "<color=#" + color.ToHexString() + ">");
+        delta = descriptionField.value.Length - delta;
+        descriptionField.value = descriptionField.value.Insert(lastSelect + delta, "</color>");
     }
 
 
