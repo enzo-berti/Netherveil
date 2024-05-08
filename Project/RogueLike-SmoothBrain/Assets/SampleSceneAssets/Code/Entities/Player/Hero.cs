@@ -26,7 +26,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     readonly float CORRUPTION_ATK_STEP = 2f;
     readonly float CORRUPTION_HP_STEP = 15f;
     readonly float CORRUPTION_LIFESTEAL_STEP = 0.15f;
-    readonly float CORRUPTION_HP_DECREASE_PERCENTAGE = 0.01f;
+    readonly float CORRUPTION_HP_DECREASE_PERCENTAGE = 0.005f;
 
     readonly float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
 
