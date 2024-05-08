@@ -21,6 +21,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static Color benedictionColor = Color.yellow;
     public static Color benedictionColor2 = new Color(0.89f, 0.75f, 0.14f);
 
+    readonly float BENEDICTION_HP_STEP = 15f;
+    readonly float BENEDICTION_ATK_STEP = 1f;
+    readonly float CORRUPTION_ATK_STEP = 2f;
+    readonly float CORRUPTION_HP_STEP = 15f;
+    readonly float CORRUPTION_LIFESTEAL_STEP = 0.05f;
+    readonly float CORRUPTION_HP_DECREASE_PERCENTAGE = 0.01f;
+
+    readonly float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
+
     Animator animator;
     PlayerInput playerInput;
     PlayerController playerController;
@@ -211,7 +220,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ApplyLifeSteal(IDamageable damageable)
     {
-        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * (damageable as Mobs).Stats.GetMaxValue(Stat.HP) * 0.75f);
+        int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * (damageable as Mobs).Stats.GetMaxValue(Stat.HP) * MAX_LIFESTEAL_HP_PERCENTAGE);
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0 && (damageable as Mobs) != null && !(damageable as Mobs).IsSpawning)
         {
@@ -225,7 +234,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     {
         if(Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE && !(damageable as Mobs).IsSpawning)
         {
-            int value = (int)(stats.GetMaxValue(Stat.HP) * 0.01f);
+            int value = (int)(stats.GetMaxValue(Stat.HP) * CORRUPTION_HP_DECREASE_PERCENTAGE);
             stats.DecreaseValue(Stat.HP, value);
             AudioManager.Instance.PlaySound(playerController.HitSFX);
             FloatingTextGenerator.CreateEffectDamageText(value, transform.position, Color.red);
@@ -282,26 +291,26 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 }
                 else
                 {
-                    Stats.DecreaseMaxValue(Stat.HP, 15f);
-                    Stats.DecreaseValue(Stat.HP, 15f);
-                    Stats.IncreaseValue(Stat.ATK, 5f);
+                    Stats.DecreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
+                    Stats.DecreaseValue(Stat.HP, BENEDICTION_HP_STEP);
+                    Stats.IncreaseValue(Stat.ATK, BENEDICTION_ATK_STEP);
                 }
             }
             else if (lastStep > 0) //corruption drawbacks
             {
                 if (i == CORRUPTION_MAX)
                 {
-                    Stats.DecreaseValue(Stat.LIFE_STEAL, 0.05f);
+                    Stats.DecreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
                     CanHealFromConsumables = true;
                     playerController.SpecialAbility = null;
                     OnCorruptionMaxDrawback?.Invoke();
                 }
                 else
                 {
-                    Stats.DecreaseValue(Stat.LIFE_STEAL, 0.05f);
-                    Stats.DecreaseValue(Stat.ATK, 5f);
-                    Stats.IncreaseMaxValue(Stat.HP, 15f);
-                    Stats.IncreaseValue(Stat.HP, 15f);
+                    Stats.DecreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
+                    Stats.DecreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
+                    Stats.IncreaseMaxValue(Stat.HP, CORRUPTION_HP_STEP);
+                    Stats.IncreaseValue(Stat.HP, CORRUPTION_HP_STEP);
                 }
             }
         }
@@ -392,9 +401,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             }
             else
             {
-                Stats.IncreaseMaxValue(Stat.HP, 15f);
-                Stats.IncreaseValue(Stat.HP, 15f);
-                Stats.DecreaseValue(Stat.ATK, 5f);
+                Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
+                Stats.IncreaseValue(Stat.HP, BENEDICTION_HP_STEP);
+                Stats.DecreaseValue(Stat.ATK, BENEDICTION_ATK_STEP);
             }
 
             foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[i].data)
@@ -415,7 +424,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
             {
-                Stats.IncreaseValue(Stat.LIFE_STEAL, 0.05f);
+                Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
                 CanHealFromConsumables = false;
                 playerController.SpecialAbility = new DamnationVeil();
                 OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
@@ -423,10 +432,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             }
             else
             {
-                Stats.IncreaseValue(Stat.LIFE_STEAL, 0.05f);
-                Stats.IncreaseValue(Stat.ATK, 5f);
-                Stats.DecreaseMaxValue(Stat.HP, 15f);
-                Stats.DecreaseValue(Stat.HP, 15f);
+                Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
+                Stats.IncreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
+                Stats.DecreaseMaxValue(Stat.HP, CORRUPTION_HP_STEP);
+                Stats.DecreaseValue(Stat.HP, CORRUPTION_HP_STEP);
             }
 
             foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[i].data)

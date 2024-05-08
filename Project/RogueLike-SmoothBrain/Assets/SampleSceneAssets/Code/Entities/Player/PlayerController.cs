@@ -165,6 +165,9 @@ public class PlayerController : MonoBehaviour
         Spear.OnPlacedInHand = null;
         Spear.OnPlacedInWorld = null;
         Spear.OnLatePlacedInWorld = null;
+
+        //reset coroutine manager to avoid any problems when reloading ingame
+        CoroutineManager.Instance.StopAllCoroutines();
     }
 
     private void Update()
