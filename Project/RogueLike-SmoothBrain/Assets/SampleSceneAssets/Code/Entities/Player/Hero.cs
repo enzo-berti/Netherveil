@@ -442,6 +442,20 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         //Stats.DecreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
     }
 
+    private void BenedictionMaxDrawback()
+    {
+        playerController.SpecialAbility = null;
+        BenedictionDrawback();
+        OnBenedictionMaxDrawback?.Invoke();
+    }
+
+    private void BenedictionDrawback()
+    {
+        Stats.DecreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
+        Stats.DecreaseValue(Stat.HP, BENEDICTION_HP_STEP);
+        //Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
+    }
+
     private void CorruptionMaxUpgrade()
     {
         CorruptionUpgrade();
@@ -458,20 +472,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Stats.IncreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
         Stats.DecreaseMaxValue(Stat.HP, CORRUPTION_HP_STEP);
         Stats.DecreaseValue(Stat.HP, CORRUPTION_HP_STEP);
-    }
-
-    private void BenedictionMaxDrawback()
-    {
-        playerController.SpecialAbility = null;
-        BenedictionDrawback();
-        OnBenedictionMaxDrawback?.Invoke();
-    }
-
-    private void BenedictionDrawback()
-    {
-        Stats.DecreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
-        Stats.DecreaseValue(Stat.HP, BENEDICTION_HP_STEP);
-        //Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
     }
 
     private void CorruptionMaxDrawback()
