@@ -196,8 +196,8 @@ MonoBehaviour:
     idName: UrnOfAvarice
     mat: {fileID: 2100000, guid: a872d0094c09e1049b9a1c01f0d368f0, type: 2}
     mesh: {fileID: 7543488566641418785, guid: 9dd07894a3065504db812776853d6d3e, type: 3}
-    Description: "Increases damages by {bloodDamagesCoef}% \nfor each blood you have
-      in your inventory."
+    Description: "increases the attack coefficient by {bloodDamagesCoef}% \nfor each
+      drop of blood in your inventory,\nup to {bloodDamagesMaxCoef}%."
     icon: {fileID: 2800000, guid: 37e0a0df7e849a845b86966f48143e42, type: 3}
   - RarityTier: 2
     Type: 0
@@ -283,7 +283,7 @@ MonoBehaviour:
     Description: "Give {poisonChance}% chance \nto inflict poison effect for \n{poisonDuration}
       seconds \nwhen hitting an enemy."
     icon: {fileID: 2800000, guid: b7f54c67d978c3443af4c7bf19ef4fef, type: 3}
-  - RarityTier: 0
+  - RarityTier: 2
     Type: 0
     idName: BleedingAmulet
     mat: {fileID: 0}

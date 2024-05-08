@@ -3,19 +3,24 @@ using UnityEngine;
 public class UrnOfAvarice : ItemEffect , IPassiveItem 
 {
     readonly float bloodDamagesCoef = 0.01f;
+    readonly float bloodDamagesMaxCoef = 0.5f;
+    float previousBloodCoef = 0f;
 
     public void OnRetrieved() 
     {
-        Utilities.Hero.OnBeforeApplyDamages += AddBloodDamages;
+        Inventory.OnAddOrRemoveBlood += AddBloodDamages;
     } 
  
     public void OnRemove() 
     {
-        Utilities.Hero.OnBeforeApplyDamages -= AddBloodDamages;
+        Inventory.OnAddOrRemoveBlood -= AddBloodDamages;
     }
 
-    private void AddBloodDamages(ref int damages, IDamageable target)
+    private void AddBloodDamages()
     {
-        damages += (int)(Utilities.Hero.Inventory.Blood.Value * (bloodDamagesCoef));
+        Utilities.Hero.Stats.DecreaseCoeffValue(Stat.ATK, previousBloodCoef);
+        float newBloodCoef = Mathf.Min(Utilities.Hero.Inventory.Blood.Value * bloodDamagesCoef, bloodDamagesMaxCoef);
+        Utilities.Hero.Stats.IncreaseCoeffValue(Stat.ATK, newBloodCoef);
+        previousBloodCoef = newBloodCoef;
     }
 } 
