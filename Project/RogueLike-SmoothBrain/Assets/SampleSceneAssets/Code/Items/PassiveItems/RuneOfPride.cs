@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class RuneOfPride : ItemEffect, IPassiveItem
 {
     [SerializeField] private int maxBoost = 4;
-    [SerializeField] private int boostValue = 3;
+    [SerializeField] private int boostValue = 2;
     private readonly int MAX_BOOST;
     private int nbBoost = 0;
     
