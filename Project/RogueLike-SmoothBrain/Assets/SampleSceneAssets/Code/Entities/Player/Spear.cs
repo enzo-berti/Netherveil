@@ -227,7 +227,7 @@ public class Spear : MonoBehaviour
                 {
                     if (!corruptionNerfApplied)
                     {
-                        hero.CorruptionNerf(/*entity, hero*/);
+                        //hero.CorruptionNerf(/*entity, hero*/);
                         corruptionNerfApplied = true;
                     }
 
