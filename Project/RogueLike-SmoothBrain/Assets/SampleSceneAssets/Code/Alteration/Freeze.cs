@@ -31,6 +31,9 @@ public class Freeze : ConstantStatus
 
     public override void OnFinished()
     {
+        if(target == null)
+            return;
+
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
         target.isFreeze = false;
         target.GetComponentInChildren<Animator>().speed = 1;
@@ -62,7 +65,6 @@ public class Freeze : ConstantStatus
     
     private void PlayVFX()
     {
-
         freezeMat = GameResources.Get<Material>("OutlineShaderMat");
         Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
 
