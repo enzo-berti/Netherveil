@@ -103,7 +103,8 @@ public class PlayerController : MonoBehaviour
     public EventReference ChargedAttackMaxSFX;
     public EventReference ChargedAttackReleaseSFX;
     public EventReference HealSFX;
-    public EventReference StepUpgradeSFX;
+    public EventReference BenedictionUpgradeSFX;
+    public EventReference CorruptionUpgradeSFX;
     public EventReference StepDowngradeSFX;
     public EventReference[] AttacksSFX;
 

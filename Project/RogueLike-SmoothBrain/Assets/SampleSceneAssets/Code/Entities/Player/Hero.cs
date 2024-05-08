@@ -286,35 +286,26 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (corruptionUpgradeOnly)
         {
             playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
-            AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-
-            animator.ResetTrigger(playerController.CorruptionUpgradeHash);
-            animator.SetTrigger(playerController.CorruptionUpgradeHash);
-            animator.ResetTrigger(playerController.PouringBloodHash);
+            AudioManager.Instance.PlaySound(playerController.CorruptionUpgradeSFX, transform.position);
+            ResetAligmentDependentAnimTriggers();
         }
         else if (benedictionUpgradeOnly)
         {
             playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
-            AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-
-            animator.ResetTrigger(playerController.BenedictionUpgradeHash);
-            animator.SetTrigger(playerController.BenedictionUpgradeHash);
-            animator.ResetTrigger(playerController.PouringBloodHash);
+            AudioManager.Instance.PlaySound(playerController.BenedictionUpgradeSFX, transform.position);
+            ResetAligmentDependentAnimTriggers();
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
             playerController.DrawbackVFX.SetBool("Corruption", true);
             playerController.DrawbackVFX.Play();
-            AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
+            AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX, transform.position);
 
             if (hascorruptionDrawbackPositiveToNegative && curStep < 0)
             {
                 playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
-                AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-
-                animator.ResetTrigger(playerController.BenedictionUpgradeHash);
-                animator.SetTrigger(playerController.BenedictionUpgradeHash);
-                animator.ResetTrigger(playerController.PouringBloodHash);
+                AudioManager.Instance.PlaySound(playerController.BenedictionUpgradeSFX, transform.position);
+                ResetAligmentDependentAnimTriggers();
             }
             else
             {
@@ -326,15 +317,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             playerController.DrawbackVFX.SetBool("Corruption", false);
             playerController.DrawbackVFX.Play();
-            AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX);
+            AudioManager.Instance.PlaySound(playerController.StepDowngradeSFX, transform.position);
+
             if (hasbenedictionDrawbackNegativeToPositive && curStep > 0)
             {
                 playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
-                AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
-
-                animator.ResetTrigger(playerController.CorruptionUpgradeHash);
-                animator.SetTrigger(playerController.CorruptionUpgradeHash);
-                animator.ResetTrigger(playerController.PouringBloodHash);
+                AudioManager.Instance.PlaySound(playerController.CorruptionUpgradeSFX, transform.position);
+                ResetAligmentDependentAnimTriggers();
             }
             else
             {
@@ -344,17 +333,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    private void ManageDrawbacks(int lastStep)
+    private void ResetAligmentDependentAnimTriggers()
     {
-        bool playedSound = false;   
+        animator.ResetTrigger(playerController.BenedictionUpgradeHash);
+        animator.SetTrigger(playerController.BenedictionUpgradeHash);
+        animator.ResetTrigger(playerController.PouringBloodHash);
+    }
+
+    private void ManageDrawbacks(int lastStep)
+    { 
         for (int i = Mathf.Abs(lastStep); i > 0; i--)
         {
-            if(!playedSound)
-            {
-                AudioManager.Instance.PlaySound(AudioManager.Instance.LostLevelSFX, transform.position);
-                playedSound = true;
-            }
-
             if (lastStep < 0) // benediction drawbacks
             {
                 if (i == Mathf.Abs(BENEDICTION_MAX))
@@ -382,7 +371,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ManageBenedictionUpgrade(int curStep)
     {
-        AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelBenedictionSFX, transform.position);
+        //AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelBenedictionSFX, transform.position);
         for (int i = 0; i < Mathf.Abs(curStep); i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
@@ -407,7 +396,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ManageCorruptionUpgrade(int curStep)
     {
-        AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelCorruptionSFX, transform.position);
+        //AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelCorruptionSFX, transform.position);
         for (int i = 0; i < curStep; i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)

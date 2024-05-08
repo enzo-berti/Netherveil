@@ -183,7 +183,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.5707547, g: 0.8383234, b: 1, a: 1}
-  m_Intensity: 20
+  m_Intensity: 10
   m_Range: 6
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1455,13 +1455,20 @@ MonoBehaviour:
       Data3: 1131920286
       Data4: 277728971
     Path: event:/Player/PlayerHeal
-  StepUpgradeSFX:
+  BenedictionUpgradeSFX:
     Guid:
       Data1: 631695147
       Data2: 1269647479
       Data3: 362477226
       Data4: 336637503
-    Path: event:/Effect/GainLevel
+    Path: event:/Effect/GainLevelBenediction
+  CorruptionUpgradeSFX:
+    Guid:
+      Data1: 1495205179
+      Data2: 1157364075
+      Data3: -1457851995
+      Data4: 311657789
+    Path: event:/Effect/GainLevelCorruption
   StepDowngradeSFX:
     Guid:
       Data1: -762465386
