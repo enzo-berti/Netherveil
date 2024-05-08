@@ -27,7 +27,7 @@ public class VulcanHunter : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB GORGONS KILLED : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnKill += UpdateCount;
     }
 
@@ -46,7 +46,7 @@ public class VulcanHunter : Quest
         if (!IsQuestFinished() && damageable as IGorgon != null)
         {
             currentNumber++;
-            progressText = $"NB VULCANS KILLED : {currentNumber}/{MAX_NUMBER}";
+            progressText = $"NB GORGONS KILLED : {currentNumber}/{MAX_NUMBER}";
         }
         QuestUpdated();
     }

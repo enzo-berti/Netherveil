@@ -27,7 +27,7 @@ public class BeastHunter : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB BEASTS KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB GLORBS KILLED : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnKill += UpdateCount;
     }
 
@@ -41,7 +41,7 @@ public class BeastHunter : Quest
         if (!IsQuestFinished() && damageable as IGlorb != null)
         {
             currentNumber++;
-            progressText = $"NB BEASTS KILLED : {currentNumber}/{MAX_NUMBER}";
+            progressText = $"NB GLORBS KILLED : {currentNumber}/{MAX_NUMBER}";
         }
     }
 
