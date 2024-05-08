@@ -137,12 +137,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             return;
         }
 
-        Stats.DecreaseValue(Stat.HP, (int)(_value * takeDamageCoeff), false);
-
         if ((-_value) < 0 && stats.GetValue(Stat.HP) > 0) //just to be sure it really inflicts damages
         {
             if (notEffectDamages)
             {
+                //only multiplied for damages inflicted outside of status effects
+                _value = (int)(_value * takeDamageCoeff);
+
                 DeviceManager.Instance.ForceStopVibrations();
                 playerController.ResetValues();
                 animator.ResetTrigger(playerController.ChargedAttackReleaseHash);
@@ -151,12 +152,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 State = (int)Entity.EntityState.MOVE;
 
                 AudioManager.Instance.PlaySound(playerController.HitSFX);
-                FloatingTextGenerator.CreateEffectDamageText((int)(_value * takeDamageCoeff), transform.position, Color.red);
+                FloatingTextGenerator.CreateEffectDamageText((int)(_value), transform.position, Color.red);
                 PostProcessingEffectManager.current.Play(Effect.Hit, false);
                 playerController.HitVFX.Play();
             }
 
-            OnTakeDamage?.Invoke((int)(_value * takeDamageCoeff), attacker);
+            Stats.DecreaseValue(Stat.HP, (int)(_value), false);
+
+            OnTakeDamage?.Invoke((int)(_value), attacker);
         }
 
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)

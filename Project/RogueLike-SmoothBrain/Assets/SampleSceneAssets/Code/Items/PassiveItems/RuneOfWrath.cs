@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RuneOfWrath : ItemEffect, IPassiveItem
 {
-    private float AttackCoeffStat = 0.5f;
+    private readonly float AttackCoeffStat = 0.5f;
 
     public void OnRemove()
     {
