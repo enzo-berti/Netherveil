@@ -279,6 +279,8 @@ public class PlayerController : MonoBehaviour
         //used so that it isn't cast from his feet to ensure that there is no ray fail by colliding with spear or ground
         Vector3 rayOffset = Vector3.up / 2;
 
+        bool corruptionNerfApplied = false;
+
         Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(collider, transform.position + rayOffset, "Enemy", LayerMask.GetMask("Map"));
 
         if (tab.Length > 0)
@@ -292,6 +294,12 @@ public class PlayerController : MonoBehaviour
                         DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
                         applyVibrations = false;
                     }
+                    if(!corruptionNerfApplied)
+                    {
+                        hero.CorruptionNerf(col.gameObject.GetComponent<IDamageable>(), hero);
+                        corruptionNerfApplied = true;
+                    }
+
                     alreadyAttacked.Add(col);
                     hero.Attack(col.gameObject.GetComponent<IDamageable>());
                 }

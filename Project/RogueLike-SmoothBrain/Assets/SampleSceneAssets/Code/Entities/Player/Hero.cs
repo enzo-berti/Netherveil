@@ -112,7 +112,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         
 
         OnKill += ApplyLifeSteal;
-        OnAttackHit += CorruptionNerf;
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
@@ -230,7 +229,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    private void CorruptionNerf(IDamageable damageable, IAttacker attacker)
+    public void CorruptionNerf(IDamageable damageable, IAttacker attacker)
     {
         if(Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE && !(damageable as Mobs).IsSpawning)
         {

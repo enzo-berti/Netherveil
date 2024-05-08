@@ -212,6 +212,7 @@ public class Spear : MonoBehaviour
         {
             SpearThrowCollider.gameObject.SetActive(true);
         }
+        bool corruptionNerfApplied = false;
 
         ScaleColliderToVector(playerToTargetPos);
         SpearThrowCollider.transform.parent.LookAt(lookAtPos + Vector3.up);
@@ -224,6 +225,12 @@ public class Spear : MonoBehaviour
             {
                 if (collider.gameObject.TryGetComponent<IDamageable>(out var entity) && collider.gameObject != player.gameObject)
                 {
+                    if (!corruptionNerfApplied)
+                    {
+                        hero.CorruptionNerf(entity, hero);
+                        corruptionNerfApplied = true;
+                    }
+
                     hero.Attack(entity);
                 }
             }
