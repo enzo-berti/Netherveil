@@ -25,7 +25,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     readonly float BENEDICTION_ATK_STEP = 1f;
     readonly float CORRUPTION_ATK_STEP = 2f;
     readonly float CORRUPTION_HP_STEP = 15f;
-    readonly float CORRUPTION_LIFESTEAL_STEP = 0.1f;
+    readonly float CORRUPTION_LIFESTEAL_STEP = 0.15f;
     readonly float CORRUPTION_HP_DECREASE_PERCENTAGE = 0.01f;
 
     readonly float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
@@ -306,7 +306,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 if (i == CORRUPTION_MAX)
                 {
-                    Stats.DecreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
+                    //Stats.DecreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
                     CanHealFromConsumables = true;
                     playerController.SpecialAbility = null;
                     OnCorruptionMaxDrawback?.Invoke();
@@ -430,7 +430,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
             {
-                Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
+                //Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
                 CanHealFromConsumables = false;
                 playerController.SpecialAbility = new DamnationVeil();
                 OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
