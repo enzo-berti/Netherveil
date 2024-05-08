@@ -2,7 +2,7 @@ using UnityEngine;
  
 public class DragonScale : ItemEffect , IPassiveItem 
 {
-    readonly float coefValue = 0.5f;
+    readonly float coefValue = 0.2f;
     readonly float hpValue = 25f;
 
     public void OnRetrieved() 
