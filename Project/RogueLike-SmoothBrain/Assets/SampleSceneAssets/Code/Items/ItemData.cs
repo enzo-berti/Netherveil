@@ -31,7 +31,6 @@ public class ItemData : IComparable<ItemData>
     public Rarity RarityTier;
     public ItemType Type;
     public string idName;
-    public int price;
     public Material mat;
     public Mesh mesh;
     [Multiline] public string Description;

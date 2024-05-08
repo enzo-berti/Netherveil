@@ -48,7 +48,6 @@ public class WindowItemDatabase : EditorWindow
         EditorGUILayout.LabelField("Id_Name", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Rarity", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Type", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
-        EditorGUILayout.LabelField("Price", GUILayout.Width(SizeArea / 4), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Description", GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Icon", GUILayout.Width(SizeArea/3), GUILayout.ExpandWidth(true));
         EditorGUILayout.LabelField("Material", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
@@ -75,7 +74,6 @@ public class WindowItemDatabase : EditorWindow
             GUI.backgroundColor = Color.white;
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
-            item.price = EditorGUILayout.IntField(item.price, GUILayout.Width(SizeArea / 4), GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical();
             item.Description = EditorGUILayout.TextArea(item.Description, GUILayout.Height(100), GUILayout.Width(SizeArea*2), GUILayout.ExpandWidth(true));
             if (GUILayout.Button("Edit description", GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true)))

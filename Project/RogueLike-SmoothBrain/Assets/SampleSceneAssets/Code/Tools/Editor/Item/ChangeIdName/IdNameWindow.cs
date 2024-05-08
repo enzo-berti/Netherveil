@@ -28,10 +28,8 @@ public class IdNameWindow : EditorWindow
         wnd.newData.icon = wnd.oldData.icon;
         wnd.newData.mat = wnd.oldData.mat;
         wnd.newData.mesh = wnd.oldData.mesh;
-        wnd.newData.price = wnd.oldData.price;
         wnd.newData.Type = wnd.oldData.Type;
         wnd.newData.RarityTier = wnd.oldData.RarityTier;
-
     }
 
     private void OnGUI()

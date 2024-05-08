@@ -11,7 +11,6 @@ public class ItemCreatorEditor : EditorWindow
 {
     private ObjectField iconField;
     private TextField idNameField;
-    private IntegerField priceField;
     private EnumField rarityField;
     private EnumField typeField;
     private FloatField cooldownField;
@@ -51,7 +50,6 @@ public class ItemCreatorEditor : EditorWindow
 
         iconField = root.Q<ObjectField>("Icon-Field");
         idNameField = root.Q<TextField>("ID-Field");
-        priceField = root.Q<IntegerField>("Price-Field");
         rarityField = root.Q<EnumField>("Rarity-Field");
         typeField = root.Q<EnumField>("Type-Field");
         cooldownField = root.Q<FloatField>("Cooldown-Field");
@@ -68,11 +66,6 @@ public class ItemCreatorEditor : EditorWindow
         idNameField.RegisterValueChangedCallback(evt =>
         {
             item.idName = evt.newValue;
-        });
-
-        priceField.RegisterValueChangedCallback(evt =>
-        {
-            item.price = evt.newValue;
         });
 
         rarityField.RegisterValueChangedCallback((EventCallback<ChangeEvent<Enum>>)(evt =>

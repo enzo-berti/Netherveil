@@ -14,6 +14,7 @@ public class Item : MonoBehaviour
     public static event Action OnLateRetrieved;
     public static float priceCoef = 1.0f;
     public static List<List<ItemData>> ItemPool;
+    public static readonly int PRICE_PER_RARITY = 30;
 
     [SerializeField] private bool isRandomized = true;
     [SerializeField] private ItemDatabase database;
@@ -42,11 +43,11 @@ public class Item : MonoBehaviour
                 ItemPool.Add(database.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).ToList());
             }
         }
-        
+
     }
     private void Start()
     {
-        if(itemEffect == null)
+        if (itemEffect == null)
         {
             if (isRandomized)
             {
@@ -54,13 +55,13 @@ public class Item : MonoBehaviour
             }
             CreateItem();
         }
-        
+
     }
     public static void InvokeOnRetrieved(ItemEffect effect)
     {
         OnRetrieved?.Invoke(effect);
         OnLateRetrieved?.Invoke();
-        AudioManager.Instance.PlaySound(AudioManager.Instance.PickUpItemSFX,Utilities.Player.transform.position);
+        AudioManager.Instance.PlaySound(AudioManager.Instance.PickUpItemSFX, Utilities.Player.transform.position);
     }
 
     private ItemEffect LoadClass()
@@ -163,7 +164,7 @@ public class Item : MonoBehaviour
         ItemData data = database.GetItem(idItemName);
         Material matToRender = data.mat;
         Mesh meshToRender = data.mesh;
-        price = data.price;
+        price = (int)(data.RarityTier + 1) * PRICE_PER_RARITY;
 
         rarityColor = database.GetItemRarityColor(idItemName);
 
