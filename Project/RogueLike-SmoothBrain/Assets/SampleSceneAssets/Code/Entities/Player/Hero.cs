@@ -430,7 +430,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void BenedictionMaxUpgrade()
     {
         playerController.SpecialAbility = new DivineShield();
-        stats.IncreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP);
+        stats.IncreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP, false);
         BenedictionUpgrade();
         OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
         StartCoroutine(OpenSpecialAbilityTab());
@@ -446,7 +446,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void BenedictionMaxDrawback()
     {
         playerController.SpecialAbility = null;
-        stats.DecreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP);
+        stats.DecreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP, false);
         BenedictionDrawback();
         OnBenedictionMaxDrawback?.Invoke();
     }
