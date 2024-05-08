@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DamnationVeil : ISpecialAbility
 {
-    public float Cooldown { get; set; } = 30f;
+    public float Cooldown { get; set; } = 40f;
     public float CurrentEnergy { get; set; } = 0;
     private readonly float radius = 10f;
 
@@ -26,7 +26,7 @@ public class DamnationVeil : ISpecialAbility
             .ToList()
             .ForEach(currentEntity =>
             {
-                currentEntity.AddStatus(new Damnation(1000f, 1));
+                currentEntity.AddStatus(new Damnation(5f, 1));
             });
     }
 }

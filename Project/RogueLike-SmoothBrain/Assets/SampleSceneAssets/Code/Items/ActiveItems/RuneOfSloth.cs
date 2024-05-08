@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RuneOfSloth : ItemEffect, IActiveItem
 {
-    public float Cooldown { get; set; } = 20;
+    public float Cooldown { get; set; } = 25f;
     private readonly float duration = 7;
     public void Activate()
     {
