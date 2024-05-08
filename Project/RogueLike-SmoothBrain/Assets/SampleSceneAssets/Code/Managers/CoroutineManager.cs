@@ -41,6 +41,14 @@ public class CoroutineManager : MonoBehaviour
         StopCoroutine(_coroutine);
     }
 
+    public static void StopAllCoroutinesInstance()
+    {
+        if (instance != null)
+        {
+            Instance.StopAllCoroutines();
+        }
+    }
+
     private void OnDestroy()
     {
         StopAllCoroutines();
