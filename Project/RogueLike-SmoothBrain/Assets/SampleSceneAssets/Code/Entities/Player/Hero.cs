@@ -22,7 +22,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static Color benedictionColor2 = new Color(0.89f, 0.75f, 0.14f);
 
     readonly float BENEDICTION_HP_STEP = 25f;
-    readonly float BENEDICTION_ATK_COEF_STEP = 0.1f;
+    readonly float BENEDICTION_HEAL_COEF_STEP = 1f;
     readonly float CORRUPTION_ATK_STEP = 2f;
     readonly float CORRUPTION_HP_STEP = 25f;
     readonly float CORRUPTION_LIFESTEAL_STEP = 0.15f;
@@ -430,6 +430,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void BenedictionMaxUpgrade()
     {
         playerController.SpecialAbility = new DivineShield();
+        stats.IncreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP);
         BenedictionUpgrade();
         OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
         StartCoroutine(OpenSpecialAbilityTab());
@@ -445,6 +446,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void BenedictionMaxDrawback()
     {
         playerController.SpecialAbility = null;
+        stats.DecreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP);
         BenedictionDrawback();
         OnBenedictionMaxDrawback?.Invoke();
     }
