@@ -85,7 +85,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: 301024b97a423684692dfe99a6fb499c, type: 2}
+  m_spriteAsset: {fileID: 11400000, guid: e116af8504dcf32468368a65c96a6d68, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -93,10 +93,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 3.8
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 12
   m_fontSizeMax: 24
   m_fontStyle: 0
@@ -313,20 +313,83 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7259462616219705613, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.w
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7259462616219705613, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7259462616219705613, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7259462616219705613, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.z
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7259462616219705613, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_spriteAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: e116af8504dcf32468368a65c96a6d68,
+        type: 2}
     - target: {fileID: 8059532023584177424, guid: ae2b96b486250184284b26c12561268e,
         type: 3}
       propertyPath: m_fontSizeMax
       value: 16
       objectReference: {fileID: 0}
+    - target: {fileID: 8059532023584177424, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_spriteAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: e116af8504dcf32468368a65c96a6d68,
+        type: 2}
     - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
         type: 3}
       propertyPath: m_fontSize
-      value: 18
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.w
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_margin.z
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
         type: 3}
       propertyPath: m_fontSizeMax
       value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_spriteAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: e116af8504dcf32468368a65c96a6d68,
+        type: 2}
+    - target: {fileID: 8439392379392209510, guid: ae2b96b486250184284b26c12561268e,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 9003852147173479134, guid: ae2b96b486250184284b26c12561268e,
         type: 3}
@@ -361,6 +424,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8917844289322102610}
   m_SourcePrefab: {fileID: 100100000, guid: ae2b96b486250184284b26c12561268e, type: 3}
+--- !u!2083052967 &1541208980771257543 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 6941477336249953188, guid: ae2b96b486250184284b26c12561268e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8446058800638154595}
+  m_PrefabAsset: {fileID: 0}
 --- !u!23 &1669583493109312367 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7070054301535288332, guid: ae2b96b486250184284b26c12561268e,
@@ -387,7 +456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isRandomized: 1
   database: {fileID: 11400000, guid: a25fead2382213b4eadf914d4354c856, type: 2}
-  auraVFX: {fileID: 0}
+  auraVFX: {fileID: 1541208980771257543}
   idItemName: GoldEmeraldRing
 --- !u!114 &5545006647387763416
 MonoBehaviour:
