@@ -44,7 +44,7 @@ public class DontDealWithMe : Quest
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
-        if (!IsQuestFinished())
+        if (!IsQuestFinished() && damageable is not IDummy)
         {
             currentNumber++;
             progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";

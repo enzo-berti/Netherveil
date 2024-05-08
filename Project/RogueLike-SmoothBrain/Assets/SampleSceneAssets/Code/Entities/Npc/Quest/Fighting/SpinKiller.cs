@@ -51,7 +51,7 @@ public class SpinKiller : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
-        if (!IsQuestFinished())
+        if (!IsQuestFinished() && damageable is not IDummy)
         {
             Entity monster = (damageable as Entity);
             if (asDoAnChargedAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)

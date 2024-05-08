@@ -43,7 +43,7 @@ public class MonsterHunter : Quest
 
     private void UpdateCount(IDamageable damageable)
     {
-        if (!IsQuestFinished())
+        if (!IsQuestFinished() && damageable is not IDummy)
         {
             currentNumber++;
             progressText = $"NB MONSTERS KILLED : {currentNumber}/{MAX_NUMBER}";
