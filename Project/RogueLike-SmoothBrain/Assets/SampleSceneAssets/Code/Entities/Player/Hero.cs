@@ -210,6 +210,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
         else
         {
+            damages += playerController.BASIC_ATTACK_DAMAGES;
             OnBasicAttack?.Invoke(damageable, this);
         }
 
