@@ -7,7 +7,6 @@ public class Bomb : ItemEffect, IActiveItem
     public float Cooldown { get; set; } = 10f;
     public static bool bombIsThrow;
     private GameObject bombPf;
-    private const float deltaY = 0.5f;
     readonly int damages = 15;
 
     public Bomb()
