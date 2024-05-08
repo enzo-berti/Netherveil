@@ -1,6 +1,6 @@
 using UnityEngine; 
  
-public class BleedingAmulet : ItemEffect, IPassiveItem 
+public class BleedingRing : ItemEffect, IPassiveItem 
 {
     private readonly float bleedingChance = 0.1f;
     private readonly float bleedingDuration = 2.0f;
