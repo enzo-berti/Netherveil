@@ -25,7 +25,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     readonly float BENEDICTION_ATK_STEP = 1f;
     readonly float CORRUPTION_ATK_STEP = 2f;
     readonly float CORRUPTION_HP_STEP = 15f;
-    readonly float CORRUPTION_LIFESTEAL_STEP = 0.05f;
+    readonly float CORRUPTION_LIFESTEAL_STEP = 0.1f;
     readonly float CORRUPTION_HP_DECREASE_PERCENTAGE = 0.01f;
 
     readonly float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
@@ -279,9 +279,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ManageDrawbacks(int lastStep)
     {
-        AudioManager.Instance.PlaySound(AudioManager.Instance.LostLevelSFX,transform.position);
+        bool playedSound = false;   
         for (int i = Mathf.Abs(lastStep); i > 0; i--)
         {
+            if(!playedSound)
+            {
+                AudioManager.Instance.PlaySound(AudioManager.Instance.LostLevelSFX, transform.position);
+                playedSound = true;
+            }
+
             if (lastStep < 0) // benediction drawbacks
             {
                 if (i == Mathf.Abs(BENEDICTION_MAX))
