@@ -296,7 +296,7 @@ public class PlayerController : MonoBehaviour
                     }
                     if(!corruptionNerfApplied)
                     {
-                        hero.CorruptionNerf(col.gameObject.GetComponent<IDamageable>(), hero);
+                        hero.CorruptionNerf(/*col.gameObject.GetComponent<IDamageable>(), hero*/);
                         corruptionNerfApplied = true;
                     }
 

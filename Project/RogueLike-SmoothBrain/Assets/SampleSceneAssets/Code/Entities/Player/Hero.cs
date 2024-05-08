@@ -27,6 +27,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     readonly float CORRUPTION_HP_STEP = 15f;
     readonly float CORRUPTION_LIFESTEAL_STEP = 0.15f;
     readonly float CORRUPTION_HP_DECREASE_PERCENTAGE = 0.005f;
+    float timerCorruptionHPDecrease = 0f;
 
     readonly float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
 
@@ -129,6 +130,18 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
        //Inventory.RemoveAllItems(Vector3.zero);
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        timerCorruptionHPDecrease += Time.deltaTime;
+        if(timerCorruptionHPDecrease > 1)
+        {
+            CorruptionNerf();
+            timerCorruptionHPDecrease = 0;
+        }
+    }
+
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
     {
         if (IsInvincibleCount > 0)
@@ -229,16 +242,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    public void CorruptionNerf(IDamageable damageable, IAttacker attacker)
+    public void CorruptionNerf()
     {
-        if(Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE && !(damageable as Mobs).IsSpawning)
+        if (Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE /*&& !(damageable as Mobs).IsSpawning*/)
         {
             int value = (int)(stats.GetMaxValue(Stat.HP) * CORRUPTION_HP_DECREASE_PERCENTAGE);
             stats.DecreaseValue(Stat.HP, value);
-            AudioManager.Instance.PlaySound(playerController.HitSFX);
+            //AudioManager.Instance.PlaySound(playerController.HitSFX);
             FloatingTextGenerator.CreateEffectDamageText(value, transform.position, Color.red);
             playerController.HitVFX.Play();
-            PostProcessingEffectManager.current.Play(Effect.Hit, false);
+            //PostProcessingEffectManager.current.Play(Effect.Hit, false);
         }
     }
 
