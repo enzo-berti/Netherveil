@@ -1,5 +1,5 @@
 
-public class BloodFlask : ItemEffect , IPassiveItem 
+public class BloodCrown : ItemEffect , IPassiveItem 
 { 
     public void OnRetrieved() 
     {
