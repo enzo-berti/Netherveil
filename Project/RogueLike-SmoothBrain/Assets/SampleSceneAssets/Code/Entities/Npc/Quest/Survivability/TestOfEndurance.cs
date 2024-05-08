@@ -51,7 +51,7 @@ public class TestOfEndurance : Quest
         QuestUpdated();
     }
 
-    protected override bool IsQuestFinished()
+    public override bool IsQuestFinished()
     {
         return currentSurvivedRoom >= NB_ROOM_SURVIVING;
     }

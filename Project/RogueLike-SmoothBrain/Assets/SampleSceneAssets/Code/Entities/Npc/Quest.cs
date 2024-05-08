@@ -35,7 +35,7 @@ public abstract class Quest
     public QuestTalker.TalkerType TalkerType { get => talkerType; }
     public QuestDifficulty Difficulty { get => difficulty; }
 
-    protected abstract bool IsQuestFinished();
+    public abstract bool IsQuestFinished();
     protected abstract void ResetQuestValues();
 
     public virtual void AcceptQuest()
@@ -128,7 +128,7 @@ public abstract class Quest
         CurrentQuestTimer = timeToFinishQuest;
         while (CurrentQuestTimer > 0)
         {
-            if (player == null)
+            if (player == null || IsQuestFinished())
             {
                 timeManagerRoutine = null;
                 yield break;

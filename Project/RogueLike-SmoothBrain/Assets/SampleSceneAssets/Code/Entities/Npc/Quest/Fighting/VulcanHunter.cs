@@ -31,7 +31,7 @@ public class VulcanHunter : Quest
         Utilities.Hero.OnKill += UpdateCount;
     }
 
-    protected override bool IsQuestFinished()
+    public override bool IsQuestFinished()
     {
         return currentNumber >= MAX_NUMBER;
     }

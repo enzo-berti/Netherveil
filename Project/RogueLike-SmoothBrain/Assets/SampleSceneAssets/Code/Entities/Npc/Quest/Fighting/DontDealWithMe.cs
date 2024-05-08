@@ -32,7 +32,7 @@ public class DontDealWithMe : Quest
         Utilities.Hero.OnChargedAttack += UpdateCount;
     }
 
-    protected override bool IsQuestFinished()
+    public override bool IsQuestFinished()
     {
         return currentNumber >= MAX_NUMBER;
     }

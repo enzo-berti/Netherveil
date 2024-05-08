@@ -31,7 +31,7 @@ public class TakeYourDistance : Quest
         Utilities.Hero.OnSpearAttack += UpdateCount;
     }
 
-    protected override bool IsQuestFinished()
+    public override bool IsQuestFinished()
     {
         return currentNumber >= MAX_NUMBER;
     }

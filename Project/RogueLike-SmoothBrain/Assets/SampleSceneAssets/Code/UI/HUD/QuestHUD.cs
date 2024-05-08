@@ -122,7 +122,7 @@ public class QuestHUD : MonoBehaviour
 
     private string GetTimeString()
     {
-        if(!player.CurrentQuest.Datas.LimitedTime)
+        if(!player.CurrentQuest.Datas.LimitedTime || player.CurrentQuest.IsQuestFinished())
             return string.Empty;
 
         if(player.CurrentQuest.CurrentQuestTimer < 60)

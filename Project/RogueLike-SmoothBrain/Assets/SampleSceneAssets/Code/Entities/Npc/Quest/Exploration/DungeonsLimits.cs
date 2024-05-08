@@ -31,7 +31,7 @@ public class DungeonsLimits : Quest
         UpdateCount();
     }
 
-    protected override bool IsQuestFinished()
+    public override bool IsQuestFinished()
     {
         return currentNumber >= COMPLETION_POURCENTAGE;
     }

@@ -15,7 +15,7 @@ public class LostRelics : Quest
         MapUtilities.onEnter += UpdateCount;
     }
 
-    protected override bool IsQuestFinished()
+    public override bool IsQuestFinished()
     {
         return currentNumber >= MAX_NUMBER;
     }
