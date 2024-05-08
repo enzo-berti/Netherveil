@@ -4,10 +4,11 @@ public class ShockwaveBracelet : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 20f;
     public readonly float cooldownDisplay;
-    readonly int AOE_DAMAGES = 15;
+    readonly int AOE_DAMAGES;
 
     public ShockwaveBracelet()
     {
+        AOE_DAMAGES = (int)(Utilities.Hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 3);
         cooldownDisplay = Cooldown;
     }
     public void Activate()
