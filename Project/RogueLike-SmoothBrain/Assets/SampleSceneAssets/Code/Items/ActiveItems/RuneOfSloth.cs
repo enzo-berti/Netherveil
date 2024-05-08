@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class RuneOfSloth : ItemEffect, IActiveItem
 {
-    public float Cooldown { get; set; } = 25f;
-    private readonly float duration = 7;
+    public float Cooldown { get; set; } = 30f;
+    private readonly float duration = 3f;
     public void Activate()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.RuneOfSlothSFX,Utilities.Player.transform.position);
