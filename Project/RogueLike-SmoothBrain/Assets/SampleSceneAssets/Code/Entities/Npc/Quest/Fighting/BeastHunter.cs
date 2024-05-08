@@ -43,6 +43,7 @@ public class BeastHunter : Quest
             currentNumber++;
             progressText = $"NB GLORBS KILLED : {currentNumber}/{MAX_NUMBER}";
         }
+        QuestUpdated();
     }
 
     protected override void ResetQuestValues()
