@@ -11,6 +11,10 @@ public class DragonScale : ItemEffect , IPassiveItem
         hero.Stats.IncreaseCoeffValue(Stat.ATK, coefValue);
         hero.Stats.IncreaseMaxValue(Stat.HP, hpValue);
         hero.Stats.IncreaseValue(Stat.HP, hpValue);
+        if (hero.Stats.GetValue(Stat.HP) <= 0)
+        {
+            hero.Stats.SetValue(Stat.HP, 1);
+        }
     } 
  
     public void OnRemove() 

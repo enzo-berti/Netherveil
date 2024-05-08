@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class SilverAmethystRing : ItemEffect, IPassiveItem
 {
-    private int maxLifeStat = 10;
-    private int speed = 1;
+    private readonly int maxLifeStat = 25;
+    private readonly int speed = 1;
 
     public void OnRemove()
     {

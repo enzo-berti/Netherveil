@@ -6,7 +6,7 @@ public class VampireTooth : ItemEffect, IPassiveItem
     public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
-        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat/100f);
+        player.Stats.IncreaseValue(Stat.LIFE_STEAL, lifeStealStat);
     }
     public void OnRemove()
     {

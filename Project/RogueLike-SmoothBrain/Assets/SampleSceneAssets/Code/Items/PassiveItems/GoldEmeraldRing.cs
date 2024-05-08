@@ -3,7 +3,7 @@ using UnityEngine;
 public class GoldEmeraldRing : ItemEffect, IPassiveItem
 {
     private readonly int attackStat = 2;
-    private readonly int healthIncrease = 10;
+    private readonly int healthIncrease = 25;
     public void OnRemove()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();

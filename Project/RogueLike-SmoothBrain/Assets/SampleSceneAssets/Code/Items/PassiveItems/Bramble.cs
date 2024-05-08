@@ -3,7 +3,7 @@ using UnityEngine;
 [Serializable]
 public class Bramble : ItemEffect, IPassiveItem
 {
-    private int attackStat = 2;
+    private int attackStat = 5;
 
     public void OnRemove()
     {
@@ -15,8 +15,5 @@ public class Bramble : ItemEffect, IPassiveItem
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
         player.Stats.IncreaseValue(Stat.ATK, attackStat, false);
-        // Description = "Amplifies player's attack, infusing their strikes with the thorny power of the wild.\n <color=\"green\">Attack: +" + attackStat.ToString();
     }
-
-   
 }
