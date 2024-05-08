@@ -10,6 +10,7 @@ public class QuestTalker : Npc
     [SerializeField] protected DialogueTree refusesDialogueDT;
     [SerializeField] protected DialogueTree alreadyHaveQuestDT;
     [SerializeField] protected DialogueTree alreadyDoneQuestDT;
+    [SerializeField] protected DialogueTree waitClearTutoDT;
     protected DialogueTreeRunner dialogueTreeRunner;
     protected Hero player;
     static QuestDatabase database;
@@ -65,7 +66,11 @@ public class QuestTalker : Npc
     {
         DialogueTree dialogue = questDT;
 
-        if (PlayerInvestedInOppositeWay())
+        if(!Utilities.PlayerController.ClearedTuto)
+        {
+            dialogue = waitClearTutoDT;
+        }
+        else if (PlayerInvestedInOppositeWay())
         {
             dialogue = refusesDialogueDT;
         }

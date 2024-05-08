@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
 
     public bool DoneQuestQTThiStage { get; set; } = false;
     public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
+    public bool ClearedTuto { get; set; } = false;
 
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;
@@ -136,6 +137,7 @@ public class PlayerController : MonoBehaviour
         //initialize starting rotation
         OverridePlayerRotation(225f, true);
         MapUtilities.onFinishStage += ResetStageDependentValues;
+        MapUtilities.onAllEnemiesDead += UpdateClearTuto;
 
         SpeedHash = Animator.StringToHash("Speed");
         IsDeadHash = Animator.StringToHash("IsDead");
@@ -154,15 +156,10 @@ public class PlayerController : MonoBehaviour
         PouringBloodHash = Animator.StringToHash("PouringBlood");
     }
 
-    private void ResetStageDependentValues()
-    {
-        DoneQuestQTThiStage = false;
-        DoneQuestQTApprenticeThiStage = false;
-    }
-
     private void OnDestroy()
     {
-        MapUtilities.onFinishStage -= ResetStageDependentValues;
+        MapUtilities.onFinishStage -= ResetStageDependentValues; 
+        MapUtilities.onAllEnemiesDead -= UpdateClearTuto;
         Spear.OnPlacedInHand = null;
         Spear.OnPlacedInWorld = null;
         Spear.OnLatePlacedInWorld = null;
@@ -492,6 +489,20 @@ public class PlayerController : MonoBehaviour
         hero.State = (int)Hero.PlayerState.MOTIONLESS;
         animator.ResetTrigger(LaunchBombHash);
         animator.SetTrigger(LaunchBombHash);
+    }
+
+    private void UpdateClearTuto()
+    {
+        if (MapUtilities.currentRoomData.Type == RoomType.Tutorial)
+        {
+            ClearedTuto = true;
+        }
+    }
+
+    private void ResetStageDependentValues()
+    {
+        DoneQuestQTThiStage = false;
+        DoneQuestQTApprenticeThiStage = false;
     }
 
     #endregion
