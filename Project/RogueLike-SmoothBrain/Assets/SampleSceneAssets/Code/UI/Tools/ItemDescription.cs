@@ -14,6 +14,16 @@ public class ItemDescription : MonoBehaviour
     private Item item;
     private float scaleDuration = 0.25f;
 
+    private void Start()
+    {
+        Inventory.OnAddOrRemoveBlood += UpdatePriceText;
+    }
+
+    private void OnDestroy()
+    {
+        Inventory.OnAddOrRemoveBlood -= UpdatePriceText;
+    }
+
     public void SetDescription(string id)
     {
         item = GetComponent<Item>();
@@ -24,6 +34,7 @@ public class ItemDescription : MonoBehaviour
         if (priceText != null)
         {
             priceText.text = "Cost: " + item.Price + " <size=50><sprite name=\"blood\">";
+            UpdatePriceText();
         }
 
         activePassiveText.text = (item.ItemEffect as IPassiveItem) != null ? "<color=grey>Passive</color>" : "<color=grey>Active</color>";
@@ -72,6 +83,21 @@ public class ItemDescription : MonoBehaviour
         }
 
         descriptionText.text = finalDescription;
+    }
+
+    private void UpdatePriceText()
+    {
+        if (priceText == null)
+            return;
+
+        if(Utilities.Hero.Inventory.Blood.Value >= item.Price)
+        {
+            priceText.color = Color.white;
+        }
+        else
+        {
+            priceText.color = Color.red;
+        }
     }
 
     public void TogglePanel(bool toggle)

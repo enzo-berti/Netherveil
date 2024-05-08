@@ -6,6 +6,8 @@ using UnityEngine;
 [Serializable]
 public class Inventory
 {
+    public static event Action OnAddOrRemoveBlood;
+
     public class BloodClass
     {
         private int value = 0;
@@ -15,20 +17,20 @@ public class Inventory
             get { return value; }
         }
 
-        // Override the += operator
-        public static BloodClass operator +(BloodClass obj, int increment)
+        public static BloodClass operator +(BloodClass blood, int increment)
         {
-            obj.value += increment;
+            blood.value += increment;
+            OnAddOrRemoveBlood?.Invoke();
             FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{increment} Blood", Color.red);
-            return obj;
+            return blood;
         }
 
-        // Override the -= operator
-        public static BloodClass operator -(BloodClass obj, int decrement)
+        public static BloodClass operator -(BloodClass blood, int decrement)
         {
-            obj.value -= decrement;
+            blood.value -= decrement;
+            OnAddOrRemoveBlood?.Invoke();
             FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"-{decrement} Blood", Color.red);
-            return obj;
+            return blood;
         }
     }
 
