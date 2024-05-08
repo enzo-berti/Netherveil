@@ -129,8 +129,6 @@ public class TutoText : MonoBehaviour
         var action = actionRef != null ? actionRef.action : null;
         string bindingDisplayString = action.GetBindingDisplayString(bindingIndex, out _, out string controlPath, displayStringOptions);
 
-        Debug.Log(controlPath);
-
         //OEM represents keys specific to specific keyboard layout or even manufacturers so there are too many different things it can be so
         //we just ignore it display a placeholder icon key
         if(controlPath.Contains("OEM"))

@@ -6,7 +6,7 @@ public class DivineShield : ISpecialAbility
     public float Cooldown { get; set; } = 30f;
     public float CurrentEnergy { get; set; } = 0f;
 
-    private readonly float duration = 3f;
+    private readonly float duration = 5f;
     private float currentTime = 0f;
 
     public DivineShield() 
