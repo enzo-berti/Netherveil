@@ -8,18 +8,11 @@ public class Bomb : ItemEffect, IActiveItem
     public static bool bombIsThrow;
     private GameObject bombPf;
     private const float deltaY = 0.5f;
-
-#pragma warning disable CS0414 // Supprimer le warning dans unity
-#pragma warning disable IDE0052 // Supprimer les membres privés non lus
-    //used to display in description, dont delete it
-    readonly float displayValue;
-#pragma warning restore IDE0052
-#pragma warning restore CS0414
+    readonly int damages = 15;
 
     public Bomb()
     {
         bombPf = GameResources.Get<GameObject>("Bomb");
-        displayValue = Utilities.Hero.Stats.GetValue(Stat.ATK);
     }
     public void Activate()
     {
@@ -45,7 +38,7 @@ public class Bomb : ItemEffect, IActiveItem
         explodingBomb.ThrowToPos(Utilities.Hero, player.transform.position + direction * Utilities.Hero.Stats.GetValue(Stat.ATK_RANGE), 0.5f);
         explodingBomb.SetTimeToExplode(0.5f * 1.5f);
 
-        explodingBomb.SetBlastDamages((int)Utilities.Hero.Stats.GetValue(Stat.ATK) * 2);
+        explodingBomb.SetBlastDamages(damages);
         explodingBomb.Activate();
         bombIsThrow = false;
     }
