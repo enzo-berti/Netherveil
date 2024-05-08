@@ -21,10 +21,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static Color benedictionColor = Color.yellow;
     public static Color benedictionColor2 = new Color(0.89f, 0.75f, 0.14f);
 
-    readonly float BENEDICTION_HP_STEP = 15f;
-    readonly float BENEDICTION_ATK_STEP = 1f;
+    readonly float BENEDICTION_HP_STEP = 25f;
+    readonly float BENEDICTION_ATK_COEF_STEP = 0.1f;
     readonly float CORRUPTION_ATK_STEP = 2f;
-    readonly float CORRUPTION_HP_STEP = 15f;
+    readonly float CORRUPTION_HP_STEP = 25f;
     readonly float CORRUPTION_LIFESTEAL_STEP = 0.15f;
     readonly float CORRUPTION_TAKE_DAMAGE_COEF_STEP = 0.25f;
 
@@ -295,12 +295,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 {
                     playerController.SpecialAbility = null;
                     OnBenedictionMaxDrawback?.Invoke();
+                    Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
                 }
                 else
                 {
                     Stats.DecreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
                     Stats.DecreaseValue(Stat.HP, BENEDICTION_HP_STEP);
-                    Stats.IncreaseValue(Stat.ATK, BENEDICTION_ATK_STEP);
+                    Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
                 }
             }
             else if (lastStep > 0) //corruption drawbacks
@@ -406,13 +407,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.SpecialAbility = new DivineShield();
                 OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+                Stats.DecreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
                 StartCoroutine(OpenSpecialAbilityTab());
             }
             else
             {
                 Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
                 Stats.IncreaseValue(Stat.HP, BENEDICTION_HP_STEP);
-                Stats.DecreaseValue(Stat.ATK, BENEDICTION_ATK_STEP);
+                Stats.DecreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
             }
 
             foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[i].data)
