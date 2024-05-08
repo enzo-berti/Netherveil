@@ -47,7 +47,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
             Mobs mob = enemy.GetComponent<Mobs>();
             mob.StatSuckerVFX.GetComponent<VFXStopper>().Duration = 1f;
             mob.StatSuckerVFX.GetComponent<VFXStopper>().PlayVFX();
-            float hpStolen = mob.Stats.GetValue(Stat.HP) * (stealPourcentage);
+            int hpStolen = (int)(mob.Stats.GetMaxValue(Stat.HP) * (stealPourcentage));
             float atkStolen = mob.Stats.GetValue(Stat.ATK) * (stealPourcentage);
             float speedStolen = mob.Stats.GetValue(Stat.SPEED) * (stealPourcentage);
 
@@ -57,14 +57,16 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
             hero.Stats.IncreaseMaxValue(Stat.HP, hpStolen);
             hero.Stats.IncreaseValue(Stat.HP, hpStolen);
+
+            mob.Stats.DecreaseMaxValue(Stat.HP, hpStolen);
             mob.Stats.DecreaseValue(Stat.HP, hpStolen, false);
 
-            hero.Stats.IncreaseMaxValue(Stat.ATK, atkStolen);
             hero.Stats.IncreaseValue(Stat.ATK, atkStolen);
+
             mob.Stats.DecreaseValue(Stat.ATK, atkStolen, false);
 
-            hero.Stats.IncreaseMaxValue(Stat.SPEED, speedStolen);
             hero.Stats.IncreaseValue(Stat.SPEED, speedStolen);
+
             mob.Stats.DecreaseValue(Stat.SPEED, speedStolen, false);
         }
     }
@@ -87,13 +89,11 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
         foreach (float statStolen in statsStolen[(int)StolenStats.ATK])
         {
-            hero.Stats.DecreaseMaxValue(Stat.ATK, statStolen);
             hero.Stats.DecreaseValue(Stat.ATK, statStolen, false);
         }
 
         foreach (float statStolen in statsStolen[(int)StolenStats.SPD])
         {
-            hero.Stats.DecreaseMaxValue(Stat.SPEED, statStolen);
             hero.Stats.DecreaseValue(Stat.SPEED, statStolen, false);
         }
 
