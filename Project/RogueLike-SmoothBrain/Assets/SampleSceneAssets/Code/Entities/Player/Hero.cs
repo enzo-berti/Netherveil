@@ -231,19 +231,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    public void CorruptionNerf()
-    {
-        if (Stats.GetValue(Stat.CORRUPTION) >= STEP_VALUE /*&& !(damageable as Mobs).IsSpawning*/)
-        {
-            int value = (int)(stats.GetMaxValue(Stat.HP) * CORRUPTION_TAKE_DAMAGE_COEF_STEP);
-            stats.DecreaseValue(Stat.HP, value);
-            //AudioManager.Instance.PlaySound(playerController.HitSFX);
-            FloatingTextGenerator.CreateEffectDamageText(value, transform.position, Color.red);
-            playerController.HitVFX.Play();
-            //PostProcessingEffectManager.current.Play(Effect.Hit, false);
-        }
-    }
-
     #region Corruption&BenedictionManagement
 
     private void UpgradePlayerStats(Stat stat)
@@ -266,63 +253,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         if (curStep < 0)
         {
-            BenedictionUpgrade(curStep);
+            ManageBenedictionUpgrade(curStep);
         }
         else if (curStep > 0)
         {
-            CorruptionUpgrade(curStep);
+            ManageCorruptionUpgrade(curStep);
         }
         else
         {
             ReactivateDefaultArmor();
-        }
-    }
-
-    private void ManageDrawbacks(int lastStep)
-    {
-        bool playedSound = false;   
-        for (int i = Mathf.Abs(lastStep); i > 0; i--)
-        {
-            if(!playedSound)
-            {
-                AudioManager.Instance.PlaySound(AudioManager.Instance.LostLevelSFX, transform.position);
-                playedSound = true;
-            }
-
-            if (lastStep < 0) // benediction drawbacks
-            {
-                if (i == Mathf.Abs(BENEDICTION_MAX))
-                {
-                    playerController.SpecialAbility = null;
-                    OnBenedictionMaxDrawback?.Invoke();
-                    Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
-                }
-                else
-                {
-                    Stats.DecreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
-                    Stats.DecreaseValue(Stat.HP, BENEDICTION_HP_STEP);
-                    Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
-                }
-            }
-            else if (lastStep > 0) //corruption drawbacks
-            {
-                if (i == CORRUPTION_MAX)
-                {
-                    //Stats.DecreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
-                    takeDamageCoeff -= CORRUPTION_TAKE_DAMAGE_COEF_STEP;
-                    CanHealFromConsumables = true;
-                    playerController.SpecialAbility = null;
-                    OnCorruptionMaxDrawback?.Invoke();
-                }
-                else
-                {
-                    Stats.DecreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
-                    takeDamageCoeff -= CORRUPTION_TAKE_DAMAGE_COEF_STEP;
-                    Stats.DecreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
-                    Stats.IncreaseMaxValue(Stat.HP, CORRUPTION_HP_STEP);
-                    Stats.IncreaseValue(Stat.HP, CORRUPTION_HP_STEP);
-                }
-            }
         }
     }
 
@@ -345,6 +284,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+
             animator.ResetTrigger(playerController.CorruptionUpgradeHash);
             animator.SetTrigger(playerController.CorruptionUpgradeHash);
             animator.ResetTrigger(playerController.PouringBloodHash);
@@ -353,6 +293,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+
             animator.ResetTrigger(playerController.BenedictionUpgradeHash);
             animator.SetTrigger(playerController.BenedictionUpgradeHash);
             animator.ResetTrigger(playerController.PouringBloodHash);
@@ -367,6 +308,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+
                 animator.ResetTrigger(playerController.BenedictionUpgradeHash);
                 animator.SetTrigger(playerController.BenedictionUpgradeHash);
                 animator.ResetTrigger(playerController.PouringBloodHash);
@@ -386,6 +328,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             {
                 playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.StepUpgradeSFX);
+
                 animator.ResetTrigger(playerController.CorruptionUpgradeHash);
                 animator.SetTrigger(playerController.CorruptionUpgradeHash);
                 animator.ResetTrigger(playerController.PouringBloodHash);
@@ -398,23 +341,54 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    private void BenedictionUpgrade(int curStep)
+    private void ManageDrawbacks(int lastStep)
+    {
+        bool playedSound = false;   
+        for (int i = Mathf.Abs(lastStep); i > 0; i--)
+        {
+            if(!playedSound)
+            {
+                AudioManager.Instance.PlaySound(AudioManager.Instance.LostLevelSFX, transform.position);
+                playedSound = true;
+            }
+
+            if (lastStep < 0) // benediction drawbacks
+            {
+                if (i == Mathf.Abs(BENEDICTION_MAX))
+                {
+                    BenedictionMaxDrawback();
+                }
+                else
+                {
+                    BenedictionDrawback();
+                }
+            }
+            else if (lastStep > 0) //corruption drawbacks
+            {
+                if (i == CORRUPTION_MAX)
+                {
+                    CorruptionMaxDrawback();
+                }
+                else
+                {
+                    CorruptionDrawback();
+                }
+            }
+        }
+    }
+
+    private void ManageBenedictionUpgrade(int curStep)
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelBenedictionSFX, transform.position);
         for (int i = 0; i < Mathf.Abs(curStep); i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
             {
-                playerController.SpecialAbility = new DivineShield();
-                OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-                Stats.DecreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
-                StartCoroutine(OpenSpecialAbilityTab());
+                BenedictionMaxUpgrade();
             }
             else
             {
-                Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
-                Stats.IncreaseValue(Stat.HP, BENEDICTION_HP_STEP);
-                Stats.DecreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
+                BenedictionUpgrade();
             }
 
             foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[i].data)
@@ -428,27 +402,18 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    private void CorruptionUpgrade(int curStep)
+    private void ManageCorruptionUpgrade(int curStep)
     {
-        AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelCorruptionSFX,transform.position);
+        AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelCorruptionSFX, transform.position);
         for (int i = 0; i < curStep; i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
             {
-                //Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
-                takeDamageCoeff += CORRUPTION_TAKE_DAMAGE_COEF_STEP;
-                CanHealFromConsumables = false;
-                playerController.SpecialAbility = new DamnationVeil();
-                OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-                StartCoroutine(OpenSpecialAbilityTab());
+                CorruptionMaxUpgrade();
             }
             else
             {
-                takeDamageCoeff += CORRUPTION_TAKE_DAMAGE_COEF_STEP;
-                Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
-                Stats.IncreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
-                Stats.DecreaseMaxValue(Stat.HP, CORRUPTION_HP_STEP);
-                Stats.DecreaseValue(Stat.HP, CORRUPTION_HP_STEP);
+                CorruptionUpgrade();
             }
 
             foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[i].data)
@@ -460,6 +425,70 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 armorPiece.SetActive(false);
             }
         }
+    }
+
+    private void BenedictionMaxUpgrade()
+    {
+        playerController.SpecialAbility = new DivineShield();
+        BenedictionUpgrade();
+        OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+        StartCoroutine(OpenSpecialAbilityTab());
+    }
+
+    private void BenedictionUpgrade()
+    {
+        Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
+        Stats.IncreaseValue(Stat.HP, BENEDICTION_HP_STEP);
+        //Stats.DecreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
+    }
+
+    private void CorruptionMaxUpgrade()
+    {
+        CorruptionUpgrade();
+        CanHealFromConsumables = false;
+        playerController.SpecialAbility = new DamnationVeil();
+        OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
+        StartCoroutine(OpenSpecialAbilityTab());
+    }
+
+    private void CorruptionUpgrade()
+    {
+        takeDamageCoeff += CORRUPTION_TAKE_DAMAGE_COEF_STEP;
+        Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
+        Stats.IncreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
+        Stats.DecreaseMaxValue(Stat.HP, CORRUPTION_HP_STEP);
+        Stats.DecreaseValue(Stat.HP, CORRUPTION_HP_STEP);
+    }
+
+    private void BenedictionMaxDrawback()
+    {
+        playerController.SpecialAbility = null;
+        BenedictionDrawback();
+        OnBenedictionMaxDrawback?.Invoke();
+    }
+
+    private void BenedictionDrawback()
+    {
+        Stats.DecreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
+        Stats.DecreaseValue(Stat.HP, BENEDICTION_HP_STEP);
+        //Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
+    }
+
+    private void CorruptionMaxDrawback()
+    {
+        CorruptionDrawback();
+        CanHealFromConsumables = true;
+        playerController.SpecialAbility = null;
+        OnCorruptionMaxDrawback?.Invoke();
+    }
+
+    private void CorruptionDrawback()
+    {
+        Stats.DecreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
+        takeDamageCoeff -= CORRUPTION_TAKE_DAMAGE_COEF_STEP;
+        Stats.DecreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
+        Stats.IncreaseMaxValue(Stat.HP, CORRUPTION_HP_STEP);
+        Stats.IncreaseValue(Stat.HP, CORRUPTION_HP_STEP);
     }
 
     private void ReactivateDefaultArmor()
