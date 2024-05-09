@@ -74,11 +74,10 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         }
 
         Context.Projectile.transform.rotation = Quaternion.identity;
-
         Context.Projectile.transform.parent = null;
 
-
-        projectile.ThrowToPos(pointToReach3D, timeToThrow, maxHeight);
+        Vector3 throwPos = Context.transform.position + (pointToReach3D - Context.transform.position).normalized * Mathf.Min((pointToReach3D - Context.transform.position).magnitude, Context.Stats.GetValue(Stat.ATK_RANGE));
+        projectile.ThrowToPos(throwPos, timeToThrow, maxHeight);
 
         yield return new WaitForSeconds(timeToThrow);
 
