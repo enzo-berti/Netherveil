@@ -5,7 +5,6 @@ using UnityEngine.VFX;
 public class RenderVFX : MonoBehaviour
 {
     VisualEffect[] VFXs;
-    [SerializeField] float WaitTime;
     void Start()
     {
         var VFXFounded = FindObjectsOfType<VisualEffect>();
