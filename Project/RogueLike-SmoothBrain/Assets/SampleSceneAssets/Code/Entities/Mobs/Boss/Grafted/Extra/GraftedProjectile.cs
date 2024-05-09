@@ -7,7 +7,7 @@ public class GraftedProjectile : Projectile
     public bool onTarget = false;
     bool ignoreCollisions = false;
     Vector3 direction;
-    Grafted grafted;
+    GraftedStateMachine grafted;
     float tempSpeed = -1;
     float damageCooldown = 0f;
 
@@ -33,7 +33,7 @@ public class GraftedProjectile : Projectile
         go.GetComponent<Collider>().isTrigger = true;
     }
 
-    public void Initialize(Grafted _grafted)
+    public void Initialize(GraftedStateMachine _grafted)
     {
         grafted = _grafted;
     }
@@ -94,19 +94,19 @@ public class GraftedProjectile : Projectile
             //}
             //else
             //{
-                Vector3 knockbackDirection = new Vector3(-direction.z, 0, direction.x);
-                knockbackDirection.y = 0;
-                knockbackDirection.Normalize();
+            Vector3 knockbackDirection = new Vector3(-direction.z, 0, direction.x);
+            knockbackDirection.y = 0;
+            knockbackDirection.Normalize();
 
-                if (Vector3.Cross(transform.forward, other.transform.position - transform.position).y > 0)
-                {
-                    knockbackDirection = -knockbackDirection;
-                }
+            if (Vector3.Cross(transform.forward, other.transform.position - transform.position).y > 0)
+            {
+                knockbackDirection = -knockbackDirection;
+            }
 
-                grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
-                GetComponentInChildren<BoxCollider>().enabled = false;
-                damageCooldown = 0.2f;
-                return;
+            //grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
+            GetComponentInChildren<BoxCollider>().enabled = false;
+            damageCooldown = 0.4f;
+            return;
             //}
         }
     }

@@ -115,8 +115,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3090980824970208318}
   - component: {fileID: 8048143146362212682}
+  - component: {fileID: 3660185868047591078}
   - component: {fileID: 1647762869994520278}
-  - component: {fileID: 7908437519458255297}
   - component: {fileID: 2593171056149161103}
   m_Layer: 3
   m_Name: GraftedCharacter
@@ -173,29 +173,7 @@ CapsuleCollider:
   m_Height: 4.757312
   m_Direction: 1
   m_Center: {x: 0, y: 2.2, z: 0}
---- !u!195 &1647762869994520278
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1438280403736243787}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 1.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 4.75
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &7908437519458255297
+--- !u!114 &3660185868047591078
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -204,7 +182,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1438280403736243787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34b4351dc6293404c82b4ce610c56f3f, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c99616d0f032f49991fab912fa8690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   statusNameToApply: []
@@ -239,17 +217,6 @@ MonoBehaviour:
       hasMinStat: 0
       hasCoeff: 0
       value: 5
-      lastValue: 0
-      coeff: 0
-      maxValue: 0
-      minValue: 0
-      overload: 0
-      underload: 0
-    - stat: 6
-      hasMaxStat: 0
-      hasMinStat: 0
-      hasCoeff: 0
-      value: 0
       lastValue: 0
       coeff: 0
       maxValue: 0
@@ -315,8 +282,8 @@ MonoBehaviour:
   spawningVFX: {fileID: 946794217609910421}
   wanderZone:
     center: {x: 0, y: 0, z: 0}
-    radius: 0
-  bossSounds:
+    radius: 8
+  sounds:
     deathSound:
       reference:
         Guid:
@@ -429,24 +396,45 @@ MonoBehaviour:
           Data3: 1126816175
           Data4: 681456336
         Path: event:/Musics/GraftedMusic
-  thrustCharge: 1.4
-  thrustDuration: 0.1
-  AOEDuration: 0.5
-  dashSpeed: 30
-  dashRange: 7
-  projectilePrefab: {fileID: 7603897466420847472, guid: 7743d6f0624620946ba885b3ad0f8ba4,
-    type: 3}
-  attacks:
+  rotationSpeed: 5
+  attackColliders:
   - data:
     - {fileID: 2217064026567559699}
   - data:
     - {fileID: 7041328143000012702}
   - data:
     - {fileID: 7282033651682388259}
-  visionAngle: 0
-  rotationSpeed: 3
+  thrustCharge: 1.4
+  thrustDuration: 0.1
+  aoeDuration: 0.5
+  dashSpeed: 30
+  dashRange: 7
+  projectilePrefab: {fileID: 7603897466420847472, guid: 7743d6f0624620946ba885b3ad0f8ba4,
+    type: 3}
   dashVFX: {fileID: 2957463444878155984}
   tripleThrustVFX: {fileID: 3982427714799087355}
+--- !u!195 &1647762869994520278
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438280403736243787}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 1.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 4.75
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &2593171056149161103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -855,7 +843,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.91
+      value: 11.396357
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -865,7 +853,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -43.48
+      value: -36.441185
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -1031,22 +1019,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.80398697
+      value: 0.8202091
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.2299379
+      value: 0.2264733
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.52725255
+      value: 0.506377
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.15079263
+      value: -0.13981904
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
@@ -1420,7 +1408,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 702ed034f4819734981edbf3037ab64f,
         type: 3}
       propertyPath: m_Name
-      value: SKE_BOSS
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 702ed034f4819734981edbf3037ab64f,
         type: 3}

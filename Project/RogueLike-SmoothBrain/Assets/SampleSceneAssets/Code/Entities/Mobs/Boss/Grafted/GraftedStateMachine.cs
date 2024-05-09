@@ -1,219 +1,337 @@
-// ---[ STATE MACHINE ] ---
-// "factory" is use to get all state possible
+//--- [STATE MACHINE]-- -
+//"factory" is use to get all state possible
 // "currentState" can be set in the start with : currentState = factory.GetState<YOUR_STATE>();
 
 using StateMachine; // include all script about stateMachine
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.VFX;
+using UnityEditor;
+using Unity.Collections;
 
-public class GraftedStateMachine : Mobs/*, IGrafted*/
+public class GraftedStateMachine : Mobs, IGrafted
 {
+    public enum Attacks
+    {
+        THRUST,
+        DASH,
+        AOE
+    }
+
+    [System.Serializable]
+    public class GraftedSounds
+    {
+        public Sound deathSound;
+        public Sound hitSound;
+        public Sound projectileLaunchedSound;
+        public Sound projectileHitMapSound;
+        public Sound projectileHitPlayerSound;
+        public Sound thrustSound;
+        public Sound introSound;
+        public Sound retrievingProjectileSound;
+        public Sound spinAttackSound;
+        public Sound stretchSound;
+        public Sound weaponOutSound;
+        public Sound weaponInSound;
+        public Sound walkingSound;
+        public Sound music;
+
+        public void StopAllSounds()
+        {
+            deathSound.Stop();
+            deathSound.Stop();
+            hitSound.Stop();
+            projectileLaunchedSound.Stop();
+            projectileHitMapSound.Stop();
+            projectileHitPlayerSound.Stop();
+            thrustSound.Stop();
+            introSound.Stop();
+            retrievingProjectileSound.Stop();
+            spinAttackSound.Stop();
+            stretchSound.Stop();
+            weaponOutSound.Stop();
+            weaponInSound.Stop();
+            walkingSound.Stop();
+            music.Stop();
+        }
+    }
+
     [HideInInspector]
     public BaseState<GraftedStateMachine> currentState;
     private StateFactory<GraftedStateMachine> factory;
 
-    //    private IAttacker.AttackDelegate onAttack;
-    //    private IAttacker.HitDelegate onHit;
-    //    public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
-    //    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
+    private IAttacker.AttackDelegate onAttack;
+    private IAttacker.HitDelegate onHit;
 
-    //    public List<Status> StatusToApply => statusToApply;
+    GameObject gameMusic;
 
-    //    float deathTimer = 0;
+    [Header("Sounds")]
+    [SerializeField] private GraftedSounds sounds;
 
-    //    // anim hash
-    //    int dyingHash;
-    //    int thrustHash;
-    //    int dashHash;
-    //    int throwingHash;
-    //    int retrievingHash;
-    //    int fallHash;
-    //    Coroutine tripleThrustCoroutine = null;
+    Hero player = null;
+    bool playerHit = false;
+    bool hasProjectile = true;
+    float attackCooldown = 0;
+    float height;
 
-    //    enum Attacks
-    //    {
-    //        THRUST,
-    //        DASH,
-    //        AOE,
-    //        RANGE,
-    //        NONE
-    //    }
+    [SerializeField] float rotationSpeed = 5f;
 
-    //    enum AttackState
-    //    {
-    //        CHARGING,
-    //        ATTACKING,
-    //        RECOVERING,
-    //        IDLE
-    //    }
+    [Header("Boss Attack Hitboxes")]
+    [SerializeField] List<NestedList<Collider>> attackColliders;
 
-    //    [System.Serializable]
-    //    private class GraftedSounds
-    //    {
-    //        public Sound deathSound;
-    //        public Sound hitSound;
-    //        public Sound projectileLaunchedSound;
-    //        public Sound projectileHitMapSound;
-    //        public Sound projectileHitPlayerSound;
-    //        public Sound thrustSound;
-    //        public Sound introSound;
-    //        public Sound retrievingProjectileSound;
-    //        public Sound spinAttackSound;
-    //        public Sound stretchSound;
-    //        public Sound weaponOutSound;
-    //        public Sound weaponInSound;
-    //        public Sound walkingSound;
-    //        public Sound music;
+    [Header("Thrust")]
+    [SerializeField] float thrustCharge = 1f;
+    [SerializeField] float thrustDuration = 1f;
 
-    //        public void StopAllSounds()
-    //        {
-    //            deathSound.Stop();
-    //            deathSound.Stop();
-    //            hitSound.Stop();
-    //            projectileLaunchedSound.Stop();
-    //            projectileHitMapSound.Stop();
-    //            projectileHitPlayerSound.Stop();
-    //            thrustSound.Stop();
-    //            introSound.Stop();
-    //            retrievingProjectileSound.Stop();
-    //            spinAttackSound.Stop();
-    //            stretchSound.Stop();
-    //            weaponOutSound.Stop();
-    //            weaponInSound.Stop();
-    //            walkingSound.Stop();
-    //            music.Stop();
-    //        }
-    //    }
+    [Header("Dash")]
+    [SerializeField] float aoeDuration;
+    [SerializeField] float dashSpeed = 5f;
+    [SerializeField] float dashRange;
 
-    //    GameObject gameMusic;
+    [Header("Range")]
+    [SerializeField] GameObject projectilePrefab;
+    GraftedProjectile projectile;
 
-    //    [Header("Sounds")]
-    //    [SerializeField] private GraftedSounds bossSounds;
+    [Header("VFXs")]
+    [SerializeField] VisualEffect dashVFX;
+    [SerializeField] VisualEffect tripleThrustVFX;
 
-    //    Attacks currentAttack = Attacks.NONE;
-    //    Attacks lastAttack = Attacks.NONE;
-    //    AttackState attackState = AttackState.IDLE;
-    //    float attackCooldown = 0;
-    //    bool hasProjectile = true;
-    //    Hero player = null;
-    //    bool playerHit = false;
-    //    float height;
+    CameraUtilities cameraUtilities;
 
-    //    [SerializeField] float thrustCharge = 1f;
-    //    float thrustChargeTimer;
-    //    [Header("Thrust")]
-    //    [SerializeField] float thrustDuration = 1f;
-    //    float thrustDurationTimer;
-    //    int thrustCounter = 0;
+    bool freezeRotation = false;
 
-    //    [SerializeField] float AOEDuration;
-    //    [SerializeField] float dashSpeed = 5f;
-    //    float dashChargeTimer = 0f;
-    //    float travelledDistance = 0f;
-    //    [Header("Dash")]
-    //    [SerializeField] float dashRange;
-    //    float AOETimer = 0f;
-    //    bool triggerAOE = false;
+    #region Getters/Setters
+    public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
+    public List<Status> StatusToApply => statusToApply;
+    public Hero Player { get => player; }
+    public Animator Animator { get => animator; }
+    public List<NestedList<Collider>> AttackColliders { get => attackColliders; }
+    public GraftedProjectile Projectile { get => projectile; set => projectile = value; }
+    public GraftedSounds Sounds { get => sounds; }
+    public GameObject ProjectilePrefab { get => projectilePrefab; }
+    public VisualEffect TripleThrustVFX { get => tripleThrustVFX; }
+    public VisualEffect DashVFX { get => dashVFX; }
+    public CameraUtilities CameraUtilities { get => cameraUtilities; }
+    public bool PlayerHit { get => playerHit; set => playerHit = value; }
+    public bool HasProjectile { get => hasProjectile; set => hasProjectile = value; }
+    public float Cooldown { get => attackCooldown; set => attackCooldown = value; }
+    public float Height { get => height; }
+    public bool FreezeRotation { set => freezeRotation = value; }
 
-    //    [Header("Range")]
-    //    [SerializeField] GameObject projectilePrefab;
-    //    GraftedProjectile projectile;
-    //    float throwingTimer = 0f;
-    //    float rangeSecurity = 0f;
+    public float ThrustCharge { get => thrustCharge; }
+    public float ThrustDuration { get => thrustDuration; }
+    public float AOEDuration { get => aoeDuration; }
+    public float DashSpeed { get => dashSpeed; }
+    public float DashRange { get => dashRange; }
 
-    //    [Header("Boss Attack Hitboxes")]
-    //    [SerializeField] List<NestedList<Collider>> attacks;
+    #endregion
 
-    //    [SerializeField, Range(0f, 360f)] float visionAngle = 360f;
-    //    [SerializeField] float rotationSpeed = 5f;
+    // DEBUG
+    protected override void Awake()
+    {
+        base.Awake();
+        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+    }
 
-    //    [Header("VFXs")]
-    //    [SerializeField] VisualEffect dashVFX;
-    //    [SerializeField] VisualEffect tripleThrustVFX;
-    //    bool dashVFXPlayed = false;
+    protected override void OnEnable()
+    {
+        base.OnEnable();
 
-    //    CameraUtilities cameraUtilities;
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(false);
+        }
 
-    //    // DEBUG
-    //    protected override void Awake()
-    //    {
-    //        base.Awake();
-    //        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
-    //    }
+        sounds.introSound.Play(transform.position);
+        sounds.music.Play();
+    }
 
-    //    protected override void OnEnable()
-    //    {
-    //        base.OnEnable();
-    //        // jouer l'anim de début de combat
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(true);
+        }
+        sounds.introSound.Stop();
+        sounds.music.Stop();
 
-    //        // mettre la cam entre le joueur et le boss
+        sounds.StopAllSounds();
 
-    //        //StartCoroutine(Brain());
-    //        if (gameMusic != null)
-    //        {
-    //            gameMusic.SetActive(false);
-    //        }
-    //        bossSounds.introSound.Play(transform.position);
-    //        bossSounds.music.Play();
-    //    }
+        StopAllCoroutines();
+    }
 
-    //    protected override void OnDisable()
-    //    {
-    //        base.OnDisable();
-    //        if (gameMusic != null)
-    //        {
-    //            gameMusic.SetActive(true);
-    //        }
-    //        bossSounds.introSound.Stop();
-    //        bossSounds.music.Stop();
+    protected override void Start()
+    {
+        base.Start();
 
-    //        bossSounds.StopAllSounds();
+        factory = new StateFactory<GraftedStateMachine>(this);
+        currentState = factory.GetState<GraftedTriggeredState>();
 
-    //        StopAllCoroutines();
-    //    }
+        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
-    //    protected override void Start()
-    //    {
-    //        base.Start();
+        height = GetComponentInChildren<Renderer>().bounds.size.y;
 
-    //        factory = new StateFactory<GraftedStateMachine>(this);
-    //        currentState = factory.GetState<GraftedTriggeredState>();
+        tripleThrustVFX.transform.parent = null;
+        tripleThrustVFX.Play();
+        player = FindObjectOfType<Hero>();
+    }
 
-    //        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
-    //    }
+    protected override void Update()
+    {
+        if (isFreeze || IsSpawning)
+            return;
 
-    //    protected override void Update()
-    //    {
-    //        base.Update();
-    //        currentState.Update();
-    //    }
+        base.Update();
+        currentState.Update();
 
-    //    #region EDITOR
-    //#if UNITY_EDITOR
-    //    private void OnDrawGizmos()
-    //    {
-    //        //if (!Selection.Contains(gameObject))
-    //        //    return;
+        if (!freezeRotation && agent.velocity.sqrMagnitude == 0f)
+        {
+            Vector3 mobToPlayer = player.transform.position - transform.position;
+            mobToPlayer.y = 0f;
 
-    //        DisplayInfos();
-    //    }
+            Quaternion lookRotation = Quaternion.LookRotation(mobToPlayer);
+            lookRotation.x = 0;
+            lookRotation.z = 0;
 
-    //    protected override void DisplayInfos()
-    //    {
-    //        Handles.Label(
-    //        transform.position + transform.up,
-    //        stats.GetEntityName() +
-    //        "\n - Health : " + stats.GetValue(Stat.HP) +
-    //        "\n - Speed : " + stats.GetValue(Stat.SPEED) +
-    //        "\n - State : " + currentState?.ToString(),
-    //        new GUIStyle()
-    //        {
-    //            alignment = TextAnchor.MiddleLeft,
-    //            normal = new GUIStyleState()
-    //            {
-    //                textColor = Color.black
-    //            }
-    //        });
-    //    }
-    //#endif
-    //    #endregion
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    #region Mob methods
+
+
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
+    {
+        int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
+
+        onHit?.Invoke(damageable, this);
+        damageable.ApplyDamage(damages, this);
+        //ApplyKnockback(damageable, this);
+
+        //sounds.hitSound.Play(transform.position);
+    }
+
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
+    {
+        //if ((Vector3.Dot(player.transform.position - transform.position, transform.forward) < 0 && !hasProjectile)
+        //    || currentAttack == Attacks.RANGE)
+        //{
+        //    _value *= 2;
+        //}
+
+        ApplyDamagesMob(_value, sounds.hitSound, Death, notEffectDamage);
+    }
+
+    public void Death()
+    {
+        animator.speed = 1;
+
+        OnDeath?.Invoke(transform.position);
+        Utilities.Hero.OnKill?.Invoke(this);
+
+        animator.SetBool("Death", true);
+
+        sounds.StopAllSounds();
+        sounds.deathSound.Play(transform.position);
+
+        if (projectile.gameObject != null)
+        {
+            Destroy(projectile.gameObject);
+        }
+    }
+
+    public void MoveTo(Vector3 _pos)
+    {
+        agent.SetDestination(_pos);
+    }
+
+    public void AttackCollide(List<Collider> colliders, bool _kb = false, bool debugMode = true)
+    {
+        if (debugMode)
+        {
+            foreach (Collider collider in colliders)
+            {
+                collider.gameObject.SetActive(true);
+            }
+        }
+
+        Vector3 rayOffset = Vector3.up / 2;
+
+        foreach (Collider attackCollider in colliders)
+        {
+            Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(attackCollider, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
+            if (tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<Hero>() != null)
+                    {
+                        IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
+                        Attack(damageable);
+
+                        if (_kb)
+                        {
+                            Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
+
+                            if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
+                            {
+                                knockbackDirection = -knockbackDirection;
+                            }
+
+                            ApplyKnockback(damageable, this, knockbackDirection);
+                        }
+
+                        playerHit = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void DisableHitboxes()
+    {
+        foreach (NestedList<Collider> attack in attackColliders)
+        {
+            foreach (Collider attackCollider in attack.data)
+            {
+                attackCollider.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    #endregion
+
+    #region EDITOR
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //if (!Selection.Contains(gameObject))
+        //    return;
+
+        DisplayInfos();
+    }
+
+    protected override void DisplayInfos()
+    {
+        Handles.Label(
+        transform.position + transform.up,
+        stats.GetEntityName() +
+        "\n - Health : " + stats.GetValue(Stat.HP) +
+        "\n - Speed : " + stats.GetValue(Stat.SPEED) +
+        "\n - State : " + currentState?.ToString(),
+        new GUIStyle()
+        {
+            alignment = TextAnchor.MiddleLeft,
+            normal = new GUIStyleState()
+            {
+                textColor = Color.black
+            }
+        });
+    }
+#endif
+    #endregion
 }
