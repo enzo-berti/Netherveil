@@ -2,7 +2,7 @@ using UnityEngine;
  
 public class UrnOfAvarice : ItemEffect , IPassiveItem 
 {
-    readonly float bloodDamagesCoef = 0.01f;
+    readonly float bloodDamagesCoef = 0.005f;
     readonly float bloodDamagesMaxCoef = 0.5f;
     float previousBloodCoef = 0f;
 
