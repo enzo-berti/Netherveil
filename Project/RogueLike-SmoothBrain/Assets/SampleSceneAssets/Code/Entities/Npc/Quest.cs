@@ -92,6 +92,7 @@ public abstract class Quest
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         MapUtilities.onEnter -= CheckQuestFinished;
         Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
+        ResetQuestValues();
 
         if (timeManagerRoutine != null)
             CoroutineManager.Instance.StopCoroutine(timeManagerRoutine);
@@ -110,6 +111,7 @@ public abstract class Quest
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
         MapUtilities.onEnter -= CheckQuestFinished;
         Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
+        ResetQuestValues();
 
         if (timeManagerRoutine != null)
             CoroutineManager.Instance.StopCoroutine(timeManagerRoutine);
