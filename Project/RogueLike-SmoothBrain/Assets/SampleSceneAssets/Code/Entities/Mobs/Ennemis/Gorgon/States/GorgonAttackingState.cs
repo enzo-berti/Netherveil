@@ -74,7 +74,7 @@ public class GorgonAttackingState : BaseState<GorgonStateMachine>
             yield break;
 
         Context.Animator.SetTrigger("Attack");
-        float timeToThrow = 0.8f;
+        float timeToThrow = 0.7f;
         yield return new WaitWhile(() => Context.HasRemovedHead == false);
         Context.HasRemovedHead = false;
         Vector2 pointToReach2D = MathsExtension.GetRandomPointOnCircle(new Vector2(Context.Player.transform.position.x, Context.Player.transform.position.z), 1f);
@@ -95,7 +95,7 @@ public class GorgonAttackingState : BaseState<GorgonStateMachine>
             ExplodingBomb exploBomb = bomb.GetComponent<ExplodingBomb>();
 
             exploBomb.ThrowToPos(Context, pointToReach3D, timeToThrow);
-            exploBomb.SetTimeToExplode(timeToThrow * 1.5f);
+            exploBomb.SetTimeToExplode(timeToThrow * 1.25f);
             exploBomb.SetBlastDamages((int)Context.Stats.GetValue(Stat.ATK));
             exploBomb.Activate();
 
