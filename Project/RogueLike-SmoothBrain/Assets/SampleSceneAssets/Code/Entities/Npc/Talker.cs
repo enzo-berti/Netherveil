@@ -30,11 +30,7 @@ public class Talker : Npc
 
     private void TriggerDialogue()
     {
-        if (dialogueTreeRunner.IsStarted)
-        {
-            dialogueTreeRunner.UpdateDialogue();
-        }
-        else
+        if (!dialogueTreeRunner.IsStarted)
         {
             StartDialogue();
         }
