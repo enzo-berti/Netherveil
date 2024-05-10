@@ -131,19 +131,19 @@ namespace Map.Generation
 
         private void Awake()
         {
-            if (SaveManager.Instance.HasData)
-            {
-                LoadSave();
-            }
-            else
-            {
+            //if (SaveManager.Instance.HasData)
+            //{
+            //    LoadSave();
+            //}
+            //else
+            //{
                 Seed.RandomizeSeed();
 
                 if (!isRandom)
                 {
                     Seed.Set(seed);
                 }
-            }
+            //}
 
             seed = Seed.seed;
             Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
@@ -465,6 +465,7 @@ namespace Map.Generation
             go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
             go.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
 
+            GenerateGates(roomGO, entranceStairs);
             doorsGenerator.RemoveDoor(entranceStairs);
         }
 
