@@ -26,6 +26,7 @@ public abstract class Quest
     protected QuestTalker.TalkerGrade talkerGrade;
     protected QuestDifficulty difficulty;
     protected bool questLost = false;
+    private int startFloor;
 
     private Coroutine timeManagerRoutine = null;
     protected float timeToFinishQuest;
@@ -45,6 +46,8 @@ public abstract class Quest
         MapUtilities.onEarlyAllChestOpen += CheckQuestFinished;
         MapUtilities.onEnter += CheckQuestFinished;
         Utilities.Hero.OnQuestObtained += CheckQuestFinished;
+
+        startFloor = GameObject.FindAnyObjectByType<MapGenerator>().stage;
     }
 
     public void LateAcceptQuest()
@@ -59,13 +62,17 @@ public abstract class Quest
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestFinishedSFX);
         player.CurrentQuest = null;
-        if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
+
+        if(startFloor == GameObject.FindAnyObjectByType<MapGenerator>().stage)
         {
-            player.GetComponent<PlayerController>().DoneQuestQTThiStage = true;
-        }
-        else
-        {
-            player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
+            if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
+            {
+                player.GetComponent<PlayerController>().DoneQuestQTThiStage = true;
+            }
+            else
+            {
+                player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
+            }
         }
 
         player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -CorruptionModifierValue :CorruptionModifierValue);
