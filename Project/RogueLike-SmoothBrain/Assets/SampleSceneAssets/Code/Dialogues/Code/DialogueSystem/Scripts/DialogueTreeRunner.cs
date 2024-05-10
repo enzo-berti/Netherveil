@@ -19,6 +19,7 @@ public class DialogueTreeRunner : MonoBehaviour
     private DialogueTree tree;
     [SerializeField, Range(0f, 1f)] private float letterDelay = 0.1f;
     [SerializeField] private Button choiceButtonPrefab;
+    [SerializeField] private GameObject hud;
     public bool IsStarted => dialogueCanvas.gameObject.activeSelf;
     private string lastDialogue;
     DialogueTreeEventManager eventManager;
@@ -39,6 +40,7 @@ public class DialogueTreeRunner : MonoBehaviour
         if (IsStarted)
             return;
 
+        hud.SetActive(false);
         this.tree = tree;
         this.tree.ResetTree();
 
@@ -53,6 +55,7 @@ public class DialogueTreeRunner : MonoBehaviour
     public void EndDialogue()
     {
         dialogueCanvas.gameObject.SetActive(false);
+        hud.SetActive(true);
         TalkerNPC = null;
         isLaunched = false;
         isRunning = false;
