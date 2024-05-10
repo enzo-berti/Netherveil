@@ -1,4 +1,4 @@
-public interface IGrafted : IAttacker, IDamageable, IMovable, IBlastable
+public interface IGrafted : IAttacker, IDamageable, IMovable, IBlastable, IBoss
 {
 
 }
