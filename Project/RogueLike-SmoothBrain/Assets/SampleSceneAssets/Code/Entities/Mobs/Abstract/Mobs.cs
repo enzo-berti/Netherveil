@@ -49,13 +49,13 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        MapUtilities.onEarlyEnter += OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter += DuplicateMyself;
         MapUtilities.onFinishStage += IncreaseMobStats;
     }
 
     protected virtual void OnDisable()
     {
-        MapUtilities.onEarlyEnter -= OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter -= DuplicateMyself;
         MapUtilities.onFinishStage -= IncreaseMobStats;
     }
 
@@ -153,8 +153,11 @@ public abstract class Mobs : Entity
         }
     }
 
-    private void OnEarlyEnterRoom()
+    private void DuplicateMyself()
     {
+        if (this is IBoss)
+            return;
+
         if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -Utilities.Hero.STEP_VALUE && UnityEngine.Random.Range(0, 100) <= 4 * Mathf.Abs(Utilities.Hero.CurrentAlignmentStep))
         {
             GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
