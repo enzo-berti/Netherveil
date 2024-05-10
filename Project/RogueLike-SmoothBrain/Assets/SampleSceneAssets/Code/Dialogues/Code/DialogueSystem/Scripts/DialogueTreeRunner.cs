@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DialogueTreeRunner : MonoBehaviour
@@ -59,6 +60,11 @@ public class DialogueTreeRunner : MonoBehaviour
         TalkerNPC = null;
         isLaunched = false;
         isRunning = false;
+    }
+
+    public bool IsCurrentDialogueChoiceDialogue()
+    {
+        return tree.currentNode as ChoiceDialogueNode;
     }
 
     public void UpdateDialogue()
@@ -164,6 +170,7 @@ public class DialogueTreeRunner : MonoBehaviour
             }
             else if (isLaunched && !isRunning)
             {
+                hud.SetActive(true);
                 if (TalkerNPC != null)
                 {
                     if (string.IsNullOrEmpty(quest.questTag))

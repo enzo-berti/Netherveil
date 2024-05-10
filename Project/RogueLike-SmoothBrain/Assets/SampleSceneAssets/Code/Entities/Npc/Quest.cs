@@ -75,7 +75,16 @@ public abstract class Quest
             }
         }
 
-        player.Stats.IncreaseValue(Stat.CORRUPTION, talkerType == QuestTalker.TalkerType.CLERIC ? -CorruptionModifierValue :CorruptionModifierValue);
+        if(talkerType == QuestTalker.TalkerType.CLERIC)
+        {
+            player.Stats.DecreaseValue(Stat.CORRUPTION, CorruptionModifierValue);
+        }
+        else
+        {
+            player.Stats.IncreaseValue(Stat.CORRUPTION, CorruptionModifierValue);
+        }
+        
+
         Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -CorruptionModifierValue : CorruptionModifierValue);
         OnQuestFinished?.Invoke();
 
