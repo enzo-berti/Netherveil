@@ -75,14 +75,63 @@ public class TextEditor : EditorWindow
         // Get uxml field
         var descriptionField = root.Q<TextField>("Description");
         var colorPicker = root.Q<ColorField>("ColorPicker");
+
+
         Color color = colorPicker.value;
         int delta = descriptionField.value.Length;
-        descriptionField.value = descriptionField.value.Insert(firstSelect, "<color=#" + color.ToHexString() + ">");
-        delta = descriptionField.value.Length - delta;
-        descriptionField.value = descriptionField.value.Insert(lastSelect + delta, "</color>");
+        if (firstSelect != lastSelect)
+        {
+            var word = descriptionField.value.Substring(firstSelect, lastSelect - firstSelect);
+            Debug.Log(word);
+            if (!HasColor(out int index) && !word.Contains("<color=#"))
+            {
+                descriptionField.value = descriptionField.value.Insert(firstSelect, "<color=#" + color.ToHexString() + ">");
+                delta = descriptionField.value.Length - delta;
+                descriptionField.value = descriptionField.value.Insert(lastSelect + delta, "</color>");
+            }
+            else
+            {
+                var splitString = descriptionField.value.Split(" ", System.StringSplitOptions.RemoveEmptyEntries);
+                descriptionField.value = string.Empty;
+                for(int i = 0; i < splitString.Length; i++)
+                {
+                    int indexColor = splitString[i].IndexOf('#');
+                    if (indexColor != -1)
+                    {
+                        splitString[i] = splitString[i].Replace(splitString[i].Substring(indexColor + 1, 8), color.ToHexString());
+                    }
+                    descriptionField.value += splitString[i] + " ";
+                }
+            }
+
+        }
+
     }
 
-
+    private bool HasColor(out int colorIndex)
+    {
+        VisualElement root = rootVisualElement;
+        // Get uxml field
+        var descriptionField = root.Q<TextField>("Description");
+        var substring = descriptionField.value.Substring(0, firstSelect);
+        string[] substringSplit = substring.Split(" ", System.StringSplitOptions.RemoveEmptyEntries);
+        for (int i = substringSplit.Length - 1; i >= 0; i--)
+        {
+            
+            if (substringSplit[i].Contains("</color>"))
+            {
+                colorIndex = -1;
+                return false;
+            }
+            if (substringSplit[i].Contains("<color=#"))
+            {
+                colorIndex = i;
+                return true;
+            }
+        }
+        colorIndex = 0;
+        return false;
+    }
     private void SetSelection()
     {
         if (rootVisualElement.Q<TextField>().focusController.focusedElement is not TextField) return;
