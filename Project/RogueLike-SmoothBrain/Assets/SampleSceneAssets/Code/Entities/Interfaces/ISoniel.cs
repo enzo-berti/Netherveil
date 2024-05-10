@@ -1,4 +1,4 @@
-public interface ISoniel : IAttacker, IDamageable, IMovable, IBlastable
+public interface ISoniel : IAttacker, IDamageable, IMovable, IBlastable, IBoss
 {
 
 }

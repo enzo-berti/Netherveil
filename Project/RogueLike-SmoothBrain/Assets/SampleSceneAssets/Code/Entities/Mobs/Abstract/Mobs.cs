@@ -50,11 +50,13 @@ public abstract class Mobs : Entity
     protected virtual void OnEnable()
     {
         MapUtilities.onEarlyEnter += OnEarlyEnterRoom;
+        MapUtilities.onFinishStage += IncreaseMobStats;
     }
 
     protected virtual void OnDisable()
     {
         MapUtilities.onEarlyEnter -= OnEarlyEnterRoom;
+        MapUtilities.onFinishStage -= IncreaseMobStats;
     }
 
     protected override void Start()
@@ -157,6 +159,18 @@ public abstract class Mobs : Entity
         {
             GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
             MapUtilities.currentRoomData.enemies.Add(clone);
+        }
+    }
+
+    private void IncreaseMobStats()
+    {
+        IBoss boss = this as IBoss;
+        if (boss == null)
+        {
+            stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+            stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+            stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+            stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
         }
     }
 
