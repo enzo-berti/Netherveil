@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Fountain
@@ -23,6 +22,9 @@ namespace Fountain
             originalSize = displayTextMesh.fontSize;
             iconSize = originalSize + 10;
             rectTransform.localScale = Vector3.zero;
+
+            Utilities.Hero.OnBenedictionMaxUpgrade += ReloadDisplay;
+            Utilities.Hero.OnCorruptionMaxUpgrade += ReloadDisplay;
         }
 
         public void Display()
@@ -52,7 +54,22 @@ namespace Fountain
                 (fountain.Type == FountainType.Blessing ? $"<size={iconSize}><sprite name=\"benediction\"><size={originalSize}>" :
                 $"<size={iconSize}><sprite name=\"corruption\"><size={originalSize}>");
 
-            displayTextMesh.text = $"Use {blood} to gain {trade}.";
+            if(fountain.GotMaxInAnyAlignment())
+            {
+                displayTextMesh.text = "Max " + 
+                    (fountain.Type == FountainType.Blessing ? 
+                    $"<size={iconSize}><sprite name=\"benediction\"><size={originalSize}>" :
+                    $"<size={iconSize}><sprite name=\"corruption\"><size={originalSize}>") + " Obtained";
+            }
+            else
+            {
+                displayTextMesh.text = $"Use {blood} to gain {trade}.";
+            }
+        }
+
+        private void ReloadDisplay(ISpecialAbility ability)
+        {
+            SetText(fountain);
         }
     }
 }

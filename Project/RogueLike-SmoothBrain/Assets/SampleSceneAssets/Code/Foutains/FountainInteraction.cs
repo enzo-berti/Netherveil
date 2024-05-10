@@ -71,31 +71,25 @@ namespace Fountain
                 int price = fountain.BloodPrice;
                 int trade = fountain.ValueTrade;
 
-                if (price > hero.Inventory.Blood.Value)
+                if (price > hero.Inventory.Blood.Value || fountain.GotMaxInAnyAlignment())
                     return;
-
-                if (fountain.Type == FountainType.Blessing)
-                {
-                    fountain.fountaineSFX.Play(transform.position);
-                }
-                else
-                {
-                    fountain.altarSFX.Play(transform.position);
-                }
 
                 hero.Inventory.Blood -= price;
 
                 if(fountain.Type == FountainType.Blessing)
                 {
                     hero.Stats.DecreaseValue(Stat.CORRUPTION, trade);
+                    fountain.fountaineSFX.Play(transform.position);
                 }
                 else
                 {
                     hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
+                    fountain.altarSFX.Play(transform.position);
                 }
 
                 hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
-                Hero.CallCorruptionBenedictionText(fountain.ValueTrade);
+
+                Hero.CallCorruptionBenedictionText(fountain.Type == FountainType.Blessing ? -fountain.ValueTrade : fountain.ValueTrade);
                 onAddBenedictionCorruption?.Invoke();
             }
         }

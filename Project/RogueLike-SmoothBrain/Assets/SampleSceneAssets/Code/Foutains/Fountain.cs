@@ -21,5 +21,11 @@ namespace Fountain
         public int ValueTrade => valueTrade;
         public int AbsoluteValueTrade => valueTrade;
         public Color Color => type == FountainType.Corruption ? new Color(0.62f, 0.34f, 0.76f, 1.0f) : new Color(0.0f, 0.94f, 1.0f, 1.0f);
+
+        public bool GotMaxInAnyAlignment()
+        {
+            return (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) >= Utilities.Hero.Stats.GetMaxValue(Stat.CORRUPTION) && Type == FountainType.Corruption) ||
+                (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= Utilities.Hero.Stats.GetMinValue(Stat.CORRUPTION) && Type == FountainType.Blessing);
+        }
     }
 }
