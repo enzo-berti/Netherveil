@@ -19,11 +19,11 @@ public class MonsterHunter : Quest
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 15;
                 CorruptionModifierValue += 5;
-                timeToFinishQuest = 300f;
+                timeToFinishQuest = 360f;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 20;
-                timeToFinishQuest = 200f;
+                timeToFinishQuest = 240f;
                 CorruptionModifierValue += 10;
                 break;
         } 

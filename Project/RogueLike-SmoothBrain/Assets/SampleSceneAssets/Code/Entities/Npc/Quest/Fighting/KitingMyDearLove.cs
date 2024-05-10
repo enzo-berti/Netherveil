@@ -19,12 +19,12 @@ public class KitingMyDearLove : Quest
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 8;
-                timeToFinishQuest = 250f;
+                timeToFinishQuest = 320f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 10;
-                timeToFinishQuest = 180f;
+                timeToFinishQuest = 240f;
                 CorruptionModifierValue += 10;
                 break;
         }

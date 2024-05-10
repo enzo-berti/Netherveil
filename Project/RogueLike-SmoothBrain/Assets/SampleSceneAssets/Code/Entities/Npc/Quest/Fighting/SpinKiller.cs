@@ -14,17 +14,17 @@ public class SpinKiller : Quest
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
-                MAX_NUMBER = 2;
-                timeToFinishQuest = 600f;
+                MAX_NUMBER = 5;
+                timeToFinishQuest = 500f;
                 break;
             case QuestDifficulty.MEDIUM:
-                MAX_NUMBER = 4;
-                timeToFinishQuest = 450f;
+                MAX_NUMBER = 8;
+                timeToFinishQuest = 350f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
-                MAX_NUMBER = 6;
-                timeToFinishQuest = 300f;
+                MAX_NUMBER = 12;
+                timeToFinishQuest = 240f;
                 CorruptionModifierValue += 10;
                 break;
         }

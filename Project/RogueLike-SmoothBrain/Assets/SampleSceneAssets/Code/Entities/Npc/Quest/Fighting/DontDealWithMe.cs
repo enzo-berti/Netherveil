@@ -15,16 +15,16 @@ public class DontDealWithMe : Quest
         {
             case QuestDifficulty.EASY:
                 MAX_NUMBER = 10;
-                timeToFinishQuest = 600f;
+                timeToFinishQuest = 360f;
                 break;
             case QuestDifficulty.MEDIUM:
                 MAX_NUMBER = 15;
-                timeToFinishQuest = 450f;
+                timeToFinishQuest = 240f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
                 MAX_NUMBER = 20;
-                timeToFinishQuest = 300f;
+                timeToFinishQuest = 180f;
                 CorruptionModifierValue += 10;
                 break;
         }

@@ -10,19 +10,18 @@ public class VulcanHunter : Quest
     public override void AcceptQuest()
     {
         base.AcceptQuest();
+        MAX_NUMBER = 3;
+
         switch (difficulty)
         {
             case QuestDifficulty.EASY:
                 timeToFinishQuest = 600f;
-                MAX_NUMBER = 2;
                 break;
             case QuestDifficulty.MEDIUM:
-                MAX_NUMBER = 4;
                 timeToFinishQuest = 450f;
                 CorruptionModifierValue += 5;
                 break;
             case QuestDifficulty.HARD:
-                MAX_NUMBER = 6;
                 timeToFinishQuest = 300f;
                 CorruptionModifierValue += 10;
                 break;
