@@ -1,5 +1,6 @@
 using Map;
 using System.Linq;
+using System.Security.Principal;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -83,7 +84,8 @@ public class TextEditor : EditorWindow
         {
             var word = descriptionField.value.Substring(firstSelect, lastSelect - firstSelect);
             Debug.Log(word);
-            if (!HasColor(out int index) && !word.Contains("<color=#"))
+            int index = -1;
+            if (!word.Contains("<color=#") && !HasColor(out index))
             {
                 descriptionField.value = descriptionField.value.Insert(firstSelect, "<color=#" + color.ToHexString() + ">");
                 delta = descriptionField.value.Length - delta;
@@ -93,12 +95,14 @@ public class TextEditor : EditorWindow
             {
                 var splitString = descriptionField.value.Split(" ", System.StringSplitOptions.RemoveEmptyEntries);
                 descriptionField.value = string.Empty;
+                bool hasChanged = false;
                 for(int i = 0; i < splitString.Length; i++)
                 {
                     int indexColor = splitString[i].IndexOf('#');
-                    if (indexColor != -1)
+                    if (!hasChanged && indexColor != -1 && i >= index)
                     {
                         splitString[i] = splitString[i].Replace(splitString[i].Substring(indexColor + 1, 8), color.ToHexString());
+                        hasChanged = true;
                     }
                     descriptionField.value += splitString[i] + " ";
                 }

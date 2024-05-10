@@ -145,6 +145,7 @@ public class Spear : MonoBehaviour
         meshRenderer.enabled = false;
         trail = Instantiate(trailPf, transform.position, Quaternion.identity);
         posToReach = _posToReach;
+        posToReach.y += 0.5f;
         Vector3 playerToPosToReachVec = (posToReach - transform.position);
 
         trail.GetComponent<Rigidbody>().AddForce(playerToPosToReachVec.normalized * SPEAR_SPEED, ForceMode.Force);
