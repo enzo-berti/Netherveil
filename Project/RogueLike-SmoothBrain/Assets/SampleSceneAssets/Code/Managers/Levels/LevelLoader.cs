@@ -25,7 +25,13 @@ public class LevelLoader : MonoBehaviour
         instance = this;
     }
 
-    public void LoadScene(string sceneName, bool transitionActive = false)
+    public void LoadScene(string sceneName)
+    {
+        int sceneIndex = GetIndexSceneByName(sceneName);
+        LoadScene(sceneIndex, false);
+    }
+
+    public void LoadScene(string sceneName, bool transitionActive)
     {
         int sceneIndex = GetIndexSceneByName(sceneName);
         LoadScene(sceneIndex, transitionActive);

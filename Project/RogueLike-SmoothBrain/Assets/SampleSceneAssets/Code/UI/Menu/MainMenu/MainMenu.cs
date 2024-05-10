@@ -8,15 +8,18 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] private MeshButton[] meshButtons;
     [SerializeField] private Selectable selectable;
+
     public void StartGame()
     {
         LevelLoader.current.LoadScene("InGame");
     }
+
     private void Start()
     {
         DeviceManager.OnChangedToGamepad += SetSelect;
         DeviceManager.OnChangedToKB += SetUnselect;
     }
+
     public void Quit()
     {
 #if UNITY_EDITOR
@@ -28,6 +31,7 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
+
     public void SetEnableMainMenu(bool enable)
     {
         SetEnableAllMeshButton(enable);

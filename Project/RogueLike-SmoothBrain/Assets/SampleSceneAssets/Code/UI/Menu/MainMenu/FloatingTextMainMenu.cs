@@ -19,9 +19,9 @@ public class FloatingTextMainMenu : MonoBehaviour
         if (routine != null)
             StopCoroutine(routine);
 
-        if (toggle && m_Text.alpha != 1.0f)
+        if (toggle)
             routine = StartCoroutine(FadeFloatingText(0.0f, 1.0f));
-        else if (m_Text.alpha != 0.0f)
+        else
             routine = StartCoroutine(FadeFloatingText(1.0f, 0.0f));
     }
 
