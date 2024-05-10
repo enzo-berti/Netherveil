@@ -237,7 +237,7 @@ public class GraftedStateMachine : Mobs, IGrafted
         sounds.StopAllSounds();
         sounds.deathSound.Play(transform.position);
 
-        if (projectile.gameObject != null)
+        if (projectile != null && projectile.gameObject != null)
         {
             Destroy(projectile.gameObject);
         }
