@@ -33,7 +33,7 @@ public class ItemDescription : MonoBehaviour
 
         if (priceText != null)
         {
-            priceText.text = "Cost: " + item.Price + " <size=50><sprite name=\"blood\">";
+            priceText.text = "Cost: " + (int)(item.Price * Item.priceCoef) + " <size=50><sprite name=\"blood\">";
             UpdatePriceText();
         }
 

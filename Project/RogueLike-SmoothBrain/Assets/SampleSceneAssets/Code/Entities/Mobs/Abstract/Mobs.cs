@@ -49,12 +49,14 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        MapUtilities.onEarlyEnter += OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter += DuplicateMyself;
+        MapUtilities.onFinishStage += IncreaseMobStats;
     }
 
     protected virtual void OnDisable()
     {
-        MapUtilities.onEarlyEnter -= OnEarlyEnterRoom;
+        MapUtilities.onEarlyEnter -= DuplicateMyself;
+        MapUtilities.onFinishStage -= IncreaseMobStats;
     }
 
     protected override void Start()
@@ -151,12 +153,27 @@ public abstract class Mobs : Entity
         }
     }
 
-    private void OnEarlyEnterRoom()
+    private void DuplicateMyself()
     {
-        if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -100f)
+        if (this is IBoss)
+            return;
+
+        if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -Utilities.Hero.STEP_VALUE && UnityEngine.Random.Range(0, 100) <= 4 * Mathf.Abs(Utilities.Hero.CurrentAlignmentStep))
         {
             GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
             MapUtilities.currentRoomData.enemies.Add(clone);
+        }
+    }
+
+    private void IncreaseMobStats()
+    {
+        IBoss boss = this as IBoss;
+        if (boss == null)
+        {
+            stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+            stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+            stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+            stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
         }
     }
 

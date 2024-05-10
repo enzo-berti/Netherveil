@@ -331,6 +331,15 @@ public class PlayerInput : MonoBehaviour
         closestInteractable?.Interract();
     }
 
+    private void SkipDialogue(InputAction.CallbackContext ctx)
+    {
+        DialogueTreeRunner DTRunner = FindAnyObjectByType<DialogueTreeRunner>();
+        if (!DTRunner.IsStarted || DTRunner.IsCurrentDialogueChoiceDialogue())
+            return;
+
+        DTRunner.UpdateDialogue();
+    }
+
     private void ResetComboWhenMoving(InputAction.CallbackContext ctx)
     {
         if (CanResetCombo())
@@ -565,6 +574,7 @@ public class PlayerInput : MonoBehaviour
             map["ToggleMap"].performed -= ToggleMap;
             map["ToggleQuest"].performed -= ToggleQuest;
             map["Pause"].started -= Pause;
+            map["SkipDialogue"].performed -= SkipDialogue;
         }
         else
         {
@@ -582,6 +592,7 @@ public class PlayerInput : MonoBehaviour
             map["ToggleMap"].performed += ToggleMap;
             map["ToggleQuest"].performed += ToggleQuest;
             map["Pause"].started += Pause;
+            map["SkipDialogue"].performed += SkipDialogue;
         }
     }
 
@@ -602,26 +613,52 @@ public class PlayerInput : MonoBehaviour
 
     public void DisableGameplayInputs()
     {
-        playerInputMap.currentActionMap["Movement"].Disable();
-        playerInputMap.currentActionMap["BasicAttack"].Disable();
-        playerInputMap.currentActionMap["Dash"].Disable();
-        playerInputMap.currentActionMap["Interact"].Disable();
-        playerInputMap.currentActionMap["Spear"].Disable();
-        playerInputMap.currentActionMap["ChargedAttack"].Disable();
-        playerInputMap.currentActionMap["ActiveItem"].Disable();
-        playerInputMap.currentActionMap["SpecialAbility"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Movement"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["BasicAttack"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Interact"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Spear"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ChargedAttack"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ActiveItem"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["SpecialAbility"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleQuest"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleMap"].Disable();
+
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Movement"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["BasicAttack"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Dash"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Interact"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Spear"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ChargedAttack"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ActiveItem"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["SpecialAbility"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleQuest"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleMap"].Disable();
     }
 
     public void EnableGameplayInputs()
     {
-        playerInputMap.currentActionMap["Movement"].Enable();
-        playerInputMap.currentActionMap["BasicAttack"].Enable();
-        playerInputMap.currentActionMap["Dash"].Enable();
-        playerInputMap.currentActionMap["Interact"].Enable();
-        playerInputMap.currentActionMap["Spear"].Enable();
-        playerInputMap.currentActionMap["ChargedAttack"].Enable();
-        playerInputMap.currentActionMap["ActiveItem"].Enable();
-        playerInputMap.currentActionMap["SpecialAbility"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Movement"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["BasicAttack"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Interact"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Spear"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ChargedAttack"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ActiveItem"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["SpecialAbility"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleQuest"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleMap"].Enable();
+
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Movement"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["BasicAttack"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Dash"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Interact"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Spear"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ChargedAttack"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ActiveItem"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["SpecialAbility"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleQuest"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleMap"].Enable();
     }
 
     private void ResetForceReturnToMove()

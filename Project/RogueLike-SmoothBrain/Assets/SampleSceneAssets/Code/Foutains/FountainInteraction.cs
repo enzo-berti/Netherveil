@@ -84,7 +84,16 @@ namespace Fountain
                 }
 
                 hero.Inventory.Blood -= price;
-                hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
+
+                if(fountain.Type == FountainType.Blessing)
+                {
+                    hero.Stats.DecreaseValue(Stat.CORRUPTION, trade);
+                }
+                else
+                {
+                    hero.Stats.IncreaseValue(Stat.CORRUPTION, trade);
+                }
+
                 hero.GetComponent<PlayerController>().PlayBloodPouringAnim();
                 Hero.CallCorruptionBenedictionText(fountain.ValueTrade);
                 onAddBenedictionCorruption?.Invoke();

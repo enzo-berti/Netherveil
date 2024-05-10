@@ -33,6 +33,9 @@ public class QuestHUD : MonoBehaviour
 
     public void Toggle()
     {
+        if (!gameObject.activeInHierarchy)
+            return;
+
         if (!questEnable)
         {
             if (questRoutine != null)

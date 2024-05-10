@@ -18,7 +18,7 @@ namespace Fountain
 
         public FountainType Type => type;
         public int BloodPrice => bloodPrice;
-        public int ValueTrade => type == FountainType.Corruption ? valueTrade : -valueTrade;
+        public int ValueTrade => valueTrade;
         public int AbsoluteValueTrade => valueTrade;
         public Color Color => type == FountainType.Corruption ? new Color(0.62f, 0.34f, 0.76f, 1.0f) : new Color(0.0f, 0.94f, 1.0f, 1.0f);
     }

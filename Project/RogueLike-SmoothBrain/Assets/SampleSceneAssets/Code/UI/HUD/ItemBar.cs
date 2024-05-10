@@ -97,11 +97,11 @@ public class ItemBar : MonoBehaviour
     {
         string keyActive = gamepadActive.action.bindings.First().path.Split("/").Last();
         Sprite activeSprite = DeviceManager.Instance.CurrentDevice is DualShockGamepad ? iconsList.ps4.GetSprite(keyActive) : iconsList.xbox.GetSprite(keyActive);
-        specialItemFrame.SetKey(activeSprite, keyActive.ToUpper());
+        specialItemFrame.SetKey(activeSprite, string.Empty);
 
         string keyAbility = gamepadAbility.action.bindings.First().path.Split("/").Last();
         Sprite abilitySprite = DeviceManager.Instance.CurrentDevice is DualShockGamepad ? iconsList.ps4.GetSprite(keyAbility) : iconsList.xbox.GetSprite(keyAbility);
-        specialAbilityFrame.SetKey(abilitySprite, keyAbility.ToUpper());
+        specialAbilityFrame.SetKey(abilitySprite, string.Empty);
     }
 
     private void OnItemAdd(ItemEffect itemAdd)

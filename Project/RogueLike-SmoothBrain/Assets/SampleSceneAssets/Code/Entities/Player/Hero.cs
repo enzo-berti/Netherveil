@@ -98,6 +98,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
+    public int CurrentAlignmentStep {  
+        get
+        {
+            return (int)(Stats.GetValue(Stat.CORRUPTION) / STEP_VALUE);
+        } 
+    }
+
     [SerializeField] List<NestedList<GameObject>> CorruptionArmorsToActivatePerStep;
     [SerializeField] List<NestedList<GameObject>> BenedictionArmorsToActivatePerStep;
     [SerializeField] List<NestedList<GameObject>> NormalArmorsToActivatePerStep;
