@@ -102,13 +102,16 @@
 		<property name="timelockedOffset">
 			<value>0.17173460977326171</value>
 		</property>
+		<relationship name="fadeOutCurve">
+			<destination>{fabfcb0e-1753-4a2c-a7c3-a8aabf9edeb7}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{b1303114-cf09-4a6a-a76c-4323cb8f68c0}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{4a514d91-81c3-47c6-beda-b29ade45b9b8}">
 		<property name="volume">
-			<value>-1</value>
+			<value>-3</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -132,6 +135,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{a286ab50-f09c-4c77-bc90-24086725392e}" />
 	<object class="MixerBusFader" id="{e21f41e5-ad1d-454c-9702-9035cc9019ea}" />
+	<object class="FadeCurve" id="{fabfcb0e-1753-4a2c-a7c3-a8aabf9edeb7}">
+		<relationship name="startPoint">
+			<destination>{1db6c44c-3a45-4a9e-baf8-da8dadc45208}</destination>
+		</relationship>
+		<relationship name="endPoint">
+			<destination>{89381489-61b2-4984-8124-86ae11f7d93d}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{daca103f-3ef8-4da8-96b7-7fd733a9d15e}">
 		<relationship name="effects">
 			<destination>{d8e93224-0bef-4eec-b783-97cbdec913c4}</destination>
@@ -149,6 +160,25 @@
 		</property>
 		<property name="highCrossover">
 			<value>5400</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{1db6c44c-3a45-4a9e-baf8-da8dadc45208}">
+		<property name="position">
+			<value>0.59999999999999998</value>
+		</property>
+		<property name="value">
+			<value>1</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.390251547</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{89381489-61b2-4984-8124-86ae11f7d93d}">
+		<property name="position">
+			<value>1.7293307231681614</value>
+		</property>
+		<property name="value">
+			<value>0</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{d8e93224-0bef-4eec-b783-97cbdec913c4}" />
