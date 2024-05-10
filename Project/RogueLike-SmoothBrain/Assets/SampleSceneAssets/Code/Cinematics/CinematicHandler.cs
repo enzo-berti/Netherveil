@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 
 [RequireComponent(typeof(PlayableDirector))]
 public class CinematicHandler : MonoBehaviour
 {
+    [SerializeField] private UnityEvent onSkip;
     private PlayableDirector director;
     [SerializeField] private bool skipable = false;
 
@@ -26,5 +28,7 @@ public class CinematicHandler : MonoBehaviour
         director.time = director.playableAsset.duration;
         director.Evaluate();
         director.Stop();
+
+        onSkip?.Invoke();
     }
 }
