@@ -1,4 +1,5 @@
 using Map;
+using Map.Generation;
 using System;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class DungeonsLimits : Quest
 {
     float currentNumber = 0f;
     int COMPLETION_POURCENTAGE = 0;
+
     public override void AcceptQuest()
     {
         base.AcceptQuest();
@@ -26,8 +28,10 @@ public class DungeonsLimits : Quest
         }
 
         currentNumber = (int)((float)MapUtilities.NbEnterRoom / MapUtilities.NbRoom * 100f);
-        progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
+
+        progressText = $"EXPLORE THIS FLOOR : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
         MapUtilities.onEarlyEnter += UpdateCount;
+        MapUtilities.onFinishStage += LoseQuest;
         UpdateCount();
     }
 
@@ -39,6 +43,14 @@ public class DungeonsLimits : Quest
     protected override void ResetQuestValues()
     {
         MapUtilities.onEarlyEnter -= UpdateCount;
+        MapUtilities.onFinishStage -= LoseQuest;
+    }
+
+    private void LoseQuest()
+    {
+        questLost = true;
+        ResetQuestValues();
+        CheckQuestFinished();
     }
 
     private void UpdateCount()
@@ -46,7 +58,7 @@ public class DungeonsLimits : Quest
         if (!IsQuestFinished())
         {
             currentNumber = (int)((float)MapUtilities.NbEnterRoom / MapUtilities.NbRoom * 100f);
-            progressText = $"EXPLORE THE DUNGEON : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
+            progressText = $"EXPLORE THIS FLOOR : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
         }
 
         QuestUpdated();

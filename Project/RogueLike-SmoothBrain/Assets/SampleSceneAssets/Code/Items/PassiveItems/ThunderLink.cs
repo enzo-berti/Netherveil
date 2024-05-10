@@ -13,11 +13,9 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly List<Spear> spears = new();
     Coroutine thunderlinkRoutine = null;
     Coroutine moveRoutine = null;
-    readonly float THUNDERLINK_WAIT_TIME = 1f;
+    readonly float THUNDERLINK_WAIT_TIME = 0.15f;
     readonly float duration = 3f;
     readonly float chance = 0.2f;
-    float timer = 0f;
-    bool fadeLink = false;
     bool allSpearsSet = false;
     public void OnRetrieved()
     {
@@ -61,7 +59,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
         thunderLinkVFXs.Add(vfx);
 
         LineRenderer lineRenderer = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ThunderLinkLine").GetComponent<LineRenderer>());
-        lineRenderer.widthMultiplier = 0f;
+        //lineRenderer.widthMultiplier = 0f;
         thunderLinkLineRenderers.Add(lineRenderer);
 
         spear.SetThunderLinkVFX(vfx, lineRenderer);
@@ -79,49 +77,11 @@ public class ThunderLink : ItemEffect, IPassiveItem
     {
         Hero player = Utilities.Hero;
         yield return new WaitUntil(() => allSpearsSet == true);
-        foreach (Spear spear in spears)
-        {
-            spear.ThunderLinkLineRenderer.widthMultiplier = 1f;
-        }
-        timer = THUNDERLINK_WAIT_TIME;
-        fadeLink = true;
-        ApplyDamages(player);
-        yield return null;
 
         while (true)
         {
-            if (!fadeLink)
-            {
-                timer += Time.deltaTime /2f;
-                foreach (Spear spear in spears)
-                {
-                    spear.ThunderLinkLineRenderer.widthMultiplier = Mathf.Min(EasingFunctions.EaseOutCubic(timer), 1f);
-                }
-
-                if (timer >= THUNDERLINK_WAIT_TIME)
-                {
-                    timer = THUNDERLINK_WAIT_TIME;
-                    fadeLink = true;
-                    ApplyDamages(player);
-                }
-                yield return null;
-            }
-            else
-            {
-                timer -= Time.deltaTime /2f;
-                foreach (Spear spear in spears)
-                {
-                    spear.ThunderLinkLineRenderer.widthMultiplier = Mathf.Max(EasingFunctions.EaseOutCubic(timer), 0f);
-                    if (spear.ThunderLinkLineRenderer.widthMultiplier <= 0.01f)
-                    {
-                        spear.ThunderLinkLineRenderer.widthMultiplier = 0f;
-                        timer = 0f;
-                        fadeLink = false;
-                    }
-                }
-
-                yield return null;
-            }
+            ApplyDamages(player);
+            yield return new WaitForSeconds(THUNDERLINK_WAIT_TIME);
         }
     }
 
@@ -130,8 +90,6 @@ public class ThunderLink : ItemEffect, IPassiveItem
         foreach (Spear spear in spears)
         {
             AudioManager.Instance.PlaySound(AudioManager.Instance.ThunderlinkSFX, spear.transform.position);
-            spear.ThunderLinkLineRenderer.widthMultiplier = 1f;
-            //spear.SpearThrowCollider.gameObject.SetActive(true);
 
             Collider[] colliders = spear.SpearThrowCollider.BoxOverlap();
 
@@ -141,7 +99,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
                 {
                     if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject)
                     {
-                        player.Attack(entity as IDamageable, -Utilities.PlayerController.SPEAR_DAMAGES);
+                        player.Attack(entity as IDamageable, -(int)(player.Stats.GetValueWithoutCoeff(Stat.ATK) * 4/5));
                         entity.AddStatus(new Electricity(duration, chance), player);
                     }
                 }
