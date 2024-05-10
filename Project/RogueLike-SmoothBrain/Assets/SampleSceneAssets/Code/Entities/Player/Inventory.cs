@@ -107,13 +107,14 @@ public class Inventory
                     itemInteraction.enabled = false;
                 }
                 ActiveItemGameObject = GameObject.Instantiate(item.gameObject);
+                ActiveItemGameObject.name = item.idItemName;
                 ActiveItemGameObject.SetActive(false);
             }
             else
             {
                 var go = GameObject.Instantiate(ActiveItemGameObject, item.gameObject.transform.position, Quaternion.identity);
                 go.SetActive(true);
-                go.GetComponent<Item>().idItemName = item.idItemName;
+                go.GetComponent<Item>().idItemName = ActiveItemGameObject.name;
                 go.GetComponentInChildren<ItemDescription>().RemovePriceText();
                 go.GetComponent<Item>().CreateItem();
                 go.GetComponent<Item>().ItemEffect.HasBeenRetreived = true;
@@ -126,6 +127,7 @@ public class Inventory
                     itemInteraction.enabled = false;
                 }
                 ActiveItemGameObject = GameObject.Instantiate(item.gameObject);
+                ActiveItemGameObject.name = item.idItemName;
                 ActiveItemGameObject.SetActive(false);
             }
             AddActiveItem(itemEffect as IActiveItem);

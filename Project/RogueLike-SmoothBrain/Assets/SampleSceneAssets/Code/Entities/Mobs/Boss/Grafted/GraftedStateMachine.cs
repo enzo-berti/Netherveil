@@ -237,10 +237,14 @@ public class GraftedStateMachine : Mobs, IGrafted
         sounds.StopAllSounds();
         sounds.deathSound.Play(transform.position);
 
+        agent.isStopped = true;
+
         if (projectile != null && projectile.gameObject != null)
         {
             Destroy(projectile.gameObject);
         }
+
+        currentState = factory.GetState<GraftedDeathState>();
     }
 
     public void MoveTo(Vector3 _pos)
