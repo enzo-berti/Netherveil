@@ -40,7 +40,7 @@ public class QuestTalker : Npc
         }
 
         //QuestIndex = Seed.Range(0, database.datas.Count);
-        QuestIndex = database.datas.FindIndex(x => x.idName == "DungeonsLimits");
+        QuestIndex = database.datas.FindIndex(x => x.idName == "MonsterHunter");
     }
 
     protected override void Start()

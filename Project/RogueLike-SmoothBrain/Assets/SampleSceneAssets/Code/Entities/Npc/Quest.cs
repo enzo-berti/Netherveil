@@ -123,10 +123,19 @@ public abstract class Quest
     protected void QuestUpdated()
     {
         if (IsQuestFinished())
-            HudHandler.current.QuestHUD.LostOrFinishedText.SetText("Quest Completed! Clear the current room to receive rewards!");
+        {
+            HudHandler.current.QuestHUD.EmptyQuestTexts();
+            HudHandler.current.QuestHUD.LostOrFinishedText.SetText("<color=yellow>Quest Completed!</color>\n Clear the current room to receive rewards!");
+        }
         else if (questLost)
-            HudHandler.current.QuestHUD.LostOrFinishedText.SetText("Quest Lost...");
-        OnQuestUpdated?.Invoke();
+        {
+            HudHandler.current.QuestHUD.EmptyQuestTexts();
+            HudHandler.current.QuestHUD.LostOrFinishedText.SetText("<color=red>Quest Lost...</color>");
+        }
+        else
+        {
+            OnQuestUpdated?.Invoke();
+        }
     }
 
     protected void CheckQuestFinished()

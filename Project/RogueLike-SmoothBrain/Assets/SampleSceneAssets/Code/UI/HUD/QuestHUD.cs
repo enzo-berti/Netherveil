@@ -24,7 +24,13 @@ public class QuestHUD : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
 
-        title.SetText("No Quests...");
+        lostOrFinishedText.SetText("No Quests...");
+        EmptyQuestTexts();
+    }
+
+    public void EmptyQuestTexts()
+    {
+        title.SetText(string.Empty);
         description.SetText(string.Empty);
         rewardText.SetText(string.Empty);
         progressText.SetText(string.Empty);
@@ -74,7 +80,6 @@ public class QuestHUD : MonoBehaviour
         if (hasQuest)
         {
             lostOrFinishedText.SetText(string.Empty);
-            float initialSize = rewardText.fontSize;
 
             string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? 
                 $"<sprite name=\"corruption\">" : 
@@ -90,7 +95,7 @@ public class QuestHUD : MonoBehaviour
                         difficultyText.SetText("<color=green>Easy</color>");
                         break;
                     case Quest.QuestDifficulty.MEDIUM:
-                        difficultyText.SetText("<color=yellow>Medium</color>");
+                        difficultyText.SetText("<color=orange>Medium</color>");
                         break;
                     case Quest.QuestDifficulty.HARD:
                         difficultyText.SetText("<color=red>Hard</color>");
@@ -106,20 +111,20 @@ public class QuestHUD : MonoBehaviour
             }
 
             //
-            title.SetText(player.CurrentQuest.Datas.idName);
+            string titleText = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ?
+                $"<color=purple>{player.CurrentQuest.Datas.idName}</color>" :
+                $"<color=yellow>{player.CurrentQuest.Datas.idName}</color>";
+
+            title.SetText(titleText);
             description.SetText(player.CurrentQuest.Datas.Description);
-            rewardText.SetText($"\nReward: {absValue} {rewardName}");
+            rewardText.SetText($"\n <color=yellow>Reward : </color> {absValue} {rewardName}");
             progressText.SetText(player.CurrentQuest.progressText + "\n" + GetTimeString());
 
             description.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         }
         else
         {
-            title.SetText(string.Empty);
-            description.SetText(string.Empty);
-            rewardText.SetText(string.Empty);
-            progressText.SetText(string.Empty);
-            difficultyText.SetText(string.Empty);
+            EmptyQuestTexts();
         }
     }
 
