@@ -9,6 +9,7 @@ public class ItemBar : MonoBehaviour
 {
     private Hero hero;
     private int maxItemDisplay = 5;
+    private Coroutine cooldownRoutine;
 
     [Header("General")]
     [SerializeField] private KeybindingsIcons iconsList;
@@ -146,14 +147,20 @@ public class ItemBar : MonoBehaviour
 
         float cooldown = (itemEffect as IActiveItem).Cooldown;
 
-        StartCoroutine(CooldownRoutine(cooldown, specialItemFrame));
+        if (cooldownRoutine != null)
+            StopCoroutine(cooldownRoutine);
+
+        cooldownRoutine = StartCoroutine(CooldownRoutine(cooldown, specialItemFrame));
     }
 
     private void SpecialAbilityCooldown()
     {
         float cooldown = Utilities.Player.GetComponent<PlayerController>().SpecialAbility.Cooldown;
 
-        StartCoroutine(CooldownRoutine(cooldown, specialAbilityFrame));
+        if (cooldownRoutine != null)
+            StopCoroutine(cooldownRoutine);
+
+        cooldownRoutine = StartCoroutine(CooldownRoutine(cooldown, specialAbilityFrame));
     }
 
     private IEnumerator CooldownRoutine(float duration, SpecialItemFrame frame)
