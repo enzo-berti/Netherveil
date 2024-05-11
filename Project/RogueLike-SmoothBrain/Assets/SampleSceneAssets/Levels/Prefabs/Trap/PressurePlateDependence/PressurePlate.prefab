@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 582325485412130391}
   - component: {fileID: 3312739499457474567}
   - component: {fileID: 6919093889906667032}
+  - component: {fileID: 6651730161886677634}
   - component: {fileID: 4101852879076790964}
-  - component: {fileID: 4209511730811999818}
-  - component: {fileID: 4756184257890842822}
   - component: {fileID: 4563189681202227861}
+  - component: {fileID: 4209511730811999818}
   m_Layer: 0
   m_Name: PressurePlate
   m_TagString: Untagged
@@ -87,6 +87,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6651730161886677634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902242411274215229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 1.5, y: 10, z: 1.5}
+  m_Center: {x: 0, y: 0, z: 0}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!65 &4101852879076790964
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -108,39 +124,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 54.594196, z: 1}
   m_Center: {x: 0, y: 27.797104, z: 0}
---- !u!114 &4209511730811999818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5902242411274215229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cda3026e161175f49840b80d511a1235, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trapToActivate: []
-  cooldownTime: 2
---- !u!114 &4756184257890842822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5902242411274215229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OverrideArea: 1
-  m_Area: 3
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
 --- !u!54 &4563189681202227861
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -168,3 +151,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4209511730811999818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902242411274215229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cda3026e161175f49840b80d511a1235, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trapToActivate: []
+  cooldownTime: 2
