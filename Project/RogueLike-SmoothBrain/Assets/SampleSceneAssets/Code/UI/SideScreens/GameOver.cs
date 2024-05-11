@@ -1,23 +1,33 @@
-using System.Collections;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
 using Map;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
     private Camera deathCam;
+    [SerializeField] GameObject firstSelect;
+    readonly List<Graphic> drawables = new List<Graphic>();
 
-    [SerializeField] private Selectable firstSelect;
-    [SerializeField] private Image panel;
-    [SerializeField] private Image reload;
-    [SerializeField] private TextMeshProUGUI reloadText;
-    [SerializeField] private Image menu;
-    [SerializeField] private TextMeshProUGUI menuText;
-    [SerializeField] private Image quit;
-    [SerializeField] private TextMeshProUGUI quitText;
-    [SerializeField] private TextMeshProUGUI gameOverText;
+    void Awake()
+    {
+        FindDrawablesRecursively(transform);
+    }
+
+    void FindDrawablesRecursively(Transform current)
+    {
+        if (current.TryGetComponent(out Graphic graphic))
+        {
+            drawables.Add(graphic);
+        }
+
+        foreach (Transform child in current)
+        {
+            FindDrawablesRecursively(child);
+        }
+    }
 
     private void OnEnable()
     {
@@ -25,20 +35,15 @@ public class GameOver : MonoBehaviour
 
         deathCam.depth = 1;
         Color clearColor = new Color(1, 1, 1, 0);
-        deathCam.backgroundColor = deathCam.backgroundColor * clearColor;
-        panel.color *= clearColor;
-        reload.color *= clearColor;
-        reloadText.color *= clearColor;
-        menu.color *= clearColor;
-        menuText.color *= clearColor;
-        quit.color *= clearColor;
-        quitText.color *= clearColor;
-        gameOverText.color *= clearColor;
+        deathCam.backgroundColor *= clearColor;
+
+        foreach(Graphic drawable in drawables)
+        {
+            drawable.color *= clearColor;
+        }
 
         DisableAllMob();
         StartCoroutine(IncreaseAlpha());
-
-        EventSystem.current.SetSelectedGameObject(firstSelect.gameObject);
     }
 
     private void DisableAllMob()
@@ -68,14 +73,10 @@ public class GameOver : MonoBehaviour
             yield return null;
         }
 
-        StartCoroutine(IncreaseElementAlpha(panel));
-        StartCoroutine(IncreaseElementAlpha(reload));
-        StartCoroutine(IncreaseElementAlpha(reloadText));
-        StartCoroutine(IncreaseElementAlpha(menu));
-        StartCoroutine(IncreaseElementAlpha(menuText));
-        StartCoroutine(IncreaseElementAlpha(quit));
-        StartCoroutine(IncreaseElementAlpha(quitText));
-        StartCoroutine(IncreaseElementAlpha(gameOverText));
+        foreach (Graphic drawable in drawables)
+        {
+            StartCoroutine(IncreaseElementAlpha(drawable));
+        }
     }
 
     IEnumerator IncreaseElementAlpha(Graphic element)
@@ -93,5 +94,12 @@ public class GameOver : MonoBehaviour
             element.color = Color.Lerp(initialColor, targetColor, t);
             yield return null;
         }
+
+        if(element.gameObject.TryGetComponent(out Button button))
+        {
+            button.interactable = true;
+            EventSystem.current.SetSelectedGameObject(firstSelect);
+        }
+        
     }
 }

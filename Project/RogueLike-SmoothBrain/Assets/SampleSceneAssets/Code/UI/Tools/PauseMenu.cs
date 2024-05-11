@@ -52,6 +52,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ReloadGame()
     {
+        EventSystem.current.gameObject.SetActive(false);
         LevelLoader.current.LoadScene(SceneManager.GetActiveScene().buildIndex, true);
     }
 
@@ -63,6 +64,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Menu()
     {
+        EventSystem.current.gameObject.SetActive(false);
         Time.timeScale = 1f;
         LevelLoader.current.LoadScene("MainMenu", true);
     }
