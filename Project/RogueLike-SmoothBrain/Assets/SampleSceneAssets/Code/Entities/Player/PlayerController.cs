@@ -379,8 +379,8 @@ public class PlayerController : MonoBehaviour
     public void OrientationErrorMargin(float visionConeRange)
     {
         Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, ATTACK_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
-        .Where(x => x.CompareTag("Enemy") && x.GetComponent<Transform>() != null 
-        && x.GetComponent<IReflectable>() == null && x.gameObject.TryGetComponent(out Entity entity) && entity.IsInvincibleCount == 0)
+        .Where(x => x.CompareTag("Enemy") && x.GetComponent<IReflectable>() == null 
+        && x.gameObject.TryGetComponent(out Entity entity) && entity.IsInvincibleCount == 0)
         .Select(x => x.GetComponent<Transform>())
         .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
         .FirstOrDefault();
