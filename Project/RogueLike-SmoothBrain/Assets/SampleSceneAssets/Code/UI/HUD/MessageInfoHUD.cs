@@ -13,6 +13,14 @@ public class MessageInfoHUD : MonoBehaviour
     private float baseDurationWait = 2.0f;
     private Coroutine displayRoutine;
 
+    private void OnDisable()
+    {
+        if (displayRoutine != null)
+            StopCoroutine(displayRoutine);
+
+        textMesh.alpha = 0.0f;
+    }
+
     public void Display(string message)
     {
         Display(message, baseDurationIn, baseDurationOut, baseDurationWait, defaultEasing);
