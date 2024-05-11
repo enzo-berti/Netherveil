@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,6 +13,7 @@ public class DescriptionTabHUD : MonoBehaviour
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private Image background;
     [SerializeField] private Button CloseButton;
+    float duration = 0.1f;
 
     public void SetTab(string title, string description, VideoClip clip, Sprite background)
     {
@@ -23,12 +25,20 @@ public class DescriptionTabHUD : MonoBehaviour
 
     public void OpenTab()
     {
-        StartCoroutine(tabRectTransform.UpScaleCoroutine(0.1f));
+        StartCoroutine(tabRectTransform.UpScaleCoroutine(duration));
+        StartCoroutine(PauseGame());
         EventSystem.current.SetSelectedGameObject(CloseButton.gameObject);
     }
 
     public void CloseTab()
     {
-        StartCoroutine(tabRectTransform.DownScaleCoroutine(0.1f));
+        Time.timeScale = 1;
+        StartCoroutine(tabRectTransform.DownScaleCoroutine(duration));
+    }
+
+    private IEnumerator PauseGame()
+    {
+        yield return new WaitForSeconds(duration);
+        Time.timeScale = 0;
     }
 }
