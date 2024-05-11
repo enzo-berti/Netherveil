@@ -44,6 +44,7 @@ public class DialogueTreeRunner : MonoBehaviour
         hud.SetActive(false);
         this.tree = tree;
         this.tree.ResetTree();
+        Utilities.PlayerInput.DisableGameplayInputs();
 
         dialogueCanvas.gameObject.SetActive(true);
 
@@ -56,6 +57,7 @@ public class DialogueTreeRunner : MonoBehaviour
     public void EndDialogue()
     {
         dialogueCanvas.gameObject.SetActive(false);
+        Utilities.PlayerInput.EnableGameplayInputs();
         hud.SetActive(true);
         TalkerNPC = null;
         isLaunched = false;

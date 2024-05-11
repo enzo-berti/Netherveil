@@ -574,7 +574,7 @@ public class PlayerInput : MonoBehaviour
             map["ToggleMap"].performed -= ToggleMap;
             map["ToggleQuest"].performed -= ToggleQuest;
             map["Pause"].started -= Pause;
-            map["SkipDialogue"].performed -= SkipDialogue;
+            map["SkipDialogue"].started -= SkipDialogue;
         }
         else
         {
@@ -592,7 +592,7 @@ public class PlayerInput : MonoBehaviour
             map["ToggleMap"].performed += ToggleMap;
             map["ToggleQuest"].performed += ToggleQuest;
             map["Pause"].started += Pause;
-            map["SkipDialogue"].performed += SkipDialogue;
+            map["SkipDialogue"].started += SkipDialogue;
         }
     }
 
