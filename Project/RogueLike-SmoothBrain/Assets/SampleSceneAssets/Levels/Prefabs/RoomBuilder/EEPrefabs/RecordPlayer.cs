@@ -1,7 +1,9 @@
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
-public class RecordPlayer : MonoBehaviour
+
+
+public class RecordPlayer : MonoBehaviour, IInterractable
 {
 
     public EventReference AllMyTearsMusic;
@@ -9,10 +11,15 @@ public class RecordPlayer : MonoBehaviour
     bool IsCollide;
     bool IsMusicPlaying = false;
     EventInstance eventMusic;
+    Hero hero;
+    PlayerInteractions interactions;
+    bool isSelect = false;
 
     void Start()
     {
         MusicNote.Pause();
+        hero = FindObjectOfType<Hero>();
+        interactions = hero.GetComponent<PlayerInteractions>();
     }
 
     private void OnTriggerEnter(Collider collide)
@@ -26,12 +33,7 @@ public class RecordPlayer : MonoBehaviour
 
     void Update()
     {
-       
-        if (Input.GetKeyUp(KeyCode.E) && IsCollide == true && !IsMusicPlaying) 
-        {
-            playMusic();
-        }
-        
+        Interraction();
         eventMusic.getPlaybackState(out PLAYBACK_STATE playbackState);
         IsMusicPlaying = playbackState == PLAYBACK_STATE.PLAYING;
         if (playbackState == PLAYBACK_STATE.STOPPING)
@@ -47,5 +49,45 @@ public class RecordPlayer : MonoBehaviour
         eventMusic.getPlaybackState(out PLAYBACK_STATE playbackState);
         eventMusic.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject.transform));
         IsMusicPlaying = playbackState == PLAYBACK_STATE.PLAYING;
+    }
+
+    private void Interraction()
+    {
+        bool isInRange = Vector2.Distance(interactions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2())
+            <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
+
+        if (isInRange && !interactions.InteractablesInRange.Contains(this))
+        {
+            interactions.InteractablesInRange.Add(this);
+        }
+        else if (!isInRange && interactions.InteractablesInRange.Contains(this))
+        {
+            interactions.InteractablesInRange.Remove(this);
+            Deselect();
+        }
+    }
+
+    public void Interract()
+    {
+        if (IsCollide == true && !IsMusicPlaying)
+        {
+            playMusic();
+        }
+    }
+
+    public void Select()
+    {
+        if (isSelect)
+            return;
+
+        isSelect = true;
+    }
+
+    public void Deselect()
+    {
+        if (!isSelect)
+            return;
+
+        isSelect = false;
     }
 }
