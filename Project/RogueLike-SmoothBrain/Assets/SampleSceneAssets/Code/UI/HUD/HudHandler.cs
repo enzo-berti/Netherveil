@@ -37,29 +37,26 @@ public class HudHandler : MonoBehaviour
     public BuffHUD BuffHUD => buffHUD;
     public ItemBar ItemBar => itemBar;
 
-    private Hero player;
-
     private void Awake()
     {
         instance = this;
-        player = FindObjectOfType<Hero>();
     }
 
     private void Update()
     {
-        BloodTestMesh.text = player.Inventory.Blood.Value.ToString();
-        corruptionSlider.value = player.Stats.GetValue(Stat.CORRUPTION);
-        corruptionText.text = Mathf.Abs(player.Stats.GetValue(Stat.CORRUPTION)).ToString();
+        BloodTestMesh.text = Utilities.Hero.Inventory.Blood.Value.ToString();
+        corruptionSlider.value = Utilities.Hero.Stats.GetValue(Stat.CORRUPTION);
+        corruptionText.text = Mathf.Abs(Utilities.Hero.Stats.GetValue(Stat.CORRUPTION)).ToString();
     }
 
     private void OnEnable()
     {
-        player.OnDeath += ActiveGameOver;
+        Utilities.Hero.OnDeath += ActiveGameOver;
     }
 
     private void OnDisable()
     {
-        player.OnDeath -= ActiveGameOver;
+        Utilities.Hero.OnDeath -= ActiveGameOver;
     }
 
 
