@@ -21,7 +21,7 @@ public class SaveBook : MonoBehaviour
     public void Close()
     {
         if (routine != null)
-            return;
+            StopCoroutine(routine);
 
         routine = StartCoroutine(CloseRoutine());
     }
@@ -29,7 +29,7 @@ public class SaveBook : MonoBehaviour
     public void Open()
     {
         if (routine != null)
-            return;
+            StopCoroutine(routine);
 
         routine = StartCoroutine(OpenRoutine());
     }
