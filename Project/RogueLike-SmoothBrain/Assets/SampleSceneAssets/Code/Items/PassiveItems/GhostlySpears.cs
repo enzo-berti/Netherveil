@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class SpearGhosts : ItemEffect , IPassiveItem 
+public class GhostlySpears : ItemEffect , IPassiveItem 
 {
     readonly List<GameObject> ghostSpears = new();
     readonly List<GameObject> spearThrowWrappers = new();
@@ -23,9 +23,9 @@ public class SpearGhosts : ItemEffect , IPassiveItem
         }
         Spear.NbSpears += 2;
 
-        Utilities.PlayerInput.OnThrowSpear += ThrowSpearGhosts;
-        Utilities.PlayerInput.OnRetrieveSpear += RetrieveSpearGhosts;
-        Spear.OnPlacedInHand += DestroySpearGhosts;
+        Utilities.PlayerInput.OnThrowSpear += ThrowGhostlySpears;
+        Utilities.PlayerInput.OnRetrieveSpear += RetrieveGhostlySpears;
+        Spear.OnPlacedInHand += DestroyGhostlySpears;
     }
 
     public void OnRemove()
@@ -40,12 +40,12 @@ public class SpearGhosts : ItemEffect , IPassiveItem
 
         Spear.NbSpears -= 2;
 
-        Utilities.PlayerInput.OnThrowSpear -= ThrowSpearGhosts;
-        Utilities.PlayerInput.OnRetrieveSpear -= RetrieveSpearGhosts;
-        Spear.OnPlacedInHand -= DestroySpearGhosts;
+        Utilities.PlayerInput.OnThrowSpear -= ThrowGhostlySpears;
+        Utilities.PlayerInput.OnRetrieveSpear -= RetrieveGhostlySpears;
+        Spear.OnPlacedInHand -= DestroyGhostlySpears;
     } 
 
-    private void ThrowSpearGhosts(Vector3 posToReach)
+    private void ThrowGhostlySpears(Vector3 posToReach)
     {
         GameObject spear = GameObject.FindWithTag("Player").GetComponent<PlayerController>().Spear.gameObject;
         PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
@@ -69,7 +69,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
         }
     }
 
-    private void RetrieveSpearGhosts()
+    private void RetrieveGhostlySpears()
     {
         foreach(GameObject spear in ghostSpears)
         {
@@ -77,7 +77,7 @@ public class SpearGhosts : ItemEffect , IPassiveItem
         }
     }
 
-    private void DestroySpearGhosts()
+    private void DestroyGhostlySpears()
     {
         foreach(GameObject spear in ghostSpears)
         {
