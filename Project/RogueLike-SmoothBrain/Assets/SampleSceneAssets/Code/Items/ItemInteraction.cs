@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using static HoudiniEngineUnity.HEU_Curve;
 
 [RequireComponent (typeof(Item))]
 public class ItemInteraction : MonoBehaviour, IInterractable
