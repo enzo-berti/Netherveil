@@ -45,6 +45,7 @@ public class RecordPlayer : MonoBehaviour
         eventMusic = AudioManager.Instance.PlaySound(AllMyTearsMusic);
         MusicNote.Play();
         eventMusic.getPlaybackState(out PLAYBACK_STATE playbackState);
+        eventMusic.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject.transform));
         IsMusicPlaying = playbackState == PLAYBACK_STATE.PLAYING;
     }
 }
