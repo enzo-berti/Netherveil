@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class VampireTooth : ItemEffect, IPassiveItem
 {
-    const float lifeStealStat = 0.2f;
+    const float lifeStealStat = 0.1f;
     public void OnRetrieved()
     {
         Hero player = GameObject.FindGameObjectWithTag("Player").GetComponent<Hero>();
