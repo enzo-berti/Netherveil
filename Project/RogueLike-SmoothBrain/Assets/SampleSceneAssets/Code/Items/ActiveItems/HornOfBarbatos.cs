@@ -16,6 +16,8 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
         Stat.HP
     };
 
+    bool itemActivatedThisRoom = false;
+
     public HornOfBarbatos()
     {
         displayValue = Cooldown;
@@ -41,17 +43,22 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
                 hero.Stats.MultiplyCoeffValue(stat, 1 + increaseValue);
             }
         }
+        itemActivatedThisRoom = true;
     }
 
     private void ResetStat()
     {
-        Hero hero = Utilities.Hero;
-        foreach (var stat in hero.Stats.StatsName)
+        if (itemActivatedThisRoom)
         {
-            if (!avoidedStat.Contains(stat))
+            Hero hero = Utilities.Hero;
+            foreach (var stat in hero.Stats.StatsName)
             {
-                hero.Stats.DivideCoeffValue(stat, 1 + increaseValue);
+                if (!avoidedStat.Contains(stat))
+                {
+                    hero.Stats.DivideCoeffValue(stat, 1 + increaseValue);
+                }
             }
         }
+        itemActivatedThisRoom = false;
     }
 }
