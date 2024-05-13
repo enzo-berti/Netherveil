@@ -51,8 +51,6 @@ public class SaveManager : MonoBehaviour
         }
 
         HasData = false;
-
-        SelectSave(1);
     }
 
     public void SelectSave(int selectedSave)
@@ -68,43 +66,42 @@ public class SaveManager : MonoBehaviour
 
     public void Save()
     {
-        Debug.Log("Saving game");
         onSave?.Invoke(DirectoryPath);
     }
 
-    const string filePath = "/Player.s";
-    public void ExampleLoad()
-    {
-        string directoryPath = SaveManager.instance.DirectoryPath;
-
-        if (File.Exists(directoryPath + filePath))
-        {
-            using (var stream = File.Open(directoryPath + filePath, FileMode.Open))
-            {
-                using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-                {
-                    Debug.Log(reader.ReadSingle());
-                    Debug.Log(reader.ReadString());
-                    Debug.Log(reader.ReadInt32());
-                    Debug.Log(reader.ReadBoolean());
-                }
-            }
-        }
-    }
-
-    public void ExampleSave(string directoryPath)
-    {
-        using (var stream = File.Open(directoryPath + filePath, FileMode.Create))
-        {
-            using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
-            {
-                writer.Write(1.250F);
-                writer.Write(@"c:\Temp");
-                writer.Write(10);
-                writer.Write(true);
-            }
-
-            stream.Close();
-        }
-    }
+    //const string filePathExample = "/Player.s";
+    //public void ExampleLoad()
+    //{
+    //    string directoryPath = SaveManager.instance.DirectoryPath;
+    //
+    //    if (File.Exists(directoryPath + filePath))
+    //    {
+    //        using (var stream = File.Open(directoryPath + filePath, FileMode.Open))
+    //        {
+    //            using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+    //            {
+    //                Debug.Log(reader.ReadSingle());
+    //                Debug.Log(reader.ReadString());
+    //                Debug.Log(reader.ReadInt32());
+    //                Debug.Log(reader.ReadBoolean());
+    //            }
+    //        }
+    //    }
+    //}
+    //
+    //public void ExampleSave(string directoryPath)
+    //{
+    //    using (var stream = File.Open(directoryPath + filePath, FileMode.Create))
+    //    {
+    //        using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+    //        {
+    //            writer.Write(1.250F);
+    //            writer.Write(@"c:\Temp");
+    //            writer.Write(10);
+    //            writer.Write(true);
+    //        }
+    //
+    //        stream.Close();
+    //    }
+    //}
 }
