@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class ItemDescription : MonoBehaviour
@@ -13,6 +14,7 @@ public class ItemDescription : MonoBehaviour
     [SerializeField] private TMP_Text activePassiveText;
     private Item item;
     private float scaleDuration = 0.25f;
+    private Coroutine displayRoutine;
 
     private void Start()
     {
@@ -22,6 +24,15 @@ public class ItemDescription : MonoBehaviour
     private void OnDestroy()
     {
         Inventory.OnAddOrRemoveBlood -= UpdatePriceText;
+    }
+
+    private void OnDisable()
+    {
+        if (displayRoutine != null)
+        {
+            StopCoroutine(displayRoutine);
+            canvasRectTransform.localScale = Vector3.zero;
+        }
     }
 
     public void SetDescription(string id)
@@ -102,8 +113,10 @@ public class ItemDescription : MonoBehaviour
 
     public void TogglePanel(bool toggle)
     {
-        StopAllCoroutines();
-        StartCoroutine(toggle ? canvasRectTransform.UpScaleCoroutine(scaleDuration, 0.01f) : canvasRectTransform.DownScaleCoroutine(scaleDuration, 0.01f));
+        if (displayRoutine != null)
+            StopCoroutine(displayRoutine);
+
+        displayRoutine = StartCoroutine(toggle ? canvasRectTransform.UpScaleCoroutine(scaleDuration, 0.01f) : canvasRectTransform.DownScaleCoroutine(scaleDuration, 0.01f));
     }
 
     public void RemovePriceText()
@@ -113,6 +126,5 @@ public class ItemDescription : MonoBehaviour
             priceText.text = string.Empty;
             priceText = null;
         }
-
     }
 }

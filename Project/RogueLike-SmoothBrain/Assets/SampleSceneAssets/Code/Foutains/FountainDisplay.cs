@@ -27,12 +27,22 @@ namespace Fountain
             Utilities.Hero.OnCorruptionMaxUpgrade += ReloadDisplay;
         }
 
+        private void OnDisable()
+        {
+            if (displayRoutine != null)
+            {
+                StopCoroutine(displayRoutine);
+                rectTransform.localScale = Vector3.zero;
+            }
+        }
+
         public void Display()
         {
             SetText(fountain);
 
             if (displayRoutine != null)
                 StopCoroutine(displayRoutine);
+
             displayRoutine = StartCoroutine(rectTransform.UpScaleCoroutine(displayDuration, 0.01f));
         }
 
