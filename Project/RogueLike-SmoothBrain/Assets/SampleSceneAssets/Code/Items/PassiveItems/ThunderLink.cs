@@ -17,6 +17,8 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly float duration = 3f;
     readonly float chance = 0.2f;
     bool allSpearsSet = false;
+    public int displayDamages;
+
     public void OnRetrieved()
     {
         Spear.OnPlacedInWorld += CreateEletricLinks;
@@ -87,6 +89,8 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void ApplyDamages(Hero player)
     {
+        displayDamages = Utilities.PlayerController.SPEAR_DAMAGES -(int)(player.Stats.GetValueWithoutCoeff(Stat.ATK) * 4 / 5);
+
         foreach (Spear spear in spears)
         {
             AudioManager.Instance.PlaySound(AudioManager.Instance.ThunderlinkSFX, spear.transform.position);
@@ -99,7 +103,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
                 {
                     if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject)
                     {
-                        player.Attack(entity as IDamageable, -(int)(player.Stats.GetValueWithoutCoeff(Stat.ATK) * 4/5));
+                        player.Attack(entity as IDamageable, displayDamages - Utilities.PlayerController.SPEAR_DAMAGES);
                         entity.AddStatus(new Electricity(duration, chance), player);
                     }
                 }
