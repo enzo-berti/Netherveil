@@ -33,7 +33,7 @@ public class GameOver : MonoBehaviour
         mainCam.m_Priority = -1;
         deathCam.m_Priority = 1;
         Color clearColor = new Color(1, 1, 1, 0);
-        Camera.main.backgroundColor = Color.grey * clearColor;
+        Camera.main.backgroundColor = new Color(0.31f, 0.31f, 0.31f) * clearColor;
 
         foreach (Graphic drawable in drawables)
         {
@@ -93,11 +93,11 @@ public class GameOver : MonoBehaviour
             yield return null;
         }
 
-        if(element.gameObject.TryGetComponent(out Button button))
+        if (element.gameObject.TryGetComponent(out Button button))
         {
             button.interactable = true;
             EventSystem.current.SetSelectedGameObject(firstSelect);
         }
-        
+
     }
 }
