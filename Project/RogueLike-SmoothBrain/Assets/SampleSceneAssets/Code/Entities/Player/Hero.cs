@@ -242,6 +242,20 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
+    public void HealConsumable(float healValue)
+    {
+        AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
+        int realHealValue = (int)(healValue * Stats.GetValue(Stat.HEAL_COEFF));
+
+        if (!CanHealFromConsumables)
+        {
+            realHealValue = 0;
+        }
+
+        Stats.IncreaseValue(Stat.HP, realHealValue, true);
+        FloatingTextGenerator.CreateHealText(realHealValue, transform.position);
+    }
+
     #region Corruption&BenedictionManagement
 
     private void UpgradePlayerStats(Stat stat)
