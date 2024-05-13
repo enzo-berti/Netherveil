@@ -116,7 +116,8 @@ public class PlayerController : MonoBehaviour
     [Header("Item dependent GOs")]
     [SerializeField] Transform leftHandTransform;
     public Transform LeftHandTransform { get => leftHandTransform; }
-    private Vector3 ENDPOS = Vector3.zero;
+    private List<Vector3> ENDPOS = new();
+    private List<Color> color = new() { Color.red, Color.green, Color.blue, Color.yellow, Color.magenta, Color.white };
     private void Awake()
     {
         hero = GetComponent<Hero>();
@@ -250,32 +251,47 @@ public class PlayerController : MonoBehaviour
 
     public void CalculEndPosition(float duration)
     {
+        const float sphereCastSize = 1f;
         Vector3 endPos = this.transform.position + dashCoef * hero.Stats.GetValue(Stat.SPEED) * duration * playerInput.DashDir;
-        if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, endPos.magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
+        ENDPOS.Clear();
+        ENDPOS.Add(endPos);
+        Debug.DrawLine(this.transform.position, endPos, Color.red, 10f);
+        if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, (endPos - this.transform.position).magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
         {
             endPos = endHit.point;
-            ENDPOS = endHit.point;
+            ENDPOS.Add(endHit.point);
         }
-        List<RaycastHit> hits = Physics.SphereCastAll(new Ray(this.gameObject.transform.position, playerInput.DashDir), 0.6f, endPos.magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
+        Vector3 basePos = this.transform.position;
+        Vector3 finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
+        List<RaycastHit> hits = Physics.CapsuleCastAll(basePos, finalPos, sphereCastSize, playerInput.DashDir, (endPos - this.transform.position).magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
         for (int i = hits.Count - 1; i >= 0; i--)
         {
             Collider collider = hits[i].collider;
             Debug.Log("collider name => " + collider.name);
-            if (Physics.OverlapSphere(endPos, 0.6f).Contains(collider))
+            basePos = endPos;
+            finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
+            if (Physics.OverlapCapsule(basePos, finalPos, sphereCastSize).Contains(collider))
             {
-                Debug.Log("Collider override");
+                Debug.Log("Overlap : " + collider.name);
                 endPos = hits[i].point;
-                Debug.Log(endPos);
+                ENDPOS.Add(endPos);
                 hits.RemoveAt(i);
             }
         }
         foreach (var hit in hits)
         {
             Collider collider = hit.collider;
-            Physics.IgnoreCollision(characterController, collider, true);
-            collidersIgnored.Add(collider);
+            basePos = endPos;
+            finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
+            if (!Physics.OverlapCapsule(basePos, finalPos, sphereCastSize).Contains(collider))
+            {
+                Debug.Log("Ignore collider => " + collider);
+                Physics.IgnoreCollision(characterController, collider, true);
+                collidersIgnored.Add(collider);
+            }
+
         }
-        
+
     }
     #endregion
 
@@ -566,8 +582,47 @@ public class PlayerController : MonoBehaviour
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(ENDPOS, 0.6f);
+
+
+        int i = 0;
+        if(ENDPOS.Count > 0)
+        {
+            foreach (var test in ENDPOS)
+            {
+                Gizmos.color = color[i];
+                Gizmos.DrawSphere(test, 1f);
+                i++;
+                i = i == ENDPOS.Count ? 0 : i;
+                //DrawWireCapsule(test, Quaternion.identity, 0.5f, 2f, Gizmos.color);
+            }
+        }
+        
+    }
+    public static void DrawWireCapsule(Vector3 _pos, Quaternion _rot, float _radius, float _height, Color _color = default(Color))
+    {
+        if (_color != default(Color))
+            Handles.color = _color;
+        Matrix4x4 angleMatrix = Matrix4x4.TRS(_pos, _rot, Handles.matrix.lossyScale);
+        using (new Handles.DrawingScope(angleMatrix))
+        {
+            var pointOffset = (_height - (_radius * 2)) / 2;
+
+            //draw sideways
+            Handles.DrawWireArc(Vector3.up * pointOffset, Vector3.left, Vector3.back, -180, _radius);
+            Handles.DrawLine(new Vector3(0, pointOffset, -_radius), new Vector3(0, -pointOffset, -_radius));
+            Handles.DrawLine(new Vector3(0, pointOffset, _radius), new Vector3(0, -pointOffset, _radius));
+            Handles.DrawWireArc(Vector3.down * pointOffset, Vector3.left, Vector3.back, 180, _radius);
+            //draw frontways
+            Handles.DrawWireArc(Vector3.up * pointOffset, Vector3.back, Vector3.left, 180, _radius);
+            Handles.DrawLine(new Vector3(-_radius, pointOffset, 0), new Vector3(-_radius, -pointOffset, 0));
+            Handles.DrawLine(new Vector3(_radius, pointOffset, 0), new Vector3(_radius, -pointOffset, 0));
+            Handles.DrawWireArc(Vector3.down * pointOffset, Vector3.back, Vector3.left, -180, _radius);
+            //draw center
+            Handles.DrawWireDisc(Vector3.up * pointOffset, Vector3.up, _radius);
+            Handles.DrawWireDisc(Vector3.down * pointOffset, Vector3.up, _radius);
+
+        }
     }
 #endif
 }
+
