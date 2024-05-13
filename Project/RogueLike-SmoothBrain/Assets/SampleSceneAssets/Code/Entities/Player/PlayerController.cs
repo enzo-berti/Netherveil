@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 using System.ComponentModel.Design;
+using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -29,12 +30,14 @@ public class PlayerController : MonoBehaviour
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
     readonly float dashCoef = 2.25f;
+    private List<Collider> collidersIgnored = new List<Collider>();
     public Coroutine SpecialAbilityCoroutine { get; set; } = null;
     public ISpecialAbility SpecialAbility { get; set; } = null;
 
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
     public BoxCollider DashAttackCollider { get => dashAttackCollider; }
+    public List<Collider> CollidersIgnored { get => collidersIgnored; }
 
     public bool DoneQuestQTThiStage { get; set; } = false;
     public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
@@ -113,7 +116,7 @@ public class PlayerController : MonoBehaviour
     [Header("Item dependent GOs")]
     [SerializeField] Transform leftHandTransform;
     public Transform LeftHandTransform { get => leftHandTransform; }
-
+    private Vector3 ENDPOS = Vector3.zero;
     private void Awake()
     {
         hero = GetComponent<Hero>();
@@ -160,7 +163,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        MapUtilities.onFinishStage -= ResetStageDependentValues; 
+        MapUtilities.onFinishStage -= ResetStageDependentValues;
         MapUtilities.onAllEnemiesDead -= UpdateClearTuto;
         Spear.OnPlacedInHand = null;
         Spear.OnPlacedInWorld = null;
@@ -232,9 +235,48 @@ public class PlayerController : MonoBehaviour
         if (hero.State != (int)Hero.PlayerState.DASH)
             return;
 
-        characterController.Move(dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * playerInput.DashDir);
+        float distance = dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime;
+        //if(Utilities.CharacterController.Raycast(new Ray(this.gameObject.transform.position, playerInput.DashDir), out var hit, distance))
+        //{
+        //    Debug.Log(hit.collider.name);
+        //}
+        if (Utilities.CharacterController.detectCollisions)
+            //if (Physics.BoxCast()
+            //{
+            //    Debug.Log(hit.collider.name);
+            //}
+            characterController.Move(distance * playerInput.DashDir);
     }
 
+    public void CalculEndPosition(float duration)
+    {
+        Vector3 endPos = this.transform.position + dashCoef * hero.Stats.GetValue(Stat.SPEED) * duration * playerInput.DashDir;
+        if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, endPos.magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
+        {
+            endPos = endHit.point;
+            ENDPOS = endHit.point;
+        }
+        List<RaycastHit> hits = Physics.SphereCastAll(new Ray(this.gameObject.transform.position, playerInput.DashDir), 0.6f, endPos.magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
+        for (int i = hits.Count - 1; i >= 0; i--)
+        {
+            Collider collider = hits[i].collider;
+            Debug.Log("collider name => " + collider.name);
+            if (Physics.OverlapSphere(endPos, 0.6f).Contains(collider))
+            {
+                Debug.Log("Collider override");
+                endPos = hits[i].point;
+                Debug.Log(endPos);
+                hits.RemoveAt(i);
+            }
+        }
+        foreach (var hit in hits)
+        {
+            Collider collider = hit.collider;
+            Physics.IgnoreCollision(characterController, collider, true);
+            collidersIgnored.Add(collider);
+        }
+        
+    }
     #endregion
 
     #region Attacks&Orientation
@@ -294,7 +336,7 @@ public class PlayerController : MonoBehaviour
                         DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
                         applyVibrations = false;
                     }
-                    if(!corruptionNerfApplied)
+                    if (!corruptionNerfApplied)
                     {
                         //hero.CorruptionNerf(/*col.gameObject.GetComponent<IDamageable>(), hero*/);
                         corruptionNerfApplied = true;
@@ -303,7 +345,7 @@ public class PlayerController : MonoBehaviour
                     alreadyAttacked.Add(col);
                     hero.Attack(col.gameObject.GetComponent<IDamageable>());
                 }
-                else if(col.gameObject.GetComponent<IReflectable>() != null && !alreadyAttacked.Contains(col))
+                else if (col.gameObject.GetComponent<IReflectable>() != null && !alreadyAttacked.Contains(col))
                 {
                     if (applyVibrations && !playerInput.LaunchedChargedAttack)
                     {
@@ -379,7 +421,7 @@ public class PlayerController : MonoBehaviour
     public void OrientationErrorMargin(float visionConeRange)
     {
         Transform targetTransform = PhysicsExtensions.OverlapVisionCone(transform.position, ATTACK_CONE_ANGLE, visionConeRange, transform.forward, LayerMask.GetMask("Entity"))
-        .Where(x => x.CompareTag("Enemy") && x.GetComponent<IReflectable>() == null 
+        .Where(x => x.CompareTag("Enemy") && x.GetComponent<IReflectable>() == null
         && x.gameObject.TryGetComponent(out Entity entity) && entity.IsInvincibleCount == 0)
         .Select(x => x.GetComponent<Transform>())
         .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
@@ -447,7 +489,7 @@ public class PlayerController : MonoBehaviour
     {
 
         ChargedAttackVFX.Stop();
-        foreach(VisualEffect effect in SpearAttacksVFX)
+        foreach (VisualEffect effect in SpearAttacksVFX)
         {
             effect.Stop();
         }
@@ -523,6 +565,9 @@ public class PlayerController : MonoBehaviour
 
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(ENDPOS, 0.6f);
     }
 #endif
 }
