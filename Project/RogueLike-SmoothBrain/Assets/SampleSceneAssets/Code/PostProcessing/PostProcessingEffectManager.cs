@@ -38,17 +38,27 @@ namespace PostProcessingEffects
 
         [Header("All effects")]
         [SerializeField] private PostProcessingHitEffect hitEffect;
-        [SerializeField] private PostProcessingBlessingEffect blessingEffect;
         [SerializeField] private PostProcessingFreezeEffect freezeEffect;
+        [SerializeField] private PostProcessingBlessingEffect blessingEffect;
         [SerializeField] private PostProcessingElectricityEffect electricityEffect;
-        [SerializeField] private PostProcessingFireEffect fireEffect;
         [SerializeField] private PostProcessingDamnationEffect damnationEffect;
         [SerializeField] private PostProcessingBleedingEffect bleedingEffect;
         [SerializeField] private PostProcessingPoisonEffect poisonEffect;
+        [SerializeField] private PostProcessingFireEffect fireEffect;
 
         private void Awake()
         {
             instance = this;
+        }
+
+        public void Enable()
+        {
+            volume.gameObject.SetActive(true);
+        }
+
+        public void Disable()
+        {
+            volume.gameObject.SetActive(false);
         }
 
         public void Play(Effect effect, bool forceCancelPrevious = true)
