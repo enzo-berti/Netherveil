@@ -9,8 +9,6 @@ namespace Map
         [SerializeField] GameObject[] roomObjects;
         [SerializeField] public RoomType type = RoomType.Normal;
 
-        public List<Room> neighbours = new List<Room>();
-
         private void OnValidate()
         {
             roomObjects = new GameObject[gameObject.transform.childCount];
