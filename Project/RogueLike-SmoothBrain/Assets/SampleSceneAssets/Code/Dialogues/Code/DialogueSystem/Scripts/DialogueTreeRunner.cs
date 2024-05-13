@@ -29,6 +29,9 @@ public class DialogueTreeRunner : MonoBehaviour
     private Hero player;
     private bool isRunning = false;
     private bool isLaunched = false;
+    private bool hasRenderedChoices = false;
+
+    public bool IsRunning => isRunning;
 
     private void Awake()
     {
@@ -66,12 +69,40 @@ public class DialogueTreeRunner : MonoBehaviour
 
     public bool IsCurrentDialogueChoiceDialogue()
     {
-        return tree.currentNode as ChoiceDialogueNode;
+        if (tree == null || tree.currentNode == null)
+            return false;
+
+        return tree.currentNode is ChoiceDialogueNode;
+    }
+
+    public bool IsNextDialogueChoiceDialogue()
+    {
+        if (tree == null || tree.currentNode == null)
+            return false;
+
+        SimpleDialogueNode simple = tree.currentNode as SimpleDialogueNode;
+        ChoiceDialogueNode choice = tree.currentNode as ChoiceDialogueNode;
+        EventDialogueNode eventN = tree.currentNode as EventDialogueNode;
+        QuestDialogueNode quest = tree.currentNode as QuestDialogueNode;
+
+        if (simple && simple.child != null && simple.child is ChoiceDialogueNode) return true;
+        if (eventN && eventN.child != null && eventN.child is ChoiceDialogueNode) return true;
+        if (quest && quest.child != null && quest.child is ChoiceDialogueNode) return true;
+
+        if (choice)
+        {
+            foreach (ChoiceDialogueNode.Option option in choice.options)
+            {
+                if (option.child != null && option.child is ChoiceDialogueNode) return true;
+            }
+        }
+
+        return false;
     }
 
     public void UpdateDialogue()
     {
-        if (!IsStarted || tree == null)
+        if (!IsStarted || tree == null || hasRenderedChoices)
             return;
 
         foreach (Transform child in choiceTab)
@@ -107,32 +138,26 @@ public class DialogueTreeRunner : MonoBehaviour
         {
             if (isRunning)
             {
+                Debug.Log("RUNNING");
                 StopAllCoroutines();
                 dialogueMesh.text = choice.dialogueData.dialogue;
                 isRunning = false;
+                StartCoroutine(ChoiceButton(choice));
+                hasRenderedChoices = true;
             }
             else if (!isLaunched)
             {
+                Debug.Log("NOTLAUNCHED");
                 SetDialogue(choice.dialogueData.dialogue);
                 SetIllustration(choice.dialogueData.illustration);
                 SetName(choice.dialogueData.name);
             }
-
-            choice.options.ForEach(choiceData =>
+            else if (isLaunched && !isRunning && !hasRenderedChoices)
             {
-                Button newChoiceButton = Instantiate(choiceButtonPrefab, choiceTab);
-                newChoiceButton.transform.GetComponentInChildren<TMP_Text>().text = choiceData.option;
-                newChoiceButton.onClick.AddListener(() =>
-                {
-                    StopAllCoroutines();
-                    tree.Process(choiceData.child);
-                    isLaunched = false;
-                    isRunning = false;
-                    UpdateDialogue();
-                });
-
-                EventSystem.current.SetSelectedGameObject(newChoiceButton.gameObject);
-            });
+                Debug.Log("NOTRENDERED");
+                StartCoroutine(ChoiceButton(choice));
+                hasRenderedChoices = true;
+            }
         }
         else if (eventN)
         {
@@ -192,6 +217,31 @@ public class DialogueTreeRunner : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        Debug.Log(EventSystem.current.currentSelectedGameObject);
+    }
+
+    private IEnumerator ChoiceButton(ChoiceDialogueNode choice)
+    {
+        choice.options.ForEach(choiceData =>
+        {
+            Button newChoiceButton = Instantiate(choiceButtonPrefab, choiceTab);
+            newChoiceButton.transform.GetComponentInChildren<TMP_Text>().text = choiceData.option;
+            newChoiceButton.onClick.AddListener(() =>
+            {
+                StopAllCoroutines();
+                tree.Process(choiceData.child);
+                isLaunched = false;
+                isRunning = false;
+                hasRenderedChoices = false;
+                UpdateDialogue();
+            });
+        });
+        yield return new WaitForSeconds(0.1f);
+        EventSystem.current.SetSelectedGameObject(choiceTab.GetChild(0).gameObject);
+    }
+
     private void SetIllustration(Sprite illustration)
     {
         if (!illustration)
@@ -242,5 +292,9 @@ public class DialogueTreeRunner : MonoBehaviour
         }
         isRunning = false;
         dialogueMesh.text = dialogue;
+        if (tree.currentNode is ChoiceDialogueNode)
+        {
+            UpdateDialogue();
+        }
     }
 }
