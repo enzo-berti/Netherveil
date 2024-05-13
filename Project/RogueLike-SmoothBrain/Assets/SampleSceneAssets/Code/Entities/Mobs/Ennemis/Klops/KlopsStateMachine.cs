@@ -11,9 +11,8 @@ public class KlopsStateMachine : Mobs, IKlops
     public class KlopsSounds
     {
         public Sound deathSound;
-        public Sound AttackSound;
+        public Sound attackSound;
         public Sound hitSound;
-        public Sound igniteSound;
     }
 
     [HideInInspector]
@@ -113,7 +112,7 @@ public class KlopsStateMachine : Mobs, IKlops
         damageable.ApplyDamage(damages, this);
         ApplyKnockback(damageable, this);
 
-        klopsSounds.AttackSound.Play(transform.position);
+        klopsSounds.attackSound.Play(transform.position);
     }
 
     public void MoveTo(Vector3 posToMove)

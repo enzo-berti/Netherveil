@@ -50,7 +50,7 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         if (!hasShot && currentTime >= 0.3f)
         {
             GameObject fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
-            Context.KlopsSound.AttackSound.Play(Context.transform.position);
+            Context.KlopsSound.attackSound.Play(Context.transform.position);
             fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
             fireball.GetComponent<Fireball>().launcher = Context;
             fireball.transform.LookAt(Utilities.Player.transform);
