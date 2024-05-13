@@ -82,6 +82,7 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
                     thrustChargeTimer = 0;
 
                     Context.Sounds.thrustSound.Play(Context.transform.position, true);
+                    Context.Sounds.thrustMapSound.Play(Context.transform.position, true);
 
                     DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.25f);
                     Context.CameraUtilities.ShakeCamera(0.3f, 0.25f, EasingFunctions.EaseInQuint);
