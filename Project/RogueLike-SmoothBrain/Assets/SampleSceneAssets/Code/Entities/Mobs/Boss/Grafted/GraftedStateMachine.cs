@@ -98,6 +98,11 @@ public class GraftedStateMachine : Mobs, IGrafted
 
     bool freezeRotation = false;
 
+    // CINEMATICS
+    [SerializeField] private BossCinematic cinematic;
+    private bool isInCinematic = false;
+    public bool IsInCinematic { get => isInCinematic; set => isInCinematic = value; }
+
     #region Getters/Setters
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
@@ -174,11 +179,15 @@ public class GraftedStateMachine : Mobs, IGrafted
         tripleThrustVFX.transform.parent = null;
         tripleThrustVFX.Play();
         player = FindObjectOfType<Hero>();
+
+        // Cinematics
+        cinematic.Play();
+        isInCinematic = true;
     }
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (isFreeze || IsSpawning || isInCinematic)
             return;
 
         base.Update();
