@@ -3,7 +3,7 @@ using UnityEngine;
 public class ElectricityAmulet : ItemEffect , IPassiveItem 
 {
     private readonly float electricityChance = 0.1f;
-    private readonly float electricityDuration = 2.0f;
+    private readonly float electricityDuration = 6.0f;
     int indexInStatus = 0;
     public void OnRetrieved()
     {

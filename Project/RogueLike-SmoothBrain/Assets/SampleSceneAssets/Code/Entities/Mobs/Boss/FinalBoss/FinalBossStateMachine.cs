@@ -4,21 +4,139 @@
 
 using UnityEngine;
 using StateMachine; // include all script about stateMachine
+using System.Collections.Generic;
+using System;
+using UnityEngine.VFX;
 
-public class FinalBossStateMachine : MonoBehaviour
+public class FinalBossStateMachine : Mobs, IFinalBoss
 {
     [HideInInspector]
     public BaseState<FinalBossStateMachine> currentState;
     private StateFactory<FinalBossStateMachine> factory;
 
-    void Start()
+    [Serializable]
+    public class FinalBossSounds
     {
-        factory = new StateFactory<FinalBossStateMachine>(this);
-        // Set currentState here !
+        public Sound hit;
     }
 
-    void Update()
+    public enum FinalBossColliders
     {
+
+    }
+
+    private IAttacker.AttackDelegate onAttack;
+    private IAttacker.HitDelegate onHit;
+    Hero player = null;
+    [SerializeField] FinalBossSounds sounds;
+    [SerializeField] List<NestedList<Collider>> attackColliders;
+    bool playerHit = false;
+    float attackCooldown = 1f;
+    float initialHP;
+    CameraUtilities cameraUtilities;
+
+    int part = 1;
+    int phase = 1;
+
+    [SerializeField] GameObject[] enemiesPrefabs;
+
+    [SerializeField] VisualEffect shieldVFX;
+    [SerializeField] GameObject clonePrefab;
+
+    #region Getters/Setters
+    public List<Status> StatusToApply { get => statusToApply; }
+    public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
+    public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
+    public Animator Animator { get => animator; }
+    public List<NestedList<Collider>> Attacks { get => attackColliders; }
+    public Hero Player { get => player; }
+    public bool PlayerHit { get => playerHit; set => playerHit = value; }
+    public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
+    public CameraUtilities CameraUtilities { get => cameraUtilities; }
+    public GameObject[] EnemiesPrefabs { get => enemiesPrefabs; }
+    public int CurrentPart { get => part; }
+    public int CurrentPhase { get => phase; }
+
+    public VisualEffect ShieldVFX { get => shieldVFX; }
+    public GameObject ClonePrefab { get => clonePrefab; }
+
+    #endregion
+
+    protected override void Start()
+    {
+
+        base.Start();
+
+        factory = new StateFactory<FinalBossStateMachine>(this);
+        currentState = factory.GetState<FinalBossTriggeredState>();
+
+        player = Utilities.Hero;
+        initialHP = stats.GetValue(Stat.HP);
+        cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
+
+        part = 1;
+        phase = 1;
+    }
+
+    protected override void Update()
+    {
+        if (isFreeze || IsSpawning)
+            return;
+
+        if (IsKnockbackable)
+            IsKnockbackable = false;
+
+        base.Update();
         currentState.Update();
     }
+
+    #region Mobs methods
+    public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
+    {
+        if (currentState is not FinalBossSummoningAttack)
+        {
+            ApplyDamagesMob(_value, sounds.hit, Death, notEffectDamage);
+        }
+    }
+
+    public void Attack(IDamageable damageable, int additionalDamages = 0)
+    {
+        int damages = (int)stats.GetValue(Stat.ATK);
+        damages += additionalDamages;
+
+        onHit?.Invoke(damageable, this);
+        damageable.ApplyDamage(damages, this);
+        //ApplyKnockback(damageable, this);
+    }
+
+    public void Death()
+    {
+        animator.speed = 1;
+        OnDeath?.Invoke(transform.position);
+        Utilities.Hero.OnKill?.Invoke(this);
+
+        currentState = factory.GetState<SonielDeathState>();
+    }
+
+    public void MoveTo(Vector3 posToMove)
+    {
+        agent.SetDestination(posToMove);
+    }
+    #endregion
+
+    #region Extra methods
+
+    public void LookAtPlayer()
+    {
+        Vector3 mobToPlayer = player.transform.position - transform.position;
+        mobToPlayer.y = 0f;
+
+        Quaternion lookRotation = Quaternion.LookRotation(mobToPlayer);
+        lookRotation.x = 0;
+        lookRotation.z = 0;
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+    }
+
+    #endregion
 }

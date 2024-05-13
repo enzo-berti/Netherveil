@@ -9,11 +9,12 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
 #pragma warning disable IDE0052 // Supprimer les membres privés non lus
     private readonly float displayValue;
 #pragma warning restore IDE0052 // Supprimer les membres privés non lus
-    private List<Stat> avoidedStat = new List<Stat>()
+    List<float> changesList = new List<float>();
+    private List<Stat> statToChange = new List<Stat>()
     {
-        Stat.CORRUPTION,
-        Stat.ATK_RANGE,
-        Stat.HP
+        Stat.ATK,
+        Stat.SPEED,
+        Stat.ATK_RANGE
     };
 
     bool itemActivatedThisRoom = false;
@@ -38,9 +39,12 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
         Hero hero = Utilities.Hero;
         foreach (var stat in hero.Stats.StatsName)
         {
-            if (!avoidedStat.Contains(stat))
+            if (statToChange.Contains(stat))
             {
-                hero.Stats.MultiplyCoeffValue(stat, 1 + increaseValue);
+                float change = hero.Stats.GetCoeff(stat);
+                change = change * 0.2f;
+                changesList.Add(change);
+                hero.Stats.IncreaseCoeffValue(stat, change);
             }
         }
         itemActivatedThisRoom = true;
@@ -51,14 +55,17 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
         if (itemActivatedThisRoom)
         {
             Hero hero = Utilities.Hero;
+            int i = 0;
             foreach (var stat in hero.Stats.StatsName)
             {
-                if (!avoidedStat.Contains(stat))
+                if (statToChange.Contains(stat))
                 {
-                    hero.Stats.DivideCoeffValue(stat, 1 + increaseValue);
+                    hero.Stats.DecreaseCoeffValue(stat, changesList[i]);
+                    i++;
                 }
             }
         }
+        changesList.Clear();
         itemActivatedThisRoom = false;
     }
 }
