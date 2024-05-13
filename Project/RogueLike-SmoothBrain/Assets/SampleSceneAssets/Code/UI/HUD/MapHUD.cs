@@ -24,7 +24,7 @@ public class MapHUD : MonoBehaviour
         if (miniMapRoutine != null)
         {
             StopCoroutine(miniMapRoutine);
-            miniMap.localScale = Vector3.one * 0.1f;
+            miniMap.localScale = Vector3.one;
         }
         if (bigMapRoutine != null)
         {
