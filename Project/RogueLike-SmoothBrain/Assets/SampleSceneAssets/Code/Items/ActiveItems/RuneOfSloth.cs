@@ -6,6 +6,15 @@ public class RuneOfSloth : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 30f;
     private readonly float duration = 3f;
+#pragma warning disable IDE0052 // Supprimer les membres privés non lus
+    private readonly float displayValue;
+#pragma warning restore IDE0052 // Supprimer les membres privés non lus
+
+    public RuneOfSloth()
+    {
+        displayValue = Cooldown;
+    }
+
     public void Activate()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.RuneOfSlothSFX,Utilities.Player.transform.position);
