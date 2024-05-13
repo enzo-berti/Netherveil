@@ -673,6 +673,17 @@ namespace Netherveil.Inputs
                 },
                 {
                     ""name"": """",
+                    ""id"": ""6fdd8b39-f24b-45d7-8686-9a6270fe1074"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SkipDialogue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""4dde01e9-97c8-40b7-be48-c30905435863"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
