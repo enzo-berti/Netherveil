@@ -27,6 +27,11 @@ namespace Fountain
             Utilities.Hero.OnCorruptionMaxUpgrade += ReloadDisplay;
         }
 
+        private void OnEnable()
+        {
+            Inventory.OnAddOrRemoveBlood += SetText;
+        }
+
         private void OnDisable()
         {
             if (displayRoutine != null)
@@ -34,11 +39,13 @@ namespace Fountain
                 StopCoroutine(displayRoutine);
                 rectTransform.localScale = Vector3.zero;
             }
+
+            Inventory.OnAddOrRemoveBlood -= SetText;
         }
 
         public void Display()
         {
-            SetText(fountain);
+            SetText();
 
             if (displayRoutine != null)
                 StopCoroutine(displayRoutine);
@@ -53,9 +60,13 @@ namespace Fountain
             displayRoutine = StartCoroutine(rectTransform.DownScaleCoroutine(displayDuration, 0.01f));
         }
 
-        private void SetText(Fountain fountain)
+        private void SetText()
         {
-            string blood = $"{fountain.BloodPrice}<size={iconSize}><sprite name=\"blood\"><size={originalSize}>";
+            string bloodPrice =
+            (Utilities.Hero.Inventory.Blood.Value < fountain.BloodPrice ? $"<color=red>{fountain.BloodPrice}</color>" :
+            $"{fountain.BloodPrice}");
+
+            string blood = $"{bloodPrice}<size={iconSize}><sprite name=\"blood\"><size={originalSize}>";
 
             string value = fountain.Type == FountainType.Blessing ? $"<color=yellow>{fountain.AbsoluteValueTrade}</color>" : 
                 $"<color=purple>{fountain.AbsoluteValueTrade}</color>";
@@ -79,7 +90,7 @@ namespace Fountain
 
         private void ReloadDisplay(ISpecialAbility ability)
         {
-            SetText(fountain);
+            SetText();
         }
     }
 }

@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MerchantCounterDisplay : MonoBehaviour
@@ -19,6 +20,12 @@ public class MerchantCounterDisplay : MonoBehaviour
         originalSize = displayTextMesh.fontSize;
         iconSize = originalSize + 10;
         rectTransform.localScale = Vector3.zero;
+       
+    }
+
+    private void OnEnable()
+    {
+        Inventory.OnAddOrRemoveBlood += SetText;
     }
 
     private void OnDisable()
@@ -28,11 +35,12 @@ public class MerchantCounterDisplay : MonoBehaviour
             StopCoroutine(displayRoutine);
             rectTransform.localScale = Vector3.zero;
         }
+        Inventory.OnAddOrRemoveBlood -= SetText;
     }
 
     public void Display()
     {
-        SetText(merchantCounter);
+        SetText();
 
         if (displayRoutine != null)
             StopCoroutine(displayRoutine);
@@ -47,10 +55,14 @@ public class MerchantCounterDisplay : MonoBehaviour
         displayRoutine = StartCoroutine(rectTransform.DownScaleCoroutine(displayDuration, 0.01f));
     }
 
-    private void SetText(MerchantCounter _merchantCounter)
+    private void SetText()
     {
-        string blood = $"{_merchantCounter.BloodPrice}<size={iconSize}><sprite name=\"blood\"><size={originalSize}>";
+        string bloodPrice = 
+            (Utilities.Hero.Inventory.Blood.Value < merchantCounter.BloodPrice ? $"<color=red>{merchantCounter.BloodPrice}</color>" : 
+            $"{merchantCounter.BloodPrice}");
 
-        displayTextMesh.text = $"Use {blood} to gain {_merchantCounter.ValueTrade} HP.";
+        string blood = $"{bloodPrice}<size={iconSize}><sprite name=\"blood\"><size={originalSize}>";
+
+        displayTextMesh.text = $"Use {blood} to gain <color=green>{merchantCounter.ValueTrade} HP</color>.";
     }
 }
