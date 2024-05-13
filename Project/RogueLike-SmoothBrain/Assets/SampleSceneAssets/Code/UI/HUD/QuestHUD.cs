@@ -26,6 +26,9 @@ public class QuestHUD : MonoBehaviour
 
         lostOrFinishedText.SetText("No Quests...");
         EmptyQuestTexts();
+
+        Utilities.Hero.OnQuestObtained += UpdateUI;
+        Utilities.Hero.OnQuestFinished += UpdateUI;
     }
 
     public void EmptyQuestTexts()
@@ -63,13 +66,22 @@ public class QuestHUD : MonoBehaviour
 
     private void OnEnable()
     {
-        Utilities.Hero.OnQuestObtained += UpdateUI;
-        Utilities.Hero.OnQuestFinished += UpdateUI;
         Quest.OnQuestUpdated += UpdateUI;
     }
 
     private void OnDisable()
     {
+        if (questRoutine != null)
+        {
+            StopCoroutine(questRoutine);
+
+            Vector3 anchoredPos = questTransform.anchoredPosition;
+            anchoredPos.x = questTransform.sizeDelta.x;
+            questTransform.anchoredPosition = anchoredPos;
+
+            questEnable = false;
+        }
+
         Quest.OnQuestUpdated -= UpdateUI;
     }
 
