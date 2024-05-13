@@ -1,4 +1,5 @@
 using Map.Component;
+using Map.Generation;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -148,6 +149,15 @@ namespace Map
             MapUtilities.onEarlyAllEnemiesDead?.Invoke();
             MapUtilities.onAllEnemiesDead?.Invoke();
 
+            for (int i = 0; i < transform.parent.parent.childCount; i++)
+            {
+                if (transform.parent.parent.GetChild(i) == transform.parent)
+                {
+                    FindObjectOfType<MapGenerator>().roomClearId.Add(i);
+                    break;
+                }
+            }
+
             SaveManager.Instance.Save();
         }
 
@@ -177,7 +187,7 @@ namespace Map
             if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
             {
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
-                if (enterToPlayer.magnitude >= 7.5f)
+                if (enterToPlayer.magnitude >= 6.25f)
                 {
                     EnterEvents();
                 }

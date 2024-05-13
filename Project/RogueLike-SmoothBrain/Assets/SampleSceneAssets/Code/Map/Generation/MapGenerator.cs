@@ -129,6 +129,8 @@ namespace Map.Generation
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
         const string fileName = "Map.save";
 
+        public List<int> roomClearId = new List<int>();
+
         private void Awake()
         {
             //if (SaveManager.Instance.HasData)
@@ -137,12 +139,12 @@ namespace Map.Generation
             //}
             //else
             //{
-                Seed.RandomizeSeed();
+            Seed.RandomizeSeed();
 
-                if (!isRandom)
-                {
-                    Seed.Set(seed);
-                }
+            if (!isRandom)
+            {
+                Seed.Set(seed);
+            }
             //}
 
             seed = Seed.seed;
@@ -164,8 +166,16 @@ namespace Map.Generation
             {
                 using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
                 {
+                    // seed
                     Seed.seed = reader.ReadString();
+                    // stage
                     stage = reader.ReadInt32();
+                    // room ids
+                    int numberCleared = reader.ReadInt32();
+                    for (int i = 0; i < numberCleared; i++)
+                    {
+                        roomClearId.Add(reader.ReadInt32());
+                    }
                 }
             }
         }
@@ -178,8 +188,16 @@ namespace Map.Generation
             {
                 using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
                 {
+                    // seed
                     writer.Write(Seed.seed);
+                    // stage
                     writer.Write(stage);
+                    // room ids
+                    writer.Write(roomClearId.Count);
+                    foreach (int id in roomClearId)
+                    {
+                        writer.Write(id);
+                    }
                 }
 
                 stream.Close();
@@ -206,7 +224,7 @@ namespace Map.Generation
                     break;
                 case 2:
                     miniMapMat.SetColor("_Ground", ColorExtension.Color("69A465"));
-                    miniMapMat.SetColor("_Ceiling",  ColorExtension.Color("76B77B"));
+                    miniMapMat.SetColor("_Ceiling", ColorExtension.Color("76B77B"));
                     miniMapMat.SetColor("_Wall", ColorExtension.Color("406A40"));
                     break;
                 case 3:
