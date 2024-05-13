@@ -33,6 +33,7 @@ public class ItemInteraction : MonoBehaviour, IInterractable
         isSelect = true;
         outline.EnableOutline();
         itemDescription.TogglePanel(true);
+        HudHandler.current.ItemBar.Toggle(true);
     }
 
     public void Deselect()
@@ -43,6 +44,7 @@ public class ItemInteraction : MonoBehaviour, IInterractable
         isSelect = false;
         outline.DisableOutline();
         itemDescription.TogglePanel(false);
+        HudHandler.current.ItemBar.Toggle(false, 0.5f);
     }
 
     private void Interraction()
@@ -63,6 +65,7 @@ public class ItemInteraction : MonoBehaviour, IInterractable
 
     public void Interract()
     {
+        Deselect();
         item.ItemEffect.Name = item.idItemName;
         hero.Inventory.AddItem(item);
         interactions.InteractablesInRange.Remove(this);

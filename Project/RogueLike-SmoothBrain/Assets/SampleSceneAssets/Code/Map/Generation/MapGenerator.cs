@@ -1,5 +1,4 @@
 using Map.Component;
-using PrefabLightMapBaker;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -122,6 +121,7 @@ namespace Map.Generation
     {
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed; // For debuging purpose
+        [SerializeField] private Material miniMapMat;
 
         [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
         [HideInInspector] public int stage = 0; // BOURRIN 2
@@ -195,9 +195,33 @@ namespace Map.Generation
             }
         }
 
+        private void ChangeMiniMapColor()
+        {
+            switch (stage)
+            {
+                case 1:
+                    miniMapMat.SetColor("Ground", new Color(128/255, 101 / 255, 164 / 255));
+                    miniMapMat.SetColor("Ceiling", new Color(146 / 255, 118 / 255, 183 / 255));
+                    miniMapMat.SetColor("Wall", new Color(82 / 255, 64 / 255, 106 / 255));
+                    break;
+                case 2:
+                    miniMapMat.SetColor("Ground", new Color(105 / 255, 164 / 255, 101 / 255));
+                    miniMapMat.SetColor("Ceiling", new Color(118 / 255, 183 / 255, 123 / 255));
+                    miniMapMat.SetColor("Wall", new Color(64 / 255, 106 / 255, 64 / 255));
+                    break;
+                case 3:
+                    miniMapMat.SetColor("Ground", new Color(101 / 255, 156 / 255, 164 / 255));
+                    miniMapMat.SetColor("Ceiling", new Color(118 / 255, 171 / 255, 183 / 255));
+                    miniMapMat.SetColor("Wall", new Color(64 / 255, 99 / 255, 106 / 255));
+                    break;
+            }
+        }
+
         public void Generate(GenerationParam genParam)
         {
             stage++;
+
+            ChangeMiniMapColor();
 
             if (stage == 1)
             {

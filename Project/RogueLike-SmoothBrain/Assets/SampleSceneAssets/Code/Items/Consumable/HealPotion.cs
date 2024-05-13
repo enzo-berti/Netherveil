@@ -14,16 +14,7 @@ public class HealPotion : Consumable
 
     public override void OnRetrieved()
     {
-        AudioManager.Instance.PlaySound(player.GetComponent<PlayerController>().HealSFX, player.transform.position);
-        int realHealValue = (int)(healValue * player.Stats.GetValue(Stat.HEAL_COEFF));
-
-        if(!player.CanHealFromConsumables)
-        {
-            realHealValue = 0;
-        }
-
-        player.Stats.IncreaseValue(Stat.HP, realHealValue, true);
-        FloatingTextGenerator.CreateHealText(realHealValue, player.transform.position);
+        Utilities.Hero.HealConsumable(healValue);
         Destroy(this.gameObject);
     }
 }

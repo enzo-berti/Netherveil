@@ -40,10 +40,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference itemBuySFX;
     [SerializeField] EventReference damnationVeilSFX;
     [SerializeField] EventReference divineShieldSFX;
+    [SerializeField] EventReference divineShieldLoopSFX;
     [SerializeField] EventReference dashShieldSFX;
     [SerializeField] EventReference thornChestSFX;
     [SerializeField] EventReference runeOfSlothSFX;
     [SerializeField] EventReference runeOfEnvySFX;
+    [SerializeField] EventReference runeOfPrideSFX;
     [SerializeField] EventReference spawningSFX;
     [SerializeField] EventReference notEnoughtBloodSFX;
 
@@ -63,10 +65,12 @@ public class AudioManager : MonoBehaviour
     public EventReference ItemBuySFX { get => itemBuySFX; }
     public EventReference DamnationVeilSFX { get => damnationVeilSFX; }
     public EventReference DivineShieldSFX { get => divineShieldSFX; }
+    public EventReference DivineShieldLoopSFX { get => divineShieldLoopSFX; }
     public EventReference DashShieldSFX { get => dashShieldSFX; }
     public EventReference ThornChestSFX { get => thornChestSFX; }
     public EventReference RuneOfSlothSFX { get => runeOfSlothSFX; }
     public EventReference RuneOfEnvySFX { get => runeOfEnvySFX; }
+    public EventReference RuneOfPrideSFX { get => runeOfPrideSFX; }
     public EventReference SpawningSFX { get => spawningSFX; }
     public EventReference NotEnoughtBloodSFX { get => notEnoughtBloodSFX; }
 

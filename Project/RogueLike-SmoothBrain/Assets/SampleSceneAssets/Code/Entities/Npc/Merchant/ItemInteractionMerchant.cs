@@ -32,6 +32,7 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         isSelect = true;
         outline.EnableOutline();
         itemDescription.TogglePanel(true);
+        HudHandler.current.ItemBar.Toggle(true);
     }
 
     public void Deselect()
@@ -42,6 +43,7 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         isSelect = false;
         outline.DisableOutline();
         itemDescription.TogglePanel(false);
+        HudHandler.current.ItemBar.Toggle(false, 0.5f);
     }
 
     private void Interraction()
@@ -70,7 +72,7 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
             return;
         }
            
-
+        Deselect();
 
         AudioManager.Instance.PlaySound(AudioManager.Instance.ItemBuySFX);
         hero.Inventory.Blood -= price;
