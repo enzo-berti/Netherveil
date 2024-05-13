@@ -41,6 +41,7 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
     [SerializeField] GameObject[] enemiesPrefabs;
 
     [SerializeField] VisualEffect shieldVFX;
+    [SerializeField] GameObject clonePrefab;
 
     #region Getters/Setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -57,6 +58,7 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
     public int CurrentPhase { get => phase; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
+    public GameObject ClonePrefab { get => clonePrefab; }
 
     #endregion
 
