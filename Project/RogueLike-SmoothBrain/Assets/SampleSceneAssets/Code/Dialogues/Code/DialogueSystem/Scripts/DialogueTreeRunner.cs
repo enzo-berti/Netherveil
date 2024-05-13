@@ -138,7 +138,6 @@ public class DialogueTreeRunner : MonoBehaviour
         {
             if (isRunning)
             {
-                Debug.Log("RUNNING");
                 StopAllCoroutines();
                 dialogueMesh.text = choice.dialogueData.dialogue;
                 isRunning = false;
@@ -147,14 +146,12 @@ public class DialogueTreeRunner : MonoBehaviour
             }
             else if (!isLaunched)
             {
-                Debug.Log("NOTLAUNCHED");
                 SetDialogue(choice.dialogueData.dialogue);
                 SetIllustration(choice.dialogueData.illustration);
                 SetName(choice.dialogueData.name);
             }
             else if (isLaunched && !isRunning && !hasRenderedChoices)
             {
-                Debug.Log("NOTRENDERED");
                 StartCoroutine(ChoiceButton(choice));
                 hasRenderedChoices = true;
             }
@@ -215,11 +212,6 @@ public class DialogueTreeRunner : MonoBehaviour
         {
             EndDialogue();
         }
-    }
-
-    private void Update()
-    {
-        Debug.Log(EventSystem.current.currentSelectedGameObject);
     }
 
     private IEnumerator ChoiceButton(ChoiceDialogueNode choice)
