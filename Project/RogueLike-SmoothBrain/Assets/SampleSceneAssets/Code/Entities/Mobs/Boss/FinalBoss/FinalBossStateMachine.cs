@@ -64,7 +64,6 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
 
     protected override void Start()
     {
-
         base.Start();
 
         factory = new StateFactory<FinalBossStateMachine>(this);
