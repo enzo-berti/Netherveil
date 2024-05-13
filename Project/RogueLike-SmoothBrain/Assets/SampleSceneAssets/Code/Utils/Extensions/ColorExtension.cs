@@ -31,7 +31,7 @@ public static class ColorExtension
 
     private static int FromHexString(this string hexString)
     {
-        int num = Int32.Parse(hexString, System.Globalization.NumberStyles.HexNumber);
+        int num = int.Parse(hexString, System.Globalization.NumberStyles.HexNumber);
 
         return num;
     }
