@@ -185,7 +185,7 @@ public class ItemBar : MonoBehaviour
         frame.ToggleCooldown(false);
     }
 
-    public void Toggle(bool toggle)
+    public void Toggle(bool toggle, float delay = 0.0f)
     {
         RectTransform rectTransform = itemPassiveTransform.GetComponent<RectTransform>();
 
@@ -193,13 +193,15 @@ public class ItemBar : MonoBehaviour
             StopCoroutine(displayRoutine);
 
         if (toggle)
-            displayRoutine = StartCoroutine(MovementRoutine(rectTransform, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), Vector3.zero, 0.1f));
+            displayRoutine = StartCoroutine(MovementRoutine(rectTransform, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), Vector3.zero, 0.1f, delay));
         else
-            displayRoutine = StartCoroutine(MovementRoutine(rectTransform, Vector3.zero, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), 0.1f));
+            displayRoutine = StartCoroutine(MovementRoutine(rectTransform, Vector3.zero, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), 0.1f, delay));
     }
 
-    private IEnumerator MovementRoutine(RectTransform toMove, Vector3 from, Vector3 to, float duration)
+    private IEnumerator MovementRoutine(RectTransform toMove, Vector3 from, Vector3 to, float duration, float delay)
     {
+        yield return new WaitForSeconds(delay);
+
         float elapsed = 0.0f;
 
         while (elapsed < duration)
