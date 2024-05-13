@@ -108,7 +108,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{8c240acf-01f3-449b-a9a4-f4e12695d9d7}">
 		<property name="volume">
-			<value>6.5</value>
+			<value>2</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -149,7 +149,13 @@
 	</object>
 	<object class="PitchShifterEffect" id="{47b14966-b018-489d-a707-7b3c05a51bc9}">
 		<property name="pitch">
-			<value>0.969999969</value>
+			<value>0.829999983</value>
+		</property>
+		<property name="fftSize">
+			<value>256</value>
+		</property>
+		<property name="overlap">
+			<value>10</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{6c717235-2e83-49a5-badd-424d0195db50}</destination>
@@ -160,7 +166,7 @@
 			<value>pitch</value>
 		</property>
 		<property name="amount">
-			<value>13.333334</value>
+			<value>13</value>
 		</property>
 	</object>
 </objects>
