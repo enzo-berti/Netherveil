@@ -42,6 +42,11 @@ public class HudHandler : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        Utilities.Hero.OnDeath += ActiveGameOver;
+    }
+
     private void Update()
     {
         BloodTestMesh.text = Utilities.Hero.Inventory.Blood.Value.ToString();
@@ -49,21 +54,11 @@ public class HudHandler : MonoBehaviour
         corruptionText.text = Mathf.Abs(Utilities.Hero.Stats.GetValue(Stat.CORRUPTION)).ToString();
     }
 
-    private void OnEnable()
-    {
-        Utilities.Hero.OnDeath += ActiveGameOver;
-    }
-
-    private void OnDisable()
-    {
-        Utilities.Hero.OnDeath -= ActiveGameOver;
-    }
-
-
     public void ActiveGameOver(Vector3 _)
     {
         GameOver.SetActive(true);
         hud.SetActive(false);
+        GameOver.GetComponent<GameOver>().LaunchDeathCam();
     }
 
 }
