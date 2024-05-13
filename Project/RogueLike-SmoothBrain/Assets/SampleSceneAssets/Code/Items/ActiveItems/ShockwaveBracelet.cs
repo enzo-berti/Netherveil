@@ -3,13 +3,13 @@ using UnityEngine;
 public class ShockwaveBracelet : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 20f;
-    public readonly float cooldownDisplay;
+    public readonly float displayValue;
     readonly int AOE_DAMAGES;
 
     public ShockwaveBracelet()
     {
         AOE_DAMAGES = (int)(Utilities.Hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 3);
-        cooldownDisplay = Cooldown;
+        displayValue = Cooldown;
     }
     public void Activate()
     {

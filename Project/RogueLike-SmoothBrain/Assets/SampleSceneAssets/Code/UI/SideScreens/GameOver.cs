@@ -1,3 +1,4 @@
+using Cinemachine;
 using Map;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,14 +8,10 @@ using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
-    private Camera deathCam;
     [SerializeField] GameObject firstSelect;
     readonly List<Graphic> drawables = new List<Graphic>();
-
-    void Awake()
-    {
-        FindDrawablesRecursively(transform);
-    }
+    public CinemachineVirtualCamera mainCam;
+    public CinemachineVirtualCamera deathCam;
 
     void FindDrawablesRecursively(Transform current)
     {
@@ -29,15 +26,16 @@ public class GameOver : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public void LaunchDeathCam()
     {
-        deathCam = GameObject.FindGameObjectWithTag("DeathCam").GetComponent<Camera>();
-
-        deathCam.depth = 1;
+        Camera.main.cullingMask = LayerMask.GetMask("Entity");
+        FindDrawablesRecursively(transform);
+        mainCam.m_Priority = -1;
+        deathCam.m_Priority = 1;
         Color clearColor = new Color(1, 1, 1, 0);
-        deathCam.backgroundColor *= clearColor;
+        Camera.main.backgroundColor = new Color(0.31f, 0.31f, 0.31f) * clearColor;
 
-        foreach(Graphic drawable in drawables)
+        foreach (Graphic drawable in drawables)
         {
             drawable.color *= clearColor;
         }
@@ -62,14 +60,14 @@ public class GameOver : MonoBehaviour
         float targetAlpha = 1.0f;
         float duration = 2.0f;
         float elapsedTime = 0f;
-        Color initialColor = deathCam.backgroundColor;
+        Color initialColor = Camera.main.backgroundColor;
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, targetAlpha);
 
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
-            deathCam.backgroundColor = Color.Lerp(initialColor, targetColor, t);
+            Camera.main.backgroundColor = Color.Lerp(initialColor, targetColor, t);
             yield return null;
         }
 
@@ -95,11 +93,11 @@ public class GameOver : MonoBehaviour
             yield return null;
         }
 
-        if(element.gameObject.TryGetComponent(out Button button))
+        if (element.gameObject.TryGetComponent(out Button button))
         {
             button.interactable = true;
             EventSystem.current.SetSelectedGameObject(firstSelect);
         }
-        
+
     }
 }
