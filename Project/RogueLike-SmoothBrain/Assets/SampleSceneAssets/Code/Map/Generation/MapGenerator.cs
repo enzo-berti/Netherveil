@@ -122,7 +122,6 @@ namespace Map.Generation
         [SerializeField] private bool isRandom = true;
         [SerializeField] private string seed; // For debuging purpose
         [SerializeField] private Material miniMapMat;
-        [SerializeField] private Camera miniMapCam;
 
         [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
         [HideInInspector] public int stage = 0; // BOURRIN 2
@@ -138,12 +137,12 @@ namespace Map.Generation
             //}
             //else
             //{
-            Seed.RandomizeSeed();
+                Seed.RandomizeSeed();
 
-            if (!isRandom)
-            {
-                Seed.Set(seed);
-            }
+                if (!isRandom)
+                {
+                    Seed.Set(seed);
+                }
             //}
 
             seed = Seed.seed;
@@ -166,7 +165,7 @@ namespace Map.Generation
                 using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
                 {
                     Seed.seed = reader.ReadString();
-                    //stage = reader.ReadInt32();
+                    stage = reader.ReadInt32();
                 }
             }
         }
@@ -180,7 +179,7 @@ namespace Map.Generation
                 using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
                 {
                     writer.Write(Seed.seed);
-                    //writer.Write(stage);
+                    writer.Write(stage);
                 }
 
                 stream.Close();
