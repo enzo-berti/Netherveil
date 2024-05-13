@@ -137,17 +137,17 @@ namespace Map.Generation
             //}
             //else
             //{
-                Seed.RandomizeSeed();
+            Seed.RandomizeSeed();
 
-                if (!isRandom)
-                {
-                    Seed.Set(seed);
-                }
+            if (!isRandom)
+            {
+                Seed.Set(seed);
+            }
             //}
 
             seed = Seed.seed;
             Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
-            
+
             SaveManager.Instance.onSave += Save;
         }
 

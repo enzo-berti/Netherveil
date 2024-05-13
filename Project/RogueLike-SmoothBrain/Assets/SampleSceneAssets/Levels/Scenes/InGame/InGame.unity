@@ -449,26 +449,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5619506229268714918, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
-        type: 3}
-      propertyPath: field of view
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5619506229268714918, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
-        type: 3}
-      propertyPath: far clip plane
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 5619506229268714918, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
-        type: 3}
-      propertyPath: near clip plane
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 5619506229268714918, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
-        type: 3}
-      propertyPath: orthographic size
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 5976807240034258296, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
         type: 3}
       propertyPath: m_Cameras.Array.data[1]
@@ -478,21 +458,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: -- CAMERAS --
-      objectReference: {fileID: 0}
-    - target: {fileID: 7367189224211553850, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -169.01479
-      objectReference: {fileID: 0}
-    - target: {fileID: 7367189224211553850, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 138.00002
-      objectReference: {fileID: 0}
-    - target: {fileID: 7367189224211553850, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -169.01479
       objectReference: {fileID: 0}
     - target: {fileID: 8263756419043740393, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
         type: 3}
@@ -510,6 +475,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 923103177}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1017812430 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7682395060692074246, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
+    type: 3}
+  m_PrefabInstance: {fileID: 923103177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1078805731
 GameObject:
   m_ObjectHideFlags: 0
@@ -855,6 +832,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2021664835}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1753233089 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7357006698814413610, guid: 40b64a1a5ad062e4ea9f92be4bae9c08,
+    type: 3}
+  m_PrefabInstance: {fileID: 923103177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1787821069
 GameObject:
   m_ObjectHideFlags: 0
@@ -1116,6 +1105,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1710675469}
     m_Modifications:
+    - target: {fileID: 177429146543883514, guid: 059499b2cd72808418feb2d5e576d0ef,
+        type: 3}
+      propertyPath: mainCam
+      value: 
+      objectReference: {fileID: 1017812430}
+    - target: {fileID: 177429146543883514, guid: 059499b2cd72808418feb2d5e576d0ef,
+        type: 3}
+      propertyPath: deathCam
+      value: 
+      objectReference: {fileID: 1753233089}
     - target: {fileID: 181109944983116964, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: settings
@@ -1319,7 +1318,7 @@ PrefabInstance:
     - target: {fileID: 5458172950539555823, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5458172950539555823, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
@@ -1389,7 +1388,7 @@ PrefabInstance:
     - target: {fileID: 7609575117156047535, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7609575117156047535, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
