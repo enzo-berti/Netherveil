@@ -7,9 +7,8 @@ using UnityEngine.InputSystem.Samples.RebindUI;
 
 public class ItemBar : MonoBehaviour
 {
-    private Hero hero;
-    private int maxItemDisplay = 5;
     private Coroutine cooldownRoutine;
+    private Coroutine displayRoutine;
 
     [Header("General")]
     [SerializeField] private KeybindingsIcons iconsList;
@@ -39,8 +38,6 @@ public class ItemBar : MonoBehaviour
 
     private void Start()
     {
-        hero = FindObjectOfType<Hero>();
-
         if (DeviceManager.Instance.IsPlayingKB())
             UpdateKeyboardBiding();
         else
@@ -69,6 +66,14 @@ public class ItemBar : MonoBehaviour
         DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad -= UpdateGamepadBiding;
         PauseMenu.OnUnpause -= UpdateBinding;
+
+        if (displayRoutine != null)
+        {
+            StopCoroutine(displayRoutine);
+
+            RectTransform rectTransform = itemPassiveTransform.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f);
+        }
     }
 
     private void UpdateBinding()
@@ -184,14 +189,13 @@ public class ItemBar : MonoBehaviour
     {
         RectTransform rectTransform = itemPassiveTransform.GetComponent<RectTransform>();
 
+        if (displayRoutine != null)
+            StopCoroutine(displayRoutine);
+
         if (toggle)
-        {
-            StartCoroutine(MovementRoutine(rectTransform, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), Vector3.zero, 0.1f));
-        }
+            displayRoutine = StartCoroutine(MovementRoutine(rectTransform, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), Vector3.zero, 0.1f));
         else
-        {
-            StartCoroutine(MovementRoutine(rectTransform, Vector3.zero, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), 0.1f));
-        }
+            displayRoutine = StartCoroutine(MovementRoutine(rectTransform, Vector3.zero, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), 0.1f));
     }
 
     private IEnumerator MovementRoutine(RectTransform toMove, Vector3 from, Vector3 to, float duration)
