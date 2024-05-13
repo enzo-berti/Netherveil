@@ -1,6 +1,5 @@
-using UnityEngine;
 using Map;
-using UnityEngine.InputSystem;
+using UnityEngine;
 
 public class RuneOfPride : ItemEffect, IPassiveItem
 {
@@ -8,7 +7,7 @@ public class RuneOfPride : ItemEffect, IPassiveItem
     [SerializeField] private int boostValue = 2;
     private readonly int MAX_BOOST;
     private int nbBoost = 0;
-    
+
     public RuneOfPride()
     {
         MAX_BOOST = maxBoost * boostValue;
@@ -20,19 +19,20 @@ public class RuneOfPride : ItemEffect, IPassiveItem
         MapUtilities.onEnter -= Reset;
     }
 
-    public void OnRetrieved() 
+    public void OnRetrieved()
     {
         Utilities.Hero.OnKill += Berserk;
         MapUtilities.onEnter += Reset;
-    } 
+    }
 
     private void Berserk(IDamageable damageable)
     {
         Hero player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         if (nbBoost * boostValue > MAX_BOOST) return;
         player.Stats.IncreaseValue(Stat.ATK, boostValue, false);
+        AudioManager.Instance.PlaySound(AudioManager.Instance.RuneOfPrideSFX);
         nbBoost++;
-        if(nbBoost == 1)
+        if (nbBoost == 1)
         {
             Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.Play();
         }
@@ -46,4 +46,4 @@ public class RuneOfPride : ItemEffect, IPassiveItem
         nbBoost = 0;
         Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.Stop();
     }
-} 
+}

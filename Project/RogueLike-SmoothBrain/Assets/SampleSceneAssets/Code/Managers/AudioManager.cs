@@ -45,6 +45,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference thornChestSFX;
     [SerializeField] EventReference runeOfSlothSFX;
     [SerializeField] EventReference runeOfEnvySFX;
+    [SerializeField] EventReference runeOfPrideSFX;
     [SerializeField] EventReference spawningSFX;
     [SerializeField] EventReference notEnoughtBloodSFX;
 
@@ -69,6 +70,7 @@ public class AudioManager : MonoBehaviour
     public EventReference ThornChestSFX { get => thornChestSFX; }
     public EventReference RuneOfSlothSFX { get => runeOfSlothSFX; }
     public EventReference RuneOfEnvySFX { get => runeOfEnvySFX; }
+    public EventReference RuneOfPrideSFX { get => runeOfPrideSFX; }
     public EventReference SpawningSFX { get => spawningSFX; }
     public EventReference NotEnoughtBloodSFX { get => notEnoughtBloodSFX; }
 

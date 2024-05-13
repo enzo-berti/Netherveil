@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 1553574989111137277}
   - component: {fileID: 2459162956112960600}
   - component: {fileID: 415532811701282962}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MESH_CandleStick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &1553574989111137277
 Transform:
@@ -94,12 +94,12 @@ GameObject:
   - component: {fileID: 3365520992632937641}
   - component: {fileID: 1809145330240754444}
   - component: {fileID: 4539513380974520262}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MESH_Candle_Tall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &3365520992632937641
 Transform:
@@ -176,12 +176,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7213909220696973157}
   - component: {fileID: 7135363016665705792}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PREFAB_TallCandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &7213909220696973157
 Transform:
@@ -232,7 +232,7 @@ MonoBehaviour:
   Params: []
   OverrideAttenuation: 0
   OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMaxDistance: 8
 --- !u!1 &7101550216311033911
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 7783873528350922377}
   - component: {fileID: 3845898580590644757}
   - component: {fileID: 3526934099106299753}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.052437715, g: 0.745283, b: 0, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -317,12 +317,12 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 2
   m_ColorTemperature: 1900
-  m_UseColorTemperature: 1
+  m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 1.02e-43, y: 3.63e-43, z: 4.4854e-41, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
@@ -359,6 +359,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7213909220696973157}
     m_Modifications:
+    - target: {fileID: 1244400193199633124, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1244400193199633124, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
+      objectReference: {fileID: 0}
     - target: {fileID: 6227980505895872651, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -383,6 +393,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VFX_Graph_Flame
+      objectReference: {fileID: 0}
+    - target: {fileID: 7095420638463258092, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7095420638463258092, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
       objectReference: {fileID: 0}
     - target: {fileID: 8845159542156711011, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
         type: 3}
