@@ -41,8 +41,6 @@ public class GraftedThrowProjectileAttack : BaseState<GraftedStateMachine>
 
         Context.Animator.ResetTrigger("Throw");
         Context.Animator.SetTrigger("Throw");
-
-        Context.Sounds.weaponOutSound.Play(Context.transform.position);
     }
 
     // This method will be called only once after the last update.

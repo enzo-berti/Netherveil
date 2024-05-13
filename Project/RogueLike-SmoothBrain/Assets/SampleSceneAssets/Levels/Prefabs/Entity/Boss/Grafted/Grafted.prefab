@@ -348,7 +348,7 @@ MonoBehaviour:
           Data3: 1358326707
           Data4: 820297616
         Path: event:/Enemy/Grafted/GraftedSpellCast
-    spinAttackSound:
+    fallSound:
       reference:
         Guid:
           Data1: -741354411
@@ -356,7 +356,7 @@ MonoBehaviour:
           Data3: -1299117894
           Data4: -1535010658
         Path: event:/Enemy/Grafted/GraftedFall
-    stretchSound:
+    dashSound:
       reference:
         Guid:
           Data1: 1252271740
@@ -364,22 +364,6 @@ MonoBehaviour:
           Data3: 1459667589
           Data4: 1477004850
         Path: event:/Enemy/Grafted/GraftedDash
-    weaponOutSound:
-      reference:
-        Guid:
-          Data1: -128107736
-          Data2: 1193393712
-          Data3: 1727045555
-          Data4: 2013680109
-        Path: event:/Enemy/Grafted/GraftedTakeWeapon
-    weaponInSound:
-      reference:
-        Guid:
-          Data1: 1699441104
-          Data2: 1274732431
-          Data3: 1046733242
-          Data4: 1605154435
-        Path: event:/Enemy/Grafted/GraftedTuckWeapon
     walkingSound:
       reference:
         Guid:
@@ -388,6 +372,14 @@ MonoBehaviour:
           Data3: -492995948
           Data4: 819532573
         Path: event:/Enemy/Grafted/GraftedWalk
+    thrustMapSound:
+      reference:
+        Guid:
+          Data1: -627876059
+          Data2: 1340345369
+          Data3: -1131270236
+          Data4: 1040081313
+        Path: event:/Enemy/Grafted/GraftedHitMap
     music:
       reference:
         Guid:
@@ -843,17 +835,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 14.258926
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.00000047683716
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -30.256617
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 137c6e1c84df844429af960facc8cc80,
         type: 3}
@@ -1019,22 +1011,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8202091
+      value: -0.83201104
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.2264733
+      value: -0.22017294
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.506377
+      value: -0.49225295
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.13981904
+      value: 0.1302636
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
