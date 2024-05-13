@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Map.Generation
@@ -67,7 +68,7 @@ namespace Map.Generation
             }
         }
 
-        public readonly void AddAvailableDoors(DoorsGenerator doorsGenerator)
+        public readonly void AddDoors(DoorsGenerator doorsGenerator)
         {
             foreach (var door in doorsGenerator.doors)
             {
@@ -153,6 +154,31 @@ namespace Map.Generation
             SaveManager.Instance.onSave += Save;
         }
 
+        private void LateUpdate()
+        {
+            if (generate)
+            {
+                ResetMapDatas();
+
+                Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
+                generate = false;
+            }
+        }
+
+        private void ResetMapDatas()
+        {
+            roomClearId.Clear();
+            MapUtilities.onEarlyExit = null;
+            MapUtilities.onEarlyEnter = null;
+            MapUtilities.onEnter = null;
+            MapUtilities.onExit = null;
+            MapUtilities.onAllChestOpen = null;
+            MapUtilities.onEarlyAllChestOpen = null;
+            MapUtilities.onAllEnemiesDead = null;
+            MapUtilities.onEarlyAllEnemiesDead = null;
+            MapUtilities.onFinishStage = null;
+        }
+
         private void LoadSave()
         {
             string filePath = SaveManager.Instance.DirectoryPath + fileName;
@@ -204,12 +230,14 @@ namespace Map.Generation
             }
         }
 
-        private void LateUpdate()
+        private void ClearRooms()
         {
-            if (generate)
+            roomClearId.Add(1);
+            foreach (int index in roomClearId)
             {
-                Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
-                generate = false;
+                Room room = transform.GetChild(index).GetComponent<Room>();
+
+                room.Clear();
             }
         }
 
@@ -251,6 +279,9 @@ namespace Map.Generation
             GenerateRooms(ref genParam);
 
             GenerateObstructionDoors(ref genParam);
+
+
+            ClearRooms();
         }
 
         private bool GenerateRooms(ref GenerationParam genParam)
@@ -318,7 +349,7 @@ namespace Map.Generation
 
             DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
 
-            genParam.AddAvailableDoors(doorsGenerator);
+            genParam.AddDoors(doorsGenerator);
             Destroy(doorsGenerator);
 
             roomGO.transform.parent = gameObject.transform;
@@ -481,7 +512,7 @@ namespace Map.Generation
             }
 
             // Add the new doors from the new room into the possible candidates
-            genParam.AddAvailableDoors(doorsGenerator);
+            genParam.AddDoors(doorsGenerator);
 
             // Generate one of the seed room and delete the other's
             roomGO.GetComponentInChildren<RoomPresets>().GenerateRandomPreset();

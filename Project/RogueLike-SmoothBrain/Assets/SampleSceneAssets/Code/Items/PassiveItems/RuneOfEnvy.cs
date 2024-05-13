@@ -36,12 +36,12 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
 
-        if (MapUtilities.currentRoomData.enemies.Count > 0)
+        if (MapUtilities.currentRoomData.Enemies.Count > 0)
         {
             AudioManager.Instance.PlaySound(AudioManager.Instance.RuneOfEnvySFX);
         }
 
-        foreach (GameObject enemy in MapUtilities.currentRoomData.enemies)
+        foreach (GameObject enemy in MapUtilities.currentRoomData.Enemies)
         {
             
             Mobs mob = enemy.GetComponent<Mobs>();

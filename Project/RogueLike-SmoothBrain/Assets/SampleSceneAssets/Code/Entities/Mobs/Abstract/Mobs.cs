@@ -162,7 +162,7 @@ public abstract class Mobs : Entity
         if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -Utilities.Hero.STEP_VALUE && UnityEngine.Random.Range(0, 100) <= 4 * Mathf.Abs(Utilities.Hero.CurrentAlignmentStep))
         {
             GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
-            MapUtilities.currentRoomData.enemies.Add(clone);
+            MapUtilities.currentRoomData.Enemies.Add(clone);
         }
     }
 

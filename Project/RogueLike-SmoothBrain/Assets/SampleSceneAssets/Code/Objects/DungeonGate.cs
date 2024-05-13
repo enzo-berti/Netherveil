@@ -6,7 +6,7 @@ using UnityEngine;
 public class DungeonGate : MonoBehaviour
 {
     private Material material;
-    private float soundPlayDistance;
+    private const float soundPlayDistance = 5f;
     [SerializeField] private BoxCollider boxCollider;
 
     private void Awake()
@@ -21,7 +21,6 @@ public class DungeonGate : MonoBehaviour
     {
         MapUtilities.onEnter += Close;
         MapUtilities.onAllEnemiesDead += Open;
-        soundPlayDistance = 5f;
     }
 
     private void OnDestroy()
@@ -47,7 +46,7 @@ public class DungeonGate : MonoBehaviour
 
     private void Close()
     {
-        if (MapUtilities.currentRoomData.enemies.Count <= 0)
+        if (MapUtilities.currentRoomData.Enemies.Count <= 0)
         {
             return;
         }

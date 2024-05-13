@@ -13,7 +13,7 @@ public class DebugForMilestone : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            foreach (var enemy in MapUtilities.currentRoomData.enemies)
+            foreach (var enemy in MapUtilities.currentRoomData.Enemies)
             {
                 if (enemy != null)
                 {
@@ -24,7 +24,7 @@ public class DebugForMilestone : MonoBehaviour
                     }
                 }
             }
-            MapUtilities.currentRoomData.enemies.Clear();
+            MapUtilities.currentRoomData.Enemies.Clear();
         }
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {

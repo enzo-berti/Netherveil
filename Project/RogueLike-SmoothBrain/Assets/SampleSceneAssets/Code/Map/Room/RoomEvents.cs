@@ -14,10 +14,9 @@ namespace Map
         private GameObject roomPreset;
         private GameObject enemies;
         private GameObject treasures;
-        //private GameObject traps;
         private NavMeshSurface navMeshSurface;
 
-        static private bool hasEntered = false;
+        static private bool hasLeaved = false;
         private bool allChestsOpenCalled = false;
         private bool allEnemiesDeadCalled = false;
         private bool enterRoomCalled = false;
@@ -36,34 +35,17 @@ namespace Map
                     break;
                 }
             }
-        }
 
-        private void OnDestroy()
-        {
-            MapUtilities.onEarlyExit = null;
-            MapUtilities.onEarlyEnter = null;
-            MapUtilities.onEnter = null;
-            MapUtilities.onExit = null;
-            MapUtilities.onAllChestOpen = null;
-            MapUtilities.onEarlyAllChestOpen = null;
-            MapUtilities.onAllEnemiesDead = null;
-            MapUtilities.onEarlyAllEnemiesDead = null;
-            MapUtilities.onFinishStage = null;
-            hasEntered = false;
-        }
-
-        private void Start()
-        {
             // find room go's
             room = transform.parent.gameObject.GetComponent<Room>();
-            roomPreset = room.GetComponentInChildren<RoomPresets>().transform.GetChild(0).gameObject;
+            room.GetComponentInChildren<RoomPresets>(true).GenerateRandomPreset(); // je détruis tout ici pour me simplifier la vie..
+            roomPreset = room.GetComponentInChildren<RoomPresets>(true).transform.GetChild(0).gameObject;
             enemies = roomPreset.transform.Find("Enemies").gameObject;
             treasures = roomPreset.transform.Find("Treasures").gameObject;
-            //traps = room.transform.Find("Traps").gameObject;
-            navMeshSurface = room.GetComponentInChildren<NavMeshSurface>();
+            navMeshSurface = room.GetComponentInChildren<NavMeshSurface>(true);
 
             enemies.SetActive(false);
-            foreach (var c in room.GetComponentsInChildren<MapLayer>())
+            foreach (var c in room.GetComponentsInChildren<MapLayer>(true))
             {
                 c.Unset();
             }
@@ -74,11 +56,6 @@ namespace Map
                 roomUI.gameObject.SetActive(false);
             }
 
-            // set bool to true to not call the events in the room if there is no enemy
-            allEnemiesDeadCalled = (enemies.transform.childCount == 0);
-            // set bool to true to not call the events in the room if there is no chest
-            allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
-
             // create data of the map
             roomData = new RoomData(room, enemies);
             if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
@@ -87,7 +64,15 @@ namespace Map
             }
         }
 
-        private void OpenChestsEvent()
+        private void Start()
+        {
+            // set bool to true to not call the events in the room if there is no enemy
+            allEnemiesDeadCalled = (enemies.transform.childCount == 0);
+            // set bool to true to not call the events in the room if there is no chest
+            allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
+        }
+
+        private void OpenAllChestsEvent()
         {
             allChestsOpenCalled = true;
 
@@ -96,12 +81,11 @@ namespace Map
             MapUtilities.onAllChestOpen?.Invoke();
         }
 
-        private void EnterEvents()
+        private void LocalEnterEvents()
         {
             enterRoomCalled = true;
-            hasEntered = true;
+            RoomEvents.hasLeaved = false;
 
-            // local events
             // set all elements to the map layer now that we can see them
             foreach (var c in room.GetComponentsInChildren<MapLayer>())
             {
@@ -109,7 +93,7 @@ namespace Map
             }
 
             // activate ui
-            var roomUI = room.GetComponentInChildren<RoomUI>(true);
+            RoomUI roomUI = room.GetComponentInChildren<RoomUI>(true);
             if (roomUI)
             {
                 roomUI.gameObject.SetActive(true);
@@ -120,24 +104,35 @@ namespace Map
 
             navMeshSurface.enabled = true;
             enemies.SetActive(true);
+        }
+
+        private void EnterEvents()
+        {
+            LocalEnterEvents();
 
             // global events
             MapUtilities.onEarlyEnter?.Invoke();
             MapUtilities.onEnter?.Invoke();
+            Debug.Log("ENTER ROOM");
+        }
+
+        private void LocalExitEvents()
+        {
+            exitRoomCalled = true;
+            RoomEvents.hasLeaved = true;
+
+            navMeshSurface.enabled = false;
+            enemies.SetActive(false);
         }
 
         private void ExitEvents()
         {
-            exitRoomCalled = true;
-            hasEntered = false;
-
-            // local events
-            navMeshSurface.enabled = false;
-            enemies.SetActive(false);
+            LocalExitEvents();
 
             // global events
             MapUtilities.onEarlyExit?.Invoke();
             MapUtilities.onExit?.Invoke();
+            Debug.Log("EXIT ROOM");
         }
 
         private void AllEnemiesDeadEvents()
@@ -159,6 +154,7 @@ namespace Map
             }
 
             SaveManager.Instance.Save();
+            Debug.Log("KILL ALL ENEMIES", gameObject);
         }
 
         private void LateUpdate()
@@ -170,7 +166,7 @@ namespace Map
 
             if (!allChestsOpenCalled && treasures.GetComponentsInChildren<Item>().Count() == 0)
             {
-                OpenChestsEvent();
+                OpenAllChestsEvent();
             }
         }
 
@@ -184,7 +180,7 @@ namespace Map
 
         private void OnTriggerStay(Collider other)
         {
-            if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
+            if (!enterRoomCalled && other.gameObject.CompareTag("Player") && hasLeaved)
             {
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
                 if (enterToPlayer.magnitude >= 6.25f)
@@ -200,6 +196,13 @@ namespace Map
             {
                 ExitEvents();
             }
+        }
+
+        public void Clear()
+        {
+            LocalEnterEvents();
+            LocalExitEvents();
+            RoomEvents.hasLeaved = false; // to ensure not being blocked
         }
     }
 }

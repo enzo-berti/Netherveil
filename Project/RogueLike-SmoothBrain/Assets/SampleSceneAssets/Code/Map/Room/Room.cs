@@ -21,6 +21,12 @@ namespace Map
             }
         }
 
+        public void Clear()
+        {
+            Enemies.Clear();
+            Skeleton.GetComponent<RoomEvents>().Clear();
+        }
+
         public T Get<T>() where T : UnityEngine.Component
         {
             foreach (var go in roomObjects)
@@ -64,6 +70,14 @@ namespace Map
             get
             {
                 return Get<RoomPresets>().gameObject;
+            }
+        }
+
+        public RoomEnemies Enemies
+        {
+            get
+            {
+                return RoomPresets.GetComponentInChildren<RoomEnemies>(true);
             }
         }
     }

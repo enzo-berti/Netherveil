@@ -22,13 +22,7 @@ namespace Map
     {
         public RoomData(Room roomPrefab, GameObject enemiesContainer)
         {
-            enemies = new List<GameObject>();
-
-            foreach (Mobs enemy in enemiesContainer.GetComponentsInChildren<Mobs>())
-            {
-                enemies.Add(enemy.gameObject);
-            }
-
+            this.enemiesContainer = enemiesContainer;
             Type = roomPrefab.type;
         }
 
@@ -36,12 +30,26 @@ namespace Map
         {
             get
             {
-                return enemies.Count;
+                return Enemies.Count;
             }
         }
 
         public RoomType Type { get; private set; }
 
-        public List<GameObject> enemies;
+        private readonly GameObject enemiesContainer;
+        public readonly List<GameObject> Enemies
+        {
+            get
+            {
+                List<GameObject> enemies = new List<GameObject>();
+
+                foreach (Mobs enemy in enemiesContainer.GetComponentsInChildren<Mobs>())
+                {
+                    enemies.Add(enemy.gameObject);
+                }
+
+                return enemies;
+            }
+        }
     }
 }
