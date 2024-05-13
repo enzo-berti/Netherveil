@@ -16,6 +16,7 @@ namespace Map
         //private GameObject traps;
         private NavMeshSurface navMeshSurface;
 
+        static private bool hasEntered = false;
         private bool allChestsOpenCalled = false;
         private bool allEnemiesDeadCalled = false;
         private bool enterRoomCalled = false;
@@ -47,6 +48,7 @@ namespace Map
             MapUtilities.onAllEnemiesDead = null;
             MapUtilities.onEarlyAllEnemiesDead = null;
             MapUtilities.onFinishStage = null;
+            hasEntered = false;
         }
 
         private void Start()
@@ -96,6 +98,7 @@ namespace Map
         private void EnterEvents()
         {
             enterRoomCalled = true;
+            hasEntered = true;
 
             // local events
             // set all elements to the map layer now that we can see them
@@ -125,6 +128,7 @@ namespace Map
         private void ExitEvents()
         {
             exitRoomCalled = true;
+            hasEntered = false;
 
             // local events
             navMeshSurface.enabled = false;
@@ -173,7 +177,7 @@ namespace Map
             if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
             {
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
-                if (enterToPlayer.magnitude >= other.bounds.size.magnitude)
+                if (enterToPlayer.magnitude >= 7.5f)
                 {
                     EnterEvents();
                 }

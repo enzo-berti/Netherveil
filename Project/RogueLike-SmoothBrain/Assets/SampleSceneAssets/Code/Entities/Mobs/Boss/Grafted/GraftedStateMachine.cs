@@ -29,11 +29,10 @@ public class GraftedStateMachine : Mobs, IGrafted
         public Sound thrustSound;
         public Sound introSound;
         public Sound retrievingProjectileSound;
-        public Sound spinAttackSound;
-        public Sound stretchSound;
-        public Sound weaponOutSound;
-        public Sound weaponInSound;
+        public Sound fallSound;
+        public Sound dashSound;
         public Sound walkingSound;
+        public Sound thrustMapSound;
         public Sound music;
 
         public void StopAllSounds()
@@ -47,11 +46,10 @@ public class GraftedStateMachine : Mobs, IGrafted
             thrustSound.Stop();
             introSound.Stop();
             retrievingProjectileSound.Stop();
-            spinAttackSound.Stop();
-            stretchSound.Stop();
-            weaponOutSound.Stop();
-            weaponInSound.Stop();
+            fallSound.Stop();
+            dashSound.Stop();
             walkingSound.Stop();
+            thrustMapSound.Stop();
             music.Stop();
         }
     }
