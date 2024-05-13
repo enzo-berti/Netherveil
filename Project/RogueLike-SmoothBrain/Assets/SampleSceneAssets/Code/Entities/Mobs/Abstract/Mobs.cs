@@ -105,6 +105,7 @@ public abstract class Mobs : Entity
         spawningVFX.GetComponent<VFXStopper>().Duration = spawningVFX.GetFloat("Duration") + 0.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
+        AudioManager.Instance.PlaySound(AudioManager.Instance.SpawningSFX, transform.position);
 
         AddSpawningMat();
         wanderZone.center = transform.position;

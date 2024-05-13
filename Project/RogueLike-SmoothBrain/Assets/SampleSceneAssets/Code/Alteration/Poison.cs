@@ -30,10 +30,10 @@ public class Poison : OverTimeStatus
 
     protected override void Effect()
     {
-        if(target != null)
+        if (target != null)
         {
-            FloatingTextGenerator.CreateEffectDamageText(Stack, target.transform.position, poisonColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(Stack, launcher, false);
+            FloatingTextGenerator.CreateEffectDamageText(Stack * 3, target.transform.position, poisonColor);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(Stack * 3, launcher, false);
 
             if (Utilities.IsPlayer(target))
                 PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Poison);

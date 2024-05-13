@@ -8,9 +8,13 @@ public class Bomb : ItemEffect, IActiveItem
     public static bool bombIsThrow;
     private GameObject bombPf;
     readonly int damages = 15;
+#pragma warning disable IDE0052 // Supprimer les membres privés non lus
+    private readonly float displayValue;
+#pragma warning restore IDE0052 // Supprimer les membres privés non lus
 
     public Bomb()
     {
+        displayValue = Cooldown;
         bombPf = GameResources.Get<GameObject>("Bomb");
     }
     public void Activate()

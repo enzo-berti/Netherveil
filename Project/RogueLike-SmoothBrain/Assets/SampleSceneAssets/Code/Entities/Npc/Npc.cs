@@ -8,6 +8,7 @@ public abstract class Npc : Entity, IInterractable
     PlayerInteractions playerInteractions;
     Hero hero;
     private bool isSelect = false;
+    private Coroutine rangeRoutine;
 
     public virtual void Interract()
     {
@@ -25,6 +26,15 @@ public abstract class Npc : Entity, IInterractable
     {
         base.Update();
         Interraction();
+    }
+
+    private void OnDisable()
+    {
+        if (rangeRoutine != null)
+        {
+            StopCoroutine(rangeRoutine);
+            rangeImage.rectTransform.localScale = Vector3.zero;
+        }
     }
 
     private void Interraction()
@@ -46,8 +56,11 @@ public abstract class Npc : Entity, IInterractable
     public void ToggleRangeImage(bool toggle)
     {
         float durationScale = 0.15f;
-        StopAllCoroutines();
-        StartCoroutine(toggle ? rangeImage.rectTransform.UpScaleCoroutine(durationScale) : rangeImage.rectTransform.DownScaleCoroutine(durationScale));
+
+        if (rangeRoutine != null)
+            StopCoroutine(rangeRoutine);
+
+        rangeRoutine = StartCoroutine(toggle ? rangeImage.rectTransform.UpScaleCoroutine(durationScale) : rangeImage.rectTransform.DownScaleCoroutine(durationScale));
     }
 
     public void Select()
