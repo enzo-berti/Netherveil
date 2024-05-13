@@ -55,7 +55,7 @@ namespace Fountain
 
         private void SetText(Fountain fountain)
         {
-            string blood = $"<color=red>{fountain.BloodPrice} <size={iconSize}></color><sprite name=\"blood\"><size={originalSize}>";
+            string blood = $"{fountain.BloodPrice}<size={iconSize}><sprite name=\"blood\"><size={originalSize}>";
 
             string value = fountain.Type == FountainType.Blessing ? $"<color=yellow>{fountain.AbsoluteValueTrade}</color>" : 
                 $"<color=purple>{fountain.AbsoluteValueTrade}</color>";
