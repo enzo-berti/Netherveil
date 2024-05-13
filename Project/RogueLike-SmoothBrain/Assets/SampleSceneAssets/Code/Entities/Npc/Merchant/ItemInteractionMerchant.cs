@@ -65,7 +65,11 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         int price = (int)(item.Price * Item.priceCoef);
 
         if (hero.Inventory.Blood.Value < price)
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.NotEnoughtBloodSFX);
             return;
+        }
+           
 
 
         AudioManager.Instance.PlaySound(AudioManager.Instance.ItemBuySFX);
