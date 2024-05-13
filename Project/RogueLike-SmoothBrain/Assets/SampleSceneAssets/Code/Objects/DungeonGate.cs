@@ -2,7 +2,6 @@ using FMODUnity;
 using Map;
 using System.Threading.Tasks;
 using UnityEngine;
-using static HoudiniEngineUnity.HEU_Curve;
 
 public class DungeonGate : MonoBehaviour
 {

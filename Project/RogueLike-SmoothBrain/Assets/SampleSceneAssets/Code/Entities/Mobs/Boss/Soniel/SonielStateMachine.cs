@@ -106,8 +106,10 @@ public class SonielStateMachine : Mobs, ISoniel
         {
             gameMusic.SetActive(false);
         }
+
         factory = new StateFactory<SonielStateMachine>(this);
         currentState = factory.GetState<SonielTriggeredState>();
+  
         animator.SetBool("Walk", true);
 
         // animation hash

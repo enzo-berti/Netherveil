@@ -65,9 +65,11 @@ public class MerchantCounterInteraction : MonoBehaviour, IInterractable
         int price = merchantCounter.BloodPrice;
         int trade = merchantCounter.ValueTrade;
 
-        if (price > hero.Inventory.Blood.Value)
+        if (price > hero.Inventory.Blood.Value || merchantCounter.NbPurchases >= merchantCounter.MAX_PURCHASE)
             return;
 
+        merchantCounter.BloodPrice += merchantCounter.PURCHASE_STEP_AUGMENTATION;
+        merchantCounter.NbPurchases++;
         hero.Inventory.Blood -= price;
         hero.HealConsumable(trade);
     }
