@@ -29,11 +29,10 @@ public class GraftedStateMachine : Mobs, IGrafted
         public Sound thrustSound;
         public Sound introSound;
         public Sound retrievingProjectileSound;
-        public Sound spinAttackSound;
-        public Sound stretchSound;
-        public Sound weaponOutSound;
-        public Sound weaponInSound;
+        public Sound fallSound;
+        public Sound dashSound;
         public Sound walkingSound;
+        public Sound thrustMapSound;
         public Sound music;
 
         public void StopAllSounds()
@@ -47,11 +46,10 @@ public class GraftedStateMachine : Mobs, IGrafted
             thrustSound.Stop();
             introSound.Stop();
             retrievingProjectileSound.Stop();
-            spinAttackSound.Stop();
-            stretchSound.Stop();
-            weaponOutSound.Stop();
-            weaponInSound.Stop();
+            fallSound.Stop();
+            dashSound.Stop();
             walkingSound.Stop();
+            thrustMapSound.Stop();
             music.Stop();
         }
     }
@@ -99,6 +97,11 @@ public class GraftedStateMachine : Mobs, IGrafted
     CameraUtilities cameraUtilities;
 
     bool freezeRotation = false;
+
+    // CINEMATICS
+    [SerializeField] private BossCinematic cinematic;
+    private bool isInCinematic = false;
+    public bool IsInCinematic { get => isInCinematic; set => isInCinematic = value; }
 
     #region Getters/Setters
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -176,11 +179,15 @@ public class GraftedStateMachine : Mobs, IGrafted
         tripleThrustVFX.transform.parent = null;
         tripleThrustVFX.Play();
         player = FindObjectOfType<Hero>();
+
+        // Cinematics
+        cinematic.Play();
+        isInCinematic = true;
     }
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (isFreeze || IsSpawning || isInCinematic)
             return;
 
         base.Update();

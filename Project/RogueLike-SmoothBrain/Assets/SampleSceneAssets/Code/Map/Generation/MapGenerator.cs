@@ -129,6 +129,8 @@ namespace Map.Generation
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
         const string fileName = "Map.save";
 
+        public List<int> roomClearId = new List<int>();
+
         private void Awake()
         {
             //if (SaveManager.Instance.HasData)
@@ -164,8 +166,16 @@ namespace Map.Generation
             {
                 using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
                 {
+                    // seed
                     Seed.seed = reader.ReadString();
-                    //stage = reader.ReadInt32();
+                    // stage
+                    stage = reader.ReadInt32();
+                    // room ids
+                    int numberCleared = reader.ReadInt32();
+                    for (int i = 0; i < numberCleared; i++)
+                    {
+                        roomClearId.Add(reader.ReadInt32());
+                    }
                 }
             }
         }
@@ -178,8 +188,16 @@ namespace Map.Generation
             {
                 using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
                 {
+                    // seed
                     writer.Write(Seed.seed);
-                    //writer.Write(stage);
+                    // stage
+                    writer.Write(stage);
+                    // room ids
+                    writer.Write(roomClearId.Count);
+                    foreach (int id in roomClearId)
+                    {
+                        writer.Write(id);
+                    }
                 }
 
                 stream.Close();
@@ -200,19 +218,19 @@ namespace Map.Generation
             switch (stage)
             {
                 case 1:
-                    miniMapMat.SetColor("Ground", new Color(128/255, 101 / 255, 164 / 255));
-                    miniMapMat.SetColor("Ceiling", new Color(146 / 255, 118 / 255, 183 / 255));
-                    miniMapMat.SetColor("Wall", new Color(82 / 255, 64 / 255, 106 / 255));
+                    miniMapMat.SetColor("_Ground", ColorExtension.Color("8065A4"));
+                    miniMapMat.SetColor("_Ceiling", ColorExtension.Color("9276B7"));
+                    miniMapMat.SetColor("_Wall", ColorExtension.Color("52406A"));
                     break;
                 case 2:
-                    miniMapMat.SetColor("Ground", new Color(105 / 255, 164 / 255, 101 / 255));
-                    miniMapMat.SetColor("Ceiling", new Color(118 / 255, 183 / 255, 123 / 255));
-                    miniMapMat.SetColor("Wall", new Color(64 / 255, 106 / 255, 64 / 255));
+                    miniMapMat.SetColor("_Ground", ColorExtension.Color("69A465"));
+                    miniMapMat.SetColor("_Ceiling", ColorExtension.Color("76B77B"));
+                    miniMapMat.SetColor("_Wall", ColorExtension.Color("406A40"));
                     break;
                 case 3:
-                    miniMapMat.SetColor("Ground", new Color(101 / 255, 156 / 255, 164 / 255));
-                    miniMapMat.SetColor("Ceiling", new Color(118 / 255, 171 / 255, 183 / 255));
-                    miniMapMat.SetColor("Wall", new Color(64 / 255, 99 / 255, 106 / 255));
+                    miniMapMat.SetColor("_Ground", ColorExtension.Color("659CA4"));
+                    miniMapMat.SetColor("_Ceiling", ColorExtension.Color("76ABB7"));
+                    miniMapMat.SetColor("_Wall", ColorExtension.Color("40636A"));
                     break;
             }
         }

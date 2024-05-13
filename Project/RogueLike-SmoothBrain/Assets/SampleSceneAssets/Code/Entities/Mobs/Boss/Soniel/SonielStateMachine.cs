@@ -65,6 +65,11 @@ public class SonielStateMachine : Mobs, ISoniel
 
     GameObject gameMusic;
 
+    // CINEMATICS
+    [SerializeField] private BossCinematic cinematic;
+    private bool isInCinematic = false;
+    public bool IsInCinematic { get => isInCinematic; set => isInCinematic = value; }
+
     // DEBUG
     bool debugMode = false;
 
@@ -101,8 +106,10 @@ public class SonielStateMachine : Mobs, ISoniel
         {
             gameMusic.SetActive(false);
         }
+
         factory = new StateFactory<SonielStateMachine>(this);
         currentState = factory.GetState<SonielTriggeredState>();
+  
         animator.SetBool("Walk", true);
 
         // animation hash
@@ -119,11 +126,15 @@ public class SonielStateMachine : Mobs, ISoniel
         swords[1].SetSounds(sounds.swordHitMap, sounds.swordSpinning);
 
         sounds.music.Play(false);
+
+        // Cinematics
+        cinematic.Play();
+        isInCinematic = true;
     }
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (isFreeze || IsSpawning || isInCinematic)
             return;
 
         base.Update();

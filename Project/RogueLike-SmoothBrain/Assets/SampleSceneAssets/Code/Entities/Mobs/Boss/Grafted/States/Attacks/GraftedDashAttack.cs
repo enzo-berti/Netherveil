@@ -71,7 +71,7 @@ public class GraftedDashAttack : BaseState<GraftedStateMachine>
 
             if (fallTimer >= 0.5f)
             {
-                Context.Sounds.stretchSound.Play(Context.transform.position);
+                Context.Sounds.dashSound.Play(Context.transform.position);
                 Context.DashVFX.GetComponent<VFXStopper>().PlayVFX();
 
                 DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.3f);
@@ -110,7 +110,7 @@ public class GraftedDashAttack : BaseState<GraftedStateMachine>
             {
                 // DEBUG
                 Context.DisableHitboxes();
-                Context.Sounds.spinAttackSound.Play(Context.transform.position);
+                Context.Sounds.fallSound.Play(Context.transform.position);
 
                 Context.PlayerHit = false;
                 triggerAOE = true;

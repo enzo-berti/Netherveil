@@ -1,4 +1,5 @@
 using Map.Component;
+using Map.Generation;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Map
         //private GameObject traps;
         private NavMeshSurface navMeshSurface;
 
+        static private bool hasEntered = false;
         private bool allChestsOpenCalled = false;
         private bool allEnemiesDeadCalled = false;
         private bool enterRoomCalled = false;
@@ -47,6 +49,7 @@ namespace Map
             MapUtilities.onAllEnemiesDead = null;
             MapUtilities.onEarlyAllEnemiesDead = null;
             MapUtilities.onFinishStage = null;
+            hasEntered = false;
         }
 
         private void Start()
@@ -96,6 +99,7 @@ namespace Map
         private void EnterEvents()
         {
             enterRoomCalled = true;
+            hasEntered = true;
 
             // local events
             // set all elements to the map layer now that we can see them
@@ -125,6 +129,7 @@ namespace Map
         private void ExitEvents()
         {
             exitRoomCalled = true;
+            hasEntered = false;
 
             // local events
             navMeshSurface.enabled = false;
@@ -143,6 +148,15 @@ namespace Map
             // global events
             MapUtilities.onEarlyAllEnemiesDead?.Invoke();
             MapUtilities.onAllEnemiesDead?.Invoke();
+
+            for (int i = 0; i < transform.parent.parent.childCount; i++)
+            {
+                if (transform.parent.parent.GetChild(i) == transform.parent)
+                {
+                    FindObjectOfType<MapGenerator>().roomClearId.Add(i);
+                    break;
+                }
+            }
 
             SaveManager.Instance.Save();
         }
@@ -173,7 +187,7 @@ namespace Map
             if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
             {
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
-                if (enterToPlayer.magnitude >= other.bounds.size.magnitude)
+                if (enterToPlayer.magnitude >= 6.25f)
                 {
                     EnterEvents();
                 }
