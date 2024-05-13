@@ -15,13 +15,23 @@ public static class ColorExtension
         float red = redStr.FromHexString() / 255f;
         float green = greenStr.FromHexString() / 255f;
         float blue = blueStr.FromHexString() / 255f;
-        UnityEngine.Debug.Log(red + " " + green + " " + blue);
+
+        return new Color(red, green, blue);
+    }
+
+    public static Color Color(int r, int g, int b)
+    {
+
+        float red = r / 255f;
+        float green = g / 255f;
+        float blue = b / 255f;
+
         return new Color(red, green, blue);
     }
 
     private static int FromHexString(this string hexString)
     {
-        int num = Int32.Parse(hexString, System.Globalization.NumberStyles.HexNumber);
+        int num = int.Parse(hexString, System.Globalization.NumberStyles.HexNumber);
 
         return num;
     }
