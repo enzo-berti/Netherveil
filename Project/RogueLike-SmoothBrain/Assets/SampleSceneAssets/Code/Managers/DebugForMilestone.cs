@@ -66,9 +66,5 @@ public class DebugForMilestone : MonoBehaviour
             Utilities.Hero.DebugCallLaunchUpgrade();
             Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
-        //if (Input.GetKeyDown(KeyCode.KeypadDivide))
-        //{
-        //    Utilities.Hero.CurrentQuest = Quest.LoadClass(Quest.GetRandomQuestName(), QuestTalker.TalkerType.CLERIC, QuestTalker.TalkerGrade.BOSS);
-        //}
     }
 }
