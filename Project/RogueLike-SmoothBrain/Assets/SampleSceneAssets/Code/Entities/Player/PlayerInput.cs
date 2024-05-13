@@ -334,7 +334,8 @@ public class PlayerInput : MonoBehaviour
     private void SkipDialogue(InputAction.CallbackContext ctx)
     {
         DialogueTreeRunner DTRunner = FindAnyObjectByType<DialogueTreeRunner>();
-        if (!DTRunner.IsStarted || DTRunner.IsCurrentDialogueChoiceDialogue())
+
+        if (!DTRunner.IsStarted)
             return;
 
         DTRunner.UpdateDialogue();
