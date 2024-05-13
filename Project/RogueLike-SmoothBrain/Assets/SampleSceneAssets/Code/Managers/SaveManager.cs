@@ -50,6 +50,8 @@ public class SaveManager : MonoBehaviour
         }
 
         HasData = false;
+
+        SelectSave(1);
     }
 
     public void SelectSave(int selectedSave)
@@ -60,6 +62,10 @@ public class SaveManager : MonoBehaviour
         if (!Directory.Exists(DirectoryPath))
         {
             Directory.CreateDirectory(DirectoryPath);
+        }
+        else
+        {
+            HasData = true; // pas ouf temporaire
         }
     }
 

@@ -113,7 +113,6 @@ namespace Map
             // global events
             MapUtilities.onEarlyEnter?.Invoke();
             MapUtilities.onEnter?.Invoke();
-            Debug.Log("ENTER ROOM");
         }
 
         private void LocalExitEvents()
@@ -129,10 +128,20 @@ namespace Map
         {
             LocalExitEvents();
 
+            for (int i = 0; i < transform.parent.parent.childCount; i++)
+            {
+                if (transform.parent.parent.GetChild(i) == transform.parent)
+                {
+                    FindObjectOfType<MapGenerator>().roomClearId.Add(i);
+                    break;
+                }
+            }
+
             // global events
             MapUtilities.onEarlyExit?.Invoke();
             MapUtilities.onExit?.Invoke();
-            Debug.Log("EXIT ROOM");
+
+            SaveManager.Instance.Save();
         }
 
         private void AllEnemiesDeadEvents()
@@ -143,18 +152,6 @@ namespace Map
             // global events
             MapUtilities.onEarlyAllEnemiesDead?.Invoke();
             MapUtilities.onAllEnemiesDead?.Invoke();
-
-            for (int i = 0; i < transform.parent.parent.childCount; i++)
-            {
-                if (transform.parent.parent.GetChild(i) == transform.parent)
-                {
-                    FindObjectOfType<MapGenerator>().roomClearId.Add(i);
-                    break;
-                }
-            }
-
-            SaveManager.Instance.Save();
-            Debug.Log("KILL ALL ENEMIES", gameObject);
         }
 
         private void LateUpdate()

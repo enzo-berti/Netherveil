@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Map.Generation
@@ -134,19 +133,19 @@ namespace Map.Generation
 
         private void Awake()
         {
-            //if (SaveManager.Instance.HasData)
-            //{
-            //    LoadSave();
-            //}
-            //else
-            //{
-            Seed.RandomizeSeed();
-
-            if (!isRandom)
+            if (SaveManager.Instance.HasData)
             {
-                Seed.Set(seed);
+                LoadSave();
             }
-            //}
+            else
+            {
+                Seed.RandomizeSeed();
+
+                if (!isRandom)
+                {
+                    Seed.Set(seed);
+                }
+            }
 
             seed = Seed.seed;
             Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
@@ -195,12 +194,14 @@ namespace Map.Generation
                     // seed
                     Seed.seed = reader.ReadString();
                     // stage
-                    stage = reader.ReadInt32();
+                    stage = reader.ReadInt32() - 1;
                     // room ids
                     int numberCleared = reader.ReadInt32();
+                    Debug.Log(numberCleared);
                     for (int i = 0; i < numberCleared; i++)
                     {
                         roomClearId.Add(reader.ReadInt32());
+                        Debug.Log(roomClearId[i]);
                     }
                 }
             }
@@ -232,7 +233,6 @@ namespace Map.Generation
 
         private void ClearRooms()
         {
-            roomClearId.Add(1);
             foreach (int index in roomClearId)
             {
                 Room room = transform.GetChild(index).GetComponent<Room>();
@@ -279,7 +279,6 @@ namespace Map.Generation
             GenerateRooms(ref genParam);
 
             GenerateObstructionDoors(ref genParam);
-
 
             ClearRooms();
         }
