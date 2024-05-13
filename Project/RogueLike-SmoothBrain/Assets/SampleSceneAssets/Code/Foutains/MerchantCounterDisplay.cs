@@ -63,6 +63,13 @@ public class MerchantCounterDisplay : MonoBehaviour
 
         string blood = $"{bloodPrice}<size={iconSize}><sprite name=\"blood\"><size={originalSize}>";
 
-        displayTextMesh.text = $"Use {blood} to gain <color=green>{merchantCounter.ValueTrade} HP</color>.";
+        if(merchantCounter.NbPurchases >= merchantCounter.MAX_PURCHASE)
+        {
+            displayTextMesh.text = $"<color=red>Max Purchase Reached...</color>";
+        }
+        else
+        {
+            displayTextMesh.text = $"Use {blood} to gain <color=green>{merchantCounter.ValueTrade} HP</color>.";
+        }
     }
 }
