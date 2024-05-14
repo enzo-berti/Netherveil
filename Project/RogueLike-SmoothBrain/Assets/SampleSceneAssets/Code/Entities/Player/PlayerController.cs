@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
-using System.ComponentModel.Design;
 using Unity.VisualScripting;
 
 #if UNITY_EDITOR
@@ -26,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject spearThrowWrapper;
     [SerializeField] BoxCollider spearThrowCollider;
     [SerializeField] BoxCollider dashAttackCollider;
+    public GameObject ezrealAttackPrefab;
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
     Plane mouseRaycastPlane;
