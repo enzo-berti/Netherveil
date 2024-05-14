@@ -235,7 +235,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Mobs mob = damageable as Mobs; 
         if(CurrentAlignmentStep >= 2 && mob != null)
         {
-            mob.AddStatus(new DamoclesSword(3f, 1f), attacker);
+            mob.AddStatus(new DamoclesSword(3f, 0.3f), attacker);
         }
     }
 

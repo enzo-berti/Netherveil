@@ -26,13 +26,13 @@ public class PestWanderingState : BaseState<PestStateMachine>
     protected override void EnterState()
     {
         Context.WanderZoneCenter = Context.transform.position;
-        if (Context.LifeBar.gameObject.activeInHierarchy) Context.LifeBar.FadeOutOpacity(0.5f, 0.25f);
+        if (Context.LifeBar.gameObject.activeSelf) Context.LifeBar.FadeOutOpacity(0.5f, 0.25f);
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-        if (Context.LifeBar.gameObject.activeInHierarchy) Context.LifeBar.TriggerHealthBar();
+        if (Context.LifeBar.gameObject.activeSelf) Context.LifeBar.TriggerHealthBar();
     }
 
     // This method will be call every frame.

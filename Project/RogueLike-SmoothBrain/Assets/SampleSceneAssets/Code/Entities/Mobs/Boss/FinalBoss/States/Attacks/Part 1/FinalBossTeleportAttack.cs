@@ -41,7 +41,7 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
         } while (!NavMesh.SamplePosition(newRandomPos, out hit, 0.1f, NavMesh.AllAreas) || newRandomPos == Context.Player.transform.position);
 
         GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
-        Object.Destroy(clone, 2f);
+        clone.GetComponentInChildren<FinalBossCloneBehaviour>().Explode(Context);
         Context.transform.position = newRandomPos;
     }
 
