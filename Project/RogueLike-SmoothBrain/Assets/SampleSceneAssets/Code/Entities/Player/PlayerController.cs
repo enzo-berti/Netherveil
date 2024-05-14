@@ -251,47 +251,79 @@ public class PlayerController : MonoBehaviour
 
     public void CalculEndPosition(float duration)
     {
-        const float sphereCastSize = 1f;
+        const float sphereCastSize = 0.5f;
+        const float height = 1.9f;
         Vector3 endPos = this.transform.position + dashCoef * hero.Stats.GetValue(Stat.SPEED) * duration * playerInput.DashDir;
+        endPos.y = 0;
+        Vector3 test2 = endPos;
+
         ENDPOS.Clear();
         ENDPOS.Add(endPos);
         Debug.DrawLine(this.transform.position, endPos, Color.red, 10f);
+        // Check if there is a wall on the dash's path
         if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, (endPos - this.transform.position).magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
         {
             endPos = endHit.point;
-            ENDPOS.Add(endHit.point);
+            endPos = Vector3.Project((endPos - test2), (this.transform.position - test2)) + test2;
+            endPos.y = 0;
+            //endPos = Vector3.Project(endPos,test2);
+            ENDPOS.Add(endPos);
         }
         Vector3 basePos = this.transform.position;
-        Vector3 finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
+        Vector3 finalPos = new Vector3(basePos.x, basePos.y + height, basePos.z);
         List<RaycastHit> hits = Physics.CapsuleCastAll(basePos, finalPos, sphereCastSize, playerInput.DashDir, (endPos - this.transform.position).magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
+        List<Collider> ToCollide = new List<Collider>();
         for (int i = hits.Count - 1; i >= 0; i--)
         {
             Collider collider = hits[i].collider;
-            Debug.Log("collider name => " + collider.name);
             basePos = endPos;
-            finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
-            if (Physics.OverlapCapsule(basePos, finalPos, sphereCastSize).Contains(collider))
+            finalPos = new Vector3(basePos.x, basePos.y + height, basePos.z);
+            foreach (var collideOnCurrentEnd in Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")))
             {
-                Debug.Log("Overlap : " + collider.name);
+                if (!ToCollide.Contains(collideOnCurrentEnd))
+                {
+                    ToCollide.Add(collideOnCurrentEnd);
+                }
+            }
+            if (Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
+            {
+                
                 endPos = hits[i].point;
+                endPos = Vector3.Project(endPos - test2, this.transform.position - test2) + test2;
+                endPos.y = 0;
+                //endPos = Vector3.Project(endPos, test2);
                 ENDPOS.Add(endPos);
                 hits.RemoveAt(i);
             }
         }
+
         foreach (var hit in hits)
         {
             Collider collider = hit.collider;
             basePos = endPos;
             finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
-            if (!Physics.OverlapCapsule(basePos, finalPos, sphereCastSize).Contains(collider))
+
+            if(!ToCollide.Contains(collider) && !Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
             {
-                Debug.Log("Ignore collider => " + collider);
                 Physics.IgnoreCollision(characterController, collider, true);
                 collidersIgnored.Add(collider);
             }
-
+            
         }
 
+    }
+
+    public Vector3 ProjeteOrthogonal(Vector3 a, Vector3 b, Vector3 c)
+    {
+        Vector3 AB = b - a;
+        float factor = 2;
+        float x = a.x + AB.x * factor;
+        float y = a.y + AB.y * factor;
+        float z = a.z + AB.z * factor;
+
+        Vector3 h = new(x, y, z);
+        Vector3 CH = h - c;
+        return new();
     }
     #endregion
 
@@ -575,33 +607,36 @@ public class PlayerController : MonoBehaviour
             return;
 
 
-        Handles.color = new Color(1, 1, 0.5f, 0.2f);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+        //Handles.color = new Color(1, 1, 0.5f, 0.2f);
+        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
 
-        Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+        //Handles.color = Color.white;
+        //Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
 
 
 
         int i = 0;
-        if(ENDPOS.Count > 0)
+        if (ENDPOS.Count > 0)
         {
             foreach (var test in ENDPOS)
             {
                 Gizmos.color = color[i];
-                Gizmos.DrawSphere(test, 1f);
+
+                //Gizmos.DrawSphere(test, 0.5f);
                 i++;
-                i = i == ENDPOS.Count ? 0 : i;
-                //DrawWireCapsule(test, Quaternion.identity, 0.5f, 2f, Gizmos.color);
+                i = i == color.Count - 1 ? 0 : i;
+                //Gizmos.DrawSphere(test, 0.5f);
+                DrawWireCapsule(test, Quaternion.identity, 0.5f, 1.9f, Gizmos.color);
             }
         }
-        
+
     }
     public static void DrawWireCapsule(Vector3 _pos, Quaternion _rot, float _radius, float _height, Color _color = default(Color))
     {
         if (_color != default(Color))
             Handles.color = _color;
+        _pos.y += _height / 2;
         Matrix4x4 angleMatrix = Matrix4x4.TRS(_pos, _rot, Handles.matrix.lossyScale);
         using (new Handles.DrawingScope(angleMatrix))
         {

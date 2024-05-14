@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.VFX;
 
-public class FinalBossStateMachine : Mobs, IFinalBoss
+public class ErecrosStateMachine : Mobs, IFinalBoss
 {
     [HideInInspector]
-    public BaseState<FinalBossStateMachine> currentState;
-    private StateFactory<FinalBossStateMachine> factory;
+    public BaseState<ErecrosStateMachine> currentState;
+    private StateFactory<ErecrosStateMachine> factory;
 
     [Serializable]
     public class FinalBossSounds
@@ -35,8 +35,8 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
     float initialHP;
     CameraUtilities cameraUtilities;
 
-    int part = 1;
-    int phase = 1;
+    int part;
+    int phase;
 
     [SerializeField] GameObject[] enemiesPrefabs;
 
@@ -66,15 +66,15 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
     {
         base.Start();
 
-        factory = new StateFactory<FinalBossStateMachine>(this);
-        currentState = factory.GetState<FinalBossTriggeredState>();
+        factory = new StateFactory<ErecrosStateMachine>(this);
+        currentState = factory.GetState<ErecrosTriggeredState>();
 
         player = Utilities.Hero;
         initialHP = stats.GetValue(Stat.HP);
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
         part = 1;
-        phase = 1;
+        phase = 2;
     }
 
     protected override void Update()
@@ -92,7 +92,7 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
     #region Mobs methods
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamage = true)
     {
-        if (currentState is not FinalBossSummoningAttack)
+        if (currentState is not ErecrosSummoningAttack)
         {
             ApplyDamagesMob(_value, sounds.hit, Death, notEffectDamage);
         }
