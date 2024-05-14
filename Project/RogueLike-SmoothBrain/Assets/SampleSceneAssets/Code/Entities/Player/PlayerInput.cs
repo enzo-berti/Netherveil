@@ -399,6 +399,11 @@ public class PlayerInput : MonoBehaviour
 
         controller.PlayVFX(controller.SpearAttacksVFX[controller.ComboCount]);
         AudioManager.Instance.PlaySound(controller.AttacksSFX[controller.ComboCount]);
+
+        if(CanLaunchEzrealAttack())
+        {
+            GameObject ezrealAttack = Instantiate(controller.ezrealAttackPrefab, transform.position + Vector3.up, transform.rotation);
+        }
     }
 
     /// <summary>
@@ -512,6 +517,12 @@ public class PlayerInput : MonoBehaviour
                && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack;
     }
 
+    private bool CanLaunchEzrealAttack()
+    {
+        return hero.CurrentAlignmentStep <= -2 &&
+            hero.Stats.GetValue(Stat.HP) / hero.Stats.GetMaxValue(Stat.HP) >= 0.75f &&
+            controller.ComboCount == controller.MAX_COMBO_COUNT - 1;
+    }
     #endregion
 
     #region Miscellaneous
