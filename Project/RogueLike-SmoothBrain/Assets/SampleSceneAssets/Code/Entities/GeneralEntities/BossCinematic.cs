@@ -14,11 +14,13 @@ public class BossCinematic : MonoBehaviour
             if (value)
             {
                 Utilities.Hero.State = lastState;
+                Utilities.Hero.GetComponent<PlayerInput>().EnableGameplayInputs();
             }
             else
             {
                 lastState = Utilities.Hero.State;
                 Utilities.Hero.State = (int)Hero.PlayerState.MOTIONLESS;
+                Utilities.Hero.GetComponent<PlayerInput>().DisableGameplayInputs();
             }
         }
     }
