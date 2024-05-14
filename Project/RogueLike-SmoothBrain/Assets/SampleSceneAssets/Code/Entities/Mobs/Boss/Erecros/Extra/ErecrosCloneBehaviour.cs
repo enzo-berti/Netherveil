@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.WSA;
 
-public class FinalBossCloneBehaviour : MonoBehaviour
+public class ErecrosCloneBehaviour : MonoBehaviour
 {
     VisualEffect VFXBomb;
     IAttacker attacker;

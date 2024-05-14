@@ -13,7 +13,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly List<Spear> spears = new();
     Coroutine thunderlinkRoutine = null;
     Coroutine moveRoutine = null;
-    readonly float THUNDERLINK_WAIT_TIME = 0.5f;
+    readonly float THUNDERLINK_WAIT_TIME = 0.15f;
     readonly float duration = 3f;
     readonly float chance = 0.2f;
     bool allSpearsSet = false;
@@ -36,6 +36,9 @@ public class ThunderLink : ItemEffect, IPassiveItem
     {
         CoroutineManager.Instance.StopCoroutine(thunderlinkRoutine);
         CoroutineManager.Instance.StopCoroutine(moveRoutine);
+        thunderlinkRoutine = null;
+        moveRoutine = null;
+
         spears.Clear();
         thunderLinkColliders.Clear();
 
@@ -60,19 +63,22 @@ public class ThunderLink : ItemEffect, IPassiveItem
         vfx.Play();
         thunderLinkVFXs.Add(vfx);
 
+
+
         LineRenderer lineRenderer = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_ThunderLinkLine").GetComponent<LineRenderer>());
         //lineRenderer.widthMultiplier = 0f;
         thunderLinkLineRenderers.Add(lineRenderer);
-
         spear.SetThunderLinkVFX(vfx, lineRenderer);
         spears.Add(spear);
-        thunderlinkRoutine = CoroutineManager.Instance.StartCoroutine(TriggerElectricLinks());
-        moveRoutine = CoroutineManager.Instance.StartCoroutine(MoveThunderLink());
     }
 
     private void WaitAllSpearsSpawned(Spear spear)
     {
         allSpearsSet = true;
+        if (thunderlinkRoutine == null)
+            thunderlinkRoutine = CoroutineManager.Instance.StartCoroutine(TriggerElectricLinks());
+        if (moveRoutine == null)
+            moveRoutine = CoroutineManager.Instance.StartCoroutine(MoveThunderLink());
     }
 
     private IEnumerator TriggerElectricLinks()
@@ -89,7 +95,9 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void ApplyDamages(Hero player)
     {
-        displayDamages = Utilities.PlayerController.SPEAR_DAMAGES -(int)(player.Stats.GetValueWithoutCoeff(Stat.ATK) * 4 / 5);
+        displayDamages = (int)(1f * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
+
+        List<Collider> alreadyAttacked = new List<Collider>();
 
         foreach (Spear spear in spears)
         {
@@ -101,10 +109,12 @@ public class ThunderLink : ItemEffect, IPassiveItem
             {
                 foreach (var collider in colliders)
                 {
-                    if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject)
+                    if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject
+                        && !alreadyAttacked.Contains(collider))
                     {
                         (entity as IDamageable).ApplyDamage((int)(1f * Utilities.Hero.Stats.GetCoeff(Stat.ATK)), Utilities.Hero);
                         entity.AddStatus(new Electricity(duration, chance), player);
+                        alreadyAttacked.Add(collider);
                     }
                 }
             }
@@ -115,6 +125,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
     {
         while (true)
         {
+            Debug.Log(spears.Count);
             foreach (Spear spear in spears)
             {
                 spear.ThunderLinkVFX.transform.position = Utilities.Player.transform.position + Vector3.up;

@@ -15,9 +15,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
+public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
 {
-    public FinalBossTeleportAttack(FinalBossStateMachine currentContext, StateFactory<FinalBossStateMachine> currentFactory)
+    public ErecrosTeleportAttack(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     bool attackEnded;
@@ -30,7 +30,7 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
     {
         if (attackEnded)
         {
-            SwitchState(Factory.GetState<FinalBossTriggeredState>());
+            SwitchState(Factory.GetState<ErecrosTriggeredState>());
         }
     }
 
@@ -84,7 +84,7 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
 
     // This method will be called on state switch.
     // No need to modify this method !
-    protected override void SwitchState(BaseState<FinalBossStateMachine> newState)
+    protected override void SwitchState(BaseState<ErecrosStateMachine> newState)
     {
         base.SwitchState(newState);
         Context.currentState = newState;
@@ -101,7 +101,7 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
         }
 
         GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
-        clone.GetComponentInChildren<FinalBossCloneBehaviour>().Explode(Context);
+        clone.GetComponentInChildren<ErecrosCloneBehaviour>().Explode(Context);
         Context.transform.position = teleportPos[0];
         teleportPos.RemoveAt(0);
 

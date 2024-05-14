@@ -276,21 +276,18 @@ public class PlayerController : MonoBehaviour
         for (int i = hits.Count - 1; i >= 0; i--)
         {
             Collider collider = hits[i].collider;
-            Debug.Log("collider name => " + collider.name);
             basePos = endPos;
             finalPos = new Vector3(basePos.x, basePos.y + height, basePos.z);
             foreach (var collideOnCurrentEnd in Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")))
             {
                 if (!ToCollide.Contains(collideOnCurrentEnd))
                 {
-                    Debug.Log("<color=yellow>To collide with => " + collideOnCurrentEnd.name + "</color>");
                     ToCollide.Add(collideOnCurrentEnd);
                 }
             }
             if (Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
             {
                 
-                Debug.Log("Overlap : " + collider.name);
                 endPos = hits[i].point;
                 endPos = Vector3.Project(endPos - test2, this.transform.position - test2) + test2;
                 endPos.y = 0;
@@ -299,23 +296,15 @@ public class PlayerController : MonoBehaviour
                 hits.RemoveAt(i);
             }
         }
-        Debug.Log($"<color=red>----Begin----</color>");
 
-        foreach (var test in Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")))
-        {
-            Debug.Log(test);
-        }
-        Debug.Log("<color=red>----End----</color>");
         foreach (var hit in hits)
         {
             Collider collider = hit.collider;
-            Debug.Log("collider : " + collider.name);
             basePos = endPos;
             finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
 
             if(!ToCollide.Contains(collider) && !Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
             {
-                Debug.Log("Ignore collider => " + collider);
                 Physics.IgnoreCollision(characterController, collider, true);
                 collidersIgnored.Add(collider);
             }
