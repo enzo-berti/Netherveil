@@ -71,8 +71,12 @@ public class FinalBossTriggeredState : BaseState<FinalBossStateMachine>
             typeof(FinalBossTriangleDashAttack),
             typeof(FinalBossSummoningAttack),
             typeof(FinalBossTeleportAttack),
-            typeof(FinalBossPrisonAttack)
         };
+
+        if (Context.CurrentPhase > 1 && Context.CurrentPart == 1)
+        {
+            availableAttacks.Add(typeof(FinalBossPrisonAttack));
+        }
 
         return availableAttacks;
     }
