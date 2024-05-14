@@ -10,6 +10,7 @@ public class EzrealAttack : Projectile
     {
         base.Awake();
         effect = GetComponentInChildren<VisualEffect>();
+        AudioManager.Instance.PlaySound(AudioManager.Instance.EzrealUltSFX);
     }
 
     protected override void Update()

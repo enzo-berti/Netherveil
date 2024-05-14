@@ -82,7 +82,6 @@ public abstract class Mobs : Entity
         //}
 
         StartCoroutine(EntityDetection());
-        StartCoroutine(Brain());
 
         Vector3 pos = transform.parent.localPosition;
         Quaternion rot = transform.parent.localRotation;
@@ -218,59 +217,6 @@ public abstract class Mobs : Entity
         }
     }
 
-    protected virtual IEnumerator Brain()
-    {
-        yield return null;
-    }
-
-    protected virtual IEnumerator EntityDetection()
-    {
-        yield return null;
-    }
-
-    protected IEnumerator HitRoutine()
-    {
-        hit.EnableMat();
-
-        hit.SetAlpha(1.0f);
-        yield return new WaitForSeconds(0.05f);
-        hit.SetAlpha(0.0f);
-        yield return new WaitForSeconds(0.05f);
-        hit.SetAlpha(1.0f);
-        yield return new WaitForSeconds(0.05f);
-        hit.SetAlpha(0.0f);
-
-        hit.DisableMat();
-    }
-
-    private IEnumerator MatUpdateMeshRenderer(Material spawnMat, MeshRenderer renderer)
-    {
-        while (spawnMat.GetFloat("_Alpha") > 0f)
-        {
-            spawnMat.SetFloat("_Alpha", spawnMat.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
-            spawnMat.SetFloat("_Alpha", Mathf.Max(spawnMat.GetFloat("_Alpha"), 0f));
-            yield return null;
-        }
-
-        List<Material> materials = new(renderer.materials);
-        materials.RemoveAll(mat => mat.shader == spawningMat.shader);
-        renderer.SetMaterials(materials);
-    }
-
-    private IEnumerator MatUpdateSkinnedMeshRenderer(Material spawnMat, SkinnedMeshRenderer renderer)
-    {
-        while (spawnMat.GetFloat("_Alpha") > 0f)
-        {
-            spawnMat.SetFloat("_Alpha", spawnMat.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
-            spawnMat.SetFloat("_Alpha", Mathf.Max(spawnMat.GetFloat("_Alpha"), 0f));
-            yield return null;
-        }
-
-        List<Material> materials = new(renderer.materials);
-        materials.RemoveAll(mat => mat.shader == spawningMat.shader);
-        renderer.SetMaterials(materials);
-    }
-
     protected void ApplyDamagesMob(int _value, Sound hitSound, Action deathMethod, bool notEffectDamage, bool _restartSound = true)
     {
         // Some times, this method is called when entity is dead ??
@@ -337,6 +283,58 @@ public abstract class Mobs : Entity
 
         return transform.position + (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
     }
+
+    #region COROUTINES
+
+    protected virtual IEnumerator EntityDetection()
+    {
+        yield return null;
+    }
+
+    protected IEnumerator HitRoutine()
+    {
+        hit.EnableMat();
+
+        hit.SetAlpha(1.0f);
+        yield return new WaitForSeconds(0.05f);
+        hit.SetAlpha(0.0f);
+        yield return new WaitForSeconds(0.05f);
+        hit.SetAlpha(1.0f);
+        yield return new WaitForSeconds(0.05f);
+        hit.SetAlpha(0.0f);
+
+        hit.DisableMat();
+    }
+
+    private IEnumerator MatUpdateMeshRenderer(Material spawnMat, MeshRenderer renderer)
+    {
+        while (spawnMat.GetFloat("_Alpha") > 0f)
+        {
+            spawnMat.SetFloat("_Alpha", spawnMat.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
+            spawnMat.SetFloat("_Alpha", Mathf.Max(spawnMat.GetFloat("_Alpha"), 0f));
+            yield return null;
+        }
+
+        List<Material> materials = new(renderer.materials);
+        materials.RemoveAll(mat => mat.shader == spawningMat.shader);
+        renderer.SetMaterials(materials);
+    }
+
+    private IEnumerator MatUpdateSkinnedMeshRenderer(Material spawnMat, SkinnedMeshRenderer renderer)
+    {
+        while (spawnMat.GetFloat("_Alpha") > 0f)
+        {
+            spawnMat.SetFloat("_Alpha", spawnMat.GetFloat("_Alpha") - Time.deltaTime / spawningVFX.GetComponent<VFXStopper>().Duration);
+            spawnMat.SetFloat("_Alpha", Mathf.Max(spawnMat.GetFloat("_Alpha"), 0f));
+            yield return null;
+        }
+
+        List<Material> materials = new(renderer.materials);
+        materials.RemoveAll(mat => mat.shader == spawningMat.shader);
+        renderer.SetMaterials(materials);
+    }
+
+    #endregion
 
 #if UNITY_EDITOR
     protected virtual void DisplayVisionRange(float _angle)
