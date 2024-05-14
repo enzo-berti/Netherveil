@@ -4,18 +4,19 @@ using UnityEngine.VFX;
 
 public class EzrealAttack : Projectile
 {
-    VisualEffect effect;
+
+    [SerializeField] VisualEffect effect;
 
     protected override void Awake()
     {
         base.Awake();
-        effect = GetComponentInChildren<VisualEffect>();
         AudioManager.Instance.PlaySound(AudioManager.Instance.EzrealUltSFX);
     }
 
     protected override void Update()
     {
         Move(transform.forward);
+        effect.transform.position = transform.position;
     }
 
     protected override void OnTriggerEnter(Collider other)
@@ -30,5 +31,10 @@ public class EzrealAttack : Projectile
         {
             damageableObject.ApplyDamage(damage, null);
         }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(transform.parent.gameObject);
     }
 }
