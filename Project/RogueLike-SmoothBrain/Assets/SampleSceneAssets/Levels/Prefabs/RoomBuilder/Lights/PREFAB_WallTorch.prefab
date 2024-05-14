@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 218070138826456674}
   - component: {fileID: 2657769103863712424}
   - component: {fileID: 2615074240997237673}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PREFAB_WallTorch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &3794676549841711559
 Transform:
@@ -129,12 +129,12 @@ GameObject:
   - component: {fileID: 6116714180551308659}
   - component: {fileID: 3894717789993099143}
   - component: {fileID: 5229236100597462486}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &7974437608821785062
 Transform:
@@ -162,7 +162,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.504717, g: 0.7084409, b: 1, a: 1}
   m_Intensity: 4
   m_Range: 8
   m_SpotAngle: 30
@@ -202,12 +202,12 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 1500
-  m_UseColorTemperature: 1
+  m_ColorTemperature: 14240
+  m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
@@ -260,15 +260,75 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3794676549841711559}
     m_Modifications:
+    - target: {fileID: 1244400193199633124, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1244400193199633124, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
+      objectReference: {fileID: 0}
+    - target: {fileID: 1923616896904197073, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1923616896904197073, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
+      objectReference: {fileID: 0}
     - target: {fileID: 5514033115632785722, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
         type: 3}
       propertyPath: UVModule.cycles
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 5514033115632785722, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5514033115632785722, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.48655844
+      objectReference: {fileID: 0}
+    - target: {fileID: 5514033115632785722, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6367252677500073758, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6367252677500073758, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.69341993
+      objectReference: {fileID: 0}
+    - target: {fileID: 6367252677500073758, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.33490568
+      objectReference: {fileID: 0}
     - target: {fileID: 7095420638463258092, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
         type: 3}
       propertyPath: m_Name
       value: Flame
+      objectReference: {fileID: 0}
+    - target: {fileID: 7095420638463258092, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7095420638463258092, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
       objectReference: {fileID: 0}
     - target: {fileID: 8845159542156711011, guid: b0e24dcc8b0b69f49891d4dc69b9ae16,
         type: 3}
