@@ -280,6 +280,7 @@ MonoBehaviour:
       decreasingValuePerDrop: 0.8
   StatSuckerVFX: {fileID: 6293110322402977416}
   spawningVFX: {fileID: 946794217609910421}
+  bossLifeBar: {fileID: 0}
   wanderZone:
     center: {x: 0, y: 0, z: 0}
     radius: 8
@@ -405,6 +406,7 @@ MonoBehaviour:
     type: 3}
   dashVFX: {fileID: 2957463444878155984}
   tripleThrustVFX: {fileID: 3982427714799087355}
+  cinematic: {fileID: 0}
 --- !u!195 &1647762869994520278
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1052,6 +1054,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7888483923736394403, guid: 5c88c906649771a43bd23b9c1322fdf2,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

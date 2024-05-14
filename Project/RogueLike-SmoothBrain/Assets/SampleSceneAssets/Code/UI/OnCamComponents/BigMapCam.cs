@@ -65,7 +65,7 @@ public class BigMapCam : MonoBehaviour
 
         Vector3 localPointToCamera = GetCameraOriented(localPoint);
 
-        transform.position = Vector3.Lerp(transform.position, playerTransform.position + localPointToCamera * /*Mathf.Abs(*/currentZoom /*- 100f)*/ * 4f, Time.deltaTime * 20f);
+        transform.position = playerTransform.position + localPointToCamera * /*Mathf.Abs(*/currentZoom /*- 100f)*/ * 4f;
     }
 
     private void CollideJoystickScreen()
@@ -75,6 +75,6 @@ public class BigMapCam : MonoBehaviour
 
         Vector3 localPointToCamera = GetCameraOriented(joyStickInput);
 
-        transform.position = Vector3.Lerp(transform.position, playerTransform.position + localPointToCamera * /*Mathf.Abs(*/currentZoom/* - 100f)*/ * 4f, Time.deltaTime * 20f);
+        transform.position = playerTransform.position + localPointToCamera * /*Mathf.Abs(*/currentZoom/* - 100f)*/ * 4f;
     }
 }

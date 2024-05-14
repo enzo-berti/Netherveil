@@ -253,30 +253,32 @@ public class PlayerController : MonoBehaviour
     {
         const float sphereCastSize = 0.5f;
         const float height = 1.9f;
-        Vector3 endPos = this.transform.position + dashCoef * hero.Stats.GetValue(Stat.SPEED) * duration * playerInput.DashDir;
-        endPos.y = 0;
-        Vector3 test2 = endPos;
 
+        Vector3 currentEndPos = this.transform.position + dashCoef * hero.Stats.GetValue(Stat.SPEED) * duration * playerInput.DashDir;
+        currentEndPos.y = 0;
+        Vector3 baseFinalPos = currentEndPos;
+        /*  ---- FOR GIZMOS ---
         ENDPOS.Clear();
-        ENDPOS.Add(endPos);
-        Debug.DrawLine(this.transform.position, endPos, Color.red, 10f);
+        ENDPOS.Add(currentEndPos);
+        */
+        Debug.DrawLine(this.transform.position, currentEndPos, Color.red, 10f);
         // Check if there is a wall on the dash's path
-        if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, (endPos - this.transform.position).magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
+        if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, (currentEndPos - this.transform.position).magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
         {
-            endPos = endHit.point;
-            endPos = Vector3.Project((endPos - test2), (this.transform.position - test2)) + test2;
-            endPos.y = 0;
-            //endPos = Vector3.Project(endPos,test2);
-            ENDPOS.Add(endPos);
+            currentEndPos = endHit.point;
+            currentEndPos = Vector3.Project((currentEndPos - baseFinalPos), (this.transform.position - baseFinalPos)) + baseFinalPos;
+            currentEndPos.y = 0;
+            /* --- FOR GIZMOS ---
+            ENDPOS.Add(currentEndPos);*/
         }
         Vector3 basePos = this.transform.position;
         Vector3 finalPos = new Vector3(basePos.x, basePos.y + height, basePos.z);
-        List<RaycastHit> hits = Physics.CapsuleCastAll(basePos, finalPos, sphereCastSize, playerInput.DashDir, (endPos - this.transform.position).magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
+        List<RaycastHit> hits = Physics.CapsuleCastAll(basePos, finalPos, sphereCastSize, playerInput.DashDir, (currentEndPos - this.transform.position).magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
         List<Collider> ToCollide = new List<Collider>();
         for (int i = hits.Count - 1; i >= 0; i--)
         {
             Collider collider = hits[i].collider;
-            basePos = endPos;
+            basePos = currentEndPos;
             finalPos = new Vector3(basePos.x, basePos.y + height, basePos.z);
             foreach (var collideOnCurrentEnd in Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")))
             {
@@ -288,19 +290,19 @@ public class PlayerController : MonoBehaviour
             if (Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
             {
                 
-                endPos = hits[i].point;
-                endPos = Vector3.Project(endPos - test2, this.transform.position - test2) + test2;
-                endPos.y = 0;
-                //endPos = Vector3.Project(endPos, test2);
-                ENDPOS.Add(endPos);
-                hits.RemoveAt(i);
+                currentEndPos = hits[i].point;
+                currentEndPos = Vector3.Project(currentEndPos - baseFinalPos, this.transform.position - baseFinalPos) + baseFinalPos;
+                currentEndPos.y = 0;
+                /* --- FOR GIZMOS ---
+                ENDPOS.Add(currentEndPos);
+                hits.RemoveAt(i); */
             }
         }
 
         foreach (var hit in hits)
         {
             Collider collider = hit.collider;
-            basePos = endPos;
+            basePos = currentEndPos;
             finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
 
             if(!ToCollide.Contains(collider) && !Physics.OverlapCapsule(basePos, finalPos, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
