@@ -238,7 +238,7 @@ namespace Map.Generation
             {
                 Room room = transform.GetChild(index).GetComponent<Room>();
 
-                room.Clear();
+                room.ClearPreset();
             }
         }
 

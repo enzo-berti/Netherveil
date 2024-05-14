@@ -5,77 +5,36 @@ namespace Map
 {
     public class Room : MonoBehaviour
     {
-        [SerializeField] GameObject[] roomObjects;
         [SerializeField] public RoomType type = RoomType.Normal;
 
-        private void OnValidate()
-        {
-            roomObjects = new GameObject[gameObject.transform.childCount];
+        [field: SerializeField] public Skeleton Skeleton { get; private set; } = null;
+        [field: SerializeField] public StaticProps StaticProps { get; private set; } = null;
+        [field: SerializeField] public Lights Lights { get; private set; } = null;
 
-            for (int i = 0; i < roomObjects.Length; i++)
-            {
-                roomObjects[i] = gameObject.transform.GetChild(i).gameObject;
-            }
-        }
-
-        public void Clear()
-        {
-            Enemies.Clear();
-            Skeleton.GetComponent<RoomEvents>().Clear();
-        }
-
-        public T Get<T>() where T : UnityEngine.Component
-        {
-            foreach (var go in roomObjects)
-            {
-                if (go.TryGetComponent(out T component))
-                {
-                    return component;
-                }
-            }
-
-            Debug.LogError("Can't find " + typeof(T).Name + " in " + gameObject.name, gameObject);
-            return null;
-        }
-
-        public GameObject Skeleton
-        {
-            get
-            {
-                return Get<Skeleton>().gameObject;
-            }
-        }
-
-        public GameObject StaticProps
-        {
-            get
-            {
-                return Get<StaticProps>().gameObject;
-            }
-        }
-
-        public GameObject Lights
-        {
-            get
-            {
-                return Get<Lights>().gameObject;
-            }
-        }
-
-        public GameObject RoomPresets
-        {
-            get
-            {
-                return Get<RoomPresets>().gameObject;
-            }
-        }
-
-        public RoomEnemies Enemies
+        [field: SerializeField] public RoomPresets RoomPresets { get; private set; } = null;
+        public RoomEnemies RoomEnemies // Need to be updated when roomPresets destroyed other rooms (work for now but not optimised)
         {
             get
             {
                 return RoomPresets.GetComponentInChildren<RoomEnemies>(true);
             }
+        }
+
+        private void OnValidate()
+        {
+            Skeleton = transform.GetComponentInChildren<Skeleton>(true);
+            StaticProps = transform.GetComponentInChildren<StaticProps>(true);
+            Lights = transform.GetComponentInChildren<Lights>(true);
+            RoomPresets = transform.GetComponentInChildren<RoomPresets>(true);
+        }
+
+        /// <summary>
+        /// Make the room marked has "cleared" in game
+        /// </summary>
+        public void ClearPreset()
+        {
+            RoomEnemies.Clear();
+            Skeleton.GetComponent<RoomEvents>().Clear();
         }
     }
 }
