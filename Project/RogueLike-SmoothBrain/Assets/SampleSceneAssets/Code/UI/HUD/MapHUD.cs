@@ -6,7 +6,6 @@ public class MapHUD : MonoBehaviour
 {
     private GameObject minimapCam;
     private GameObject bigmapCam;
-    [SerializeField] private GameObject hud;
     [SerializeField] private RectTransform miniMap;
     [SerializeField] private RectTransform bigMap;
     private bool isMiniMapActive = true;
