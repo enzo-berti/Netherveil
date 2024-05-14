@@ -4,19 +4,20 @@ using UnityEngine.VFX;
 
 public class EzrealAttack : Projectile
 {
-
     [SerializeField] VisualEffect effect;
+    float baseOffsetZ;
 
     protected override void Awake()
     {
         base.Awake();
         AudioManager.Instance.PlaySound(AudioManager.Instance.EzrealUltSFX);
+        baseOffsetZ = effect.transform.localPosition.z;
     }
 
     protected override void Update()
     {
         Move(transform.forward);
-        effect.transform.position = transform.position;
+        effect.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - baseOffsetZ);
     }
 
     protected override void OnTriggerEnter(Collider other)
