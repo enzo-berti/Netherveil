@@ -85,9 +85,8 @@ public class DeviceManager : MonoBehaviour
     void OnInputSystemEvent(InputEventPtr eventPtr, InputDevice device)
     {
         if (IsSameDevice(device))
-        {
-            return;
-        }
+             return;
+        
 
         // Some devices like to spam events like crazy.
         // Example: PS4 controller on PC keeps triggering events without meaningful change.
