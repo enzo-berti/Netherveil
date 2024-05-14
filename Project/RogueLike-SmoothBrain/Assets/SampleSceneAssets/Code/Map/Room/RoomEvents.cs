@@ -56,9 +56,10 @@ namespace Map
             }
             else
             {
+                // je suis obligé de faire ça pour que la seed soit correcte
+                // par rapport à l'ancienne sauvegarde si le joueur tue un boss
                 if (roomData.Type == RoomType.Boss)
                 {
-                    Debug.Log("PUTAIN");
                     //Seed.Iterate(3);
                 }
             }
