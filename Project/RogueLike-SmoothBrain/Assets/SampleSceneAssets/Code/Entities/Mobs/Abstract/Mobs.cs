@@ -234,16 +234,18 @@ public abstract class Mobs : Entity
         _value = (int)(_value * DamageTakenMultiplicator);
         Stats.DecreaseValue(Stat.HP, _value, false);
 
-        if (!lifeBar.gameObject.activeSelf && bossLifeBar == null)
-        {
-            lifeBar.gameObject.SetActive(true);
-        }
-
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
-
         if (bossLifeBar != null)
         {
             bossLifeBar.ValueChanged(stats.GetValue(Stat.HP));
+        }
+        else
+        {
+            if (!lifeBar.gameObject.activeSelf)
+            {
+                lifeBar.gameObject.SetActive(true);
+            }
+
+            lifeBar.ValueChanged(stats.GetValue(Stat.HP));
         }
 
         if (notEffectDamage)
