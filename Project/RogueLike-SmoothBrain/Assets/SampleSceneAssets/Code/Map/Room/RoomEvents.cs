@@ -16,7 +16,7 @@ namespace Map
         private GameObject treasures;
         private NavMeshSurface navMeshSurface;
 
-        static private bool hasLeaved = false;
+        static private bool hasLeaved = true;
         private bool allChestsOpenCalled = false;
         private bool allEnemiesDeadCalled = false;
         private bool enterRoomCalled = false;
@@ -44,28 +44,17 @@ namespace Map
             treasures = roomPreset.transform.Find("Treasures").gameObject;
             navMeshSurface = room.GetComponentInChildren<NavMeshSurface>(true);
 
-            enemies.SetActive(false);
-            foreach (var c in room.GetComponentsInChildren<MapLayer>(true))
-            {
-                c.Unset();
-            }
-
-            var roomUI = room.GetComponentInChildren<RoomUI>(true);
-            if (roomUI)
-            {
-                roomUI.gameObject.SetActive(false);
-            }
-
             // create data of the map
             roomData = new RoomData(room, enemies);
-            if (roomData.Type == RoomType.Lobby) // because enter not called frame one in game (dumb fix)
-            {
-                EnterEvents();
-            }
         }
 
         private void Start()
         {
+            if (!enterRoomCalled)
+            {
+                Unclear();
+            }
+
             // set bool to true to not call the events in the room if there is no enemy
             allEnemiesDeadCalled = (enemies.transform.childCount == 0);
             // set bool to true to not call the events in the room if there is no chest
@@ -108,6 +97,7 @@ namespace Map
 
         private void EnterEvents()
         {
+            Debug.Log("ENTER");
             LocalEnterEvents();
 
             // global events
@@ -126,6 +116,7 @@ namespace Map
 
         private void ExitEvents()
         {
+            Debug.Log("EXIT");
             LocalExitEvents();
 
             for (int i = 0; i < transform.parent.parent.childCount; i++)
@@ -171,13 +162,14 @@ namespace Map
         {
             if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
             {
+                Debug.Log("ENTER COLLIDE");
                 enterPos = triggerCollide.ClosestPointOnBounds(other.bounds.center);
             }
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (!enterRoomCalled && other.gameObject.CompareTag("Player") && hasLeaved)
+            if (!enterRoomCalled && hasLeaved && other.gameObject.CompareTag("Player"))
             {
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
                 if (enterToPlayer.magnitude >= 6.25f)
@@ -195,11 +187,31 @@ namespace Map
             }
         }
 
+        private void Unclear()
+        {
+            enemies.SetActive(false);
+            foreach (var c in room.GetComponentsInChildren<MapLayer>(true))
+            {
+                c.Unset();
+            }
+
+            var roomUI = room.GetComponentInChildren<RoomUI>(true);
+            if (roomUI)
+            {
+                roomUI.gameObject.SetActive(false);
+            }
+
+            if (roomData.Type == RoomType.Lobby)
+            {
+                EnterEvents();
+            }
+        }
+
         public void Clear()
         {
             LocalEnterEvents();
             LocalExitEvents();
-            RoomEvents.hasLeaved = false; // to ensure not being blocked
+            RoomEvents.hasLeaved = true; // to ensure not being blocked
         }
     }
 }
