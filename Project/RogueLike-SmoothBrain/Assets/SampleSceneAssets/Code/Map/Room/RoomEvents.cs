@@ -54,6 +54,20 @@ namespace Map
             {
                 Unclear();
             }
+            else
+            {
+                if (roomData.Type == RoomType.Boss)
+                {
+                    Debug.Log("PUTAIN");
+                    //Seed.Iterate(3);
+                }
+            }
+
+            RoomUI roomUI = room.GetComponentInChildren<RoomUI>(true);
+            if (roomUI)
+            {
+                roomUI.gameObject.SetActive(true);
+            }
 
             // set bool to true to not call the events in the room if there is no enemy
             allEnemiesDeadCalled = (enemies.transform.childCount == 0);
@@ -97,7 +111,6 @@ namespace Map
 
         private void EnterEvents()
         {
-            Debug.Log("ENTER");
             LocalEnterEvents();
 
             // global events
@@ -116,7 +129,6 @@ namespace Map
 
         private void ExitEvents()
         {
-            Debug.Log("EXIT");
             LocalExitEvents();
 
             for (int i = 0; i < transform.parent.parent.childCount; i++)
@@ -162,7 +174,6 @@ namespace Map
         {
             if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
             {
-                Debug.Log("ENTER COLLIDE");
                 enterPos = triggerCollide.ClosestPointOnBounds(other.bounds.center);
             }
         }

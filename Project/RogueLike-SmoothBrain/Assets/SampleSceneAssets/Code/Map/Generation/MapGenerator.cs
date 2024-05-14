@@ -125,6 +125,7 @@ namespace Map.Generation
 
         [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
         [HideInInspector] public int stage = 0; // BOURRIN 2
+        private int iterationSeedRegister = 0; // BOURRIN 3 AAAAAA
 
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
         const string fileName = "Map.save";
@@ -133,19 +134,19 @@ namespace Map.Generation
 
         private void Awake()
         {
-            if (SaveManager.Instance.HasData)
-            {
-                LoadSave();
-            }
-            else
-            {
-              Seed.RandomizeSeed();
+            //if (SaveManager.Instance.HasData)
+            //{
+            //    LoadSave();
+            //}
+            //else
+            //{
+            //    Seed.RandomizeSeed();
 
-              if (!isRandom)
-              {
-                  Seed.Set(seed);
-              }
-            }
+                if (!isRandom)
+                {
+                    Seed.Set(seed);
+                }
+            //}
 
             seed = Seed.seed;
             Generate(new GenerationParam(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
@@ -193,15 +194,14 @@ namespace Map.Generation
                 {
                     // seed
                     Seed.seed = reader.ReadString();
+                    Seed.Iterate(reader.ReadInt32());
                     // stage
                     stage = reader.ReadInt32() - 1;
                     // room ids
                     int numberCleared = reader.ReadInt32();
-                    Debug.Log(numberCleared);
                     for (int i = 0; i < numberCleared; i++)
                     {
                         roomClearId.Add(reader.ReadInt32());
-                        Debug.Log(roomClearId[i]);
                     }
                 }
             }
@@ -217,6 +217,7 @@ namespace Map.Generation
                 {
                     // seed
                     writer.Write(Seed.seed);
+                    writer.Write(iterationSeedRegister);
                     // stage
                     writer.Write(stage);
                     // room ids
@@ -266,6 +267,7 @@ namespace Map.Generation
         public void Generate(GenerationParam genParam)
         {
             stage++;
+            iterationSeedRegister = Seed.Iteration;
 
             ChangeMiniMapColor();
 
@@ -485,8 +487,6 @@ namespace Map.Generation
 
             // if we find another trigger with the "map" tag then we collide with another room
             Collider[] colliders = roomColliderEnter.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.UseGlobal).Where(collider => collider != roomColliderEnter && collider != roomColliderExit && collider.isTrigger).ToArray();
-            if (colliders.Any())
-                Debug.Log(colliders.Length);
             return colliders.Any();
         }
 
