@@ -6,6 +6,7 @@ public class PressurePlateTrap : MonoBehaviour
     public float cooldownTime = 2f;
     private float currentCooldownTime = 0f;
     private bool canActive = true;
+    public Sound activeSound;
 
     private void OnTriggerStay(Collider other)
     {
@@ -24,7 +25,7 @@ public class PressurePlateTrap : MonoBehaviour
                 activableTrap.Active();
             }
         }
-
+        activeSound.Play(transform.position);
         canActive = false;
     }
 

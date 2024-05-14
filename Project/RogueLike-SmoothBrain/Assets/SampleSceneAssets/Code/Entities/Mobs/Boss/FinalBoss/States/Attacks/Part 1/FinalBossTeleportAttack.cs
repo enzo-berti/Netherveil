@@ -11,6 +11,7 @@
 // }
 
 using StateMachine; // include all scripts about StateMachines
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,18 +20,39 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
     public FinalBossTeleportAttack(FinalBossStateMachine currentContext, StateFactory<FinalBossStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
+    bool attackEnded;
+    List<Vector3> teleportPos = new();
+
+    float teleportCooldown = 0f;
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        SwitchState(Factory.GetState<FinalBossTriggeredState>());
+        if (attackEnded)
+        {
+            SwitchState(Factory.GetState<FinalBossTriggeredState>());
+        }
     }
 
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-        Vector3 newRandomPos = Context.transform.position;
         NavMeshHit hit;
 
+        Debug.Log(Context.CurrentPhase + " : " + Context.CurrentPart);
+
+        if (Context.CurrentPhase > 1 || Context.CurrentPart > 1)
+        {
+            Vector3 newPos = Context.Player.transform.position + (Context.Player.transform.position - Context.transform.position).normalized * 6f;
+            newPos.y = Context.Player.transform.position.y;
+
+            if (NavMesh.SamplePosition(newPos, out hit, 0.1f, NavMesh.AllAreas))
+            {
+                teleportPos.Add(newPos);
+            }
+        }
+
+        Vector3 newRandomPos = Context.transform.position;
         do
         {
             Vector2 randomDirection2D = Random.insideUnitCircle.normalized;
@@ -40,9 +62,7 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
 
         } while (!NavMesh.SamplePosition(newRandomPos, out hit, 0.1f, NavMesh.AllAreas) || newRandomPos == Context.Player.transform.position);
 
-        GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
-        Object.Destroy(clone, 2f);
-        Context.transform.position = newRandomPos;
+        teleportPos.Add(newRandomPos);
     }
 
     // This method will be called only once after the last update.
@@ -54,7 +74,12 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        teleportCooldown -= Time.deltaTime;
 
+        if (teleportCooldown <= 0)
+        {
+            Teleport();
+        }
     }
 
     // This method will be called on state switch.
@@ -64,4 +89,24 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
+    #region Extra methods
+
+    void Teleport()
+    {
+        if (teleportPos.Count <= 0)
+        {
+            attackEnded = true;
+            return;
+        }
+
+        GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
+        clone.GetComponentInChildren<FinalBossCloneBehaviour>().Explode(Context);
+        Context.transform.position = teleportPos[0];
+        teleportPos.RemoveAt(0);
+
+        teleportCooldown = teleportPos.Count > 0 ? 0.5f : 0;
+    }
+
+    #endregion
 }

@@ -117,8 +117,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerController = GetComponent<PlayerController>();
         GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
 
-        
 
+        OnBasicAttack += ApplyDamoclesSwordEffect;
         OnKill += ApplyLifeSteal;
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
@@ -228,6 +228,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         damageable.ApplyDamage(damages, this);
 
         OnAttackHit?.Invoke(damageable, this);
+    }
+
+    private void ApplyDamoclesSwordEffect(IDamageable damageable, IAttacker attacker)
+    {
+        Mobs mob = damageable as Mobs; 
+        if(CurrentAlignmentStep >= 2 && mob != null)
+        {
+            mob.AddStatus(new DamoclesSword(3f, 0.3f), attacker);
+        }
     }
 
     private void ApplyLifeSteal(IDamageable damageable)
