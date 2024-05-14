@@ -15,20 +15,20 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     private StateFactory<ErecrosStateMachine> factory;
 
     [Serializable]
-    public class FinalBossSounds
+    public class ErecrosSounds
     {
         public Sound hit;
     }
 
-    public enum FinalBossColliders
+    public enum ErecrosColliders
     {
-
+        DASH
     }
 
     private IAttacker.AttackDelegate onAttack;
     private IAttacker.HitDelegate onHit;
     Hero player = null;
-    [SerializeField] FinalBossSounds sounds;
+    [SerializeField] ErecrosSounds sounds;
     [SerializeField] List<NestedList<Collider>> attackColliders;
     bool playerHit = false;
     float attackCooldown = 1f;
@@ -124,6 +124,60 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     #endregion
 
     #region Extra methods
+    public void DisableHitboxes()
+    {
+        foreach (NestedList<Collider> attack in attackColliders)
+        {
+            foreach (Collider attackCollider in attack.data)
+            {
+                attackCollider.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void AttackCollide(List<Collider> colliders, bool _kb = false, bool debugMode = true)
+    {
+        if (debugMode)
+        {
+            foreach (Collider collider in colliders)
+            {
+                collider.gameObject.SetActive(true);
+            }
+        }
+
+        Vector3 rayOffset = Vector3.up / 2;
+
+        foreach (Collider attackCollider in colliders)
+        {
+            Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(attackCollider, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
+            if (tab.Length > 0)
+            {
+                foreach (Collider col in tab)
+                {
+                    if (col.gameObject.GetComponent<Hero>() != null)
+                    {
+                        IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
+                        Attack(damageable);
+
+                        if (_kb)
+                        {
+                            Vector3 knockbackDirection = new Vector3(-transform.forward.z, 0, transform.forward.x);
+
+                            if (Vector3.Cross(transform.forward, player.transform.position - transform.position).y > 0)
+                            {
+                                knockbackDirection = -knockbackDirection;
+                            }
+
+                            ApplyKnockback(damageable, this, knockbackDirection);
+                        }
+
+                        playerHit = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
     public void LookAtPlayer()
     {
