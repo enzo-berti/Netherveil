@@ -169,6 +169,9 @@ public class GraftedStateMachine : Mobs, IGrafted
     {
         base.Start();
 
+        // Disable life bar on the boss
+        lifeBar.gameObject.SetActive(false);
+
         factory = new StateFactory<GraftedStateMachine>(this);
         currentState = factory.GetState<GraftedTriggeredState>();
 

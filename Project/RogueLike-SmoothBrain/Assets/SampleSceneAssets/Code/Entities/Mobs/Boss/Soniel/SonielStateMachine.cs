@@ -101,6 +101,9 @@ public class SonielStateMachine : Mobs, ISoniel
     {
         base.Start();
 
+        // Disable life bar on the boss
+        lifeBar.gameObject.SetActive(false);
+
         gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
         if (gameMusic != null)
         {
