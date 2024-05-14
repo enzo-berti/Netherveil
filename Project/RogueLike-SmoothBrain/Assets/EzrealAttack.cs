@@ -10,6 +10,7 @@ public class EzrealAttack : Projectile
     protected override void Awake()
     {
         base.Awake();
+        damage = (int)((Utilities.Hero.Stats.GetValueWithoutCoeff(Stat.ATK) + Utilities.PlayerController.FINISHER_DAMAGES) * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
         AudioManager.Instance.PlaySound(AudioManager.Instance.EzrealUltSFX);
         baseOffsetZ = effect.transform.localPosition.z;
     }

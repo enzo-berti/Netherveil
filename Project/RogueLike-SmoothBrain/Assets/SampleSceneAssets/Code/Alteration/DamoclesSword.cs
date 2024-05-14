@@ -1,18 +1,16 @@
-using PostProcessingEffects;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class DamoclesSword : ConstantStatus
 {
     VisualEffect vfx;
+    int damages;
 
     public DamoclesSword(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
+        damages = (int)(Utilities.Hero.Stats.GetValueWithoutCoeff(Stat.ATK)*2 * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
     }
 
     public override Status DeepCopy()
@@ -37,8 +35,8 @@ public class DamoclesSword : ConstantStatus
         .ToList()
         .ForEach(currentEntity =>
         {
-            FloatingTextGenerator.CreateEffectDamageText(10, (currentEntity as MonoBehaviour).transform.position, Hero.corruptionColor);
-            currentEntity.ApplyDamage(10, launcher, false);
+            FloatingTextGenerator.CreateEffectDamageText(damages, (currentEntity as MonoBehaviour).transform.position, Hero.corruptionColor);
+            currentEntity.ApplyDamage(damages, launcher, false);
         });
 
         GameObject.Destroy(vfx.gameObject, 0.3f);
