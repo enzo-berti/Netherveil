@@ -281,6 +281,7 @@ MonoBehaviour:
       decreasingValuePerDrop: 0
   StatSuckerVFX: {fileID: 6752794675419931081}
   spawningVFX: {fileID: 2419481624720550170}
+  bossLifeBar: {fileID: 0}
   wanderZone:
     center: {x: 0, y: 0, z: 0}
     radius: 8
@@ -293,14 +294,14 @@ MonoBehaviour:
           Data3: -79602505
           Data4: -551212355
         Path: event:/Enemy/klops/Fire/KlopsFireDeath
-    AttackSound:
+    attackSound:
       reference:
         Guid:
-          Data1: -1892268768
-          Data2: 1078247924
-          Data3: -1212856411
-          Data4: 428177694
-        Path: event:/Enemy/klops/Fire/KlopsFireAttack
+          Data1: 0
+          Data2: 0
+          Data3: 0
+          Data4: 0
+        Path: 
     hitSound:
       reference:
         Guid:
@@ -309,15 +310,7 @@ MonoBehaviour:
           Data3: -1995946319
           Data4: -1294715118
         Path: event:/Enemy/klops/Fire/KlopsFireHit
-    igniteSound:
-      reference:
-        Guid:
-          Data1: -120245371
-          Data2: 1292517182
-          Data3: 1158932650
-          Data4: 167655265
-        Path: event:/Enemy/klops/Fire/KlopsIgnite
-  defaultVisionAngle: 145
+  defaultVisionAngle: 180
   fireballPrefab: {fileID: 3075343138573199242, guid: 73db5c335518cca40ab83f68aec06498,
     type: 3}
   fireballSpawn: {fileID: 1991301359084458009}
@@ -520,22 +513,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8934983
+      value: -0.87903106
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.23497693
+      value: -0.223773
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.37009916
+      value: -0.40797526
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09733062
+      value: 0.10385734
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

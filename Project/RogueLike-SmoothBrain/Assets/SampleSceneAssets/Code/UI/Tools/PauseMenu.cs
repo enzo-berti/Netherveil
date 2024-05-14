@@ -30,7 +30,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0.0f;
 
         Utilities.PlayerInput.DisableGameplayInputs();
-        HudHandler.current.SetActive(false, 0.25f);
+        HudHandler.current.SetActive(false, 0.0f);
         gameObject.SetActive(true);
 
         OnPause?.Invoke();
@@ -43,7 +43,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1.0f;
         Utilities.PlayerInput.EnableGameplayInputs();
 
-        HudHandler.current.SetActive(true, 0.25f);
+        HudHandler.current.SetActive(true, 0.0f);
         gameObject.SetActive(false);
         settings.SetActive(false);
 

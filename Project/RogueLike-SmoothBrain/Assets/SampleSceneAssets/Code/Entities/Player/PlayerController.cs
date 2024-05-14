@@ -249,50 +249,83 @@ public class PlayerController : MonoBehaviour
             characterController.Move(distance * playerInput.DashDir);
     }
 
-    public void CalculEndPosition(float duration)
+    public void RemoveCollisionOnDash(float _dashDuration)
     {
-        const float sphereCastSize = 1f;
-        Vector3 endPos = this.transform.position + dashCoef * hero.Stats.GetValue(Stat.SPEED) * duration * playerInput.DashDir;
+        // Player capsule collider ( character controller ) params
+        const float sphereCastSize = 0.5f;
+        const float height = 1.9f;
+
+        Vector3 currentEndPos = this.transform.position + dashCoef * hero.Stats.GetValue(Stat.SPEED) * _dashDuration * playerInput.DashDir;
+        currentEndPos.y = 0;
+        Vector3 baseFinalPos = currentEndPos;
+
+        /*  ---- FOR GIZMOS ---
         ENDPOS.Clear();
-        ENDPOS.Add(endPos);
-        Debug.DrawLine(this.transform.position, endPos, Color.red, 10f);
-        if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, (endPos - this.transform.position).magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
+        ENDPOS.Add(currentEndPos);
+        */
+
+        // Check if there is a wall on the dash's path
+        if (Physics.Raycast(transform.position, playerInput.DashDir, out var endHit, (currentEndPos - this.transform.position).magnitude, ~LayerMask.GetMask("AvoidDashCollide")))
         {
-            endPos = endHit.point;
-            ENDPOS.Add(endHit.point);
+            // If it is, replace EndPos close to the hit point on wall
+            currentEndPos = endHit.point;
+            // Used to align every EndPos on the vector (baseFinalPos, player)
+            currentEndPos = Vector3.Project((currentEndPos - baseFinalPos), (this.transform.position - baseFinalPos)) + baseFinalPos;
+            currentEndPos.y = 0;
+
+            /* --- FOR GIZMOS ---
+            ENDPOS.Add(currentEndPos);*/
         }
-        Vector3 basePos = this.transform.position;
-        Vector3 finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
-        List<RaycastHit> hits = Physics.CapsuleCastAll(basePos, finalPos, sphereCastSize, playerInput.DashDir, (endPos - this.transform.position).magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
+
+        Vector3 capsuleBase = this.transform.position;
+        Vector3 capsuleTop = new Vector3(capsuleBase.x, capsuleBase.y + height, capsuleBase.z);
+        List<RaycastHit> hits = Physics.CapsuleCastAll(capsuleBase, capsuleTop, sphereCastSize, playerInput.DashDir, (currentEndPos - this.transform.position).magnitude, LayerMask.GetMask("AvoidDashCollide")).ToList();
+        List<Collider> ToCollide = new List<Collider>();
+        // For each collider on the dash path
         for (int i = hits.Count - 1; i >= 0; i--)
         {
             Collider collider = hits[i].collider;
-            Debug.Log("collider name => " + collider.name);
-            basePos = endPos;
-            finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
-            if (Physics.OverlapCapsule(basePos, finalPos, sphereCastSize).Contains(collider))
+            capsuleBase = currentEndPos;
+            capsuleTop = new Vector3(capsuleBase.x, capsuleBase.y + height, capsuleBase.z);
+            Collider[] overlapColliders = Physics.OverlapCapsule(capsuleBase, capsuleTop, sphereCastSize, LayerMask.GetMask("AvoidDashCollide"));
+            // Put on List ToCollide every collider in the overlapCapsule from the currentEndPosition
+            foreach (var collideOnCurrentEnd in overlapColliders)
             {
-                Debug.Log("Overlap : " + collider.name);
-                endPos = hits[i].point;
-                ENDPOS.Add(endPos);
-                hits.RemoveAt(i);
+                if (!ToCollide.Contains(collideOnCurrentEnd))
+                {
+                    ToCollide.Add(collideOnCurrentEnd);
+                }
+            }
+            // Then if the current collider is on the overlapColliders, then replace the current EndPos on the current colliders
+            if (overlapColliders.Contains(collider))
+            {
+                currentEndPos = hits[i].point;
+                currentEndPos = Vector3.Project(currentEndPos - baseFinalPos, this.transform.position - baseFinalPos) + baseFinalPos;
+                currentEndPos.y = 0;
+                /* --- FOR GIZMOS ---
+                ENDPOS.Add(currentEndPos);
+                hits.RemoveAt(i); */
             }
         }
+
+        // Finally, for each colliders in the dash path
         foreach (var hit in hits)
         {
             Collider collider = hit.collider;
-            basePos = endPos;
-            finalPos = new Vector3(basePos.x, basePos.y + 2, basePos.z);
-            if (!Physics.OverlapCapsule(basePos, finalPos, sphereCastSize).Contains(collider))
+            capsuleBase = currentEndPos;
+            capsuleTop = new Vector3(capsuleBase.x, capsuleBase.y + 2, capsuleBase.z);
+
+            // If the collider isn't in ToCollide List && not in the last overlapCapsule from the endPos, Ignore its collision until the end of the dash
+            if(!ToCollide.Contains(collider) && !Physics.OverlapCapsule(capsuleBase, capsuleTop, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
             {
-                Debug.Log("Ignore collider => " + collider);
                 Physics.IgnoreCollision(characterController, collider, true);
                 collidersIgnored.Add(collider);
             }
-
+            
         }
 
     }
+
     #endregion
 
     #region Attacks&Orientation
@@ -575,33 +608,36 @@ public class PlayerController : MonoBehaviour
             return;
 
 
-        Handles.color = new Color(1, 1, 0.5f, 0.2f);
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
-        Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+        //Handles.color = new Color(1, 1, 0.5f, 0.2f);
+        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
 
-        Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
+        //Handles.color = Color.white;
+        //Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
 
 
 
         int i = 0;
-        if(ENDPOS.Count > 0)
+        if (ENDPOS.Count > 0)
         {
             foreach (var test in ENDPOS)
             {
                 Gizmos.color = color[i];
-                Gizmos.DrawSphere(test, 1f);
+
+                //Gizmos.DrawSphere(test, 0.5f);
                 i++;
-                i = i == ENDPOS.Count ? 0 : i;
-                //DrawWireCapsule(test, Quaternion.identity, 0.5f, 2f, Gizmos.color);
+                i = i == color.Count - 1 ? 0 : i;
+                //Gizmos.DrawSphere(test, 0.5f);
+                DrawWireCapsule(test, Quaternion.identity, 0.5f, 1.9f, Gizmos.color);
             }
         }
-        
+
     }
     public static void DrawWireCapsule(Vector3 _pos, Quaternion _rot, float _radius, float _height, Color _color = default(Color))
     {
         if (_color != default(Color))
             Handles.color = _color;
+        _pos.y += _height / 2;
         Matrix4x4 angleMatrix = Matrix4x4.TRS(_pos, _rot, Handles.matrix.lossyScale);
         using (new Handles.DrawingScope(angleMatrix))
         {

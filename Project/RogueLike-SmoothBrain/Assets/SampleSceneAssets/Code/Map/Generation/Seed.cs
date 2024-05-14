@@ -8,6 +8,8 @@ namespace Map.Generation
     {
         static private readonly int seedSize = 8;
         static public string seed = "0";
+        static public int Iteration { private set; get; } = 0;
+
         static private System.Random random = new System.Random(0);
 
         static public void RandomizeSeed()
@@ -29,37 +31,53 @@ namespace Map.Generation
             }
 
             random = new System.Random(SeedToInt());
+            Iteration = 0;
         }
 
         static public void Reset()
         {
             random = new System.Random(SeedToInt());
+            Iteration = 0;
         }
 
         static public void Set(string seed)
         {
             Seed.seed = seed;
             random = new System.Random(SeedToInt());
+            Iteration = 0;
         }
 
         static public int Range(int minInclusive, int maxExclusive)
         {
+            Iteration++;
             return random.Next(minInclusive, maxExclusive);
+        }
+
+        static public void Iterate(int numIt)
+        {
+            for (int i = 0; i < numIt; i++)
+            {
+                Iteration++;
+                random.Next();
+            }
         }
 
         // TODO : make it function lmao
         static public float Range(float minInclusive, float maxExclusive)
         {
+            Iteration++;
             return (float)random.NextDouble() % (maxExclusive - minInclusive) + minInclusive;
         }
 
         static public float Range()
         {
+            Iteration++;
             return (float)random.NextDouble();
         }
 
         static float NextFloat()
         {
+            Iteration++;
             double mantissa = (random.NextDouble() * 2.0) - 1.0;
             // choose -149 instead of -126 to also generate subnormal floats (*)
             double exponent = Math.Pow(2.0, random.Next(-126, 128));

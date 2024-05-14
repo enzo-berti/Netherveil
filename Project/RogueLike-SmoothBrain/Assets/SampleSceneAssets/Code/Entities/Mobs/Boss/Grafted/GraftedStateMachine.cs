@@ -146,7 +146,6 @@ public class GraftedStateMachine : Mobs, IGrafted
             gameMusic.SetActive(false);
         }
 
-        sounds.introSound.Play(transform.position);
         sounds.music.Play();
     }
 
@@ -245,6 +244,8 @@ public class GraftedStateMachine : Mobs, IGrafted
         sounds.deathSound.Play(transform.position);
 
         agent.isStopped = true;
+
+        freezeRotation = true;
 
         if (projectile != null && projectile.gameObject != null)
         {

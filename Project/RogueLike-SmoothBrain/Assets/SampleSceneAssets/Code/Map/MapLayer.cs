@@ -9,6 +9,6 @@ public class MapLayer : MonoBehaviour
 
     public void Unset()
     {
-        gameObject.layer = LayerMask.NameToLayer("Default");
+        gameObject.layer = LayerMask.NameToLayer("UndiscoveredRoom");
     }
 }
