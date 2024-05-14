@@ -354,8 +354,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1306929387543802998}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08591252, y: -0.7048817, z: 0.08666658, w: 0.6987487}
-  m_LocalPosition: {x: 12.25, y: 3.5, z: -1.25}
+  m_LocalRotation: {x: 5.3951482e-20, y: 0.99997735, z: -8.012165e-18, w: 0.0067335432}
+  m_LocalPosition: {x: 4, y: 1.5, z: 16.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6457,8 +6457,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3279629581712723287}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0017180989, y: -0.8128718, z: 0.0023978532, w: 0.58243525}
-  m_LocalPosition: {x: 12.25, y: 3.5, z: -1.25}
+  m_LocalRotation: {x: -0.03967281, y: -0.123382896, z: -0.004936643, w: 0.99155354}
+  m_LocalPosition: {x: 4, y: 1.5, z: 16.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7021,6 +7021,7 @@ GameObject:
   - component: {fileID: 6337313429784424632}
   - component: {fileID: 8660346612724852154}
   - component: {fileID: 6435392533984258504}
+  - component: {fileID: 2048739310226192007}
   m_Layer: 0
   m_Name: Cinematics
   m_TagString: Untagged
@@ -7076,6 +7077,8 @@ PlayableDirector:
     value: {fileID: 1891236107451011801}
   - key: {fileID: 4272696674388319142, guid: 3b94be5b66f49664082baa84a2a203df, type: 2}
     value: {fileID: 2246426881478162067}
+  - key: {fileID: -6870102724833052680, guid: 3b94be5b66f49664082baa84a2a203df, type: 2}
+    value: {fileID: 2048739310226192007}
   m_ExposedReferences:
     m_References:
     - db23e9d0fc51e624bb32c5d43c9c015a: {fileID: 7801575870325127313}
@@ -7112,6 +7115,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9295c2307e2fb0e489484c6e6decabb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2048739310226192007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5653520730418325301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 4a60d5d773d6e8143838bde5eb780622, type: 2}
+    - {fileID: 11400000, guid: e2743f204b7b10c4faa0ed66752bb612, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6435392533984258504}
+          m_TargetAssemblyTypeName: BossCinematic, Assembly-CSharp
+          m_MethodName: set_EnablePlayerMouvement
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6435392533984258504}
+          m_TargetAssemblyTypeName: BossCinematic, Assembly-CSharp
+          m_MethodName: set_EnablePlayerMouvement
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
 --- !u!1 &5756084928024784849
 GameObject:
   m_ObjectHideFlags: 0

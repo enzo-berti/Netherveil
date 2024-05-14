@@ -6457,6 +6457,7 @@ GameObject:
   - component: {fileID: 1525931506224445120}
   - component: {fileID: 8619554663447512391}
   - component: {fileID: 3502876374217438437}
+  - component: {fileID: 7942402100044080218}
   m_Layer: 0
   m_Name: Cinematics
   m_TagString: Untagged
@@ -6512,6 +6513,8 @@ PlayableDirector:
     value: {fileID: 5307239793349372209}
   - key: {fileID: 3813102944224677535, guid: 645a39e6993d1b04d854f6a68d1e70ed, type: 2}
     value: {fileID: 6909014295659585598}
+  - key: {fileID: 8233576384072540259, guid: 645a39e6993d1b04d854f6a68d1e70ed, type: 2}
+    value: {fileID: 7942402100044080218}
   m_ExposedReferences:
     m_References:
     - db23e9d0fc51e624bb32c5d43c9c015a: {fileID: 3753913858875213614}
@@ -6548,6 +6551,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9295c2307e2fb0e489484c6e6decabb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7942402100044080218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5201848424530566916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 4a60d5d773d6e8143838bde5eb780622, type: 2}
+    - {fileID: 11400000, guid: e2743f204b7b10c4faa0ed66752bb612, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3502876374217438437}
+          m_TargetAssemblyTypeName: BossCinematic, Assembly-CSharp
+          m_MethodName: set_EnablePlayerMouvement
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3502876374217438437}
+          m_TargetAssemblyTypeName: BossCinematic, Assembly-CSharp
+          m_MethodName: set_EnablePlayerMouvement
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
 --- !u!1 &5230984129846954123
 GameObject:
   m_ObjectHideFlags: 0
@@ -6756,8 +6804,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5653206508180717136}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14915395, y: -0.34924358, z: 0.05641448, w: 0.92336315}
-  m_LocalPosition: {x: 13.75, y: 3.5, z: -22.25}
+  m_LocalRotation: {x: -0, y: 0.9935014, z: -1e-45, w: 0.113819845}
+  m_LocalPosition: {x: 1, y: 1.5, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7077,8 +7125,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6741994774817037141}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.003236, y: -0.5483634, z: 0.0021220257, w: 0.83623123}
-  m_LocalPosition: {x: 13.75, y: 3.5, z: -22.25}
+  m_LocalRotation: {x: -0.0113689, y: -0.20622341, z: -0.002396205, w: 0.978436}
+  m_LocalPosition: {x: 1, y: 1.5, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
