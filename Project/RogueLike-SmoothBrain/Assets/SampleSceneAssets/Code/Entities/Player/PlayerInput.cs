@@ -159,6 +159,7 @@ public class PlayerInput : MonoBehaviour
         cameraUtilities.ShakeCamera(0.3f * ChargedAttackCoef, 0.25f, easeFuncs[(int)easeShake]);
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
+        controller.ChargedAttackVFX.Reinit();
         controller.PlayVFX(controller.ChargedAttackVFX);
         AudioManager.Instance.PlaySound(controller.ChargedAttackReleaseSFX);
     }
