@@ -39,8 +39,6 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
     {
         NavMeshHit hit;
 
-        Debug.Log(Context.CurrentPhase + " : " + Context.CurrentPart);
-
         if (Context.CurrentPhase > 1 || Context.CurrentPart > 1)
         {
             Vector3 newPos = Context.Player.transform.position + (Context.Player.transform.position - Context.transform.position).normalized * 6f;
@@ -100,12 +98,16 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
             return;
         }
 
+        Context.Sounds.clone.Play(Context.transform.position, true);
+
         GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
         clone.GetComponentInChildren<ErecrosCloneBehaviour>().Explode(Context);
         Context.transform.position = teleportPos[0];
         teleportPos.RemoveAt(0);
 
-        teleportCooldown = teleportPos.Count > 0 ? 0.5f : 0;
+        Context.Sounds.teleport.Play(Context.transform.position, true);
+        
+        teleportCooldown = teleportPos.Count > 0 ? 1f : 0;
     }
 
     #endregion

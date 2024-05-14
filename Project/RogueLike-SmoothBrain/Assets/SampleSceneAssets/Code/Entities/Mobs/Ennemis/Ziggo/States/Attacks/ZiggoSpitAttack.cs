@@ -85,6 +85,7 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         projectile.PoisonPuddleVFX.transform.parent = null;
         projectile.PoisonPuddleVFX.transform.position = new Vector3(projectile.transform.position.x, Utilities.Player.transform.position.y, projectile.transform.position.z);
         projectile.PoisonPuddleVFX.transform.localScale = Vector3.one;
+        projectile.PoisonPuddleVFX.transform.rotation = Quaternion.identity;
 
         projectile.PoisonPuddleVFX.SetFloat("Duration", puddleDuration);
         //this is because vfx is based on plane size so 1 plane size equals 5 unity units
