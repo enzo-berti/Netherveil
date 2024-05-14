@@ -71,7 +71,8 @@ public abstract class Mobs : Entity
         hit = GetComponentInChildren<HitMaterialApply>();
 
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
-        lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+        if (lifeBar)
+            lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
 
         if (bossLifeBar != null)
         {
@@ -108,7 +109,8 @@ public abstract class Mobs : Entity
         animator.speed = 0;
         IsInvincibleCount++;
         IsKnockbackable = false;
-        lifeBar.gameObject.SetActive(false);
+        if (lifeBar)
+            lifeBar.gameObject.SetActive(false);
         spawningVFX.GetComponent<VFXStopper>().Duration = spawningVFX.GetFloat("Duration") + 0.5f;
         spawningVFX.GetComponent<VFXStopper>().PlayVFX();
         spawningVFX.GetComponent<VFXStopper>().OnStop.AddListener(EndOfSpawningVFX);
