@@ -139,12 +139,12 @@ namespace Map.Generation
             }
             else
             {
-                Seed.RandomizeSeed();
+              Seed.RandomizeSeed();
 
-                if (!isRandom)
-                {
-                    Seed.Set(seed);
-                }
+              if (!isRandom)
+              {
+                  Seed.Set(seed);
+              }
             }
 
             seed = Seed.seed;
@@ -485,6 +485,8 @@ namespace Map.Generation
 
             // if we find another trigger with the "map" tag then we collide with another room
             Collider[] colliders = roomColliderEnter.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.UseGlobal).Where(collider => collider != roomColliderEnter && collider != roomColliderExit && collider.isTrigger).ToArray();
+            if (colliders.Any())
+                Debug.Log(colliders.Length);
             return colliders.Any();
         }
 

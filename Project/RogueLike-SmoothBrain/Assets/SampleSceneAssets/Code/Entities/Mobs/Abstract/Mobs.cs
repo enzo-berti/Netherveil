@@ -18,13 +18,15 @@ public abstract class Mobs : Entity
     protected NavMeshAgent agent;
     protected Renderer mRenderer;
     protected Entity[] nearbyEntities;
-    protected EnemyLifeBar lifeBar;
     protected Animator animator;
     [SerializeField] protected Drop drop;
     public VisualEffect StatSuckerVFX;
     [SerializeField] protected VisualEffect spawningVFX;
     private HitMaterialApply hit;
     private Material spawningMat;
+
+    protected EnemyLifeBar lifeBar;
+    [SerializeField] protected BossLifeBar bossLifeBar;
 
     // opti
     protected int frameToUpdate;
@@ -65,10 +67,16 @@ public abstract class Mobs : Entity
 
         agent = GetComponent<NavMeshAgent>();
         mRenderer = GetComponentInChildren<Renderer>();
-        lifeBar = GetComponentInChildren<EnemyLifeBar>();
         animator = GetComponentInChildren<Animator>();
         hit = GetComponentInChildren<HitMaterialApply>();
+
+        lifeBar = GetComponentInChildren<EnemyLifeBar>();
         lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
+
+        if (bossLifeBar != null)
+        {
+            bossLifeBar.MaxValue = stats.GetValue(Stat.HP);
+        }
 
         nearbyEntities = null;
         ApplySpeed(Stat.SPEED);
@@ -226,12 +234,19 @@ public abstract class Mobs : Entity
         _value = (int)(_value * DamageTakenMultiplicator);
         Stats.DecreaseValue(Stat.HP, _value, false);
 
-        if (!lifeBar.gameObject.activeInHierarchy)
+        if (bossLifeBar != null)
         {
-            lifeBar.gameObject.SetActive(true);
+            bossLifeBar.ValueChanged(stats.GetValue(Stat.HP));
         }
+        else
+        {
+            if (!lifeBar.gameObject.activeSelf)
+            {
+                lifeBar.gameObject.SetActive(true);
+            }
 
-        lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+            lifeBar.ValueChanged(stats.GetValue(Stat.HP));
+        }
 
         if (notEffectDamage)
         {
