@@ -105,7 +105,7 @@ public class FinalBossTeleportAttack : BaseState<FinalBossStateMachine>
         Context.transform.position = teleportPos[0];
         teleportPos.RemoveAt(0);
 
-        teleportCooldown = 0.5f;
+        teleportCooldown = teleportPos.Count > 0 ? 0.5f : 0;
     }
 
     #endregion
