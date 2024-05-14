@@ -6,9 +6,27 @@ public class BossCinematic : MonoBehaviour
 {
     private PlayableDirector director;
 
+    private int lastState = -1;
+    public bool EnablePlayerMouvement
+    {
+        set
+        {
+            if (value)
+            {
+                Utilities.Hero.State = lastState;
+            }
+            else
+            {
+                lastState = Utilities.Hero.State;
+                Utilities.Hero.State = (int)Hero.PlayerState.MOTIONLESS;
+            }
+        }
+    }
+
     private void Awake()
     {
         director = GetComponentInChildren<PlayableDirector>();
+        lastState = Utilities.Hero.State;
     }
 
     private void OnEnable()

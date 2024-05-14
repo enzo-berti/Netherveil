@@ -103,7 +103,7 @@ public abstract class Status
 
     protected void PlayVfx(string vfxName)
     {
-        if (target.Stats.GetValue(Stat.HP) <= 0) return;
+        if (string.IsNullOrEmpty(vfxName) || target.Stats.GetValue(Stat.HP) <= 0) return;
         if (target.statusVfxs.FirstOrDefault(x => x.name.Contains(vfxName)) == null)
         {
             

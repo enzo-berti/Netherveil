@@ -246,6 +246,8 @@ public class GraftedStateMachine : Mobs, IGrafted
 
         agent.isStopped = true;
 
+        freezeRotation = true;
+
         if (projectile != null && projectile.gameObject != null)
         {
             Destroy(projectile.gameObject);

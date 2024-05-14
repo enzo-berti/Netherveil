@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -14,11 +15,13 @@ public class HudHandler : MonoBehaviour
             return instance;
         }
     }
-    [SerializeField] private GameObject hud;
     [SerializeField] private GameObject GameOver;
     [SerializeField] private TMP_Text BloodTestMesh;
     [SerializeField] private MinMaxSlider corruptionSlider;
     [SerializeField] private TMP_Text corruptionText;
+
+    [SerializeField] private CanvasGroup canvasGroupHUD;
+    private Coroutine activeRoutine = null;
 
     [Header("HUD parts")]
     [SerializeField] private PauseMenu pauseMenu;
@@ -54,11 +57,42 @@ public class HudHandler : MonoBehaviour
         corruptionText.text = Mathf.Abs(Utilities.Hero.Stats.GetValue(Stat.CORRUPTION)).ToString();
     }
 
+    public void SetActive(bool active, float duration = 0.0f)
+    {
+        if (activeRoutine != null)
+            StopCoroutine(activeRoutine);
+
+        if (active)
+            activeRoutine = StartCoroutine(ActiveRoutine(0.0f, 1.0f, duration));
+        else
+            activeRoutine = StartCoroutine(ActiveRoutine(1.0f, 0.0f, duration));
+    }
+
+    private IEnumerator ActiveRoutine(float from, float to, float duration)
+    {
+        float elapsed = 0.0f;
+
+        canvasGroupHUD.alpha = from;
+
+        while (elapsed < duration)
+        {
+            elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+            float factor = elapsed / duration;
+
+            canvasGroupHUD.alpha = factor;
+
+            yield return null;
+        }
+
+        canvasGroupHUD.alpha = to;
+        activeRoutine = null;
+    }
+
+    // Not in the right place -_(O_O)_-
     public void ActiveGameOver(Vector3 _)
     {
         GameOver.SetActive(true);
-        hud.SetActive(false);
+        SetActive(false);
         GameOver.GetComponent<GameOver>().LaunchDeathCam();
     }
-
 }
