@@ -103,7 +103,7 @@ public class EnemyLifeBar : MonoBehaviour
         damageBarSlider.enabled = true;
     }
 
-    void UpdateAlpha()
+    private void UpdateAlpha()
     {
         Color lifebarColor = lifeBarSlider.color;
         lifebarColor.a = alpha;
@@ -114,7 +114,7 @@ public class EnemyLifeBar : MonoBehaviour
         background.color = backgroundColor;
     }
 
-    IEnumerator FadeCoroutine(float _desiredAlpha, float _duration)
+    private IEnumerator FadeCoroutine(float _desiredAlpha, float _duration)
     {
         float timer = 0f;
         float alphaDifference = _desiredAlpha - alpha;
