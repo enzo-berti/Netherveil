@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: 3586686003851066095}
   - component: {fileID: 5547983565370113272}
   - component: {fileID: 282726251491024791}
+  - component: {fileID: 5497509186140094267}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -176,8 +177,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 16777215
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -236,6 +237,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5497509186140094267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1301613722909092923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713a5c4d3171e63459cfd2cd86c22479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeTime: 0.2
 --- !u!1 &1500780075772966348
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,6 +597,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5497509186140094267}
+        m_TargetAssemblyTypeName: FloatingTextMainMenu, Assembly-CSharp
+        m_MethodName: FadeFloatingTexts
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onHoverExit:
     m_PersistentCalls:
       m_Calls:
@@ -590,6 +616,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Outline, Assembly-CSharp
         m_MethodName: DisableOutline
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5497509186140094267}
+        m_TargetAssemblyTypeName: FloatingTextMainMenu, Assembly-CSharp
+        m_MethodName: FadeFloatingTexts
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
