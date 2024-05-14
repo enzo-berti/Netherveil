@@ -13,7 +13,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly List<Spear> spears = new();
     Coroutine thunderlinkRoutine = null;
     Coroutine moveRoutine = null;
-    readonly float THUNDERLINK_WAIT_TIME = 0.15f;
+    readonly float THUNDERLINK_WAIT_TIME = 0.5f;
     readonly float duration = 3f;
     readonly float chance = 0.2f;
     bool allSpearsSet = false;
@@ -103,7 +103,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
                 {
                     if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject)
                     {
-                        player.Attack(entity as IDamageable, displayDamages - Utilities.PlayerController.SPEAR_DAMAGES);
+                        (entity as IDamageable).ApplyDamage((int)(1f * Utilities.Hero.Stats.GetCoeff(Stat.ATK)), Utilities.Hero);
                         entity.AddStatus(new Electricity(duration, chance), player);
                     }
                 }
