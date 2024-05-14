@@ -146,7 +146,6 @@ public class GraftedStateMachine : Mobs, IGrafted
             gameMusic.SetActive(false);
         }
 
-        sounds.introSound.Play(transform.position);
         sounds.music.Play();
     }
 

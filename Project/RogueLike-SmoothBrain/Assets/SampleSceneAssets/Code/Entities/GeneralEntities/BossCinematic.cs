@@ -22,6 +22,13 @@ public class BossCinematic : MonoBehaviour
             }
         }
     }
+    public bool EnableHUD
+    {
+        set
+        {
+            HudHandler.current.SetActive(value, 0.25f);
+        }
+    }
 
     private void Awake()
     {
