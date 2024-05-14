@@ -9,11 +9,12 @@ public class SelectionForcer : MonoBehaviour
     private void Update()
     {
         var currentSelect = EventSystem.current.currentSelectedGameObject;
-        if (currentSelect != previousSelect)
+        if (currentSelect != null)
         {
             previousSelect = currentSelect;
         }
-        else
+        
+        if (currentSelect == null)
         {
             EventSystem.current.SetSelectedGameObject(previousSelect);
         }
