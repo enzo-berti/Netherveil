@@ -14,20 +14,20 @@ using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FinalBossTriangleDashAttack : BaseState<FinalBossStateMachine>
+public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
 {
-    public FinalBossTriangleDashAttack(FinalBossStateMachine currentContext, StateFactory<FinalBossStateMachine> currentFactory)
+    public ErecrosTriangleDashAttack(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
-    List<FinalBossCloneBehaviour> cloneBehaviours = new();
+    List<ErecrosCloneBehaviour> cloneBehaviours = new();
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
         if (attackEnded)
         {
-            SwitchState(Factory.GetState<FinalBossTriggeredState>());
+            SwitchState(Factory.GetState<ErecrosTriggeredState>());
         }
     }
 
@@ -45,7 +45,7 @@ public class FinalBossTriangleDashAttack : BaseState<FinalBossStateMachine>
             spawnVector = Quaternion.AngleAxis(360 / (clonesAmount + 1) * (i + 1), Vector3.up) * spawnVector;
             clone.transform.position = Context.Player.transform.position + spawnVector;
 
-            cloneBehaviours.Add(clone.GetComponentInChildren<FinalBossCloneBehaviour>());
+            cloneBehaviours.Add(clone.GetComponentInChildren<ErecrosCloneBehaviour>());
         }
 
     }
@@ -63,7 +63,7 @@ public class FinalBossTriangleDashAttack : BaseState<FinalBossStateMachine>
 
     // This method will be called on state switch.
     // No need to modify this method !
-    protected override void SwitchState(BaseState<FinalBossStateMachine> newState)
+    protected override void SwitchState(BaseState<ErecrosStateMachine> newState)
     {
         base.SwitchState(newState);
         Context.currentState = newState;

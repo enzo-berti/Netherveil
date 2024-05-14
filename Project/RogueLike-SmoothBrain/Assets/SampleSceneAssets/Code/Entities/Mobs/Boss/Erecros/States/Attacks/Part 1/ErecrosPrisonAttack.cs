@@ -12,15 +12,15 @@
 
 using StateMachine; // include all scripts about StateMachines
 
-public class FinalBossPrisonAttack : BaseState<FinalBossStateMachine>
+public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 {
-    public FinalBossPrisonAttack(FinalBossStateMachine currentContext, StateFactory<FinalBossStateMachine> currentFactory)
+    public ErecrosPrisonAttack(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
         
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        SwitchState(Factory.GetState<FinalBossTriggeredState>());
+        SwitchState(Factory.GetState<ErecrosTriggeredState>());
     }
 
     // This method will be called only once before the update.
@@ -43,7 +43,7 @@ public class FinalBossPrisonAttack : BaseState<FinalBossStateMachine>
 
     // This method will be called on state switch.
     // No need to modify this method !
-    protected override void SwitchState(BaseState<FinalBossStateMachine> newState)
+    protected override void SwitchState(BaseState<ErecrosStateMachine> newState)
     {
         base.SwitchState(newState);
         Context.currentState = newState;

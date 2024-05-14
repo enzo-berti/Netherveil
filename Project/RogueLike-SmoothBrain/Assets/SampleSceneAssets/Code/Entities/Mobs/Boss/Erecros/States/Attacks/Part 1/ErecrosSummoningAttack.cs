@@ -14,9 +14,9 @@ using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FinalBossSummoningAttack : BaseState<FinalBossStateMachine>
+public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
 {
-    public FinalBossSummoningAttack(FinalBossStateMachine currentContext, StateFactory<FinalBossStateMachine> currentFactory)
+    public ErecrosSummoningAttack(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
@@ -29,7 +29,7 @@ public class FinalBossSummoningAttack : BaseState<FinalBossStateMachine>
     {
         if (attackEnded)
         {
-            SwitchState(Factory.GetState<FinalBossTriggeredState>());
+            SwitchState(Factory.GetState<ErecrosTriggeredState>());
         }
     }
 
@@ -81,7 +81,7 @@ public class FinalBossSummoningAttack : BaseState<FinalBossStateMachine>
 
     // This method will be called on state switch.
     // No need to modify this method !
-    protected override void SwitchState(BaseState<FinalBossStateMachine> newState)
+    protected override void SwitchState(BaseState<ErecrosStateMachine> newState)
     {
         base.SwitchState(newState);
         Context.currentState = newState;

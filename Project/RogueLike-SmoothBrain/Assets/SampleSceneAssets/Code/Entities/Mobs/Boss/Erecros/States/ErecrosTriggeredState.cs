@@ -15,9 +15,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FinalBossTriggeredState : BaseState<FinalBossStateMachine>
+public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
 {
-    public FinalBossTriggeredState(FinalBossStateMachine currentContext, StateFactory<FinalBossStateMachine> currentFactory)
+    public ErecrosTriggeredState(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     Type lastAttack;
@@ -58,7 +58,7 @@ public class FinalBossTriggeredState : BaseState<FinalBossStateMachine>
 
     // This method will be called on state switch.
     // No need to modify this method !
-    protected override void SwitchState(BaseState<FinalBossStateMachine> newState)
+    protected override void SwitchState(BaseState<ErecrosStateMachine> newState)
     {
         base.SwitchState(newState);
         Context.currentState = newState;
@@ -68,14 +68,14 @@ public class FinalBossTriggeredState : BaseState<FinalBossStateMachine>
     {
         List<Type> availableAttacks = new()
         {
-            typeof(FinalBossTriangleDashAttack),
-            typeof(FinalBossSummoningAttack),
-            typeof(FinalBossTeleportAttack),
+            typeof(ErecrosTriangleDashAttack),
+            typeof(ErecrosSummoningAttack),
+            typeof(ErecrosTeleportAttack),
         };
 
         if (Context.CurrentPhase > 1 && Context.CurrentPart == 1)
         {
-            availableAttacks.Add(typeof(FinalBossPrisonAttack));
+            availableAttacks.Add(typeof(ErecrosPrisonAttack));
         }
 
         return availableAttacks;
@@ -86,19 +86,19 @@ public class FinalBossTriggeredState : BaseState<FinalBossStateMachine>
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SwitchState(Factory.GetState<FinalBossTriangleDashAttack>());
+            SwitchState(Factory.GetState<ErecrosTriangleDashAttack>());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SwitchState(Factory.GetState<FinalBossSummoningAttack>());
+            SwitchState(Factory.GetState<ErecrosSummoningAttack>());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            SwitchState(Factory.GetState<FinalBossTeleportAttack>());
+            SwitchState(Factory.GetState<ErecrosTeleportAttack>());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            SwitchState(Factory.GetState<FinalBossPrisonAttack>());
+            SwitchState(Factory.GetState<ErecrosPrisonAttack>());
         }
     }
     #endregion
