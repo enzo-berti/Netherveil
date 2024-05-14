@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class RoomUI : MonoBehaviour
+namespace Map.Component
 {
+    public class RoomUI : MonoBehaviour
+    {
 
+    }
 }
