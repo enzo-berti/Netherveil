@@ -38,7 +38,7 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
     {
         Context.Agent.isStopped = true;
 
-        int iterations = (Context.CurrentPhase > 1 || Context.CurrentPart > 1) ? 5 : 3; 
+        int iterations = (Context.CurrentPhase > 1 || Context.CurrentPart > 1) ? 6 : 4; 
 
         for (int i = 0; i < iterations; i++)
         {

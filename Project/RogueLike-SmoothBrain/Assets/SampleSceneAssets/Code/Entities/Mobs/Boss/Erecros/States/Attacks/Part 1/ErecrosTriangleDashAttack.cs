@@ -76,8 +76,13 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
 
         foreach (ErecrosCloneBehaviour clone in cloneBehaviours)
         {
+            clone.DisableDebugCollider();
             Object.Destroy(clone.gameObject);
         }
+
+        Context.PlayerHit = false;
+
+        Context.DisableHitboxes();
 
         cloneBehaviours.Clear();
     }
@@ -101,6 +106,11 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
         }
         else
         {
+            if (!Context.PlayerHit)
+            {
+                Context.AttackCollide(Context.Attacks[(int)ErecrosStateMachine.ErecrosColliders.DASH].data, debugMode: true);
+            }
+
             dashDistance -= Context.Stats.GetValue(Stat.SPEED) * Time.deltaTime;
 
             Context.transform.position += Context.transform.forward * Context.Stats.GetValue(Stat.SPEED) * Time.deltaTime;
@@ -108,6 +118,14 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
             foreach (ErecrosCloneBehaviour clone in cloneBehaviours)
             {
                 clone.transform.position += clone.transform.forward * Context.Stats.GetValue(Stat.SPEED) * Time.deltaTime;
+
+                if (!Context.PlayerHit)
+                {
+                    if (clone.AttackCollide(Context))
+                    {
+                        Context.PlayerHit = true;
+                    }
+                }
             }
 
             if (dashDistance <= 0f)
