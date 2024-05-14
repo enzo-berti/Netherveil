@@ -6,7 +6,7 @@ public class DashBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         GameObject.FindWithTag("Player").GetComponent<PlayerInput>().StartOfDashAnimation();
-        Utilities.PlayerController.CalculEndPosition(stateInfo.length);
+        Utilities.PlayerController.RemoveCollisionOnDash(stateInfo.length);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

@@ -486,7 +486,10 @@ public class PlayerInput : MonoBehaviour
 
     private bool CanDashAttack()
     {
-        return hero.State == (int)Hero.PlayerState.DASH
+        Transform playerTr = Utilities.Player.transform;
+        Vector3 capsuleBase = playerTr.position;
+        Vector3 capsuleTop = new Vector3(capsuleBase.x, capsuleBase.y + Utilities.CharacterController.height, capsuleBase.z);
+        return hero.State == (int)Hero.PlayerState.DASH && Physics.OverlapCapsule(capsuleBase, capsuleTop, Utilities.CharacterController.radius, LayerMask.GetMask("AvoidDashCollide")).Length == 0
         && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
     }
 
