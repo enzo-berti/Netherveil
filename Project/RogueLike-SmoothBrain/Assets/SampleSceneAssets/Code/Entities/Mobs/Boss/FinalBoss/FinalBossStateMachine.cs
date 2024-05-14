@@ -35,8 +35,8 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
     float initialHP;
     CameraUtilities cameraUtilities;
 
-    int part = 1;
-    int phase = 1;
+    int part;
+    int phase;
 
     [SerializeField] GameObject[] enemiesPrefabs;
 
@@ -74,7 +74,7 @@ public class FinalBossStateMachine : Mobs, IFinalBoss
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
         part = 1;
-        phase = 1;
+        phase = 2;
     }
 
     protected override void Update()
