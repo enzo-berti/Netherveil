@@ -28,6 +28,8 @@ public class DamoclesSword : ConstantStatus
         if (target == null)
             return;
 
+        AudioManager.Instance.PlaySound(AudioManager.Instance.AresBladeSFX, target.transform.position);
+
         Physics.OverlapSphere(target.transform.position, vfx.GetAnimationCurve("SizeSlash").keys.Last().value / 2f, LayerMask.GetMask("Entity"))
         .Where(entity => entity.gameObject != (launcher as MonoBehaviour).gameObject)
         .Select(entity => entity.GetComponent<IDamageable>())
