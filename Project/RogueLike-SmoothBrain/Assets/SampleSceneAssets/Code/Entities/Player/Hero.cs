@@ -66,6 +66,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     public bool CanHealFromConsumables { get; set; } = true;
     bool canLaunchUpgrade = false;
+    public int LastDamagesSuffered { get; private set; } = 0;
 
     public List<Status> StatusToApply => statusToApply;
 
@@ -164,6 +165,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
                 playerController.HitVFX.Play();
             }
 
+            LastDamagesSuffered = (int)(_value);
             Stats.DecreaseValue(Stat.HP, (int)(_value), false);
 
             OnTakeDamage?.Invoke((int)(_value), attacker);

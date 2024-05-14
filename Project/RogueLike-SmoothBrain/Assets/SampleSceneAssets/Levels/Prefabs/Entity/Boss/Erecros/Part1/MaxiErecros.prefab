@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4149131573260210077}
   m_Layer: 3
-  m_Name: Erecros
+  m_Name: MaxiErecros
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -678,17 +678,147 @@ MonoBehaviour:
     center: {x: 0, y: 0, z: 0}
     radius: 8
   sounds:
-    hit:
+    intro:
       reference:
         Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
+          Data1: -448004939
+          Data2: 1143041209
+          Data3: 775212694
+          Data4: -92089055
+        Path: event:/Enemy/Erecros/ErecrosSpawn
+    miniHit:
+      reference:
+        Guid:
+          Data1: -2119122666
+          Data2: 1107032259
+          Data3: 76010119
+          Data4: 1437588645
+        Path: event:/Enemy/Erecros/ErecrosHitLittle
+    miniDeath:
+      reference:
+        Guid:
+          Data1: 1473691697
+          Data2: 1222263116
+          Data3: 2086226099
+          Data4: 1056626289
+        Path: event:/Enemy/Erecros/ErecrosDeathLittle
+    maxiHit:
+      reference:
+        Guid:
+          Data1: 285072160
+          Data2: 1300855590
+          Data3: -1585620806
+          Data4: 1278656246
+        Path: event:/Enemy/Erecros/ErecrosHitBig
+    maxiDeath:
+      reference:
+        Guid:
+          Data1: -749896909
+          Data2: 1254059715
+          Data3: 1740986498
+          Data4: 278552064
+        Path: event:/Enemy/Erecros/ErecrosDeathBig
+    teleport:
+      reference:
+        Guid:
+          Data1: -1105549635
+          Data2: 1281167146
+          Data3: -1955623267
+          Data4: -1953237810
+        Path: event:/Enemy/Erecros/ErecrosTeleport
+    dash:
+      reference:
+        Guid:
+          Data1: 1039382854
+          Data2: 1162363825
+          Data3: 1203827391
+          Data4: -1853089385
+        Path: event:/Enemy/Erecros/ErecrosDash
+    clone:
+      reference:
+        Guid:
+          Data1: 34363453
+          Data2: 1147439186
+          Data3: -473922933
+          Data4: 1701939608
+        Path: event:/Enemy/Erecros/ErecrosKageBunshinNoJutsu
+    levitation:
+      reference:
+        Guid:
+          Data1: 2129163307
+          Data2: 1094182079
+          Data3: -1933398618
+          Data4: 1619914075
+        Path: event:/Enemy/Erecros/ErecrosLevitation
+    prison:
+      reference:
+        Guid:
+          Data1: -1813339370
+          Data2: 1204795144
+          Data3: -1458388344
+          Data4: -1763954975
+        Path: event:/Enemy/Erecros/ErecrosMagicArea
+    shieldHit:
+      reference:
+        Guid:
+          Data1: 1359138708
+          Data2: 1246856600
+          Data3: 199394448
+          Data4: -564642388
+        Path: event:/Enemy/Erecros/ErecrosShieldHit
+    shockwave:
+      reference:
+        Guid:
+          Data1: -1332578657
+          Data2: 1102562482
+          Data3: -803187284
+          Data4: -1976758815
+        Path: event:/Enemy/Erecros/ErecrosComboChockWave
+    invocation:
+      reference:
+        Guid:
+          Data1: -621854245
+          Data2: 1234590855
+          Data3: 386585733
+          Data4: -21601877
+        Path: event:/Enemy/Erecros/ErecrosInvocation
+    throwWeapon:
+      reference:
+        Guid:
+          Data1: -872735393
+          Data2: 1328086963
+          Data3: -1207240051
+          Data4: -1646810645
+        Path: event:/Enemy/Erecros/ErecrosThrow
+    weaponHitGround:
+      reference:
+        Guid:
+          Data1: 2135952765
+          Data2: 1271485345
+          Data3: 163236789
+          Data4: -20161725
+        Path: event:/Enemy/Erecros/ErecrosWeaponHitGround
+    weaponHitWall:
+      reference:
+        Guid:
+          Data1: 1137478632
+          Data2: 1221846330
+          Data3: -1505303876
+          Data4: 1910734853
+        Path: event:/Enemy/Erecros/ErecrosWeaponHitWall
+    weaponFlying:
+      reference:
+        Guid:
+          Data1: -953987107
+          Data2: 1096694957
+          Data3: -431677269
+          Data4: 71043479
+        Path: event:/Enemy/Erecros/ErecrosWeaponThrowInAir
   attackColliders:
   - data:
     - {fileID: 5631931618629611891}
+  part: 2
+  phase: 1
   enemiesPrefabs:
   - {fileID: 7946285657065441543, guid: 376ce9b0187a0764d9984198a53c48b7, type: 3}
   - {fileID: 2077170564847773805, guid: bac8bbdc7f45cee4080b036c3c1ffb4c, type: 3}
@@ -969,8 +1099,13 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
         type: 3}
       propertyPath: m_Name
-      value: Model
+      value: MaxiModel
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e217eabb75eb53c4c91cadccca949c57, type: 2}
     - target: {fileID: 7538775946762833600, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -979,8 +1114,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -2679874932307580678, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2970190163206381566}
   m_SourcePrefab: {fileID: 100100000, guid: 8f0d4fd8a005aa34687c2fdd844091fe, type: 3}
+--- !u!1 &1892125747529128762 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2679874932307580678, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 4651380197219447744}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2970190163206381566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892125747529128762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bad904c67b36e9144ba2622ed1d8b8a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &2887398268088876288 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7538775946762833600, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
@@ -1064,22 +1221,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8097767
+      value: 0.8184346
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.22519448
+      value: 0.22203837
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5219929
+      value: 0.51147723
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.14516334
+      value: -0.13876192
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

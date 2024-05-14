@@ -73,7 +73,7 @@ namespace Map
             }
         }
 
-        static public void SetDatas(GenerationParam genParam)
+        static public void SetDatas(GenerationParameters genParam)
         {
             nbRoomByType = genParam.nbRoomByType.ToDictionary(entry => entry.Key, entry => entry.Value);
 

@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-using UnityEngine.WSA;
 
 public class ErecrosCloneBehaviour : MonoBehaviour
 {
@@ -11,7 +9,8 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
     CameraUtilities cameraUtilities;
 
-    [SerializeField] Collider collider;
+    [SerializeField] Collider attackHitbox;
+    [SerializeField] Sound explosionSound;
 
     private void Awake()
     {
@@ -50,6 +49,8 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
         GetComponentInChildren<Renderer>().gameObject.SetActive(false);
 
+        explosionSound.Play(transform.position);
+
         DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.5f);
         cameraUtilities.ShakeCamera(0.5f, 0.5f, EasingFunctions.EaseInQuint);
 
@@ -87,12 +88,12 @@ public class ErecrosCloneBehaviour : MonoBehaviour
     {
         if (debugMode)
         {
-            collider.gameObject.SetActive(true);
+            attackHitbox.gameObject.SetActive(true);
         }
 
         Vector3 rayOffset = Vector3.up / 2;
 
-        Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(collider, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
+        Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(attackHitbox, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
         if (tab.Length > 0)
         {
             foreach (Collider col in tab)
@@ -104,7 +105,7 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
                     if (debugMode)
                     {
-                        collider.gameObject.SetActive(false);
+                        attackHitbox.gameObject.SetActive(false);
                     }
                     return true;
                 }
@@ -115,6 +116,6 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
     public void DisableDebugCollider()
     {
-        collider.gameObject.SetActive(false);
+        attackHitbox.gameObject.SetActive(false);
     }
 }

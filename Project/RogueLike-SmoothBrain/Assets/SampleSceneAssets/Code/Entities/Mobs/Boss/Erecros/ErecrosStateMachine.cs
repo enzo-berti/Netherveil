@@ -17,7 +17,23 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     [Serializable]
     public class ErecrosSounds
     {
-        public Sound hit;
+        public Sound intro;
+        public Sound miniHit; //
+        public Sound miniDeath; //
+        public Sound maxiHit; //
+        public Sound maxiDeath; //
+        public Sound teleport; //
+        public Sound dash; //
+        public Sound clone; //
+        public Sound levitation;
+        public Sound prison;
+        public Sound shieldHit; //
+        public Sound shockwave;
+        public Sound invocation; //
+        public Sound throwWeapon;
+        public Sound weaponHitGround;
+        public Sound weaponHitWall;
+        public Sound weaponFlying;
     }
 
     public enum ErecrosColliders
@@ -35,8 +51,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     float initialHP;
     CameraUtilities cameraUtilities;
 
-    int part;
-    int phase;
+    [SerializeField] int part;
+    [SerializeField] int phase;
 
     [SerializeField] GameObject[] enemiesPrefabs;
 
@@ -49,6 +65,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
     public Animator Animator { get => animator; }
     public List<NestedList<Collider>> Attacks { get => attackColliders; }
+    public ErecrosSounds Sounds { get => sounds; }
     public Hero Player { get => player; }
     public bool PlayerHit { get => playerHit; set => playerHit = value; }
     public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
@@ -94,7 +111,11 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     {
         if (currentState is not ErecrosSummoningAttack)
         {
-            ApplyDamagesMob(_value, sounds.hit, Death, notEffectDamage);
+            ApplyDamagesMob(_value, part <= 1 ? sounds.miniHit : sounds.maxiHit, Death, notEffectDamage);
+        }
+        else
+        {
+            sounds.shieldHit.Play(transform.position, true);
         }
     }
 
@@ -113,6 +134,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         animator.speed = 1;
         OnDeath?.Invoke(transform.position);
         Utilities.Hero.OnKill?.Invoke(this);
+
+        if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
 
         currentState = factory.GetState<SonielDeathState>();
     }

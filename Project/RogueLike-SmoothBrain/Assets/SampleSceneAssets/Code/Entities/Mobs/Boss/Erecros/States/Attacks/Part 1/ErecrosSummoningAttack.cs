@@ -50,6 +50,8 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
             enemies.Add(Object.Instantiate(Context.EnemiesPrefabs[Random.Range(0, Context.EnemiesPrefabs.Length)], mobPos, Quaternion.identity).GetComponentInChildren<Mobs>());
         }
 
+        Context.Sounds.invocation.Play(Context.transform.position);
+
         Context.ShieldVFX.Reinit();
         Context.ShieldVFX.Play();
     }
@@ -68,13 +70,7 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
     {
         Context.LookAtPlayer();
 
-        foreach (Mobs enemy in enemies)
-        {
-            if (enemy.GetComponentInChildren<Mobs>().Stats.GetValue(Stat.HP) <= 0)
-            {
-                enemies.Remove(enemy);
-            }
-        }
+        RemoveDeadEnemies();
 
         attackEnded = enemies.Count <= 0f;
     }
@@ -86,4 +82,26 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
+    #region Extra methods
+
+    void RemoveDeadEnemies()
+    {
+        List<Mobs> enemiesToRemove = new List<Mobs>();
+        foreach (Mobs enemy in enemies)
+        {
+            if (enemy.GetComponentInChildren<Mobs>().Stats.GetValue(Stat.HP) <= 0)
+            {
+                enemiesToRemove.Add(enemy);
+            }
+        }
+
+        foreach (Mobs enemy in enemiesToRemove)
+        {
+            enemies.Remove(enemy);
+        }
+        enemiesToRemove.Clear();
+    }
+
+    #endregion
 }

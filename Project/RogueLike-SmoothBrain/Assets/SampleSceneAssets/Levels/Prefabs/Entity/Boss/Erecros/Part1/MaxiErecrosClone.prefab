@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2799082595357482665}
   m_Layer: 3
-  m_Name: ErecrosClone
+  m_Name: MaxiErecrosClone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -446,7 +446,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b000e066d9e0fd47bbca4c9f665a86e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 8814618729154696440}
+  attackHitbox: {fileID: 8814618729154696440}
+  explosionSound:
+    reference:
+      Guid:
+        Data1: 1088130236
+        Data2: 1201804223
+        Data3: -900139347
+        Data4: -391393013
+      Path: event:/Object/BombeExplosion
 --- !u!1001 &5661335361027897231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -518,8 +526,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -2679874932307580678, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4677667919631159685}
   m_SourcePrefab: {fileID: 100100000, guid: 8f0d4fd8a005aa34687c2fdd844091fe, type: 3}
+--- !u!1 &1467664913948860277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2679874932307580678, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 5661335361027897231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4677667919631159685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467664913948860277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bad904c67b36e9144ba2622ed1d8b8a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &2742136146608929103 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7538775946762833600, guid: 8f0d4fd8a005aa34687c2fdd844091fe,

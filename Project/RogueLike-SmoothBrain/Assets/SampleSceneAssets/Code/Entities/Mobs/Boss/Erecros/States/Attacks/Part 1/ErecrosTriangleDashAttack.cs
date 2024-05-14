@@ -67,6 +67,9 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
 
             cloneBehaviours.Add(clone.GetComponentInChildren<ErecrosCloneBehaviour>());
         }
+
+        Context.Sounds.clone.Play(Context.Player.transform.position, true);
+        Context.Sounds.teleport.Play(Context.transform.position, true);
     }
 
     // This method will be called only once after the last update.
@@ -101,6 +104,7 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
 
                 Context.Stats.IncreaseCoeffValue(Stat.SPEED, 4f);
 
+                Context.Sounds.dash.Play(Context.transform.position);
                 dashed = true;
             }
         }

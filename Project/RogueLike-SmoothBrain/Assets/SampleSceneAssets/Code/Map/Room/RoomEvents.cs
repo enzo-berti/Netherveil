@@ -184,7 +184,7 @@ namespace Map
             if (!enterRoomCalled && hasLeaved && other.gameObject.CompareTag("Player"))
             {
                 Vector3 enterToPlayer = enterPos - other.bounds.center;
-                if (enterToPlayer.magnitude >= 6.25f)
+                if (enterToPlayer.magnitude >= 4f)
                 {
                     EnterEvents();
                 }
