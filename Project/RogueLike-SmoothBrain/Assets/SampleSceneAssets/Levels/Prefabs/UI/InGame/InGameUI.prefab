@@ -364,6 +364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1882517606329679549}
+  - component: {fileID: 7949154718186477610}
   - component: {fileID: 8576172045066730106}
   m_Layer: 5
   m_Name: HUD
@@ -398,6 +399,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &7949154718186477610
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204350457420971887}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &8576172045066730106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,11 +423,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a9455171ffb2054fb32c0d780fb1f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hud: {fileID: 1204350457420971887}
   GameOver: {fileID: 7241473623315860069}
   BloodTestMesh: {fileID: 7623068430848984703}
   corruptionSlider: {fileID: 9178113697217660642}
   corruptionText: {fileID: 6586712579333978309}
+  canvasGroupHUD: {fileID: 7949154718186477610}
   pauseMenu: {fileID: 181109944983116964}
   questHUD: {fileID: 6970367456858513890}
   mapHUD: {fileID: 5086754428936548828}
@@ -2965,8 +2978,8 @@ RectTransform:
   - {fileID: 458248874205813232}
   - {fileID: 8794596256557947888}
   - {fileID: 2378844969024337725}
-  - {fileID: 8360027737486661036}
   - {fileID: 8741690818495123243}
+  - {fileID: 8360027737486661036}
   m_Father: {fileID: 5134436257781994442}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7275,7 +7288,7 @@ PrefabInstance:
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
@@ -7411,7 +7424,7 @@ PrefabInstance:
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
