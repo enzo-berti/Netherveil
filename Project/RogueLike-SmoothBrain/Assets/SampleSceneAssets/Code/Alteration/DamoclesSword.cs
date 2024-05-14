@@ -5,7 +5,11 @@ using UnityEngine.VFX;
 public class DamoclesSword : ConstantStatus
 {
     VisualEffect vfx;
-    int damages;
+    readonly int damages;
+    //used to make the vfx a little bit longer than the effect so that the OnFinished is perfectly timed on the sword drop
+    readonly float VFX_DURATION_OFFSET = 0.2f;
+    readonly float SWORD_BASE_OFFSET = 0.5f;
+    readonly float SWORD_BEFORE_DROP_OFFSET = 0.75f;
 
     public DamoclesSword(float _duration, float _chance) : base(_duration, _chance)
     {
@@ -52,7 +56,20 @@ public class DamoclesSword : ConstantStatus
     protected override void PlayStatus()
     {
         vfx = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_CorruptedSword"), target.transform).GetComponent<VisualEffect>();
-        vfx.SetFloat("Duration", duration + 0.2f);
+        vfx.SetFloat("Duration", duration + VFX_DURATION_OFFSET);
+
+        AnimationCurve curve = vfx.GetAnimationCurve("SwordOffset");
+        Keyframe[] keyframes = curve.keys;
+        keyframes[0].value = target.GetComponent<CapsuleCollider>().height + SWORD_BASE_OFFSET;
+        keyframes[1].value = keyframes[0].value;
+        keyframes[2].value = keyframes[1].value + SWORD_BEFORE_DROP_OFFSET;
+
+        for (int i = 0; i < keyframes.Length; i++)
+        {
+            curve.MoveKey(i, keyframes[i]);
+        }
+
+        vfx.SetAnimationCurve("SwordOffset", curve);
         vfx.Play();
     }
 }
