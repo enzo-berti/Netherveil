@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-using UnityEngine.WSA;
 
 public class ErecrosCloneBehaviour : MonoBehaviour
 {
