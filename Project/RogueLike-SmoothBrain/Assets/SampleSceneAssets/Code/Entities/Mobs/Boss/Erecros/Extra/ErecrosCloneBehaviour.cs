@@ -11,6 +11,8 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
     CameraUtilities cameraUtilities;
 
+    [SerializeField] Collider collider;
+
     private void Awake()
     {
         VFXBomb = GetComponentInChildren<VisualEffect>();
@@ -79,5 +81,40 @@ public class ErecrosCloneBehaviour : MonoBehaviour
         lookRotation.z = 0;
 
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+    }
+
+    public bool AttackCollide(IAttacker _attacker, bool debugMode = true)
+    {
+        if (debugMode)
+        {
+            collider.gameObject.SetActive(true);
+        }
+
+        Vector3 rayOffset = Vector3.up / 2;
+
+        Collider[] tab = PhysicsExtensions.CheckAttackCollideRayCheck(collider, transform.position + rayOffset, "Player", LayerMask.GetMask("Map"));
+        if (tab.Length > 0)
+        {
+            foreach (Collider col in tab)
+            {
+                if (col.gameObject.GetComponent<Hero>() != null)
+                {
+                    IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
+                    _attacker.Attack(damageable);
+
+                    if (debugMode)
+                    {
+                        collider.gameObject.SetActive(false);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void DisableDebugCollider()
+    {
+        collider.gameObject.SetActive(false);
     }
 }
