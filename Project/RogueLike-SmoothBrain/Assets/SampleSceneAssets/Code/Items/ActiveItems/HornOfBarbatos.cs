@@ -5,8 +5,8 @@ using UnityEngine;
 public class HornOfBarbatos : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 35f;
-    private float increaseValue = 0.2f;
 #pragma warning disable IDE0052 // Supprimer les membres privés non lus
+    private float increaseValue = 0.2f;
     private readonly float displayValue;
 #pragma warning restore IDE0052 // Supprimer les membres privés non lus
     List<float> changesList = new List<float>();
@@ -42,7 +42,7 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
             if (statToChange.Contains(stat))
             {
                 float change = hero.Stats.GetCoeff(stat);
-                change = change * 0.2f;
+                change = change * increaseValue;
                 changesList.Add(change);
                 hero.Stats.IncreaseCoeffValue(stat, change);
             }

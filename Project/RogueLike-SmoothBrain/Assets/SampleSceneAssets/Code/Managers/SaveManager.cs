@@ -29,7 +29,7 @@ public class SaveManager : MonoBehaviour
 
     private int selectedSave = -1;
     public string DirectoryPath { private set; get; } = string.Empty;
-    public bool HasData { private set; get; }
+    public bool HasData { private set; get; } = false;
 
     private void Awake()
     {
@@ -51,7 +51,7 @@ public class SaveManager : MonoBehaviour
 
         HasData = false;
 
-        SelectSave(1);
+        //SelectSave(1);
     }
 
     public void SelectSave(int selectedSave)
