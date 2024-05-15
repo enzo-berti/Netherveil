@@ -5663,6 +5663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 9
   <Skeleton>k__BackingField: {fileID: 3523659120464929451}
+  <DoorsGenerator>k__BackingField: {fileID: 689047663684800205}
   <StaticProps>k__BackingField: {fileID: 2272128575384870456}
   <Lights>k__BackingField: {fileID: 8684566353546906833}
   <RoomPresets>k__BackingField: {fileID: 3160313757602866791}
@@ -6802,7 +6803,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5653206508180717136}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14915395, y: -0.34924355, z: 0.056414478, w: 0.92336315}
+  m_LocalRotation: {x: 0.14915396, y: -0.34924352, z: 0.056414474, w: 0.92336315}
   m_LocalPosition: {x: 13.75, y: 3.5, z: -22.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6898,18 +6899,22 @@ MonoBehaviour:
     localPosition: {x: 0.84, y: 0, z: 20.137}
     localRotation: 0
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
   - forward: {x: 1, y: 0, z: -0.00000011920929}
     localPosition: {x: 21.823, y: 0, z: -4.85}
     localRotation: 90
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
   - forward: {x: 0.00000008742278, y: 0, z: -1}
     localPosition: {x: 0.8, y: 0, z: -29.858}
     localRotation: 180
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
   - forward: {x: -1.0000001, y: 0, z: -0.00000011920929}
     localPosition: {x: -20.155, y: 0, z: -4.85}
     localRotation: 270
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
 --- !u!1 &6209252871256379320
 GameObject:
   m_ObjectHideFlags: 0
@@ -7156,6 +7161,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7673398906941674277}
+  - component: {fileID: 541277725009989471}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -7184,6 +7190,19 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &541277725009989471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6797200604900226147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae592d9a3ade6f74d80fb40057e1e4e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss: {fileID: 795328744879525240}
 --- !u!1 &6893320270086097367
 GameObject:
   m_ObjectHideFlags: 0
