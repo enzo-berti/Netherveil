@@ -75,8 +75,6 @@ public struct GenerationParameters
                 Debug.LogError("Error try to insert an object with a not allowed rotation : " + door.Rotation, doorsGenerator);
             }
         }
-
-        //UnityEngine.Object.Destroy(doorsGenerator); // destroy doorsGenerator
     }
 
     public readonly List<Door> GetFarestDoors()

@@ -6,19 +6,17 @@ public class BossCinematic : MonoBehaviour
 {
     private PlayableDirector director;
 
-    private int lastState = -1;
     public bool EnablePlayerMouvement
     {
         set
         {
             if (value)
             {
-                Utilities.Hero.State = lastState;
+                Utilities.Hero.State = (int)Entity.EntityState.MOVE;
                 Utilities.Hero.GetComponent<PlayerInput>().EnableGameplayInputs();
             }
             else
             {
-                lastState = Utilities.Hero.State;
                 Utilities.Hero.State = (int)Hero.PlayerState.MOTIONLESS;
                 Utilities.Hero.GetComponent<PlayerInput>().DisableGameplayInputs();
             }
@@ -35,7 +33,6 @@ public class BossCinematic : MonoBehaviour
     private void Awake()
     {
         director = GetComponentInChildren<PlayableDirector>();
-        lastState = Utilities.Hero.State;
     }
 
     private void OnEnable()

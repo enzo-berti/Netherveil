@@ -1,4 +1,5 @@
 using Map.Component;
+using Map.Generation;
 using UnityEngine;
 
 namespace Map
@@ -8,6 +9,7 @@ namespace Map
         [SerializeField] public RoomType type = RoomType.Normal;
 
         [field: SerializeField] public Skeleton Skeleton { get; private set; } = null;
+        [field: SerializeField] public DoorsGenerator DoorsGenerator { get; private set; } = null;
         [field: SerializeField] public StaticProps StaticProps { get; private set; } = null;
         [field: SerializeField] public Lights Lights { get; private set; } = null;
 
@@ -23,6 +25,7 @@ namespace Map
         private void OnValidate()
         {
             Skeleton = transform.GetComponentInChildren<Skeleton>(true);
+            DoorsGenerator = transform.GetComponentInChildren<DoorsGenerator>(true);
             StaticProps = transform.GetComponentInChildren<StaticProps>(true);
             Lights = transform.GetComponentInChildren<Lights>(true);
             RoomPresets = transform.GetComponentInChildren<RoomPresets>(true);
