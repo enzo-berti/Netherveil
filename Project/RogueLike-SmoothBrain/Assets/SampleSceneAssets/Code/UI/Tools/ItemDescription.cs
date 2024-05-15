@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using TMPro;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 public class ItemDescription : MonoBehaviour
@@ -59,28 +60,21 @@ public class ItemDescription : MonoBehaviour
 
         for (int i = 0; i < splitDescription.Length; i++)
         {
-            if (splitDescription[i].Length > 0 && splitDescription[i][0] == '{')
+            if (splitDescription[i].Length > 0 && splitDescription[i].Contains('{'))
             {
-                char[] separatorsForCurrent = { '{', '}' };
-                string[] splitCurrent = splitDescription[i].Split(separatorsForCurrent, System.StringSplitOptions.RemoveEmptyEntries);
-                string valueToFind = splitCurrent[0];
-
+                int indexEntry = splitDescription[i].IndexOf("{") + 1;
+                int indexOut = splitDescription[i].IndexOf("}");
+                int length = indexOut - indexEntry;
+                string valueToFind = splitDescription[i].Substring(indexEntry, length);
                 FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
-
-                if (valueInfo != null)
+                if(valueInfo != null)
                 {
                     var memberValue = valueInfo.GetValue(itemEffect);
-
-                    if (splitCurrent.Length > 1 && splitCurrent[1].Contains("%"))
+                    if (splitDescription[i].Contains("%"))
                     {
                         memberValue = Convert.ToSingle(valueInfo.GetValue(itemEffect)) * 100;
                     }
-
-                    splitDescription[i] = memberValue.ToString();
-                    for (int j = 1; j < splitCurrent.Length; j++)
-                    {
-                        splitDescription[i] += splitCurrent[j];
-                    }
+                    splitDescription[i] = splitDescription[i].Replace("{" + valueToFind + "}", memberValue.ToString());
                 }
                 else
                 {
