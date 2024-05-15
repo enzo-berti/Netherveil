@@ -44,7 +44,7 @@ public class ItemInteraction : MonoBehaviour, IInterractable
         isSelect = false;
         outline.DisableOutline();
         itemDescription.TogglePanel(false);
-        HudHandler.current.ItemBar.Toggle(false, 0.5f);
+        HudHandler.current.ItemBar.Toggle(false, 2.0f);
     }
 
     private void Interraction()
