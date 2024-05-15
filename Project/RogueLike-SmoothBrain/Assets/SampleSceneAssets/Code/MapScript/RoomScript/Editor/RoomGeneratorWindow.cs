@@ -51,10 +51,16 @@ namespace Tool
             string typeRoomPath = "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + roomType.ToString();
             string roomFolderPath = typeRoomPath + "/" + roomName;
             string roomPrefabPath = roomFolderPath + "/" + roomName + ".prefab";
+
+            string meshPath = "Assets/SampleSceneAssets/Art/Meshs/Room/" + roomType.ToString() + "/" + roomName + ".asset";
+
             if (!Directory.Exists(UnityEngine.Application.dataPath + roomFolderPath))
             {
                 AssetDatabase.CreateFolder("Assets" + typeRoomPath, roomName);
             }
+
+            AssetDatabase.CreateAsset(roomGO.GetComponent<Room>().Skeleton.GetComponent<MeshFilter>().sharedMesh, meshPath);
+            AssetDatabase.SaveAssets();
             PrefabUtility.SaveAsPrefabAsset(roomGO, UnityEngine.Application.dataPath + roomPrefabPath);
         }
 
