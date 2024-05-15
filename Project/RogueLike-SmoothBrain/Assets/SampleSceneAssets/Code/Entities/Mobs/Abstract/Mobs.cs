@@ -301,6 +301,18 @@ public abstract class Mobs : Entity
         return transform.position + (Utilities.Hero.transform.position - transform.position).normalized * _minTravelDistance;
     }
 
+    public void LookAtTarget(Vector3 _target, float _speed = 5f)
+    {
+        Vector3 mobToPlayer = _target - transform.position;
+        mobToPlayer.y = 0f;
+
+        Quaternion lookRotation = Quaternion.LookRotation(mobToPlayer);
+        lookRotation.x = 0;
+        lookRotation.z = 0;
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, _speed * Time.deltaTime);
+    }
+
     #region COROUTINES
 
     protected virtual IEnumerator EntityDetection()

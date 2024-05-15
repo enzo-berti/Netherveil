@@ -51,10 +51,18 @@ namespace Tool
             string typeRoomPath = "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + roomType.ToString();
             string roomFolderPath = typeRoomPath + "/" + roomName;
             string roomPrefabPath = roomFolderPath + "/" + roomName + ".prefab";
+
+            string meshPath = "Assets/SampleSceneAssets/Art/Meshs/Room/" + roomType.ToString() + "/" + roomName + ".asset";
+
             if (!Directory.Exists(UnityEngine.Application.dataPath + roomFolderPath))
             {
                 AssetDatabase.CreateFolder("Assets" + typeRoomPath, roomName);
             }
+                
+            // save mesh
+            AssetDatabase.CreateAsset(roomGO.GetComponent<Room>().Skeleton.GetComponent<MeshFilter>().sharedMesh, meshPath);
+            AssetDatabase.SaveAssets();
+            // save prefab
             PrefabUtility.SaveAsPrefabAsset(roomGO, UnityEngine.Application.dataPath + roomPrefabPath);
         }
 
@@ -63,8 +71,13 @@ namespace Tool
             GameObject roomGO = CreateRoomGameObject();
             Room room = roomGO.GetComponent<Room>();
 
+            Mesh sharedMesh = Instantiate(bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh);
+            room.Skeleton.GetComponent<MeshFilter>().sharedMesh = sharedMesh;
+            room.Skeleton.GetComponent<MeshCollider>().sharedMesh = sharedMesh;
+            room.Skeleton.GetComponent<BoxCollider>().center = sharedMesh.bounds.center;
+            room.Skeleton.GetComponent<BoxCollider>().size = sharedMesh.bounds.size;
+
             room.Skeleton.GetComponent<MeshRenderer>().sharedMaterials = bakedRoom.GetComponentInChildren<MeshRenderer>(true).sharedMaterials;
-            room.Skeleton.GetComponent<MeshFilter>().sharedMesh = bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh;
 
             foreach (Transform child in houdiniRoom.transform.Find("HDA_Data").Find("Instances_1"))
             {
