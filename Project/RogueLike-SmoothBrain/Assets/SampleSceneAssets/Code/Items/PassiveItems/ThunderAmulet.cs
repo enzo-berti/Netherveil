@@ -1,6 +1,6 @@
 using UnityEngine; 
  
-public class ElectricityAmulet : ItemEffect , IPassiveItem 
+public class ThunderAmulet : ItemEffect , IPassiveItem 
 {
     private readonly float electricityChance = 0.1f;
     private readonly float electricityDuration = 6.0f;
