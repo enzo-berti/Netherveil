@@ -1,5 +1,6 @@
 using Map.Component;
 using Map.Generation;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
@@ -12,6 +13,7 @@ namespace Map
         [field: SerializeField] public DoorsGenerator DoorsGenerator { get; private set; } = null;
         [field: SerializeField] public StaticProps StaticProps { get; private set; } = null;
         [field: SerializeField] public Lights Lights { get; private set; } = null;
+        [field: SerializeField] public RoomUI RoomUI { get; private set; }
 
         [field: SerializeField] public RoomPresets RoomPresets { get; private set; } = null;
         public RoomEnemies RoomEnemies // Need to be updated when roomPresets destroyed other rooms (work for now but not optimised)
@@ -22,12 +24,15 @@ namespace Map
             }
         }
 
+        public List<Room> neighbor = new List<Room>();
+
         private void OnValidate()
         {
             Skeleton = transform.GetComponentInChildren<Skeleton>(true);
             DoorsGenerator = transform.GetComponentInChildren<DoorsGenerator>(true);
             StaticProps = transform.GetComponentInChildren<StaticProps>(true);
             Lights = transform.GetComponentInChildren<Lights>(true);
+            RoomUI = transform.GetComponentInChildren<RoomUI>(true);
             RoomPresets = transform.GetComponentInChildren<RoomPresets>(true);
         }
 

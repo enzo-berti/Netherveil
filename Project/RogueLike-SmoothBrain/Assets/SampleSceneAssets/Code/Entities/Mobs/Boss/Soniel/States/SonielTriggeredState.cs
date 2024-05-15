@@ -102,7 +102,7 @@ public class SonielTriggeredState : BaseState<SonielStateMachine>
                 availableAttacks.Add(typeof(SonielCircularHit));
             }
 
-            if (Context.HasLeftArm && distanceToPlayer > Context.Agent.stoppingDistance + 0.1f)
+            if (Context.HasLeftArm && distanceToPlayer > Context.Agent.stoppingDistance + 1f)
             {
                 availableAttacks.Add(typeof(SonielBerserk));
             }

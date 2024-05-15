@@ -117,6 +117,10 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
                 Context.Stats.SetValue(Stat.KNOCKBACK_DISTANCE, 5f);
                 return;
             }
+            else
+            {
+                Context.LookAtTarget(Context.Player.transform.position);
+            }
 
             punchDelay += Time.deltaTime;
         }

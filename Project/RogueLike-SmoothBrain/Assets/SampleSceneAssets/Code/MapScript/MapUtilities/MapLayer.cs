@@ -7,8 +7,16 @@ public class MapLayer : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Map");
     }
 
+    public void MarkUndiscovered()
+    {
+        if (gameObject.layer != LayerMask.NameToLayer("Map"))
+        {
+            gameObject.layer = LayerMask.NameToLayer("UndiscoveredRoom");
+        }
+    }
+
     public void Unset()
     {
-        gameObject.layer = LayerMask.NameToLayer("UndiscoveredRoom");
+        gameObject.layer = LayerMask.NameToLayer("Default");
     }
 }
