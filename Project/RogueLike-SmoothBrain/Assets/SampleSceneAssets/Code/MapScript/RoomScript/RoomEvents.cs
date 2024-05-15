@@ -64,12 +64,6 @@ namespace Map
                 }
             }
 
-            RoomUI roomUI = room.GetComponentInChildren<RoomUI>(true);
-            if (roomUI)
-            {
-                roomUI.gameObject.SetActive(true);
-            }
-
             // set bool to true to not call the events in the room if there is no enemy
             allEnemiesDeadCalled = (enemies.transform.childCount == 0);
             // set bool to true to not call the events in the room if there is no chest
@@ -91,16 +85,23 @@ namespace Map
             RoomEvents.hasLeaved = false;
 
             // set all elements to the map layer now that we can see them
-            foreach (var c in room.GetComponentsInChildren<MapLayer>())
+            foreach (var c in room.GetComponentsInChildren<MapLayer>(true))
             {
                 c.Set();
             }
+            // set all neighbor elements has undiscovered
+            foreach (Room neighbor in room.neighbor)
+            {
+                foreach (var c in neighbor.GetComponentsInChildren<MapLayer>(true))
+                {
+                    c.MarkUndiscovered();
+                }
+            }
 
             // activate ui
-            RoomUI roomUI = room.GetComponentInChildren<RoomUI>(true);
-            if (roomUI)
+            if (room.RoomUI)
             {
-                roomUI.gameObject.SetActive(true);
+                room.RoomUI.gameObject.SetActive(true);
             }
 
             MapUtilities.currentRoomData = roomData;
