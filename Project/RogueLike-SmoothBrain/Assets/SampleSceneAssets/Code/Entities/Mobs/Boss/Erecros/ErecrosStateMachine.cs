@@ -58,6 +58,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     [SerializeField] VisualEffect shieldVFX;
     [SerializeField] GameObject clonePrefab;
+    [SerializeField] GameObject prisonTorusPrefab;
 
     #region Getters/Setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -76,6 +77,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public GameObject ClonePrefab { get => clonePrefab; }
+    public GameObject PrisonTorusPrefab { get => prisonTorusPrefab; }
 
     #endregion
 
@@ -137,7 +139,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
         if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
 
-        currentState = factory.GetState<SonielDeathState>();
+        currentState = factory.GetState<ErecrosDeathState>();
     }
 
     public void MoveTo(Vector3 posToMove)
