@@ -355,6 +355,7 @@ public class PlayerInput : MonoBehaviour
     #region AnimationEvents
     public void StartOfDashAnimation()
     {
+        hero.IsInvincibleCount++;
         controller.DashVFX.Play();
         hero.State = (int)Hero.PlayerState.DASH;
         AudioManager.Instance.PlaySound(controller.DashSFX);
@@ -371,6 +372,7 @@ public class PlayerInput : MonoBehaviour
             controller.ResetValues();
             OnEndDash?.Invoke(transform.position);
         }
+        hero.IsInvincibleCount--;
         triggeredDashAttack = false;
     }
 
