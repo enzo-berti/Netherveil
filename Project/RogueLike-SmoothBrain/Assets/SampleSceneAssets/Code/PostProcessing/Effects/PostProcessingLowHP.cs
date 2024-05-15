@@ -16,8 +16,20 @@ public class PostProcessingLowHP : MonoBehaviour
     void Start()
     {
         activePostProcessing = false;
+    }
+
+    private void OnEnable()
+    {
         Utilities.Hero.OnTakeDamage += Active;
         Utilities.Hero.OnHeal += Desactive;
+        Utilities.Hero.OnDeath += DesactiveAtDeath;
+    }
+
+    private void OnDisable()
+    {
+        Utilities.Hero.OnTakeDamage -= Active;
+        Utilities.Hero.OnHeal -= Desactive;
+        Utilities.Hero.OnDeath -= DesactiveAtDeath;
     }
 
     void Update()
@@ -45,5 +57,10 @@ public class PostProcessingLowHP : MonoBehaviour
         {
             activePostProcessing = false;
         }
+    }
+
+    private void DesactiveAtDeath(Vector3 _)
+    {
+       activePostProcessing = false;
     }
 }
