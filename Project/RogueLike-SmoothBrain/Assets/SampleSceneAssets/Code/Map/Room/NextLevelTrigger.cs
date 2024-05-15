@@ -1,27 +1,38 @@
 using Map.Generation;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Map
 {
     public class NextLevelTrigger : MonoBehaviour
     {
+        [SerializeField] private PlayableDirector director;
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                MapUtilities.onFinishStage?.Invoke();
-
-                MapGenerator mapGen = FindObjectOfType<MapGenerator>();
-
-                if (mapGen.stage == 2)
-                {
-                    FindObjectOfType<LevelLoader>().LoadScene("endScreen", true);
-                    return;
-                }
-
-                mapGen.DestroyMap();
-                mapGen.generate = true;
+                director.Play();
+                Utilities.Hero.State = (int)Hero.PlayerState.MOTIONLESS;
             }
+        }
+
+        public void CallNextLevel()
+        {
+            Utilities.Hero.State = (int)Entity.EntityState.MOVE;
+
+            MapUtilities.onFinishStage?.Invoke();
+
+            MapGenerator mapGen = FindObjectOfType<MapGenerator>();
+
+            if (mapGen.stage == 2)
+            {
+                FindObjectOfType<LevelLoader>().LoadScene("Outro", true);
+                return;
+            }
+
+            mapGen.DestroyMap();
+            mapGen.generate = true;
         }
     }
 }
