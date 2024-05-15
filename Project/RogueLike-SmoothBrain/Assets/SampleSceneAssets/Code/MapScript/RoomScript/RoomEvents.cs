@@ -173,7 +173,7 @@ namespace Map
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!enterRoomCalled && other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player"))
             {
                 enterPos = triggerCollide.ClosestPointOnBounds(other.bounds.center);
             }

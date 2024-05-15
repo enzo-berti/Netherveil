@@ -1,5 +1,6 @@
 using Map.Component;
 using Map.Generation;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Map
@@ -21,6 +22,8 @@ namespace Map
                 return RoomPresets.GetComponentInChildren<RoomEnemies>(true);
             }
         }
+
+        public List<Room> neighbor = new List<Room>();
 
         private void OnValidate()
         {

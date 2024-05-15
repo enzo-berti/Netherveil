@@ -381,7 +381,9 @@ namespace Map.Generation
             room.transform.SetParent(gameObject.transform);
 
             // Add room to exitDoor room neighbours
-            //Room exitRoom = exitDoor.parentSkeleton.transform.parent.GetComponent<Room>();
+            Room exitRoom = exitDoor.parentSkeleton.transform.parent.GetComponent<Room>();
+            room.neighbor.Add(exitRoom);
+            exitRoom.neighbor.Add(room);
 
             // Removed used door
             room.DoorsGenerator.RemoveDoor(entranceDoor);
