@@ -84,7 +84,6 @@ namespace Map.Generation
             foreach (Transform child in transform)
             {
                 doors.Add(new Door(child));
-                Debug.Log(doors.Last().room);
             }
 
             for (int i = transform.childCount - 1; i >= 0; i--)
