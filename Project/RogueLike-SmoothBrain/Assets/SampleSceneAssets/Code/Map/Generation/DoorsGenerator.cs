@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Map.Generation
@@ -12,13 +13,15 @@ namespace Map.Generation
             forward = transform.forward;
             localPosition = transform.position;
             localRotation = transform.rotation.eulerAngles.y;
-            parentSkeleton = transform.gameObject.transform.parent.parent.gameObject;
+            parentSkeleton = transform.parent.parent.gameObject;
+            room = transform.parent.parent.parent.gameObject.GetComponent<Room>();
         }
 
         public Vector3 forward;
         [SerializeField] private Vector3 localPosition;
         public float localRotation;
         public GameObject parentSkeleton;
+        public Room room;
 
         public Vector3 Forward
         {
@@ -63,6 +66,16 @@ namespace Map.Generation
             }
         }
 
+        private void OnValidate()
+        {
+            for (int i = 0; i < doors.Count; i++)
+            {
+                Door door = doors[i];
+                door.room = door.parentSkeleton.transform.parent.gameObject.GetComponent<Room>();
+                doors[i] = door;
+            }
+        }
+
 #if UNITY_EDITOR
         public void GeneratePrefab()
         {
@@ -71,6 +84,7 @@ namespace Map.Generation
             foreach (Transform child in transform)
             {
                 doors.Add(new Door(child));
+                Debug.Log(doors.Last().room);
             }
 
             for (int i = transform.childCount - 1; i >= 0; i--)
