@@ -57,7 +57,7 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         Context.Projectile.SetActive(true);
 
         ZiggoProjectile projectile = Context.Projectile.GetComponent<ZiggoProjectile>();
-        Transform originalParent = Context.Projectile.transform.parent;
+        Transform originalParent = projectile.transform.parent;
 
         Context.Animator.ResetTrigger("Spit");
         Context.Animator.SetTrigger("Spit");
@@ -73,8 +73,8 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
             pointToReach3D = hit.position;
         }
 
-        Context.Projectile.transform.rotation = Quaternion.identity;
-        Context.Projectile.transform.parent = null;
+        projectile.transform.rotation = Quaternion.identity;
+        projectile.transform.parent = null;
 
         Vector3 throwPos = Context.transform.position + (pointToReach3D - Context.transform.position).normalized * Mathf.Min((pointToReach3D - Context.transform.position).magnitude, Context.Stats.GetValue(Stat.ATK_RANGE));
         projectile.ThrowToPos(throwPos, timeToThrow, maxHeight);
@@ -99,30 +99,38 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         float coeff = 20 / (1 - maxThickness);
         float speed = 3f;
 
-        Context.Sounds.splatterSound.Play(Context.Projectile.transform.position);
+        Context.Sounds.splatterSound.Play(projectile.transform.position);
 
         do
         {
             yield return null;
-            Vector3 scale = Context.Projectile.transform.localScale;
+            Vector3 scale = projectile.transform.localScale;
             scale.x = scale.x >= maxDiameter ? maxDiameter : scale.x + Time.deltaTime * coeff * speed;
             scale.z = scale.z >= maxDiameter ? maxDiameter : scale.z + Time.deltaTime * coeff * speed;
             scale.y = scale.y <= maxThickness ? maxThickness : scale.y - Time.deltaTime * speed;
 
-            Context.Projectile.transform.localScale = scale;
+            projectile.transform.localScale = scale;
 
-        } while (Context.Projectile.transform.localScale.x != maxDiameter || Context.Projectile.transform.localScale.y != maxThickness);
+        } while (projectile.transform.localScale.x != maxDiameter || projectile.transform.localScale.y != maxThickness);
 
         attackEnded = true;
         yield return new WaitForSeconds(puddleDuration);
 
         projectile.PoisonPuddleVFX.Stop();
-        projectile.PoisonPuddleVFX.transform.parent = Context.Projectile.transform;
+        projectile.PoisonPuddleVFX.transform.parent = projectile.transform;
         projectile.PoisonBallVFX.gameObject.SetActive(true);
-        Context.Projectile.transform.parent = originalParent;
-        Context.Projectile.transform.localPosition = Vector3.zero;
-        Context.Projectile.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-        Context.Projectile.SetActive(false);
+
+        //if (Context && Context.Stats.GetValue(Stat.HP) > 0)
+        //{
+        projectile.transform.parent = originalParent;
+        projectile.transform.localPosition = Vector3.zero;
+        projectile.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        projectile.gameObject.SetActive(false);
+        //}
+        //else
+        //{
+        //    Object.Destroy(projectile.gameObject);
+        //}
     }
 }
 

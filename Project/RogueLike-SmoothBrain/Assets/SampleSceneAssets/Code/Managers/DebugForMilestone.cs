@@ -66,5 +66,10 @@ public class DebugForMilestone : MonoBehaviour
             Utilities.Hero.DebugCallLaunchUpgrade();
             Utilities.Hero.ChangeStatsBasedOnAlignment();
         }
+        if (Input.GetKey(KeyCode.KeypadDivide))
+        {
+            for (int i = 0; i < 10; i++)
+                FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, "<sprite name=\"omg\">", 3);
+        }
     }
 }

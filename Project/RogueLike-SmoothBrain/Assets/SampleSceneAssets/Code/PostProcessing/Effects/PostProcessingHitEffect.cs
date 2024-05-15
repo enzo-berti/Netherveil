@@ -1,10 +1,8 @@
 using PostProcessingEffects.Effects;
 using System.Collections;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using Color = UnityEngine.Color;
 
 namespace PostProcessingEffects
 {
@@ -14,7 +12,6 @@ namespace PostProcessingEffects
         [SerializeField] private VolumeProfile profile;
         [SerializeField] private float duration = 0.5f;
         private Vignette vignette;
-        Color baseColor = Color.white;
 
         protected override IEnumerator PlayRoutine(PostProcessingEffectManager manager)
         {
@@ -36,6 +33,34 @@ namespace PostProcessingEffects
                 {
                     vignette.intensity.value = .9f;
                 }
+            }
+
+            while (elapsed < duration)
+            {
+                elapsed = Mathf.Min(elapsed + Time.deltaTime, duration);
+                float factor = elapsed / duration;
+                float ease = Mathf.Sin(factor * Mathf.PI);
+
+                manager.Volume.weight = ease;
+
+                yield return null;
+            }
+
+            manager.Volume.weight = 0.0f;
+            manager.routine = null;
+            manager.effectIsPlaying = false;
+            vignette.intensity.value = 0.5f;
+        }
+
+        public IEnumerator PlayRoutine(PostProcessingLowHP manager)
+        {
+            manager.Volume.profile = profile;
+            manager.effectIsPlaying = true;
+            float elapsed = 0.0f;
+
+            if (profile.TryGet(out vignette))
+            {
+               vignette.intensity.value = .6f;
             }
 
             while (elapsed < duration)

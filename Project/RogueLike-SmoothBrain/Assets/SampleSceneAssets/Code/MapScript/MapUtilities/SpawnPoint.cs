@@ -7,5 +7,6 @@ public class SpawnPoint : MonoBehaviour
         Utilities.Player.GetComponent<CharacterController>().enabled = false;
         Utilities.Player.transform.position = transform.position;
         Utilities.Player.GetComponent<CharacterController>().enabled = true;
+        Camera.main.transform.position = transform.position;
     }
 }
