@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PressurePlateTrap : MonoBehaviour
 {
+    [SerializeField] ParticleSystem vfx;
     public GameObject[] trapToActivate;
     public float cooldownTime = 2f;
     private float currentCooldownTime = 0f;
@@ -25,6 +26,8 @@ public class PressurePlateTrap : MonoBehaviour
                 activableTrap.Active();
             }
         }
+
+        vfx.Play();
         activeSound.Play(transform.position);
         canActive = false;
     }

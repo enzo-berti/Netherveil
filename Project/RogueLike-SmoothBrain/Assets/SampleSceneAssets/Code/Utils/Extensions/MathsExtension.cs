@@ -25,18 +25,29 @@ public static class MathsExtension
 
         return new UnityEngine.Vector3(x, 0, y);
     }
-    public static UnityEngine.Vector2 GetRandomPointOnCircle(UnityEngine.Vector2 center, float radius)
+    public static UnityEngine.Vector2 GetRandomPointOnCircle(this UnityEngine.Vector2 center, float radius)
     {
         float randomValue = Random.Range(0, 2 * Mathf.PI);
         return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
-    public static UnityEngine.Vector2 GetRandomPointInCircle(UnityEngine.Vector2 center, float maxRadius)
+    /// <summary>
+    /// Give a vector3, it won't take the y component 
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="radius"></param>
+    /// <returns>return random point on a circle with Y component equals to 0</returns>
+    public static UnityEngine.Vector3 GetRandomPointOnCircle(this UnityEngine.Vector3 center, float radius)
+    {
+        float randomValue = Random.Range(0, 2 * Mathf.PI);
+        return new UnityEngine.Vector3(center.x + Mathf.Cos(randomValue) * radius, 0, center.y + Mathf.Sin(randomValue) * radius);
+    }
+    public static UnityEngine.Vector2 GetRandomPointInCircle(this UnityEngine.Vector2 center, float maxRadius)
     {
         float randomValue = Random.Range(0, 2 * Mathf.PI);
         float radius = Random.Range(0, maxRadius);
         return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
-    public static UnityEngine.Vector3 GetRandomPointInCircle(UnityEngine.Vector3 center, float maxRadius)
+    public static UnityEngine.Vector3 GetRandomPointInCircle(this UnityEngine.Vector3 center, float maxRadius)
     {
         UnityEngine.Vector2 center2D = new(center.x, center.z);
         UnityEngine.Vector2 point2D = GetRandomPointInCircle(center2D, maxRadius);
@@ -44,22 +55,28 @@ public static class MathsExtension
         return toReturn;
     }
 
-    public static UnityEngine.Vector2 GetRandomPointInCircle(UnityEngine.Vector2 center, float minRadius, float maxRadius)
+    public static UnityEngine.Vector2 GetRandomPointInCircle(this UnityEngine.Vector2 center, float minRadius, float maxRadius)
     {
         float randomValue = Random.Range(0, 2 * Mathf.PI);
         float radius = Random.Range(minRadius, maxRadius);
         return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
     }
-    public static UnityEngine.Vector3 GetRandomPointInCircle(UnityEngine.Vector3 center, float minRadius, float maxRadius)
+    public static UnityEngine.Vector3 GetRandomPointInCircle(this UnityEngine.Vector3 center, float minRadius, float maxRadius)
     {
         UnityEngine.Vector2 center2D = new(center.x, center.z);
         UnityEngine.Vector2 point2D = GetRandomPointInCircle(center2D, minRadius, maxRadius);
         UnityEngine.Vector3 toReturn = new(point2D.x, center.y, point2D.y);
-        Debug.Log(UnityEngine.Vector3.Distance(center, toReturn));
         return toReturn;
     }
-
-    public static UnityEngine.Vector2 GetRandomPointOnCone(UnityEngine.Vector2 center, UnityEngine.Vector2 direction, float radius, float angle)
+    /// <summary>
+    /// Give angle in degree
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="direction"></param>
+    /// <param name="radius"></param>
+    /// <param name="angle"></param>
+    /// <returns>Random point on a cone in the given direction</returns>
+    public static UnityEngine.Vector2 GetRandomPointOnCone(this UnityEngine.Vector2 center, UnityEngine.Vector2 direction, float radius, float angle)
     {
         if (direction == UnityEngine.Vector2.zero)
         {
@@ -83,6 +100,24 @@ public static class MathsExtension
         }
         float randomValue = Random.Range(-radAngle + cs, radAngle + cs);
         return new UnityEngine.Vector2(center.x + Mathf.Cos(randomValue) * radius, center.y + Mathf.Sin(randomValue) * radius);
+    }
+
+    /// <summary>
+    /// Give angle in degree
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="direction"></param>
+    /// <param name="radius"></param>
+    /// <param name="angle"></param>
+    /// <returns>Random point on a cone in the given direction</returns>
+    public static UnityEngine.Vector3 GetRandomPointOnCone(this UnityEngine.Vector3 center, UnityEngine.Vector3 direction, float radius, float angle)
+    {
+        UnityEngine.Vector2 center2D = new(center.x, center.z);
+        UnityEngine.Vector2 direction2D = new(direction.x, direction.z);
+        if(direction2D == UnityEngine.Vector2.zero) direction2D = UnityEngine.Vector2.one;
+        UnityEngine.Vector2 point2D = GetRandomPointOnCone(center2D, direction2D, radius, angle);
+        UnityEngine.Vector3 toReturn = new(point2D.x, center.y, point2D.y);
+        return toReturn;
     }
 
     public static float[] Resolve2ndDegree(float a, float b, float c, float wantedY)

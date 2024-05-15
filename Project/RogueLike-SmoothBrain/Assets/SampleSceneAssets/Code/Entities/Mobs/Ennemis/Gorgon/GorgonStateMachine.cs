@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.VFX;
 
 public class GorgonStateMachine : Mobs, IGorgon
@@ -49,13 +50,11 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     bool canLoseAggro = true;
     float attackCooldown = 0f;
-    float MAX_ATTACK_COOLDOWN = 1f;
 
     float dashCooldown = 0f;
     float MAX_DASH_COOLDOWN = 2f;
 
     float fleeCooldown = 0f;
-    float MAX_FLEE_COOLDOWN = 1f;
 
     #region getters/setters
     public IAttacker.HitDelegate OnAttackHit { get => onHit; set => onHit = value; }
@@ -71,11 +70,11 @@ public class GorgonStateMachine : Mobs, IGorgon
     public float VisionAngle { get => !canLoseAggro ? 360 : (currentState is GorgonTriggeredState || currentState is GorgonAttackingState) && player != null ? 360 : defaultVisionAngle; }
     public float VisionRange { get => !canLoseAggro ? Stats.GetValue(Stat.VISION_RANGE) * 1.25f : Stats.GetValue(Stat.VISION_RANGE) * (currentState is GorgonTriggeredState || currentState is GorgonAttackingState ? 1.25f : 1f); }
     public bool CanLoseAggro { set => canLoseAggro = value; }
-    public bool IsAttackAvailable { get => attackCooldown >= MAX_ATTACK_COOLDOWN; }
+    public bool IsAttackAvailable { get => attackCooldown >= timeBetweenAttack; }
     public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
     public bool IsDashAvailable { get => dashCooldown >= MAX_DASH_COOLDOWN; }
     public float DashCooldown { get => dashCooldown; set => dashCooldown = value; }
-    public bool IsFleeAvailable { get => fleeCooldown >= MAX_FLEE_COOLDOWN; }
+    public bool IsFleeAvailable { get => fleeCooldown >= timeBetweenFleeing; }
     public float FleeCooldown { get => fleeCooldown; set => fleeCooldown = value; }
     public float TimeBetweenAttacks { get => timeBetweenAttack; }
     public bool IsDashing { get => isDashing; }
@@ -105,13 +104,13 @@ public class GorgonStateMachine : Mobs, IGorgon
         base.Update();
 
         if (currentState is not GorgonAttackingState)
-            if (attackCooldown < MAX_ATTACK_COOLDOWN) attackCooldown += Time.deltaTime;
+            if (attackCooldown < timeBetweenAttack) attackCooldown += Time.deltaTime;
 
         if (currentState is not GorgonDashingState)
             if (dashCooldown < MAX_DASH_COOLDOWN) dashCooldown += Time.deltaTime;
 
         if (currentState is not GorgonFleeingState)
-            if (fleeCooldown < MAX_FLEE_COOLDOWN) fleeCooldown += Time.deltaTime;
+            if (fleeCooldown < timeBetweenFleeing) fleeCooldown += Time.deltaTime;
 
         currentState.Update();
     }
@@ -252,7 +251,8 @@ public class GorgonStateMachine : Mobs, IGorgon
     private IEnumerator GoSmoothToPosition(Vector3 posToReach)
     {
         isSmoothCoroutineOn = true;
-
+        NavMesh.SamplePosition(posToReach, out NavMeshHit hit, float.PositiveInfinity, NavMesh.AllAreas);
+        posToReach = hit.position;
         float timer = 0;
         Vector3 basePos = this.transform.position;
         Vector3 newPos;
@@ -271,5 +271,52 @@ public class GorgonStateMachine : Mobs, IGorgon
         isSmoothCoroutineOn = false;
     }
 
+    public List<Vector3> GetDashesPath(Vector3 posToReach, int nbDash)
+    {
+        List<Vector3> path = new()
+        {
+            transform.position
+        };
+
+        NavMeshPath navPath = new();
+        NavMesh.CalculatePath(transform.position, posToReach, -1, navPath);
+        // First corner is initPos and last is endPos
+        for (int i = 1; i < navPath.corners.Length - 1; i++)
+        {
+            path.Add(navPath.corners[i]);
+        }
+        float distance = Vector3.Distance(transform.position, posToReach);
+        // If it's a straight line
+        if (path.Count == 1)
+        {
+            for (int i = 1; i < nbDash; i++)
+            {
+                // We avoid y value because we only move in x and z
+                Vector2 posToReach2D = new(posToReach.x, posToReach.z);
+
+                // Virtually get the "current" position of the dasher ( get the position he reached after his previous dash )
+                Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
+
+                Vector2 direction = posToReach2D - curPos2D;
+
+                Vector2 posOnCone = transform.position;
+
+                if (direction != Vector2.zero)
+                    posOnCone = MathsExtension.GetRandomPointOnCone(curPos2D, direction, distance / nbDash, 60);
+
+                Vector3 posOnCone3D = new(posOnCone.x, transform.position.y, posOnCone.y);
+                if (NavMesh.SamplePosition(posOnCone3D, out var hit, 10, NavMesh.AllAreas))
+                {
+                    posOnCone3D = hit.position;
+                    path.Add(posOnCone3D);
+                }
+            }
+            //path.Add(posToReach);
+        }
+
+        // We finally add the position that we want to reach after every dash
+        path.Add(posToReach);
+        return path;
+    }
     #endregion
 }
