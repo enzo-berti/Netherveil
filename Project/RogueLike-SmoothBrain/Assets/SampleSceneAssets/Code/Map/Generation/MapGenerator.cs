@@ -1,4 +1,3 @@
-using Map.Component;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -221,13 +220,13 @@ namespace Map.Generation
         {
             foreach (Room candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
             {
-                GameObject roomGO = Instantiate(candidateRoomPrefab.gameObject);
-                if (!TryPutRoom(roomGO, ref genParam, out Door entranceDoor, out Door exitDoor))
+                Room room = Instantiate(candidateRoomPrefab.gameObject).GetComponent<Room>();
+                if (!TryPutRoom(room, ref genParam, out Door entranceDoor, out Door exitDoor))
                 {
                     continue;
                 }
 
-                InitRoom(roomGO, ref genParam, ref entranceDoor, exitDoor);
+                InitRoom(room, ref genParam, ref entranceDoor, exitDoor);
                 return true;
             }
 
@@ -237,27 +236,27 @@ namespace Map.Generation
 
         private void GenerateLobbyRoom(ref GenerationParameters genParam)
         {
-            GameObject roomGO = Instantiate(MapResources.RandRoomPrefab(RoomType.Lobby).gameObject);
+            Room room = Instantiate(MapResources.RandRoomPrefab(RoomType.Lobby).gameObject).GetComponent<Room>();
 
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = room.GetComponentInChildren<DoorsGenerator>();
 
             genParam.AddDoors(doorsGenerator);
             Destroy(doorsGenerator);
 
-            roomGO.transform.parent = gameObject.transform;
+            room.transform.parent = gameObject.transform;
         }
 
         private void GenerateTutorialRoom(ref GenerationParameters genParam)
         {
-            GameObject roomGO = Instantiate(MapResources.RandRoomPrefab(RoomType.Tutorial).gameObject);
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            Room room = Instantiate(MapResources.RandRoomPrefab(RoomType.Tutorial).gameObject).GetComponent<Room>();
+            DoorsGenerator doorsGenerator = room.GetComponentInChildren<DoorsGenerator>();
 
             Door entranceDoor = doorsGenerator.doors[0];
-            TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
+            TrySetEntranceDoorPos(room, ref genParam, entranceDoor, out Door exitDoor);
 
-            InitRoom(roomGO, ref genParam, ref entranceDoor, exitDoor);
+            InitRoom(room, ref genParam, ref entranceDoor, exitDoor);
 
-            roomGO.transform.parent = gameObject.transform;
+            room.transform.parent = gameObject.transform;
         }
 
         private void GenerateBossRoom(ref GenerationParameters genParam)
@@ -265,21 +264,21 @@ namespace Map.Generation
             var bossPrefabs = MapResources.RoomPrefabs(RoomType.Boss);
             int bossIndex = stage % bossPrefabs.Count;
 
-            GameObject roomGO = Instantiate(bossPrefabs[bossIndex].gameObject);
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            Room room = Instantiate(bossPrefabs[bossIndex].gameObject).GetComponent<Room>();
+            DoorsGenerator doorsGenerator = room.GetComponentInChildren<DoorsGenerator>();
 
             Door entranceDoor = doorsGenerator.doors[0];
-            TrySetEntranceBossDoorPos(roomGO, ref genParam, entranceDoor, out Door exitDoor);
+            TrySetEntranceBossDoorPos(room, ref genParam, entranceDoor, out Door exitDoor);
 
-            InitRoom(roomGO, ref genParam, ref entranceDoor, exitDoor);
+            InitRoom(room, ref genParam, ref entranceDoor, exitDoor);
 
-            roomGO.transform.parent = gameObject.transform;
+            room.transform.parent = gameObject.transform;
         }
 
-        static private bool TrySetEntranceBossDoorPos(GameObject roomGO, ref GenerationParameters genParam, Door entranceDoor, out Door exitDoor)
+        static private bool TrySetEntranceBossDoorPos(Room room, ref GenerationParameters genParam, Door entranceDoor, out Door exitDoor)
         {
             List<Door> doors = genParam.GetFarestDoors();
-            float defaultRot = roomGO.transform.rotation.eulerAngles.y;
+            float defaultRot = room.transform.rotation.eulerAngles.y;
 
             for (int i = 0; i < doors.Count; i++)
             {
@@ -287,16 +286,16 @@ namespace Map.Generation
                 float rotation = candidateExitDoor.Rotation;
 
                 // rotate gameObject entrance door to correspond the exit door
-                roomGO.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
+                room.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
 
                 // Set position
-                roomGO.transform.position = entranceDoor.parentSkeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
+                room.transform.position = entranceDoor.room.Skeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
                 Physics.SyncTransforms(); // need to update physics before doing collision test in the same frame
 
                 // Check collision
-                if (IsRoomCollidingOtherRoom(roomGO, candidateExitDoor))
+                if (IsRoomCollidingOtherRoom(room, candidateExitDoor))
                 {
-                    roomGO.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
+                    room.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
                     continue; // fail to generate continue to next door candidate
                 }
 
@@ -308,13 +307,13 @@ namespace Map.Generation
             return false;
         }
 
-        static private bool TryPutRoom(GameObject roomGO, ref GenerationParameters genParam, out Door entranceDoor, out Door exitDoor)
+        static private bool TryPutRoom(Room room, ref GenerationParameters genParam, out Door entranceDoor, out Door exitDoor)
         {
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = room.GetComponentInChildren<DoorsGenerator>();
 
             foreach (Door entranceDoorCandidate in Seed.RandList(doorsGenerator.doors))
             {
-                if (TrySetEntranceDoorPos(roomGO, ref genParam, entranceDoorCandidate, out exitDoor))
+                if (TrySetEntranceDoorPos(room, ref genParam, entranceDoorCandidate, out exitDoor))
                 {
                     entranceDoor = entranceDoorCandidate;
                     return true;
@@ -323,11 +322,11 @@ namespace Map.Generation
 
             entranceDoor = new Door();
             exitDoor = new Door();
-            DestroyImmediate(roomGO);
+            DestroyImmediate(room);
             return false;
         }
 
-        static private bool TrySetEntranceDoorPos(GameObject roomGO, ref GenerationParameters genParam, Door entranceDoor, out Door exitDoor)
+        static private bool TrySetEntranceDoorPos(Room room, ref GenerationParameters genParam, Door entranceDoor, out Door exitDoor)
         {
             foreach (int rotation in Seed.RandList(availableRotations))
             {
@@ -336,20 +335,20 @@ namespace Map.Generation
                     continue;
                 }
 
-                float defaultRot = roomGO.transform.rotation.eulerAngles.y;
+                float defaultRot = room.transform.rotation.eulerAngles.y;
                 foreach (Door candidateExitDoor in Seed.RandList(genParam.availableDoorsByRotation[rotation]))
                 {
                     // rotate gameObject entrance door to correspond the exit door
-                    roomGO.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
+                    room.transform.rotation = Quaternion.Euler(0f, (int)(rotation - 180f - entranceDoor.Rotation + defaultRot), 0f);
 
                     // Set position
-                    roomGO.transform.position = entranceDoor.parentSkeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
+                    room.transform.position = entranceDoor.room.Skeleton.transform.position - entranceDoor.Position + candidateExitDoor.Position; // exit.pos = entrance.pos + (-entrance.arrow.pos + exit.arrow.pos) + forward * 0.1 (forward = offset)
                     Physics.SyncTransforms(); // need to update physics before doing collision test in the same frame
 
                     // Check collision
-                    if (IsRoomCollidingOtherRoom(roomGO, candidateExitDoor))
+                    if (IsRoomCollidingOtherRoom(room, candidateExitDoor))
                     {
-                        roomGO.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
+                        room.transform.rotation = Quaternion.Euler(0f, defaultRot, 0f); // reset rotation
                         continue; // fail to generate continue to next door candidate
                     }
 
@@ -370,67 +369,67 @@ namespace Map.Generation
             }
         }
 
-        static private bool IsRoomCollidingOtherRoom(GameObject roomGO, Door exitDoor)
+        static private bool IsRoomCollidingOtherRoom(Room room, Door exitDoor)
         {
-            GameObject skeletonGO = roomGO.GetComponentInChildren<Skeleton>().gameObject;
+            GameObject skeletonGO = room.Skeleton.gameObject;
             BoxCollider roomColliderEnter = skeletonGO.GetComponent<BoxCollider>();
-            BoxCollider roomColliderExit = exitDoor.parentSkeleton.GetComponent<BoxCollider>();
+            BoxCollider roomColliderExit = exitDoor.room.Skeleton.GetComponent<BoxCollider>();
 
             // if we find another trigger with the "map" tag then we collide with another room
             Collider[] colliders = roomColliderEnter.BoxOverlap(LayerMask.GetMask("Map"), QueryTriggerInteraction.UseGlobal).Where(collider => collider != roomColliderEnter && collider != roomColliderExit && collider.isTrigger).ToArray();
             return colliders.Any();
         }
 
-        private void InitRoom(GameObject roomGO, ref GenerationParameters genParam, ref Door entranceDoor, Door exitDoor)
+        private void InitRoom(Room room, ref GenerationParameters genParam, ref Door entranceDoor, Door exitDoor)
         {
             // Set parent room
-            roomGO.transform.SetParent(gameObject.transform);
+            room.transform.SetParent(gameObject.transform);
 
             // Add room to exitDoor room neighbours
-            Room exitRoom = exitDoor.parentSkeleton.transform.parent.GetComponent<Room>();
-            Room room = roomGO.GetComponent<Room>();
+            //Room exitRoom = exitDoor.parentSkeleton.transform.parent.GetComponent<Room>();
 
             // Removed used door
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = room.GetComponentInChildren<DoorsGenerator>();
             doorsGenerator.RemoveDoor(entranceDoor);
             genParam.RemoveDoor(exitDoor);
 
             // Generate props
-            GenerateGates(roomGO, entranceDoor);
+            GenerateGates(room, entranceDoor);
             // Stairs
             if (room.type == RoomType.Boss)
             {
-                GenerateStairs(roomGO);
+                GenerateStairs(room);
             }
 
             // Add the new doors from the new room into the possible candidates
             genParam.AddDoors(doorsGenerator);
 
             // Generate one of the seed room and delete the other's
-            roomGO.GetComponentInChildren<RoomPresets>().GenerateRandomPreset();
+            room.RoomPresets.GenerateRandomPreset();
 
             // SetActive object's of room
-            roomGO.GetComponentInChildren<NavMeshSurface>().transform.Find("Enemies").gameObject.SetActive(false);
-            roomGO.GetComponentInChildren<NavMeshSurface>().enabled = false;
+            room.RoomEnemies.gameObject.SetActive(false);
+            //room.GetComponentInChildren<NavMeshSurface>().transform.Find("Enemies").gameObject.SetActive(false);
+            room.GetComponentInChildren<NavMeshSurface>().enabled = false;
         }
 
-        static private void GenerateGates(GameObject roomGO, Door entranceDoor)
+        static private void GenerateGates(Room room, Door entranceDoor)
         {
             GameObject gateGO = Instantiate(MapResources.GatePrefab, entranceDoor.Position, Quaternion.identity);
             gateGO.transform.Rotate(0f, entranceDoor.Rotation, 0f);
-            gateGO.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
+            gateGO.transform.parent = room.StaticProps.transform;
         }
 
-        static private void GenerateStairs(GameObject roomGO)
+        static private void GenerateStairs(Room room)
         {
-            DoorsGenerator doorsGenerator = roomGO.GetComponentInChildren<Skeleton>().transform.Find("Doors").GetComponent<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = room.Skeleton.transform.Find("Doors").GetComponent<DoorsGenerator>();
             Door entranceStairs = Seed.RandList(doorsGenerator.doors)[0];
 
             GameObject go = Instantiate(Seed.RandList(MapResources.StairsPrefabs)[0], entranceStairs.Position, Quaternion.identity);
             go.transform.Rotate(0f, entranceStairs.Rotation, 0f);
-            go.transform.parent = roomGO.GetComponentInChildren<StaticProps>().transform;
+            go.transform.parent = room.StaticProps.transform;
 
-            GenerateGates(roomGO, entranceStairs);
+            GenerateGates(room, entranceStairs);
             doorsGenerator.RemoveDoor(entranceStairs);
         }
 
@@ -442,7 +441,7 @@ namespace Map.Generation
                 {
                     GameObject go = Instantiate(Seed.RandList(MapResources.ObstructionDoors)[0], door.Position, Quaternion.identity);
                     go.transform.Rotate(0f, door.Rotation, 0f);
-                    go.transform.parent = door.parentSkeleton.transform.parent.GetComponentInChildren<StaticProps>().transform;
+                    go.transform.parent = door.room.StaticProps.transform;
                 }
             }
 
