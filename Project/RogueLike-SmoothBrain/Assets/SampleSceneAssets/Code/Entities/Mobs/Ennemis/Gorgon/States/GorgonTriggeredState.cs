@@ -15,12 +15,24 @@ using UnityEngine;
 
 public class GorgonTriggeredState : BaseState<GorgonStateMachine>
 {
+
+    const float coeffDeltaToDash = 1.15f;
     public GorgonTriggeredState(GorgonStateMachine currentContext, StateFactory<GorgonStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
+        float sqrGorgonBombDiameter = 0f;
+        float thisToPlayerSqrMagnitude = 0f;
+        float sqrAtkRange = 0f;
+        if (Context.Player)
+        {
+            thisToPlayerSqrMagnitude = Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position);
+            sqrAtkRange = Context.Stats.GetValue(Stat.ATK_RANGE) * Context.Stats.GetValue(Stat.ATK_RANGE);
+            sqrGorgonBombDiameter = Context.gameObject.GetComponentInChildren<ExplodingBomb>().BlastDiameter * Context.gameObject.GetComponentInChildren<ExplodingBomb>().BlastDiameter;
+        }
+
         if (!Context.Player)
         {
             if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
@@ -29,14 +41,14 @@ public class GorgonTriggeredState : BaseState<GorgonStateMachine>
                 return;
             }
         }
-        else if (Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE) * Context.Stats.GetValue(Stat.ATK_RANGE))
+        else if (thisToPlayerSqrMagnitude <= sqrAtkRange && thisToPlayerSqrMagnitude > sqrGorgonBombDiameter)
         {
             if (Context.IsAttackAvailable)
             {
                 SwitchState(Factory.GetState<GorgonAttackingState>());
                 return;
             }
-            else if (Context.IsFleeAvailable)
+            else if (Context.IsFleeAvailable && Vector3.Distance(Context.Player.transform.position, Context.transform.position) < Context.Stats.GetValue(Stat.ATK_RANGE) * coeffDeltaToDash)
             {
                 SwitchState(Factory.GetState<GorgonFleeingState>());
                 return;
@@ -62,9 +74,15 @@ public class GorgonTriggeredState : BaseState<GorgonStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        if (Context.Player)
+        if (Context.Player && !Context.Agent.hasPath)
         {
-            Context.MoveTo(Context.Player.transform.position);
+            Vector3 direction = Context.transform.position - Context.Player.transform.position;
+            Vector3 pointToReach = Context.transform.position.GetRandomPointOnCone(direction, 2, 45);
+            if(Physics.Raycast(Context.transform.position, direction, out var hit, (pointToReach - Context.transform.position).magnitude))
+            {
+                pointToReach = Context.transform.position.GetRandomPointOnCone(hit.normal, 2, 45);
+            }
+            Context.MoveTo(pointToReach);
         }
     }
 

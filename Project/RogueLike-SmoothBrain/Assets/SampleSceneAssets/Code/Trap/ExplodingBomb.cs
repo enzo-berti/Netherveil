@@ -17,7 +17,7 @@ public class ExplodingBomb : MonoBehaviour
     [SerializeField] private bool activateOnAwake;
     [SerializeField] private float timerBeforeExplode;
     [SerializeField] private float blastDiameter;
-    private float BlastDiameter { get => blastDiameter; }
+    public float BlastDiameter { get => blastDiameter; }
     [SerializeField] private int blastDamage;
     [SerializeField] private LayerMask damageLayer;
     //private bool isActive;
