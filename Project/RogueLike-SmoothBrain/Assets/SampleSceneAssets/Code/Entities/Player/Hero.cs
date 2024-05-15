@@ -51,6 +51,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public event Action<ISpecialAbility> OnCorruptionMaxUpgrade;
     public event Action OnBenedictionMaxDrawback;
     public event Action OnCorruptionMaxDrawback;
+    public event Action<int> OnHeal;
 
     public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
     public event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
@@ -99,11 +100,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
-    public int CurrentAlignmentStep {  
+    public int CurrentAlignmentStep
+    {
         get
         {
             return (int)(Stats.GetValue(Stat.CORRUPTION) / STEP_VALUE);
-        } 
+        }
     }
 
     [SerializeField] List<NestedList<GameObject>> CorruptionArmorsToActivatePerStep;
@@ -135,7 +137,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= UpgradePlayerStats;
 
-       //Inventory.RemoveAllItems(Vector3.zero);
+        //Inventory.RemoveAllItems(Vector3.zero);
     }
 
     public void ApplyDamage(int _value, IAttacker attacker, bool notEffectDamages = true)
@@ -234,8 +236,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
     private void ApplyDamoclesSwordEffect(IDamageable damageable, IAttacker attacker)
     {
-        Mobs mob = damageable as Mobs; 
-        if(CurrentAlignmentStep >= 2 && mob != null)
+        Mobs mob = damageable as Mobs;
+        if (CurrentAlignmentStep >= 2 && mob != null)
         {
             mob.AddStatus(new DamoclesSword(3f, 0.3f), attacker);
         }
@@ -247,15 +249,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         lifeIncreasedValue = (int)(lifeIncreasedValue * Stats.GetValue(Stat.HEAL_COEFF));
         if (lifeIncreasedValue > 0 && (damageable as Mobs) != null && !(damageable as Mobs).IsSpawning)
         {
-            AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
-            FloatingTextGenerator.CreateHealText(lifeIncreasedValue, transform.position);
-            Stats.IncreaseValue(Stat.HP, lifeIncreasedValue);
+            HealPlayer(lifeIncreasedValue);
         }
     }
 
     public void HealConsumable(float healValue)
     {
-        AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
         int realHealValue = (int)(healValue * Stats.GetValue(Stat.HEAL_COEFF));
 
         if (!CanHealFromConsumables)
@@ -263,8 +262,19 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             realHealValue = 0;
         }
 
-        Stats.IncreaseValue(Stat.HP, realHealValue, true);
+        HealPlayer(realHealValue);
+    }
+
+    private void HealPlayer(int realHealValue)
+    {
+        if(realHealValue > 0)
+        {
+            AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
+            Stats.IncreaseValue(Stat.HP, realHealValue, true);
+        }
+        
         FloatingTextGenerator.CreateHealText(realHealValue, transform.position);
+        OnHeal?.Invoke(realHealValue);
     }
 
     #region Corruption&BenedictionManagement
@@ -378,7 +388,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     }
 
     private void ManageDrawbacks(int lastStep)
-    { 
+    {
         for (int i = Mathf.Abs(lastStep); i > 0; i--)
         {
             if (lastStep < 0) // benediction drawbacks
@@ -555,10 +565,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         {
             yield return new WaitForSeconds(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration);
 
-            HudHandler.current.DescriptionTab.SetTab("<color=#44197c><b>Damnation Veil</b></color>", 
+            HudHandler.current.DescriptionTab.SetTab("<color=#44197c><b>Damnation Veil</b></color>",
                 "On activation, creates a <color=purple><b>damnation zone</b></color> that applies the <color=purple><b>damnation effect</b></color> " +
                 "that <color=red>doubles the damages</color> received to all enemies touched by the zone.",
-                GameResources.Get<VideoClip>("CorruptionVideo"), 
+                GameResources.Get<VideoClip>("CorruptionVideo"),
                 GameResources.Get<Sprite>("SpecialAbilityBackgroundCoruption"));
 
             HudHandler.current.DescriptionTab.OpenTab();
@@ -568,8 +578,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
             yield return new WaitForSeconds(playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().Duration);
 
             HudHandler.current.DescriptionTab.SetTab("<color=yellow><b>Divine Shield</b></color>",
-                "On activation, creates a <color=#a52a2aff><b>shield</b></color> around you that <color=#a52a2aff><b>nullifies damages</b></color> for a small amount of time.", 
-                GameResources.Get<VideoClip>("BenedictionVideo"), 
+                "On activation, creates a <color=#a52a2aff><b>shield</b></color> around you that <color=#a52a2aff><b>nullifies damages</b></color> for a small amount of time.",
+                GameResources.Get<VideoClip>("BenedictionVideo"),
                 GameResources.Get<Sprite>("SpecialAbilityBackgroundBenediction"));
             HudHandler.current.DescriptionTab.OpenTab();
         }
