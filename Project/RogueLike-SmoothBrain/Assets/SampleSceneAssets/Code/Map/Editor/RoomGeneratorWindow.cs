@@ -10,15 +10,8 @@ namespace Tool
 {
     public class RoomGeneratorWindow : EditorWindow
     {
-        public enum TypeRoom
-        {
-            Lobby,
-            Normal,
-            Treasure,
-            Boss,
-        }
-        TypeRoom typeRoom = TypeRoom.Normal;
-        string prefabName = "";
+        RoomType roomType = RoomType.Normal;
+        string roomName = "";
         GameObject houdiniRoom;
         GameObject bakedRoom;
 
@@ -28,15 +21,15 @@ namespace Tool
             EditorWindow.GetWindow(typeof(RoomGeneratorWindow));
         }
 
-        void OnGUI()
+        private void OnGUI()
         {
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
             houdiniRoom = EditorGUILayout.ObjectField("Houdini Room", houdiniRoom, typeof(GameObject), true) as GameObject;
             bakedRoom = EditorGUILayout.ObjectField("Baked Room", bakedRoom, typeof(GameObject), true) as GameObject;
-            prefabName = EditorGUILayout.TextField("Prefab Name", prefabName);
-            typeRoom = (TypeRoom)EditorGUILayout.EnumPopup("Type of room", typeRoom);
+            roomName = EditorGUILayout.TextField("Prefab Name", roomName);
+            roomType = (RoomType)EditorGUILayout.EnumPopup("Type of room", roomType);
 
             if (GUILayout.Button("Generate Room"))
             {
@@ -46,67 +39,83 @@ namespace Tool
             EditorGUILayout.EndVertical();
         }
 
-        void GenerateRoomPrefab()
+        private GameObject CreateRoomGameObject()
         {
-            GameObject room = Instantiate(bakedRoom);
-            GameObject roomPrefab = new GameObject(prefabName == "" ? bakedRoom.name : prefabName);
-            roomPrefab.AddComponent<PrefabBaker>();
+            Object source = Resources.Load("RoomPrefab");
+            GameObject roomGO = (GameObject)PrefabUtility.InstantiatePrefab(source);
+            roomGO.name = roomName;
+            roomGO.GetComponent<Room>().type = roomType;
 
-            GameObject skeleton = room.transform.GetChild(1).transform.GetChild(0).gameObject;
-            skeleton.gameObject.name = "Skeleton";
-            skeleton.transform.parent = roomPrefab.transform;
-            skeleton.layer = LayerMask.NameToLayer("Map");
-            BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
-            boxCollider.isTrigger = true;
-            MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
-            collisionPlayer.includeLayers = -1;
-            skeleton.AddComponent<RoomEvents>();
+            return roomGO;
+        }
 
-            GameObject arrows = room.transform.GetChild(0).gameObject;
-            arrows.gameObject.name = "Doors";
-            arrows.transform.parent = skeleton.transform;
-            DoorsGenerator generator = arrows.AddComponent<DoorsGenerator>();
-            generator.GeneratePrefab();
-
-            GameObject staticProps = room.transform.GetChild(1).gameObject;
-            staticProps.gameObject.name = "StaticProps";
-            staticProps.transform.parent = skeleton.transform;
-
-            GameObject lights = new GameObject("Lights");
-            lights.transform.parent = skeleton.transform;
-
-            GameObject roomPreset = new GameObject("RoomPreset");
-            roomPreset.transform.parent = roomPrefab.transform;
-            //roomGenerator.AddComponent<RoomGenerator>();
-
-            GameObject roomSeed1 = new GameObject("Room1");
-            roomSeed1.transform.parent = roomPreset.transform;
-            roomSeed1.AddComponent<NavMeshSurface>();
-
-            GameObject traps = new GameObject("Traps");
-            traps.transform.parent = roomSeed1.transform;
-            GameObject enemies = new GameObject("Enemies");
-            enemies.transform.parent = roomSeed1.transform;
-            GameObject props = new GameObject("Props");
-            props.transform.parent = roomSeed1.transform;
-            GameObject treasures = new GameObject("Treasures");
-            treasures.transform.parent = roomSeed1.transform;
-            GameObject npcs = new GameObject("Npcs");
-            npcs.transform.parent = roomSeed1.transform;
-
-
-            string typeRoomPath = "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + typeRoom.ToString();
-            string roomFolderPath = typeRoomPath + "/" + prefabName;
-            string roomPrefabPath = roomFolderPath + "/" + prefabName + ".prefab";
+        private void SaveRoomGameObject(GameObject room)
+        {
+            string typeRoomPath = "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + roomType.ToString();
+            string roomFolderPath = typeRoomPath + "/" + roomName;
+            string roomPrefabPath = roomFolderPath + "/" + roomName + ".prefab";
             if (!Directory.Exists(UnityEngine.Application.dataPath + roomFolderPath))
             {
-                AssetDatabase.CreateFolder("Assets" + typeRoomPath, prefabName);
+                AssetDatabase.CreateFolder("Assets" + typeRoomPath, roomName);
             }
-            PrefabUtility.SaveAsPrefabAsset(roomPrefab, UnityEngine.Application.dataPath + roomPrefabPath);
+            PrefabUtility.SaveAsPrefabAsset(room, UnityEngine.Application.dataPath + roomPrefabPath);
+        }
 
+        private void GenerateRoomPrefab()
+        {
+            GameObject roomGO = CreateRoomGameObject();
+            Room room = roomGO.GetComponent<Room>();
+
+            //GameObject room = Instantiate(bakedRoom);
+            //GameObject roomPrefab = new GameObject(prefabName == "" ? bakedRoom.name : prefabName);
+            //roomPrefab.AddComponent<PrefabBaker>();
+            //
+            //GameObject skeleton = room.transform.GetChild(1).transform.GetChild(0).gameObject;
+            //skeleton.gameObject.name = "Skeleton";
+            //skeleton.transform.parent = roomPrefab.transform;
+            //skeleton.layer = LayerMask.NameToLayer("Map");
+            //BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
+            //boxCollider.isTrigger = true;
+            //MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
+            //collisionPlayer.includeLayers = -1;
+            //skeleton.AddComponent<RoomEvents>();
+            //
+            //GameObject arrows = room.transform.GetChild(0).gameObject;
+            //arrows.gameObject.name = "Doors";
+            //arrows.transform.parent = skeleton.transform;
+            //DoorsGenerator generator = arrows.AddComponent<DoorsGenerator>();
+            //generator.GeneratePrefab();
+            //
+            //GameObject staticProps = room.transform.GetChild(1).gameObject;
+            //staticProps.gameObject.name = "StaticProps";
+            //staticProps.transform.parent = skeleton.transform;
+            //
+            //GameObject lights = new GameObject("Lights");
+            //lights.transform.parent = skeleton.transform;
+            //
+            //GameObject roomPreset = new GameObject("RoomPreset");
+            //roomPreset.transform.parent = roomPrefab.transform;
+            ////roomGenerator.AddComponent<RoomGenerator>();
+            //
+            //GameObject roomSeed1 = new GameObject("Room1");
+            //roomSeed1.transform.parent = roomPreset.transform;
+            //roomSeed1.AddComponent<NavMeshSurface>();
+            //
+            //GameObject traps = new GameObject("Traps");
+            //traps.transform.parent = roomSeed1.transform;
+            //GameObject enemies = new GameObject("Enemies");
+            //enemies.transform.parent = roomSeed1.transform;
+            //GameObject props = new GameObject("Props");
+            //props.transform.parent = roomSeed1.transform;
+            //GameObject treasures = new GameObject("Treasures");
+            //treasures.transform.parent = roomSeed1.transform;
+            //GameObject npcs = new GameObject("Npcs");
+            //npcs.transform.parent = roomSeed1.transform;
+
+            SaveRoomGameObject(roomGO);
+            
             // destroy garbage in scene
-            DestroyImmediate(room);
-            DestroyImmediate(roomPrefab);
+            DestroyImmediate(roomGO);
         }
     }
 }
