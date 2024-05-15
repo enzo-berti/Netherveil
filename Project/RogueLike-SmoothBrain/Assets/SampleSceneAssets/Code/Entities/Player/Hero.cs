@@ -318,15 +318,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         if (corruptionUpgradeOnly)
         {
+            ResetAligmentDependentAnimTriggers();
             playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.CorruptionUpgradeSFX, transform.position);
-            ResetAligmentDependentAnimTriggers();
+            animator.SetTrigger(playerController.CorruptionUpgradeHash);
         }
         else if (benedictionUpgradeOnly)
         {
+            ResetAligmentDependentAnimTriggers();
             playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
             AudioManager.Instance.PlaySound(playerController.BenedictionUpgradeSFX, transform.position);
-            ResetAligmentDependentAnimTriggers();
+            animator.SetTrigger(playerController.BenedictionUpgradeHash);
         }
         else if (hascorruptionDrawbackPositiveToNegative || hascorruptionDrawbackPositiveOnly)
         {
@@ -336,9 +338,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
             if (hascorruptionDrawbackPositiveToNegative && curStep < 0)
             {
+                ResetAligmentDependentAnimTriggers();
                 playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.BenedictionUpgradeSFX, transform.position);
-                ResetAligmentDependentAnimTriggers();
+                animator.SetTrigger(playerController.BenedictionUpgradeHash);
             }
             else
             {
@@ -354,9 +357,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
             if (hasbenedictionDrawbackNegativeToPositive && curStep > 0)
             {
+                ResetAligmentDependentAnimTriggers();
                 playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().PlayVFX();
                 AudioManager.Instance.PlaySound(playerController.CorruptionUpgradeSFX, transform.position);
-                ResetAligmentDependentAnimTriggers();
+                animator.SetTrigger(playerController.CorruptionUpgradeHash);
             }
             else
             {
@@ -369,7 +373,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     private void ResetAligmentDependentAnimTriggers()
     {
         animator.ResetTrigger(playerController.BenedictionUpgradeHash);
-        animator.SetTrigger(playerController.BenedictionUpgradeHash);
+        animator.ResetTrigger(playerController.CorruptionUpgradeHash);
         animator.ResetTrigger(playerController.PouringBloodHash);
     }
 
