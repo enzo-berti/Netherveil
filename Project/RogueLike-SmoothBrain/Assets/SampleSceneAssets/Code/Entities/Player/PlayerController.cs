@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour
         //if player has fallen out of map security
         if (transform.position.y < -100f)
         {
-            LevelLoader.current.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            hero.Death();
         }
     }
 

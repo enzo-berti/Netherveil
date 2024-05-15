@@ -355,6 +355,7 @@ public class PlayerInput : MonoBehaviour
     #region AnimationEvents
     public void StartOfDashAnimation()
     {
+        hero.IsInvincibleCount++;
         controller.DashVFX.Play();
         hero.State = (int)Hero.PlayerState.DASH;
         AudioManager.Instance.PlaySound(controller.DashSFX);
@@ -371,6 +372,7 @@ public class PlayerInput : MonoBehaviour
             controller.ResetValues();
             OnEndDash?.Invoke(transform.position);
         }
+        hero.IsInvincibleCount--;
         triggeredDashAttack = false;
     }
 
@@ -487,6 +489,9 @@ public class PlayerInput : MonoBehaviour
 
     private bool CanDashAttack()
     {
+        if (Utilities.CharacterController == null || !Utilities.CharacterController.enabled)
+            return false;
+
         Transform playerTr = Utilities.Player.transform;
         Vector3 capsuleBase = playerTr.position;
         Vector3 capsuleTop = new Vector3(capsuleBase.x, capsuleBase.y + Utilities.CharacterController.height, capsuleBase.z);

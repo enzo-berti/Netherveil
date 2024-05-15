@@ -18,17 +18,15 @@ public class DashShield : ItemEffect , IPassiveItem
  
     private void ApplyShield()
     {
-        //enable Shield VFX
-        GameObject.FindWithTag("Player").GetComponent<Hero>().IsInvincibleCount++;
-        Utilities.Player.GetComponent<PlayerController>().DashShieldVFX.Reinit();
-        Utilities.Player.GetComponent<PlayerController>().DashShieldVFX.Play();
+        Utilities.Hero.IsInvincibleCount++;
+        Utilities.PlayerController.DashShieldVFX.Reinit();
+        Utilities.PlayerController.DashShieldVFX.Play();
         AudioManager.Instance.PlaySound(AudioManager.Instance.DashShieldSFX);
     }
 
     private void RemoveShield(Vector3 playerPos)
     {
-        //disable Shield VFX
-        GameObject.FindWithTag("Player").GetComponent<Hero>().IsInvincibleCount--;
-        Utilities.Player.GetComponent<PlayerController>().DashShieldVFX.Stop();
+        Utilities.Hero.IsInvincibleCount--;
+        Utilities.PlayerController.DashShieldVFX.Stop();
     }
 } 
