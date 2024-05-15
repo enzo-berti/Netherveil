@@ -1,8 +1,6 @@
 using Map;
-using Map.Generation;
-using PrefabLightMapBaker;
+using System.Collections.Generic;
 using System.IO;
-using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
 
@@ -49,7 +47,7 @@ namespace Tool
             return roomGO;
         }
 
-        private void SaveRoomGameObject(GameObject room)
+        private void SaveRoomGameObject(GameObject roomGO)
         {
             string typeRoomPath = "/SampleSceneAssets/Levels/Prefabs/Map/Room/" + roomType.ToString();
             string roomFolderPath = typeRoomPath + "/" + roomName;
@@ -58,13 +56,16 @@ namespace Tool
             {
                 AssetDatabase.CreateFolder("Assets" + typeRoomPath, roomName);
             }
-            PrefabUtility.SaveAsPrefabAsset(room, UnityEngine.Application.dataPath + roomPrefabPath);
+            PrefabUtility.SaveAsPrefabAsset(roomGO, UnityEngine.Application.dataPath + roomPrefabPath);
         }
 
         private void GenerateRoomPrefab()
         {
             GameObject roomGO = CreateRoomGameObject();
             Room room = roomGO.GetComponent<Room>();
+
+            room.Skeleton.GetComponent<MeshRenderer>().sharedMaterials = bakedRoom.GetComponentInChildren<MeshRenderer>(true).sharedMaterials;
+            room.Skeleton.GetComponent<MeshFilter>().sharedMesh = bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh;
 
             //GameObject room = Instantiate(bakedRoom);
             //GameObject roomPrefab = new GameObject(prefabName == "" ? bakedRoom.name : prefabName);
