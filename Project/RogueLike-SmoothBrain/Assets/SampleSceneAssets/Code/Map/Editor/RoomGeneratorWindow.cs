@@ -19,7 +19,8 @@ namespace Tool
         }
         TypeRoom typeRoom = TypeRoom.Normal;
         string prefabName = "";
-        GameObject roomObj;
+        GameObject houdiniRoom;
+        GameObject bakedRoom;
 
         [UnityEditor.MenuItem("Tools/Room/Create")]
         public static void CreateRoom()
@@ -32,7 +33,8 @@ namespace Tool
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-            roomObj = EditorGUILayout.ObjectField("Room prefab", roomObj, typeof(GameObject), false) as GameObject;
+            houdiniRoom = EditorGUILayout.ObjectField("Houdini Room", houdiniRoom, typeof(GameObject), true) as GameObject;
+            bakedRoom = EditorGUILayout.ObjectField("Baked Room", bakedRoom, typeof(GameObject), true) as GameObject;
             prefabName = EditorGUILayout.TextField("Prefab Name", prefabName);
             typeRoom = (TypeRoom)EditorGUILayout.EnumPopup("Type of room", typeRoom);
 
@@ -46,8 +48,8 @@ namespace Tool
 
         void GenerateRoomPrefab()
         {
-            GameObject room = Instantiate(roomObj);
-            GameObject roomPrefab = new GameObject(prefabName == "" ? roomObj.name : prefabName);
+            GameObject room = Instantiate(bakedRoom);
+            GameObject roomPrefab = new GameObject(prefabName == "" ? bakedRoom.name : prefabName);
             roomPrefab.AddComponent<PrefabBaker>();
 
             GameObject skeleton = room.transform.GetChild(1).transform.GetChild(0).gameObject;
