@@ -184,10 +184,10 @@ public class ZiggoStateMachine : Mobs, IZiggo
         ziggoSounds.deathSound.Play(transform.position);
         animator.SetBool(deathHash, true);
 
-        Destroy(projectile);
-        if (spitAttackCoroutine != null) StopCoroutine(spitAttackCoroutine);
+        //Destroy(projectile);
+        //if (spitAttackCoroutine != null) StopCoroutine(spitAttackCoroutine);
 
-        Projectile.GetComponent<ZiggoProjectile>().PoisonPuddleVFX.Stop();
+        //Projectile.GetComponent<ZiggoProjectile>().PoisonPuddleVFX.Stop();
         currentState = factory.GetState<ZiggoDeathState>();
     }
 
