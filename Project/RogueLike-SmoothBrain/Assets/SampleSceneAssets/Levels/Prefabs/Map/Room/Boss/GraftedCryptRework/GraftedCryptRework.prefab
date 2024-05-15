@@ -1175,15 +1175,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f64fff4eedd564a438366b0e45235b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomObjects:
-  - {fileID: 2574603909979925105}
-  - {fileID: 1174388275117448387}
-  - {fileID: 988486121872733334}
-  - {fileID: 4355156683106714209}
-  - {fileID: 8797519071912530688}
-  - {fileID: 3329394025575153266}
-  - {fileID: 5653520730418325301}
   type: 9
+  <Skeleton>k__BackingField: {fileID: 3523659120464929451}
+  <DoorsGenerator>k__BackingField: {fileID: 689047663684800205}
+  <StaticProps>k__BackingField: {fileID: 2272128575384870456}
+  <Lights>k__BackingField: {fileID: 8684566353546906833}
+  <RoomPresets>k__BackingField: {fileID: 4466642995427107276}
 --- !u!1 &1775404218950751719
 GameObject:
   m_ObjectHideFlags: 0
@@ -6976,6 +6973,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4955394558322574519}
+  - component: {fileID: 7369920512856428100}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -7004,6 +7002,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7369920512856428100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5405750577896744882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae592d9a3ade6f74d80fb40057e1e4e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss: {fileID: 1286985930119828571}
 --- !u!1 &5574985686314658664
 GameObject:
   m_ObjectHideFlags: 0
@@ -7277,18 +7288,22 @@ MonoBehaviour:
     localPosition: {x: 3.63945, y: 0, z: 17.065857}
     localRotation: 0
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
   - forward: {x: 1.0000001, y: 0, z: -0.00000011920929}
     localPosition: {x: 23.13945, y: 0, z: -1.4341354}
     localRotation: 90
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
   - forward: {x: 0.00000008742278, y: 0, z: -1}
     localPosition: {x: 4.13945, y: 0, z: -19.934143}
     localRotation: 180
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
   - forward: {x: -1.0000001, y: 0, z: -0.00000011920929}
     localPosition: {x: -15.86055, y: 0, z: -0.93413544}
     localRotation: 270
     parentSkeleton: {fileID: 2574603909979925105}
+    room: {fileID: 3296634023868056251}
 --- !u!1 &6209252871256379320
 GameObject:
   m_ObjectHideFlags: 0
