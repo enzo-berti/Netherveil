@@ -71,8 +71,13 @@ namespace Tool
             GameObject roomGO = CreateRoomGameObject();
             Room room = roomGO.GetComponent<Room>();
 
+            Mesh sharedMesh = Instantiate(bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh);
+            room.Skeleton.GetComponent<MeshFilter>().sharedMesh = sharedMesh;
+            room.Skeleton.GetComponent<MeshCollider>().sharedMesh = sharedMesh;
+            room.Skeleton.GetComponent<BoxCollider>().center = sharedMesh.bounds.center;
+            room.Skeleton.GetComponent<BoxCollider>().size = sharedMesh.bounds.size;
+
             room.Skeleton.GetComponent<MeshRenderer>().sharedMaterials = bakedRoom.GetComponentInChildren<MeshRenderer>(true).sharedMaterials;
-            room.Skeleton.GetComponent<MeshFilter>().sharedMesh = Instantiate(bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh);
 
             foreach (Transform child in houdiniRoom.transform.Find("HDA_Data").Find("Instances_1"))
             {
