@@ -36,7 +36,8 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
         NavMesh.SamplePosition(pointToReach3D, out NavMeshHit hit, float.PositiveInfinity, NavMesh.AllAreas);
         pointToReach3D = hit.position;
 
-        List<Vector3> listDashes = GetDashesPath(pointToReach3D, 3);
+        float nbDash = (pointToReach3D - Context.transform.position).magnitude / 5;
+        List<Vector3> listDashes = Context.GetDashesPath(pointToReach3D, (int)nbDash + 1);
         Context.DashCoroutine = Context.StartCoroutine(Context.DashToPos(listDashes));
 
         dashLaunched = true;
@@ -66,52 +67,6 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
     }
 
     #region Extra methods
-    public List<Vector3> GetDashesPath(Vector3 posToReach, int nbDash)
-    {
-        List<Vector3> path = new()
-        {
-            Context.transform.position
-        };
-
-        NavMeshPath navPath = new();
-        NavMesh.CalculatePath(Context.transform.position, posToReach, -1, navPath);
-        // First corner is initPos and last is endPos
-        for (int i = 1; i < navPath.corners.Length - 1; i++)
-        {
-            path.Add(navPath.corners[i]);
-        }
-        float distance = Vector3.Distance(Context.transform.position, posToReach);
-        // If it's a straight line
-        if (path.Count == 1)
-        {
-            for (int i = 1; i < nbDash; i++)
-            {
-                // We avoid y value because we only move in x and z
-                Vector2 posToReach2D = new(posToReach.x, posToReach.z);
-
-                // Virtually get the "current" position of the dasher ( get the position he reached after his previous dash )
-                Vector2 curPos2D = new(path[i - 1].x, path[i - 1].z);
-
-                Vector2 direction = posToReach2D - curPos2D;
-
-                Vector2 posOnCone = Context.transform.position;
-
-                if (direction != Vector2.zero)
-                    posOnCone = MathsExtension.GetRandomPointOnCone(curPos2D, direction, distance / nbDash, 60);
-
-                Vector3 posOnCone3D = new(posOnCone.x, Context.transform.position.y, posOnCone.y);
-                if (NavMesh.SamplePosition(posOnCone3D, out var hit, 10, NavMesh.AllAreas))
-                {
-                    posOnCone3D = hit.position;
-                    path.Add(posOnCone3D);
-                }
-            }
-            //path.Add(posToReach);
-        }
-
-        // We finally add the position that we want to reach after every dash
-        path.Add(posToReach);
-        return path;
-    }
+    
     #endregion
 }

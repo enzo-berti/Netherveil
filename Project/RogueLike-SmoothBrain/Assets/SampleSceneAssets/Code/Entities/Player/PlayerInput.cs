@@ -72,7 +72,7 @@ public class PlayerInput : MonoBehaviour
         flashMaterial = GetComponent<HitMaterialApply>();
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         EaseFuncsShitStorm();
@@ -83,6 +83,13 @@ public class PlayerInput : MonoBehaviour
         chargedAttackVFXMaxSize = controller.ChargedAttackVFX.GetFloat("VFX Size");
         PauseMenu.OnPause += DisableGameplayInputs;
         PauseMenu.OnUnpause += EnableGameplayInputs;
+
+        // Wait 2.8 seconds before move to Start cinematic
+        DisableGameplayInputs();
+        hero.State = (int)Hero.PlayerState.MOTIONLESS;
+        yield return new WaitForSeconds(2.8f);
+        EnableGameplayInputs();
+        hero.State = (int)Entity.EntityState.MOVE;
     }
 
     private void OnDestroy()

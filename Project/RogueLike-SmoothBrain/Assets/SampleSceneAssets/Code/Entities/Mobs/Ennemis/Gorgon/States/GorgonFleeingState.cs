@@ -34,15 +34,10 @@ public class GorgonFleeingState : BaseState<GorgonStateMachine>
     protected override void EnterState()
     {
         Context.CanLoseAggro = false;
-
-        Vector3 mobToPlayer = Context.Player.transform.position - Context.transform.position;
-
-        List<Vector3> dash = new()
-        {
-            Context.transform.position,
-            Context.transform.position - mobToPlayer.normalized * (Context.Stats.GetValue(Stat.ATK_RANGE) - mobToPlayer.magnitude)
-            //Context.transform.position + mobToPlayer.normalized * (Context.Stats.GetValue(Stat.ATK_RANGE) - Context.Stats.GetValue(Stat.ATK_RANGE) - (Context.Player.transform.position - Context.transform.position).magnitude)
-        };
+        Vector3 posToReach = Utilities.Player.transform.position.GetRandomPointInCircle(Context.Stats.GetValue(Stat.ATK_RANGE), Context.Stats.GetValue(Stat.ATK_RANGE) * 1.3f);
+        float nbDash = (posToReach - Context.transform.position).magnitude / 5;
+        if((int)nbDash == 0) nbDash = 1;
+        List<Vector3> dash = Context.GetDashesPath(posToReach, (int)nbDash);
 
         Context.StartCoroutine(Context.DashToPos(dash));
         dashLaunched = true;
