@@ -436,12 +436,16 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void MouseOrientation()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 mousePos = Input.mousePosition;
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
         if (mouseRaycastPlane.Raycast(ray, out float enter))
         {
             Vector3 hitPoint = ray.GetPoint(enter);
+            hitPoint.y = this.transform.position.y;
+            hitPoint += (hitPoint - this.transform.position).normalized * 50f;
 
-            float angle = transform.AngleOffsetToFaceTarget(new Vector3(hitPoint.x, this.transform.position.y, hitPoint.z));
+            float angle = transform.AngleOffsetToFaceTarget(hitPoint);
+            angle = System.MathF.Round(angle, 1);
             if (angle != float.MaxValue)
             {
                 OffsetPlayerRotation(angle, true);
