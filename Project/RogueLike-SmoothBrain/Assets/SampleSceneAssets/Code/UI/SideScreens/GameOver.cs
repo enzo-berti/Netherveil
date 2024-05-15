@@ -46,11 +46,14 @@ public class GameOver : MonoBehaviour
 
     private void DisableAllMob()
     {
-        foreach (GameObject enemy in MapUtilities.currentRoomData.Enemies)
+        if (MapUtilities.currentRoomData.Enemies != null && MapUtilities.currentRoomData.Enemies.Count > 0)
         {
-            if (enemy != null)
+            foreach (GameObject enemy in MapUtilities.currentRoomData.Enemies)
             {
-                enemy.SetActive(false);
+                if (enemy != null)
+                {
+                    enemy.SetActive(false);
+                }
             }
         }
     }
