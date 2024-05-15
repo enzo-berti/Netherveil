@@ -67,51 +67,18 @@ namespace Tool
             room.Skeleton.GetComponent<MeshRenderer>().sharedMaterials = bakedRoom.GetComponentInChildren<MeshRenderer>(true).sharedMaterials;
             room.Skeleton.GetComponent<MeshFilter>().sharedMesh = bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh;
 
-            //GameObject room = Instantiate(bakedRoom);
-            //GameObject roomPrefab = new GameObject(prefabName == "" ? bakedRoom.name : prefabName);
-            //roomPrefab.AddComponent<PrefabBaker>();
-            //
-            //GameObject skeleton = room.transform.GetChild(1).transform.GetChild(0).gameObject;
-            //skeleton.gameObject.name = "Skeleton";
-            //skeleton.transform.parent = roomPrefab.transform;
-            //skeleton.layer = LayerMask.NameToLayer("Map");
-            //BoxCollider boxCollider = skeleton.AddComponent<BoxCollider>();
-            //boxCollider.isTrigger = true;
-            //MeshCollider collisionPlayer = skeleton.AddComponent<MeshCollider>();
-            //collisionPlayer.includeLayers = -1;
-            //skeleton.AddComponent<RoomEvents>();
-            //
-            //GameObject arrows = room.transform.GetChild(0).gameObject;
-            //arrows.gameObject.name = "Doors";
-            //arrows.transform.parent = skeleton.transform;
-            //DoorsGenerator generator = arrows.AddComponent<DoorsGenerator>();
-            //generator.GeneratePrefab();
-            //
-            //GameObject staticProps = room.transform.GetChild(1).gameObject;
-            //staticProps.gameObject.name = "StaticProps";
-            //staticProps.transform.parent = skeleton.transform;
-            //
-            //GameObject lights = new GameObject("Lights");
-            //lights.transform.parent = skeleton.transform;
-            //
-            //GameObject roomPreset = new GameObject("RoomPreset");
-            //roomPreset.transform.parent = roomPrefab.transform;
-            ////roomGenerator.AddComponent<RoomGenerator>();
-            //
-            //GameObject roomSeed1 = new GameObject("Room1");
-            //roomSeed1.transform.parent = roomPreset.transform;
-            //roomSeed1.AddComponent<NavMeshSurface>();
-            //
-            //GameObject traps = new GameObject("Traps");
-            //traps.transform.parent = roomSeed1.transform;
-            //GameObject enemies = new GameObject("Enemies");
-            //enemies.transform.parent = roomSeed1.transform;
-            //GameObject props = new GameObject("Props");
-            //props.transform.parent = roomSeed1.transform;
-            //GameObject treasures = new GameObject("Treasures");
-            //treasures.transform.parent = roomSeed1.transform;
-            //GameObject npcs = new GameObject("Npcs");
-            //npcs.transform.parent = roomSeed1.transform;
+            foreach (Transform child in houdiniRoom.transform.Find("HDA_Data").Find("Instances_1"))
+            {
+                if (child.name.Contains("Door_Instance"))
+                {
+                    Instantiate(child.gameObject, room.DoorsGenerator.transform);
+                }
+                else
+                {
+                    Instantiate(child.gameObject, room.StaticProps.transform);
+                }
+            }
+            room.DoorsGenerator.GeneratePrefab();
 
             SaveRoomGameObject(roomGO);
             
