@@ -201,18 +201,5 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             }
         }
     }
-
-    public void LookAtPlayer()
-    {
-        Vector3 mobToPlayer = player.transform.position - transform.position;
-        mobToPlayer.y = 0f;
-
-        Quaternion lookRotation = Quaternion.LookRotation(mobToPlayer);
-        lookRotation.x = 0;
-        lookRotation.z = 0;
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
-    }
-
     #endregion
 }

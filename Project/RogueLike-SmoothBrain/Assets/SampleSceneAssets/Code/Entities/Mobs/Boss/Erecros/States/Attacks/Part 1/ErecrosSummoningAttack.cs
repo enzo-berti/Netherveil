@@ -68,7 +68,7 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        Context.LookAtPlayer();
+        Context.LookAtTarget(Context.Player.transform.position, 5f);
 
         RemoveDeadEnemies();
 

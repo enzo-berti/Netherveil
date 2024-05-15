@@ -297,6 +297,7 @@ public class SonielCircularHit : BaseState<SonielStateMachine>
         {
             if (circularAttackChargeTimers[_currentAttack] >= MAX_CIRCULAR_ATTACK_CHARGE[_currentAttack]) // lance l'attaque après un délai
             {
+                Context.LookAtTarget(Context.Player.transform.position);
                 attackLaunched[_currentAttack] = true;
             }
         }
