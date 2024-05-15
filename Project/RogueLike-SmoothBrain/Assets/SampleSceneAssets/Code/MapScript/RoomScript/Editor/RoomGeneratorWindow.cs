@@ -58,9 +58,11 @@ namespace Tool
             {
                 AssetDatabase.CreateFolder("Assets" + typeRoomPath, roomName);
             }
-
+                
+            // save mesh
             AssetDatabase.CreateAsset(roomGO.GetComponent<Room>().Skeleton.GetComponent<MeshFilter>().sharedMesh, meshPath);
             AssetDatabase.SaveAssets();
+            // save prefab
             PrefabUtility.SaveAsPrefabAsset(roomGO, UnityEngine.Application.dataPath + roomPrefabPath);
         }
 
@@ -70,7 +72,7 @@ namespace Tool
             Room room = roomGO.GetComponent<Room>();
 
             room.Skeleton.GetComponent<MeshRenderer>().sharedMaterials = bakedRoom.GetComponentInChildren<MeshRenderer>(true).sharedMaterials;
-            room.Skeleton.GetComponent<MeshFilter>().sharedMesh = bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh;
+            room.Skeleton.GetComponent<MeshFilter>().sharedMesh = Instantiate(bakedRoom.GetComponentInChildren<MeshFilter>(true).sharedMesh);
 
             foreach (Transform child in houdiniRoom.transform.Find("HDA_Data").Find("Instances_1"))
             {
