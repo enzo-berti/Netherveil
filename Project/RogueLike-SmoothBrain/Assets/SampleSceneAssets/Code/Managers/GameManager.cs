@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
     }
 
     public bool dashWithMouse = false;
-    public Transition publicFade;
 
     private void Awake()
     {
