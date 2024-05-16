@@ -16,7 +16,7 @@ public class DamnationVeil : ISpecialAbility
     public void Activate()
     {
         PlayerController playerController = Utilities.Player.GetComponent<PlayerController>();
-        playerController.PlayVFX(playerController.DamnationVeilVFX);
+        playerController.PlayVFXAtPlayerPos(playerController.DamnationVeilVFX);
         ISpecialAbility.OnSpecialAbilityActivated?.Invoke();
         AudioManager.Instance.PlaySound(AudioManager.Instance.DamnationVeilSFX, Utilities.Player.transform.position);
 
