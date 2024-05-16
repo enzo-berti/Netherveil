@@ -60,7 +60,7 @@ namespace PostProcessingEffects
 
             if (profile.TryGet(out vignette))
             {
-               vignette.intensity.value = .6f;
+               vignette.intensity.value = .5f;
             }
 
             while (elapsed < duration)

@@ -20,9 +20,9 @@ namespace Map
         public void CallFade(bool enable)
         {
             if (enable)
-                GameManager.Instance.publicFade.FadeIn();
+                InGameManager.current.publicFade.FadeIn();
             else
-                GameManager.Instance.publicFade.FadeOut();
+                InGameManager.current.publicFade.FadeOut();
         }
 
         public void CallNextLevel()
