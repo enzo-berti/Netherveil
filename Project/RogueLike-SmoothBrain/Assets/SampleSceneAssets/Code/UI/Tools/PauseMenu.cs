@@ -35,6 +35,8 @@ public class PauseMenu : MonoBehaviour
 
         OnPause?.Invoke();
 
+
+        AudioManager.Instance.PauseAllSounds();
         EventSystem.current.SetSelectedGameObject(firstSelect.gameObject);
     }
 
@@ -46,6 +48,7 @@ public class PauseMenu : MonoBehaviour
         HudHandler.current.SetActive(true, 0.0f);
         gameObject.SetActive(false);
         settings.SetActive(false);
+        AudioManager.Instance.ResumeAllSounds();
 
         OnUnpause?.Invoke();
     }

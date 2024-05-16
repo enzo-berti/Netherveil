@@ -295,6 +295,28 @@ public class AudioManager : MonoBehaviour
         audioInstances.Remove(eventInstance);
     }
 
+    public void PauseAllSounds()
+    {
+        foreach (var audioInstance in audioInstances)
+        {
+            if (!buttonSFXInstances.Contains(audioInstance))
+            {
+                audioInstance.setPaused(true);
+            }
+        }
+    }
+
+    public void ResumeAllSounds()
+    {
+        foreach (var audioInstance in audioInstances)
+        {
+            if (!buttonSFXInstances.Contains(audioInstance))
+            {
+                audioInstance.setPaused(false);
+            }
+        }
+    }
+
     public void ButtonClickSFX()
     {
         foreach (var buttonSFXInstance in buttonSFXInstances)
