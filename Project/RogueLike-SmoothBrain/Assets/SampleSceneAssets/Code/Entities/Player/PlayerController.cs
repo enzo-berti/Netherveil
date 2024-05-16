@@ -38,10 +38,6 @@ public class PlayerController : MonoBehaviour
     public BoxCollider DashAttackCollider { get => dashAttackCollider; }
     public List<Collider> CollidersIgnored { get => collidersIgnored; }
 
-    public bool DoneQuestQTThiStage { get; set; } = false;
-    public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
-    public bool ClearedTuto { get; set; } = false;
-
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;
     readonly float smoothTime = 0.05f;
@@ -591,14 +587,14 @@ public class PlayerController : MonoBehaviour
     {
         if (MapUtilities.currentRoomData.Type == RoomType.Tutorial)
         {
-            ClearedTuto = true;
+            hero.ClearedTuto = true;
         }
     }
 
     private void ResetStageDependentValues()
     {
-        DoneQuestQTThiStage = false;
-        DoneQuestQTApprenticeThiStage = false;
+        hero.DoneQuestQTThiStage = false;
+        hero.DoneQuestQTApprenticeThiStage = false;
     }
 
     #endregion
