@@ -99,7 +99,7 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (IsFreeze || IsSpawning)
             return;
 
         base.Update();

@@ -4986,6 +4986,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5327188549745405351}
+  - component: {fileID: 4822035342482072777}
   m_Layer: 0
   m_Name: Enemies
   m_TagString: Untagged
@@ -5012,11 +5013,23 @@ Transform:
   - {fileID: 506499580169359382}
   - {fileID: 8657121464333329824}
   - {fileID: 3808260600188832239}
-  - {fileID: 6795390774784957281}
+  - {fileID: 4814106457589928674}
   - {fileID: 8017330591593100608}
   - {fileID: 5869876771803919458}
   m_Father: {fileID: 8274282366929220385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4822035342482072777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603416618667804850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d1b0fdf83a20f4b81be0fdbf9a2422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &621294917377547466
 GameObject:
   m_ObjectHideFlags: 0
@@ -6412,9 +6425,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 3
   <Skeleton>k__BackingField: {fileID: 7799977530084054785}
+  <DoorsGenerator>k__BackingField: {fileID: 8004438383983829246}
   <StaticProps>k__BackingField: {fileID: 5506873347165859969}
   <Lights>k__BackingField: {fileID: 2941276165797304501}
+  <RoomUI>k__BackingField: {fileID: 0}
   <RoomPresets>k__BackingField: {fileID: 8550152962602069949}
+  neighbor: []
 --- !u!114 &2722792603827384376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16984,14 +17000,17 @@ MonoBehaviour:
     localPosition: {x: -195.5, y: 0, z: 119}
     localRotation: 180
     parentSkeleton: {fileID: 3262537104553187551}
+    room: {fileID: 6850719115959290232}
   - forward: {x: -1.0000001, y: 0, z: -0.00000011920929}
     localPosition: {x: -200, y: 0, z: 160}
     localRotation: 270
     parentSkeleton: {fileID: 3262537104553187551}
+    room: {fileID: 6850719115959290232}
   - forward: {x: 1.0000001, y: 0, z: -0.00000011920929}
     localPosition: {x: -140, y: 0, z: 155.00279}
     localRotation: 90
     parentSkeleton: {fileID: 3262537104553187551}
+    room: {fileID: 6850719115959290232}
 --- !u!1 &6343115362305292989
 GameObject:
   m_ObjectHideFlags: 0
@@ -17339,7 +17358,7 @@ Transform:
   - {fileID: 1225902809526889992}
   - {fileID: 8850343112611308211}
   - {fileID: 1264567868753825036}
-  - {fileID: 5901269626097388457}
+  - {fileID: 4170162544126598992}
   m_Father: {fileID: 6204469988180159594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1027426111105400249
@@ -47828,7 +47847,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 257a517f7a180d54897a65e5e34bc00f, type: 3}
---- !u!4 &5901269626097388457 stripped
+--- !u!4 &4170162544126598992 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7510563578258674936, guid: 257a517f7a180d54897a65e5e34bc00f,
     type: 3}
@@ -51904,7 +51923,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6efaedea0c28aed4fb448bbb72bae0a7, type: 3}
---- !u!4 &6795390774784957281 stripped
+--- !u!4 &4814106457589928674 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2053984163547695490, guid: 6efaedea0c28aed4fb448bbb72bae0a7,
     type: 3}

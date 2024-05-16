@@ -76,7 +76,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (IsFreeze || IsSpawning)
             return;
 
         base.Update();

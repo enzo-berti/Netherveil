@@ -186,7 +186,7 @@ public class GraftedStateMachine : Mobs, IGrafted
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning || isInCinematic)
+        if (IsFreeze || IsSpawning || isInCinematic)
             return;
 
         base.Update();
