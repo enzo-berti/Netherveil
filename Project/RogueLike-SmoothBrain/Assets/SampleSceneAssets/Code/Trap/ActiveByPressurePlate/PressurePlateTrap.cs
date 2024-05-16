@@ -9,11 +9,19 @@ public class PressurePlateTrap : MonoBehaviour
     private bool canActive = true;
     public Sound activeSound;
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (canActive && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
         {
             ActivateTraps();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!canActive && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
+        {
+            canActive = true;
         }
     }
 
@@ -30,18 +38,5 @@ public class PressurePlateTrap : MonoBehaviour
         vfx.Play();
         activeSound.Play(transform.position);
         canActive = false;
-    }
-
-    private void Update()
-    {
-        if (!canActive)
-        {
-            currentCooldownTime += Time.deltaTime;
-            if (currentCooldownTime >= cooldownTime)
-            {
-                currentCooldownTime = 0;
-                canActive = true;
-            }
-        }
     }
 }
