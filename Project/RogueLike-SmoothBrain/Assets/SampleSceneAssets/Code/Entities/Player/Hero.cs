@@ -1,5 +1,4 @@
 using Fountain;
-using Map.Generation;
 using PostProcessingEffects;
 using System;
 using System.Collections;
@@ -9,7 +8,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Video;
 
-public class Hero : Entity, IDamageable, IAttacker, IBlastable
+public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 {
     public enum PlayerState : int
     {
@@ -24,14 +23,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public static Color benedictionColor = Color.yellow;
     public static Color benedictionColor2 = new Color(0.89f, 0.75f, 0.14f);
 
-    readonly float BENEDICTION_HP_STEP = 25f;
-    readonly float BENEDICTION_HEAL_COEF_STEP = 1f;
-    readonly float CORRUPTION_ATK_STEP = 2f;
-    readonly float CORRUPTION_HP_STEP = 25f;
-    readonly float CORRUPTION_LIFESTEAL_STEP = 0.15f;
-    readonly float CORRUPTION_TAKE_DAMAGE_COEF_STEP = 0.25f;
+    const float BENEDICTION_HP_STEP = 25f;
+    const float BENEDICTION_HEAL_COEF_STEP = 1f;
+    const float CORRUPTION_ATK_STEP = 2f;
+    const float CORRUPTION_HP_STEP = 25f;
+    const float CORRUPTION_LIFESTEAL_STEP = 0.15f;
+    const float CORRUPTION_TAKE_DAMAGE_COEF_STEP = 0.25f;
 
-    readonly float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
+    const float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
     float takeDamageCoeff = 1f;
 
     Animator animator;
@@ -39,7 +38,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     PlayerController playerController;
     public Inventory Inventory { get; private set; } = new Inventory();
 
-    static private string saveFileName = "Player";
+    const string saveFileName = "Player";
 
     private event Action<IDamageable> onKill;
     private event IAttacker.AttackDelegate onAttack;
@@ -65,10 +64,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     public IAttacker.HitDelegate OnAttackHit { get => onAttackHit; set => onAttackHit = value; }
     public Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
-    public readonly int STEP_VALUE = 25;
-    public readonly int BENEDICTION_MAX = -4;
-    public readonly int CORRUPTION_MAX = 4;
-    public readonly int MAX_INDEX_ALIGNMENT_TAB = 3;
+    public const int STEP_VALUE = 25;
+    public const int BENEDICTION_MAX = -4;
+    public const int CORRUPTION_MAX = 4;
+    public const int MAX_INDEX_ALIGNMENT_TAB = 3;
 
     public bool CanHealFromConsumables { get; set; } = true;
     bool canLaunchUpgrade = false;
@@ -141,6 +140,17 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
 
         SaveManager.Instance.onSave += Save;
         Load();
+    }
+
+
+    public void Save(string directoryPath)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string Load(string directoryPath)
+    {
+        throw new NotImplementedException();
     }
 
     private void Load()

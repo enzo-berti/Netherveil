@@ -168,7 +168,7 @@ public abstract class Mobs : Entity
         if (this is IBoss)
             return;
 
-        if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -Utilities.Hero.STEP_VALUE && UnityEngine.Random.Range(0, 100) <= 4 * Mathf.Abs(Utilities.Hero.CurrentAlignmentStep))
+        if (Utilities.Hero.Stats.GetValue(Stat.CORRUPTION) <= -Hero.STEP_VALUE && UnityEngine.Random.Range(0, 100) <= 4 * Mathf.Abs(Utilities.Hero.CurrentAlignmentStep))
         {
             GameObject clone = Instantiate(transform.parent.gameObject, transform.parent.parent);
             MapUtilities.currentRoomData.Enemies.Add(clone);
@@ -177,8 +177,7 @@ public abstract class Mobs : Entity
 
     private void IncreaseMobStats()
     {
-        IBoss boss = this as IBoss;
-        if (boss == null)
+        if (this is not IBoss)
         {
             stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
             stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);

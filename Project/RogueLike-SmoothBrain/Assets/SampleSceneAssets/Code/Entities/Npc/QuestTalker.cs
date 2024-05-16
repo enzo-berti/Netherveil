@@ -83,11 +83,11 @@ public class QuestTalker : Npc
 
     protected bool PlayerInvestedInOppositeWay()
     {
-        if (type == TalkerType.CLERIC && player.Stats.GetValue(Stat.CORRUPTION) >= player.STEP_VALUE)
+        if (type == TalkerType.CLERIC && player.Stats.GetValue(Stat.CORRUPTION) >= Hero.STEP_VALUE)
         {
             return true;
         }
-        else if (type == TalkerType.SHAMAN && player.Stats.GetValue(Stat.CORRUPTION) <= -player.STEP_VALUE)
+        else if (type == TalkerType.SHAMAN && player.Stats.GetValue(Stat.CORRUPTION) <= -Hero.STEP_VALUE)
         {
             return true;
         }
