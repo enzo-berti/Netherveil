@@ -384,29 +384,30 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
 
             foreach(var binding in action.actionMap.bindings)
             {
-                if(binding.action == newBinding.action)
+                if(binding.action == newBinding.action && !newBinding.isPartOfComposite)
                 {
                     continue;
                 }
-                if(binding.effectivePath == newBinding.effectivePath && binding.interactions == newBinding.interactions)
+                if(binding.effectivePath == newBinding.effectivePath && binding.interactions == newBinding.interactions && newBinding != binding)
                 {
-                    Debug.Log("Duplicate Binding Found : " + newBinding.effectivePath);
                     alreadyAssignedPrompt.gameObject.SetActive(true);
-                    alreadyAssignedPrompt.text = "Key " + Keybinding.GetAppropriateKeyString(controlPath, displayString) + " is already assigned";
+                    alreadyAssignedPrompt.text = "Key <sprite name=\"" + Keybinding.GetAppropriateKeyString(controlPath, displayString).GetCamelCase() + "\"> is already assigned";
                     return true;
                 }
             }
 
             //check for duplicate composite bindings
-            if(allCompositeParts)
+            if(allCompositeParts ||newBinding.isPartOfComposite)
             {
-                for(int i = 1; i < bindingIndex; i++) 
+                for(int i = 1; i < action.bindings.Count; i++) 
                 {
+                    if (i == bindingIndex) continue;
+
                     if (action.bindings[i].effectivePath == newBinding.effectivePath && action.bindings[i].interactions == newBinding.interactions)
                     {
                         Debug.Log("Duplicate Binding Found : " + newBinding.effectivePath);
                         alreadyAssignedPrompt.gameObject.SetActive(true);
-                        alreadyAssignedPrompt.text = "Key " + Keybinding.GetAppropriateKeyString(controlPath, displayString) + " is already assigned";
+                        alreadyAssignedPrompt.text = "Key <sprite name=\"" + Keybinding.GetAppropriateKeyString(controlPath, displayString).GetCamelCase() + "\"> is already assigned";
                         return true;
                     }
                 }
