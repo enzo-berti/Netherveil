@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -15,6 +14,16 @@ public class Inventory
         public int Value
         {
             get { return value; }
+        }
+
+        public void Add(int value, bool hasText = false)
+        {
+            this.value += value;
+            OnAddOrRemoveBlood?.Invoke();
+            if (hasText)
+            {
+                FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{value} Blood", Color.red);
+            }
         }
 
         public static BloodClass operator +(BloodClass blood, int increment)

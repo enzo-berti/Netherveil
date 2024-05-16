@@ -1,8 +1,11 @@
 using Fountain;
+using Map.Generation;
 using PostProcessingEffects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -35,6 +38,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     PlayerInput playerInput;
     PlayerController playerController;
     public Inventory Inventory { get; private set; } = new Inventory();
+
+    static private string saveFileName = "Player";
 
     private event Action<IDamageable> onKill;
     private event IAttacker.AttackDelegate onAttack;
@@ -116,6 +121,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
     [SerializeField] List<NestedList<GameObject>> BenedictionArmorsToActivatePerStep;
     [SerializeField] List<NestedList<GameObject>> NormalArmorsToActivatePerStep;
 
+    bool isLoading = false;
+
     protected override void Start()
     {
         base.Start();
@@ -124,7 +131,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         playerController = GetComponent<PlayerController>();
         GetComponent<Knockback>().onObstacleCollide += ApplyDamage;
 
-
         OnBasicAttack += ApplyDamoclesSwordEffect;
         OnKill += ApplyLifeSteal;
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
@@ -132,6 +138,67 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
         stats.onStatChange += UpgradePlayerStats;
         //OnDeath += Inventory.RemoveAllItems;
+
+        SaveManager.Instance.onSave += Save;
+        Load();
+    }
+
+    private void Load()
+    {
+        isLoading = true;
+        string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
+        float hp = 0;
+
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
+        using (var stream = File.Open(filePath, FileMode.Open))
+        {
+            using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+            {
+                // items
+                //Inventory.ActiveItem.
+                //Inventory.AddItem()
+                // blood
+                Inventory.Blood.Add(reader.ReadInt32());
+
+                // save stats values (call it only at the end of the loading)
+                hp = reader.ReadSingle();
+                stats.SetValue(Stat.CORRUPTION, reader.ReadSingle());
+            }
+        }
+
+        DebugCallLaunchUpgrade();
+        ChangeStatsBasedOnAlignment();
+        stats.SetValue(Stat.HP, hp);
+
+
+        isLoading = false;
+    }
+
+    private void Save()
+    {
+        string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
+
+        using (var stream = File.Open(filePath, FileMode.Create))
+        {
+            using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+            {
+                // items
+                //Inventory.ActiveItem.
+                //Inventory.ActiveItem.
+                // blood
+                writer.Write(Inventory.Blood.Value);
+
+                // save stats values (call it only at the end of the loading)
+                writer.Write(stats.GetValue(Stat.HP));
+                writer.Write(stats.GetValue(Stat.CORRUPTION));
+            }
+    
+            stream.Close();
+        }
     }
 
     private void OnDestroy()
@@ -298,7 +365,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         if (curStep == lastStep || !canLaunchUpgrade)
             return;
 
-        TriggerAnimAndVFX(curStep, lastStep);
+        if(!isLoading)
+        {
+            TriggerAnimAndVFX(curStep, lastStep);
+        }
         ManageDrawbacks(lastStep);
 
         if (curStep < 0)
@@ -476,7 +546,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         stats.IncreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP, false);
         BenedictionUpgrade();
         OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        StartCoroutine(OpenSpecialAbilityTab());
+        if(!isLoading)
+            StartCoroutine(OpenSpecialAbilityTab());
     }
 
     private void BenedictionUpgrade()
@@ -507,7 +578,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         CanHealFromConsumables = false;
         playerController.SpecialAbility = new DamnationVeil();
         OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        StartCoroutine(OpenSpecialAbilityTab());
+        if(!isLoading)
+            StartCoroutine(OpenSpecialAbilityTab());
     }
 
     private void CorruptionUpgrade()
