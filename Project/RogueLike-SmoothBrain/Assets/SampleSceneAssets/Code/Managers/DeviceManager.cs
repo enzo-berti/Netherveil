@@ -10,7 +10,7 @@ using UnityEngine.InputSystem.XInput;
 
 public class DeviceManager : MonoBehaviour
 {
-    //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi
+    //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi // C'est réel ça
     [SerializeField] TMP_Text debugText;
     [SerializeField] InputActionAsset playerInput;
     public InputDevice CurrentDevice { get; private set; } = null;
@@ -145,6 +145,10 @@ public class DeviceManager : MonoBehaviour
             Cursor.visible = false;
             playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Disable();
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Enable();
+            if(Utilities.Player != null && Utilities.PlayerInput.GameplayInputsDisabled)
+            {
+                Utilities.PlayerInput.DisableGameplayInputs();
+            }
             OnChangedToGamepad?.Invoke();
         }
         else
@@ -158,6 +162,10 @@ public class DeviceManager : MonoBehaviour
             Cursor.visible = true;
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Disable();
             playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Enable();
+            if (Utilities.Player != null && Utilities.PlayerInput.GameplayInputsDisabled)
+            {
+                Utilities.PlayerInput.DisableGameplayInputs();
+            }
             OnChangedToKB?.Invoke();
         }
     }

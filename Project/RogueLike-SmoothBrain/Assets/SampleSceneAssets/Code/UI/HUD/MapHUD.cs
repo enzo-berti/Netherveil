@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
 
 public class MapHUD : MonoBehaviour
@@ -41,6 +42,7 @@ public class MapHUD : MonoBehaviour
 
         if (isMiniMapActive)
         {
+            Mouse.current.WarpCursorPosition(new Vector2(Screen.width/2, Screen.height/2));   
             minimapCam.SetActive(false);
             bigmapCam.SetActive(true);
 
