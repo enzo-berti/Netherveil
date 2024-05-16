@@ -79,7 +79,6 @@ public class PlayerController : MonoBehaviour
     public int PouringBloodHash { get; private set; }
 
     [Header("VFXs")]
-    [SerializeField] GameObject VFXWrapper;
     [SerializeField] SkinnedMeshRenderer bodyMesh;
     public List<VisualEffect> SpearAttacksVFX;
     public VisualEffect DashAttackVFX;
@@ -537,9 +536,8 @@ public class PlayerController : MonoBehaviour
         CurrentTargetAngle = newAngle;
     }
 
-    public void PlayVFX(VisualEffect VFX)
+    public void PlayVFXAtPlayerPos(VisualEffect VFX)
     {
-
         ChargedAttackVFX.Stop();
         foreach (VisualEffect effect in SpearAttacksVFX)
         {
@@ -548,7 +546,8 @@ public class PlayerController : MonoBehaviour
 
         DashAttackVFX.Stop();
         SpearLaunchVFX.Stop();
-        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        DamnationVeilVFX.Stop();
+        UpdateMovableVFXTransform(VFX);
         VFX.Play();
     }
 
@@ -569,9 +568,9 @@ public class PlayerController : MonoBehaviour
         playerInput.ResetValuesInput();
     }
 
-    public void UpdateVFXWrapperTransform()
+    public void UpdateMovableVFXTransform(VisualEffect vfx)
     {
-        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        vfx.transform.SetPositionAndRotation(transform.position, transform.rotation);
     }
 
     public void PlayBloodPouringAnim()
