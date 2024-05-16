@@ -30,7 +30,7 @@ namespace Map.Generation
             //}
             //else
             //{
-            //    Seed.RandomizeSeed();
+                Seed.RandomizeSeed();
 
                 if (!isRandom)
                 {
