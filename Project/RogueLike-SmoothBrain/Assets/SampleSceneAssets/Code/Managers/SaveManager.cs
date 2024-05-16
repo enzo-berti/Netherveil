@@ -24,8 +24,8 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public delegate void OnSave(string directoryPath);
-    public OnSave onSave; 
+    public delegate void OnSave();
+    public event OnSave onSave; 
 
     private int selectedSave = -1;
     public string DirectoryPath { private set; get; } = string.Empty;
@@ -51,7 +51,7 @@ public class SaveManager : MonoBehaviour
 
         HasData = false;
 
-        SelectSave(1);
+        //SelectSave(1);
     }
 
     public void SelectSave(int selectedSave)
@@ -71,7 +71,7 @@ public class SaveManager : MonoBehaviour
 
     public void Save()
     {
-        onSave?.Invoke(DirectoryPath);
+        onSave?.Invoke();
     }
 
     //const string filePathExample = "/Player.s";
