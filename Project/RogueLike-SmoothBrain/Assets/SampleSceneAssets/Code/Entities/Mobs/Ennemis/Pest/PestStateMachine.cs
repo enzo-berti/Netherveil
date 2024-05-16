@@ -91,7 +91,7 @@ public class PestStateMachine : Mobs, IPest
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (IsFreeze || IsSpawning)
             return;
 
         base.Update();
@@ -165,7 +165,7 @@ public class PestStateMachine : Mobs, IPest
         animator.ResetTrigger(deathHash);
         animator.SetTrigger(deathHash);
 
-        isFreeze = false;
+        
         currentState = factory.GetState<PestDeathState>();
     }
 

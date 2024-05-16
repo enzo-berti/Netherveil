@@ -96,7 +96,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (IsFreeze || IsSpawning)
             return;
 
         base.Update();

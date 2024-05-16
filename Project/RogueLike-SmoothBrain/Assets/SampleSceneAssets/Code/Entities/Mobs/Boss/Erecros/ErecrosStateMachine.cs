@@ -98,7 +98,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (IsFreeze || IsSpawning)
             return;
 
         if (IsKnockbackable)

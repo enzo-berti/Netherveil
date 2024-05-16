@@ -67,7 +67,7 @@ public class KlopsStateMachine : Mobs, IKlops
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning)
+        if (IsFreeze || IsSpawning)
             return;
 
         base.Update();

@@ -134,7 +134,7 @@ public class SonielStateMachine : Mobs, ISoniel
 
     protected override void Update()
     {
-        if (isFreeze || IsSpawning || isInCinematic)
+        if (IsFreeze || IsSpawning || isInCinematic)
             return;
 
         base.Update();
