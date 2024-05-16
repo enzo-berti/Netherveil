@@ -260,6 +260,7 @@ public abstract class Mobs : Entity
         if (stats.GetValue(Stat.HP) <= 0)
         {
             deathMethod();
+            this.IsFreeze = false;
         }
         else
         {

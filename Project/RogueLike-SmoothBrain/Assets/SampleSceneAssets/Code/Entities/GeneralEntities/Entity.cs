@@ -38,7 +38,29 @@ public abstract class Entity : MonoBehaviour
     public List<VisualEffect> statusVfxs = new();
     public bool IsKnockbackable = true;
     public bool canTriggerTraps = true;
-    public bool isFreeze = false;
+    public byte isFreeze = 0;
+    public bool IsFreeze 
+    { 
+        get 
+        { 
+            return isFreeze > 0; 
+        } 
+        protected set
+        {
+            switch(value)
+            {
+                case true:
+                    if(IsFreeze)
+                    {
+                        isFreeze = 1;
+                    }
+                    break;
+                case false:
+                    isFreeze = 0;
+                    break;
+            }
+        }
+    }
 
     //not a bool because if you get multiple invincibility sources at the same time,
     //if one would go away, he would put the bool at false but it would break the invincibility from other sources too,
