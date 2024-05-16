@@ -232,6 +232,9 @@ public abstract class Entity : MonoBehaviour
         }
         else
         {
+            if(this is Mobs && (this as Mobs).IsSpawning)
+                return false;
+
             float chance = UnityEngine.Random.value;
             if (chance <= status.statusChance)
             {
