@@ -1,9 +1,24 @@
 using Map;
+using System.IO;
 
 public class TestOfEndurance : Quest
 {
     int currentSurvivedRoom = 0;
     int NB_ROOM_SURVIVING;
+
+    public override void Save(BinaryWriter writer)
+    {
+        base.Save(writer);
+
+        writer.Write(currentSurvivedRoom);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        base.Load(reader);
+
+        currentSurvivedRoom = reader.ReadInt32();
+    }
 
     public override void AcceptQuest()
     {

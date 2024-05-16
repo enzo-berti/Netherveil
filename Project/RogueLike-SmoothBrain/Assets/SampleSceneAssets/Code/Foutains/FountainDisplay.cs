@@ -15,10 +15,13 @@ namespace Fountain
         private float originalSize;
         private float iconSize;
 
-        private void Start()
+        private void Awake()
         {
             fountain = GetComponent<Fountain>();
+        }
 
+        private void Start()
+        {
             originalSize = displayTextMesh.fontSize;
             iconSize = originalSize + 10;
             rectTransform.localScale = Vector3.zero;

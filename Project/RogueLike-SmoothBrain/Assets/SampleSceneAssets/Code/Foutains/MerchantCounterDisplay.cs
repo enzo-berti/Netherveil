@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MerchantCounterDisplay : MonoBehaviour
@@ -13,10 +12,13 @@ public class MerchantCounterDisplay : MonoBehaviour
     private float originalSize;
     private float iconSize;
 
-    private void Start()
+    private void Awake()
     {
         merchantCounter = GetComponent<MerchantCounter>();
+    }
 
+    private void Start()
+    {
         originalSize = displayTextMesh.fontSize;
         iconSize = originalSize + 10;
         rectTransform.localScale = Vector3.zero;

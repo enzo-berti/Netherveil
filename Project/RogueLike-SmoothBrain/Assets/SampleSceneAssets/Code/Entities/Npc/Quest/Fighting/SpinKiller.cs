@@ -1,12 +1,24 @@
-
-using System.Collections;
-using UnityEngine;
+using System.IO;
 
 public class SpinKiller : Quest
 {
     int currentNumber = 0;
-    bool asDoAnChargedAttack = false;
+    bool chargedAttackCalled = false;
     int MAX_NUMBER;
+
+    public override void Save(BinaryWriter writer)
+    {
+        base.Save(writer);
+
+        writer.Write(currentNumber);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        base.Load(reader);
+
+        currentNumber = reader.ReadInt32();
+    }
 
     public override void AcceptQuest()
     {
@@ -46,7 +58,7 @@ public class SpinKiller : Quest
 
     private void SetBool(IDamageable damageable, IAttacker attacker)
     {
-        asDoAnChargedAttack = true;
+        chargedAttackCalled = true;
     }
 
     private void UpdateCount(IDamageable damageable)
@@ -54,12 +66,12 @@ public class SpinKiller : Quest
         if (!IsQuestFinished() && damageable is not IDummy)
         {
             Entity monster = (damageable as Entity);
-            if (asDoAnChargedAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
+            if (chargedAttackCalled && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
             {
                 currentNumber++;
                 progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
             }
-            asDoAnChargedAttack = false;
+            chargedAttackCalled = false;
         }
         QuestUpdated();
     }

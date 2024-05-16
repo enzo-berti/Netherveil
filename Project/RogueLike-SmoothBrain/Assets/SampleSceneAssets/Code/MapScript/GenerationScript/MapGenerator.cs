@@ -102,7 +102,7 @@ namespace Map.Generation
             }
         }
 
-        private void Save()
+        private void Save(string directoryPath)
         {
             string filePath = SaveManager.Instance.DirectoryPath + fileName;
 

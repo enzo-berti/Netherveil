@@ -20,16 +20,28 @@ public class PostProcessingLowHP : MonoBehaviour
 
     private void OnEnable()
     {
-        Utilities.Hero.OnTakeDamage += Active;
-        Utilities.Hero.OnHeal += Desactive;
-        Utilities.Hero.OnDeath += DesactiveAtDeath;
+        Hero hero = Utilities.Hero;
+        if (hero != null)
+        {
+            hero.OnTakeDamage += Active;
+            hero.OnHeal += Desactive;
+            hero.OnDeath += DesactiveAtDeath;
+        }
+        else
+        {
+            Debug.LogWarning("PostProcessingLowHP can't subscribe to hero event : hero is null");
+        }
     }
 
     private void OnDisable()
     {
-        Utilities.Hero.OnTakeDamage -= Active;
-        Utilities.Hero.OnHeal -= Desactive;
-        Utilities.Hero.OnDeath -= DesactiveAtDeath;
+        Hero hero = Utilities.Hero;
+        if (hero != null)
+        {
+            hero.OnTakeDamage -= Active;
+            hero.OnHeal -= Desactive;
+            hero.OnDeath -= DesactiveAtDeath;
+        }
     }
 
     void Update()

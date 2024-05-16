@@ -3,8 +3,10 @@ using Map;
 using Map.Generation;
 using System;
 using System.Collections;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
+using static QuestTalker;
 
 public abstract class Quest
 {
@@ -34,7 +36,27 @@ public abstract class Quest
     public float CurrentQuestTimer { get; protected set; }
     public int CorruptionModifierValue { get; protected set; } = 0;
     public QuestTalker.TalkerType TalkerType { get => talkerType; }
+    public QuestTalker.TalkerGrade TalkerGrade { get => talkerGrade; }
     public QuestDifficulty Difficulty { get => difficulty; }
+
+    public virtual void Save(BinaryWriter writer)
+    {
+        // Quest informations
+        writer.Write(Datas.idName);
+        writer.Write(Difficulty.ToString());
+        writer.Write(TalkerType.ToString());
+        writer.Write(TalkerGrade.ToString());
+
+        // Quest values
+        writer.Write(CurrentQuestTimer);
+    }
+    public virtual void Load(BinaryReader reader)
+    {
+        // Quest informations need to be load outside of quest to be able to construct the class correctly
+
+        // Quest values
+        CurrentQuestTimer = reader.ReadSingle();
+    }
 
     public abstract bool IsQuestFinished();
     protected abstract void ResetQuestValues();
@@ -182,6 +204,24 @@ public abstract class Quest
         quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
         quest.talkerType = questTalker.Type;
         quest.talkerGrade = questTalker.Grade;
+        quest.CorruptionModifierValue = quest.Datas.CorruptionModifierValue;
+        quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)difficulty : QuestDifficulty.MEDIUM;
+        InitDescription(ref quest.Datas.Description);
+        return quest;
+    }
+
+    static public Quest LoadClass(string name, QuestDialogueDifficulty difficulty, TalkerType talkerType, TalkerGrade talkerGrade)
+    {
+        if (database == null)
+        {
+            database = GameResources.Get<QuestDatabase>("QuestDatabase");
+        }
+
+        Quest quest = Assembly.GetExecutingAssembly().CreateInstance(name.GetPascalCase()) as Quest;
+        quest.Datas = database.GetQuest(name);
+        quest.player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        quest.talkerType = talkerType;
+        quest.talkerGrade = talkerGrade;
         quest.CorruptionModifierValue = quest.Datas.CorruptionModifierValue;
         quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)difficulty : QuestDifficulty.MEDIUM;
         InitDescription(ref quest.Datas.Description);

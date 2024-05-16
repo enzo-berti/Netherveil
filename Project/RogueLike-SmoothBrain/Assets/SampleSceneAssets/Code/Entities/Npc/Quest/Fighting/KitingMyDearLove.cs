@@ -1,12 +1,24 @@
-
-using System.Collections;
-using UnityEngine;
+using System.IO;
 
 public class KitingMyDearLove : Quest 
 {
     int currentNumber = 0;
-    bool asDoAnDistanceAttack = false;
+    bool distanceAttackCalled = false;
     int MAX_NUMBER;
+
+    public override void Save(BinaryWriter writer)
+    {
+        base.Save(writer);
+
+        writer.Write(currentNumber);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        base.Load(reader);
+
+        currentNumber = reader.ReadInt32();
+    }
 
     public override void AcceptQuest()
     {
@@ -46,7 +58,7 @@ public class KitingMyDearLove : Quest
 
     private void SetBool(IDamageable damageable, IAttacker attacker)
     {
-        asDoAnDistanceAttack = true;
+        distanceAttackCalled = true;
     }
 
     private void UpdateCount(IDamageable damageable)
@@ -54,12 +66,12 @@ public class KitingMyDearLove : Quest
         if (!IsQuestFinished() && damageable is not IDummy)
         {
             Entity monster = (damageable as Entity);
-            if (asDoAnDistanceAttack && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
+            if (distanceAttackCalled && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
             {
                 currentNumber++;
                 progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
             }
-            asDoAnDistanceAttack = false;
+            distanceAttackCalled = false;
         }
         QuestUpdated();
     }

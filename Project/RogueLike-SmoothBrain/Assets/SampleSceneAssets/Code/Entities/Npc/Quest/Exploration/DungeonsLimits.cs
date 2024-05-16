@@ -1,12 +1,24 @@
 using Map;
-using Map.Generation;
-using System;
-using UnityEngine;
+using System.IO;
 
 public class DungeonsLimits : Quest
 {
     float currentNumber = 0f;
     int COMPLETION_POURCENTAGE = 0;
+
+    public override void Save(BinaryWriter writer)
+    {
+        base.Save(writer);
+
+        writer.Write(currentNumber);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        base.Load(reader);
+
+        currentNumber = reader.ReadInt32();
+    }
 
     public override void AcceptQuest()
     {

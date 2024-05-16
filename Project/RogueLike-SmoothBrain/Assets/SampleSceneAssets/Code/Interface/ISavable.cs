@@ -2,7 +2,7 @@ using System;
 
 public interface ISavable
 {
-    public void Save(string directoryPath);
+    public void Save(string directoryPath) => throw new NotImplementedException();
 
-    public string Load(string directoryPath);
+    public void Load() => throw new NotImplementedException();
 }

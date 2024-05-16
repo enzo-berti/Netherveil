@@ -1,9 +1,24 @@
 using Map;
+using System.IO;
 
 public class LostRelics : Quest
 {
     int currentNumber = 0;
     int MAX_NUMBER;
+
+    public override void Save(BinaryWriter writer)
+    {
+        base.Save(writer);
+
+        writer.Write(currentNumber);
+    }
+
+    public override void Load(BinaryReader reader)
+    {
+        base.Load(reader);
+
+        currentNumber = reader.ReadInt32();
+    }
 
     public override void AcceptQuest()
     {
