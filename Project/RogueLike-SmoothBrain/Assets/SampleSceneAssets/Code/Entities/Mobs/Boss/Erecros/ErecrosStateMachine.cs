@@ -38,7 +38,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public enum ErecrosColliders
     {
-        DASH
+        DASH,
+        SPINNING_ATTACK
     }
 
     private IAttacker.AttackDelegate onAttack;
@@ -57,8 +58,13 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     [SerializeField] GameObject[] enemiesPrefabs;
 
     [SerializeField] VisualEffect shieldVFX;
+    [SerializeField] VisualEffect shockwaveVFX;
     [SerializeField] GameObject clonePrefab;
     [SerializeField] GameObject prisonTorusPrefab;
+    [SerializeField] GameObject propsParent;
+
+    Rigidbody[] props;
+    List<BoxCollider> propsColliders = new();
 
     #region Getters/Setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -76,6 +82,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public int CurrentPhase { get => phase; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
+    public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
     public GameObject ClonePrefab { get => clonePrefab; }
     public GameObject PrisonTorusPrefab { get => prisonTorusPrefab; }
 
@@ -94,6 +101,13 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
         part = 1;
         phase = 2;
+
+        props = propsParent.GetComponentsInChildren<Rigidbody>();
+
+        foreach (Rigidbody prop in props)
+        {
+            propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
+        }
     }
 
     protected override void Update()
