@@ -24,8 +24,8 @@ public class Freeze : ConstantStatus
         if (target != null)
         {
             baseAgentSpeed = target.Stats.GetValue(Stat.SPEED);
-            target.Stats.SetValue(Stat.SPEED, 0);
-            target.isFreeze = true;
+           // target.Stats.SetValue(Stat.SPEED, 0);
+            target.isFreeze += 1;
         }
     }
 
@@ -35,7 +35,7 @@ public class Freeze : ConstantStatus
             return;
 
         target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
-        target.isFreeze = false;
+        target.isFreeze -= 1;
         target.GetComponentInChildren<Animator>().speed = 1;
         Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
 
