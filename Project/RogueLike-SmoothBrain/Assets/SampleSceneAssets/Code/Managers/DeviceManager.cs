@@ -10,7 +10,6 @@ using UnityEngine.InputSystem.XInput;
 
 public class DeviceManager : MonoBehaviour
 {
-    //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi // C'est réel ça
     [SerializeField] TMP_Text debugText;
     [SerializeField] InputActionAsset playerInput;
     public InputDevice CurrentDevice { get; private set; } = null;
