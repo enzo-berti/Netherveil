@@ -32,8 +32,9 @@ public class Poison : OverTimeStatus
     {
         if (target != null)
         {
-            FloatingTextGenerator.CreateEffectDamageText(Stack * 3, target.transform.position, poisonColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(Stack * 3, launcher, false);
+            int damages = target.IsInvincibleCount == 0 ? Stack * 3 : 0;
+            FloatingTextGenerator.CreateEffectDamageText(damages, target.transform.position, poisonColor);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damages, launcher, false);
 
             if (Utilities.IsPlayer(target))
                 PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Poison);

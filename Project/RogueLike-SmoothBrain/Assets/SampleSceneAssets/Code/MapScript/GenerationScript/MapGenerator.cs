@@ -55,6 +55,11 @@ namespace Map.Generation
             }
         }
 
+        private void OnDestroy()
+        {
+            ResetMapDatas();
+        }
+
         private void ResetMapDatas()
         {
             roomClearId.Clear();
