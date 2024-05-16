@@ -14,6 +14,7 @@ public interface IReflectable
 
     public void Reflect(Vector3 direction)
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.ReflectSFX);
         Direction = direction;
         IsReflected = true;
     }

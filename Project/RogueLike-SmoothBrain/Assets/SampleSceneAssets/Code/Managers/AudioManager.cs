@@ -50,6 +50,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference notEnoughtBloodSFX;
     [SerializeField] EventReference ezrealUltSFX;
     [SerializeField] EventReference aresBladeSFX;
+    [SerializeField] EventReference reflectSFX;
 
     public EventReference QuestObtainedSFX { get => questObtainedSFX; }
     public EventReference QuestFinishedSFX { get => questFinishedSFX; }
@@ -77,6 +78,7 @@ public class AudioManager : MonoBehaviour
     public EventReference NotEnoughtBloodSFX { get => notEnoughtBloodSFX; }
     public EventReference EzrealUltSFX { get => ezrealUltSFX; }
     public EventReference AresBladeSFX { get => aresBladeSFX; }
+    public EventReference ReflectSFX { get => reflectSFX; }
 
     private static AudioManager instance = null;
     public static AudioManager Instance
