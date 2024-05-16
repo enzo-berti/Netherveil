@@ -380,6 +380,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
         private bool CheckDuplicateBindings(InputAction action, int bindingIndex, bool allCompositeParts = false)
         {
             InputBinding newBinding = action.bindings[bindingIndex];
+            string displayString = action.GetBindingDisplayString(bindingIndex, out _, out string controlPath);
 
             foreach(var binding in action.actionMap.bindings)
             {
@@ -391,7 +392,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 {
                     Debug.Log("Duplicate Binding Found : " + newBinding.effectivePath);
                     alreadyAssignedPrompt.gameObject.SetActive(true);
-                    alreadyAssignedPrompt.text = "Key " + action.GetBindingDisplayString(bindingIndex, out _, out _) + " is already assigned";
+                    alreadyAssignedPrompt.text = "Key " + Keybinding.GetAppropriateKeyString(controlPath, displayString) + " is already assigned";
                     return true;
                 }
             }
@@ -405,7 +406,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     {
                         Debug.Log("Duplicate Binding Found : " + newBinding.effectivePath);
                         alreadyAssignedPrompt.gameObject.SetActive(true);
-                        alreadyAssignedPrompt.text = "Key " + action.GetBindingDisplayString(bindingIndex, out _, out _) + " is already assigned";
+                        alreadyAssignedPrompt.text = "Key " + Keybinding.GetAppropriateKeyString(controlPath, displayString) + " is already assigned";
                         return true;
                     }
                 }
