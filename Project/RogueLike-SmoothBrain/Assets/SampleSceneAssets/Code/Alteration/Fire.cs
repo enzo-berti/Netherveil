@@ -23,7 +23,7 @@ public class Fire : OverTimeStatus
                 realDamages = 0;
             }
             FloatingTextGenerator.CreateEffectDamageText(realDamages, target.transform.position, fireColor);
-            target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage, launcher, false);
+            target.gameObject.GetComponent<IDamageable>().ApplyDamage(realDamages, launcher, false);
 
             if (Utilities.IsPlayer(target))
                 PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Fire);
