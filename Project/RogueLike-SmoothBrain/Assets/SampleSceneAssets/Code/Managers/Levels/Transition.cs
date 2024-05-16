@@ -21,7 +21,7 @@ public class Transition : MonoBehaviour
 
         if (playOnAwake)
         {
-            animator.SetBool("Transit", false);
+            FadeOut();
         }
     }
 
@@ -38,12 +38,12 @@ public class Transition : MonoBehaviour
     public void Toggle()
     {
         if (enable)
-            Disable();
+            FadeIn();
         else
-            Enable();
+            FadeOut();
     }
 
-    public void Enable()
+    public void FadeOut()
     {
         if (enable)
         {
@@ -53,12 +53,13 @@ public class Transition : MonoBehaviour
 
         enable = true;
         transitionEnd = false;
-        animator.SetBool("Transit", true);
+        animator.ResetTrigger("FadeOut");
+        animator.SetTrigger("FadeOut");
     }
 
-    public void Disable()
+    public void FadeIn()
     {
-        if (enable)
+        if (!enable)
         {
             Debug.LogWarning("Transition already disable");
             return;
@@ -66,6 +67,7 @@ public class Transition : MonoBehaviour
 
         enable = false;
         transitionEnd = false;
-        animator.SetBool("Transit", false);
+        animator.ResetTrigger("FadeIn");
+        animator.SetTrigger("FadeIn");
     }
 }

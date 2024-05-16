@@ -1865,7 +1865,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 364132855182191744}
   m_Direction: 2
   m_Value: 0.99999934
-  m_Size: 0.65326613
+  m_Size: 0.6532662
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3001,6 +3001,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 5776511820824484012}
+        m_TargetAssemblyTypeName: FloatingTextMainMenu, Assembly-CSharp
+        m_MethodName: FadeFloatingTexts
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
   onRelease:
     m_PersistentCalls:
@@ -4335,7 +4347,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f89a228820db81641a79548229b4e151, type: 2}
+  - {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4380,7 +4392,7 @@ MonoBehaviour:
   m_text: Settings
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: f89a228820db81641a79548229b4e151, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4724,7 +4736,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4626a3b93752804e82b746c10eb58a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 0}
+  playerInput: {fileID: -944628639613478452, guid: 265257847d33b76449ed90f675b85193,
+    type: 3}
 --- !u!114 &9077313199364082644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4943,6 +4956,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 4846456230006942479}
           m_ObjectArgumentAssemblyTypeName: MenuPart, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4846456230006942479}
+        m_TargetAssemblyTypeName: ControlsSettingsPart, Assembly-CSharp
+        m_MethodName: BackKeybinding
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -6868,6 +6893,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PREFAB_MediumCandle
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223048245322277982, guid: 153cf54768a49bf4caae03f59e51d537,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223048245322277982, guid: 153cf54768a49bf4caae03f59e51d537,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223048245322277982, guid: 153cf54768a49bf4caae03f59e51d537,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223048245322277982, guid: 153cf54768a49bf4caae03f59e51d537,
+        type: 3}
+      propertyPath: m_UseColorTemperature
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128602372919321772, guid: 153cf54768a49bf4caae03f59e51d537,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128602372919321772, guid: 153cf54768a49bf4caae03f59e51d537,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.47843137
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128602372919321772, guid: 153cf54768a49bf4caae03f59e51d537,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7067613763235721892, guid: 153cf54768a49bf4caae03f59e51d537,
         type: 3}
@@ -16721,7 +16781,7 @@ PrefabInstance:
     - target: {fileID: 2838442217865933188, guid: 6d59c1ca1848e1440bf975a91de561f4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.33000004
+      value: 0.301
       objectReference: {fileID: 0}
     - target: {fileID: 2838442217865933188, guid: 6d59c1ca1848e1440bf975a91de561f4,
         type: 3}
@@ -16731,7 +16791,7 @@ PrefabInstance:
     - target: {fileID: 2838442217865933188, guid: 6d59c1ca1848e1440bf975a91de561f4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.26399994
+      value: 0.38
       objectReference: {fileID: 0}
     - target: {fileID: 2838442217865933188, guid: 6d59c1ca1848e1440bf975a91de561f4,
         type: 3}
@@ -17454,6 +17514,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: keyboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143169084718669180, guid: c0b60e0514d7b624b95f3e15ea426287,
+        type: 3}
+      propertyPath: m_text
+      value: Keybinding
       objectReference: {fileID: 0}
     - target: {fileID: 8143169084718669180, guid: c0b60e0514d7b624b95f3e15ea426287,
         type: 3}
@@ -19751,6 +19816,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2947341367092066328, guid: c0b60e0514d7b624b95f3e15ea426287,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2947341367092066328, guid: c0b60e0514d7b624b95f3e15ea426287,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2947341367092066328, guid: c0b60e0514d7b624b95f3e15ea426287,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2947341367092066328, guid: c0b60e0514d7b624b95f3e15ea426287,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -80
+      objectReference: {fileID: 0}
     - target: {fileID: 3024776737828661784, guid: c0b60e0514d7b624b95f3e15ea426287,
         type: 3}
       propertyPath: m_Name
@@ -20077,7 +20162,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0

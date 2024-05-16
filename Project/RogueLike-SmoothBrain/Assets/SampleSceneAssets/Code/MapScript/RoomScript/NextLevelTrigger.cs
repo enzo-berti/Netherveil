@@ -17,6 +17,14 @@ namespace Map
             }
         }
 
+        public void CallFade(bool enable)
+        {
+            if (enable)
+                GameManager.Instance.publicFade.FadeIn();
+            else
+                GameManager.Instance.publicFade.FadeOut();
+        }
+
         public void CallNextLevel()
         {
             Utilities.Hero.State = (int)Entity.EntityState.MOVE;
