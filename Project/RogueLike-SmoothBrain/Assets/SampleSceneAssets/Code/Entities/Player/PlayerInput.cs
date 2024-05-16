@@ -56,6 +56,8 @@ public class PlayerInput : MonoBehaviour
     //used to cancel queued attacks when pressing another button during attack sequence
     bool ForceReturnToMove = false;
 
+    public bool GameplayInputsDisabled { get; private set; } = false;
+
     [Header("Easing")]
     [SerializeField] EasingFunctions.EaseName easeUnzoom;
     [SerializeField] EasingFunctions.EaseName easeZoom;
@@ -641,6 +643,8 @@ public class PlayerInput : MonoBehaviour
 
     public void DisableGameplayInputs()
     {
+        GameplayInputsDisabled = true;
+
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Movement"].Disable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["BasicAttack"].Disable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Disable();
@@ -666,6 +670,8 @@ public class PlayerInput : MonoBehaviour
 
     public void EnableGameplayInputs()
     {
+        GameplayInputsDisabled = false;
+
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Movement"].Enable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["BasicAttack"].Enable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Enable();
