@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using UnityEditor;
+using UnityEngine.VFX;
 
 public class KlopsStateMachine : Mobs, IKlops
 {
@@ -27,6 +28,7 @@ public class KlopsStateMachine : Mobs, IKlops
     [SerializeField] float defaultVisionAngle = 145f;
     [SerializeField] GameObject fireballPrefab;
     [SerializeField] Transform fireballSpawn;
+    [SerializeField] VisualEffect explodingVFX;
     Hero player = null;
 
     // animation hash
@@ -46,6 +48,7 @@ public class KlopsStateMachine : Mobs, IKlops
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
     public KlopsSounds KlopsSound { get => klopsSounds; }
+    public VisualEffect ExplodingVFX {  get => explodingVFX; }
 
     protected override void Start()
     {
