@@ -155,7 +155,6 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
         Vector3 endPos = Context.TripleThrustVFX.transform.position + Context.transform.forward * Context.AttackColliders[(int)Attacks.THRUST].data[0].transform.localScale.z;
         endPos.y = Context.transform.position.y;
 
-
         while (Context.TripleThrustVFX.transform.position != endPos)
         {
             Context.TripleThrustVFX.transform.position = Vector3.MoveTowards(Context.TripleThrustVFX.transform.position, endPos, 23f * Time.deltaTime);

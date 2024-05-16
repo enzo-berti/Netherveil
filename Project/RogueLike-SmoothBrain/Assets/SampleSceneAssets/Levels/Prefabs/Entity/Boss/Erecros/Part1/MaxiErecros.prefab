@@ -456,6 +456,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3311839338910950997}
+  - {fileID: 7740596301367255714}
+  - {fileID: 89012079941232467}
   m_Father: {fileID: 3928930367643280855}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8290815356487923807
@@ -494,8 +496,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5118267138707051563}
-  - {fileID: 7740596301367255714}
-  - {fileID: 89012079941232467}
   - {fileID: 2802076455877075609}
   - {fileID: 3367812469261278035}
   - {fileID: 5499552843452620934}
@@ -829,6 +829,7 @@ MonoBehaviour:
   shieldVFX: {fileID: 3320532051446923921}
   clonePrefab: {fileID: 210556839228303083, guid: 54cdab0bd94be274cab3636e5b768e26,
     type: 3}
+  prisonTorusPrefab: {fileID: 0}
 --- !u!114 &2958494465097264025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,7 +850,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 3928930367643280855}
+    m_TransformParent: {fileID: 5499552843452620934}
     m_Modifications:
     - target: {fileID: 10401993589473847, guid: 32f3b67cab93eda4d845db69a925aab9,
         type: 3}
@@ -1285,7 +1286,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 3928930367643280855}
+    m_TransformParent: {fileID: 5499552843452620934}
     m_Modifications:
     - target: {fileID: 1206219349471999316, guid: 1b1ef451daeac5e458b4a230c73f76f7,
         type: 3}
