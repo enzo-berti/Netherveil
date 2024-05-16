@@ -17,7 +17,12 @@ public class Fire : OverTimeStatus
     {
         if (target != null)
         {
-            FloatingTextGenerator.CreateEffectDamageText(damage, target.transform.position, fireColor);
+            int realDamages = damage;
+            if(target.IsInvincibleCount > 0)
+            {
+                realDamages = 0;
+            }
+            FloatingTextGenerator.CreateEffectDamageText(realDamages, target.transform.position, fireColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damage, launcher, false);
 
             if (Utilities.IsPlayer(target))

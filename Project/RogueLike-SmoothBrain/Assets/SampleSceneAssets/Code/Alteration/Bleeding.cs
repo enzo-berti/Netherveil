@@ -29,7 +29,8 @@ public class Bleeding : OverTimeStatus
     {
         if (target != null)
         {
-            int damages = (int)(target.Stats.GetMaxValue(Stat.HP) * coefValue * Stack);
+            int damages = target.IsInvincibleCount == 0 ? (int)(target.Stats.GetMaxValue(Stat.HP) * coefValue * Stack) : 0;
+
             FloatingTextGenerator.CreateEffectDamageText(damages, target.transform.position, bleedingColor);
             target.gameObject.GetComponent<IDamageable>().ApplyDamage(damages, launcher, false);
 
