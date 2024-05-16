@@ -10,7 +10,6 @@ using UnityEngine.InputSystem.XInput;
 
 public class DeviceManager : MonoBehaviour
 {
-    //à tout moment si tu bouges la manette en meme temps qu'une touche de clavier ou la souris c'est le bordel mais t'as qu'à pas être un fdp aussi // C'est réel ça
     [SerializeField] TMP_Text debugText;
     [SerializeField] InputActionAsset playerInput;
     public InputDevice CurrentDevice { get; private set; } = null;
@@ -19,6 +18,11 @@ public class DeviceManager : MonoBehaviour
     public static event Action OnChangedToGamepad;
     public static event Action OnChangedToKB;
     public bool toggleVibrations = true;
+    Coroutine vibrationsRoutine = null;
+
+    bool canSwitchDevice = true;
+    float timerSwitchDevice = 0f;
+    readonly float MAX_TIMER_SWITCH_DEVICE = 0.25f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Load()
@@ -84,7 +88,7 @@ public class DeviceManager : MonoBehaviour
 
     void OnInputSystemEvent(InputEventPtr eventPtr, InputDevice device)
     {
-        if (IsSameDevice(device))
+        if (IsSameDevice(device) || !canSwitchDevice)
              return;
         
 
@@ -107,7 +111,7 @@ public class DeviceManager : MonoBehaviour
 
     void OnInputSystemDeviceChange(InputDevice device, InputDeviceChange change)
     {
-        if (IsSameDevice(device))
+        if (IsSameDevice(device) || !canSwitchDevice)
             return;
 
         if (change == InputDeviceChange.Removed || change == InputDeviceChange.Disconnected || change == InputDeviceChange.Disabled)
@@ -145,10 +149,7 @@ public class DeviceManager : MonoBehaviour
             Cursor.visible = false;
             playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Disable();
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Enable();
-            if(Utilities.Player != null && Utilities.PlayerInput.GameplayInputsDisabled)
-            {
-                Utilities.PlayerInput.DisableGameplayInputs();
-            }
+            DisableGameplayInputsIfNecessary();
             OnChangedToGamepad?.Invoke();
         }
         else
@@ -162,11 +163,19 @@ public class DeviceManager : MonoBehaviour
             Cursor.visible = true;
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Disable();
             playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Enable();
-            if (Utilities.Player != null && Utilities.PlayerInput.GameplayInputsDisabled)
-            {
-                Utilities.PlayerInput.DisableGameplayInputs();
-            }
+            DisableGameplayInputsIfNecessary();
             OnChangedToKB?.Invoke();
+        }
+
+        canSwitchDevice = false;
+        StartCoroutine(ReenableCanSwitchDevice());
+    }
+
+    private static void DisableGameplayInputsIfNecessary()
+    {
+        if (Utilities.Player != null && Utilities.PlayerInput.GameplayInputsDisabled)
+        {
+            Utilities.PlayerInput.DisableGameplayInputs();
         }
     }
 
@@ -182,25 +191,27 @@ public class DeviceManager : MonoBehaviour
 
     public void ApplyVibrations(float lowFrequency, float highFrequency, float duration)
     {
-        StopAllCoroutines();
+        StopCoroutineNullify(vibrationsRoutine);
+
         if (IsSupportingVibrations() && toggleVibrations)
         {
             lowFrequency = Mathf.Clamp(lowFrequency, 0f, 1f);
             highFrequency = Mathf.Clamp(highFrequency, 0f, 1f);
 
             (CurrentDevice as Gamepad).SetMotorSpeeds(lowFrequency, highFrequency);
-            StartCoroutine(StopVibration(CurrentDevice as Gamepad, duration));
+            vibrationsRoutine = StartCoroutine(StopVibration(CurrentDevice as Gamepad, duration));
         }
     }
 
     public void ApplyVibrationsInfinite(float lowFrequency, float highFrequency)
     {
-        StopAllCoroutines();
+        StopCoroutineNullify(vibrationsRoutine);
+
         if (IsSupportingVibrations() && toggleVibrations)
         {
             lowFrequency = Mathf.Clamp(lowFrequency, 0f, 1f);
             highFrequency = Mathf.Clamp(highFrequency, 0f, 1f);
-            StartCoroutine(VibrationsInfiniteCoroutine(lowFrequency, highFrequency));
+            vibrationsRoutine = StartCoroutine(VibrationsInfiniteCoroutine(lowFrequency, highFrequency));
         }
     }
 
@@ -223,10 +234,26 @@ public class DeviceManager : MonoBehaviour
 
     public void ForceStopVibrations()
     {
-        StopAllCoroutines();
+        StopCoroutineNullify(vibrationsRoutine);
+
         if (CurrentDevice is Gamepad)
         {
             (CurrentDevice as Gamepad).SetMotorSpeeds(0f, 0f);
         }
+    }
+
+    private IEnumerator ReenableCanSwitchDevice()
+    {
+        yield return new WaitForSeconds(MAX_TIMER_SWITCH_DEVICE);
+        canSwitchDevice = true;
+    }
+
+    private void StopCoroutineNullify(Coroutine routine)
+    {
+        if (routine != null)
+        {
+            StopCoroutine(routine);
+        }
+        routine = null;
     }
 }
