@@ -4,14 +4,20 @@ public class DesactivateOnBossAndPlayerDeath : MonoBehaviour
 {
     [SerializeField] private Entity boss;
 
-    void Start()
+    private void Desactive(Vector3 _)
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
     {
         Utilities.Hero.OnDeath += Desactive;
         boss.OnDeath += Desactive;
     }
 
-    private void Desactive(Vector3 _)
+    private void OnDisable()
     {
-        gameObject.SetActive(false);
+        Utilities.Hero.OnDeath -= Desactive;
+        boss.OnDeath -= Desactive;
     }
 }
