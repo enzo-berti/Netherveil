@@ -91,6 +91,12 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             set => m_RebindText = value;
         }
 
+        public TMP_Text alreadyAssignedPrompt
+        {
+            get => m_alreadyAssignedText;
+            set => m_alreadyAssignedText = value;
+        }
+
         /// <summary>
         /// Optional UI that is activated when an interactive rebind is started and deactivated when the rebind
         /// is finished. This is normally used to display an overlay over the current UI while the system is
@@ -312,6 +318,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                         action.Enable();
                         m_RebindStopEvent?.Invoke(this, operation);
                         m_RebindOverlay?.SetActive(false);
+                        m_alreadyAssignedText.gameObject.SetActive(false);
                         UpdateBindingDisplay();
                         CleanUp();
                     })
@@ -320,6 +327,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     {
                         action.Enable();
                         m_RebindOverlay?.SetActive(false);
+                        m_alreadyAssignedText.gameObject.SetActive(false);
                         m_RebindStopEvent?.Invoke(this, operation);
 
                         if(CheckDuplicateBindings(action, bindingIndex, allCompositeParts))
@@ -382,6 +390,8 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 if(binding.effectivePath == newBinding.effectivePath && binding.interactions == newBinding.interactions)
                 {
                     Debug.Log("Duplicate Binding Found : " + newBinding.effectivePath);
+                    alreadyAssignedPrompt.gameObject.SetActive(true);
+                    alreadyAssignedPrompt.text = "Key " + action.GetBindingDisplayString(bindingIndex, out _, out _) + " is already assigned";
                     return true;
                 }
             }
@@ -394,6 +404,8 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     if (action.bindings[i].effectivePath == newBinding.effectivePath && action.bindings[i].interactions == newBinding.interactions)
                     {
                         Debug.Log("Duplicate Binding Found : " + newBinding.effectivePath);
+                        alreadyAssignedPrompt.gameObject.SetActive(true);
+                        alreadyAssignedPrompt.text = "Key " + action.GetBindingDisplayString(bindingIndex, out _, out _) + " is already assigned";
                         return true;
                     }
                 }
@@ -477,6 +489,10 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
         [Tooltip("Optional text label that will be updated with prompt for user input.")]
         [SerializeField]
         private TMP_Text m_RebindText;
+
+        [Tooltip("Text to display when input trying to be bind is already assigned.")]
+        [SerializeField]
+        private TMP_Text m_alreadyAssignedText;
 
         [Tooltip("Event that is triggered when the way the binding is display should be updated. This allows displaying "
             + "bindings in custom ways, e.g. using images instead of text.")]
