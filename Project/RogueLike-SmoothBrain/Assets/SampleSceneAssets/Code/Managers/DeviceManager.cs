@@ -145,6 +145,10 @@ public class DeviceManager : MonoBehaviour
             Cursor.visible = false;
             playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Disable();
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Enable();
+            if(Utilities.Player != null && Utilities.PlayerInput.GameplayInputsDisabled)
+            {
+                Utilities.PlayerInput.DisableGameplayInputs();
+            }
             OnChangedToGamepad?.Invoke();
         }
         else
@@ -158,6 +162,10 @@ public class DeviceManager : MonoBehaviour
             Cursor.visible = true;
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Disable();
             playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Enable();
+            if (Utilities.Player != null && Utilities.PlayerInput.GameplayInputsDisabled)
+            {
+                Utilities.PlayerInput.DisableGameplayInputs();
+            }
             OnChangedToKB?.Invoke();
         }
     }
