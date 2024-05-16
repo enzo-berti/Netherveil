@@ -5666,7 +5666,9 @@ MonoBehaviour:
   <DoorsGenerator>k__BackingField: {fileID: 689047663684800205}
   <StaticProps>k__BackingField: {fileID: 2272128575384870456}
   <Lights>k__BackingField: {fileID: 8684566353546906833}
+  <RoomUI>k__BackingField: {fileID: 8715751810585246428}
   <RoomPresets>k__BackingField: {fileID: 3160313757602866791}
+  neighbor: []
 --- !u!114 &4854735294368198245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5837,11 +5839,11 @@ GameObject:
   - component: {fileID: 2982362022628355541}
   - component: {fileID: 3523659120464929451}
   - component: {fileID: 4288298301416239858}
+  - component: {fileID: 8520805425972199655}
   - component: {fileID: 939619082869316100}
   - component: {fileID: 2952099260688835708}
   - component: {fileID: 6678684525042240862}
   - component: {fileID: 2922067446367473113}
-  - component: {fileID: 8520805425972199655}
   m_Layer: 6
   m_Name: Skeleton
   m_TagString: Untagged
@@ -5887,6 +5889,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92d0b0d5def07084c89f865112c0a867, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8520805425972199655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574603909979925105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80873030c8511d4468504a3d6651992b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!23 &939619082869316100
@@ -5984,18 +5998,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 0f4754bb33beabd4492155adb52cfb4e, type: 2}
---- !u!114 &8520805425972199655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2574603909979925105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80873030c8511d4468504a3d6651992b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2836221357945863825
 GameObject:
   m_ObjectHideFlags: 0
