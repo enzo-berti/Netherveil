@@ -39,10 +39,13 @@ public class DamoclesSword : ConstantStatus
         .Select(entity => entity.GetComponent<IDamageable>())
         .Where(entity => entity != null)
         .ToList()
-        .ForEach(currentEntity =>
+        .ForEach(currentDamageable =>
         {
-            FloatingTextGenerator.CreateEffectDamageText(damages, (currentEntity as MonoBehaviour).transform.position, Hero.corruptionColor);
-            currentEntity.ApplyDamage(damages, launcher, false);
+            if((currentDamageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.IsInvincibleCount == 0)
+            {
+                FloatingTextGenerator.CreateEffectDamageText(damages, (currentDamageable as MonoBehaviour).transform.position, Hero.corruptionColor);
+                currentDamageable.ApplyDamage(damages, launcher, false);
+            }
         });
 
         GameObject.Destroy(vfx.gameObject, 0.3f);
