@@ -33,7 +33,7 @@ namespace Map
 
             MapGenerator mapGen = FindObjectOfType<MapGenerator>();
 
-            if (mapGen.stage == 2)
+            if (mapGen.stage == 3)
             {
                 FindObjectOfType<LevelLoader>().LoadScene("Outro", true);
                 return;
