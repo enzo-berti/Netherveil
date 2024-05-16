@@ -100,6 +100,14 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         {
             SwitchState(Factory.GetState<ErecrosPrisonAttack>());
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SwitchState(Factory.GetState<ErecrosShockwave>());
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            SwitchState(Factory.GetState<ErecrosWeaponThrow>());
+        }
     }
     #endregion
 }
