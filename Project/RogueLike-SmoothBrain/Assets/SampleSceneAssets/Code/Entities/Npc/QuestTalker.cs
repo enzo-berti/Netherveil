@@ -60,7 +60,7 @@ public class QuestTalker : Npc
     {
         DialogueTree dialogue = questDT;
 
-        if(!Utilities.PlayerController.ClearedTuto)
+        if(!player.ClearedTuto)
         {
             dialogue = waitClearTutoDT;
         }
@@ -72,7 +72,7 @@ public class QuestTalker : Npc
         {
             dialogue = alreadyHaveQuestDT;
         }
-        else if (player.GetComponent<PlayerController>().DoneQuestQTThiStage)
+        else if (player.DoneQuestQTThiStage)
         {
             dialogue = alreadyDoneQuestDT;
         }

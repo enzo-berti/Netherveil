@@ -21,8 +21,7 @@ public class DeviceManager : MonoBehaviour
     Coroutine vibrationsRoutine = null;
 
     bool canSwitchDevice = true;
-    float timerSwitchDevice = 0f;
-    readonly float MAX_TIMER_SWITCH_DEVICE = 0.25f;
+    readonly float TIMER_SWITCH_DEVICE = 0.25f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Load()
@@ -244,7 +243,7 @@ public class DeviceManager : MonoBehaviour
 
     private IEnumerator ReenableCanSwitchDevice()
     {
-        yield return new WaitForSeconds(MAX_TIMER_SWITCH_DEVICE);
+        yield return new WaitForSeconds(TIMER_SWITCH_DEVICE);
         canSwitchDevice = true;
     }
 
