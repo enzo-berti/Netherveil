@@ -52,7 +52,7 @@ namespace Tool
             string roomFolderPath = typeRoomPath + "/" + roomName;
             string roomPrefabPath = roomFolderPath + "/" + roomName + ".prefab";
 
-            string meshPath = "Assets/SampleSceneAssets/Art/Meshs/Room/" + roomType.ToString() + "/" + roomName + ".asset";
+            string meshPath = "Assets/SampleSceneAssets/Art/Meshs/Room/" + roomType.ToString() + "/" + roomName + "Mesh.asset";
 
             if (!Directory.Exists(UnityEngine.Application.dataPath + roomFolderPath))
             {
