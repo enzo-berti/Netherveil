@@ -108,6 +108,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable
         }
     }
 
+    public bool DoneQuestQTThiStage { get; set; } = false;
+    public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
+    public bool ClearedTuto { get; set; } = false;
+
     [SerializeField] List<NestedList<GameObject>> CorruptionArmorsToActivatePerStep;
     [SerializeField] List<NestedList<GameObject>> BenedictionArmorsToActivatePerStep;
     [SerializeField] List<NestedList<GameObject>> NormalArmorsToActivatePerStep;

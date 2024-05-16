@@ -67,11 +67,11 @@ public abstract class Quest
         {
             if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
             {
-                player.GetComponent<PlayerController>().DoneQuestQTThiStage = true;
+                Utilities.Hero.DoneQuestQTThiStage = true;
             }
             else
             {
-                player.GetComponent<PlayerController>().DoneQuestQTApprenticeThiStage = true;
+                Utilities.Hero.DoneQuestQTApprenticeThiStage = true;
             }
         }
 

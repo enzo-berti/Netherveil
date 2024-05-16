@@ -25,7 +25,6 @@ public class GraftedStateMachine : Mobs, IGrafted
         public Sound hitSound;
         public Sound projectileLaunchedSound;
         public Sound projectileHitMapSound;
-        public Sound projectileHitPlayerSound;
         public Sound thrustSound;
         public Sound introSound;
         public Sound retrievingProjectileSound;
@@ -42,7 +41,6 @@ public class GraftedStateMachine : Mobs, IGrafted
             hitSound.Stop();
             projectileLaunchedSound.Stop();
             projectileHitMapSound.Stop();
-            projectileHitPlayerSound.Stop();
             thrustSound.Stop();
             introSound.Stop();
             retrievingProjectileSound.Stop();
