@@ -169,7 +169,7 @@ public class PlayerInput : MonoBehaviour
         cameraUtilities.ChangeFov(cameraUtilities.defaultFOV, ZOOM_DEZOOM_TIME, easeFuncs[(int)easeZoom]);
 
         controller.ChargedAttackVFX.Reinit();
-        controller.PlayVFX(controller.ChargedAttackVFX);
+        controller.PlayVFXAtPlayerPos(controller.ChargedAttackVFX);
         AudioManager.Instance.PlaySound(controller.ChargedAttackReleaseSFX);
     }
 
@@ -318,7 +318,7 @@ public class PlayerInput : MonoBehaviour
             Vector3 posToReach = transform.position + transform.forward * hero.Stats.GetValue(Stat.ATK_RANGE);
             OnThrowSpear?.Invoke(posToReach);
             controller.Spear.Throw(posToReach);
-            controller.PlayVFX(controller.SpearLaunchVFX);
+            controller.PlayVFXAtPlayerPos(controller.SpearLaunchVFX);
         }
         else
         {
@@ -409,7 +409,7 @@ public class PlayerInput : MonoBehaviour
             vfx.Stop();
         }
 
-        controller.PlayVFX(controller.SpearAttacksVFX[controller.ComboCount]);
+        controller.PlayVFXAtPlayerPos(controller.SpearAttacksVFX[controller.ComboCount]);
         AudioManager.Instance.PlaySound(controller.AttacksSFX[controller.ComboCount]);
 
         if(CanLaunchEzrealAttack())
@@ -459,14 +459,14 @@ public class PlayerInput : MonoBehaviour
         DashDir = transform.forward;
         dashAttackAlreadyAttacked.Clear();
         applyVibrationsDashAttack = true;
-        controller.PlayVFX(controller.DashAttackVFX);
+        controller.PlayVFXAtPlayerPos(controller.DashAttackVFX);
         LaunchedDashAttack = true;
     }
 
     public void UpdateDashAttackAnimation()
     {
         hero.State = (int)Hero.PlayerState.DASH;
-        controller.UpdateVFXWrapperTransform();
+        controller.UpdateMovableVFXTransform(controller.DashAttackVFX);
         controller.ApplyCollide(controller.DashAttackCollider, dashAttackAlreadyAttacked, ref applyVibrationsDashAttack, false);
     }
 

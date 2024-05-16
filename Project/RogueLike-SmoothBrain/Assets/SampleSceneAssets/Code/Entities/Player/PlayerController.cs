@@ -38,10 +38,6 @@ public class PlayerController : MonoBehaviour
     public BoxCollider DashAttackCollider { get => dashAttackCollider; }
     public List<Collider> CollidersIgnored { get => collidersIgnored; }
 
-    public bool DoneQuestQTThiStage { get; set; } = false;
-    public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
-    public bool ClearedTuto { get; set; } = false;
-
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;
     readonly float smoothTime = 0.05f;
@@ -79,7 +75,6 @@ public class PlayerController : MonoBehaviour
     public int PouringBloodHash { get; private set; }
 
     [Header("VFXs")]
-    [SerializeField] GameObject VFXWrapper;
     [SerializeField] SkinnedMeshRenderer bodyMesh;
     public List<VisualEffect> SpearAttacksVFX;
     public VisualEffect DashAttackVFX;
@@ -537,9 +532,8 @@ public class PlayerController : MonoBehaviour
         CurrentTargetAngle = newAngle;
     }
 
-    public void PlayVFX(VisualEffect VFX)
+    public void PlayVFXAtPlayerPos(VisualEffect VFX)
     {
-
         ChargedAttackVFX.Stop();
         foreach (VisualEffect effect in SpearAttacksVFX)
         {
@@ -548,7 +542,8 @@ public class PlayerController : MonoBehaviour
 
         DashAttackVFX.Stop();
         SpearLaunchVFX.Stop();
-        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        DamnationVeilVFX.Stop();
+        UpdateMovableVFXTransform(VFX);
         VFX.Play();
     }
 
@@ -569,9 +564,9 @@ public class PlayerController : MonoBehaviour
         playerInput.ResetValuesInput();
     }
 
-    public void UpdateVFXWrapperTransform()
+    public void UpdateMovableVFXTransform(VisualEffect vfx)
     {
-        VFXWrapper.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        vfx.transform.SetPositionAndRotation(transform.position, transform.rotation);
     }
 
     public void PlayBloodPouringAnim()
@@ -592,14 +587,14 @@ public class PlayerController : MonoBehaviour
     {
         if (MapUtilities.currentRoomData.Type == RoomType.Tutorial)
         {
-            ClearedTuto = true;
+            hero.ClearedTuto = true;
         }
     }
 
     private void ResetStageDependentValues()
     {
-        DoneQuestQTThiStage = false;
-        DoneQuestQTApprenticeThiStage = false;
+        hero.DoneQuestQTThiStage = false;
+        hero.DoneQuestQTApprenticeThiStage = false;
     }
 
     #endregion
