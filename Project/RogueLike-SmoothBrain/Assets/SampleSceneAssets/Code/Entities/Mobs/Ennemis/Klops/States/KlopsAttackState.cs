@@ -3,12 +3,22 @@ using UnityEngine;
 
 public class KlopsAttackState : BaseState<KlopsStateMachine>
 {
-    bool endState = false;
+
+    const float BeginToAttackTime = 0.2f;
+    const float TimeBeforeChargingFireball = BeginToAttackTime + 0.15f;
+    const float LaunchTime = 0.85f;
+
+    readonly Vector3 fireballScale = new(0.6f, 0.6f, 0.6f);
+
     float timeBeforeChangeState = 1.5f;
     float currentTime = 0f;
+    float scalingTimer = 0f;
+
+    bool endState = false;
     bool hasShot = false;
-    // Grosse flemme sorry
     bool hasAnim = false;
+
+    GameObject fireball;
     public KlopsAttackState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
     {
     }
@@ -30,6 +40,8 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         endState = false;
 
         Context.Agent.isStopped = true;
+
+        timeBeforeChangeState = Random.Range(1.5f, 3f);
     }
 
     protected override void ExitState()
@@ -39,17 +51,27 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
 
     protected override void UpdateState()
     {
+        if (Context.IsFreeze) return;
         currentTime += Time.deltaTime;
         Context.transform.LookAt(Utilities.Player.transform);
-        if (!hasAnim && currentTime >= 0.2f)
+
+
+        if (!hasAnim && currentTime >= BeginToAttackTime)
         {
+            fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
+            fireball.transform.localScale = Vector3.zero;
             Context.Animator.ResetTrigger("Attack");
             Context.Animator.SetTrigger("Attack");
             hasAnim = true;
         }
-        if (!hasShot && currentTime >= 0.3f)
+        else if (!hasShot && currentTime >= TimeBeforeChargingFireball)
         {
-            GameObject fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
+            scalingTimer += Time.deltaTime / (LaunchTime - TimeBeforeChargingFireball);
+            fireball.transform.localScale = Vector3.Lerp(Vector3.zero, fireballScale, scalingTimer);
+            fireball.transform.position = Context.FireballSpawn.position;
+        }
+        if (!hasShot && currentTime >= LaunchTime)
+        {
             Context.KlopsSound.attackSound.Play(Context.transform.position);
             fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
             fireball.GetComponent<Fireball>().launcher = Context;
