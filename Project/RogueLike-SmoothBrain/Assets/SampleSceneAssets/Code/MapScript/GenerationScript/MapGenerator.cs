@@ -50,8 +50,8 @@ namespace Map.Generation
             {
                 ResetMapDatas();
 
-                Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
                 generate = false;
+                Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
             }
         }
 
@@ -230,7 +230,7 @@ namespace Map.Generation
                 return true;
             }
 
-            Debug.LogError("Can't find any candidate for map room");
+            Debug.LogError("Can't find any candidate for room");
             return false;
         }
 
@@ -317,7 +317,7 @@ namespace Map.Generation
 
             entranceDoor = new Door();
             exitDoor = new Door();
-            DestroyImmediate(room);
+            DestroyImmediate(room.gameObject);
             return false;
         }
 
@@ -360,7 +360,9 @@ namespace Map.Generation
         {
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
-                Destroy(transform.GetChild(i).gameObject);
+                GameObject gameObject = transform.GetChild(i).gameObject;
+                gameObject.transform.parent = null;
+                DestroyImmediate(gameObject);
             }
         }
 
