@@ -33,7 +33,7 @@ namespace Netherveil.Inputs
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""5608f3eb-ca2b-42c3-a2de-6adfffa8f11a"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -142,7 +142,7 @@ namespace Netherveil.Inputs
                 {
                     ""name"": ""KB"",
                     ""id"": ""e8aa7670-8f3d-4223-a9bb-da4b45fe2244"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
