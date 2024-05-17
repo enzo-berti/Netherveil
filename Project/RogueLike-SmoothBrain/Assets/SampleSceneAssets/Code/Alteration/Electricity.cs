@@ -35,7 +35,7 @@ public class Electricity : OverTimeStatus
     {
         if (target != null && !isStunCoroutineOn)
         {
-            CoroutineManager.Instance.StartCustom(Stun());
+            CoroutineManager.Instance.StartCoroutine(Stun());
 
             if (Utilities.IsPlayer(target))
                 PostProcessingEffectManager.current.Play(PostProcessingEffects.Effect.Electricity);
