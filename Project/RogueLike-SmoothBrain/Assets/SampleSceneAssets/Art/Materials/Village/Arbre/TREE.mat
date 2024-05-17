@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TREE
-  m_Shader: {fileID: -6465566751694194690, guid: a94113d5bffd5d144898e8fc88e1d6a2,
+  m_Shader: {fileID: -6465566751694194690, guid: 12ee447889bf58f489fb05d5ec17c8c6,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -92,6 +92,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _Bend_Factor: 6
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -108,6 +109,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
+    - _Noise_Wind_Scale: 0.5
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -127,7 +129,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Wind_Direction: {r: 0, g: 0, b: 0, a: 0}
+    - _Wind_Direction: {r: 3, g: -3, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6244435512266514833
 MonoBehaviour:
