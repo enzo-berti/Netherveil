@@ -53,13 +53,11 @@ public abstract class Mobs : Entity
     protected virtual void OnEnable()
     {
         MapUtilities.onEarlyEnter += DuplicateMyself;
-        MapUtilities.onFinishStage += IncreaseMobStats;
     }
 
     protected virtual void OnDisable()
     {
         MapUtilities.onEarlyEnter -= DuplicateMyself;
-        MapUtilities.onFinishStage -= IncreaseMobStats;
     }
 
     protected override void Start()
@@ -119,6 +117,8 @@ public abstract class Mobs : Entity
 
         AddSpawningMat();
         wanderZone.center = transform.position;
+
+        IncreaseMobStats();
     }
 
     private void AddSpawningMat()
@@ -180,10 +180,23 @@ public abstract class Mobs : Entity
     {
         if (this is not IBoss)
         {
-            stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
-            stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
-            stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
-            stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+            switch (MapUtilities.stage)
+            {
+                case 0:
+                    break;
+                case 1:
+                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+                    break;
+                case 2:
+                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
+                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
+                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 2.5f);
+                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 2.5f);
+                    break;
+            }
         }
     }
 

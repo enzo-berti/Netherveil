@@ -96,6 +96,12 @@ namespace Map
                 {
                     c.MarkUndiscovered();
                 }
+
+                // activate ui
+                if (neighbor.RoomUI)
+                {
+                    neighbor.RoomUI.gameObject.SetActive(true);
+                }
             }
 
             // activate ui

@@ -1,6 +1,5 @@
 using DialogueSystem.Runtime;
 using Map;
-using Map.Generation;
 using System;
 using System.Collections;
 using System.IO;
@@ -69,14 +68,14 @@ public abstract class Quest
         MapUtilities.onEnter += CheckQuestFinished;
         Utilities.Hero.OnQuestObtained += CheckQuestFinished;
 
-        startFloor = GameObject.FindAnyObjectByType<MapGenerator>().stage;
+        startFloor = MapUtilities.stage;
     }
 
     public void LateAcceptQuest()
     {
-        if(Datas.LimitedTime)
+        if (Datas.LimitedTime)
         {
-           timeManagerRoutine = CoroutineManager.Instance.StartCoroutine(TimeToFinishRoutine());
+            timeManagerRoutine = CoroutineManager.Instance.StartCoroutine(TimeToFinishRoutine());
         }
     }
 
@@ -85,7 +84,7 @@ public abstract class Quest
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestFinishedSFX);
         player.CurrentQuest = null;
 
-        if(startFloor == GameObject.FindAnyObjectByType<MapGenerator>().stage)
+        if (startFloor == MapUtilities.stage)
         {
             if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
             {
@@ -97,7 +96,7 @@ public abstract class Quest
             }
         }
 
-        if(talkerType == QuestTalker.TalkerType.CLERIC)
+        if (talkerType == QuestTalker.TalkerType.CLERIC)
         {
             player.Stats.DecreaseValue(Stat.CORRUPTION, CorruptionModifierValue);
         }
@@ -105,7 +104,7 @@ public abstract class Quest
         {
             player.Stats.IncreaseValue(Stat.CORRUPTION, CorruptionModifierValue);
         }
-        
+
 
         Hero.CallCorruptionBenedictionText(talkerType == QuestTalker.TalkerType.CLERIC ? -CorruptionModifierValue : CorruptionModifierValue);
         OnQuestFinished?.Invoke();
