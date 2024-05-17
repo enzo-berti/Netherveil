@@ -8,7 +8,6 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Video;
-using static UnityEditor.Progress;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 {
