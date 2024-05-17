@@ -6,12 +6,12 @@ public class ReductionTicket : ItemEffect , IPassiveItem
 
     public void OnRetrieved() 
     {
-        Item.priceCoef *= coefValue;
+        Item.PriceCoef *= coefValue;
     }
 
     public void OnRemove() 
     {
-        Item.priceCoef /= coefValue;
+        Item.PriceCoef /= coefValue;
     } 
  
 } 

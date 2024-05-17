@@ -32,7 +32,6 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         isSelect = true;
         outline.EnableOutline();
         itemDescription.TogglePanel(true);
-        HudHandler.current.ItemBar.Toggle(true);
     }
 
     public void Deselect()
@@ -43,7 +42,6 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         isSelect = false;
         outline.DisableOutline();
         itemDescription.TogglePanel(false);
-        HudHandler.current.ItemBar.Toggle(false, 2.0f);
     }
 
     private void Interraction()
@@ -64,7 +62,7 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
 
     public void Interract()
     {
-        int price = (int)(item.Price * Item.priceCoef);
+        int price = (int)(item.Price * Item.PriceCoef);
 
         if (hero.Inventory.Blood.Value < price)
         {
@@ -76,7 +74,6 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
 
         AudioManager.Instance.PlaySound(AudioManager.Instance.ItemBuySFX);
         hero.Inventory.Blood -= price;
-        item.ItemEffect.Name = item.idItemName;
 
         hero.Inventory.AddItem(item);
         interactions.InteractablesInRange.Remove(this);

@@ -134,9 +134,9 @@ namespace PrefabLightMapBaker
 
         public static void UpdatePrefab(GameObject prefab)
         {
-            var targetPrefab = PrefabUtility.GetCorrespondingObjectFromOriginalSource(prefab) as GameObject;
+            var prefabRoot = PrefabUtility.GetCorrespondingObjectFromSource(prefab) as GameObject;
 
-            if (targetPrefab == null)
+            if (prefabRoot == null)
             {
                 var dsc = System.IO.Path.DirectorySeparatorChar;
                 var scene = SceneManager.GetActiveScene();
@@ -155,26 +155,17 @@ namespace PrefabLightMapBaker
 
                 return;
             }
-
-            GameObject prefab_root = PrefabUtility.GetOutermostPrefabInstanceRoot(prefab);
-
-            if (prefab_root == null)
-            {
-                Debug.LogWarning("[PrefabBaker] Failed to find prefab root: " + prefab.name);
-
-                PrefabUtility.ApplyPrefabInstance(prefab, InteractionMode.AutomatedAction);
-            }
             else
             {
                 GameObject rootPrefab = PrefabUtility.GetCorrespondingObjectFromSource(prefab);
 
                 string rootPath = AssetDatabase.GetAssetPath(rootPrefab);
 
-                PrefabUtility.UnpackPrefabInstanceAndReturnNewOutermostRoots(prefab_root, PrefabUnpackMode.OutermostRoot);
+                PrefabUtility.UnpackPrefabInstanceAndReturnNewOutermostRoots(prefabRoot, PrefabUnpackMode.OutermostRoot);
 
                 try { PrefabUtility.ApplyPrefabInstance(prefab, InteractionMode.AutomatedAction); }
                 catch { }
-                finally { PrefabUtility.SaveAsPrefabAssetAndConnect(prefab_root, rootPath, InteractionMode.AutomatedAction); }
+                finally { PrefabUtility.SaveAsPrefabAssetAndConnect(prefabRoot, rootPath, InteractionMode.AutomatedAction); }
             }
         }
 

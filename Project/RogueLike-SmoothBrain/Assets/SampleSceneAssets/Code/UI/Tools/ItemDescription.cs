@@ -18,11 +18,13 @@ public class ItemDescription : MonoBehaviour
     private void Start()
     {
         Inventory.OnAddOrRemoveBlood += UpdatePriceText;
+        Item.OnChangePriceCoef += UpdatePriceText;
     }
 
     private void OnDestroy()
     {
         Inventory.OnAddOrRemoveBlood -= UpdatePriceText;
+        Item.OnChangePriceCoef -= UpdatePriceText;
     }
 
     private void OnDisable()
@@ -43,7 +45,6 @@ public class ItemDescription : MonoBehaviour
 
         if (priceText != null)
         {
-            priceText.text = "Cost: " + (int)(item.Price * Item.priceCoef) + " <size=50><sprite name=\"blood\">";
             UpdatePriceText();
         }
 
@@ -93,7 +94,9 @@ public class ItemDescription : MonoBehaviour
         if (priceText == null)
             return;
 
-        if(Utilities.Hero.Inventory.Blood.Value >= item.Price)
+        priceText.text = "Cost: " + (int)(item.Price * Item.PriceCoef) + " <size=50><sprite name=\"blood\">";
+
+        if (Utilities.Hero.Inventory.Blood.Value >= item.Price)
         {
             priceText.color = Color.white;
         }

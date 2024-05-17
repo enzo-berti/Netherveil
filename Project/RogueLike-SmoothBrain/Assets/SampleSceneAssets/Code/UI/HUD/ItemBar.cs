@@ -9,6 +9,7 @@ public class ItemBar : MonoBehaviour
 {
     private Coroutine cooldownRoutine;
     private Coroutine displayRoutine;
+    private bool toggleOn;
 
     [Header("General")]
     [SerializeField] private KeybindingsIcons iconsList;
@@ -38,6 +39,7 @@ public class ItemBar : MonoBehaviour
 
     private void Start()
     {
+        toggleOn = false;
         if (DeviceManager.Instance.IsPlayingKB())
             UpdateKeyboardBiding();
         else
@@ -185,14 +187,16 @@ public class ItemBar : MonoBehaviour
         frame.ToggleCooldown(false);
     }
 
-    public void Toggle(bool toggle, float delay = 0.0f)
+    public void Toggle(float delay = 0.0f)
     {
+        toggleOn = !toggleOn;
+
         RectTransform rectTransform = itemPassiveTransform.GetComponent<RectTransform>();
 
         if (displayRoutine != null)
             StopCoroutine(displayRoutine);
 
-        if (toggle)
+        if (toggleOn)
             displayRoutine = StartCoroutine(MovementRoutine(rectTransform, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), Vector3.zero, 0.1f, delay));
         else
             displayRoutine = StartCoroutine(MovementRoutine(rectTransform, Vector3.zero, new Vector3(-rectTransform.sizeDelta.x, 0.0f, 0.0f), 0.1f, delay));

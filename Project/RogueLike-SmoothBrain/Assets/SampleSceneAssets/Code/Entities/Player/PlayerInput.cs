@@ -351,6 +351,11 @@ public class PlayerInput : MonoBehaviour
         DTRunner.UpdateDialogue();
     }
 
+    private void ToggleItemDescription(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.ItemBar.Toggle();
+    }
+
     private void ResetComboWhenMoving(InputAction.CallbackContext ctx)
     {
         if (CanResetCombo())
@@ -605,6 +610,7 @@ public class PlayerInput : MonoBehaviour
             map["ToggleQuest"].performed -= ToggleQuest;
             map["Pause"].started -= Pause;
             map["SkipDialogue"].started -= SkipDialogue;
+            map["ItemDescription"].started -= ToggleItemDescription;
         }
         else
         {
@@ -623,6 +629,7 @@ public class PlayerInput : MonoBehaviour
             map["ToggleQuest"].performed += ToggleQuest;
             map["Pause"].started += Pause;
             map["SkipDialogue"].started += SkipDialogue;
+            map["ItemDescription"].started += ToggleItemDescription;
         }
     }
 
