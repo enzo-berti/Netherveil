@@ -5,6 +5,7 @@ public class TestOfEndurance : Quest
 {
     int currentSurvivedRoom = 0;
     int NB_ROOM_SURVIVING;
+    readonly float HP_PERCENTAGE_THRESHOLD = 0.25f;
 
     public override void Save(BinaryWriter writer)
     {
@@ -37,14 +38,14 @@ public class TestOfEndurance : Quest
                 NB_ROOM_SURVIVING = 6;
                 break;
         }
-        progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
-        MapUtilities.onAllEnemiesDead += UpdateCount;
+        progressText = $"DON'T FALL UNDER {HP_PERCENTAGE_THRESHOLD * 100}% HP DURING {NB_ROOM_SURVIVING} ROOMS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
+        MapUtilities.onEarlyAllEnemiesDead += UpdateCount;
         Utilities.Hero.OnTakeDamage += TestHp;
     }
 
     protected override void ResetQuestValues()
     {
-        MapUtilities.onAllEnemiesDead -= UpdateCount;
+        MapUtilities.onEarlyAllEnemiesDead -= UpdateCount;
         Utilities.Hero.OnTakeDamage -= TestHp;
     }
 
@@ -61,7 +62,7 @@ public class TestOfEndurance : Quest
         if (!IsQuestFinished() && !questLost)
         {
             currentSurvivedRoom++;
-            progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} FIGHTS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
+            progressText = $"DON'T FALL UNDER 25% HP DURING {NB_ROOM_SURVIVING} ROOMS : {currentSurvivedRoom}/{NB_ROOM_SURVIVING}";
         }
         QuestUpdated();
     }
@@ -73,6 +74,6 @@ public class TestOfEndurance : Quest
 
     protected bool IsQuestLost()
     {
-        return Utilities.Hero.Stats.GetValue(Stat.HP) / Utilities.Hero.Stats.GetMaxValue(Stat.HP) < 0.25f;
+        return Utilities.Hero.Stats.GetValue(Stat.HP) / Utilities.Hero.Stats.GetMaxValue(Stat.HP) < HP_PERCENTAGE_THRESHOLD;
     }
 }
