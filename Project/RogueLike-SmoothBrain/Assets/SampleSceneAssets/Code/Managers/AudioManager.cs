@@ -339,7 +339,6 @@ public class AudioManager : MonoBehaviour
         }
         buttonSFXInstances.Clear();
 
-        Debug.Log("zbi");
         buttonSFXInstances.Add(Instance.PlaySound(buttonClick));
     }
 }
