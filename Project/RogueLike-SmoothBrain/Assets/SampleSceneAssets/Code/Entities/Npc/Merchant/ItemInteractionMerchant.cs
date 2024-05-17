@@ -74,7 +74,6 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
 
         AudioManager.Instance.PlaySound(AudioManager.Instance.ItemBuySFX);
         hero.Inventory.Blood -= price;
-        item.ItemEffect.Name = item.idItemName;
 
         hero.Inventory.AddItem(item);
         interactions.InteractablesInRange.Remove(this);

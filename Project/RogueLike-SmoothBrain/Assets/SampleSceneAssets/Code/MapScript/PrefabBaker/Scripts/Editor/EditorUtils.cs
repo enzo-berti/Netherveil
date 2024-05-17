@@ -134,7 +134,7 @@ namespace PrefabLightMapBaker
 
         public static void UpdatePrefab(GameObject prefab)
         {
-            var targetPrefab = PrefabUtility.GetCorrespondingObjectFromOriginalSource(prefab) as GameObject;
+            var targetPrefab = PrefabUtility.GetCorrespondingObjectFromSource(prefab) as GameObject;
 
             if (targetPrefab == null)
             {

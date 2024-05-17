@@ -64,7 +64,6 @@ public class ItemInteraction : MonoBehaviour, IInterractable
     public void Interract()
     {
         Deselect();
-        item.ItemEffect.Name = item.idItemName;
         hero.Inventory.AddItem(item);
         interactions.InteractablesInRange.Remove(this);
 
