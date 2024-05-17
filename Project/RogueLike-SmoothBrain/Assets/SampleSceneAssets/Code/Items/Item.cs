@@ -12,7 +12,18 @@ public class Item : MonoBehaviour
 {
     public static event Action<ItemEffect> OnRetrieved;
     public static event Action OnLateRetrieved;
-    public static float priceCoef = 1.0f;
+    public static event Action OnChangePriceCoef;
+
+    private static float priceCoef = 1.0f;
+    public static float PriceCoef
+    {
+        get => priceCoef; 
+        set
+        {
+            priceCoef = value;
+            OnChangePriceCoef?.Invoke();
+        }
+    }
     public static List<List<ItemData>> ItemPool;
     public static readonly int PRICE_PER_RARITY = 30;
 
