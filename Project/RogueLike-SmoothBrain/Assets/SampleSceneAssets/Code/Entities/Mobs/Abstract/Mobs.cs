@@ -7,6 +7,7 @@ using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
 using System.Collections.Generic;
+using UnityEngine.Video;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -349,6 +350,31 @@ public abstract class Mobs : Entity
         hit.DisableMat();
     }
 
+    public IEnumerator PrepareAttack()
+    {
+        hit.EnableMat();
+        float timer = 0;
+        float alpha = 0;
+        while(timer < 1f)
+        {
+            alpha = EasingFunctions.EaseInExpo(timer) / 5f;
+            hit.SetAlpha(alpha);
+            timer += Time.deltaTime / 0.2f;
+            timer = Mathf.Clamp01(timer);
+            yield return null;
+        }
+        while (timer > 0f)
+        {
+            alpha = EasingFunctions.EaseInExpo(timer) / 5f;
+            hit.SetAlpha(alpha);
+            timer -= Time.deltaTime / 0.2f;
+            timer = Mathf.Clamp01(timer);
+            yield return null;
+        }
+        hit.SetAlpha(0.0f);
+
+        hit.DisableMat();
+    }
     private IEnumerator MatUpdateMeshRenderer(Material spawnMat, MeshRenderer renderer)
     {
         while (spawnMat.GetFloat("_Alpha") > 0f)
