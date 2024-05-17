@@ -58,7 +58,7 @@
 	</object>
 	<object class="EventAutomatableProperties" id="{f3845da8-8c30-4d7e-ad09-6bb8f54ab5a9}">
 		<property name="maximumDistance">
-			<value>5</value>
+			<value>10</value>
 		</property>
 	</object>
 	<object class="MarkerTrack" id="{869649e1-cfb3-48c9-afb8-a918c0eb08d8}" />
@@ -101,6 +101,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{d67e6953-c574-46c6-b59a-379ed12745ce}">
+		<property name="volume">
+			<value>-4.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -126,6 +129,8 @@
 		<relationship name="effects">
 			<destination>{f3433d5d-785f-4206-a6f1-305d06e288f9}</destination>
 			<destination>{681df104-7b9b-484e-85fa-c0d418b6daea}</destination>
+			<destination>{fbf90594-cc8d-4a12-a277-67338e1c4f89}</destination>
+			<destination>{627f527c-5650-450b-8b5d-ef5c41a0deb3}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{e40d1b43-d408-4337-83ad-7839edc5f851}" />
@@ -134,7 +139,7 @@
 	<object class="MixerBusFader" id="{f3433d5d-785f-4206-a6f1-305d06e288f9}" />
 	<object class="PitchShifterEffect" id="{681df104-7b9b-484e-85fa-c0d418b6daea}">
 		<property name="pitch">
-			<value>1.02999997</value>
+			<value>1.05999994</value>
 		</property>
 		<property name="fftSize">
 			<value>256</value>
@@ -143,12 +148,40 @@
 			<destination>{0c34dc5b-dcbe-46d8-900a-76a418ebf0c6}</destination>
 		</relationship>
 	</object>
+	<object class="ThreeEQEffect" id="{fbf90594-cc8d-4a12-a277-67338e1c4f89}">
+		<property name="lowGain">
+			<value>-9</value>
+		</property>
+		<property name="midGain">
+			<value>-8</value>
+		</property>
+		<property name="highGain">
+			<value>-7.5</value>
+		</property>
+		<property name="lowCrossover">
+			<value>40</value>
+		</property>
+		<property name="highCrossover">
+			<value>10</value>
+		</property>
+		<property name="crossoverSlope">
+			<value>2</value>
+		</property>
+	</object>
+	<object class="LowpassEffect" id="{627f527c-5650-450b-8b5d-ef5c41a0deb3}">
+		<property name="cutoff">
+			<value>5000</value>
+		</property>
+		<property name="resonance">
+			<value>1.03999996</value>
+		</property>
+	</object>
 	<object class="RandomizerModulator" id="{0c34dc5b-dcbe-46d8-900a-76a418ebf0c6}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>pitch</value>
 		</property>
 		<property name="amount">
-			<value>15</value>
+			<value>7</value>
 		</property>
 	</object>
 </objects>

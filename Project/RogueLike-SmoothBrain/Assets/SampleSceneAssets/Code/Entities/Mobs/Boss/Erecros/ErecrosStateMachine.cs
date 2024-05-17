@@ -82,12 +82,13 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public GameObject[] EnemiesPrefabs { get => enemiesPrefabs; }
     public int CurrentPart { get => part; }
     public int CurrentPhase { get => phase; }
-    public float Height { get => height; }
+    public float Height { get => height - 1.25f; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
     public GameObject ClonePrefab { get => clonePrefab; }
     public GameObject PrisonTorusPrefab { get => prisonTorusPrefab; }
+    public GameObject PropsParent { get => propsParent; }
     public Rigidbody[] PropsRB { get => props; }
     public List<BoxCollider> PropsColliders { get => propsColliders; }
 
@@ -111,7 +112,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
         foreach (Rigidbody prop in props)
         {
-            propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
+            propsColliders.Add(prop.gameObject.GetComponentInChildren<BoxCollider>());
         }
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
