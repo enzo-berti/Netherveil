@@ -149,7 +149,7 @@ public class Inventory
             {
                 if (itemEffect.CurrentEnergy < (itemEffect as IActiveItem).Cooldown)
                 {
-                    CoroutineManager.Instance.StartCustom((itemEffect as IActiveItem).WaitToUse());
+                    CoroutineManager.Instance.StartCoroutine((itemEffect as IActiveItem).WaitToUse());
                 }
             }
         }

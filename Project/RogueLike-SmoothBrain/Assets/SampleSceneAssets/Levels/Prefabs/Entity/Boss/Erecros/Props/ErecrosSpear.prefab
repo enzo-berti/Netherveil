@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3669590912149405903}
   - component: {fileID: 8652360072052011136}
-  - component: {fileID: 8706124659193701074}
   m_Layer: 0
   m_Name: ErecrosSpear
   m_TagString: Untagged
@@ -61,27 +60,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 1
---- !u!65 &8706124659193701074
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3055495989090246315}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.118660994, y: 2.3633814, z: 0.09392394}
-  m_Center: {x: -0.000000011175871, y: 1.1816907, z: -0.000000009313226}
 --- !u!1001 &6192051233366244995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -113,27 +91,27 @@ PrefabInstance:
     - target: {fileID: 662927547579766600, guid: 08e597b3e12e57d42a963792bdb03a78,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 662927547579766600, guid: 08e597b3e12e57d42a963792bdb03a78,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 662927547579766600, guid: 08e597b3e12e57d42a963792bdb03a78,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 662927547579766600, guid: 08e597b3e12e57d42a963792bdb03a78,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 662927547579766600, guid: 08e597b3e12e57d42a963792bdb03a78,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 662927547579766600, guid: 08e597b3e12e57d42a963792bdb03a78,
         type: 3}
@@ -148,8 +126,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 178140378621300210, guid: 08e597b3e12e57d42a963792bdb03a78,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7796641087740171900}
   m_SourcePrefab: {fileID: 100100000, guid: 08e597b3e12e57d42a963792bdb03a78, type: 3}
+--- !u!1 &6311359957294920561 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 178140378621300210, guid: 08e597b3e12e57d42a963792bdb03a78,
+    type: 3}
+  m_PrefabInstance: {fileID: 6192051233366244995}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &7796641087740171900
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6311359957294920561}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.118660994, y: 2.3633819, z: 0.09392396}
+  m_Center: {x: -0.000000011175871, y: 1.1816909, z: -0.0000000093132275}
 --- !u!4 &6691685893297695179 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 662927547579766600, guid: 08e597b3e12e57d42a963792bdb03a78,
