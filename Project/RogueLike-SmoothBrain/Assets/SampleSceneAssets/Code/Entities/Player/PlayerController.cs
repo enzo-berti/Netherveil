@@ -115,6 +115,10 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         hero = GetComponent<Hero>();
+        characterController = GetComponent<CharacterController>();
+        playerInput = GetComponent<PlayerInput>();
+        animator = GetComponentInChildren<Animator>();
+
         FINISHER_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 2);
         BASIC_ATTACK_DAMAGES = (int)hero.Stats.GetValueWithoutCoeff(Stat.ATK);
         SPEAR_DAMAGES = 0;
@@ -123,9 +127,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        playerInput = GetComponent<PlayerInput>();
-        animator = GetComponentInChildren<Animator>();
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
         cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;

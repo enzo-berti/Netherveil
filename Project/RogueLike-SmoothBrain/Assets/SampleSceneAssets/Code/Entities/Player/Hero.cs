@@ -185,7 +185,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
         float hp;
 
-        if (!File.Exists(filePath))
+        if (!File.Exists(filePath) || SaveManager.Instance.HasData)
         {
             isLoading = false;
             return;
