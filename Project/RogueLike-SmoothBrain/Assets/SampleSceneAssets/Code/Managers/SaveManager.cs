@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 static public class SaveManager
@@ -7,7 +8,7 @@ static public class SaveManager
     static public event OnSave onSave;
 
     static public string DirectoryPath { private set; get; } = string.Empty;
-    static public bool HasData { get => DirectoryPath != string.Empty; }
+    static public bool HasData { private set; get; } = false;
 
     static public void SelectSave(int selectedSave)
     {
@@ -22,6 +23,10 @@ static public class SaveManager
         {
             Directory.CreateDirectory(DirectoryPath);
         }
+
+        // temporaire
+        // c'est pas genial il faudrait faire un check de si les fichiers sont vraiment complet ou pas avant de vouloir charger une partie
+        HasData = new DirectoryInfo(DirectoryPath).GetFiles().Any(); // check if save has files or not
     }
 
     /// <summary>
