@@ -69,6 +69,10 @@ public class Item : MonoBehaviour
         return Assembly.GetExecutingAssembly().CreateInstance(idItemName.GetPascalCase()) as ItemEffect;
     }
 
+    static public ItemEffect LoadClass(string idName)
+    {
+        return Assembly.GetExecutingAssembly().CreateInstance(idName.GetPascalCase()) as ItemEffect;
+    }
     static public void RandomizeItem(Item item)
     {
         bool isEveryPoolEmpty = true;

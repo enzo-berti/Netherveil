@@ -90,14 +90,14 @@ public class Inventory
 
     public void RemoveAllItems(Vector3 _)
     {
-        if(passiveItems.Count > 0)
+        if (passiveItems.Count > 0)
         {
-            for(int i = passiveItems.Count -1; i >= 0; --i)
+            for (int i = passiveItems.Count - 1; i >= 0; --i)
             {
                 RemoveItem(passiveItems[i]);
             }
         }
-        if(activeItem != null)
+        if (activeItem != null)
         {
             (activeItem as IPassiveItem)?.OnRemove();
             activeItem = null;
@@ -110,7 +110,7 @@ public class Inventory
         {
             if (activeItem == null)
             {
-                if(item.gameObject.TryGetComponent<ItemInteractionMerchant>(out var itemInteraction) && itemInteraction.enabled)
+                if (item.gameObject.TryGetComponent<ItemInteractionMerchant>(out var itemInteraction) && itemInteraction.enabled)
                 {
                     item.gameObject.AddComponent<ItemInteraction>();
                     itemInteraction.enabled = false;
@@ -152,6 +152,27 @@ public class Inventory
                     CoroutineManager.Instance.StartCustom((itemEffect as IActiveItem).WaitToUse());
                 }
             }
+        }
+        else if (itemEffect as IPassiveItem != null)
+        {
+            AddPassiveItem(itemEffect as IPassiveItem);
+        }
+        (itemEffect as IPassiveItem)?.OnRetrieved();
+        itemEffect.HasBeenRetreived = true;
+    }
+
+    public void AddItem(string idName)
+    {
+        ItemEffect itemEffect = Item.LoadClass(idName);
+
+        if ((itemEffect as IActiveItem) != null)
+        {
+            GameObject item = GameResources.Get<GameObject>("Item");
+            ActiveItemGameObject = GameObject.Instantiate(item);
+            ActiveItemGameObject.name = idName;
+            ActiveItemGameObject.SetActive(false);
+            AddActiveItem(itemEffect as IActiveItem);
+            itemEffect.CurrentEnergy = (itemEffect as IActiveItem).Cooldown;
         }
         else if (itemEffect as IPassiveItem != null)
         {
