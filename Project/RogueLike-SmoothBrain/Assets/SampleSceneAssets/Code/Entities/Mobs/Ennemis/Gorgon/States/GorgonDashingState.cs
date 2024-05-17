@@ -65,8 +65,4 @@ public class GorgonDashingState : BaseState<GorgonStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
-
-    #region Extra methods
-    
-    #endregion
 }
