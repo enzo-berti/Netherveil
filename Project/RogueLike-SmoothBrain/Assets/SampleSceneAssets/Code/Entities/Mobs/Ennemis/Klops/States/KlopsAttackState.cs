@@ -64,13 +64,13 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
             Context.Animator.SetTrigger("Attack");
             hasAnim = true;
         }
-        else if (!hasShot && currentTime >= TimeBeforeChargingFireball)
+        else if (!hasShot && currentTime >= TimeBeforeChargingFireball && fireball != null)
         {
             scalingTimer += Time.deltaTime / (LaunchTime - TimeBeforeChargingFireball);
             fireball.transform.localScale = Vector3.Lerp(Vector3.zero, fireballScale, scalingTimer);
             fireball.transform.position = Context.FireballSpawn.position;
         }
-        if (!hasShot && currentTime >= LaunchTime)
+        if (!hasShot && currentTime >= LaunchTime && fireball != null)
         {
             Context.KlopsSound.attackSound.Play(Context.transform.position);
             fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
