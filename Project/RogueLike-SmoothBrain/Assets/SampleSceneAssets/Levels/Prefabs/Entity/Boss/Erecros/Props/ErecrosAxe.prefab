@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6596109008606333166}
   - component: {fileID: 5033553485903532492}
+  - component: {fileID: 4897574973848149763}
+  - component: {fileID: 1956998313017055166}
   m_Layer: 0
   m_Name: ErecrosAxe
   m_TagString: Untagged
@@ -26,9 +28,9 @@ Transform:
   m_GameObject: {fileID: 7204864694825524849}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.557917, y: -0, z: -31.478863}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7932467037816441448}
   m_Father: {fileID: 0}
@@ -52,7 +54,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1983
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -60,6 +62,40 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 1
+--- !u!65 &4897574973848149763
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7204864694825524849}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.49231148, y: 0.1146729, z: 1.241581}
+  m_Center: {x: 0.001250267, y: 0, z: 0.6188164}
+--- !u!114 &1956998313017055166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7204864694825524849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4d72b5eea8ac2498a5061c767e777d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitMap: 0
 --- !u!1001 &5889922688449736041
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -126,39 +162,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3810939635068337595, guid: a014e1d08416e794c8ec37621b889f78,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6270329594578576369}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a014e1d08416e794c8ec37621b889f78, type: 3}
---- !u!1 &7304302114304102610 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3810939635068337595, guid: a014e1d08416e794c8ec37621b889f78,
-    type: 3}
-  m_PrefabInstance: {fileID: 5889922688449736041}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &6270329594578576369
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7304302114304102610}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0.48973393, y: 1.2372496, z: 0.1136529}
-  m_Center: {x: 0, y: 0.6186248, z: -0.000000022351747}
 --- !u!4 &7932467037816441448 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,

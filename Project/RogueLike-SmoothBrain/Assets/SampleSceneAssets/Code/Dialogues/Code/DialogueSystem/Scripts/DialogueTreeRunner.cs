@@ -263,6 +263,7 @@ public class DialogueTreeRunner : MonoBehaviour
                 hasRenderedChoices = false;
                 UpdateDialogue();
             });
+            AudioManager.Instance.AddbuttonSFX(newChoiceButton);
         });
         yield return new WaitForSeconds(0.1f);
         EventSystem.current.SetSelectedGameObject(choiceTab.GetChild(0).gameObject);

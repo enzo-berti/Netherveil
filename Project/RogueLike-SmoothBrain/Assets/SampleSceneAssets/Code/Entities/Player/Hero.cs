@@ -140,8 +140,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         stats.onStatChange += UpgradePlayerStats;
         //OnDeath += Inventory.RemoveAllItems;
 
-        SaveManager.Instance.onSave += Save;
-        Load();
+        //SaveManager.Instance.onSave += Save;
+        //Load();
     }
 
     #region Save&Load
