@@ -5,10 +5,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Video;
+using static UnityEditor.Progress;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 {
@@ -148,15 +148,25 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     public void Save(string directoryPath)
     {
         string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
-    
+
         using (var stream = File.Open(filePath, FileMode.Create))
         {
             using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
             {
                 // items
-                //Inventory.ActiveItem.
-                //Inventory.ActiveItem.
-                
+                writer.Write(Inventory.ActiveItem != null);
+                if (Inventory.ActiveItem != null) // if the game had saved an active item
+                {
+                    writer.Write(Inventory.ActiveItem.GetType().ToString());
+                    writer.Write(Inventory.ActiveItem.Cooldown);
+                }
+
+                writer.Write(Inventory.PassiveItems.Count);
+                foreach (var item in Inventory.PassiveItems)
+                {
+                    writer.Write(item.GetType().ToString());
+                }
+
                 // save stats values
                 writer.Write(stats.GetValue(Stat.HP));
                 writer.Write(stats.GetValue(Stat.CORRUPTION));
@@ -164,7 +174,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
                 SaveInventory(writer);
                 SaveQuest(writer);
             }
-    
+
             stream.Close();
         }
     }
@@ -185,6 +195,20 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         {
             using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
             {
+                // items
+                if (reader.ReadBoolean())
+                {
+                    Inventory.AddItem(reader.ReadString());
+                    Inventory.ActiveItem.Cooldown = reader.ReadSingle();
+                    Item.InvokeOnRetrieved(Inventory.ActiveItem as ItemEffect);
+                }
+
+                int numItem = reader.ReadInt32();
+                for (int i = 0; i < numItem; i++)
+                {
+                    Inventory.AddItem(reader.ReadString());
+                }
+
                 // load stats values (set it only at the end of the loading)
                 hp = reader.ReadSingle();
                 stats.SetValue(Stat.CORRUPTION, reader.ReadSingle());
@@ -392,12 +416,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     private void HealPlayer(int realHealValue)
     {
-        if(realHealValue > 0)
+        if (realHealValue > 0)
         {
             AudioManager.Instance.PlaySound(playerController.HealSFX, transform.position);
             Stats.IncreaseValue(Stat.HP, realHealValue, true);
         }
-        
+
         FloatingTextGenerator.CreateHealText(realHealValue, transform.position);
         OnHeal?.Invoke(realHealValue);
     }
@@ -419,7 +443,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         if (curStep == lastStep || !canLaunchUpgrade)
             return;
 
-        if(!isLoading)
+        if (!isLoading)
         {
             TriggerAnimAndVFX(curStep, lastStep);
         }
@@ -600,7 +624,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         stats.IncreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP, false);
         BenedictionUpgrade();
         OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        if(!isLoading)
+        if (!isLoading)
             StartCoroutine(OpenSpecialAbilityTab());
     }
 
@@ -632,7 +656,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         CanHealFromConsumables = false;
         playerController.SpecialAbility = new DamnationVeil();
         OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        if(!isLoading)
+        if (!isLoading)
             StartCoroutine(OpenSpecialAbilityTab());
     }
 

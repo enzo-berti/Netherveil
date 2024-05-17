@@ -30,7 +30,6 @@ public class KlopsDeathBehaviour : StateMachineBehaviour
     {
         animator.transform.parent.gameObject.SetActive(false);
         yield return new WaitForSeconds(time + 0.5f);
-        Debug.Log("DESTROY");
         Destroy(animator.transform.parent.parent.gameObject);
     }
 
