@@ -40,8 +40,8 @@ public class ScrollRectExtension : MonoBehaviour
 
     public void OnSelect(BaseEventData eventData)
     {
-        if(!DeviceManager.Instance.IsPlayingKB()) SnapTo(eventData.selectedObject.GetComponent<RectTransform>());
-
+        if(!DeviceManager.Instance.IsPlayingKB()) 
+            SnapTo(eventData.selectedObject.GetComponent<RectTransform>());
     }
 
     public void SnapTo(RectTransform target)

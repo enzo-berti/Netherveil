@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 public class VideoSettingsPart : MenuPart
 {
@@ -30,7 +31,7 @@ public class VideoSettingsPart : MenuPart
 
     private void InitDropdownResolution()
     {
-        resolutions = Screen.resolutions;
+        resolutions = Get16by9Resolutions();
         resolutionDropdown.ClearOptions();
 
         List<string> options = new List<string>();
@@ -39,7 +40,7 @@ public class VideoSettingsPart : MenuPart
         // List all resolution available
         for (int i = 0; i < resolutions.Length; i++)
         {
-            options.Add(resolutions[i].width + " x " + resolutions[i].height + " @ " + resolutions[i].refreshRateRatio + "hz");
+            options.Add(resolutions[i].width + " x " + resolutions[i].height);
 
             if (resolutions[i].width == Screen.currentResolution.width &&
                 resolutions[i].height == Screen.currentResolution.height)
@@ -52,6 +53,27 @@ public class VideoSettingsPart : MenuPart
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+    }
+
+    private Resolution[] Get16by9Resolutions()
+    {
+        List<Resolution> filteredResolutions = new List<Resolution>();
+        Resolution[] allResolutions = Screen.resolutions;
+
+        foreach (Resolution res in allResolutions)
+        {
+            float aspectRatio = (float)res.width / (float)res.height;
+            if (Mathf.Approximately(aspectRatio, 16f / 9f))
+            {
+                Debug.Log(aspectRatio);
+                if (!filteredResolutions.Any(x => x.width == res.width && x.height == res.height))
+                {
+                    filteredResolutions.Add(res);
+                }
+            }
+        }
+
+        return filteredResolutions.ToArray();
     }
 
     private void InitDropdownScreenMode()
