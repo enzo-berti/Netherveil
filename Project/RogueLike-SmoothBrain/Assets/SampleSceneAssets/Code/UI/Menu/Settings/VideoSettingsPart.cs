@@ -65,7 +65,6 @@ public class VideoSettingsPart : MenuPart
             float aspectRatio = (float)res.width / (float)res.height;
             if (Mathf.Approximately(aspectRatio, 16f / 9f))
             {
-                Debug.Log(aspectRatio);
                 if (!filteredResolutions.Any(x => x.width == res.width && x.height == res.height))
                 {
                     filteredResolutions.Add(res);
