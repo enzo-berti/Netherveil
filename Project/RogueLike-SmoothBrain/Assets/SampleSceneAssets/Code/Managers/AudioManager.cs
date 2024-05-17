@@ -149,20 +149,25 @@ public class AudioManager : MonoBehaviour
 
     }
 
-    private void loadButtonSound()
+    private void PutButtonSoundOnAll()
     {
         CustomEventTrigger.buttonSelectSFX = buttonSelect;
         UnityEngine.UI.Button[] buttons = FindObjectsOfType<UnityEngine.UI.Button>(true); // parameter makes it include inactive UI elements with buttons
         foreach (UnityEngine.UI.Button b in buttons)
         {
-            b.onClick.AddListener(ButtonClickSFX);
-            b.AddComponent<CustomEventTrigger>();
+            AddbuttonSFX(b);
         }
+    }
+
+    public void AddbuttonSFX(UnityEngine.UI.Button button)
+    {
+        button.onClick.AddListener(ButtonClickSFX);
+        button.AddComponent<CustomEventTrigger>();
     }
 
     private void OnLevelWasLoaded(int level)
     {
-        loadButtonSound();
+        PutButtonSoundOnAll();
     }
 
     private void Update()
