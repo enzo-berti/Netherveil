@@ -466,6 +466,7 @@ public class PlayerInput : MonoBehaviour
         applyVibrationsDashAttack = true;
         controller.PlayVFXAtPlayerPos(controller.DashAttackVFX);
         LaunchedDashAttack = true;
+        AudioManager.Instance.PlaySound(controller.DashAttackSFX);
     }
 
     public void UpdateDashAttackAnimation()

@@ -95,6 +95,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("SFXs")]
     public EventReference DashSFX;
+    public EventReference DashAttackSFX;
     public EventReference HitSFX;
     public EventReference DeadSFX;
     public EventReference ThrowSpearSFX;
