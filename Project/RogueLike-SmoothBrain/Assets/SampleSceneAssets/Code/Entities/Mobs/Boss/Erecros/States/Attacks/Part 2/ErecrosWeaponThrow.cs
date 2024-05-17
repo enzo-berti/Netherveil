@@ -10,11 +10,9 @@
 //      }
 // }
 
-using Cinemachine.Utility;
 using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
@@ -28,9 +26,11 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
     List<bool> onBoss = new();
     List<bool> launched = new();
 
-    float delayBetweenLaunch = 0.5f;
+    float delayBetweenLaunch = 0.4f;
     float launchTimer;
     int iterator = 0;
+
+    List<Collider> activeColliders = new();
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -50,6 +50,7 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
 
         for (int i = 0; i < props.Length; i++)
         {
+            Context.PropsColliders[i].enabled = false;
             props[i].constraints = RigidbodyConstraints.None;
             props[i].isKinematic = false;
 
@@ -57,7 +58,7 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
             customVector = Quaternion.AngleAxis(180f / (props.Length - 1) * i, Context.transform.forward) * customVector;
 
             targetPos.Add(Context.transform.position + Context.transform.up * Context.Height + customVector);
-            props[i].velocity = (targetPos.Last() - props[i].transform.position).normalized * 10f;
+            props[i].velocity = (targetPos.Last() - props[i].transform.position).normalized * 20f;
 
             onBoss.Add(false);
             launched.Add(false);
@@ -73,6 +74,7 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
         {
             prop.isKinematic = true;
             prop.constraints = RigidbodyConstraints.FreezeAll;
+            prop.GetComponent<ErecrosWeaponBehaviour>().Reset();
         }
     }
 
@@ -82,6 +84,7 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
         Context.LookAtTarget(Context.Player.transform.position);
 
         bool allOnBoss = true;
+        attackEnded = true;
 
         for (int i = 0; i < props.Length; i++)
         {
@@ -94,29 +97,45 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
             {
                 props[i].transform.position = new Vector3(props[i].transform.position.x, targetPos[i].y + Mathf.Sin(5f * Time.time + i * 5f) * 0.25f, props[i].transform.position.z);
             }
+            else if (!props[i].GetComponent<ErecrosWeaponBehaviour>().hitMap)
+            {
+                if (!Context.PlayerHit)
+                {
+                    Context.AttackCollide(activeColliders);
+                }
+                LookAtTarget(props[i].transform, props[i].transform.position + props[i].velocity);
+            }
+            else
+            {
+                activeColliders.Remove(Context.PropsColliders[i]);
+            }
+
+            // obligé de le faire en 2 conditions séparées
+            if (!props[i].GetComponent<ErecrosWeaponBehaviour>().hitMap)
+            {
+                attackEnded = false;
+            }
         }
 
         if (allOnBoss)
         {
+            if (iterator >= props.Length) return;
+
             launchTimer += Time.deltaTime;
 
             if (launchTimer >= delayBetweenLaunch)
             {
-                //delayBetweenLaunch -= 0.1f;
+                //delayBetweenLaunch *= 0.9f;
                 launchTimer = 0f;
 
                 props[iterator].transform.parent = Context.PropsParent.transform;
-                props[iterator].velocity = (Context.Player.transform.position - props[iterator].transform.position).normalized * 20f;
-                LookAtForward(props[iterator]);
+                props[iterator].velocity = (Context.Player.transform.position + Vector3.up - props[iterator].transform.position).normalized * 50f;
                 launched[iterator] = true;
+
+                Context.PlayerHit = false;
 
                 iterator++;
             }
-        }
-
-        if (iterator >= props.Length)
-        {
-            attackEnded = true;
         }
     }
 
@@ -163,6 +182,9 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
             props[i].transform.parent = Context.transform;
             props[i].velocity = Vector3.zero;
             onBoss[i] = true;
+
+            Context.PropsColliders[i].enabled = true;
+            activeColliders.Add(Context.PropsColliders[i]);
 
             targetPos[i] = props[i].transform.position;
         }
