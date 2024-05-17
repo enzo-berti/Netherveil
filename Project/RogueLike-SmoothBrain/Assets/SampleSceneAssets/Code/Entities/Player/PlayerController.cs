@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
             magnitudeCoef = 0f;
         }
 
-        animator.SetFloat(SpeedHash, playerInput.Direction.magnitude * magnitudeCoef, 0.1f, Time.deltaTime);
+        animator.SetFloat(SpeedHash, playerInput.Direction.magnitude * magnitudeCoef, 0.05f, Time.deltaTime);
         animator.SetInteger(ComboCountHash, ComboCount);
     }
 
