@@ -163,6 +163,7 @@ public class Inventory
 
     public void AddItem(string idName)
     {
+        if (string.IsNullOrEmpty(idName)) return;
         ItemEffect itemEffect = Item.LoadClass(idName);
 
         if ((itemEffect as IActiveItem) != null)
