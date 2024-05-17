@@ -32,7 +32,6 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         isSelect = true;
         outline.EnableOutline();
         itemDescription.TogglePanel(true);
-        HudHandler.current.ItemBar.Toggle(true);
     }
 
     public void Deselect()
@@ -43,7 +42,6 @@ public class ItemInteractionMerchant : MonoBehaviour, IInterractable
         isSelect = false;
         outline.DisableOutline();
         itemDescription.TogglePanel(false);
-        HudHandler.current.ItemBar.Toggle(false, 2.0f);
     }
 
     private void Interraction()
