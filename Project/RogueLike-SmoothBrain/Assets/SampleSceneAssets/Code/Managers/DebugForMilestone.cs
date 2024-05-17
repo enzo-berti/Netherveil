@@ -9,7 +9,7 @@ public class DebugForMilestone : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            Utilities.Hero.Stats.IncreaseValue(Stat.HP, 1000000);
+            Utilities.Hero.HealPlayer(10000000);
         }
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
