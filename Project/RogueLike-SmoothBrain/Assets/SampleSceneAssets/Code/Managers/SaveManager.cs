@@ -51,7 +51,7 @@ public class SaveManager : MonoBehaviour
 
         HasData = false;
 
-        SelectSave(1);
+        //SelectSave(1);
     }
 
     public void SelectSave(int selectedSave)
