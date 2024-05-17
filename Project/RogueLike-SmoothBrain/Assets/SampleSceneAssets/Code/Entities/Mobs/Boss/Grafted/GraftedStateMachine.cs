@@ -174,6 +174,7 @@ public class GraftedStateMachine : Mobs, IGrafted
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
         tripleThrustVFX.transform.parent = null;
+        tripleThrustVFX.transform.rotation = Quaternion.identity;
         tripleThrustVFX.Play();
         player = FindObjectOfType<Hero>();
 
