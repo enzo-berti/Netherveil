@@ -232,7 +232,7 @@ public abstract class Entity : MonoBehaviour
         }
         else
         {
-            if(this is Mobs && (this as Mobs).IsSpawning)
+            if(this.IsInvincibleCount > 0 || (this is Mobs && (this as Mobs).IsSpawning))
                 return false;
 
             float chance = UnityEngine.Random.value;
