@@ -126,7 +126,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
         else
         {
             int randSound = Random.Range(0, 3);
-            FloatingTextGenerator.CreateActionText(transform.position, "Parried!");
+            FloatingTextGenerator.CreateActionText(transform.position, "Blocked!");
 
             switch (randSound)
             {
