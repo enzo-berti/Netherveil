@@ -177,6 +177,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
         if (!File.Exists(filePath))
         {
+            isLoading = false;
             return;
         }
 
@@ -191,9 +192,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
                 LoadInventory(reader);
                 LoadQuest(reader);
             }
+
+            stream.Close();
         }
 
-        DebugCallLaunchUpgrade();
+        canLaunchUpgrade = true;
         ChangeStatsBasedOnAlignment();
         stats.SetValue(Stat.HP, hp);
 
