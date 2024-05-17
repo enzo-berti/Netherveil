@@ -40,13 +40,13 @@ public class DashShield : ItemEffect , IPassiveItem
 
     private IEnumerator Shield()
     {
-        float playerheight = Utilities.CharacterController.height;
-        float playerRadius = Utilities.CharacterController.radius;
-        Vector3 basePlayer = Utilities.Player.transform.position;
-        Vector3 finalPos = basePlayer;
-        finalPos.y += playerheight;
         while (hasShield)
         {
+            float playerheight = Utilities.CharacterController.height;
+            float playerRadius = Utilities.CharacterController.radius;
+            Vector3 basePlayer = Utilities.Player.transform.position;
+            Vector3 finalPos = basePlayer;
+            finalPos.y += playerheight;
             List<IReflectable> reflectables = Physics.OverlapCapsule(basePlayer, finalPos, playerRadius).Where(x => x.TryGetComponent<IReflectable>(out var reflectable) && !reflectable.IsReflected).Select(x => x.GetComponent<IReflectable>()).ToList();
             if (reflectables.Count > 0)
             {

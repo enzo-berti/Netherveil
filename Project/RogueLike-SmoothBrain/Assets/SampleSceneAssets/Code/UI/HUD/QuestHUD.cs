@@ -147,9 +147,9 @@ public class QuestHUD : MonoBehaviour
         if(!player.CurrentQuest.Datas.LimitedTime || player.CurrentQuest.IsQuestFinished())
             return string.Empty;
 
-        if(player.CurrentQuest.CurrentQuestTimer < 60)
-            return "<color=red>" + Math.Round(player.CurrentQuest.CurrentQuestTimer, 1) + " seconds remaining</color>";
+        if (player.CurrentQuest.CurrentQuestTimer < 60)
+            return "<color=red>" + Math.Round(player.CurrentQuest.CurrentQuestTimer, player.CurrentQuest.CurrentQuestTimer < 1 ? 1 : 0) + " seconds remaining</color>";
         else
-            return Math.Round(player.CurrentQuest.CurrentQuestTimer, 1) + " seconds remaining";
+            return Math.Round(player.CurrentQuest.CurrentQuestTimer, 0) + " seconds remaining";
     }
 }
