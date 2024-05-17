@@ -29,7 +29,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     const float BENEDICTION_HEAL_COEF_STEP = 1f;
     const float CORRUPTION_ATK_STEP = 2f;
     const float CORRUPTION_HP_STEP = 25f;
-    const float CORRUPTION_LIFESTEAL_STEP = 0.05f;
+    const float CORRUPTION_LIFESTEAL_STEP = 0.03f;
     const float CORRUPTION_TAKE_DAMAGE_COEF_STEP = 0.25f;
 
     const float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
