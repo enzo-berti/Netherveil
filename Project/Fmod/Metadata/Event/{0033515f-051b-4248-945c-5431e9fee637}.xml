@@ -101,9 +101,6 @@
 		<relationship name="fadeInCurve">
 			<destination>{626a39eb-7bdb-42d5-925c-4a71d4806422}</destination>
 		</relationship>
-		<relationship name="fadeOutCurve">
-			<destination>{835bd541-565b-4914-bdf1-14bff016710d}</destination>
-		</relationship>
 		<relationship name="audioFile">
 			<destination>{0ecb63ef-2f6d-4f64-82e9-e0af73027953}</destination>
 		</relationship>
@@ -115,6 +112,9 @@
 		<property name="name">
 			<value>Audio 3</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{949b7ee2-2218-4b20-8959-a79216acd77b}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{372b39e6-21e8-44a1-84e7-3b44b158b3d2}</destination>
 		</relationship>
@@ -140,13 +140,19 @@
 			<destination>{0c066e2c-ac19-443b-96da-624bedfeb5b7}</destination>
 		</relationship>
 	</object>
-	<object class="FadeCurve" id="{835bd541-565b-4914-bdf1-14bff016710d}">
-		<relationship name="startPoint">
-			<destination>{1aaa1794-c7f2-4b0b-9ae3-33f3e9f8f433}</destination>
-		</relationship>
-		<relationship name="endPoint">
-			<destination>{8d02fc7c-522d-441c-ace7-36408a601f6c}</destination>
-		</relationship>
+	<object class="ADSRModulator" id="{949b7ee2-2218-4b20-8959-a79216acd77b}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>240</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
 	</object>
 	<object class="MixerBusEffectChain" id="{372b39e6-21e8-44a1-84e7-3b44b158b3d2}">
 		<relationship name="effects">
@@ -172,25 +178,6 @@
 		</property>
 		<property name="value">
 			<value>1</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{1aaa1794-c7f2-4b0b-9ae3-33f3e9f8f433}">
-		<property name="position">
-			<value>0.68485553942030464</value>
-		</property>
-		<property name="value">
-			<value>1</value>
-		</property>
-		<property name="curveShape">
-			<value>-0.289506376</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{8d02fc7c-522d-441c-ace7-36408a601f6c}">
-		<property name="position">
-			<value>12.516320135499239</value>
-		</property>
-		<property name="value">
-			<value>0</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{4da6238e-bf07-4610-b40d-b3acdd0c1768}" />
