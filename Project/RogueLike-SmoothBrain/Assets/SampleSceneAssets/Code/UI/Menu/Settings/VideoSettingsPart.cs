@@ -9,11 +9,20 @@ using System.Linq;
 public class VideoSettingsPart : MenuPart
 {
     private Resolution[] resolutions;
+    private int[] fpsArray =
+    {
+        -1,
+        240,
+        144,
+        60,
+        30
+    };
 
     [Header("Video Settings")]
     [SerializeField] private TMP_Dropdown resolutionDropdown;
     [SerializeField] private TMP_Dropdown displayModeDropdown;
     [SerializeField] private TMP_Dropdown qualityDropdown;
+    [SerializeField] private TMP_Dropdown fpsDropdown;
     [SerializeField] private Slider brightnessSlider;
     [SerializeField] private Toggle vSyncToggle;
     [SerializeField] private Toggle screenShakeToggle;
@@ -24,6 +33,7 @@ public class VideoSettingsPart : MenuPart
         InitDropdownResolution();
         InitDropdownScreenMode();
         InitDropdownQuality();
+        InitDropdownFPS();
         InitToggleVsync();
         InitToggleCameraShaking();
         InitSliderBrightness();
@@ -100,6 +110,28 @@ public class VideoSettingsPart : MenuPart
         qualityDropdown.RefreshShownValue();
     }
 
+    private void InitDropdownFPS()
+    {
+        fpsDropdown.ClearOptions();
+
+        List<string> options = new List<string>();
+        int currentTargetFPS = Application.targetFrameRate;
+        int currentOptionIndex = 0;
+
+        for (int i = 0; i < fpsArray.Length; i++)
+        {
+            options.Add($"{(fpsArray[i] == -1 ? "unlimited" : fpsArray[i])} fps");
+
+            if (fpsArray[i] == currentTargetFPS)
+            {
+                currentOptionIndex = i;
+            }
+        }
+
+        fpsDropdown.AddOptions(options);
+        fpsDropdown.value = currentOptionIndex;
+    }
+
     private void InitToggleVsync()
     {
         vSyncToggle.isOn = QualitySettings.vSyncCount > 0;
@@ -148,6 +180,11 @@ public class VideoSettingsPart : MenuPart
     public void SetQuality(int qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex);
+    }
+
+    public void SetLimitFPS(int limitFPS)
+    {
+        Application.targetFrameRate = fpsArray[limitFPS];
     }
 
     public void ToggleVsync(bool toggle)
