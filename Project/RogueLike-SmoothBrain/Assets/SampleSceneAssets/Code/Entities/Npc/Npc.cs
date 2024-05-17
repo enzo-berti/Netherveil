@@ -25,6 +25,10 @@ public abstract class Npc : Entity, IInterractable
     protected override void Update()
     {
         base.Update();
+    }
+
+    private void FixedUpdate()
+    {
         Interraction();
     }
 
@@ -39,14 +43,18 @@ public abstract class Npc : Entity, IInterractable
 
     private void Interraction()
     {
-        bool isInRange = Vector2.Distance(playerInteractions.transform.position.ToCameraOrientedVec2(), transform.position.ToCameraOrientedVec2())
+        bool isInRange = Vector3.Distance(playerInteractions.transform.position, transform.position)
             <= hero.Stats.GetValue(Stat.CATCH_RADIUS);
 
-        if (isInRange && !playerInteractions.InteractablesInRange.Contains(this))
+        Vector3 npcToPlayerVec = (playerInteractions.transform.position - transform.position);
+        bool isTouchingMapBetween = Physics.Raycast(transform.position, npcToPlayerVec.normalized, npcToPlayerVec.magnitude, LayerMask.GetMask("Map"));
+        Debug.DrawRay(transform.position, npcToPlayerVec, Color.yellow, Time.deltaTime * 2);
+
+        if (isInRange && !isTouchingMapBetween && !playerInteractions.InteractablesInRange.Contains(this))
         {
             playerInteractions.InteractablesInRange.Add(this);
         }
-        else if (!isInRange && playerInteractions.InteractablesInRange.Contains(this))
+        else if ((!isInRange || isTouchingMapBetween) && playerInteractions.InteractablesInRange.Contains(this))
         {
             playerInteractions.InteractablesInRange.Remove(this);
             Deselect();       

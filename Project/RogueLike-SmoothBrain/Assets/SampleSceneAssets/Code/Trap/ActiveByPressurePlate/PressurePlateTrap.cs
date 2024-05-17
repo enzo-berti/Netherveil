@@ -4,10 +4,15 @@ public class PressurePlateTrap : MonoBehaviour
 {
     [SerializeField] ParticleSystem vfx;
     public GameObject[] trapToActivate;
-    public float cooldownTime = 2f;
-    private float currentCooldownTime = 0f;
     private bool canActive = true;
     public Sound activeSound;
+    public GameObject plateToMove;
+    private Vector3 intialePos;
+
+    private void Start()
+    {
+        intialePos = plateToMove.transform.position;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -22,6 +27,7 @@ public class PressurePlateTrap : MonoBehaviour
         if (!canActive && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
         {
             canActive = true;
+            plateToMove.transform.position = intialePos;
         }
     }
 
@@ -35,6 +41,7 @@ public class PressurePlateTrap : MonoBehaviour
             }
         }
 
+        plateToMove.transform.position = new Vector3(intialePos.x, intialePos.y - .2f, intialePos.z);
         vfx.Play();
         activeSound.Play(transform.position);
         canActive = false;
