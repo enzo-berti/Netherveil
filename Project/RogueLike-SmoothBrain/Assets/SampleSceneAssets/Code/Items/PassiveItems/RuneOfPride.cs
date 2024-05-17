@@ -16,13 +16,13 @@ public class RuneOfPride : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Utilities.Hero.OnKill -= Berserk;
-        MapUtilities.onEnter -= Reset;
+        MapUtilities.onExit -= Reset;
     }
 
     public void OnRetrieved()
     {
         Utilities.Hero.OnKill += Berserk;
-        MapUtilities.onEnter += Reset;
+        MapUtilities.onExit += Reset;
     }
 
     private void Berserk(IDamageable damageable)
@@ -36,7 +36,7 @@ public class RuneOfPride : ItemEffect, IPassiveItem
         {
             Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.Play();
         }
-        Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.SetFloat("Arrows Amounts", 0.03f * nbBoost);
+        Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.SetFloat("Arrows Amounts", 0.01f * nbBoost);
     }
 
     private void Reset()
