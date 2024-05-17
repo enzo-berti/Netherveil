@@ -78,7 +78,7 @@ public class PlayerInput : MonoBehaviour
     private IEnumerator Start()
     {
         playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        EaseFuncsShitStorm();
+        EaseFuncsLoad();
         InputSetup();
         hero = GetComponent<Hero>();
         hero.OnChangeState += ResetForceReturnToMove;
@@ -108,7 +108,7 @@ public class PlayerInput : MonoBehaviour
         InputManagement(gamepadMap, unsubscribe: true);
     }
 
-    #region Inputs
+    #region INPUTS
 
     private void ReadDirection(InputAction.CallbackContext ctx)
     {
@@ -279,14 +279,6 @@ public class PlayerInput : MonoBehaviour
         animator.SetTrigger(controller.DashHash);
     }
 
-    private IEnumerator DashCoroutine()
-    {
-        dashInCooldown = true;
-        yield return new WaitForSeconds(DASH_COOLDOWN_TIME);
-        dashInCooldown = false;
-        dashCoroutine = null;
-    }
-
     private void ActiveItemActivation(InputAction.CallbackContext ctx)
     {
         IActiveItem item = hero.Inventory.ActiveItem;
@@ -376,9 +368,24 @@ public class PlayerInput : MonoBehaviour
             controller.ResetValues();
         }
     }
+
+    private static void Pause(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.PauseMenu.Toggle();
+    }
+
+    private static void ToggleQuest(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.QuestHUD.Toggle();
+    }
+
+    private static void ToggleMap(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.MapHUD.Toggle();
+    }
     #endregion
 
-    #region AnimationEvents
+    #region ANIMATION_EVENTS
     public void StartOfDashAnimation()
     {
         hero.IsInvincibleCount++;
@@ -500,7 +507,7 @@ public class PlayerInput : MonoBehaviour
 
     #endregion
 
-    #region InputConditions
+    #region INPUT_CONDITIONS
 
     private bool CanReleaseChargedAttack()
     {
@@ -561,8 +568,8 @@ public class PlayerInput : MonoBehaviour
     }
     #endregion
 
-    #region Miscellaneous
-    private void EaseFuncsShitStorm()
+    #region MISCELLANEOUS
+    private void EaseFuncsLoad()
     {
         easeFuncs.Add(EasingFunctions.EaseInBack);
         easeFuncs.Add(EasingFunctions.EaseInBounce);
@@ -602,7 +609,6 @@ public class PlayerInput : MonoBehaviour
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
         InputManagement(gamepadMap, unsubscribe: false);
     }
-
 
     void InputManagement(InputActionMap map, bool unsubscribe)
     {
@@ -644,21 +650,6 @@ public class PlayerInput : MonoBehaviour
             map["SkipDialogue"].started += SkipDialogue;
             map["ItemDescription"].started += ToggleItemDescription;
         }
-    }
-
-    private static void Pause(InputAction.CallbackContext ctx)
-    {
-        HudHandler.current.PauseMenu.Toggle();
-    }
-
-    private static void ToggleQuest(InputAction.CallbackContext ctx)
-    {
-        HudHandler.current.QuestHUD.Toggle();
-    }
-
-    private static void ToggleMap(InputAction.CallbackContext ctx)
-    {
-        HudHandler.current.MapHUD.Toggle();
     }
 
     public void DisableGameplayInputs()
@@ -742,6 +733,14 @@ public class PlayerInput : MonoBehaviour
             StopCoroutine(chargedAttackCoroutine);
             chargedAttackCoroutine = null;
         }
+    }
+
+    private IEnumerator DashCoroutine()
+    {
+        dashInCooldown = true;
+        yield return new WaitForSeconds(DASH_COOLDOWN_TIME);
+        dashInCooldown = false;
+        dashCoroutine = null;
     }
 
     private void RestartDashCoroutine()

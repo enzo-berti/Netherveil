@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     Hero hero;
     Animator animator;
     PlayerInput playerInput;
-    Transform cameraTransform;
     DialogueTreeRunner dialogueTreeRunner;
     CharacterController characterController;
 
@@ -27,16 +26,21 @@ public class PlayerController : MonoBehaviour
     public GameObject ezrealAttackPrefab;
     public Collider ChargedAttack;
     public List<NestedList<Collider>> SpearAttacks;
-    Plane mouseRaycastPlane;
-    readonly float dashCoef = 2.25f;
-    private List<Collider> collidersIgnored = new List<Collider>();
-    public Coroutine SpecialAbilityCoroutine { get; set; } = null;
-    public ISpecialAbility SpecialAbility { get; set; } = null;
-
     public GameObject SpearThrowWrapper { get => spearThrowWrapper; }
     public BoxCollider SpearThrowCollider { get => spearThrowCollider; }
     public BoxCollider DashAttackCollider { get => dashAttackCollider; }
+    Plane mouseRaycastPlane;
+
+    //special ability variables
+    public Coroutine SpecialAbilityCoroutine { get; set; } = null;
+    public ISpecialAbility SpecialAbility { get; set; } = null;
+
+    //dash variables
     public List<Collider> CollidersIgnored { get => collidersIgnored; }
+    private List<Collider> collidersIgnored = new List<Collider>();
+    private List<Vector3> ENDPOS = new();
+    private List<Color> color = new() { Color.red, Color.green, Color.blue, Color.yellow, Color.magenta, Color.white };
+    readonly float dashCoef = 2.25f;
 
     //rotate values
     public float CurrentTargetAngle { get; set; } = 0f;
@@ -49,13 +53,11 @@ public class PlayerController : MonoBehaviour
     //attack values
     public int ComboCount { get; set; } = 0;
     public readonly int MAX_COMBO_COUNT = 3;
-
+    public readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
     public int FINISHER_DAMAGES { get; private set; }
     public int BASIC_ATTACK_DAMAGES { get; private set; }
     public int SPEAR_DAMAGES { get; private set; }
     public int CHARGED_ATTACK_DAMAGES { get; private set; }
-
-    public readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
 
     //animator hashs
     public int SpeedHash { get; private set; }
@@ -111,8 +113,7 @@ public class PlayerController : MonoBehaviour
     [Header("Item dependent GOs")]
     [SerializeField] Transform leftHandTransform;
     public Transform LeftHandTransform { get => leftHandTransform; }
-    private List<Vector3> ENDPOS = new();
-    private List<Color> color = new() { Color.red, Color.green, Color.blue, Color.yellow, Color.magenta, Color.white };
+
     private void Awake()
     {
         hero = GetComponent<Hero>();
@@ -129,8 +130,9 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         dialogueTreeRunner = FindObjectOfType<DialogueTreeRunner>();
-        cameraTransform = Camera.main.transform;
         hero.State = (int)Entity.EntityState.MOVE;
+
+        //creating a plane so that we can raycast on it to orient player rotation with mouse position on screen
         mouseRaycastPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
 
         //divide by 5 because the vfx is based on plane scale size, and -0.2 is to make the arrow perfectly at the spear end pos
@@ -141,21 +143,7 @@ public class PlayerController : MonoBehaviour
         MapUtilities.onFinishStage += ResetStageDependentValues;
         MapUtilities.onAllEnemiesDead += UpdateClearTuto;
 
-        SpeedHash = Animator.StringToHash("Speed");
-        IsDeadHash = Animator.StringToHash("IsDead");
-        IsKnockbackHash = Animator.StringToHash("IsKnockback");
-        DashHash = Animator.StringToHash("Dash");
-        DashAttackHash = Animator.StringToHash("DashAttack");
-        BasicAttackHash = Animator.StringToHash("BasicAttack");
-        ComboCountHash = Animator.StringToHash("ComboCount");
-        SpearThrowingHash = Animator.StringToHash("SpearThrowing");
-        SpearThrownHash = Animator.StringToHash("SpearThrown");
-        ChargedAttackReleaseHash = Animator.StringToHash("ChargedAttackRelease");
-        ChargedAttackCastingHash = Animator.StringToHash("ChargedAttackCasting");
-        LaunchBombHash = Animator.StringToHash("LaunchBomb");
-        CorruptionUpgradeHash = Animator.StringToHash("CorruptionUpgrade");
-        BenedictionUpgradeHash = Animator.StringToHash("BenedictionUpgrade");
-        PouringBloodHash = Animator.StringToHash("PouringBlood");
+        CreateAnimatorHashCode();
     }
 
     private void OnDestroy()
@@ -182,35 +170,11 @@ public class PlayerController : MonoBehaviour
             DashMove();
         }
 
-        //if player has fallen out of map security
-        if (transform.position.y < -30f && hero.State != (int)Entity.EntityState.DEAD)
-        {
-            hero.Death();
-        }
-
-        //security to avoid player walking on props
-        if (this.transform.position.y > 0.1f)
-        {
-            Debug.Log("player security avoid walking on props", this);
-            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
-        }
-        
+        OutOfMapSecurity();
+        PropsClippingSecurity();
     }
 
-    private void UpdateAnimator()
-    {
-        //used so that you don't see the character running while in transition between the normal attack and the charged attack casting
-        float magnitudeCoef = 10;
-        if (playerInput.LaunchedChargedAttack || dialogueTreeRunner.IsStarted)
-        {
-            magnitudeCoef = 0f;
-        }
-
-        animator.SetFloat(SpeedHash, playerInput.Direction.magnitude * magnitudeCoef, 0.05f, Time.deltaTime);
-        animator.SetInteger(ComboCountHash, ComboCount);
-    }
-
-    #region BasicMovements
+    #region MOVEMENTS
 
     private void Rotate()
     {
@@ -231,7 +195,7 @@ public class PlayerController : MonoBehaviour
         if (!CanMove())
             return;
 
-        CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + cameraTransform.rotation.eulerAngles.y;
+        CurrentTargetAngle = Mathf.Atan2(playerInput.Direction.x, playerInput.Direction.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
         characterController.Move(hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime * playerInput.Direction.ToCameraOrientedVec3().normalized);
     }
 
@@ -241,16 +205,18 @@ public class PlayerController : MonoBehaviour
             return;
 
         float distance = dashCoef * hero.Stats.GetValue(Stat.SPEED) * Time.deltaTime;
-        //if(Utilities.CharacterController.Raycast(new Ray(this.gameObject.transform.position, playerInput.DashDir), out var hit, distance))
+        //if(characterController.Raycast(new Ray(this.gameObject.transform.position, playerInput.DashDir), out var hit, distance))
         //{
         //    Debug.Log(hit.collider.name);
         //}
-        if (Utilities.CharacterController.detectCollisions)
+        if (characterController.detectCollisions)
+        {
             //if (Physics.BoxCast()
             //{
             //    Debug.Log(hit.collider.name);
             //}
             characterController.Move(distance * playerInput.DashDir);
+        }
     }
 
     public void RemoveCollisionOnDash(float _dashDuration)
@@ -332,7 +298,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region Attacks&Orientation
+    #region ATTACKS_AND_ORIENTATION
 
     /// <summary>
     ///  Check collision with attack colliders and inflict damages.
@@ -495,7 +461,7 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region Conditions
+    #region CONTROLS_CONDITIONS
     private bool CanMove()
     {
         return hero.State == (int)Entity.EntityState.MOVE && playerInput.Direction != Vector2.zero;
@@ -514,7 +480,20 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region Miscellaneous
+    #region MISCELLANEOUS
+
+    private void UpdateAnimator()
+    {
+        //used so that you don't see the character running while in transition between the normal attack and the charged attack casting
+        float magnitudeCoef = 10;
+        if (playerInput.LaunchedChargedAttack || dialogueTreeRunner.IsStarted)
+        {
+            magnitudeCoef = 0f;
+        }
+
+        animator.SetFloat(SpeedHash, playerInput.Direction.magnitude * magnitudeCoef, 0.05f, Time.deltaTime);
+        animator.SetInteger(ComboCountHash, ComboCount);
+    }
 
     public void OffsetPlayerRotation(float angleOffset, bool isImmediate = false)
     {
@@ -607,23 +586,52 @@ public class PlayerController : MonoBehaviour
         hero.DoneQuestQTApprenticeThiStage = false;
     }
 
+    private void PropsClippingSecurity()
+    {
+        //security to avoid player walking on props
+        if (this.transform.position.y > 0.1f)
+        {
+            Debug.Log("player security avoid walking on props", this);
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+        }
+    }
+
+    private void OutOfMapSecurity()
+    {
+        //if player has fallen out of map security
+        if (transform.position.y < -30f && hero.State != (int)Entity.EntityState.DEAD)
+        {
+            hero.Death();
+        }
+    }
+
+    private void CreateAnimatorHashCode()
+    {
+        SpeedHash = Animator.StringToHash("Speed");
+        IsDeadHash = Animator.StringToHash("IsDead");
+        IsKnockbackHash = Animator.StringToHash("IsKnockback");
+        DashHash = Animator.StringToHash("Dash");
+        DashAttackHash = Animator.StringToHash("DashAttack");
+        BasicAttackHash = Animator.StringToHash("BasicAttack");
+        ComboCountHash = Animator.StringToHash("ComboCount");
+        SpearThrowingHash = Animator.StringToHash("SpearThrowing");
+        SpearThrownHash = Animator.StringToHash("SpearThrown");
+        ChargedAttackReleaseHash = Animator.StringToHash("ChargedAttackRelease");
+        ChargedAttackCastingHash = Animator.StringToHash("ChargedAttackCasting");
+        LaunchBombHash = Animator.StringToHash("LaunchBomb");
+        CorruptionUpgradeHash = Animator.StringToHash("CorruptionUpgrade");
+        BenedictionUpgradeHash = Animator.StringToHash("BenedictionUpgrade");
+        PouringBloodHash = Animator.StringToHash("PouringBlood");
+    }
+
     #endregion
 
+    #region EDITOR
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying)
             return;
-
-
-        //Handles.color = new Color(1, 1, 0.5f, 0.2f);
-        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
-        //Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, -ATTACK_CONE_ANGLE / 2f, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
-
-        //Handles.color = Color.white;
-        //Handles.DrawWireDisc(transform.position, Vector3.up, (int)hero.Stats.GetValue(Stat.ATK_RANGE));
-
-
 
         int i = 0;
         if (ENDPOS.Count > 0)
@@ -668,5 +676,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 #endif
+    #endregion
 }
 
