@@ -258,7 +258,7 @@ public class GorgonStateMachine : Mobs, IGorgon
         Vector3 newPos;
         // Face to his next direction
         this.transform.forward = posToReach - basePos;
-        while (timer < 1f)
+        while (timer < 1f && this.IsAlive)
         {
             newPos = Vector3.Lerp(basePos, posToReach, timer);
             agent.Warp(newPos);
