@@ -11,7 +11,7 @@ using UnityEngine;
 [Serializable]
 public class Drop
 {
-    private static readonly float radiusDropRandom = 2.0f; 
+    private static readonly float radiusDropRandom = 2.0f;
     [SerializeField] List<DropInfo> dropList = new();
     public void DropLoot(Vector3 position)
     {
@@ -31,8 +31,8 @@ public class Drop
     private void DropBasic(Vector3 position, DropInfo dropInfo)
     {
         float baseChance = dropInfo.chance;
-        if (!DropChanceShared(position, dropInfo)) return;
-        for (int i = dropInfo.minQuantity; i <= dropInfo.maxQuantity; i++)
+        DropMinimum(position, dropInfo);
+        for (int i = dropInfo.minQuantity; i < dropInfo.maxQuantity; i++)
         {
             if (UnityEngine.Random.value <= dropInfo.chance)
             {
@@ -70,6 +70,18 @@ public class Drop
         return false;
     }
 
+    private void DropMinimum(Vector3 position, DropInfo dropInfo)
+    {
+        for (int i = 0; i < dropInfo.minQuantity; i++)
+        {
+            GameObject go = GameObject.Instantiate(dropInfo.loot, position, Quaternion.identity);
+            Vector3 pos3D;
+            Vector2 pos = MathsExtension.GetRandomPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
+            pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
+            CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
+        }
+        dropInfo.chance -= dropInfo.decreasingValuePerDrop;
+    }
     private IEnumerator DropMovement(GameObject go, Vector3 pos, float throwTime)
     {
         if (go == null) yield break;
