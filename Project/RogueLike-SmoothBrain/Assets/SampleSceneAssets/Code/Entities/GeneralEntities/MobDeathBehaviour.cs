@@ -8,7 +8,7 @@ public class MobDeathBehaviour : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         VisualEffect vfx = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Death"), animator.transform.parent.position, Quaternion.identity).GetComponent<VisualEffect>();
-        vfx.Play();
+        //vfx.Play();
         GameObject.Destroy(vfx.gameObject, 3f);
         Destroy(animator.transform.parent.parent.gameObject);
     }
