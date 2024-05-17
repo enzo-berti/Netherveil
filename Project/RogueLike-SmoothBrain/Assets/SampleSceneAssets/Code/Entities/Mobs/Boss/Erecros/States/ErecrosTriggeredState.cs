@@ -39,13 +39,13 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-
+        Context.Animator.SetBool("Walk", true);
     }
 
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
-
+        Context.Animator.SetBool("Walk", false);
     }
 
     // This method will be called every frame.
@@ -54,6 +54,9 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         Context.AttackCooldown -= Time.deltaTime;
 
         Context.MoveTo(Context.Player.transform.position);
+
+        Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
+
     }
 
     // This method will be called on state switch.

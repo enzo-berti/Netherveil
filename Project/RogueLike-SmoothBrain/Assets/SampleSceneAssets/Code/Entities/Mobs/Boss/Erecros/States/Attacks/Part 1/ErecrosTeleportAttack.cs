@@ -24,6 +24,7 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
     List<Vector3> teleportPos = new();
 
     float teleportCooldown = 0f;
+    float teleportAnimDelay = 0f;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -37,6 +38,7 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
+        Context.Agent.isStopped = true;
         NavMeshHit hit;
 
         if (Context.CurrentPhase > 1 || Context.CurrentPart > 1)
@@ -66,6 +68,7 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
     // This method will be called only once after the last update.
     protected override void ExitState()
     {
+        Context.Agent.isStopped = false;
         Context.AttackCooldown = 2f + Random.Range(-0.25f, 0.25f);
     }
 
@@ -98,16 +101,35 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
             return;
         }
 
-        Context.Sounds.clone.Play(Context.transform.position, true);
+        if (teleportAnimDelay == 0)
+        {
+            Context.Animator.ResetTrigger("Teleport");
+            Context.Animator.SetTrigger("Teleport");
+        }
 
-        GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
-        clone.GetComponentInChildren<ErecrosCloneBehaviour>().Explode(Context);
-        Context.transform.position = teleportPos[0];
-        teleportPos.RemoveAt(0);
+        teleportAnimDelay += Time.deltaTime;
 
-        Context.Sounds.teleport.Play(Context.transform.position, true);
-        
-        teleportCooldown = teleportPos.Count > 0 ? 1f : 0;
+        if (teleportAnimDelay >= 0.9f)
+        {
+            teleportAnimDelay = 0;
+
+            Context.Sounds.clone.Play(Context.transform.position, true);
+
+            GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
+            clone.GetComponentInChildren<ErecrosCloneBehaviour>().Explode(Context);
+            Context.transform.position = teleportPos[0];
+
+            Vector3 bossToPlayer = Context.Player.transform.position - Context.transform.position;
+            bossToPlayer.y = 0f;
+
+            Context.transform.LookAt(Context.transform.position + bossToPlayer);
+
+            teleportPos.RemoveAt(0);
+
+            Context.Sounds.teleport.Play(Context.transform.position, true);
+
+            teleportCooldown = teleportPos.Count > 0 ? 0.5f : 0;
+        }
     }
 
     #endregion
