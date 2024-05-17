@@ -16,6 +16,9 @@ namespace Map.Generation
         [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
         private int iterationSeedRegister = 0; // BOURRIN 2 
 
+        Room previousRoomSpawned = null;
+
+        static private readonly RoomType[] priorityType = new RoomType[] { RoomType.Lobby, RoomType.Tutorial, RoomType.Normal, RoomType.Boss, RoomType.Merchant, RoomType.Treasure };
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
         const string fileName = "Map.save";
 
@@ -187,35 +190,40 @@ namespace Map.Generation
 
             for (int i = 0; i < nbRoom; i++)
             {
-                for (int indexType = 0; indexType < genParam.nbRoomByType.Count; indexType++)
+                // Search a type to spawn
+                RoomType roomType = RoomType.None;
+                foreach (RoomType typeCandidate in priorityType)
                 {
-                    RoomType type = genParam.nbRoomByType.Keys.ElementAt(indexType);
-
-                    if (genParam.nbRoomByType[type] > 0)
+                    if (genParam.nbRoomByType[typeCandidate] > 0)
                     {
-                        switch (type)
-                        {
-                            case RoomType.Lobby:
-                                GenerateLobbyRoom(ref genParam);
-                                break;
-                            case RoomType.Tutorial:
-                                GenerateTutorialRoom(ref genParam);
-                                break;
-                            case RoomType.Boss:
-                                GenerateBossRoom(ref genParam);
-                                break;
-                            default:
-                                if (!GenerateRoom(ref genParam, type))
-                                {
-                                    Debug.LogError("Can't generate room");
-                                    return false;
-                                }
-                                break;
-                        }
-
-                        genParam.nbRoomByType[type]--;
+                        genParam.nbRoomByType[typeCandidate]--;
+                        roomType = typeCandidate;
                         break;
                     }
+                }
+
+                // Find the right function to spawn the type of room
+                switch (roomType)
+                {
+                    case RoomType.Lobby:
+                        GenerateLobbyRoom(ref genParam);
+                        break;
+                    case RoomType.Tutorial:
+                        GenerateTutorialRoom(ref genParam);
+                        break;
+                    case RoomType.Boss:
+                        GenerateBossRoom(ref genParam);
+                        break;
+                    case RoomType.None:
+                        Debug.LogWarning("No type found in room generations");
+                        break;
+                    default:
+                        if (!GenerateRoom(ref genParam, roomType))
+                        {
+                            Debug.LogError("Can't generate room");
+                            return false;
+                        }
+                        break;
                 }
             }
 
@@ -310,7 +318,7 @@ namespace Map.Generation
 
         static private bool TryPutRoom(Room room, ref GenerationParameters genParam, out Door entranceDoor, out Door exitDoor)
         {
-            DoorsGenerator doorsGenerator = room.GetComponentInChildren<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = room.DoorsGenerator;
 
             foreach (Door entranceDoorCandidate in Seed.RandList(doorsGenerator.doors))
             {
