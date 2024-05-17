@@ -149,7 +149,7 @@ public class AudioManager : MonoBehaviour
 
     }
 
-    void Start()
+    private void loadButtonSound()
     {
         CustomEventTrigger.buttonSelectSFX = buttonSelect;
         UnityEngine.UI.Button[] buttons = FindObjectsOfType<UnityEngine.UI.Button>(true); // parameter makes it include inactive UI elements with buttons
@@ -158,6 +158,11 @@ public class AudioManager : MonoBehaviour
             b.onClick.AddListener(ButtonClickSFX);
             b.AddComponent<CustomEventTrigger>();
         }
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        loadButtonSound();
     }
 
     private void Update()
@@ -329,6 +334,7 @@ public class AudioManager : MonoBehaviour
         }
         buttonSFXInstances.Clear();
 
+        Debug.Log("zbi");
         buttonSFXInstances.Add(Instance.PlaySound(buttonClick));
     }
 }
