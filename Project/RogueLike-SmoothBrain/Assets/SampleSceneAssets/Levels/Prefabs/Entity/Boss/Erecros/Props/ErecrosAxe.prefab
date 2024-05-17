@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6596109008606333166}
   - component: {fileID: 5033553485903532492}
-  - component: {fileID: 7350060190574160236}
   m_Layer: 0
   m_Name: ErecrosAxe
   m_TagString: Untagged
@@ -61,27 +60,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 1
---- !u!65 &7350060190574160236
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7204864694825524849}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.48973393, y: 1.2372494, z: 0.11365287}
-  m_Center: {x: 0, y: 0.6186247, z: -0.000000022351742}
 --- !u!1001 &5889922688449736041
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -113,27 +91,27 @@ PrefabInstance:
     - target: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,
         type: 3}
@@ -148,8 +126,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3810939635068337595, guid: a014e1d08416e794c8ec37621b889f78,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6270329594578576369}
   m_SourcePrefab: {fileID: 100100000, guid: a014e1d08416e794c8ec37621b889f78, type: 3}
+--- !u!1 &7304302114304102610 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3810939635068337595, guid: a014e1d08416e794c8ec37621b889f78,
+    type: 3}
+  m_PrefabInstance: {fileID: 5889922688449736041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6270329594578576369
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304302114304102610}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.48973393, y: 1.2372496, z: 0.1136529}
+  m_Center: {x: 0, y: 0.6186248, z: -0.000000022351747}
 --- !u!4 &7932467037816441448 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4587195241718884097, guid: a014e1d08416e794c8ec37621b889f78,

@@ -38,7 +38,7 @@ public class VulcanHunter : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB GORGONS KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB <size={HudHandler.current.QuestHUD.progressTextSize + 15}><sprite name=\"gorgon\"><size={HudHandler.current.QuestHUD.progressTextSize}> KILLED : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnKill += UpdateCount;
     }
 

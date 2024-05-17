@@ -19,6 +19,7 @@ public class QuestHUD : MonoBehaviour
     public bool QuestEnable { get => questEnable; }
     public TMP_Text LostOrFinishedText { get => lostOrFinishedText; }
     private Coroutine questRoutine;
+    public float progressTextSize;
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class QuestHUD : MonoBehaviour
 
         Utilities.Hero.OnQuestObtained += UpdateUI;
         Utilities.Hero.OnQuestFinished += UpdateUI;
+        progressTextSize = progressText.fontSize;
     }
 
     public void EmptyQuestTexts()
