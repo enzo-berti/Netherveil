@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class CustomEventTrigger : EventTrigger
 {
@@ -145,11 +146,18 @@ public class AudioManager : MonoBehaviour
         }
 
         LoadBuses();
-
-
+        SceneManager.sceneLoaded += PutButtonSoundOnAll;
     }
 
-    private void PutButtonSoundOnAll()
+    private void OnDestroy()
+    {
+        if(this == instance)
+        {
+            SceneManager.sceneLoaded -= PutButtonSoundOnAll;
+        }
+    }
+
+    private void PutButtonSoundOnAll(Scene _, LoadSceneMode __)
     {
         CustomEventTrigger.buttonSelectSFX = buttonSelect;
         UnityEngine.UI.Button[] buttons = FindObjectsOfType<UnityEngine.UI.Button>(true); // parameter makes it include inactive UI elements with buttons
@@ -163,11 +171,6 @@ public class AudioManager : MonoBehaviour
     {
         button.onClick.AddListener(ButtonClickSFX);
         button.AddComponent<CustomEventTrigger>();
-    }
-
-    private void OnLevelWasLoaded(int level)
-    {
-        PutButtonSoundOnAll();
     }
 
     private void Update()
@@ -339,7 +342,6 @@ public class AudioManager : MonoBehaviour
         }
         buttonSFXInstances.Clear();
 
-        Debug.Log("zbi");
         buttonSFXInstances.Add(Instance.PlaySound(buttonClick));
     }
 }
