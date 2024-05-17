@@ -136,6 +136,15 @@ namespace Netherveil.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemDescription"",
+                    ""type"": ""Button"",
+                    ""id"": ""162a7f5e-1c53-41cc-abcb-f9c31ddaec3e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -314,6 +323,17 @@ namespace Netherveil.Inputs
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""103b9c72-108d-4a1f-aa1a-cfaae2a47d21"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ItemDescription"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -433,6 +453,15 @@ namespace Netherveil.Inputs
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""a7490cf1-d3ef-49dd-9105-9331b4655f58"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemDescription"",
+                    ""type"": ""Button"",
+                    ""id"": ""b56b9158-7397-4d0f-80e6-e23ff87cd743"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -692,6 +721,17 @@ namespace Netherveil.Inputs
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""42701725-f03b-4cdc-9fb6-497d0d0d3d40"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ItemDescription"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -734,6 +774,7 @@ namespace Netherveil.Inputs
             m_Keyboard_SpecialAbility = m_Keyboard.FindAction("SpecialAbility", throwIfNotFound: true);
             m_Keyboard_SkipDialogue = m_Keyboard.FindAction("SkipDialogue", throwIfNotFound: true);
             m_Keyboard_Interact = m_Keyboard.FindAction("Interact", throwIfNotFound: true);
+            m_Keyboard_ItemDescription = m_Keyboard.FindAction("ItemDescription", throwIfNotFound: true);
             // Gamepad
             m_Gamepad = asset.FindActionMap("Gamepad", throwIfNotFound: true);
             m_Gamepad_Movement = m_Gamepad.FindAction("Movement", throwIfNotFound: true);
@@ -749,6 +790,7 @@ namespace Netherveil.Inputs
             m_Gamepad_SpecialAbility = m_Gamepad.FindAction("SpecialAbility", throwIfNotFound: true);
             m_Gamepad_SkipDialogue = m_Gamepad.FindAction("SkipDialogue", throwIfNotFound: true);
             m_Gamepad_Interact = m_Gamepad.FindAction("Interact", throwIfNotFound: true);
+            m_Gamepad_ItemDescription = m_Gamepad.FindAction("ItemDescription", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -822,6 +864,7 @@ namespace Netherveil.Inputs
         private readonly InputAction m_Keyboard_SpecialAbility;
         private readonly InputAction m_Keyboard_SkipDialogue;
         private readonly InputAction m_Keyboard_Interact;
+        private readonly InputAction m_Keyboard_ItemDescription;
         public struct KeyboardActions
         {
             private @PlayerInputMap m_Wrapper;
@@ -838,6 +881,7 @@ namespace Netherveil.Inputs
             public InputAction @SpecialAbility => m_Wrapper.m_Keyboard_SpecialAbility;
             public InputAction @SkipDialogue => m_Wrapper.m_Keyboard_SkipDialogue;
             public InputAction @Interact => m_Wrapper.m_Keyboard_Interact;
+            public InputAction @ItemDescription => m_Wrapper.m_Keyboard_ItemDescription;
             public InputActionMap Get() { return m_Wrapper.m_Keyboard; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -883,6 +927,9 @@ namespace Netherveil.Inputs
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @ItemDescription.started += instance.OnItemDescription;
+                @ItemDescription.performed += instance.OnItemDescription;
+                @ItemDescription.canceled += instance.OnItemDescription;
             }
 
             private void UnregisterCallbacks(IKeyboardActions instance)
@@ -923,6 +970,9 @@ namespace Netherveil.Inputs
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
+                @ItemDescription.started -= instance.OnItemDescription;
+                @ItemDescription.performed -= instance.OnItemDescription;
+                @ItemDescription.canceled -= instance.OnItemDescription;
             }
 
             public void RemoveCallbacks(IKeyboardActions instance)
@@ -957,6 +1007,7 @@ namespace Netherveil.Inputs
         private readonly InputAction m_Gamepad_SpecialAbility;
         private readonly InputAction m_Gamepad_SkipDialogue;
         private readonly InputAction m_Gamepad_Interact;
+        private readonly InputAction m_Gamepad_ItemDescription;
         public struct GamepadActions
         {
             private @PlayerInputMap m_Wrapper;
@@ -974,6 +1025,7 @@ namespace Netherveil.Inputs
             public InputAction @SpecialAbility => m_Wrapper.m_Gamepad_SpecialAbility;
             public InputAction @SkipDialogue => m_Wrapper.m_Gamepad_SkipDialogue;
             public InputAction @Interact => m_Wrapper.m_Gamepad_Interact;
+            public InputAction @ItemDescription => m_Wrapper.m_Gamepad_ItemDescription;
             public InputActionMap Get() { return m_Wrapper.m_Gamepad; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1022,6 +1074,9 @@ namespace Netherveil.Inputs
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @ItemDescription.started += instance.OnItemDescription;
+                @ItemDescription.performed += instance.OnItemDescription;
+                @ItemDescription.canceled += instance.OnItemDescription;
             }
 
             private void UnregisterCallbacks(IGamepadActions instance)
@@ -1065,6 +1120,9 @@ namespace Netherveil.Inputs
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
+                @ItemDescription.started -= instance.OnItemDescription;
+                @ItemDescription.performed -= instance.OnItemDescription;
+                @ItemDescription.canceled -= instance.OnItemDescription;
             }
 
             public void RemoveCallbacks(IGamepadActions instance)
@@ -1105,6 +1163,7 @@ namespace Netherveil.Inputs
             void OnSpecialAbility(InputAction.CallbackContext context);
             void OnSkipDialogue(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
+            void OnItemDescription(InputAction.CallbackContext context);
         }
         public interface IGamepadActions
         {
@@ -1121,6 +1180,7 @@ namespace Netherveil.Inputs
             void OnSpecialAbility(InputAction.CallbackContext context);
             void OnSkipDialogue(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
+            void OnItemDescription(InputAction.CallbackContext context);
         }
     }
 }

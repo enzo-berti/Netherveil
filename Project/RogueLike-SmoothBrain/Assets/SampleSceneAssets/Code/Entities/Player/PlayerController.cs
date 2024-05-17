@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //if player has fallen out of map security
-        if (transform.position.y < -100f)
+        if (transform.position.y < -30f && hero.State != (int)Entity.EntityState.DEAD)
         {
             hero.Death();
         }

@@ -30,8 +30,6 @@ namespace PrefabLightMapBaker
 
         public static void Start()
         {
-            Debug.ClearDeveloperConsole();
-
             UpdateLightSettings();
 
             // 1. Prepare objects for bake
@@ -41,7 +39,6 @@ namespace PrefabLightMapBaker
             {
                 // Set all nested object as static for bake
                 EditorUtils.LockForBake(x.gameObject);
-
             });
 
             // 2. Display progress dialog and await for bake complete in `BakeCompelte()`
