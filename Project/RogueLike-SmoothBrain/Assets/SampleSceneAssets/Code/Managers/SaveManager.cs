@@ -1,76 +1,49 @@
 using System.IO;
 using UnityEngine;
 
-public class SaveManager : MonoBehaviour
+static public class SaveManager
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void LoadSaveManager()
-    {
-        _ = Instance;
-    }
-
-    static private SaveManager instance;
-    static public SaveManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                GameObject obj = new GameObject(nameof(SaveManager));
-                obj.AddComponent<SaveManager>();
-            }
-
-            return instance;
-        }
-    }
-
     public delegate void OnSave(string directoryPath);
-    public event OnSave onSave;
+    static public event OnSave onSave;
 
-    private int selectedSave = -1;
-    public string DirectoryPath { private set; get; } = string.Empty;
-    public bool HasData { private set; get; } = false;
+    static public string DirectoryPath { private set; get; } = string.Empty;
+    static public bool HasData { get => DirectoryPath != string.Empty; }
 
-    private void Awake()
+    static public void SelectSave(int selectedSave)
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(instance);
-        }
-        else
-        {
-            Destroy(instance);
-            return;
-        }
+        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + "/";
 
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
         {
             Directory.CreateDirectory(Application.persistentDataPath + "/Save");
         }
 
-        HasData = false;
-
-        //SelectSave(1);
-    }
-
-    public void SelectSave(int selectedSave)
-    {
-        this.selectedSave = selectedSave;
-        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + "/";
-
         if (!Directory.Exists(DirectoryPath))
         {
             Directory.CreateDirectory(DirectoryPath);
         }
-        else
+    }
+
+    /// <summary>
+    /// Erase all the file in the selectionned save folder
+    /// </summary>
+    static public void NukeSave()
+    {
+        DirectoryInfo directory = new DirectoryInfo(DirectoryPath);
+
+        foreach (FileInfo file in directory.GetFiles())
         {
-            HasData = true; // pas ouf temporaire
+            file.Delete();
         }
     }
 
-    public void Save()
+    static public void Save()
     {
+        if (DirectoryPath == string.Empty)
+        {
+            return;
+        }
+
         onSave?.Invoke(DirectoryPath);
     }
 

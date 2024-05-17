@@ -628,7 +628,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     #region SAVE_AND_LOAD
     public void Save(string directoryPath)
     {
-        string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
+        string filePath = SaveManager.DirectoryPath + saveFileName;
 
         using (var stream = File.Open(filePath, FileMode.Create))
         {
@@ -663,10 +663,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     public void Load()
     {
         isLoading = true;
-        string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
+        string filePath = SaveManager.DirectoryPath + saveFileName;
         float hp;
 
-        if (!File.Exists(filePath) || SaveManager.Instance.HasData)
+        if (!File.Exists(filePath) || SaveManager.HasData)
         {
             isLoading = false;
             return;

@@ -45,7 +45,7 @@ namespace Map.Generation
 
             MapUtilities.stage = 0;
 
-            SaveManager.Instance.onSave += Save;
+            SaveManager.onSave += Save;
         }
 
         private void LateUpdate()
@@ -80,7 +80,7 @@ namespace Map.Generation
 
         private void LoadSave()
         {
-            string filePath = SaveManager.Instance.DirectoryPath + fileName;
+            string filePath = SaveManager.DirectoryPath + fileName;
 
             if (!File.Exists(filePath))
             {
@@ -108,7 +108,7 @@ namespace Map.Generation
 
         private void Save(string directoryPath)
         {
-            string filePath = SaveManager.Instance.DirectoryPath + fileName;
+            string filePath = SaveManager.DirectoryPath + fileName;
 
             using (var stream = File.Open(filePath, FileMode.Create))
             {

@@ -152,7 +152,7 @@ namespace Map
             MapUtilities.onEarlyExit?.Invoke();
             MapUtilities.onExit?.Invoke();
 
-            SaveManager.Instance.Save();
+            SaveManager.Save();
         }
 
         private void AllEnemiesDeadEvents()
