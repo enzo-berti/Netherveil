@@ -182,7 +182,7 @@ public abstract class Mobs : Entity
     {
         if (this is not IBoss)
         {
-            switch (MapUtilities.stage)
+            switch (MapUtilities.Stage)
             {
                 case 0:
                     break;

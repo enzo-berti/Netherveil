@@ -31,7 +31,7 @@ namespace Map
 
             MapUtilities.onFinishStage?.Invoke();
 
-            if (MapUtilities.stage == 3)
+            if (MapUtilities.Stage == 3)
             {
                 FindObjectOfType<LevelLoader>().LoadScene("Outro", true);
                 return;

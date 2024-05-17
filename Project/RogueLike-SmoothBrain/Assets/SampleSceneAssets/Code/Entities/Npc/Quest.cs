@@ -68,7 +68,7 @@ public abstract class Quest
         MapUtilities.onEnter += CheckQuestFinished;
         Utilities.Hero.OnQuestObtained += CheckQuestFinished;
 
-        startFloor = MapUtilities.stage;
+        startFloor = MapUtilities.Stage;
     }
 
     public void LateAcceptQuest()
@@ -84,7 +84,7 @@ public abstract class Quest
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestFinishedSFX);
         player.CurrentQuest = null;
 
-        if (startFloor == MapUtilities.stage)
+        if (startFloor == MapUtilities.Stage)
         {
             if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
             {
