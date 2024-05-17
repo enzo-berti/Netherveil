@@ -20,7 +20,7 @@ public class ShockwaveBracelet : ItemEffect, IActiveItem
 
         shockwaveVFX.transform.position = hero.transform.position;
         shockwaveCollider.transform.position = hero.transform.position;
-        shockwaveCollider.SetActive(true);
+        //shockwaveCollider.SetActive(true);
 
         shockwaveVFX.GetComponent<VFXStopper>().PlayVFX();
 
