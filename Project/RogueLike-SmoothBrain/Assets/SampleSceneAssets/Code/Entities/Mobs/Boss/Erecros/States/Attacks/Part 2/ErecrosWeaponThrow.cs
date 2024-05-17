@@ -10,8 +10,10 @@
 //      }
 // }
 
+using Cinemachine.Utility;
 using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -23,6 +25,12 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
     bool attackEnded = false;
     List<Vector3> targetPos = new();
     Rigidbody[] props;
+    List<bool> onBoss = new();
+    List<bool> launched = new();
+
+    float delayBetweenLaunch = 0.5f;
+    float launchTimer;
+    int iterator = 0;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -44,9 +52,15 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
         {
             props[i].constraints = RigidbodyConstraints.None;
             props[i].isKinematic = false;
-            targetPos.Add(props[i].position);
-            targetPos.Add(Context.transform.position + Vector3.up * Context.Height);
-            props[i].velocity = (targetPos[i] - props[i].transform.position).normalized * 10f;
+
+            Vector3 customVector = Context.transform.right * 2f;
+            customVector = Quaternion.AngleAxis(180f / (props.Length - 1) * i, Context.transform.forward) * customVector;
+
+            targetPos.Add(Context.transform.position + Context.transform.up * Context.Height + customVector);
+            props[i].velocity = (targetPos.Last() - props[i].transform.position).normalized * 10f;
+
+            onBoss.Add(false);
+            launched.Add(false);
         }
     }
 
@@ -65,19 +79,42 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        Context.LookAtTarget(Context.Player.transform.position);
+
+        bool allOnBoss = true;
 
         for (int i = 0; i < props.Length; i++)
         {
-            LookAtTarget(props[i].transform, targetPos[i]);
-
-            if (Vector3.Distance(props[i].transform.position, targetPos[i]) <= 1f)
+            if (!onBoss[i])
             {
-                props[i].isKinematic = true;
-                props[i].constraints = RigidbodyConstraints.FreezeAll;
+                GetToBoss(i);
+                allOnBoss = false;
+            }
+            else if (!launched[i])
+            {
+                props[i].transform.position = new Vector3(props[i].transform.position.x, targetPos[i].y + Mathf.Sin(5f * Time.time + i * 5f) * 0.25f, props[i].transform.position.z);
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Keypad9))
+        if (allOnBoss)
+        {
+            launchTimer += Time.deltaTime;
+
+            if (launchTimer >= delayBetweenLaunch)
+            {
+                //delayBetweenLaunch -= 0.1f;
+                launchTimer = 0f;
+
+                props[iterator].transform.parent = Context.PropsParent.transform;
+                props[iterator].velocity = (Context.Player.transform.position - props[iterator].transform.position).normalized * 20f;
+                LookAtForward(props[iterator]);
+                launched[iterator] = true;
+
+                iterator++;
+            }
+        }
+
+        if (iterator >= props.Length)
         {
             attackEnded = true;
         }
@@ -99,8 +136,38 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
 
         Quaternion lookRotation = Quaternion.LookRotation(mobToPlayer);
 
-        _launcher.rotation = Quaternion.Slerp(_launcher.rotation, lookRotation, _speed * Time.deltaTime);
+        _launcher.localRotation = Quaternion.Slerp(_launcher.localRotation, lookRotation, _speed * Time.deltaTime);
     }
+
+    public void LookAtForward(Rigidbody _launcher, float _speed = 5f)
+    {
+        Quaternion lookRotation = Quaternion.LookRotation(_launcher.transform.forward);
+
+        _launcher.transform.localRotation = Quaternion.Slerp(_launcher.transform.localRotation, lookRotation, _speed * Time.deltaTime);
+    }
+
+    void GetToBoss(int i)
+    {
+        Vector3 customVector = Context.transform.right * 2f;
+        customVector = Quaternion.AngleAxis(180f / (props.Length - 1) * i, Context.transform.forward) * customVector;
+
+        targetPos[i] = Context.transform.position + Context.transform.up * Context.Height + customVector;
+
+        props[i].velocity = (targetPos[i] - props[i].transform.position).normalized * 10f;
+
+        LookAtTarget(props[i].transform, targetPos[i]);
+
+        if (Vector3.Distance(props[i].transform.position, targetPos[i]) <= 0.1f)
+        {
+            props[i].transform.LookAt(props[i].transform.position + Context.transform.forward);
+            props[i].transform.parent = Context.transform;
+            props[i].velocity = Vector3.zero;
+            onBoss[i] = true;
+
+            targetPos[i] = props[i].transform.position;
+        }
+    }
+
 
     #endregion
 }
