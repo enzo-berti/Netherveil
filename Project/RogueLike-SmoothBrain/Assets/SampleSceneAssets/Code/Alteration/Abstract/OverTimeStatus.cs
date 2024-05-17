@@ -16,7 +16,7 @@ public abstract class OverTimeStatus : Status
     {
         if (!isCoroutineOn)
         {
-            CoroutineManager.Instance.StartCustom(EffectAsync());
+            CoroutineManager.Instance.StartCoroutine(EffectAsync());
         }
     }
     private IEnumerator EffectAsync()
@@ -34,7 +34,7 @@ public abstract class OverTimeStatus : Status
     public sealed override void ApplyEffect(Entity target)
     {
         base.ApplyEffect(target);
-        CoroutineManager.Instance.StartCustom(UpdateEffect());
+        CoroutineManager.Instance.StartCoroutine(UpdateEffect());
     }
 
     public sealed override void AddStack(int nb)

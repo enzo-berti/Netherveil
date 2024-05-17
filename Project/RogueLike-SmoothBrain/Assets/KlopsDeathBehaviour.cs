@@ -19,11 +19,11 @@ public class KlopsDeathBehaviour : StateMachineBehaviour
         VFX.SetFloat("ExplosionRadius", blastDiameter);
         VFX.transform.position = animator.gameObject.transform.parent.position;
         VFX.Play();
-        CoroutineManager.Instance.StartCustom(Explosion(animator.gameObject.transform.parent.GetComponent<KlopsStateMachine>(), stateInfo.length));
+        CoroutineManager.Instance.StartCoroutine(Explosion(animator.gameObject.transform.parent.GetComponent<KlopsStateMachine>(), stateInfo.length));
     }
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        CoroutineManager.Instance.StartCustom(BeforeDestroy(animator, VFX.GetFloat("ExplosionTime")));
+        CoroutineManager.Instance.StartCoroutine(BeforeDestroy(animator, VFX.GetFloat("ExplosionTime")));
     }
 
     private IEnumerator BeforeDestroy(Animator animator, float time)
