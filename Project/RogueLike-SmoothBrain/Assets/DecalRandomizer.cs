@@ -11,6 +11,6 @@ public class DecalRandomizer : MonoBehaviour
     {
         decalProjector = GetComponent<DecalProjector>();
         decalProjector.material = materials[UnityEngine.Random.Range(0, materials.Length)];
-        transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
+        transform.rotation = Quaternion.Euler(gameObject.transform.rotation.eulerAngles.x, UnityEngine.Random.Range(gameObject.transform.rotation.eulerAngles.x, 360f), gameObject.transform.rotation.eulerAngles.z);
     }
 }
