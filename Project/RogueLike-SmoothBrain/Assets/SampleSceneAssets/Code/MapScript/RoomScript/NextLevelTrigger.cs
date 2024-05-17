@@ -31,14 +31,13 @@ namespace Map
 
             MapUtilities.onFinishStage?.Invoke();
 
-            MapGenerator mapGen = FindObjectOfType<MapGenerator>();
-
-            if (mapGen.stage == 3)
+            if (MapUtilities.stage == 3)
             {
                 FindObjectOfType<LevelLoader>().LoadScene("Outro", true);
                 return;
             }
 
+            MapGenerator mapGen = FindObjectOfType<MapGenerator>();
             mapGen.DestroyMap();
             mapGen.generate = true;
         }
