@@ -24,7 +24,7 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
     bool attackEnded = false;
     List<ErecrosCloneBehaviour> cloneBehaviours = new();
 
-    float timeBeforeDash = 0.75f;
+    float timeBeforeDash = 1f;
     bool dashed = false;
     float dashDistance = 12f;
 
@@ -70,6 +70,9 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
 
         Context.Sounds.clone.Play(Context.Player.transform.position, true);
         Context.Sounds.teleport.Play(Context.transform.position, true);
+
+        Context.Animator.ResetTrigger("Dash");
+        Context.Animator.SetTrigger("Dash");
     }
 
     // This method will be called only once after the last update.
@@ -136,6 +139,11 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
             {
                 Context.Stats.DecreaseCoeffValue(Stat.SPEED, 4f);
                 attackEnded = true;
+            }
+            else if (dashDistance <= 2f)
+            {
+                Context.Animator.ResetTrigger("DashRecover");
+                Context.Animator.SetTrigger("DashRecover");
             }
         }
     }

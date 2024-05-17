@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class CustomEventTrigger : EventTrigger
 {
@@ -145,19 +146,31 @@ public class AudioManager : MonoBehaviour
         }
 
         LoadBuses();
-
-
+        SceneManager.sceneLoaded += PutButtonSoundOnAll;
     }
 
-    void Start()
+    private void OnDestroy()
+    {
+        if(this == instance)
+        {
+            SceneManager.sceneLoaded -= PutButtonSoundOnAll;
+        }
+    }
+
+    private void PutButtonSoundOnAll(Scene _, LoadSceneMode __)
     {
         CustomEventTrigger.buttonSelectSFX = buttonSelect;
         UnityEngine.UI.Button[] buttons = FindObjectsOfType<UnityEngine.UI.Button>(true); // parameter makes it include inactive UI elements with buttons
         foreach (UnityEngine.UI.Button b in buttons)
         {
-            b.onClick.AddListener(ButtonClickSFX);
-            b.AddComponent<CustomEventTrigger>();
+            AddbuttonSFX(b);
         }
+    }
+
+    public void AddbuttonSFX(UnityEngine.UI.Button button)
+    {
+        button.onClick.AddListener(ButtonClickSFX);
+        button.AddComponent<CustomEventTrigger>();
     }
 
     private void Update()

@@ -66,7 +66,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     [SerializeField] GameObject propsParent;
 
     Rigidbody[] props;
-    List<BoxCollider> propsColliders = new();
+    List<Collider> propsColliders = new();
 
     #region Getters/Setters
     public List<Status> StatusToApply { get => statusToApply; }
@@ -90,7 +90,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public GameObject PrisonTorusPrefab { get => prisonTorusPrefab; }
     public GameObject PropsParent { get => propsParent; }
     public Rigidbody[] PropsRB { get => props; }
-    public List<BoxCollider> PropsColliders { get => propsColliders; }
+    public List<Collider> PropsColliders { get => propsColliders; }
 
     #endregion
 
@@ -112,7 +112,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
         foreach (Rigidbody prop in props)
         {
-            propsColliders.Add(prop.gameObject.GetComponentInChildren<BoxCollider>());
+            propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
         }
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;

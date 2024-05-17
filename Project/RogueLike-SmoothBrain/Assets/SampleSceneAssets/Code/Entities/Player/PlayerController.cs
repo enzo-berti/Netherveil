@@ -95,6 +95,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("SFXs")]
     public EventReference DashSFX;
+    public EventReference DashAttackSFX;
     public EventReference HitSFX;
     public EventReference DeadSFX;
     public EventReference ThrowSpearSFX;
@@ -186,6 +187,14 @@ public class PlayerController : MonoBehaviour
         {
             hero.Death();
         }
+
+        //security to avoid player walking on props
+        if (this.transform.position.y > 0.1f)
+        {
+            Debug.Log("HOHOHOHO");
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+        }
+        
     }
 
     private void UpdateAnimator()
@@ -311,12 +320,12 @@ public class PlayerController : MonoBehaviour
             capsuleTop = new Vector3(capsuleBase.x, capsuleBase.y + 2, capsuleBase.z);
 
             // If the collider isn't in ToCollide List && not in the last overlapCapsule from the endPos, Ignore its collision until the end of the dash
-            if(!ToCollide.Contains(collider) && !Physics.OverlapCapsule(capsuleBase, capsuleTop, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
+            if (!ToCollide.Contains(collider) && !Physics.OverlapCapsule(capsuleBase, capsuleTop, sphereCastSize, LayerMask.GetMask("AvoidDashCollide")).Contains(collider))
             {
                 Physics.IgnoreCollision(characterController, collider, true);
                 collidersIgnored.Add(collider);
             }
-            
+
         }
 
     }
