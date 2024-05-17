@@ -70,6 +70,8 @@ public abstract class Mobs : Entity
         animator = GetComponentInChildren<Animator>();
         hit = GetComponentInChildren<HitMaterialApply>();
 
+        IncreaseMobStats();
+
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
         if (lifeBar)
             lifeBar.SetMaxValue(stats.GetValue(Stat.HP));
@@ -118,8 +120,7 @@ public abstract class Mobs : Entity
 
         AddSpawningMat();
         wanderZone.center = transform.position;
-
-        IncreaseMobStats();
+        
     }
 
     private void AddSpawningMat()
@@ -188,13 +189,11 @@ public abstract class Mobs : Entity
                 case 1:
                     stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
                     stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
-                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
                     stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
                     break;
                 case 2:
                     stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
                     stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
-                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 2.5f);
                     stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 2.5f);
                     break;
             }
