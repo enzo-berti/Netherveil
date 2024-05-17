@@ -36,7 +36,7 @@ public class RuneOfPride : ItemEffect, IPassiveItem
         {
             Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.Play();
         }
-        Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.SetFloat("Arrows Amounts", 0.03f * nbBoost);
+        Utilities.Player.GetComponent<PlayerController>().RuneOfPrideVFX.SetFloat("Arrows Amounts", 0.01f * nbBoost);
     }
 
     private void Reset()
