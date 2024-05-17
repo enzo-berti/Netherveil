@@ -79,8 +79,8 @@ public class Drop
             Vector2 pos = MathsExtension.GetRandomPointInCircle(new Vector2(go.transform.position.x, go.transform.position.z), radiusDropRandom);
             pos3D = new Vector3(pos.x, go.transform.position.y, pos.y);
             CoroutineManager.Instance.StartCustom(DropMovement(go, pos3D, 1f));
-            dropInfo.chance -= dropInfo.decreasingValuePerDrop;
         }
+        dropInfo.chance -= dropInfo.decreasingValuePerDrop;
     }
     private IEnumerator DropMovement(GameObject go, Vector3 pos, float throwTime)
     {
