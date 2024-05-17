@@ -23,7 +23,7 @@ public class Bomb : ItemEffect, IActiveItem
         player.GetComponent<PlayerController>().PlayLaunchBombAnim();
         player.GetComponent<PlayerController>().RotatePlayerToDeviceAndMargin();
 
-        CoroutineManager.Instance.StartCustom(WaitLaunch(player));
+        CoroutineManager.Instance.StartCoroutine(WaitLaunch(player));
         
     }
 
