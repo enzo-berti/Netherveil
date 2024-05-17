@@ -19,6 +19,8 @@ namespace Map
 
         static public RoomData currentRoomData;
 
+        static public int stage;
+
         static public Dictionary<RoomType, int> nbRoomByType = new Dictionary<RoomType, int>
         {
             { RoomType.Lobby, 0 },

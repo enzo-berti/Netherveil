@@ -1,3 +1,4 @@
+using Map;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -85,6 +86,7 @@ public class PlayerInput : MonoBehaviour
         chargedAttackVFXMaxSize = controller.ChargedAttackVFX.GetFloat("VFX Size");
         PauseMenu.OnPause += DisableGameplayInputs;
         PauseMenu.OnUnpause += EnableGameplayInputs;
+        MapUtilities.onFinishStage += RetrieveSpear;
 
         // Wait 2.8 seconds before move to Start cinematic
         DisableGameplayInputs();
@@ -99,6 +101,7 @@ public class PlayerInput : MonoBehaviour
         hero.OnChangeState -= ResetForceReturnToMove;
         PauseMenu.OnPause -= DisableGameplayInputs;
         PauseMenu.OnUnpause -= EnableGameplayInputs;
+        MapUtilities.onFinishStage -= RetrieveSpear;
         InputActionMap kbMap = playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true);
         InputManagement(kbMap, unsubscribe: true);
         InputActionMap gamepadMap = playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true);
@@ -321,6 +324,15 @@ public class PlayerInput : MonoBehaviour
             controller.PlayVFXAtPlayerPos(controller.SpearLaunchVFX);
         }
         else
+        {
+            OnRetrieveSpear?.Invoke();
+            controller.Spear.Return();
+        }
+    }
+
+    private void RetrieveSpear()
+    {
+        if(controller.Spear.IsThrown && !controller.Spear.IsThrowing)
         {
             OnRetrieveSpear?.Invoke();
             controller.Spear.Return();

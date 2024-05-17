@@ -52,6 +52,9 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
 
         Context.Sounds.invocation.Play(Context.transform.position);
 
+        Context.Animator.ResetTrigger("Invoke");
+        Context.Animator.SetTrigger("Invoke");
+
         Context.ShieldVFX.Reinit();
         Context.ShieldVFX.Play();
     }
@@ -63,6 +66,9 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
         Context.AttackCooldown = 2f + Random.Range(-0.25f, 0.25f);
 
         Context.ShieldVFX.Stop();
+
+        Context.Animator.ResetTrigger("EnemiesDead");
+        Context.Animator.SetTrigger("EnemiesDead");
     }
 
     // This method will be called every frame.
