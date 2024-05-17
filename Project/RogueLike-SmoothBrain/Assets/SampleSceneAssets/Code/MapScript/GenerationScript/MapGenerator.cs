@@ -16,7 +16,7 @@ namespace Map.Generation
         [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
         private int iterationSeedRegister = 0; // BOURRIN 2 
 
-        Room previousRoomSpawned = null;
+        private Room previousRoomSpawned = null;
 
         static private readonly RoomType[] priorityType = new RoomType[] { RoomType.Lobby, RoomType.Tutorial, RoomType.Normal, RoomType.Boss, RoomType.Merchant, RoomType.Treasure };
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
@@ -234,6 +234,11 @@ namespace Map.Generation
         {
             foreach (Room candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
             {
+                if (type == RoomType.Normal && candidateRoomPrefab == previousRoomSpawned) // temporary
+                {
+                    continue;
+                }
+
                 Room room = Instantiate(candidateRoomPrefab.gameObject).GetComponent<Room>();
                 if (!TryPutRoom(room, ref genParam, out Door entranceDoor, out Door exitDoor))
                 {
@@ -241,6 +246,11 @@ namespace Map.Generation
                 }
 
                 InitRoom(room, ref genParam, ref entranceDoor, exitDoor);
+                if (type == RoomType.Normal) // temporary
+                {
+                    previousRoomSpawned = room;
+                }
+
                 return true;
             }
 
