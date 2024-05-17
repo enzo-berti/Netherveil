@@ -414,7 +414,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         HealPlayer(realHealValue);
     }
 
-    private void HealPlayer(int realHealValue)
+    public void HealPlayer(int realHealValue)
     {
         if (realHealValue > 0)
         {
