@@ -1,4 +1,5 @@
 using DialogueSystem.Runtime;
+using Map.Generation;
 using UnityEngine;
 
 public class QuestTalker : Npc
