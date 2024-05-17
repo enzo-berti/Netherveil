@@ -2,7 +2,17 @@ using UnityEngine;
 
 public static class Utilities
 {
-    static public GameObject Player { get => GameObject.FindWithTag("Player"); }
+    static private GameObject player = null;
+    static public GameObject Player
+    {
+        get
+        {
+            if (player == null)
+                player = GameObject.FindWithTag("Player");
+
+            return player;
+        }
+    }
 
     static public Hero Hero { get => Player != null ? Player.TryGetComponent(out Hero hero) ? hero : null : null; }
     static public Stats PlayerStat { get => Hero.Stats; }

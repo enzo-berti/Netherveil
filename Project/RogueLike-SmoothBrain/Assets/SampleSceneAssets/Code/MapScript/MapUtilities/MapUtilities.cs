@@ -2,6 +2,7 @@ using Map.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Map
 {
@@ -19,7 +20,21 @@ namespace Map
 
         static public RoomData currentRoomData;
 
-        static public int stage;
+        static private MapGenerator mapGenerator = null;
+        static public MapGenerator MapGenerator
+        {
+            get
+            {
+                if (mapGenerator == null)
+                {
+                    mapGenerator = GameObject.FindObjectOfType<MapGenerator>(true);
+                }
+
+                return mapGenerator;
+            }
+        }
+
+        static public int Stage { get => MapGenerator.Stage; }
 
         static public Dictionary<RoomType, int> nbRoomByType = new Dictionary<RoomType, int>
         {

@@ -24,6 +24,8 @@ namespace Map.Generation
 
         public List<int> roomClearId = new List<int>();
 
+        public int Stage { get; private set; } = 0;
+
         private void Awake()
         {
             //if (SaveManager.Instance.HasData)
@@ -42,8 +44,6 @@ namespace Map.Generation
 
             seed = Seed.seed;
             Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
-
-            MapUtilities.stage = 0;
 
             SaveManager.onSave += Save;
         }
@@ -95,7 +95,7 @@ namespace Map.Generation
                     Seed.seed = reader.ReadString();
                     Seed.Iterate(reader.ReadInt32());
                     // stage
-                    MapUtilities.stage = reader.ReadInt32() - 1;
+                    Stage = reader.ReadInt32() - 1;
                     // room ids
                     int numberCleared = reader.ReadInt32();
                     for (int i = 0; i < numberCleared; i++)
@@ -118,7 +118,7 @@ namespace Map.Generation
                     writer.Write(Seed.seed);
                     writer.Write(iterationSeedRegister);
                     // stage
-                    writer.Write(MapUtilities.stage);
+                    writer.Write(MapUtilities.Stage);
                     // room ids
                     writer.Write(roomClearId.Count);
                     foreach (int id in roomClearId)
@@ -143,7 +143,7 @@ namespace Map.Generation
 
         private void ChangeMiniMapColor()
         {
-            switch (MapUtilities.stage)
+            switch (MapUtilities.Stage)
             {
                 case 1:
                     miniMapMat.SetColor("_Ground", ColorExtension.Color("8065A4"));
@@ -165,12 +165,12 @@ namespace Map.Generation
 
         public void Generate(GenerationParameters genParam)
         {
-            MapUtilities.stage++;
+            Stage++;
             iterationSeedRegister = Seed.Iteration;
 
             ChangeMiniMapColor();
 
-            if (MapUtilities.stage == 1)
+            if (MapUtilities.Stage == 1)
             {
                 genParam.nbRoomByType[RoomType.Tutorial] = 1;
             }
@@ -282,7 +282,7 @@ namespace Map.Generation
         private void GenerateBossRoom(ref GenerationParameters genParam)
         {
             var bossPrefabs = MapResources.RoomPrefabs(RoomType.Boss);
-            int bossIndex = MapUtilities.stage % bossPrefabs.Count;
+            int bossIndex = MapUtilities.Stage % bossPrefabs.Count;
 
             Room room = Instantiate(bossPrefabs[bossIndex].gameObject).GetComponent<Room>();
 

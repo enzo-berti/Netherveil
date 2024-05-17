@@ -17,7 +17,7 @@ public class TutoText : MonoBehaviour
     void Awake()
     {
         // Temporaire
-        if (MapUtilities.stage > 1)
+        if (MapUtilities.Stage > 1)
         {
             Destroy(gameObject);
             return;
