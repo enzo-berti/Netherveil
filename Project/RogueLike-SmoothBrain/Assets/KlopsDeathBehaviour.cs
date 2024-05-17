@@ -11,9 +11,7 @@ public class KlopsDeathBehaviour : StateMachineBehaviour
     [SerializeField] int blastDamage;
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Debug.Log("Explosion");
         VFX = animator.gameObject.transform.parent.GetComponent<KlopsStateMachine>().ExplodingVFX;
-        Debug.Log("is VFX null => " + VFX == null);
         VFX.SetFloat("TimeToExplode", stateInfo.length);
         VFX.SetFloat("ExplosionTime", 2.5f);
         VFX.SetFloat("ExplosionRadius", blastDiameter);
