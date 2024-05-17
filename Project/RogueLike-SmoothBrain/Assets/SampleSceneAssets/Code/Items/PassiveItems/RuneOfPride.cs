@@ -16,13 +16,13 @@ public class RuneOfPride : ItemEffect, IPassiveItem
     public void OnRemove()
     {
         Utilities.Hero.OnKill -= Berserk;
-        MapUtilities.onEnter -= Reset;
+        MapUtilities.onExit -= Reset;
     }
 
     public void OnRetrieved()
     {
         Utilities.Hero.OnKill += Berserk;
-        MapUtilities.onEnter += Reset;
+        MapUtilities.onExit += Reset;
     }
 
     private void Berserk(IDamageable damageable)
