@@ -133,8 +133,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         stats.onStatChange += CheckIfLaunchUpgrade;
         //OnDeath += Inventory.RemoveAllItems;
 
-        //SaveManager.Instance.onSave += Save;
-        //Load();
+        SaveManager.onSave += Save;
+        Load();
     }
 
     private void OnDestroy()
@@ -662,11 +662,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     public void Load()
     {
+        if (!SaveManager.HasData)
+        {
+            return;
+        }
+
         isLoading = true;
         string filePath = SaveManager.DirectoryPath + saveFileName;
         float hp;
 
-        if (!File.Exists(filePath) || SaveManager.HasData)
+        if (!File.Exists(filePath))
         {
             isLoading = false;
             return;
