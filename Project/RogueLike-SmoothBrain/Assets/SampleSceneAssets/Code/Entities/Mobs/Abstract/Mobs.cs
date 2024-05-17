@@ -48,6 +48,7 @@ public abstract class Mobs : Entity
     public Vector3 WanderZoneCenter { get => wanderZone.center; set => wanderZone.center = value; }
     public int WanderZoneRadius { get => wanderZone.radius; set => wanderZone.radius = value; }
     public EnemyLifeBar LifeBar { get => lifeBar; }
+    public bool IsAlive { get => this.Stats.GetValue(Stat.HP) > 0; }
 
     protected virtual void OnEnable()
     {
