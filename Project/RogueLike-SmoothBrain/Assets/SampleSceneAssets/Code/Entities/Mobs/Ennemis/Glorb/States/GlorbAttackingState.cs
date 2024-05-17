@@ -28,6 +28,7 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
     Attacks currentAttack = Attacks.NONE;
     float stompDelay = 0f;
     float punchDelay = 0f;
+    bool hasLaunchedPunch = false;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -75,7 +76,8 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
                 Context.Animator.SetTrigger("Shockwave");
                 currentAttack = Attacks.SPECIAL;
             }
-            else if (stompDelay >= 0.8f)
+
+            else if (stompDelay >= 1.1f)
             {
                 stompDelay = 0f;
                 Context.SpecialAttackTimer = 0f;
@@ -94,6 +96,7 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
 
             stompDelay += Time.deltaTime;
         }
+        
         else if (Context.IsBasicAttackAvailable && currentAttack != Attacks.SPECIAL)
         {
             if (punchDelay == 0f)
@@ -103,7 +106,12 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
                 Context.Animator.SetTrigger("Punch");
                 currentAttack = Attacks.BASIC;
             }
-            else if (punchDelay >= 0.6f)
+            else if (!hasLaunchedPunch && punchDelay >= 0.5f)
+            {
+                hasLaunchedPunch = true;
+                Context.Animator.speed = 2f;
+            }
+            else if (punchDelay >= 0.85f)
             {
                 punchDelay = 0f;
                 Context.BasicAttackTimer = 0f;
@@ -115,6 +123,8 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
                 currentAttack = Attacks.NONE;
 
                 Context.Stats.SetValue(Stat.KNOCKBACK_DISTANCE, 5f);
+                Context.Animator.speed = 1f;
+                hasLaunchedPunch = false;
                 return;
             }
             else

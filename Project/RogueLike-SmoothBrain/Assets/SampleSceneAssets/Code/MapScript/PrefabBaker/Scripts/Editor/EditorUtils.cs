@@ -165,7 +165,7 @@ namespace PrefabLightMapBaker
 
                 try { PrefabUtility.ApplyPrefabInstance(prefab, InteractionMode.AutomatedAction); }
                 catch { }
-                finally { PrefabUtility.SaveAsPrefabAssetAndConnect(prefabRoot, rootPath, InteractionMode.AutomatedAction); }
+                finally { PrefabUtility.SaveAsPrefabAsset(prefabRoot, rootPath); }
             }
         }
 
