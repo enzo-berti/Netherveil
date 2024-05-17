@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
         //security to avoid player walking on props
         if (this.transform.position.y > 0.1f)
         {
-            Debug.Log("HOHOHOHO");
+            Debug.Log("player security avoid walking on props", this);
             transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
         }
         
