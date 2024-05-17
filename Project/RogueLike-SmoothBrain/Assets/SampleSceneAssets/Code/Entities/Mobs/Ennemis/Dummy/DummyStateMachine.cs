@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class DummyStateMachine : Mobs, IDummy
 {
@@ -133,6 +134,7 @@ public class DummyStateMachine : Mobs, IDummy
 
     public void Death()
     {
+        GameObject.Destroy(GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
         animator.speed = 1;
         Unsubscribe();
         Destroy(objectToDestroy);
