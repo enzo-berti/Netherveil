@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using UnityEngine.VFX;
+using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -187,6 +188,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
 
         if (projectile != null)
         {
+            Destroy(projectile.GetComponent<ZiggoProjectile>().PoisonBallVFX.gameObject);
             projectile.GetComponent<ZiggoProjectile>().PoisonPuddleVFX.Stop();
             Destroy(projectile);
         }
