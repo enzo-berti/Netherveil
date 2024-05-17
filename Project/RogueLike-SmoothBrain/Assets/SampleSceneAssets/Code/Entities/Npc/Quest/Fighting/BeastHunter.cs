@@ -39,7 +39,7 @@ public class BeastHunter : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB GLORBS KILLED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB <size={HudHandler.current.QuestHUD.progressTextSize + 15}><sprite name=\"glorb\"><size={HudHandler.current.QuestHUD.progressTextSize}> KILLED : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnKill += UpdateCount;
     }
 
