@@ -7,7 +7,7 @@ public class PreviewPicture : MonoBehaviour
 {
     [SerializeField] private string spritePath = "Assets/SampleSceneAssets/Art/Sprites/Items";
     [SerializeField] private Vector2Int RenderSize = new Vector2Int(2048, 2048);
-    private RenderTexture renderTexture;
+    [SerializeField] private RenderTexture renderTexture;
 
     [SerializeField] private GameObject[] toPictures;
 
@@ -18,8 +18,8 @@ public class PreviewPicture : MonoBehaviour
 
     private IEnumerator TakePictureRoutine()
     {
-        renderTexture = new RenderTexture(RenderSize.x, RenderSize.y, 16);
-        renderTexture.Create();
+        //renderTexture = new RenderTexture(RenderSize.x, RenderSize.y, 16);
+        //renderTexture.Create();
 
         DisableAllToPictures();
         GameObject lastObject = null;
@@ -37,8 +37,8 @@ public class PreviewPicture : MonoBehaviour
             Picture(spritePath, p.name);
         }
 
-        renderTexture.Release();
-        renderTexture = null;
+        //renderTexture.Release();
+        //renderTexture = null;
     }
 
     private void DisableAllToPictures()
