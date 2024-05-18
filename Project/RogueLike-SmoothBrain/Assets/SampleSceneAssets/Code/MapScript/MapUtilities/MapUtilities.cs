@@ -8,8 +8,8 @@ namespace Map
 {
     static public class MapUtilities
     {
-        static public Action onEarlyEnter;
-        static public Action onEnter;
+        static public Action onEarlyFirstEnter;
+        static public Action onFirstEnter;
         static public Action onFirstExit;
         static public Action onEarlyExitRoom;
         static public Action onExitRoom;
@@ -112,8 +112,8 @@ namespace Map
         static public void ResetActions()
         {
             onEarlyExitRoom = null;
-            onEarlyEnter = null;
-            onEnter = null;
+            onEarlyFirstEnter = null;
+            onFirstEnter = null;
             onFirstExit = null;
             onAllChestOpen = null;
             onEarlyAllChestOpen = null;

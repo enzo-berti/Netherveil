@@ -41,7 +41,7 @@ public class DungeonsLimits : Quest
         currentNumber = (int)((float)MapUtilities.NbEnterRoom / MapUtilities.NbRoom * 100f);
 
         progressText = $"EXPLORE THIS FLOOR : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
-        MapUtilities.onEarlyEnter += UpdateCount;
+        MapUtilities.onEarlyFirstEnter += UpdateCount;
         MapUtilities.onFinishStage += LoseQuest;
         UpdateCount();
     }
@@ -53,7 +53,7 @@ public class DungeonsLimits : Quest
 
     protected override void ResetQuestValues()
     {
-        MapUtilities.onEarlyEnter -= UpdateCount;
+        MapUtilities.onEarlyFirstEnter -= UpdateCount;
         MapUtilities.onFinishStage -= LoseQuest;
     }
 

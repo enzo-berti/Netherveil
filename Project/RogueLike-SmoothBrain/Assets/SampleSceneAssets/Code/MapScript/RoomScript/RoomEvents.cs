@@ -122,8 +122,8 @@ namespace Map
             LocalEnterEvents();
 
             // global events
-            MapUtilities.onEarlyEnter?.Invoke();
-            MapUtilities.onEnter?.Invoke();
+            MapUtilities.onEarlyFirstEnter?.Invoke();
+            MapUtilities.onFirstEnter?.Invoke();
         }
 
         private void LocalExitEvents()

@@ -45,7 +45,7 @@ public abstract class Quest : ISavable
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
         MapUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen += CheckQuestFinished;
-        MapUtilities.onEnter += CheckQuestFinished;
+        MapUtilities.onFirstEnter += CheckQuestFinished;
         Utilities.Hero.OnQuestObtained += CheckQuestFinished;
 
         startFloor = MapUtilities.Stage;
@@ -91,7 +91,7 @@ public abstract class Quest : ISavable
 
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        MapUtilities.onEnter -= CheckQuestFinished;
+        MapUtilities.onFirstEnter -= CheckQuestFinished;
         Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
         ResetQuestValues();
 
@@ -110,7 +110,7 @@ public abstract class Quest : ISavable
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        MapUtilities.onEnter -= CheckQuestFinished;
+        MapUtilities.onFirstEnter -= CheckQuestFinished;
         Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
         ResetQuestValues();
 

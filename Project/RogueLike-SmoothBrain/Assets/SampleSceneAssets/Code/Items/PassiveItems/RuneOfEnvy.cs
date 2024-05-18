@@ -17,7 +17,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
     public void OnRetrieved()
     {
-        MapUtilities.onEnter += StealStats;
+        MapUtilities.onFirstEnter += StealStats;
         MapUtilities.onFirstExit += ResetStats;
 
         for(int i = 0; i< (int)StolenStats.NB; i++)
@@ -28,7 +28,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
     public void OnRemove()
     {
-        MapUtilities.onEnter -= StealStats;
+        MapUtilities.onFirstEnter -= StealStats;
         MapUtilities.onFirstExit -= ResetStats;
     }
 

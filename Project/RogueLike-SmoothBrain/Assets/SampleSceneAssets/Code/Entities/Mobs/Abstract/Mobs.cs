@@ -53,12 +53,12 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        MapUtilities.onEarlyEnter += DuplicateMyself;
+        MapUtilities.onEarlyFirstEnter += DuplicateMyself;
     }
 
     protected virtual void OnDisable()
     {
-        MapUtilities.onEarlyEnter -= DuplicateMyself;
+        MapUtilities.onEarlyFirstEnter -= DuplicateMyself;
     }
 
     protected override void Start()
