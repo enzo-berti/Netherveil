@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -9,21 +7,22 @@ namespace Map.Generation
 {
     public class MapGenerator : MonoBehaviour
     {
+        // Debuging purpose only
         [SerializeField] private bool isRandom = true;
-        [SerializeField] private string seed; // For debuging purpose
+        [SerializeField] private string seed;
+
+        // monkey variables
         [SerializeField] private Material miniMapMat;
+        [HideInInspector] public bool generate = false; 
 
-        [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
-        private int iterationSeedRegister = 0; // BOURRIN 2 
-
+        // Generation variables
         private Room previousRoomSpawned = null;
-
         static private readonly RoomType[] priorityType = new RoomType[] { RoomType.Lobby, RoomType.Tutorial, RoomType.Normal, RoomType.Boss, RoomType.Merchant, RoomType.Treasure };
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
-        const string fileName = "Map.save";
 
+        // Map variables
         public List<int> roomClearId = new List<int>();
-
+        private int iterationSeedRegister = 0;
         public int Stage { get; private set; } = 0;
 
         private void Awake()
@@ -78,58 +77,58 @@ namespace Map.Generation
             MapUtilities.onFinishStage = null;
         }
 
-        private void LoadSave()
-        {
-            string filePath = SaveManager.DirectoryPath + fileName;
-
-            if (!File.Exists(filePath))
-            {
-                return;
-            }
-
-            using (var stream = File.Open(filePath, FileMode.Open))
-            {
-                using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-                {
-                    // seed
-                    Seed.seed = reader.ReadString();
-                    Seed.Iterate(reader.ReadInt32());
-                    // stage
-                    Stage = reader.ReadInt32() - 1;
-                    // room ids
-                    int numberCleared = reader.ReadInt32();
-                    for (int i = 0; i < numberCleared; i++)
-                    {
-                        roomClearId.Add(reader.ReadInt32());
-                    }
-                }
-            }
-        }
-
-        private void Save(string directoryPath)
-        {
-            string filePath = SaveManager.DirectoryPath + fileName;
-
-            using (var stream = File.Open(filePath, FileMode.Create))
-            {
-                using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
-                {
-                    // seed
-                    writer.Write(Seed.seed);
-                    writer.Write(iterationSeedRegister);
-                    // stage
-                    writer.Write(MapUtilities.Stage);
-                    // room ids
-                    writer.Write(roomClearId.Count);
-                    foreach (int id in roomClearId)
-                    {
-                        writer.Write(id);
-                    }
-                }
-
-                stream.Close();
-            }
-        }
+        //private void LoadSave()
+        //{
+        //    string filePath = SaveManager.DirectoryPath + fileName;
+        //
+        //    if (!File.Exists(filePath))
+        //    {
+        //        return;
+        //    }
+        //
+        //    using (var stream = File.Open(filePath, FileMode.Open))
+        //    {
+        //        using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+        //        {
+        //            // seed
+        //            Seed.seed = reader.ReadString();
+        //            Seed.Iterate(reader.ReadInt32());
+        //            // stage
+        //            Stage = reader.ReadInt32() - 1;
+        //            // room ids
+        //            int numberCleared = reader.ReadInt32();
+        //            for (int i = 0; i < numberCleared; i++)
+        //            {
+        //                roomClearId.Add(reader.ReadInt32());
+        //            }
+        //        }
+        //    }
+        //}
+        //
+        //private void Save(string directoryPath)
+        //{
+        //    string filePath = SaveManager.DirectoryPath + fileName;
+        //
+        //    using (var stream = File.Open(filePath, FileMode.Create))
+        //    {
+        //        using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+        //        {
+        //            // seed
+        //            writer.Write(Seed.seed);
+        //            writer.Write(iterationSeedRegister);
+        //            // stage
+        //            writer.Write(MapUtilities.Stage);
+        //            // room ids
+        //            writer.Write(roomClearId.Count);
+        //            foreach (int id in roomClearId)
+        //            {
+        //                writer.Write(id);
+        //            }
+        //        }
+        //
+        //        stream.Close();
+        //    }
+        //}
 
         private void ClearRooms()
         {
