@@ -166,6 +166,9 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public void MoveTo(Vector3 posToMove)
     {
+        if (!agent.enabled || IsFreeze)
+            return;
+
         agent.SetDestination(posToMove);
     }
     #endregion

@@ -256,6 +256,9 @@ public class GraftedStateMachine : Mobs, IGrafted
 
     public void MoveTo(Vector3 _pos)
     {
+        if (!agent.enabled || IsFreeze)
+            return;
+
         agent.SetDestination(_pos);
     }
 
