@@ -95,7 +95,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void ApplyDamages(Hero player)
     {
-        displayDamages = (int)(1f * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
+        displayDamages = (int)(2f * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
 
         List<Collider> alreadyAttacked = new List<Collider>();
 
@@ -112,7 +112,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
                     if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject
                         && !alreadyAttacked.Contains(collider))
                     {
-                        (entity as IDamageable).ApplyDamage((int)(1f * Utilities.Hero.Stats.GetCoeff(Stat.ATK)), Utilities.Hero);
+                        (entity as IDamageable).ApplyDamage(displayDamages, Utilities.Hero);
                         entity.AddStatus(new Electricity(duration, chance), player);
                         alreadyAttacked.Add(collider);
                     }
