@@ -10,4 +10,9 @@ public class InGameManager : MonoBehaviour
     {
         current = this;
     }
+
+    private void OnDestroy()
+    {
+        SaveManager.UnselectSave();
+    }
 }

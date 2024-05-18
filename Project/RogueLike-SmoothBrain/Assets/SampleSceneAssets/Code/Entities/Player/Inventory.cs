@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class Inventory
+public class Inventory : ISavable
 {
     public static event Action OnAddOrRemoveBlood;
 
@@ -181,5 +181,45 @@ public class Inventory
         }
         (itemEffect as IPassiveItem)?.OnRetrieved();
         itemEffect.HasBeenRetreived = true;
+    }
+
+    public void Save(ref SaveData save)
+    {
+        // Active Item
+        if (ActiveItem != null)
+        {
+            save.activeItemName = ActiveItem.GetType().ToString();
+            save.activeItemCooldown = ActiveItem.Cooldown;
+        }
+        else
+        {
+            save.activeItemName = string.Empty;
+        }
+
+        // Passive Items
+        save.passiveItemNames = new List<string>();
+        foreach (var item in PassiveItems)
+        {
+            save.passiveItemNames.Add(item.GetType().ToString());
+        }
+
+        save.bloodValue = Blood.Value;
+    }
+
+    public void LoadSave()
+    {
+        if (SaveManager.saveData.activeItemName != string.Empty)
+        {
+            AddItem(SaveManager.saveData.activeItemName);
+            ActiveItem.Cooldown = SaveManager.saveData.activeItemCooldown;
+            Item.InvokeOnRetrieved(ActiveItem as ItemEffect);
+        }
+
+        foreach (var itemName in SaveManager.saveData.passiveItemNames)
+        {
+            AddItem(itemName);
+        }
+
+        Blood.Add(SaveManager.saveData.bloodValue);
     }
 }

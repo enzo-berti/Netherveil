@@ -1,25 +1,24 @@
 using Map;
-using System.IO;
 
 public class TestOfEndurance : Quest
 {
     int currentSurvivedRoom = 0;
     int NB_ROOM_SURVIVING;
-    readonly float HP_PERCENTAGE_THRESHOLD = 0.25f;
+    const float HP_PERCENTAGE_THRESHOLD = 0.25f;
 
-    public override void Save(BinaryWriter writer)
+    public override void Save(ref SaveData saveData)
     {
-        base.Save(writer);
-
-        writer.Write(currentSurvivedRoom);
+        base.Save(ref saveData);
+        saveData.questEvolution = currentSurvivedRoom;
     }
 
-    public override void Load(BinaryReader reader)
+    public override void LoadSave()
     {
-        base.Load(reader);
+        base.LoadSave();
 
-        currentSurvivedRoom = reader.ReadInt32();
+        currentSurvivedRoom = SaveManager.saveData.questEvolution;
     }
+
 
     public override void AcceptQuest()
     {

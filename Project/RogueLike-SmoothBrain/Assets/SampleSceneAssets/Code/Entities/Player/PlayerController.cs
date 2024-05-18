@@ -583,7 +583,7 @@ public class PlayerController : MonoBehaviour
     private void ResetStageDependentValues()
     {
         hero.DoneQuestQTThiStage = false;
-        hero.DoneQuestQTApprenticeThiStage = false;
+        hero.DoneQuestQTApprenticeThisStage = false;
     }
 
     private void PropsClippingSecurity()
