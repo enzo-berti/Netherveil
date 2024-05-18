@@ -171,7 +171,7 @@ public class PestStateMachine : Mobs, IPest
 
     public void MoveTo(Vector3 posToMove)
     {
-        if (!agent.enabled)
+        if (!agent.enabled || IsFreeze)
             return;
 
         agent.SetDestination(posToMove);

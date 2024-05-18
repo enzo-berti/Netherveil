@@ -191,6 +191,9 @@ public class GorgonStateMachine : Mobs, IGorgon
 
     public void MoveTo(Vector3 posToMove)
     {
+        if (!agent.enabled || IsFreeze)
+            return;
+
         agent.SetDestination(posToMove);
     }
     #endregion

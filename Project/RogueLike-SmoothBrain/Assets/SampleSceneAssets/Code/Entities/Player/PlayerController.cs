@@ -160,6 +160,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (gameObject.GetComponent<Hero>().IsFreeze) return;
         UpdateAnimator();
 
         if (CanUpdatePhysic())

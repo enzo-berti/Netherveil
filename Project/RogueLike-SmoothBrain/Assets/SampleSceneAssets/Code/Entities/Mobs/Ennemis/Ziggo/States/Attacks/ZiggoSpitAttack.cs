@@ -99,6 +99,7 @@ public class ZiggoSpitAttack : BaseState<ZiggoStateMachine>
         float coeff = 20 / (1 - maxThickness);
         float speed = 3f;
 
+        projectile.ApplyPoison();
         Context.Sounds.splatterSound.Play(projectile.transform.position);
 
         do

@@ -355,7 +355,7 @@ public abstract class Mobs : Entity
     {
         hit.EnableMat();
         float timer = 0;
-        float alpha = 0;
+        float alpha;
         while(timer < 1f)
         {
             alpha = EasingFunctions.EaseInExpo(timer) / 5f;
