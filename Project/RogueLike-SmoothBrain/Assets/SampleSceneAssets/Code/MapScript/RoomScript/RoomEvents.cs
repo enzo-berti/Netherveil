@@ -200,9 +200,14 @@ namespace Map
 
         private void OnTriggerExit(Collider other)
         {
-            if (!exitRoomCalled && other.gameObject.CompareTag("Player"))
+            if ( other.gameObject.CompareTag("Player"))
             {
-                ExitEvents();
+                if (!exitRoomCalled)
+                {
+                    ExitEvents();
+                }
+
+                MapUtilities.onExitRoom?.Invoke();
             }
         }
 

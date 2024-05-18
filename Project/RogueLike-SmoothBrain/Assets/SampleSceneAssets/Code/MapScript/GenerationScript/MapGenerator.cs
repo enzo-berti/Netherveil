@@ -60,21 +60,12 @@ namespace Map.Generation
 
         private void OnDestroy()
         {
-            ResetMapDatas();
+            MapUtilities.ResetActions();
         }
 
         private void ResetMapDatas()
         {
             roomClearId.Clear();
-            MapUtilities.onEarlyExit = null;
-            MapUtilities.onEarlyEnter = null;
-            MapUtilities.onEnter = null;
-            MapUtilities.onExit = null;
-            MapUtilities.onAllChestOpen = null;
-            MapUtilities.onEarlyAllChestOpen = null;
-            MapUtilities.onAllEnemiesDead = null;
-            MapUtilities.onEarlyAllEnemiesDead = null;
-            MapUtilities.onFinishStage = null;
         }
 
         //private void LoadSave()

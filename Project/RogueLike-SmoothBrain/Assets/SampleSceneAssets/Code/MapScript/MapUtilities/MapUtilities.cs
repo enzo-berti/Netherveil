@@ -11,6 +11,7 @@ namespace Map
         static public Action onEarlyEnter;
         static public Action onEnter;
         static public Action onEarlyExit;
+        static public Action onExitRoom;
         static public Action onExit;
         static public Action onEarlyAllEnemiesDead;
         static public Action onAllEnemiesDead;
@@ -106,6 +107,19 @@ namespace Map
                 { RoomType.MiniBoss, 0 },
                 { RoomType.Boss, 0 },
             };
+        }
+
+        static public void ResetActions()
+        {
+            onEarlyExit = null;
+            onEarlyEnter = null;
+            onEnter = null;
+            onExit = null;
+            onAllChestOpen = null;
+            onEarlyAllChestOpen = null;
+            onAllEnemiesDead = null;
+            onEarlyAllEnemiesDead = null;
+            onFinishStage = null;
         }
     }
 }
