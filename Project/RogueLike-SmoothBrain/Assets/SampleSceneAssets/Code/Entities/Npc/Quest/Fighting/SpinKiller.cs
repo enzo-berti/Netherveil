@@ -6,19 +6,19 @@ public class SpinKiller : Quest
     bool chargedAttackCalled = false;
     int MAX_NUMBER;
 
-    public override void Save(BinaryWriter writer)
+    public override void Save(ref SaveData saveData)
     {
-        base.Save(writer);
-
-        writer.Write(currentNumber);
+        base.Save(ref saveData);
+        saveData.questEvolution = currentNumber;
     }
 
-    public override void Load(BinaryReader reader)
+    public override void LoadSave()
     {
-        base.Load(reader);
+        base.LoadSave();
 
-        currentNumber = reader.ReadInt32();
+        currentNumber = SaveManager.saveData.questEvolution;
     }
+
 
     public override void AcceptQuest()
     {

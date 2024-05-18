@@ -182,7 +182,6 @@ public abstract class Mobs : Entity
     {
         if (this is not IBoss)
         {
-            Debug.Log(MapUtilities.Stage);
             switch (MapUtilities.Stage)
             {
                 case 1:
