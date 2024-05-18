@@ -22,7 +22,7 @@ public class Inventory
             OnAddOrRemoveBlood?.Invoke();
             if (hasText)
             {
-                FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{value} Blood", Color.red);
+                FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{value}<size=50><sprite name=\"blood\">", Color.red);
             }
         }
 
@@ -30,7 +30,7 @@ public class Inventory
         {
             blood.value += increment;
             OnAddOrRemoveBlood?.Invoke();
-            FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{increment} Blood", Color.red);
+            FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{increment}<size=50><sprite name=\"blood\">", Color.red);
             return blood;
         }
 
@@ -38,7 +38,7 @@ public class Inventory
         {
             blood.value -= decrement;
             OnAddOrRemoveBlood?.Invoke();
-            FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"-{decrement} Blood", Color.red);
+            FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"-{decrement}<size=50><sprite name=\"blood\">", Color.red);
             return blood;
         }
     }
