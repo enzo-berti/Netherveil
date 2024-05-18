@@ -149,7 +149,6 @@ namespace Map
             }
 
             // global events
-            MapUtilities.onEarlyExitRoom?.Invoke();
             MapUtilities.onFirstExit?.Invoke();
 
             SaveManager.Save();
@@ -207,6 +206,7 @@ namespace Map
                     ExitEvents();
                 }
 
+                MapUtilities.onEarlyExitRoom?.Invoke();
                 MapUtilities.onExitRoom?.Invoke();
             }
         }
