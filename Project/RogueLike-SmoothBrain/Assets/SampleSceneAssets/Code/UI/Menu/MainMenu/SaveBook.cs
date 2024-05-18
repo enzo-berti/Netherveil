@@ -8,10 +8,36 @@ public class SaveBook : MonoBehaviour
     [SerializeField] private GameObject closeObject;
     [SerializeField] private GameObject openObject;
     private Animator bookAnimator;
+
+    [SerializeField] private GameObject savePart;
+    [SerializeField] private GameObject notSavePart;
+
+    private bool saveRegister = false;
     private float durationMovementIn = 1.0f;
     private float durationMovementOut = 1.0f;
-
     private Coroutine routine;
+
+    public bool SaveRegister
+    {
+        get
+        {
+            return saveRegister;
+        }
+        set
+        {
+            saveRegister = value;
+            if (saveRegister)
+            {
+                savePart.SetActive(true);
+                notSavePart.SetActive(false);
+            }
+            else
+            {
+                savePart.SetActive(false);
+                notSavePart.SetActive(true);
+            }
+        }
+    }
 
     private void Start()
     {
