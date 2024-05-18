@@ -22,12 +22,12 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     public HornOfBarbatos()
     {
         displayValue = Cooldown;
-        MapUtilities.onExit += ResetStat;
+        MapUtilities.onFirstExit += ResetStat;
     }
 
     ~HornOfBarbatos()
     {
-        MapUtilities.onExit -= ResetStat;
+        MapUtilities.onFirstExit -= ResetStat;
     }
 
     public void Activate()

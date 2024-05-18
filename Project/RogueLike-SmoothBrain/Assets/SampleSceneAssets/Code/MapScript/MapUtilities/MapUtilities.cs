@@ -10,9 +10,9 @@ namespace Map
     {
         static public Action onEarlyEnter;
         static public Action onEnter;
-        static public Action onEarlyExit;
+        static public Action onFirstExit;
+        static public Action onEarlyExitRoom;
         static public Action onExitRoom;
-        static public Action onExit;
         static public Action onEarlyAllEnemiesDead;
         static public Action onAllEnemiesDead;
         static public Action onEarlyAllChestOpen;
@@ -111,10 +111,10 @@ namespace Map
 
         static public void ResetActions()
         {
-            onEarlyExit = null;
+            onEarlyExitRoom = null;
             onEarlyEnter = null;
             onEnter = null;
-            onExit = null;
+            onFirstExit = null;
             onAllChestOpen = null;
             onEarlyAllChestOpen = null;
             onAllEnemiesDead = null;

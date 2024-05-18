@@ -149,8 +149,8 @@ namespace Map
             }
 
             // global events
-            MapUtilities.onEarlyExit?.Invoke();
-            MapUtilities.onExit?.Invoke();
+            MapUtilities.onEarlyExitRoom?.Invoke();
+            MapUtilities.onFirstExit?.Invoke();
 
             SaveManager.Save();
         }
