@@ -1,11 +1,8 @@
-using DialogueSystem.Runtime;
 using Fountain;
 using PostProcessingEffects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -103,7 +100,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         }
     }
     public bool DoneQuestQTThiStage { get; set; } = false;
-    public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
+    public bool DoneQuestQTApprenticeThisStage { get; set; } = false;
 
     //save & load variables
     const string saveFileName = "Hero";
@@ -134,7 +131,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         //OnDeath += Inventory.RemoveAllItems;
 
         SaveManager.onSave += Save;
-        Load();
+        LoadSave();
     }
 
     private void OnDestroy()
@@ -143,6 +140,8 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
         stats.onStatChange -= CheckIfLaunchUpgrade;
+
+        SaveManager.onSave -= Save;
 
         //Inventory.RemoveAllItems(Vector3.zero);
     }
@@ -626,41 +625,29 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     #endregion
 
     #region SAVE_AND_LOAD
-    public void Save(string directoryPath)
+
+    public void Save(ref SaveData save)
     {
-        string filePath = SaveManager.DirectoryPath + saveFileName;
+        save.doneQuestQThisStage = DoneQuestQTThiStage;
+        save.doneQuestQTApprenticeThisStage = DoneQuestQTApprenticeThisStage;
+        save.clearedTuto = ClearedTuto;
 
-        using (var stream = File.Open(filePath, FileMode.Create))
+        save.statHp = stats.GetValue(Stat.HP);
+        save.statCorruption = stats.GetValue(Stat.CORRUPTION);
+
+        if (currentQuest != null)
         {
-            using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
-            {
-                // items
-                writer.Write(Inventory.ActiveItem != null);
-                if (Inventory.ActiveItem != null) // if the game had saved an active item
-                {
-                    writer.Write(Inventory.ActiveItem.GetType().ToString());
-                    writer.Write(Inventory.ActiveItem.Cooldown);
-                }
-
-                writer.Write(Inventory.PassiveItems.Count);
-                foreach (var item in Inventory.PassiveItems)
-                {
-                    writer.Write(item.GetType().ToString());
-                }
-
-                // save stats values
-                writer.Write(stats.GetValue(Stat.HP));
-                writer.Write(stats.GetValue(Stat.CORRUPTION));
-
-                SaveInventory(writer);
-                SaveQuest(writer);
-            }
-
-            stream.Close();
+            currentQuest.Save(ref save);
         }
+        else
+        {
+            save.questId = string.Empty;
+        }
+
+        Inventory.Save(ref save);
     }
 
-    public void Load()
+    public void LoadSave()
     {
         if (!SaveManager.HasData)
         {
@@ -668,99 +655,22 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         }
 
         isLoading = true;
-        string filePath = SaveManager.DirectoryPath + saveFileName;
-        float hp;
+        SaveData saveData = SaveManager.saveData;
 
-        if (!File.Exists(filePath))
-        {
-            isLoading = false;
-            return;
-        }
+        DoneQuestQTThiStage = saveData.doneQuestQThisStage;
+        DoneQuestQTApprenticeThisStage = saveData.doneQuestQTApprenticeThisStage;
+        ClearedTuto = saveData.clearedTuto;
 
-        using (var stream = File.Open(filePath, FileMode.Open))
-        {
-            using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-            {
-                // items
-                if (reader.ReadBoolean())
-                {
-                    Inventory.AddItem(reader.ReadString());
-                    Inventory.ActiveItem.Cooldown = reader.ReadSingle();
-                    Item.InvokeOnRetrieved(Inventory.ActiveItem as ItemEffect);
-                }
+        CurrentQuest = Quest.LoadClassWithSave(saveData.questId, saveData.questDifficulty, saveData.talkerType, saveData.talkerGrade);
+        Inventory.LoadSave();
 
-                int numItem = reader.ReadInt32();
-                for (int i = 0; i < numItem; i++)
-                {
-                    Inventory.AddItem(reader.ReadString());
-                }
-
-                // load stats values (set it only at the end of the loading)
-                hp = reader.ReadSingle();
-                stats.SetValue(Stat.CORRUPTION, reader.ReadSingle());
-
-                LoadInventory(reader);
-                LoadQuest(reader);
-            }
-
-            stream.Close();
-        }
-
+        stats.SetValue(Stat.CORRUPTION, saveData.statCorruption);
         canLaunchUpgrade = true;
         ChangeStatsBasedOnAlignment();
-        stats.SetValue(Stat.HP, hp);
+
+        stats.SetValue(Stat.HP, saveData.statHp);
 
         isLoading = false;
-    }
-
-    private void LoadInventory(BinaryReader reader)
-    {
-        // blood
-        Inventory.Blood.Add(reader.ReadInt32());
-    }
-
-    private void SaveInventory(BinaryWriter writer)
-    {
-        // blood
-        writer.Write(Inventory.Blood.Value);
-    }
-
-    private void LoadQuest(BinaryReader reader)
-    {
-        // Hero quest values
-        DoneQuestQTThiStage = reader.ReadBoolean();
-        DoneQuestQTApprenticeThiStage = reader.ReadBoolean();
-        ClearedTuto = reader.ReadBoolean();
-
-        // Quest class
-        if (reader.ReadBoolean()) // if the game had saved a quest
-        {
-            // Quest Informations
-            string idName = reader.ReadString();
-            QuestDialogueDifficulty difficulty = (QuestDialogueDifficulty)Enum.Parse(typeof(QuestDialogueDifficulty), reader.ReadString(), true);
-            QuestTalker.TalkerType talkerType = (QuestTalker.TalkerType)Enum.Parse(typeof(QuestTalker.TalkerType), reader.ReadString());
-            QuestTalker.TalkerGrade talkerGrade = (QuestTalker.TalkerGrade)Enum.Parse(typeof(QuestTalker.TalkerGrade), reader.ReadString());
-
-            Quest heroQuest = Quest.LoadClass(idName, difficulty, talkerType, talkerGrade);
-            heroQuest.Load(reader);
-
-            CurrentQuest = heroQuest;
-        }
-    }
-
-    private void SaveQuest(BinaryWriter writer)
-    {
-        // Hero quest values
-        writer.Write(DoneQuestQTThiStage);
-        writer.Write(DoneQuestQTApprenticeThiStage);
-        writer.Write(ClearedTuto);
-
-        // Quest class
-        writer.Write(currentQuest != null);
-        if (currentQuest != null)
-        {
-            CurrentQuest.Save(writer);
-        }
     }
 
     #endregion

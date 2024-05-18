@@ -10,7 +10,7 @@ public class QuestTalkerApprentice : QuestTalker
         {
             dialogue = alreadyHaveQuestDT;
         }
-        else if (Utilities.Hero.DoneQuestQTApprenticeThiStage)
+        else if (Utilities.Hero.DoneQuestQTApprenticeThisStage)
         {
             dialogue = alreadyDoneQuestDT;
         }
