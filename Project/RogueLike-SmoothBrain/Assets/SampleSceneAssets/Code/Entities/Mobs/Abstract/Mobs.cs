@@ -187,14 +187,16 @@ public abstract class Mobs : Entity
                 case 1:
                     break;
                 case 2:
-                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
-                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
-                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.2f);
+                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.2f);
+                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.2f);
+                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.2f);
                     break;
                 case 3:
-                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
-                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
-                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 2.5f);
+                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
                     break;
             }
         }
