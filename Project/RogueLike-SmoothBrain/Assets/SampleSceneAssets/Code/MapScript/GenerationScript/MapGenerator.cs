@@ -408,7 +408,7 @@ namespace Map.Generation
             // Generate props
             GenerateGates(room, entranceDoor);
             // Stairs
-            if (room.type == RoomType.Boss)
+            if (room.type == RoomType.Boss && Stage != 3)
             {
                 GenerateStairs(room);
             }
