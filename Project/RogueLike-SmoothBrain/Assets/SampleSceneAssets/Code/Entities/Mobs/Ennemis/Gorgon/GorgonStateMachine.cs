@@ -86,6 +86,7 @@ public class GorgonStateMachine : Mobs, IGorgon
     {
         base.Start();
 
+        canTriggerTraps = false;
         factory = new StateFactory<GorgonStateMachine>(this);
         currentState = factory.GetState<GorgonWanderingState>();
 

@@ -54,6 +54,7 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         base.Start();
 
+        canTriggerTraps = false;
         factory = new StateFactory<KlopsStateMachine>(this);
         currentState = factory.GetState<KlopsWanderingState>();
 

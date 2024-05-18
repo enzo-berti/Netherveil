@@ -49,6 +49,8 @@ public class DummyStateMachine : Mobs, IDummy
 
     private void TriggerAttackBool(IDamageable _damageable, IAttacker _attacker)
     {
+        if (!gameObject.activeSelf)
+            return;
         triggerAttack = true;
         StartCoroutine(DesactiveTheTrigger(.1f));
     }

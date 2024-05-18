@@ -63,6 +63,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     {
         base.Start();
 
+        canTriggerTraps = false;
         factory = new StateFactory<DamoclesStateMachine>(this);
         currentState = factory.GetState<DamoclesWanderingState>();
 
