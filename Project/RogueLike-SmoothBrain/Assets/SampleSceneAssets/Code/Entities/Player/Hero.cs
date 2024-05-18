@@ -1,14 +1,10 @@
-using DialogueSystem.Runtime;
 using Fountain;
 using PostProcessingEffects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Video;
-using static QuestTalker;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 {
