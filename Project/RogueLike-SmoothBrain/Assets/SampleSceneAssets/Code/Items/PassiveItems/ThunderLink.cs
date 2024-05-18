@@ -125,7 +125,6 @@ public class ThunderLink : ItemEffect, IPassiveItem
     {
         while (true)
         {
-            Debug.Log(spears.Count);
             foreach (Spear spear in spears)
             {
                 spear.ThunderLinkVFX.transform.position = Utilities.Player.transform.position + Vector3.up;

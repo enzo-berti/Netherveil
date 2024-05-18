@@ -9,15 +9,18 @@ public class KlopsDeathBehaviour : StateMachineBehaviour
     VisualEffect VFX;
     [SerializeField] float blastDiameter;
     [SerializeField] int blastDamage;
+    Transform mobTransform;
+
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        VFX = animator.gameObject.transform.parent.GetComponent<KlopsStateMachine>().ExplodingVFX;
+        mobTransform = animator.gameObject.transform.parent;
+        VFX = mobTransform.GetComponent<KlopsStateMachine>().ExplodingVFX;
         VFX.SetFloat("TimeToExplode", stateInfo.length);
         VFX.SetFloat("ExplosionTime", 2.5f);
         VFX.SetFloat("ExplosionRadius", blastDiameter);
-        VFX.transform.position = animator.gameObject.transform.parent.position;
+        VFX.transform.position = mobTransform.position;
         VFX.Play();
-        CoroutineManager.Instance.StartCoroutine(Explosion(animator.gameObject.transform.parent.GetComponent<KlopsStateMachine>(), stateInfo.length));
+        CoroutineManager.Instance.StartCoroutine(Explosion(mobTransform.GetComponent<KlopsStateMachine>(), stateInfo.length));
     }
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -26,15 +29,16 @@ public class KlopsDeathBehaviour : StateMachineBehaviour
 
     private IEnumerator BeforeDestroy(Animator animator, float time)
     {
-        animator.transform.parent.gameObject.SetActive(false);
+        mobTransform.gameObject.SetActive(false);
         yield return new WaitForSeconds(time + 0.5f);
-        Destroy(animator.transform.parent.parent.gameObject);
+        Destroy(mobTransform.parent.gameObject);
     }
 
     private IEnumerator Explosion(IAttacker attacker, float time)
     {
         yield return new WaitForSeconds(time);
-        Physics.OverlapSphere(VFX.transform.transform.position, blastDiameter / 2f - blastDiameter / 8f, LayerMask.GetMask("Entity"))
+        AudioManager.Instance.PlaySound(AudioManager.Instance.BombItemSFX, mobTransform.position);
+        Physics.OverlapSphere(VFX.transform.position, blastDiameter / 2f - blastDiameter / 8f, LayerMask.GetMask("Entity"))
             .Select(entity => entity.GetComponent<Hero>())
             .Where(entity => entity != null)
             .ToList()
