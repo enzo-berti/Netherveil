@@ -68,6 +68,7 @@ public class GraftedProjectile : Projectile
             if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
             {
                 Destroy(gameObject);
+                Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
                 return;
             }
         }
@@ -87,6 +88,7 @@ public class GraftedProjectile : Projectile
 
             grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
             Destroy(gameObject);
+            Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
         }
     }
 }
