@@ -704,6 +704,17 @@ public class PlayerInput : MonoBehaviour
         playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["SpecialAbility"].Enable();
         playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleQuest"].Enable();
         playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleMap"].Enable();
+
+        if(DeviceManager.Instance.IsPlayingKB())
+        {
+            playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true).Enable();
+            playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true).Disable();
+        }
+        else
+        {
+            playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true).Disable();
+            playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true).Enable();
+        }
     }
 
     private void ResetForceReturnToMove()
