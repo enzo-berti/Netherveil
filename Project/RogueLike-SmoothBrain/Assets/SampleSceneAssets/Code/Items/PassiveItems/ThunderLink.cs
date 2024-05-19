@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
+using static UnityEngine.Rendering.DebugUI;
 
 public class ThunderLink : ItemEffect, IPassiveItem
 {
@@ -110,9 +111,10 @@ public class ThunderLink : ItemEffect, IPassiveItem
                 foreach (var collider in colliders)
                 {
                     if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject
-                        && !alreadyAttacked.Contains(collider))
+                        && !alreadyAttacked.Contains(collider) && entity.IsInvincibleCount == 0)
                     {
-                        (entity as IDamageable).ApplyDamage(displayDamages, Utilities.Hero);
+                        FloatingTextGenerator.CreateDamageText(displayDamages, entity.transform.position);
+                        (entity as IDamageable).ApplyDamage(displayDamages, Utilities.Hero, false);
                         entity.AddStatus(new Electricity(duration, chance), player);
                         alreadyAttacked.Add(collider);
                     }

@@ -248,7 +248,10 @@ public abstract class Mobs : Entity
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
-        _value = (int)(_value * DamageTakenMultiplicator);
+        if(notEffectDamage)
+        {
+            _value = (int)(_value * DamageTakenMultiplicator);
+        }
         Stats.DecreaseValue(Stat.HP, _value, false);
 
         if (bossLifeBar != null)
@@ -267,7 +270,6 @@ public abstract class Mobs : Entity
 
         if (notEffectDamage)
         {
-            //add SFX here
             FloatingTextGenerator.CreateDamageText(_value, transform.position);
             StartCoroutine(HitRoutine());
         }
@@ -277,7 +279,7 @@ public abstract class Mobs : Entity
             deathMethod();
             this.IsFreeze = false;
         }
-        else
+        else if (notEffectDamage)
         {
             hitSound.Play(transform.position, _restartSound);
         }
