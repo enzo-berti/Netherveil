@@ -76,17 +76,11 @@ public class GraftedTriggeredState : BaseState<GraftedStateMachine>
         {
             typeof(GraftedTripleThrustAttack),
             typeof(GraftedDashAttack),
-            Context.HasProjectile ? typeof(GraftedThrowProjectileAttack) : typeof(GraftedRetrieveProjectileAttack)
+            typeof(GraftedThrowProjectileAttack)
         };
 
-        if (availableAttacks.Contains(typeof(GraftedRetrieveProjectileAttack)))
-        {
-            if (!Context.Projectile.onTarget && !Context.Projectile.GetCollisionImmune())
-            {
-                availableAttacks.Remove(typeof(GraftedRetrieveProjectileAttack));
-            }
-        }
-        else if (availableAttacks.Contains(typeof(GraftedThrowProjectileAttack)))
+
+        if (availableAttacks.Contains(typeof(GraftedThrowProjectileAttack)))
         {
             if (isNearPlayer)
             {
@@ -105,13 +99,9 @@ public class GraftedTriggeredState : BaseState<GraftedStateMachine>
     // DEBUG
     void UseDebugKeys()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && Context.HasProjectile)
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SwitchState(Factory.GetState<GraftedThrowProjectileAttack>());
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SwitchState(Factory.GetState<GraftedRetrieveProjectileAttack>());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {

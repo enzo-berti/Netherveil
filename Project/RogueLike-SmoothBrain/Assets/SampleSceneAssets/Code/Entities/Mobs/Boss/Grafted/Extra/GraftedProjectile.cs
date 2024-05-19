@@ -4,12 +4,10 @@ using UnityEngine;
 public class GraftedProjectile : Projectile
 {
     [HideInInspector]
-    public bool onTarget = false;
     bool ignoreCollisions = false;
     Vector3 direction;
     GraftedStateMachine grafted;
     float tempSpeed = -1;
-    float damageCooldown = 0f;
 
     [SerializeField] List<GameObject> projectileList = new List<GameObject>();
 
@@ -52,19 +50,10 @@ public class GraftedProjectile : Projectile
             speed = tempSpeed;
         }
 
-        if (!onTarget)
-        {
-            Move(direction);
-        }
+        Move(direction);
 
         speed = originalSpeed;
         tempSpeed = -1;
-
-        if (damageCooldown > 0)
-            damageCooldown -= Time.deltaTime;
-        else
-            GetComponentInChildren<BoxCollider>().enabled = true;
-
     }
 
     public bool OnLauncher(Vector3 _launcher)
@@ -78,22 +67,16 @@ public class GraftedProjectile : Projectile
         {
             if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
             {
-                onTarget = true;
+                Destroy(gameObject);
+                Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
                 return;
             }
         }
 
         IDamageable damageableObject = other.GetComponent<IDamageable>();
-        if (damageableObject != null && !onTarget && other.CompareTag("Player"))
+        if (damageableObject != null && other.CompareTag("Player"))
         {
             damageableObject.ApplyDamage(damage, grafted);
-
-            //if (!ignoreCollisions)
-            //{
-            //    direction = -Vector3.up;
-            //}
-            //else
-            //{
             Vector3 knockbackDirection = new Vector3(-direction.z, 0, direction.x);
             knockbackDirection.y = 0;
             knockbackDirection.Normalize();
@@ -103,11 +86,9 @@ public class GraftedProjectile : Projectile
                 knockbackDirection = -knockbackDirection;
             }
 
-            //grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
-            GetComponentInChildren<BoxCollider>().enabled = false;
-            damageCooldown = 0.4f;
-            return;
-            //}
+            grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
+            Destroy(gameObject);
+            Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
         }
     }
 }

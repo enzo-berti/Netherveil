@@ -122,9 +122,8 @@ public class SonielBerserk : BaseState<SonielStateMachine>
                 Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.BERSERK].data, debugMode: Context.DebugMode);
             }
 
-            var path = new NavMeshPath();
-            Context.Agent.CalculatePath(Context.transform.position + direction * (Context.Agent.stoppingDistance + 0.1f), path);
-            if (path.status != NavMeshPathStatus.PathComplete || Context.Agent.velocity.sqrMagnitude <= 0f)
+
+            if (Context.Agent.path.status != NavMeshPathStatus.PathComplete || Context.Agent.velocity.sqrMagnitude <= 0f)
             {
                 Context.Animator.ResetTrigger(stunnedHash);
                 Context.Animator.SetTrigger(stunnedHash);

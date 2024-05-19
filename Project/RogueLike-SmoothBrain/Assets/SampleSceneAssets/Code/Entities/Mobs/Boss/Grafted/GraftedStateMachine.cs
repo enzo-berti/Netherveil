@@ -66,7 +66,6 @@ public class GraftedStateMachine : Mobs, IGrafted
 
     Hero player = null;
     bool playerHit = false;
-    bool hasProjectile = true;
     float attackCooldown = 0;
     float height;
 
@@ -115,7 +114,6 @@ public class GraftedStateMachine : Mobs, IGrafted
     public VisualEffect DashVFX { get => dashVFX; }
     public CameraUtilities CameraUtilities { get => cameraUtilities; }
     public bool PlayerHit { get => playerHit; set => playerHit = value; }
-    public bool HasProjectile { get => hasProjectile; set => hasProjectile = value; }
     public float Cooldown { get => attackCooldown; set => attackCooldown = value; }
     public float Height { get => height; }
     public bool FreezeRotation { set => freezeRotation = value; }
