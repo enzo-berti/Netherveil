@@ -353,7 +353,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (applyVibrations && !playerInput.LaunchedChargedAttack)
                     {
-                        DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
+                        DeviceManager.Instance.ApplyVibrations(0.02f, 0.02f, 0.15f);
                         applyVibrations = false;
                     }
                     if (!corruptionNerfApplied)
@@ -369,7 +369,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (applyVibrations && !playerInput.LaunchedChargedAttack)
                     {
-                        DeviceManager.Instance.ApplyVibrations(0.1f, 0.1f, 0.15f);
+                        DeviceManager.Instance.ApplyVibrations(0.02f, 0.02f, 0.15f);
                         applyVibrations = false;
                     }
                     alreadyAttacked.Add(col);

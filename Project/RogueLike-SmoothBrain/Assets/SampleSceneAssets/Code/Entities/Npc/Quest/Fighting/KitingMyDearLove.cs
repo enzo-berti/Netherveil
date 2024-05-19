@@ -40,7 +40,7 @@ public class KitingMyDearLove : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB MONSTERS KILLED WITH SPEAR LAUNCH ATTACK : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnSpearAttack += SetBool;
         Utilities.Hero.OnKill += UpdateCount;
     }
@@ -69,7 +69,7 @@ public class KitingMyDearLove : Quest
             if (distanceAttackCalled && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
             {
                 currentNumber++;
-                progressText = $"NB ENEMIES KILL WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
+                progressText = $"NB MONSTERS KILLED WITH SPEAR LAUNCH ATTACK : {currentNumber}/{MAX_NUMBER}";
             }
             distanceAttackCalled = false;
         }

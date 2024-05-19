@@ -39,7 +39,7 @@ public class TakeYourDistance : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB MONSTERS HIT WITH SPEAR LAUNCH ATTACK : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnSpearAttack += UpdateCount;
     }
 
@@ -55,10 +55,10 @@ public class TakeYourDistance : Quest
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
-        if (!IsQuestFinished() && damageable is not IDummy)
+        if (!IsQuestFinished() && damageable is not IDummy && damageable is Mobs && !(damageable as Mobs).IsSpawning)
         {
             currentNumber++;
-            progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
+            progressText = $"NB MONSTERS HIT WITH SPEAR LAUNCH ATTACK : {currentNumber}/{MAX_NUMBER}";
         }
 
         QuestUpdated();

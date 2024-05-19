@@ -40,7 +40,7 @@ public class SpinKiller : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB MONSTERS KILLED WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnChargedAttack += SetBool;
         Utilities.Hero.OnKill += UpdateCount;
     }
@@ -69,7 +69,7 @@ public class SpinKiller : Quest
             if (chargedAttackCalled && monster != null && monster.Stats.GetValue(Stat.HP) <= 0)
             {
                 currentNumber++;
-                progressText = $"NB ENEMIES KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
+                progressText = $"NB MONSTERS KILL WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
             }
             chargedAttackCalled = false;
         }

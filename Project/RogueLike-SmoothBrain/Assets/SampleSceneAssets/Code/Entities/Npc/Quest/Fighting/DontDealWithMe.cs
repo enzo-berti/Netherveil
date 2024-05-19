@@ -40,7 +40,7 @@ public class DontDealWithMe : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB MONSTERS HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnChargedAttack += UpdateCount;
     }
 
@@ -56,10 +56,10 @@ public class DontDealWithMe : Quest
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
-        if (!IsQuestFinished() && damageable is not IDummy)
+        if (!IsQuestFinished() && damageable is not IDummy && damageable is Mobs && !(damageable as Mobs).IsSpawning)
         {
             currentNumber++;
-            progressText = $"NB ENEMIES HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
+            progressText = $"NB MONSTERS HIT WITH CHARGED ATTACK : {currentNumber}/{MAX_NUMBER}";
         }
 
         QuestUpdated();
