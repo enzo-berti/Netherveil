@@ -8,10 +8,13 @@ using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
-    [SerializeField] GameObject firstSelect;
+    [SerializeField] private GameObject firstSelect;
     readonly List<Graphic> drawables = new List<Graphic>();
+
     public CinemachineVirtualCamera mainCam;
     public CinemachineVirtualCamera deathCam;
+
+    public bool GameOverActive => gameObject.activeSelf;
 
     void FindDrawablesRecursively(Transform current)
     {

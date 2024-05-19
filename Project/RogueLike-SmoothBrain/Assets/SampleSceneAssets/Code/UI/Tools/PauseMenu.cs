@@ -11,6 +11,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject hud;
     [SerializeField] private GameObject settings;
 
+    [SerializeField] private GameOver gameOverPage;
+
     public static event Action OnPause;
     public static event Action OnUnpause;
 
@@ -24,7 +26,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
-        if (settings.gameObject.activeSelf)
+        if (settings.gameObject.activeSelf || gameOverPage.GameOverActive)
             return;
 
         Time.timeScale = 0.0f;
@@ -35,13 +37,15 @@ public class PauseMenu : MonoBehaviour
 
         OnPause?.Invoke();
 
-
         AudioManager.Instance.PauseAllSounds();
         EventSystem.current.SetSelectedGameObject(firstSelect.gameObject);
     }
 
     public void Resume()
     {
+        if (gameOverPage.GameOverActive)
+            return;
+
         Time.timeScale = 1.0f;
         Utilities.PlayerInput.EnableGameplayInputs();
 
