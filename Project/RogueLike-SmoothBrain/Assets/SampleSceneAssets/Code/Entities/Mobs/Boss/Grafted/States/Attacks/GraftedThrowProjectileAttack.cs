@@ -49,8 +49,6 @@ public class GraftedThrowProjectileAttack : BaseState<GraftedStateMachine>
         Context.Agent.isStopped = false;
         Context.FreezeRotation = false;
 
-        Context.HasProjectile = false;
-
         Context.Cooldown = 2f + Random.Range(-0.25f, 0.25f);
     }
 
