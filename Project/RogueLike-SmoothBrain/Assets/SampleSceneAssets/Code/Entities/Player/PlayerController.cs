@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
         FINISHER_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 2);
         BASIC_ATTACK_DAMAGES = (int)hero.Stats.GetValueWithoutCoeff(Stat.ATK);
         SPEAR_DAMAGES = 0;
-        CHARGED_ATTACK_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 9);
+        CHARGED_ATTACK_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 16);
     }
 
     private void Start()
