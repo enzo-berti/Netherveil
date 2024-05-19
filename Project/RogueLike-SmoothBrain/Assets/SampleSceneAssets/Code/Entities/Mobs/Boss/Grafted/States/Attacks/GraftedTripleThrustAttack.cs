@@ -34,6 +34,8 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
     int thrustCounter = 0;
     float thrustChargeTimer = 0f;
     float thrustDurationTimer = 0f;
+    readonly float THRUST_LENGTH = 8f;
+    readonly float THRUST_SPEED = 23f;
 
     Coroutine tripleThrustCoroutine = null;
 
@@ -78,7 +80,6 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
                 }
                 else
                 {
-                    Context.AttackCollide(Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data, debugMode: false);
                     thrustChargeTimer = 0;
 
                     Context.Sounds.thrustSound.Play(Context.transform.position, true);
@@ -101,12 +102,12 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
                     {
                         if (tripleThrustCoroutine == null)
                         {
-                            tripleThrustCoroutine = Context.StartCoroutine(TripleThrustVFX());
+                            tripleThrustCoroutine = Context.StartCoroutine(ThrustAttack());
                         }
                         else if (tripleThrustCoroutine != null)
                         {
                             Context.StopCoroutine(tripleThrustCoroutine);
-                            tripleThrustCoroutine = Context.StartCoroutine(TripleThrustVFX());
+                            tripleThrustCoroutine = Context.StartCoroutine(ThrustAttack());
                         }
                     }
 
@@ -125,6 +126,7 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
 
                 thrustCounter++;
                 Context.FreezeRotation = false;
+                Context.PlayerHit = false;
 
                 if (thrustCounter < 3)
                 {
@@ -149,15 +151,25 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
 
     #region Extra Methods
 
-    private IEnumerator TripleThrustVFX()
+    private IEnumerator ThrustAttack()
     {
-        Context.TripleThrustVFX.transform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
-        Vector3 endPos = Context.TripleThrustVFX.transform.position + Context.transform.forward * Context.AttackColliders[(int)Attacks.THRUST].data[0].transform.localScale.z;
-        endPos.y = Context.transform.position.y;
+        Transform thrustTransform = Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data[0].transform;
+        Transform vfxTransform = Context.TripleThrustVFX.transform;
 
-        while (Context.TripleThrustVFX.transform.position != endPos)
+        vfxTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
+        thrustTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
+
+        Vector3 endPos = thrustTransform.transform.position + Context.transform.forward * THRUST_LENGTH;
+        endPos.y = Context.transform.position.y;     
+
+        while (thrustTransform.transform.position != endPos)
         {
-            Context.TripleThrustVFX.transform.position = Vector3.MoveTowards(Context.TripleThrustVFX.transform.position, endPos, 23f * Time.deltaTime);
+            vfxTransform.transform.position = Vector3.MoveTowards(Context.TripleThrustVFX.transform.position, endPos, THRUST_SPEED * Time.deltaTime);
+            thrustTransform.position = Vector3.MoveTowards(thrustTransform.position, endPos, THRUST_SPEED * Time.deltaTime);
+
+            if(!Context.PlayerHit)
+                Context.AttackCollide(Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data, debugMode: false);
+
             yield return null;
         }
     }
