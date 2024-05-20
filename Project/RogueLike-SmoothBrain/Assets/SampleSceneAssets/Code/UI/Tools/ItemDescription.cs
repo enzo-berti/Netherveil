@@ -50,6 +50,7 @@ public class ItemDescription : MonoBehaviour
 
         activePassiveText.text = (item.ItemEffect as IPassiveItem) != null ? "<color=grey>Passive</color>" : "<color=grey>Active</color>";
 
+       
         ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;
 
         string descriptionToDisplay = item.Database.GetItem(id).Description;
@@ -87,6 +88,47 @@ public class ItemDescription : MonoBehaviour
         }
 
         descriptionText.text = finalDescription;
+    }
+
+    public static string GetDescription(string id)
+    {
+        ItemDatabase itemDb = GameResources.Get<ItemDatabase>("ItemDatabase");
+        ItemEffect itemEffect = Assembly.GetExecutingAssembly().CreateInstance(id.GetPascalCase()) as ItemEffect;
+        string descriptionToDisplay = itemDb.GetItem(id).Description;
+        char[] separators = new char[] { ' ', '\n' };
+        string[] splitDescription = descriptionToDisplay.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        string finalDescription = string.Empty;
+        FieldInfo[] fieldOfItem = itemEffect.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+
+        for (int i = 0; i < splitDescription.Length; i++)
+        {
+            if (splitDescription[i].Length > 0 && splitDescription[i].Contains('{'))
+            {
+                int indexEntry = splitDescription[i].IndexOf("{") + 1;
+                int indexOut = splitDescription[i].IndexOf("}");
+                int length = indexOut - indexEntry;
+                string valueToFind = splitDescription[i].Substring(indexEntry, length);
+                FieldInfo valueInfo = fieldOfItem.FirstOrDefault(x => x.Name == valueToFind);
+                if (valueInfo != null)
+                {
+                    var memberValue = valueInfo.GetValue(itemEffect);
+                    if (splitDescription[i].Contains("%"))
+                    {
+                        memberValue = Convert.ToSingle(valueInfo.GetValue(itemEffect)) * 100;
+                    }
+                    splitDescription[i] = splitDescription[i].Replace("{" + valueToFind + "}", memberValue.ToString());
+                }
+                else
+                {
+                    splitDescription[i] = "N/A";
+                    Debug.LogWarning($"value : {valueToFind}, has not be found");
+                }
+            }
+
+            finalDescription += splitDescription[i] + " ";
+        }
+
+        return finalDescription;
     }
 
     private void UpdatePriceText()
