@@ -316,24 +316,12 @@ public class AudioManager : MonoBehaviour
 
     public void PauseAllSounds()
     {
-        foreach (var audioInstance in audioInstances)
-        {
-            if (!buttonSFXInstances.Contains(audioInstance))
-            {
-                audioInstance.setPaused(true);
-            }
-        }
+        SoundsFXBus.setPaused(true);
     }
 
     public void ResumeAllSounds()
     {
-        foreach (var audioInstance in audioInstances)
-        {
-            if (!buttonSFXInstances.Contains(audioInstance))
-            {
-                audioInstance.setPaused(false);
-            }
-        }
+        SoundsFXBus.setPaused(false);
     }
 
     public void ButtonClickSFX()
