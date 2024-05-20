@@ -16,6 +16,7 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private ItemDatabase database;
     [SerializeField] private Transform itemPassiveTransform;
     [SerializeField] private ItemFrame framePf;
+    [SerializeField] private GameObject panelToToggle;
 
     [Header("Backgrounds")]
     [SerializeField] private Sprite backDamnation;
@@ -121,6 +122,7 @@ public class ItemBar : MonoBehaviour
         {
             ItemFrame frame = Instantiate(framePf, itemPassiveTransform);
             frame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
+            frame.SetPanel(panelToToggle,itemAdd.Name, data.Description);
         }
         else if (itemAdd is IActiveItem)
         {
@@ -138,7 +140,7 @@ public class ItemBar : MonoBehaviour
         else if (ability as DivineShield != null)
         {
             specialAbilityFrame.SetFrame(backDivine, divineSprite);
-        }
+        } 
     }
 
     private void OnSpecialAbilityRemove()

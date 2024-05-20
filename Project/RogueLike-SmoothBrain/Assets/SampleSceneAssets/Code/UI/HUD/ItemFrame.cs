@@ -1,17 +1,17 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ItemFrame : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] protected Image background;
     [SerializeField] protected Image item;
     private Button itemButton;
-    private Item itemInstance; // Reference to the Item instance
-
-    public UnityEvent onPointerEnter;
-    public UnityEvent onPointerExit;
+    private string description;
+    private string name;
+    private GameObject panel;
 
     private void Awake()
     {
@@ -25,36 +25,44 @@ public class ItemFrame : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
     }
 
-    public void SetFrame(Sprite backgroundSprite, Sprite itemSprite)
+    public void SetFrame(Sprite _backgroundSprite, Sprite _itemSprite)
     {
         this.background.gameObject.SetActive(true);
         this.item.gameObject.SetActive(true);
 
-        this.background.sprite = backgroundSprite;
-        this.item.sprite = itemSprite;
+        this.background.sprite = _backgroundSprite;
+        this.item.sprite = _itemSprite;
+        
 
-        if (backgroundSprite == null)
+        if (_backgroundSprite == null)
             this.background.gameObject.SetActive(false);
-        if (itemSprite == null)
+        if (_itemSprite == null)
             this.item.gameObject.SetActive(false);
+    }
+
+    public void SetPanel(GameObject _panel,string _name, string _description)
+    {
+        panel = _panel;
+        name = _name;
+        description = _description;
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        onPointerEnter?.Invoke();
-        if (itemInstance != null)
+        if (description != null)
         {
-            //Debug.Log(itemInstance.GetComponent<ItemDescription>().TogglePanel(true));
-            Debug.Log("show Description");
+            panel.SetActive(true);
+            panel.GetComponentsInChildren<TextMeshProUGUI>()[0].text = name;
+            panel.GetComponentsInChildren<TextMeshProUGUI>()[1].text = description;
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        onPointerExit?.Invoke();
-        if (itemInstance != null)
+        if (description != null)
         {
-            Debug.Log("Hide description");
+            panel.SetActive(false);
         }
     }
 }
