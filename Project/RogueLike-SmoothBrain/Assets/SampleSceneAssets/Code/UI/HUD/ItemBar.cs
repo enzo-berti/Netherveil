@@ -122,7 +122,7 @@ public class ItemBar : MonoBehaviour
         {
             ItemFrame frame = Instantiate(framePf, itemPassiveTransform);
             frame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
-            frame.SetPanel(panelToToggle,itemAdd.Name, data.Description);
+            frame.SetPanel(panelToToggle,itemAdd.Name, ItemDescription.GetDescription(data.idName));
         }
         else if (itemAdd is IActiveItem)
         {
