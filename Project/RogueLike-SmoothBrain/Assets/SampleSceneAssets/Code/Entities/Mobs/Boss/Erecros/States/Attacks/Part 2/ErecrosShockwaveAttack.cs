@@ -13,9 +13,9 @@
 using StateMachine; // include all scripts about StateMachines
 using UnityEngine;
 
-public class ErecrosShockwave : BaseState<ErecrosStateMachine>
+public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
 {
-    public ErecrosShockwave(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
+    public ErecrosShockwaveAttack(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
@@ -56,6 +56,8 @@ public class ErecrosShockwave : BaseState<ErecrosStateMachine>
         Context.ShockwaveVFX.gameObject.SetActive(false);
 
         Context.PlayerHit = false;
+
+        Context.AttackCooldown = 1.25f + Random.Range(-0.25f, 0.25f);
     }
 
     // This method will be called every frame.

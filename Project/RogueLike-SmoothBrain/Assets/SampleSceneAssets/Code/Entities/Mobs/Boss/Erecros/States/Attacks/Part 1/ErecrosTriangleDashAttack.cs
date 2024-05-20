@@ -91,6 +91,8 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
         Context.DisableHitboxes();
 
         cloneBehaviours.Clear();
+
+        Context.AttackCooldown = 1.25f + Random.Range(-0.25f, 0.25f);
     }
 
     // This method will be called every frame.

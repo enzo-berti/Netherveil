@@ -15,9 +15,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
+public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
 {
-    public ErecrosWeaponThrow(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
+    public ErecrosWeaponThrowAttack(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
@@ -76,6 +76,8 @@ public class ErecrosWeaponThrow : BaseState<ErecrosStateMachine>
             prop.constraints = RigidbodyConstraints.FreezeAll;
             prop.GetComponent<ErecrosWeaponBehaviour>().Reset();
         }
+
+        Context.AttackCooldown = 1.25f + Random.Range(-0.25f, 0.25f);
     }
 
     // This method will be called every frame.

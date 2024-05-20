@@ -70,6 +70,8 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         {
             Object.Destroy(clone.gameObject);
         }
+
+        Context.AttackCooldown = 2f + Random.Range(-0.25f, 0.25f);
     }
 
     // This method will be called every frame.

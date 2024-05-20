@@ -20,7 +20,7 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
     public ErecrosTriggeredState(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    Type lastAttack;
+    Type lastAttack = null;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -29,10 +29,13 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
 
         //if (Context.AttackCooldown <= 0f)
         //{
-        //    List<Type> availableAttacks = GetAvailableAttacks();
+        //    if (Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+        //    {
+        //        List<Type> availableAttacks = GetAvailableAttacks();
 
-        //    lastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
-        //    SwitchState(Factory.GetState(lastAttack));
+        //        lastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
+        //        SwitchState(Factory.GetState(lastAttack));
+        //    }
         //}
     }
 
@@ -76,9 +79,31 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
             typeof(ErecrosTeleportAttack),
         };
 
-        if (Context.CurrentPhase > 1 && Context.CurrentPart == 1)
+        if (Context.CurrentPart == 1)
         {
-            availableAttacks.Add(typeof(ErecrosPrisonAttack));
+            if (Context.CurrentPhase == 1)
+            {
+                availableAttacks.Add(typeof(ErecrosPrisonAttack));
+            }
+        }
+        else if (Context.CurrentPart == 2)
+        {
+            if (Context.CurrentPhase == 1)
+            {
+                availableAttacks.Add(typeof(ErecrosShockwaveAttack));
+            }
+            else if (Context.CurrentPhase == 2)
+            {
+                availableAttacks.Add(typeof(ErecrosWeaponThrowAttack));
+            }
+        }
+
+        if (lastAttack != null)
+        {
+            if (availableAttacks.Contains(lastAttack))
+            {
+                availableAttacks.Remove(lastAttack);
+            }
         }
 
         return availableAttacks;
@@ -105,11 +130,11 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            SwitchState(Factory.GetState<ErecrosShockwave>());
+            SwitchState(Factory.GetState<ErecrosShockwaveAttack>());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            SwitchState(Factory.GetState<ErecrosWeaponThrow>());
+            SwitchState(Factory.GetState<ErecrosWeaponThrowAttack>());
         }
     }
     #endregion
