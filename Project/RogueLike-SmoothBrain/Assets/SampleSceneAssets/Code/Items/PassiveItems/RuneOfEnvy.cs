@@ -6,6 +6,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 {
     readonly List<List<float>> statsStolen = new();
     readonly float stealPourcentage = 0.1f;
+    bool hasStolenStats = false;
 
     enum StolenStats
     {
@@ -38,18 +39,34 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
         if (MapUtilities.currentRoomData.Enemies.Count > 0)
         {
+            hasStolenStats = true;
             AudioManager.Instance.PlaySound(AudioManager.Instance.RuneOfEnvySFX);
         }
 
         foreach (GameObject enemy in MapUtilities.currentRoomData.Enemies)
         {
-            
+            float atkStolen = 0;
+            int hpStolen = 0;
+            float speedStolen = 0;
+
             Mobs mob = enemy.GetComponent<Mobs>();
             mob.StatSuckerVFX.GetComponent<VFXStopper>().Duration = 1f;
             mob.StatSuckerVFX.GetComponent<VFXStopper>().PlayVFX();
-            int hpStolen = (int)(mob.Stats.GetMaxValue(Stat.HP) * (stealPourcentage));
-            float atkStolen = mob.Stats.GetValue(Stat.ATK) * (stealPourcentage);
-            float speedStolen = mob.Stats.GetValue(Stat.SPEED) * (stealPourcentage);
+
+            if(mob.Stats.HasStat(Stat.HP))
+            {
+                hpStolen = (int)(mob.Stats.GetMaxValue(Stat.HP) * stealPourcentage);
+            }
+
+            if (mob.Stats.HasStat(Stat.ATK))
+            {
+                atkStolen = mob.Stats.GetValue(Stat.ATK) * stealPourcentage;
+            }
+
+            if(mob.Stats.HasStat(Stat.SPEED))
+            {
+                speedStolen = mob.Stats.GetValue(Stat.SPEED) * stealPourcentage;
+            }
 
             statsStolen[(int)StolenStats.HP].Add(hpStolen);
             statsStolen[(int)StolenStats.ATK].Add(atkStolen);
@@ -73,6 +90,15 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
 
     private void ResetStats()
     {
+        if(!hasStolenStats)
+        {
+            foreach (List<float> statsStolenList in statsStolen)
+            {
+                statsStolenList.Clear();
+            }
+            return;
+        }
+
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
 
         foreach (float statStolen in statsStolen[(int)StolenStats.HP])
@@ -101,5 +127,6 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
         {
             statsStolenList.Clear();
         }
+        hasStolenStats = false;
     }
 }

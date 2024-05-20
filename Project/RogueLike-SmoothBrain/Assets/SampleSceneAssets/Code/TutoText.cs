@@ -47,7 +47,7 @@ public class TutoText : MonoBehaviour
 
         string textString = initText;
 
-        if (actionRefs[0].action.name == "Movement" && DeviceManager.Instance.IsPlayingKB())
+        if (actionRefs[0].action.name == "Move" && DeviceManager.Instance.IsPlayingKB())
         {
             if (textString.Contains("^") && !textString.Contains("\"^^\""))
             {
@@ -66,7 +66,7 @@ public class TutoText : MonoBehaviour
                 textString = textString.Replace("*", "<sprite name=\"" + GetDisplayString(actionRefs[0], 4).GetCamelCase() + "\">");
             }
         }
-        else if (actionRefs[0].action.name == "Movement" && !DeviceManager.Instance.IsPlayingKB())
+        else if (actionRefs[0].action.name == "Move" && !DeviceManager.Instance.IsPlayingKB())
         {
             textString = textString.Replace("^", "<sprite name=\"" + "leftStick" + (DeviceManager.Instance.CurrentDevice is DualShockGamepad ? "_ps" : "_xbox") + "\">");
             textString = textString.Replace("$", string.Empty);
