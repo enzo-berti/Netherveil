@@ -319,6 +319,12 @@ public class AudioManager : MonoBehaviour
         SoundsFXBus.setPaused(true);
     }
 
+    public void StopAllMusics()
+    {
+        musicsBus.setPaused(true);
+        ambiencesBus.setPaused(true);
+    }
+
     public void ResumeAllSounds()
     {
         SoundsFXBus.setPaused(false);

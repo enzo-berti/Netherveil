@@ -43,6 +43,7 @@ public class GameOver : MonoBehaviour
             drawable.color *= clearColor;
         }
 
+        AudioManager.Instance.StopAllMusics();
         DisableAllMob();
         StartCoroutine(IncreaseAlpha());
     }
