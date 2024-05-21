@@ -132,6 +132,10 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         sounds.intro.Play(transform.position);
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
+
+        // Cinematics
+        cinematic.Play();
+        isInCinematic = true;
     }
 
     protected override void Update()
