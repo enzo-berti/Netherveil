@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class ItemBar : MonoBehaviour
 {
@@ -128,11 +129,12 @@ public class ItemBar : MonoBehaviour
         {
             ItemFrame frame = Instantiate(framePf, itemPassiveTransform);
             frame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
-            frame.SetPanel(panelToToggle,itemAdd.Name, ItemDescription.GetDescription(data.idName), data.Type.ToString());
+            frame.GetComponent<ItemSelector>().SetPanel(panelToToggle,itemAdd.Name, ItemDescription.GetDescription(data.idName), data.Type.ToString());
         }
         else if (itemAdd is IActiveItem)
         {
             specialItemFrame.SetFrame(backItemActiveNormal[(int)data.RarityTier], item);
+            specialItemFrame.GetComponent<ItemSelector>().SetPanel(panelToToggle, itemAdd.Name, ItemDescription.GetDescription(data.idName), data.Type.ToString());
         }
     }
 
