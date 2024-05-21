@@ -220,6 +220,11 @@ public class Inventory : ISavable
             AddItem(itemName);
         }
 
+        foreach (var item in PassiveItems)
+        {
+            Item.InvokeOnRetrieved(item as ItemEffect);
+        }
+
         Blood.Add(SaveManager.saveData.bloodValue);
     }
 }
