@@ -20,7 +20,7 @@ public class QuestHUD : MonoBehaviour
     private Coroutine questRoutine;
     public float progressTextSize;
 
-    void Start()
+    void Awake()
     {
         lostOrFinishedText.SetText("No Quests...");
         EmptyQuestTexts();
