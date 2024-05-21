@@ -3,6 +3,7 @@ using PostProcessingEffects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -661,7 +662,10 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         DoneQuestQTApprenticeThisStage = saveData.doneQuestQTApprenticeThisStage;
         ClearedTuto = saveData.clearedTuto;
 
-        CurrentQuest = Quest.LoadClassWithSave(saveData.questId, saveData.questDifficulty, saveData.talkerType, saveData.talkerGrade);
+        if (saveData.questId.Any())
+        {
+            CurrentQuest = Quest.LoadClassWithSave(saveData.questId, saveData.questDifficulty, saveData.talkerType, saveData.talkerGrade);
+        }
         Inventory.LoadSave();
 
         stats.SetValue(Stat.CORRUPTION, saveData.statCorruption);

@@ -42,6 +42,8 @@ namespace Map.Generation
             //}
 
             seed = Seed.seed;
+            SaveManager.saveData.seed = Seed.seed;
+
             Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
 
             //SaveManager.onSave += Save;
