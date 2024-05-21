@@ -59,7 +59,6 @@ public class Stats
                     }
                     else
                     {
-                        Debug.LogWarning($"Can't find max value for {info} in {name}");
                         return stat.value * coeff;
                     }
                 }
