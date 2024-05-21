@@ -67,59 +67,6 @@ namespace Map.Generation
             roomClearId.Clear();
         }
 
-        //private void LoadSave()
-        //{
-        //    string filePath = SaveManager.DirectoryPath + fileName;
-        //
-        //    if (!File.Exists(filePath))
-        //    {
-        //        return;
-        //    }
-        //
-        //    using (var stream = File.Open(filePath, FileMode.Open))
-        //    {
-        //        using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-        //        {
-        //            // seed
-        //            Seed.seed = reader.ReadString();
-        //            Seed.Iterate(reader.ReadInt32());
-        //            // stage
-        //            Stage = reader.ReadInt32() - 1;
-        //            // room ids
-        //            int numberCleared = reader.ReadInt32();
-        //            for (int i = 0; i < numberCleared; i++)
-        //            {
-        //                roomClearId.Add(reader.ReadInt32());
-        //            }
-        //        }
-        //    }
-        //}
-        //
-        //private void Save(string directoryPath)
-        //{
-        //    string filePath = SaveManager.DirectoryPath + fileName;
-        //
-        //    using (var stream = File.Open(filePath, FileMode.Create))
-        //    {
-        //        using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
-        //        {
-        //            // seed
-        //            writer.Write(Seed.seed);
-        //            writer.Write(iterationSeedRegister);
-        //            // stage
-        //            writer.Write(MapUtilities.Stage);
-        //            // room ids
-        //            writer.Write(roomClearId.Count);
-        //            foreach (int id in roomClearId)
-        //            {
-        //                writer.Write(id);
-        //            }
-        //        }
-        //
-        //        stream.Close();
-        //    }
-        //}
-
         private void ClearRooms()
         {
             foreach (int index in roomClearId)
