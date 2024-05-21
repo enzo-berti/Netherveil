@@ -1,13 +1,18 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.Playables;
 
 [RequireComponent(typeof(PlayableDirector))]
 public class CinematicHandler : MonoBehaviour
 {
-    [SerializeField] private UnityEvent onSkip;
-    private PlayableDirector director;
     [SerializeField] private bool skipable = false;
+    private PlayableDirector director;
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onSkip;
 
     private void Start()
     {
@@ -16,7 +21,8 @@ public class CinematicHandler : MonoBehaviour
 
     void Update()
     {
-        if (Input.anyKeyDown)
+        bool gamepadButtonPressed = !DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl && x.IsPressed() && !x.synthetic);
+        if (Input.anyKeyDown || gamepadButtonPressed)
         {
             if (skipable)
                 Skip();

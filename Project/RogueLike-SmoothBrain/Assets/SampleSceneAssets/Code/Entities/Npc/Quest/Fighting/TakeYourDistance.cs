@@ -5,19 +5,19 @@ public class TakeYourDistance : Quest
     int currentNumber = 0;
     int MAX_NUMBER;
 
-    public override void Save(BinaryWriter writer)
+    public override void Save(ref SaveData saveData)
     {
-        base.Save(writer);
-
-        writer.Write(currentNumber);
+        base.Save(ref saveData);
+        saveData.questEvolution = currentNumber;
     }
 
-    public override void Load(BinaryReader reader)
+    public override void LoadSave()
     {
-        base.Load(reader);
+        base.LoadSave();
 
-        currentNumber = reader.ReadInt32();
+        currentNumber = SaveManager.saveData.questEvolution;
     }
+
 
     public override void AcceptQuest()
     {
@@ -39,7 +39,7 @@ public class TakeYourDistance : Quest
                 CorruptionModifierValue += 10;
                 break;
         }
-        progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB MONSTERS HIT WITH SPEAR LAUNCH ATTACK : {currentNumber}/{MAX_NUMBER}";
         Utilities.Hero.OnSpearAttack += UpdateCount;
     }
 
@@ -55,10 +55,10 @@ public class TakeYourDistance : Quest
 
     private void UpdateCount(IDamageable damageable, IAttacker attacker)
     {
-        if (!IsQuestFinished() && damageable is not IDummy)
+        if (!IsQuestFinished() && damageable is not IDummy && damageable is Mobs && !(damageable as Mobs).IsSpawning)
         {
             currentNumber++;
-            progressText = $"NB ENEMIES HIT WITH DISTANCE ATTACK : {currentNumber}/{MAX_NUMBER}";
+            progressText = $"NB MONSTERS HIT WITH SPEAR LAUNCH ATTACK : {currentNumber}/{MAX_NUMBER}";
         }
 
         QuestUpdated();

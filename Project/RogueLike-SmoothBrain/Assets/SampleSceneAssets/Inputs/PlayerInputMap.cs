@@ -30,7 +30,7 @@ namespace Netherveil.Inputs
             ""id"": ""bb78d813-0d21-454e-a9d4-2e93d94b28b4"",
             ""actions"": [
                 {
-                    ""name"": ""Movement"",
+                    ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""5608f3eb-ca2b-42c3-a2de-6adfffa8f11a"",
                     ""expectedControlType"": ""Analog"",
@@ -39,7 +39,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""BasicAttack"",
+                    ""name"": ""Basic Attack"",
                     ""type"": ""Button"",
                     ""id"": ""017a0e5c-3a7a-4866-ade3-788788399d8f"",
                     ""expectedControlType"": ""Button"",
@@ -48,7 +48,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ChargedAttack"",
+                    ""name"": ""Charged Attack"",
                     ""type"": ""Button"",
                     ""id"": ""2b38a7ee-7606-41ae-84ee-66f698cda467"",
                     ""expectedControlType"": ""Button"",
@@ -57,7 +57,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Spear"",
+                    ""name"": ""Throw/Retrieve Spear"",
                     ""type"": ""Button"",
                     ""id"": ""cd9ce065-145a-45cf-b78a-843dd1732144"",
                     ""expectedControlType"": ""Button"",
@@ -75,7 +75,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleMap"",
+                    ""name"": ""Map"",
                     ""type"": ""Button"",
                     ""id"": ""65bb6ba4-6bfe-4405-bf76-aaf08c00aa82"",
                     ""expectedControlType"": ""Button"",
@@ -84,7 +84,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleQuest"",
+                    ""name"": ""Quest"",
                     ""type"": ""Button"",
                     ""id"": ""13868f5d-afd8-438b-bd44-1d11408a028c"",
                     ""expectedControlType"": ""Button"",
@@ -102,7 +102,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ActiveItem"",
+                    ""name"": ""Active Item"",
                     ""type"": ""Button"",
                     ""id"": ""5fc5dc1c-aecc-4d80-913a-b1cbe96ddee5"",
                     ""expectedControlType"": ""Button"",
@@ -111,7 +111,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SpecialAbility"",
+                    ""name"": ""Special Ability"",
                     ""type"": ""Button"",
                     ""id"": ""f68d8ec1-c558-42e7-aa7e-35523a654c45"",
                     ""expectedControlType"": ""Button"",
@@ -138,7 +138,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ItemDescription"",
+                    ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""162a7f5e-1c53-41cc-abcb-f9c31ddaec3e"",
                     ""expectedControlType"": ""Button"",
@@ -155,7 +155,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Movement"",
+                    ""action"": ""Move"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -166,7 +166,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Movement"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -177,7 +177,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Movement"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -188,7 +188,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Movement"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -199,7 +199,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Movement"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -210,7 +210,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""BasicAttack"",
+                    ""action"": ""Basic Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -221,7 +221,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ChargedAttack"",
+                    ""action"": ""Charged Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -232,7 +232,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Spear"",
+                    ""action"": ""Throw/Retrieve Spear"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -254,7 +254,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleMap"",
+                    ""action"": ""Map"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -276,7 +276,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActiveItem"",
+                    ""action"": ""Active Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -287,7 +287,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SpecialAbility"",
+                    ""action"": ""Special Ability"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -298,7 +298,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleQuest"",
+                    ""action"": ""Quest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -331,7 +331,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ItemDescription"",
+                    ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -342,7 +342,7 @@ namespace Netherveil.Inputs
             ""id"": ""b1c8ef0c-2982-421a-b375-78581075bd3f"",
             ""actions"": [
                 {
-                    ""name"": ""Movement"",
+                    ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""133bdb3c-dbcb-4413-9585-dfa8cd5a932c"",
                     ""expectedControlType"": ""Analog"",
@@ -351,7 +351,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""BasicAttack"",
+                    ""name"": ""Basic Attack"",
                     ""type"": ""Button"",
                     ""id"": ""11ad5c4a-022f-4d2f-825e-e038225ef2c5"",
                     ""expectedControlType"": ""Button"",
@@ -360,7 +360,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ChargedAttack"",
+                    ""name"": ""Charged Attack"",
                     ""type"": ""Button"",
                     ""id"": ""3c4db0dc-e68a-42f0-b91b-ba85846f36a5"",
                     ""expectedControlType"": ""Button"",
@@ -369,7 +369,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Spear"",
+                    ""name"": ""Throw/Retrieve Spear"",
                     ""type"": ""Button"",
                     ""id"": ""8e0220b5-5e72-4ccf-84df-3e0aa0fbaa68"",
                     ""expectedControlType"": ""Button"",
@@ -387,7 +387,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleMap"",
+                    ""name"": ""Map"",
                     ""type"": ""Button"",
                     ""id"": ""8e70fd4d-7c29-4331-9da2-4444d40328fb"",
                     ""expectedControlType"": ""Button"",
@@ -396,7 +396,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleQuest"",
+                    ""name"": ""Quest"",
                     ""type"": ""Button"",
                     ""id"": ""2dec7434-5d35-4f23-a6b9-afae95d763b7"",
                     ""expectedControlType"": ""Button"",
@@ -423,7 +423,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""ActiveItem"",
+                    ""name"": ""Active Item"",
                     ""type"": ""Button"",
                     ""id"": ""5cfb8626-e1aa-4ab9-bc79-838ee5891917"",
                     ""expectedControlType"": ""Button"",
@@ -432,7 +432,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SpecialAbility"",
+                    ""name"": ""Special Ability"",
                     ""type"": ""Button"",
                     ""id"": ""688d5a40-0eea-4b89-8da6-088b9f2e6fb4"",
                     ""expectedControlType"": ""Button"",
@@ -459,7 +459,7 @@ namespace Netherveil.Inputs
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ItemDescription"",
+                    ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""b56b9158-7397-4d0f-80e6-e23ff87cd743"",
                     ""expectedControlType"": ""Button"",
@@ -470,68 +470,13 @@ namespace Netherveil.Inputs
             ],
             ""bindings"": [
                 {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""b87ba5d5-fe74-45b1-957d-69dc88623e24"",
-                    ""path"": ""2DVector(mode=2)"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""16569f13-bd60-4aed-b6ea-61f45718de50"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""174f834d-7638-45f1-aa5e-bc1f67c44986"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""190c5e0a-d31a-4095-bd49-bfa0f7cd9108"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""073759ba-503e-4717-9355-aad95d7a8e2f"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""9d9ad43f-4646-4877-bd16-edc0d1646952"",
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""BasicAttack"",
+                    ""action"": ""Basic Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -542,7 +487,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ChargedAttack"",
+                    ""action"": ""Charged Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -553,7 +498,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Spear"",
+                    ""action"": ""Throw/Retrieve Spear"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -575,7 +520,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleMap"",
+                    ""action"": ""Map"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -591,59 +536,15 @@ namespace Netherveil.Inputs
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""636e6a81-5efd-4e56-9b0d-f544867b579e"",
-                    ""path"": ""2DVector(mode=2)"",
+                    ""name"": """",
+                    ""id"": ""ebf1879d-f8ac-4978-aef9-0b940ac32457"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""CamLookAway"",
-                    ""isComposite"": true,
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""afe52d42-76e8-4f3a-878c-230b50d0eef3"",
-                    ""path"": ""<Gamepad>/rightStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CamLookAway"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""d65a6561-11b4-415d-ada8-cec0795882ca"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CamLookAway"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""ad2debba-c69e-49b6-93cf-bb63ab74527d"",
-                    ""path"": ""<Gamepad>/rightStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CamLookAway"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""cd6d3a2c-e76d-49c3-96c0-8963cd659c2d"",
-                    ""path"": ""<Gamepad>/rightStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CamLookAway"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -652,7 +553,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActiveItem"",
+                    ""action"": ""Active Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -663,7 +564,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SpecialAbility"",
+                    ""action"": ""Special Ability"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -674,7 +575,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleQuest"",
+                    ""action"": ""Quest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -685,7 +586,7 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleQuest"",
+                    ""action"": ""Quest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -729,7 +630,18 @@ namespace Netherveil.Inputs
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ItemDescription"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f281f01f-231a-4e03-a13d-869cda04aebd"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -762,35 +674,35 @@ namespace Netherveil.Inputs
 }");
             // Keyboard
             m_Keyboard = asset.FindActionMap("Keyboard", throwIfNotFound: true);
-            m_Keyboard_Movement = m_Keyboard.FindAction("Movement", throwIfNotFound: true);
-            m_Keyboard_BasicAttack = m_Keyboard.FindAction("BasicAttack", throwIfNotFound: true);
-            m_Keyboard_ChargedAttack = m_Keyboard.FindAction("ChargedAttack", throwIfNotFound: true);
-            m_Keyboard_Spear = m_Keyboard.FindAction("Spear", throwIfNotFound: true);
+            m_Keyboard_Move = m_Keyboard.FindAction("Move", throwIfNotFound: true);
+            m_Keyboard_BasicAttack = m_Keyboard.FindAction("Basic Attack", throwIfNotFound: true);
+            m_Keyboard_ChargedAttack = m_Keyboard.FindAction("Charged Attack", throwIfNotFound: true);
+            m_Keyboard_ThrowRetrieveSpear = m_Keyboard.FindAction("Throw/Retrieve Spear", throwIfNotFound: true);
             m_Keyboard_Dash = m_Keyboard.FindAction("Dash", throwIfNotFound: true);
-            m_Keyboard_ToggleMap = m_Keyboard.FindAction("ToggleMap", throwIfNotFound: true);
-            m_Keyboard_ToggleQuest = m_Keyboard.FindAction("ToggleQuest", throwIfNotFound: true);
+            m_Keyboard_Map = m_Keyboard.FindAction("Map", throwIfNotFound: true);
+            m_Keyboard_Quest = m_Keyboard.FindAction("Quest", throwIfNotFound: true);
             m_Keyboard_Pause = m_Keyboard.FindAction("Pause", throwIfNotFound: true);
-            m_Keyboard_ActiveItem = m_Keyboard.FindAction("ActiveItem", throwIfNotFound: true);
-            m_Keyboard_SpecialAbility = m_Keyboard.FindAction("SpecialAbility", throwIfNotFound: true);
+            m_Keyboard_ActiveItem = m_Keyboard.FindAction("Active Item", throwIfNotFound: true);
+            m_Keyboard_SpecialAbility = m_Keyboard.FindAction("Special Ability", throwIfNotFound: true);
             m_Keyboard_SkipDialogue = m_Keyboard.FindAction("SkipDialogue", throwIfNotFound: true);
             m_Keyboard_Interact = m_Keyboard.FindAction("Interact", throwIfNotFound: true);
-            m_Keyboard_ItemDescription = m_Keyboard.FindAction("ItemDescription", throwIfNotFound: true);
+            m_Keyboard_Inventory = m_Keyboard.FindAction("Inventory", throwIfNotFound: true);
             // Gamepad
             m_Gamepad = asset.FindActionMap("Gamepad", throwIfNotFound: true);
-            m_Gamepad_Movement = m_Gamepad.FindAction("Movement", throwIfNotFound: true);
-            m_Gamepad_BasicAttack = m_Gamepad.FindAction("BasicAttack", throwIfNotFound: true);
-            m_Gamepad_ChargedAttack = m_Gamepad.FindAction("ChargedAttack", throwIfNotFound: true);
-            m_Gamepad_Spear = m_Gamepad.FindAction("Spear", throwIfNotFound: true);
+            m_Gamepad_Move = m_Gamepad.FindAction("Move", throwIfNotFound: true);
+            m_Gamepad_BasicAttack = m_Gamepad.FindAction("Basic Attack", throwIfNotFound: true);
+            m_Gamepad_ChargedAttack = m_Gamepad.FindAction("Charged Attack", throwIfNotFound: true);
+            m_Gamepad_ThrowRetrieveSpear = m_Gamepad.FindAction("Throw/Retrieve Spear", throwIfNotFound: true);
             m_Gamepad_Dash = m_Gamepad.FindAction("Dash", throwIfNotFound: true);
-            m_Gamepad_ToggleMap = m_Gamepad.FindAction("ToggleMap", throwIfNotFound: true);
-            m_Gamepad_ToggleQuest = m_Gamepad.FindAction("ToggleQuest", throwIfNotFound: true);
+            m_Gamepad_Map = m_Gamepad.FindAction("Map", throwIfNotFound: true);
+            m_Gamepad_Quest = m_Gamepad.FindAction("Quest", throwIfNotFound: true);
             m_Gamepad_Pause = m_Gamepad.FindAction("Pause", throwIfNotFound: true);
             m_Gamepad_CamLookAway = m_Gamepad.FindAction("CamLookAway", throwIfNotFound: true);
-            m_Gamepad_ActiveItem = m_Gamepad.FindAction("ActiveItem", throwIfNotFound: true);
-            m_Gamepad_SpecialAbility = m_Gamepad.FindAction("SpecialAbility", throwIfNotFound: true);
+            m_Gamepad_ActiveItem = m_Gamepad.FindAction("Active Item", throwIfNotFound: true);
+            m_Gamepad_SpecialAbility = m_Gamepad.FindAction("Special Ability", throwIfNotFound: true);
             m_Gamepad_SkipDialogue = m_Gamepad.FindAction("SkipDialogue", throwIfNotFound: true);
             m_Gamepad_Interact = m_Gamepad.FindAction("Interact", throwIfNotFound: true);
-            m_Gamepad_ItemDescription = m_Gamepad.FindAction("ItemDescription", throwIfNotFound: true);
+            m_Gamepad_Inventory = m_Gamepad.FindAction("Inventory", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -852,36 +764,36 @@ namespace Netherveil.Inputs
         // Keyboard
         private readonly InputActionMap m_Keyboard;
         private List<IKeyboardActions> m_KeyboardActionsCallbackInterfaces = new List<IKeyboardActions>();
-        private readonly InputAction m_Keyboard_Movement;
+        private readonly InputAction m_Keyboard_Move;
         private readonly InputAction m_Keyboard_BasicAttack;
         private readonly InputAction m_Keyboard_ChargedAttack;
-        private readonly InputAction m_Keyboard_Spear;
+        private readonly InputAction m_Keyboard_ThrowRetrieveSpear;
         private readonly InputAction m_Keyboard_Dash;
-        private readonly InputAction m_Keyboard_ToggleMap;
-        private readonly InputAction m_Keyboard_ToggleQuest;
+        private readonly InputAction m_Keyboard_Map;
+        private readonly InputAction m_Keyboard_Quest;
         private readonly InputAction m_Keyboard_Pause;
         private readonly InputAction m_Keyboard_ActiveItem;
         private readonly InputAction m_Keyboard_SpecialAbility;
         private readonly InputAction m_Keyboard_SkipDialogue;
         private readonly InputAction m_Keyboard_Interact;
-        private readonly InputAction m_Keyboard_ItemDescription;
+        private readonly InputAction m_Keyboard_Inventory;
         public struct KeyboardActions
         {
             private @PlayerInputMap m_Wrapper;
             public KeyboardActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Movement => m_Wrapper.m_Keyboard_Movement;
+            public InputAction @Move => m_Wrapper.m_Keyboard_Move;
             public InputAction @BasicAttack => m_Wrapper.m_Keyboard_BasicAttack;
             public InputAction @ChargedAttack => m_Wrapper.m_Keyboard_ChargedAttack;
-            public InputAction @Spear => m_Wrapper.m_Keyboard_Spear;
+            public InputAction @ThrowRetrieveSpear => m_Wrapper.m_Keyboard_ThrowRetrieveSpear;
             public InputAction @Dash => m_Wrapper.m_Keyboard_Dash;
-            public InputAction @ToggleMap => m_Wrapper.m_Keyboard_ToggleMap;
-            public InputAction @ToggleQuest => m_Wrapper.m_Keyboard_ToggleQuest;
+            public InputAction @Map => m_Wrapper.m_Keyboard_Map;
+            public InputAction @Quest => m_Wrapper.m_Keyboard_Quest;
             public InputAction @Pause => m_Wrapper.m_Keyboard_Pause;
             public InputAction @ActiveItem => m_Wrapper.m_Keyboard_ActiveItem;
             public InputAction @SpecialAbility => m_Wrapper.m_Keyboard_SpecialAbility;
             public InputAction @SkipDialogue => m_Wrapper.m_Keyboard_SkipDialogue;
             public InputAction @Interact => m_Wrapper.m_Keyboard_Interact;
-            public InputAction @ItemDescription => m_Wrapper.m_Keyboard_ItemDescription;
+            public InputAction @Inventory => m_Wrapper.m_Keyboard_Inventory;
             public InputActionMap Get() { return m_Wrapper.m_Keyboard; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -891,27 +803,27 @@ namespace Netherveil.Inputs
             {
                 if (instance == null || m_Wrapper.m_KeyboardActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_KeyboardActionsCallbackInterfaces.Add(instance);
-                @Movement.started += instance.OnMovement;
-                @Movement.performed += instance.OnMovement;
-                @Movement.canceled += instance.OnMovement;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
                 @BasicAttack.started += instance.OnBasicAttack;
                 @BasicAttack.performed += instance.OnBasicAttack;
                 @BasicAttack.canceled += instance.OnBasicAttack;
                 @ChargedAttack.started += instance.OnChargedAttack;
                 @ChargedAttack.performed += instance.OnChargedAttack;
                 @ChargedAttack.canceled += instance.OnChargedAttack;
-                @Spear.started += instance.OnSpear;
-                @Spear.performed += instance.OnSpear;
-                @Spear.canceled += instance.OnSpear;
+                @ThrowRetrieveSpear.started += instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.performed += instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.canceled += instance.OnThrowRetrieveSpear;
                 @Dash.started += instance.OnDash;
                 @Dash.performed += instance.OnDash;
                 @Dash.canceled += instance.OnDash;
-                @ToggleMap.started += instance.OnToggleMap;
-                @ToggleMap.performed += instance.OnToggleMap;
-                @ToggleMap.canceled += instance.OnToggleMap;
-                @ToggleQuest.started += instance.OnToggleQuest;
-                @ToggleQuest.performed += instance.OnToggleQuest;
-                @ToggleQuest.canceled += instance.OnToggleQuest;
+                @Map.started += instance.OnMap;
+                @Map.performed += instance.OnMap;
+                @Map.canceled += instance.OnMap;
+                @Quest.started += instance.OnQuest;
+                @Quest.performed += instance.OnQuest;
+                @Quest.canceled += instance.OnQuest;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -927,34 +839,34 @@ namespace Netherveil.Inputs
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
-                @ItemDescription.started += instance.OnItemDescription;
-                @ItemDescription.performed += instance.OnItemDescription;
-                @ItemDescription.canceled += instance.OnItemDescription;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
             }
 
             private void UnregisterCallbacks(IKeyboardActions instance)
             {
-                @Movement.started -= instance.OnMovement;
-                @Movement.performed -= instance.OnMovement;
-                @Movement.canceled -= instance.OnMovement;
+                @Move.started -= instance.OnMove;
+                @Move.performed -= instance.OnMove;
+                @Move.canceled -= instance.OnMove;
                 @BasicAttack.started -= instance.OnBasicAttack;
                 @BasicAttack.performed -= instance.OnBasicAttack;
                 @BasicAttack.canceled -= instance.OnBasicAttack;
                 @ChargedAttack.started -= instance.OnChargedAttack;
                 @ChargedAttack.performed -= instance.OnChargedAttack;
                 @ChargedAttack.canceled -= instance.OnChargedAttack;
-                @Spear.started -= instance.OnSpear;
-                @Spear.performed -= instance.OnSpear;
-                @Spear.canceled -= instance.OnSpear;
+                @ThrowRetrieveSpear.started -= instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.performed -= instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.canceled -= instance.OnThrowRetrieveSpear;
                 @Dash.started -= instance.OnDash;
                 @Dash.performed -= instance.OnDash;
                 @Dash.canceled -= instance.OnDash;
-                @ToggleMap.started -= instance.OnToggleMap;
-                @ToggleMap.performed -= instance.OnToggleMap;
-                @ToggleMap.canceled -= instance.OnToggleMap;
-                @ToggleQuest.started -= instance.OnToggleQuest;
-                @ToggleQuest.performed -= instance.OnToggleQuest;
-                @ToggleQuest.canceled -= instance.OnToggleQuest;
+                @Map.started -= instance.OnMap;
+                @Map.performed -= instance.OnMap;
+                @Map.canceled -= instance.OnMap;
+                @Quest.started -= instance.OnQuest;
+                @Quest.performed -= instance.OnQuest;
+                @Quest.canceled -= instance.OnQuest;
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
@@ -970,9 +882,9 @@ namespace Netherveil.Inputs
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
-                @ItemDescription.started -= instance.OnItemDescription;
-                @ItemDescription.performed -= instance.OnItemDescription;
-                @ItemDescription.canceled -= instance.OnItemDescription;
+                @Inventory.started -= instance.OnInventory;
+                @Inventory.performed -= instance.OnInventory;
+                @Inventory.canceled -= instance.OnInventory;
             }
 
             public void RemoveCallbacks(IKeyboardActions instance)
@@ -994,38 +906,38 @@ namespace Netherveil.Inputs
         // Gamepad
         private readonly InputActionMap m_Gamepad;
         private List<IGamepadActions> m_GamepadActionsCallbackInterfaces = new List<IGamepadActions>();
-        private readonly InputAction m_Gamepad_Movement;
+        private readonly InputAction m_Gamepad_Move;
         private readonly InputAction m_Gamepad_BasicAttack;
         private readonly InputAction m_Gamepad_ChargedAttack;
-        private readonly InputAction m_Gamepad_Spear;
+        private readonly InputAction m_Gamepad_ThrowRetrieveSpear;
         private readonly InputAction m_Gamepad_Dash;
-        private readonly InputAction m_Gamepad_ToggleMap;
-        private readonly InputAction m_Gamepad_ToggleQuest;
+        private readonly InputAction m_Gamepad_Map;
+        private readonly InputAction m_Gamepad_Quest;
         private readonly InputAction m_Gamepad_Pause;
         private readonly InputAction m_Gamepad_CamLookAway;
         private readonly InputAction m_Gamepad_ActiveItem;
         private readonly InputAction m_Gamepad_SpecialAbility;
         private readonly InputAction m_Gamepad_SkipDialogue;
         private readonly InputAction m_Gamepad_Interact;
-        private readonly InputAction m_Gamepad_ItemDescription;
+        private readonly InputAction m_Gamepad_Inventory;
         public struct GamepadActions
         {
             private @PlayerInputMap m_Wrapper;
             public GamepadActions(@PlayerInputMap wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Movement => m_Wrapper.m_Gamepad_Movement;
+            public InputAction @Move => m_Wrapper.m_Gamepad_Move;
             public InputAction @BasicAttack => m_Wrapper.m_Gamepad_BasicAttack;
             public InputAction @ChargedAttack => m_Wrapper.m_Gamepad_ChargedAttack;
-            public InputAction @Spear => m_Wrapper.m_Gamepad_Spear;
+            public InputAction @ThrowRetrieveSpear => m_Wrapper.m_Gamepad_ThrowRetrieveSpear;
             public InputAction @Dash => m_Wrapper.m_Gamepad_Dash;
-            public InputAction @ToggleMap => m_Wrapper.m_Gamepad_ToggleMap;
-            public InputAction @ToggleQuest => m_Wrapper.m_Gamepad_ToggleQuest;
+            public InputAction @Map => m_Wrapper.m_Gamepad_Map;
+            public InputAction @Quest => m_Wrapper.m_Gamepad_Quest;
             public InputAction @Pause => m_Wrapper.m_Gamepad_Pause;
             public InputAction @CamLookAway => m_Wrapper.m_Gamepad_CamLookAway;
             public InputAction @ActiveItem => m_Wrapper.m_Gamepad_ActiveItem;
             public InputAction @SpecialAbility => m_Wrapper.m_Gamepad_SpecialAbility;
             public InputAction @SkipDialogue => m_Wrapper.m_Gamepad_SkipDialogue;
             public InputAction @Interact => m_Wrapper.m_Gamepad_Interact;
-            public InputAction @ItemDescription => m_Wrapper.m_Gamepad_ItemDescription;
+            public InputAction @Inventory => m_Wrapper.m_Gamepad_Inventory;
             public InputActionMap Get() { return m_Wrapper.m_Gamepad; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1035,27 +947,27 @@ namespace Netherveil.Inputs
             {
                 if (instance == null || m_Wrapper.m_GamepadActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_GamepadActionsCallbackInterfaces.Add(instance);
-                @Movement.started += instance.OnMovement;
-                @Movement.performed += instance.OnMovement;
-                @Movement.canceled += instance.OnMovement;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
                 @BasicAttack.started += instance.OnBasicAttack;
                 @BasicAttack.performed += instance.OnBasicAttack;
                 @BasicAttack.canceled += instance.OnBasicAttack;
                 @ChargedAttack.started += instance.OnChargedAttack;
                 @ChargedAttack.performed += instance.OnChargedAttack;
                 @ChargedAttack.canceled += instance.OnChargedAttack;
-                @Spear.started += instance.OnSpear;
-                @Spear.performed += instance.OnSpear;
-                @Spear.canceled += instance.OnSpear;
+                @ThrowRetrieveSpear.started += instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.performed += instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.canceled += instance.OnThrowRetrieveSpear;
                 @Dash.started += instance.OnDash;
                 @Dash.performed += instance.OnDash;
                 @Dash.canceled += instance.OnDash;
-                @ToggleMap.started += instance.OnToggleMap;
-                @ToggleMap.performed += instance.OnToggleMap;
-                @ToggleMap.canceled += instance.OnToggleMap;
-                @ToggleQuest.started += instance.OnToggleQuest;
-                @ToggleQuest.performed += instance.OnToggleQuest;
-                @ToggleQuest.canceled += instance.OnToggleQuest;
+                @Map.started += instance.OnMap;
+                @Map.performed += instance.OnMap;
+                @Map.canceled += instance.OnMap;
+                @Quest.started += instance.OnQuest;
+                @Quest.performed += instance.OnQuest;
+                @Quest.canceled += instance.OnQuest;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -1074,34 +986,34 @@ namespace Netherveil.Inputs
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
-                @ItemDescription.started += instance.OnItemDescription;
-                @ItemDescription.performed += instance.OnItemDescription;
-                @ItemDescription.canceled += instance.OnItemDescription;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
             }
 
             private void UnregisterCallbacks(IGamepadActions instance)
             {
-                @Movement.started -= instance.OnMovement;
-                @Movement.performed -= instance.OnMovement;
-                @Movement.canceled -= instance.OnMovement;
+                @Move.started -= instance.OnMove;
+                @Move.performed -= instance.OnMove;
+                @Move.canceled -= instance.OnMove;
                 @BasicAttack.started -= instance.OnBasicAttack;
                 @BasicAttack.performed -= instance.OnBasicAttack;
                 @BasicAttack.canceled -= instance.OnBasicAttack;
                 @ChargedAttack.started -= instance.OnChargedAttack;
                 @ChargedAttack.performed -= instance.OnChargedAttack;
                 @ChargedAttack.canceled -= instance.OnChargedAttack;
-                @Spear.started -= instance.OnSpear;
-                @Spear.performed -= instance.OnSpear;
-                @Spear.canceled -= instance.OnSpear;
+                @ThrowRetrieveSpear.started -= instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.performed -= instance.OnThrowRetrieveSpear;
+                @ThrowRetrieveSpear.canceled -= instance.OnThrowRetrieveSpear;
                 @Dash.started -= instance.OnDash;
                 @Dash.performed -= instance.OnDash;
                 @Dash.canceled -= instance.OnDash;
-                @ToggleMap.started -= instance.OnToggleMap;
-                @ToggleMap.performed -= instance.OnToggleMap;
-                @ToggleMap.canceled -= instance.OnToggleMap;
-                @ToggleQuest.started -= instance.OnToggleQuest;
-                @ToggleQuest.performed -= instance.OnToggleQuest;
-                @ToggleQuest.canceled -= instance.OnToggleQuest;
+                @Map.started -= instance.OnMap;
+                @Map.performed -= instance.OnMap;
+                @Map.canceled -= instance.OnMap;
+                @Quest.started -= instance.OnQuest;
+                @Quest.performed -= instance.OnQuest;
+                @Quest.canceled -= instance.OnQuest;
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
@@ -1120,9 +1032,9 @@ namespace Netherveil.Inputs
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
-                @ItemDescription.started -= instance.OnItemDescription;
-                @ItemDescription.performed -= instance.OnItemDescription;
-                @ItemDescription.canceled -= instance.OnItemDescription;
+                @Inventory.started -= instance.OnInventory;
+                @Inventory.performed -= instance.OnInventory;
+                @Inventory.canceled -= instance.OnInventory;
             }
 
             public void RemoveCallbacks(IGamepadActions instance)
@@ -1151,36 +1063,36 @@ namespace Netherveil.Inputs
         }
         public interface IKeyboardActions
         {
-            void OnMovement(InputAction.CallbackContext context);
+            void OnMove(InputAction.CallbackContext context);
             void OnBasicAttack(InputAction.CallbackContext context);
             void OnChargedAttack(InputAction.CallbackContext context);
-            void OnSpear(InputAction.CallbackContext context);
+            void OnThrowRetrieveSpear(InputAction.CallbackContext context);
             void OnDash(InputAction.CallbackContext context);
-            void OnToggleMap(InputAction.CallbackContext context);
-            void OnToggleQuest(InputAction.CallbackContext context);
+            void OnMap(InputAction.CallbackContext context);
+            void OnQuest(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
             void OnActiveItem(InputAction.CallbackContext context);
             void OnSpecialAbility(InputAction.CallbackContext context);
             void OnSkipDialogue(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
-            void OnItemDescription(InputAction.CallbackContext context);
+            void OnInventory(InputAction.CallbackContext context);
         }
         public interface IGamepadActions
         {
-            void OnMovement(InputAction.CallbackContext context);
+            void OnMove(InputAction.CallbackContext context);
             void OnBasicAttack(InputAction.CallbackContext context);
             void OnChargedAttack(InputAction.CallbackContext context);
-            void OnSpear(InputAction.CallbackContext context);
+            void OnThrowRetrieveSpear(InputAction.CallbackContext context);
             void OnDash(InputAction.CallbackContext context);
-            void OnToggleMap(InputAction.CallbackContext context);
-            void OnToggleQuest(InputAction.CallbackContext context);
+            void OnMap(InputAction.CallbackContext context);
+            void OnQuest(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
             void OnCamLookAway(InputAction.CallbackContext context);
             void OnActiveItem(InputAction.CallbackContext context);
             void OnSpecialAbility(InputAction.CallbackContext context);
             void OnSkipDialogue(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
-            void OnItemDescription(InputAction.CallbackContext context);
+            void OnInventory(InputAction.CallbackContext context);
         }
     }
 }

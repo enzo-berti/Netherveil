@@ -69,7 +69,7 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
     protected override void ExitState()
     {
         Context.Agent.isStopped = false;
-        Context.AttackCooldown = 2f + Random.Range(-0.25f, 0.25f);
+        Context.AttackCooldown = 1.5f + Random.Range(-0.25f, 0.25f);
     }
 
     // This method will be called every frame.

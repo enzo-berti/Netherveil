@@ -207,6 +207,9 @@ public class SonielStateMachine : Mobs, ISoniel
 
     public void MoveTo(Vector3 posToMove)
     {
+        if (!agent.enabled || IsFreeze)
+            return;
+
         agent.SetDestination(posToMove);
     }
     #endregion

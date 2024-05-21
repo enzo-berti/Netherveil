@@ -68,6 +68,11 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     Rigidbody[] props;
     List<Collider> propsColliders = new();
 
+    // CINEMATICS
+    [SerializeField] private BossCinematic cinematic;
+    private bool isInCinematic = false;
+    public bool IsInCinematic { get => isInCinematic; set => isInCinematic = value; }
+
     #region Getters/Setters
     public List<Status> StatusToApply { get => statusToApply; }
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
@@ -120,7 +125,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     protected override void Update()
     {
-        if (IsFreeze || IsSpawning)
+        if (IsFreeze || IsSpawning || isInCinematic)
             return;
 
         if (IsKnockbackable)
@@ -166,6 +171,9 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public void MoveTo(Vector3 posToMove)
     {
+        if (!agent.enabled || IsFreeze)
+            return;
+
         agent.SetDestination(posToMove);
     }
     #endregion

@@ -186,6 +186,9 @@ public class GlorbStateMachine : Mobs, IGlorb
 
     public void MoveTo(Vector3 posToMove)
     {
+        if (!agent.enabled || IsFreeze)
+            return;
+
         agent.SetDestination(posToMove);
         //AudioManager.Instance.PlaySound(glorbSounds.walkSFX, transform.position);
     }

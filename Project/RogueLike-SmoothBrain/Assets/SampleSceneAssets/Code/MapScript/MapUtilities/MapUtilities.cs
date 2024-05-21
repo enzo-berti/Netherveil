@@ -2,15 +2,17 @@ using Map.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Map
 {
     static public class MapUtilities
     {
-        static public Action onEarlyEnter;
-        static public Action onEnter;
-        static public Action onEarlyExit;
-        static public Action onExit;
+        static public Action onEarlyFirstEnter;
+        static public Action onFirstEnter;
+        static public Action onFirstExit;
+        static public Action onEarlyExitRoom;
+        static public Action onExitRoom;
         static public Action onEarlyAllEnemiesDead;
         static public Action onAllEnemiesDead;
         static public Action onEarlyAllChestOpen;
@@ -19,7 +21,21 @@ namespace Map
 
         static public RoomData currentRoomData;
 
-        static public int stage;
+        static private MapGenerator mapGenerator = null;
+        static public MapGenerator MapGenerator
+        {
+            get
+            {
+                if (mapGenerator == null)
+                {
+                    mapGenerator = GameObject.FindObjectOfType<MapGenerator>(true);
+                }
+
+                return mapGenerator;
+            }
+        }
+
+        static public int Stage { get => MapGenerator.Stage; }
 
         static public Dictionary<RoomType, int> nbRoomByType = new Dictionary<RoomType, int>
         {
@@ -91,6 +107,19 @@ namespace Map
                 { RoomType.MiniBoss, 0 },
                 { RoomType.Boss, 0 },
             };
+        }
+
+        static public void ResetActions()
+        {
+            onEarlyExitRoom = null;
+            onEarlyFirstEnter = null;
+            onFirstEnter = null;
+            onFirstExit = null;
+            onAllChestOpen = null;
+            onEarlyAllChestOpen = null;
+            onAllEnemiesDead = null;
+            onEarlyAllEnemiesDead = null;
+            onFinishStage = null;
         }
     }
 }

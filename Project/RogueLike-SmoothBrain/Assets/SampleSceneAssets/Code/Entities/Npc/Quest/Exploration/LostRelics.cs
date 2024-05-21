@@ -6,19 +6,19 @@ public class LostRelics : Quest
     int currentNumber = 0;
     int MAX_NUMBER;
 
-    public override void Save(BinaryWriter writer)
+    public override void Save(ref SaveData saveData)
     {
-        base.Save(writer);
-
-        writer.Write(currentNumber);
+        base.Save(ref saveData);
+        saveData.questEvolution = currentNumber;
     }
 
-    public override void Load(BinaryReader reader)
+    public override void LoadSave()
     {
-        base.Load(reader);
+        base.LoadSave();
 
-        currentNumber = reader.ReadInt32();
+        currentNumber = SaveManager.saveData.questEvolution;
     }
+
 
     public override void AcceptQuest()
     {
@@ -27,7 +27,7 @@ public class LostRelics : Quest
         currentNumber = MapUtilities.nbEnterRoomByType[RoomType.Treasure];
         MAX_NUMBER = MapUtilities.nbRoomByType[RoomType.Treasure];
         progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
-        MapUtilities.onEnter += UpdateCount;
+        MapUtilities.onFirstEnter += UpdateCount;
     }
 
     public override bool IsQuestFinished()
@@ -37,7 +37,7 @@ public class LostRelics : Quest
 
     protected override void ResetQuestValues()
     {
-        MapUtilities.onEnter -= UpdateCount;
+        MapUtilities.onFirstEnter -= UpdateCount;
     }
 
     private void UpdateCount()

@@ -122,8 +122,8 @@ namespace Map
             LocalEnterEvents();
 
             // global events
-            MapUtilities.onEarlyEnter?.Invoke();
-            MapUtilities.onEnter?.Invoke();
+            MapUtilities.onEarlyFirstEnter?.Invoke();
+            MapUtilities.onFirstEnter?.Invoke();
         }
 
         private void LocalExitEvents()
@@ -149,10 +149,9 @@ namespace Map
             }
 
             // global events
-            MapUtilities.onEarlyExit?.Invoke();
-            MapUtilities.onExit?.Invoke();
+            MapUtilities.onFirstExit?.Invoke();
 
-            SaveManager.Instance.Save();
+            SaveManager.Save();
         }
 
         private void AllEnemiesDeadEvents()
@@ -200,9 +199,15 @@ namespace Map
 
         private void OnTriggerExit(Collider other)
         {
-            if (!exitRoomCalled && other.gameObject.CompareTag("Player"))
+            if ( other.gameObject.CompareTag("Player"))
             {
-                ExitEvents();
+                if (!exitRoomCalled)
+                {
+                    ExitEvents();
+                }
+
+                MapUtilities.onEarlyExitRoom?.Invoke();
+                MapUtilities.onExitRoom?.Invoke();
             }
         }
 

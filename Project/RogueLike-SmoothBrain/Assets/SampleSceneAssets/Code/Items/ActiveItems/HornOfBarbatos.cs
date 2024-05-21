@@ -22,16 +22,19 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     public HornOfBarbatos()
     {
         displayValue = Cooldown;
-        MapUtilities.onExit += ResetStat;
+        MapUtilities.onExitRoom += ResetStat;
     }
 
     ~HornOfBarbatos()
     {
-        MapUtilities.onExit -= ResetStat;
+        MapUtilities.onExitRoom -= ResetStat;
     }
 
     public void Activate()
     {
+        if (itemActivatedThisRoom)
+            return;
+
         Camera.main.GetComponent<CameraUtilities>().ShakeCamera(0.3f, 0.25f, EasingFunctions.EaseInQuint);
         AudioManager.Instance.PlaySound(AudioManager.Instance.HornOfBarbatosSFX);
         //add sfx here

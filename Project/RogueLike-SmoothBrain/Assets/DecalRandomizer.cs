@@ -1,16 +1,15 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+[ExecuteInEditMode]
 public class DecalRandomizer : MonoBehaviour
 {
-    [SerializeField] Material[] materials;
-    DecalProjector decalProjector;
+    [SerializeField] private Material[] materials;
 
     void Awake()
     {
-        decalProjector = GetComponent<DecalProjector>();
+        DecalProjector decalProjector = GetComponent<DecalProjector>();
         decalProjector.material = materials[UnityEngine.Random.Range(0, materials.Length)];
-        transform.rotation = Quaternion.Euler(gameObject.transform.rotation.eulerAngles.x, UnityEngine.Random.Range(gameObject.transform.rotation.eulerAngles.x, 360f), gameObject.transform.rotation.eulerAngles.z);
+        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, UnityEngine.Random.Range(0f, 360f), transform.eulerAngles.z);
     }
 }

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -9,21 +7,27 @@ namespace Map.Generation
 {
     public class MapGenerator : MonoBehaviour
     {
+        // Debuging purpose only
         [SerializeField] private bool isRandom = true;
-        [SerializeField] private string seed; // For debuging purpose
+        [SerializeField] private string seed;
+
+        // monkey variables
         [SerializeField] private Material miniMapMat;
+        [HideInInspector] public bool generate = false; 
 
-        [HideInInspector] public bool generate = false; // SUPER BOURRIN OMG
-        private int iterationSeedRegister = 0; // BOURRIN 2 
-
+        // Generation variables
+        private Room previousRoomSpawned = null;
+        static private readonly RoomType[] priorityType = new RoomType[] { RoomType.Lobby, RoomType.Tutorial, RoomType.Normal, RoomType.Boss, RoomType.Merchant, RoomType.Treasure };
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
-        const string fileName = "Map.save";
 
+        // Map variables
         public List<int> roomClearId = new List<int>();
+        private int iterationSeedRegister = 0;
+        public int Stage { get; private set; } = 0;
 
         private void Awake()
         {
-            //if (SaveManager.Instance.HasData)
+            //if (SaveManager.HasData)
             //{
             //    LoadSave();
             //}
@@ -40,9 +44,7 @@ namespace Map.Generation
             seed = Seed.seed;
             Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
 
-            MapUtilities.stage = 0;
-
-            SaveManager.Instance.onSave += Save;
+            //SaveManager.onSave += Save;
         }
 
         private void LateUpdate()
@@ -58,75 +60,66 @@ namespace Map.Generation
 
         private void OnDestroy()
         {
-            ResetMapDatas();
+            MapUtilities.ResetActions();
         }
 
         private void ResetMapDatas()
         {
             roomClearId.Clear();
-            MapUtilities.onEarlyExit = null;
-            MapUtilities.onEarlyEnter = null;
-            MapUtilities.onEnter = null;
-            MapUtilities.onExit = null;
-            MapUtilities.onAllChestOpen = null;
-            MapUtilities.onEarlyAllChestOpen = null;
-            MapUtilities.onAllEnemiesDead = null;
-            MapUtilities.onEarlyAllEnemiesDead = null;
-            MapUtilities.onFinishStage = null;
         }
 
-        private void LoadSave()
-        {
-            string filePath = SaveManager.Instance.DirectoryPath + fileName;
-
-            if (!File.Exists(filePath))
-            {
-                return;
-            }
-
-            using (var stream = File.Open(filePath, FileMode.Open))
-            {
-                using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-                {
-                    // seed
-                    Seed.seed = reader.ReadString();
-                    Seed.Iterate(reader.ReadInt32());
-                    // stage
-                    MapUtilities.stage = reader.ReadInt32() - 1;
-                    // room ids
-                    int numberCleared = reader.ReadInt32();
-                    for (int i = 0; i < numberCleared; i++)
-                    {
-                        roomClearId.Add(reader.ReadInt32());
-                    }
-                }
-            }
-        }
-
-        private void Save(string directoryPath)
-        {
-            string filePath = SaveManager.Instance.DirectoryPath + fileName;
-
-            using (var stream = File.Open(filePath, FileMode.Create))
-            {
-                using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
-                {
-                    // seed
-                    writer.Write(Seed.seed);
-                    writer.Write(iterationSeedRegister);
-                    // stage
-                    writer.Write(MapUtilities.stage);
-                    // room ids
-                    writer.Write(roomClearId.Count);
-                    foreach (int id in roomClearId)
-                    {
-                        writer.Write(id);
-                    }
-                }
-
-                stream.Close();
-            }
-        }
+        //private void LoadSave()
+        //{
+        //    string filePath = SaveManager.DirectoryPath + fileName;
+        //
+        //    if (!File.Exists(filePath))
+        //    {
+        //        return;
+        //    }
+        //
+        //    using (var stream = File.Open(filePath, FileMode.Open))
+        //    {
+        //        using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+        //        {
+        //            // seed
+        //            Seed.seed = reader.ReadString();
+        //            Seed.Iterate(reader.ReadInt32());
+        //            // stage
+        //            Stage = reader.ReadInt32() - 1;
+        //            // room ids
+        //            int numberCleared = reader.ReadInt32();
+        //            for (int i = 0; i < numberCleared; i++)
+        //            {
+        //                roomClearId.Add(reader.ReadInt32());
+        //            }
+        //        }
+        //    }
+        //}
+        //
+        //private void Save(string directoryPath)
+        //{
+        //    string filePath = SaveManager.DirectoryPath + fileName;
+        //
+        //    using (var stream = File.Open(filePath, FileMode.Create))
+        //    {
+        //        using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+        //        {
+        //            // seed
+        //            writer.Write(Seed.seed);
+        //            writer.Write(iterationSeedRegister);
+        //            // stage
+        //            writer.Write(MapUtilities.Stage);
+        //            // room ids
+        //            writer.Write(roomClearId.Count);
+        //            foreach (int id in roomClearId)
+        //            {
+        //                writer.Write(id);
+        //            }
+        //        }
+        //
+        //        stream.Close();
+        //    }
+        //}
 
         private void ClearRooms()
         {
@@ -140,7 +133,7 @@ namespace Map.Generation
 
         private void ChangeMiniMapColor()
         {
-            switch (MapUtilities.stage)
+            switch (MapUtilities.Stage)
             {
                 case 1:
                     miniMapMat.SetColor("_Ground", ColorExtension.Color("8065A4"));
@@ -162,12 +155,12 @@ namespace Map.Generation
 
         public void Generate(GenerationParameters genParam)
         {
-            MapUtilities.stage++;
+            Stage++;
             iterationSeedRegister = Seed.Iteration;
 
             ChangeMiniMapColor();
 
-            if (MapUtilities.stage == 1)
+            if (MapUtilities.Stage == 1)
             {
                 genParam.nbRoomByType[RoomType.Tutorial] = 1;
             }
@@ -187,35 +180,40 @@ namespace Map.Generation
 
             for (int i = 0; i < nbRoom; i++)
             {
-                for (int indexType = 0; indexType < genParam.nbRoomByType.Count; indexType++)
+                // Search a type to spawn
+                RoomType roomType = RoomType.None;
+                foreach (RoomType typeCandidate in priorityType)
                 {
-                    RoomType type = genParam.nbRoomByType.Keys.ElementAt(indexType);
-
-                    if (genParam.nbRoomByType[type] > 0)
+                    if (genParam.nbRoomByType[typeCandidate] > 0)
                     {
-                        switch (type)
-                        {
-                            case RoomType.Lobby:
-                                GenerateLobbyRoom(ref genParam);
-                                break;
-                            case RoomType.Tutorial:
-                                GenerateTutorialRoom(ref genParam);
-                                break;
-                            case RoomType.Boss:
-                                GenerateBossRoom(ref genParam);
-                                break;
-                            default:
-                                if (!GenerateRoom(ref genParam, type))
-                                {
-                                    Debug.LogError("Can't generate room");
-                                    return false;
-                                }
-                                break;
-                        }
-
-                        genParam.nbRoomByType[type]--;
+                        genParam.nbRoomByType[typeCandidate]--;
+                        roomType = typeCandidate;
                         break;
                     }
+                }
+
+                // Find the right function to spawn the type of room
+                switch (roomType)
+                {
+                    case RoomType.Lobby:
+                        GenerateLobbyRoom(ref genParam);
+                        break;
+                    case RoomType.Tutorial:
+                        GenerateTutorialRoom(ref genParam);
+                        break;
+                    case RoomType.Boss:
+                        GenerateBossRoom(ref genParam);
+                        break;
+                    case RoomType.None:
+                        Debug.LogWarning("No type found in room generations");
+                        break;
+                    default:
+                        if (!GenerateRoom(ref genParam, roomType))
+                        {
+                            Debug.LogError("Can't generate room");
+                            return false;
+                        }
+                        break;
                 }
             }
 
@@ -226,6 +224,11 @@ namespace Map.Generation
         {
             foreach (Room candidateRoomPrefab in Seed.RandList(MapResources.RoomPrefabs(type)))
             {
+                if (type == RoomType.Normal && candidateRoomPrefab == previousRoomSpawned) // temporary
+                {
+                    continue;
+                }
+
                 Room room = Instantiate(candidateRoomPrefab.gameObject).GetComponent<Room>();
                 if (!TryPutRoom(room, ref genParam, out Door entranceDoor, out Door exitDoor))
                 {
@@ -233,6 +236,11 @@ namespace Map.Generation
                 }
 
                 InitRoom(room, ref genParam, ref entranceDoor, exitDoor);
+                if (type == RoomType.Normal) // temporary
+                {
+                    previousRoomSpawned = room;
+                }
+
                 return true;
             }
 
@@ -264,7 +272,7 @@ namespace Map.Generation
         private void GenerateBossRoom(ref GenerationParameters genParam)
         {
             var bossPrefabs = MapResources.RoomPrefabs(RoomType.Boss);
-            int bossIndex = MapUtilities.stage % bossPrefabs.Count;
+            int bossIndex = MapUtilities.Stage % bossPrefabs.Count;
 
             Room room = Instantiate(bossPrefabs[bossIndex].gameObject).GetComponent<Room>();
 
@@ -310,7 +318,7 @@ namespace Map.Generation
 
         static private bool TryPutRoom(Room room, ref GenerationParameters genParam, out Door entranceDoor, out Door exitDoor)
         {
-            DoorsGenerator doorsGenerator = room.GetComponentInChildren<DoorsGenerator>();
+            DoorsGenerator doorsGenerator = room.DoorsGenerator;
 
             foreach (Door entranceDoorCandidate in Seed.RandList(doorsGenerator.doors))
             {
@@ -400,7 +408,7 @@ namespace Map.Generation
             // Generate props
             GenerateGates(room, entranceDoor);
             // Stairs
-            if (room.type == RoomType.Boss)
+            if (room.type == RoomType.Boss && Stage != 3)
             {
                 GenerateStairs(room);
             }

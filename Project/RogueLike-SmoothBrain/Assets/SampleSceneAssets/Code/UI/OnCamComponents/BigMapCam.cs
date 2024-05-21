@@ -71,10 +71,10 @@ public class BigMapCam : MonoBehaviour
     private void CollideJoystickScreen()
     {
         Gamepad gamepad = DeviceManager.Instance.CurrentDevice as Gamepad;
-        Vector2 joyStickInput = gamepad.rightStick.value;
+        Vector2 joyStickInput = gamepad.rightStick.value.normalized * gamepad.rightStick.value.magnitude;
 
         Vector3 localPointToCamera = GetCameraOriented(joyStickInput);
 
-        transform.position = playerTransform.position + localPointToCamera * /*Mathf.Abs(*/currentZoom/* - 100f)*/ * 4f;
+        transform.position = playerTransform.position + localPointToCamera * currentZoom;
     }
 }

@@ -11,6 +11,7 @@
 // }
 
 using StateMachine; // include all script about stateMachine
+using System.Collections;
 using UnityEngine;
 
 public class GlorbAttackingState : BaseState<GlorbStateMachine>
@@ -28,7 +29,9 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
     Attacks currentAttack = Attacks.NONE;
     float stompDelay = 0f;
     float punchDelay = 0f;
-    bool hasLaunchedPunch = false;
+    bool CoroutineBasicAttackStarted = false;
+    const float timeBeforePrepare = 0.15f;
+    const float timeBeforePunch = 0.85f;
 
     // This method will be call every Update to check and change a state.
     protected override void CheckSwitchStates()
@@ -99,32 +102,12 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
         
         else if (Context.IsBasicAttackAvailable && currentAttack != Attacks.SPECIAL)
         {
-            if (punchDelay == 0f)
+            if(!CoroutineBasicAttackStarted)
             {
-                Context.Stats.SetValue(Stat.KNOCKBACK_DISTANCE, 0f);
-                Context.Animator.ResetTrigger("Punch");
-                Context.Animator.SetTrigger("Punch");
-                currentAttack = Attacks.BASIC;
-            }
-            else if (!hasLaunchedPunch && punchDelay >= 0.5f)
-            {
-                hasLaunchedPunch = true;
-                Context.Animator.speed = 2f;
+                Context.StartCoroutine(BasicAttack());
             }
             else if (punchDelay >= 0.85f)
             {
-                punchDelay = 0f;
-                Context.BasicAttackTimer = 0f;
-                Context.SpecialAttackTimer -= 0.5f;
-
-                Context.Sounds.punchSFX.Play(Context.transform.position, true);
-
-                Context.AttackCollide(Context.AttackColliders[(int)Attacks.BASIC]);
-                currentAttack = Attacks.NONE;
-
-                Context.Stats.SetValue(Stat.KNOCKBACK_DISTANCE, 5f);
-                Context.Animator.speed = 1f;
-                hasLaunchedPunch = false;
                 return;
             }
             else
@@ -142,5 +125,34 @@ public class GlorbAttackingState : BaseState<GlorbStateMachine>
     {
         base.SwitchState(newState);
         Context.currentState = newState;
+    }
+
+    private IEnumerator BasicAttack()
+    {
+        CoroutineBasicAttackStarted = true;
+        Context.Stats.SetValue(Stat.KNOCKBACK_DISTANCE, 0f);
+        Context.Animator.ResetTrigger("Punch");
+        Context.Animator.SetTrigger("Punch");
+        currentAttack = Attacks.BASIC;
+
+        yield return new WaitForSeconds(timeBeforePrepare);
+        Context.StartCoroutine(Context.PrepareAttack());
+
+        yield return new WaitForSeconds(0.1f);
+        Context.Animator.speed = 2f;
+
+        yield return new WaitForSeconds(timeBeforePunch - timeBeforePrepare - 0.1f);
+        punchDelay = 0f;
+        Context.BasicAttackTimer = 0f;
+        Context.SpecialAttackTimer -= 0.5f;
+
+        Context.Sounds.punchSFX.Play(Context.transform.position, true);
+
+        Context.AttackCollide(Context.AttackColliders[(int)Attacks.BASIC]);
+        currentAttack = Attacks.NONE;
+
+        Context.Stats.SetValue(Stat.KNOCKBACK_DISTANCE, 5f);
+        Context.Animator.speed = 1f;
+        CoroutineBasicAttackStarted = false;
     }
 }

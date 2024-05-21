@@ -7,6 +7,7 @@ using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
 using System.Collections.Generic;
+using UnityEngine.Video;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -52,12 +53,12 @@ public abstract class Mobs : Entity
 
     protected virtual void OnEnable()
     {
-        MapUtilities.onEarlyEnter += DuplicateMyself;
+        MapUtilities.onEarlyFirstEnter += DuplicateMyself;
     }
 
     protected virtual void OnDisable()
     {
-        MapUtilities.onEarlyEnter -= DuplicateMyself;
+        MapUtilities.onEarlyFirstEnter -= DuplicateMyself;
     }
 
     protected override void Start()
@@ -68,6 +69,8 @@ public abstract class Mobs : Entity
         mRenderer = GetComponentInChildren<Renderer>();
         animator = GetComponentInChildren<Animator>();
         hit = GetComponentInChildren<HitMaterialApply>();
+
+        IncreaseMobStats();
 
         lifeBar = GetComponentInChildren<EnemyLifeBar>();
         if (lifeBar)
@@ -117,8 +120,7 @@ public abstract class Mobs : Entity
 
         AddSpawningMat();
         wanderZone.center = transform.position;
-
-        IncreaseMobStats();
+        
     }
 
     private void AddSpawningMat()
@@ -180,21 +182,21 @@ public abstract class Mobs : Entity
     {
         if (this is not IBoss)
         {
-            switch (MapUtilities.stage)
+            switch (MapUtilities.Stage)
             {
-                case 0:
-                    break;
                 case 1:
-                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
-                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
-                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
-                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
                     break;
                 case 2:
-                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
-                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 2.5f);
-                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 2.5f);
-                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 2.5f);
+                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.2f);
+                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.2f);
+                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.2f);
+                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.2f);
+                    break;
+                case 3:
+                    stats.IncreaseMaxValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+                    stats.IncreaseMaxValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
+                    stats.IncreaseValue(Stat.HP, stats.GetValue(Stat.HP) * 1.5f);
+                    stats.IncreaseValue(Stat.ATK, stats.GetValue(Stat.ATK) * 1.5f);
                     break;
             }
         }
@@ -246,7 +248,10 @@ public abstract class Mobs : Entity
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
-        _value = (int)(_value * DamageTakenMultiplicator);
+        if(notEffectDamage)
+        {
+            _value = (int)(_value * DamageTakenMultiplicator);
+        }
         Stats.DecreaseValue(Stat.HP, _value, false);
 
         if (bossLifeBar != null)
@@ -265,7 +270,6 @@ public abstract class Mobs : Entity
 
         if (notEffectDamage)
         {
-            //add SFX here
             FloatingTextGenerator.CreateDamageText(_value, transform.position);
             StartCoroutine(HitRoutine());
         }
@@ -275,7 +279,7 @@ public abstract class Mobs : Entity
             deathMethod();
             this.IsFreeze = false;
         }
-        else
+        else if (notEffectDamage)
         {
             hitSound.Play(transform.position, _restartSound);
         }
@@ -349,6 +353,31 @@ public abstract class Mobs : Entity
         hit.DisableMat();
     }
 
+    public IEnumerator PrepareAttack()
+    {
+        hit.EnableMat();
+        float timer = 0;
+        float alpha;
+        while(timer < 1f)
+        {
+            alpha = EasingFunctions.EaseInExpo(timer) / 5f;
+            hit.SetAlpha(alpha);
+            timer += Time.deltaTime / 0.2f;
+            timer = Mathf.Clamp01(timer);
+            yield return null;
+        }
+        while (timer > 0f)
+        {
+            alpha = EasingFunctions.EaseInExpo(timer) / 5f;
+            hit.SetAlpha(alpha);
+            timer -= Time.deltaTime / 0.2f;
+            timer = Mathf.Clamp01(timer);
+            yield return null;
+        }
+        hit.SetAlpha(0.0f);
+
+        hit.DisableMat();
+    }
     private IEnumerator MatUpdateMeshRenderer(Material spawnMat, MeshRenderer renderer)
     {
         while (spawnMat.GetFloat("_Alpha") > 0f)

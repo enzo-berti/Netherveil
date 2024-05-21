@@ -278,6 +278,13 @@ MonoBehaviour:
       minQuantity: 1
       isChanceShared: 1
       decreasingValuePerDrop: 0.8
+    - loot: {fileID: 1932433315592405472, guid: f92e56a9a5be40c428d30776368a9f15,
+        type: 3}
+      chance: 1
+      maxQuantity: 3
+      minQuantity: 1
+      isChanceShared: 0
+      decreasingValuePerDrop: 0.25
   StatSuckerVFX: {fileID: 6293110322402977416}
   spawningVFX: {fileID: 946794217609910421}
   bossLifeBar: {fileID: 0}
@@ -568,8 +575,8 @@ Transform:
   m_GameObject: {fileID: 7029741839067723960}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.84, z: 5.97}
-  m_LocalScale: {x: 1, y: 1, z: 8}
+  m_LocalPosition: {x: 0, y: 0.84, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3090980824970208318}
@@ -602,7 +609,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f67cceb1853c68c418917ebaa99cafd7, type: 2}
+  - {fileID: 2100000, guid: bbb235fff4f48426b863b36058ab66d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1179,7 +1186,7 @@ PrefabInstance:
     - target: {fileID: 7895906903998644739, guid: 7ed315d8c4a3fd24c9e26770233b990f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.21
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7895906903998644739, guid: 7ed315d8c4a3fd24c9e26770233b990f,
         type: 3}
@@ -1189,7 +1196,7 @@ PrefabInstance:
     - target: {fileID: 7895906903998644739, guid: 7ed315d8c4a3fd24c9e26770233b990f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.36
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7895906903998644739, guid: 7ed315d8c4a3fd24c9e26770233b990f,
         type: 3}

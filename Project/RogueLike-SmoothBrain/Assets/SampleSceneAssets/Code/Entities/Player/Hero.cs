@@ -1,14 +1,10 @@
-using DialogueSystem.Runtime;
 using Fountain;
 using PostProcessingEffects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Video;
-using static UnityEditor.Progress;
 
 public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 {
@@ -20,10 +16,30 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         MOTIONLESS
     }
 
-    public static Color corruptionColor = new Color(0.62f, 0.34f, 0.76f, 1.0f);
-    public static Color corruptionColor2 = new Color(0.4f, 0.08f, 0.53f);
+    public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
+
+    [SerializeField] List<NestedList<GameObject>> CorruptionArmorsToActivatePerStep;
+    [SerializeField] List<NestedList<GameObject>> BenedictionArmorsToActivatePerStep;
+    [SerializeField] List<NestedList<GameObject>> NormalArmorsToActivatePerStep;
+
+    Animator animator;
+    PlayerInput playerInput;
+    PlayerController playerController;
+    public Inventory Inventory { get; private set; } = new Inventory();
+    public List<Status> StatusToApply => statusToApply;
+
+    //alignment variables
+    public static Color corruptionColor = new(0.62f, 0.34f, 0.76f, 1.0f);
+    public static Color corruptionColor2 = new(0.4f, 0.08f, 0.53f);
     public static Color benedictionColor = Color.yellow;
-    public static Color benedictionColor2 = new Color(0.89f, 0.75f, 0.14f);
+    public static Color benedictionColor2 = new(0.89f, 0.75f, 0.14f);
+
+    public int CurrentAlignmentStep { get => (int)(Stats.GetValue(Stat.CORRUPTION) / STEP_VALUE); }
+    public const int STEP_VALUE = 25;
+    public const int BENEDICTION_MAX = -4;
+    public const int CORRUPTION_MAX = 4;
+    public const int MAX_INDEX_ALIGNMENT_TAB = 3;
+    bool canLaunchUpgrade = false;
 
     const float BENEDICTION_HP_STEP = 25f;
     const float BENEDICTION_HEAL_COEF_STEP = 1f;
@@ -32,16 +48,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     const float CORRUPTION_LIFESTEAL_STEP = 0.03f;
     const float CORRUPTION_TAKE_DAMAGE_COEF_STEP = 0.25f;
 
-    const float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
-    float takeDamageCoeff = 1f;
-
-    Animator animator;
-    PlayerInput playerInput;
-    PlayerController playerController;
-    public Inventory Inventory { get; private set; } = new Inventory();
-
-    const string saveFileName = "Hero";
-
+    //player events
     private event Action<IDamageable> onKill;
     private event IAttacker.AttackDelegate onAttack;
     private event IAttacker.HitDelegate onAttackHit;
@@ -58,25 +65,12 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     public event Action OnBenedictionMaxDrawback;
     public event Action OnCorruptionMaxDrawback;
     public event Action<int> OnHeal;
-
-    public delegate void OnBeforeApplyDamagesDelegate(ref int damages, IDamageable target);
     public event OnBeforeApplyDamagesDelegate OnBeforeApplyDamages;
-
     public IAttacker.AttackDelegate OnAttack { get => onAttack; set => onAttack = value; }
     public IAttacker.HitDelegate OnAttackHit { get => onAttackHit; set => onAttackHit = value; }
     public Action<IDamageable> OnKill { get => onKill; set => onKill = value; }
 
-    public const int STEP_VALUE = 25;
-    public const int BENEDICTION_MAX = -4;
-    public const int CORRUPTION_MAX = 4;
-    public const int MAX_INDEX_ALIGNMENT_TAB = 3;
-
-    public bool CanHealFromConsumables { get; set; } = true;
-    bool canLaunchUpgrade = false;
-    public int LastDamagesSuffered { get; private set; } = 0;
-
-    public List<Status> StatusToApply => statusToApply;
-
+    //quest variables
     Quest currentQuest = null;
     public Quest CurrentQuest
     {
@@ -105,24 +99,20 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             }
         }
     }
-
-    public int CurrentAlignmentStep
-    {
-        get
-        {
-            return (int)(Stats.GetValue(Stat.CORRUPTION) / STEP_VALUE);
-        }
-    }
-
     public bool DoneQuestQTThiStage { get; set; } = false;
-    public bool DoneQuestQTApprenticeThiStage { get; set; } = false;
-    public bool ClearedTuto { get; set; } = false;
+    public bool DoneQuestQTApprenticeThisStage { get; set; } = false;
 
-    [SerializeField] List<NestedList<GameObject>> CorruptionArmorsToActivatePerStep;
-    [SerializeField] List<NestedList<GameObject>> BenedictionArmorsToActivatePerStep;
-    [SerializeField] List<NestedList<GameObject>> NormalArmorsToActivatePerStep;
-
+    //save & load variables
+    const string saveFileName = "Hero";
     bool isLoading = false;
+
+    //miscellaneous variables
+    public bool ClearedTuto { get; set; } = false;
+    public int LastDamagesSuffered { get; private set; } = 0;
+    public bool CanHealFromConsumables { get; set; } = true;
+
+    const float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
+    float takeDamageCoeff = 1f;
 
     protected override void Start()
     {
@@ -137,154 +127,21 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         FountainInteraction.onAddBenedictionCorruption += ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished += ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved += ChangeStatsBasedOnAlignment;
-        stats.onStatChange += UpgradePlayerStats;
+        stats.onStatChange += CheckIfLaunchUpgrade;
         //OnDeath += Inventory.RemoveAllItems;
 
-        //SaveManager.Instance.onSave += Save;
-        //Load();
+        SaveManager.onSave += Save;
+        LoadSave();
     }
-
-    #region Save&Load
-    public void Save(string directoryPath)
-    {
-        string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
-
-        using (var stream = File.Open(filePath, FileMode.Create))
-        {
-            using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
-            {
-                // items
-                writer.Write(Inventory.ActiveItem != null);
-                if (Inventory.ActiveItem != null) // if the game had saved an active item
-                {
-                    writer.Write(Inventory.ActiveItem.GetType().ToString());
-                    writer.Write(Inventory.ActiveItem.Cooldown);
-                }
-
-                writer.Write(Inventory.PassiveItems.Count);
-                foreach (var item in Inventory.PassiveItems)
-                {
-                    writer.Write(item.GetType().ToString());
-                }
-
-                // save stats values
-                writer.Write(stats.GetValue(Stat.HP));
-                writer.Write(stats.GetValue(Stat.CORRUPTION));
-
-                SaveInventory(writer);
-                SaveQuest(writer);
-            }
-
-            stream.Close();
-        }
-    }
-
-    public void Load()
-    {
-        isLoading = true;
-        string filePath = SaveManager.Instance.DirectoryPath + saveFileName;
-        float hp;
-
-        if (!File.Exists(filePath) || SaveManager.Instance.HasData)
-        {
-            isLoading = false;
-            return;
-        }
-
-        using (var stream = File.Open(filePath, FileMode.Open))
-        {
-            using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-            {
-                // items
-                if (reader.ReadBoolean())
-                {
-                    Inventory.AddItem(reader.ReadString());
-                    Inventory.ActiveItem.Cooldown = reader.ReadSingle();
-                    Item.InvokeOnRetrieved(Inventory.ActiveItem as ItemEffect);
-                }
-
-                int numItem = reader.ReadInt32();
-                for (int i = 0; i < numItem; i++)
-                {
-                    Inventory.AddItem(reader.ReadString());
-                }
-
-                // load stats values (set it only at the end of the loading)
-                hp = reader.ReadSingle();
-                stats.SetValue(Stat.CORRUPTION, reader.ReadSingle());
-
-                LoadInventory(reader);
-                LoadQuest(reader);
-            }
-
-            stream.Close();
-        }
-
-        canLaunchUpgrade = true;
-        ChangeStatsBasedOnAlignment();
-        stats.SetValue(Stat.HP, hp);
-
-        isLoading = false;
-    }
-
-    private void LoadInventory(BinaryReader reader)
-    {
-        // blood
-        Inventory.Blood.Add(reader.ReadInt32());
-    }
-
-    private void SaveInventory(BinaryWriter writer)
-    {
-        // blood
-        writer.Write(Inventory.Blood.Value);
-    }
-
-    private void LoadQuest(BinaryReader reader)
-    {
-        // Hero quest values
-        DoneQuestQTThiStage = reader.ReadBoolean();
-        DoneQuestQTApprenticeThiStage = reader.ReadBoolean();
-        ClearedTuto = reader.ReadBoolean();
-
-        // Quest class
-        if (reader.ReadBoolean()) // if the game had saved a quest
-        {
-            // Quest Informations
-            string idName = reader.ReadString();
-            QuestDialogueDifficulty difficulty = (QuestDialogueDifficulty)Enum.Parse(typeof(QuestDialogueDifficulty), reader.ReadString(), true);
-            QuestTalker.TalkerType talkerType = (QuestTalker.TalkerType)Enum.Parse(typeof(QuestTalker.TalkerType), reader.ReadString());
-            QuestTalker.TalkerGrade talkerGrade = (QuestTalker.TalkerGrade)Enum.Parse(typeof(QuestTalker.TalkerGrade), reader.ReadString());
-
-            Quest heroQuest = Quest.LoadClass(idName, difficulty, talkerType, talkerGrade);
-            heroQuest.Load(reader);
-
-            CurrentQuest = heroQuest;
-        }
-    }
-
-    private void SaveQuest(BinaryWriter writer)
-    {
-        // Hero quest values
-        writer.Write(DoneQuestQTThiStage);
-        writer.Write(DoneQuestQTApprenticeThiStage);
-        writer.Write(ClearedTuto);
-
-        // Quest class
-        writer.Write(currentQuest != null);
-        if (currentQuest != null)
-        {
-            CurrentQuest.Save(writer);
-        }
-    }
-
-    #endregion
 
     private void OnDestroy()
     {
         FountainInteraction.onAddBenedictionCorruption -= ChangeStatsBasedOnAlignment;
         Quest.OnQuestFinished -= ChangeStatsBasedOnAlignment;
         Item.OnLateRetrieved -= ChangeStatsBasedOnAlignment;
-        stats.onStatChange -= UpgradePlayerStats;
+        stats.onStatChange -= CheckIfLaunchUpgrade;
+
+        SaveManager.onSave -= Save;
 
         //Inventory.RemoveAllItems(Vector3.zero);
     }
@@ -311,15 +168,15 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
                 State = (int)Entity.EntityState.MOVE;
 
                 AudioManager.Instance.PlaySound(playerController.HitSFX);
-                FloatingTextGenerator.CreateEffectDamageText((int)(_value), transform.position, Color.red);
+                FloatingTextGenerator.CreateEffectDamageText(_value, transform.position, Color.red);
                 PostProcessingEffectManager.current.Play(Effect.Hit, false);
                 playerController.HitVFX.Play();
             }
 
-            LastDamagesSuffered = (int)(_value);
-            Stats.DecreaseValue(Stat.HP, (int)(_value), false);
+            LastDamagesSuffered = _value;
+            Stats.DecreaseValue(Stat.HP, _value, false);
 
-            OnTakeDamage?.Invoke((int)(_value), attacker);
+            OnTakeDamage?.Invoke(_value, attacker);
         }
 
         if (stats.GetValue(Stat.HP) <= 0 && State != (int)EntityState.DEAD)
@@ -341,23 +198,18 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         animator.SetBool(playerController.IsDeadHash, true);
     }
 
+    #region ATTACK
     public void Attack(IDamageable damageable, int additionalDamages = 0)
     {
         int damages = (int)stats.GetValueWithoutCoeff(Stat.ATK);
 
         if (playerInput.LaunchedChargedAttack)
         {
-            damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
-            ApplyKnockback(damageable, this, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * playerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef,
-                stats.GetValue(Stat.KNOCKBACK_COEFF) * playerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
-            OnChargedAttack?.Invoke(damageable, this);
+            ChargedAttackDamages(damageable, ref damages);
         }
         else if (playerController.ComboCount == playerController.MAX_COMBO_COUNT - 1)
         {
-            damages += playerController.FINISHER_DAMAGES;
-            DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
-            ApplyKnockback(damageable, this);
-            OnFinisherAttack?.Invoke(damageable, this);
+            FinisherDamages(damageable, ref damages);
         }
         else if (playerController.Spear.IsThrowing || playerController.Spear.IsThrown)
         {
@@ -383,6 +235,28 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         OnAttackHit?.Invoke(damageable, this);
     }
 
+    private void FinisherDamages(IDamageable damageable, ref int damages)
+    {
+        damages += playerController.FINISHER_DAMAGES;
+        DeviceManager.Instance.ApplyVibrations(0.1f, 0f, 0.1f);
+        ApplyKnockback(damageable, this);
+        OnFinisherAttack?.Invoke(damageable, this);
+    }
+
+    private void ChargedAttackDamages(IDamageable damageable, ref int damages)
+    {
+        damages += (int)(playerController.CHARGED_ATTACK_DAMAGES * playerInput.ChargedAttackCoef);
+        ApplyKnockback(damageable, this, stats.GetValue(Stat.KNOCKBACK_DISTANCE) * playerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef,
+            stats.GetValue(Stat.KNOCKBACK_COEFF) * playerController.CHARGED_ATTACK_KNOCKBACK_COEFF * playerInput.ChargedAttackCoef);
+        OnChargedAttack?.Invoke(damageable, this);
+    }
+
+
+    /// <summary>
+    /// used to apply the damocles sword effect when player is equal to or above 50% corruption
+    /// </summary>
+    /// <param name="damageable"></param>
+    /// <param name="attacker"></param>
     private void ApplyDamoclesSwordEffect(IDamageable damageable, IAttacker attacker)
     {
         Mobs mob = damageable as Mobs;
@@ -391,7 +265,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             mob.AddStatus(new DamoclesSword(3f, 0.3f), attacker);
         }
     }
+    #endregion
 
+    #region HEAL_MECHANICS
     private void ApplyLifeSteal(IDamageable damageable)
     {
         int lifeIncreasedValue = (int)(Stats.GetValue(Stat.LIFE_STEAL) * (damageable as Mobs).Stats.GetMaxValue(Stat.HP) * MAX_LIFESTEAL_HP_PERCENTAGE);
@@ -425,10 +301,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         FloatingTextGenerator.CreateHealText(realHealValue, transform.position);
         OnHeal?.Invoke(realHealValue);
     }
+    #endregion
 
-    #region Corruption&BenedictionManagement
+    #region ALIGNMENT_MANAGEMENT
 
-    private void UpgradePlayerStats(Stat stat)
+    private void CheckIfLaunchUpgrade(Stat stat)
     {
         if (stat != Stat.CORRUPTION)
             return;
@@ -570,7 +447,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     private void ManageBenedictionUpgrade(int curStep)
     {
-        //AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelBenedictionSFX, transform.position);
         for (int i = 0; i < Mathf.Abs(curStep); i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
@@ -595,7 +471,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     private void ManageCorruptionUpgrade(int curStep)
     {
-        //AudioManager.Instance.PlaySound(AudioManager.Instance.GainLevelCorruptionSFX, transform.position);
         for (int i = 0; i < curStep; i++)
         {
             if (i == MAX_INDEX_ALIGNMENT_TAB)
@@ -632,7 +507,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     {
         Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
         Stats.IncreaseValue(Stat.HP, BENEDICTION_HP_STEP);
-        //Stats.DecreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
     }
 
     private void BenedictionMaxDrawback()
@@ -647,7 +521,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     {
         Stats.DecreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
         Stats.DecreaseValue(Stat.HP, BENEDICTION_HP_STEP);
-        //Stats.IncreaseCoeffValue(Stat.ATK, BENEDICTION_ATK_COEF_STEP);
     }
 
     private void CorruptionMaxUpgrade()
@@ -749,5 +622,56 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     {
         canLaunchUpgrade = true;
     }
+    #endregion
+
+    #region SAVE_AND_LOAD
+
+    public void Save(ref SaveData save)
+    {
+        save.doneQuestQThisStage = DoneQuestQTThiStage;
+        save.doneQuestQTApprenticeThisStage = DoneQuestQTApprenticeThisStage;
+        save.clearedTuto = ClearedTuto;
+
+        save.statHp = stats.GetValue(Stat.HP);
+        save.statCorruption = stats.GetValue(Stat.CORRUPTION);
+
+        if (currentQuest != null)
+        {
+            currentQuest.Save(ref save);
+        }
+        else
+        {
+            save.questId = string.Empty;
+        }
+
+        Inventory.Save(ref save);
+    }
+
+    public void LoadSave()
+    {
+        if (!SaveManager.HasData)
+        {
+            return;
+        }
+
+        isLoading = true;
+        SaveData saveData = SaveManager.saveData;
+
+        DoneQuestQTThiStage = saveData.doneQuestQThisStage;
+        DoneQuestQTApprenticeThisStage = saveData.doneQuestQTApprenticeThisStage;
+        ClearedTuto = saveData.clearedTuto;
+
+        CurrentQuest = Quest.LoadClassWithSave(saveData.questId, saveData.questDifficulty, saveData.talkerType, saveData.talkerGrade);
+        Inventory.LoadSave();
+
+        stats.SetValue(Stat.CORRUPTION, saveData.statCorruption);
+        canLaunchUpgrade = true;
+        ChangeStatsBasedOnAlignment();
+
+        stats.SetValue(Stat.HP, saveData.statHp);
+
+        isLoading = false;
+    }
+
     #endregion
 }

@@ -54,6 +54,7 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         base.Start();
 
+        canTriggerTraps = false;
         factory = new StateFactory<KlopsStateMachine>(this);
         currentState = factory.GetState<KlopsWanderingState>();
 
@@ -120,7 +121,7 @@ public class KlopsStateMachine : Mobs, IKlops
 
     public void MoveTo(Vector3 posToMove)
     {
-        if (!agent.enabled)
+        if (!agent.enabled || IsFreeze)
             return;
 
         agent.SetDestination(posToMove);

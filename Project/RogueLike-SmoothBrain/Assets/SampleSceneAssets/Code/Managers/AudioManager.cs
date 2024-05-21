@@ -52,6 +52,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] EventReference ezrealUltSFX;
     [SerializeField] EventReference aresBladeSFX;
     [SerializeField] EventReference reflectSFX;
+    [SerializeField] EventReference bombItemSFX;
 
     public EventReference QuestObtainedSFX { get => questObtainedSFX; }
     public EventReference QuestFinishedSFX { get => questFinishedSFX; }
@@ -80,6 +81,7 @@ public class AudioManager : MonoBehaviour
     public EventReference EzrealUltSFX { get => ezrealUltSFX; }
     public EventReference AresBladeSFX { get => aresBladeSFX; }
     public EventReference ReflectSFX { get => reflectSFX; }
+    public EventReference BombItemSFX { get => bombItemSFX; }
 
     private static AudioManager instance = null;
     public static AudioManager Instance
@@ -314,24 +316,18 @@ public class AudioManager : MonoBehaviour
 
     public void PauseAllSounds()
     {
-        foreach (var audioInstance in audioInstances)
-        {
-            if (!buttonSFXInstances.Contains(audioInstance))
-            {
-                audioInstance.setPaused(true);
-            }
-        }
+        SoundsFXBus.setPaused(true);
+    }
+
+    public void StopAllMusics()
+    {
+        musicsBus.setPaused(true);
+        ambiencesBus.setPaused(true);
     }
 
     public void ResumeAllSounds()
     {
-        foreach (var audioInstance in audioInstances)
-        {
-            if (!buttonSFXInstances.Contains(audioInstance))
-            {
-                audioInstance.setPaused(false);
-            }
-        }
+        SoundsFXBus.setPaused(false);
     }
 
     public void ButtonClickSFX()

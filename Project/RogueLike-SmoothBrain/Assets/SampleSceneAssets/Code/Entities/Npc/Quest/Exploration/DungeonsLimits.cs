@@ -1,24 +1,23 @@
 using Map;
-using System.IO;
 
 public class DungeonsLimits : Quest
 {
-    float currentNumber = 0f;
+    int currentNumber = 0;
     int COMPLETION_POURCENTAGE = 0;
 
-    public override void Save(BinaryWriter writer)
+    public override void Save(ref SaveData saveData)
     {
-        base.Save(writer);
-
-        writer.Write(currentNumber);
+        base.Save(ref saveData);
+        saveData.questEvolution = currentNumber;
     }
 
-    public override void Load(BinaryReader reader)
+    public override void LoadSave()
     {
-        base.Load(reader);
+        base.LoadSave();
 
-        currentNumber = reader.ReadInt32();
+        currentNumber = SaveManager.saveData.questEvolution;
     }
+
 
     public override void AcceptQuest()
     {
@@ -42,7 +41,7 @@ public class DungeonsLimits : Quest
         currentNumber = (int)((float)MapUtilities.NbEnterRoom / MapUtilities.NbRoom * 100f);
 
         progressText = $"EXPLORE THIS FLOOR : {currentNumber}%/{COMPLETION_POURCENTAGE} %";
-        MapUtilities.onEarlyEnter += UpdateCount;
+        MapUtilities.onEarlyFirstEnter += UpdateCount;
         MapUtilities.onFinishStage += LoseQuest;
         UpdateCount();
     }
@@ -54,7 +53,7 @@ public class DungeonsLimits : Quest
 
     protected override void ResetQuestValues()
     {
-        MapUtilities.onEarlyEnter -= UpdateCount;
+        MapUtilities.onEarlyFirstEnter -= UpdateCount;
         MapUtilities.onFinishStage -= LoseQuest;
     }
 

@@ -78,7 +78,7 @@ public class PlayerInput : MonoBehaviour
     private IEnumerator Start()
     {
         playerInputMap = GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        EaseFuncsShitStorm();
+        EaseFuncsLoad();
         InputSetup();
         hero = GetComponent<Hero>();
         hero.OnChangeState += ResetForceReturnToMove;
@@ -108,7 +108,7 @@ public class PlayerInput : MonoBehaviour
         InputManagement(gamepadMap, unsubscribe: true);
     }
 
-    #region Inputs
+    #region INPUTS
 
     private void ReadDirection(InputAction.CallbackContext ctx)
     {
@@ -279,14 +279,6 @@ public class PlayerInput : MonoBehaviour
         animator.SetTrigger(controller.DashHash);
     }
 
-    private IEnumerator DashCoroutine()
-    {
-        dashInCooldown = true;
-        yield return new WaitForSeconds(DASH_COOLDOWN_TIME);
-        dashInCooldown = false;
-        dashCoroutine = null;
-    }
-
     private void ActiveItemActivation(InputAction.CallbackContext ctx)
     {
         IActiveItem item = hero.Inventory.ActiveItem;
@@ -376,9 +368,24 @@ public class PlayerInput : MonoBehaviour
             controller.ResetValues();
         }
     }
+
+    private static void Pause(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.PauseMenu.Toggle();
+    }
+
+    private static void ToggleQuest(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.QuestHUD.Toggle();
+    }
+
+    private static void ToggleMap(InputAction.CallbackContext ctx)
+    {
+        HudHandler.current.MapHUD.Toggle();
+    }
     #endregion
 
-    #region AnimationEvents
+    #region ANIMATION_EVENTS
     public void StartOfDashAnimation()
     {
         hero.IsInvincibleCount++;
@@ -500,7 +507,7 @@ public class PlayerInput : MonoBehaviour
 
     #endregion
 
-    #region InputConditions
+    #region INPUT_CONDITIONS
 
     private bool CanReleaseChargedAttack()
     {
@@ -550,7 +557,7 @@ public class PlayerInput : MonoBehaviour
                 (DeviceManager.Instance.IsPlayingKB() && Keyboard.current.anyKey.isPressed) ||
                 (!DeviceManager.Instance.IsPlayingKB() && Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic))
                )
-               && !playerInputMap.currentActionMap["BasicAttack"].IsPressed() && hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack;
+               && !playerInputMap.currentActionMap["Basic Attack"].IsPressed() && hero.State == (int)Entity.EntityState.ATTACK && !LaunchedChargedAttack;
     }
 
     private bool CanLaunchEzrealAttack()
@@ -561,8 +568,8 @@ public class PlayerInput : MonoBehaviour
     }
     #endregion
 
-    #region Miscellaneous
-    private void EaseFuncsShitStorm()
+    #region MISCELLANEOUS
+    private void EaseFuncsLoad()
     {
         easeFuncs.Add(EasingFunctions.EaseInBack);
         easeFuncs.Add(EasingFunctions.EaseInBounce);
@@ -603,116 +610,111 @@ public class PlayerInput : MonoBehaviour
         InputManagement(gamepadMap, unsubscribe: false);
     }
 
-
     void InputManagement(InputActionMap map, bool unsubscribe)
     {
         if (unsubscribe)
         {
-            map["Movement"].performed -= ReadDirection;
-            map["Movement"].started -= ResetComboWhenMoving;
-            map["Movement"].canceled -= ReadDirection;
-            map["BasicAttack"].performed -= Attack;
+            map["Move"].performed -= ReadDirection;
+            map["Move"].started -= ResetComboWhenMoving;
+            map["Move"].canceled -= ReadDirection;
+            map["Basic Attack"].performed -= Attack;
             map["Dash"].performed -= Dash;
             map["Interact"].performed -= Interract;
-            map["Spear"].performed -= ThrowOrRetrieveSpear;
-            map["ChargedAttack"].performed -= ChargedAttack;
-            map["ChargedAttack"].canceled -= ChargedAttackCanceled;
-            map["ActiveItem"].performed -= ActiveItemActivation;
-            map["SpecialAbility"].performed -= SpecialAbilityActivation;
-            map["ToggleMap"].performed -= ToggleMap;
-            map["ToggleQuest"].performed -= ToggleQuest;
+            map["Throw/Retrieve Spear"].performed -= ThrowOrRetrieveSpear;
+            map["Charged Attack"].performed -= ChargedAttack;
+            map["Charged Attack"].canceled -= ChargedAttackCanceled;
+            map["Active Item"].performed -= ActiveItemActivation;
+            map["Special Ability"].performed -= SpecialAbilityActivation;
+            map["Map"].performed -= ToggleMap;
+            map["Quest"].performed -= ToggleQuest;
             map["Pause"].started -= Pause;
             map["SkipDialogue"].started -= SkipDialogue;
-            map["ItemDescription"].started -= ToggleItemDescription;
+            map["Inventory"].started -= ToggleItemDescription;
         }
         else
         {
-            map["Movement"].performed += ReadDirection;
-            map["Movement"].started += ResetComboWhenMoving;
-            map["Movement"].canceled += ReadDirection;
-            map["BasicAttack"].performed += Attack;
+            map["Move"].performed += ReadDirection;
+            map["Move"].started += ResetComboWhenMoving;
+            map["Move"].canceled += ReadDirection;
+            map["Basic Attack"].performed += Attack;
             map["Dash"].performed += Dash;
             map["Interact"].performed += Interract;
-            map["Spear"].performed += ThrowOrRetrieveSpear;
-            map["ChargedAttack"].performed += ChargedAttack;
-            map["ChargedAttack"].canceled += ChargedAttackCanceled;
-            map["ActiveItem"].performed += ActiveItemActivation;
-            map["SpecialAbility"].performed += SpecialAbilityActivation;
-            map["ToggleMap"].performed += ToggleMap;
-            map["ToggleQuest"].performed += ToggleQuest;
+            map["Throw/Retrieve Spear"].performed += ThrowOrRetrieveSpear;
+            map["Charged Attack"].performed += ChargedAttack;
+            map["Charged Attack"].canceled += ChargedAttackCanceled;
+            map["Active Item"].performed += ActiveItemActivation;
+            map["Special Ability"].performed += SpecialAbilityActivation;
+            map["Map"].performed += ToggleMap;
+            map["Quest"].performed += ToggleQuest;
             map["Pause"].started += Pause;
             map["SkipDialogue"].started += SkipDialogue;
-            map["ItemDescription"].started += ToggleItemDescription;
+            map["Inventory"].started += ToggleItemDescription;
         }
-    }
-
-    private static void Pause(InputAction.CallbackContext ctx)
-    {
-        HudHandler.current.PauseMenu.Toggle();
-    }
-
-    private static void ToggleQuest(InputAction.CallbackContext ctx)
-    {
-        HudHandler.current.QuestHUD.Toggle();
-    }
-
-    private static void ToggleMap(InputAction.CallbackContext ctx)
-    {
-        HudHandler.current.MapHUD.Toggle();
     }
 
     public void DisableGameplayInputs()
     {
         GameplayInputsDisabled = true;
 
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Movement"].Disable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["BasicAttack"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Move"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Basic Attack"].Disable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Disable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Interact"].Disable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Spear"].Disable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ChargedAttack"].Disable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ActiveItem"].Disable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["SpecialAbility"].Disable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleQuest"].Disable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleMap"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Throw/Retrieve Spear"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Charged Attack"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Active Item"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Special Ability"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Quest"].Disable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Map"].Disable();
 
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Movement"].Disable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["BasicAttack"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Move"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Basic Attack"].Disable();
         playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Dash"].Disable();
         playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Interact"].Disable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Spear"].Disable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ChargedAttack"].Disable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ActiveItem"].Disable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["SpecialAbility"].Disable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleQuest"].Disable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleMap"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Throw/Retrieve Spear"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Charged Attack"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Active Item"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Special Ability"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Quest"].Disable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Map"].Disable();
     }
 
     public void EnableGameplayInputs()
     {
         GameplayInputsDisabled = false;
 
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Movement"].Enable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["BasicAttack"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Move"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Basic Attack"].Enable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Enable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Interact"].Enable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Spear"].Enable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ChargedAttack"].Enable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ActiveItem"].Enable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["SpecialAbility"].Enable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleQuest"].Enable();
-        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["ToggleMap"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Throw/Retrieve Spear"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Charged Attack"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Active Item"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Special Ability"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Quest"].Enable();
+        playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Map"].Enable();
 
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Movement"].Enable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["BasicAttack"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Move"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Basic Attack"].Enable();
         playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Dash"].Enable();
         playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Interact"].Enable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Spear"].Enable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ChargedAttack"].Enable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ActiveItem"].Enable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["SpecialAbility"].Enable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleQuest"].Enable();
-        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["ToggleMap"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Throw/Retrieve Spear"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Charged Attack"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Active Item"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Special Ability"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Quest"].Enable();
+        playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true)["Map"].Enable();
+
+        if(DeviceManager.Instance.IsPlayingKB())
+        {
+            playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true).Enable();
+            playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true).Disable();
+        }
+        else
+        {
+            playerInputMap.actions.FindActionMap("Keyboard", throwIfNotFound: true).Disable();
+            playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true).Enable();
+        }
     }
 
     private void ResetForceReturnToMove()
@@ -742,6 +744,14 @@ public class PlayerInput : MonoBehaviour
             StopCoroutine(chargedAttackCoroutine);
             chargedAttackCoroutine = null;
         }
+    }
+
+    private IEnumerator DashCoroutine()
+    {
+        dashInCooldown = true;
+        yield return new WaitForSeconds(DASH_COOLDOWN_TIME);
+        dashInCooldown = false;
+        dashCoroutine = null;
     }
 
     private void RestartDashCoroutine()

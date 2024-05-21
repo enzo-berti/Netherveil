@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
+using static UnityEngine.Rendering.DebugUI;
 
 public class ThunderLink : ItemEffect, IPassiveItem
 {
@@ -95,7 +96,7 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void ApplyDamages(Hero player)
     {
-        displayDamages = (int)(1f * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
+        displayDamages = (int)(2f * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
 
         List<Collider> alreadyAttacked = new List<Collider>();
 
@@ -110,9 +111,10 @@ public class ThunderLink : ItemEffect, IPassiveItem
                 foreach (var collider in colliders)
                 {
                     if (collider.gameObject.TryGetComponent<Entity>(out var entity) && entity is IDamageable && collider.gameObject != player.gameObject
-                        && !alreadyAttacked.Contains(collider))
+                        && !alreadyAttacked.Contains(collider) && entity.IsInvincibleCount == 0)
                     {
-                        (entity as IDamageable).ApplyDamage((int)(1f * Utilities.Hero.Stats.GetCoeff(Stat.ATK)), Utilities.Hero);
+                        FloatingTextGenerator.CreateDamageText(displayDamages, entity.transform.position);
+                        (entity as IDamageable).ApplyDamage(displayDamages, Utilities.Hero, false);
                         entity.AddStatus(new Electricity(duration, chance), player);
                         alreadyAttacked.Add(collider);
                     }
@@ -125,7 +127,6 @@ public class ThunderLink : ItemEffect, IPassiveItem
     {
         while (true)
         {
-            Debug.Log(spears.Count);
             foreach (Spear spear in spears)
             {
                 spear.ThunderLinkVFX.transform.position = Utilities.Player.transform.position + Vector3.up;

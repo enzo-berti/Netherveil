@@ -19,13 +19,13 @@ public class DungeonGate : MonoBehaviour
 
     private void Start()
     {
-        MapUtilities.onEnter += Close;
+        MapUtilities.onFirstEnter += Close;
         MapUtilities.onAllEnemiesDead += Open;
     }
 
     private void OnDestroy()
     {
-        MapUtilities.onEnter -= Close;
+        MapUtilities.onFirstEnter -= Close;
         MapUtilities.onAllEnemiesDead -= Open;
     }
 

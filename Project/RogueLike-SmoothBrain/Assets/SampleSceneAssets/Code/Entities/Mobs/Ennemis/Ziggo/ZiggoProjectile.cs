@@ -19,7 +19,7 @@ public class ZiggoProjectile : MonoBehaviour
         player = Utilities.Hero;
     }
 
-    private void Update()
+    public void ApplyPoison()
     {
         if (effectCooldown <= 0)
         {
@@ -38,7 +38,6 @@ public class ZiggoProjectile : MonoBehaviour
             }
         }
         else effectCooldown -= Time.deltaTime;
-
     }
 
     public void ThrowToPos(Vector3 pos, float throwTime, float height)

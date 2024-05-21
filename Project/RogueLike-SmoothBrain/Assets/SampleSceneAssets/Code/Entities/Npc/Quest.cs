@@ -2,12 +2,11 @@ using DialogueSystem.Runtime;
 using Map;
 using System;
 using System.Collections;
-using System.IO;
 using System.Reflection;
 using UnityEngine;
 using static QuestTalker;
 
-public abstract class Quest
+public abstract class Quest : ISavable
 {
     public enum QuestDifficulty
     {
@@ -38,25 +37,6 @@ public abstract class Quest
     public QuestTalker.TalkerGrade TalkerGrade { get => talkerGrade; }
     public QuestDifficulty Difficulty { get => difficulty; }
 
-    public virtual void Save(BinaryWriter writer)
-    {
-        // Quest informations
-        writer.Write(Datas.idName);
-        writer.Write(Difficulty.ToString());
-        writer.Write(TalkerType.ToString());
-        writer.Write(TalkerGrade.ToString());
-
-        // Quest values
-        writer.Write(CurrentQuestTimer);
-    }
-    public virtual void Load(BinaryReader reader)
-    {
-        // Quest informations need to be load outside of quest to be able to construct the class correctly
-
-        // Quest values
-        CurrentQuestTimer = reader.ReadSingle();
-    }
-
     public abstract bool IsQuestFinished();
     protected abstract void ResetQuestValues();
 
@@ -65,10 +45,10 @@ public abstract class Quest
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestObtainedSFX);
         MapUtilities.onEarlyAllEnemiesDead += CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen += CheckQuestFinished;
-        MapUtilities.onEnter += CheckQuestFinished;
+        MapUtilities.onFirstEnter += CheckQuestFinished;
         Utilities.Hero.OnQuestObtained += CheckQuestFinished;
 
-        startFloor = MapUtilities.stage;
+        startFloor = MapUtilities.Stage;
     }
 
     public void LateAcceptQuest()
@@ -84,7 +64,7 @@ public abstract class Quest
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestFinishedSFX);
         player.CurrentQuest = null;
 
-        if (startFloor == MapUtilities.stage)
+        if (startFloor == MapUtilities.Stage)
         {
             if (talkerGrade == QuestTalker.TalkerGrade.BOSS)
             {
@@ -92,7 +72,7 @@ public abstract class Quest
             }
             else
             {
-                Utilities.Hero.DoneQuestQTApprenticeThiStage = true;
+                Utilities.Hero.DoneQuestQTApprenticeThisStage = true;
             }
         }
 
@@ -111,7 +91,7 @@ public abstract class Quest
 
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        MapUtilities.onEnter -= CheckQuestFinished;
+        MapUtilities.onFirstEnter -= CheckQuestFinished;
         Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
         ResetQuestValues();
 
@@ -130,7 +110,7 @@ public abstract class Quest
         AudioManager.Instance.PlaySound(AudioManager.Instance.QuestLostSFX);
         MapUtilities.onEarlyAllEnemiesDead -= CheckQuestFinished;
         MapUtilities.onEarlyAllChestOpen -= CheckQuestFinished;
-        MapUtilities.onEnter -= CheckQuestFinished;
+        MapUtilities.onFirstEnter -= CheckQuestFinished;
         Utilities.Hero.OnQuestObtained -= CheckQuestFinished;
         ResetQuestValues();
 
@@ -190,6 +170,24 @@ public abstract class Quest
         yield break;
     }
 
+    public virtual void Save(ref SaveData save)
+    {
+        save.questId = Datas.idName;
+        save.questDifficulty = difficulty;
+        save.talkerType = talkerType;
+        save.talkerGrade = talkerGrade;
+
+        save.questTimer = CurrentQuestTimer;
+    }
+
+    public virtual void LoadSave()
+    {
+        // Quest informations need to be load outside of quest to be able to construct the class correctly
+
+        // Quest values
+        CurrentQuestTimer = SaveManager.saveData.questTimer;
+    }
+
     #region STATIC_METHODS
     static public Quest LoadClass(string name, QuestDialogueDifficulty difficulty, QuestTalker questTalker)
     {
@@ -209,7 +207,7 @@ public abstract class Quest
         return quest;
     }
 
-    static public Quest LoadClass(string name, QuestDialogueDifficulty difficulty, TalkerType talkerType, TalkerGrade talkerGrade)
+    static public Quest LoadClassWithSave(string name, QuestDifficulty difficulty, TalkerType talkerType, TalkerGrade talkerGrade)
     {
         if (database == null)
         {
@@ -222,8 +220,9 @@ public abstract class Quest
         quest.talkerType = talkerType;
         quest.talkerGrade = talkerGrade;
         quest.CorruptionModifierValue = quest.Datas.CorruptionModifierValue;
-        quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)difficulty : QuestDifficulty.MEDIUM;
+        quest.difficulty = difficulty;
         InitDescription(ref quest.Datas.Description);
+        quest.LoadSave();
         return quest;
     }
 

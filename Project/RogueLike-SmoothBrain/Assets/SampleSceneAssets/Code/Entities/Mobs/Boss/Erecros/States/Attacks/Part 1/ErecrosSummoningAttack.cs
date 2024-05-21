@@ -69,6 +69,8 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
 
         Context.Animator.ResetTrigger("EnemiesDead");
         Context.Animator.SetTrigger("EnemiesDead");
+
+        Context.AttackCooldown = 1.25f + Random.Range(-0.25f, 0.25f);
     }
 
     // This method will be called every frame.

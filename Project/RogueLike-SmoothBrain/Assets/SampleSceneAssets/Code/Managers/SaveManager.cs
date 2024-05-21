@@ -1,77 +1,185 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
-public class SaveManager : MonoBehaviour
+public struct SaveData
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void LoadSaveManager()
-    {
-        _ = Instance;
-    }
+    // Player
+    public string Name;
+    public string Seed;
+    // Map
+    public int SeedIteration;
+    // Hero
+    public bool doneQuestQThisStage;
+    public bool doneQuestQTApprenticeThisStage;
+    public bool clearedTuto;
+    // Hero Items
+    public string activeItemName;
+    public float activeItemCooldown;
+    public List<string> passiveItemNames;
+    public int bloodValue;
+    // Hero Stats
+    public float statHp;
+    public float statCorruption;
+    // Hero Quest
+    public string questId;
+    public float questTimer;
+    public Quest.QuestDifficulty questDifficulty;
+    public QuestTalker.TalkerType talkerType;
+    public QuestTalker.TalkerGrade talkerGrade;
+    public int questEvolution;
 
-    static private SaveManager instance;
-    static public SaveManager Instance
+    public readonly void Save(string filePath)
     {
-        get
+        using var stream = File.Open(filePath, FileMode.Create);
+        using var writer = new BinaryWriter(stream, Encoding.UTF8, false);
+
+        // Player
+        writer.Write(Name);
+        writer.Write(Seed);
+        // Map
+        writer.Write(SeedIteration);
+        // Hero
+        writer.Write(doneQuestQThisStage);
+        writer.Write(doneQuestQTApprenticeThisStage);
+        writer.Write(clearedTuto);
+        // Hero activeItem
+        writer.Write(activeItemName.Any());
+        if (activeItemName.Any())
         {
-            if (instance == null)
-            {
-                GameObject obj = new GameObject(nameof(SaveManager));
-                obj.AddComponent<SaveManager>();
-            }
-
-            return instance;
+            writer.Write(activeItemName);
+            writer.Write(activeItemCooldown);
+        }
+        // Hero passiveItems
+        writer.Write(passiveItemNames.Count);
+        foreach (var itemName in passiveItemNames)
+        {
+            writer.Write(itemName);
+        }
+        writer.Write(bloodValue);
+        // Hero Stats
+        writer.Write(statHp);
+        writer.Write(statCorruption);
+        // Hero Quest
+        writer.Write(questId.Any());
+        if (questId.Any())
+        {
+            writer.Write(questId);
+            writer.Write(questTimer);
+            writer.Write(questEvolution);
+            writer.Write(questDifficulty.ToString());
+            writer.Write(talkerType.ToString());
+            writer.Write(talkerGrade.ToString());
         }
     }
 
-    public delegate void OnSave(string directoryPath);
-    public event OnSave onSave;
-
-    private int selectedSave = -1;
-    public string DirectoryPath { private set; get; } = string.Empty;
-    public bool HasData { private set; get; } = false;
-
-    private void Awake()
+    public void Load(string filePath)
     {
-        if (instance == null)
+        using var stream = File.Open(filePath, FileMode.Open);
+        using var reader = new BinaryReader(stream, Encoding.UTF8, false);
+
+        // Player
+        Name = reader.ReadString();
+        Seed = reader.ReadString();
+        // Map
+        SeedIteration = reader.ReadInt32();
+        // Hero
+        doneQuestQThisStage = reader.ReadBoolean();
+        doneQuestQTApprenticeThisStage = reader.ReadBoolean();
+        clearedTuto = reader.ReadBoolean();
+        // Hero activeItem
+        if (reader.ReadBoolean())
         {
-            instance = this;
-            DontDestroyOnLoad(instance);
+            activeItemName = reader.ReadString();
+            activeItemCooldown = reader.ReadSingle();
         }
-        else
+        // Hero passiveItems
+        int itemCounts = reader.ReadInt32();
+        passiveItemNames = new List<string>();
+        for (int i = 0; i < itemCounts; i++)
         {
-            Destroy(instance);
-            return;
+            passiveItemNames.Add(reader.ReadString());
         }
+        bloodValue = reader.ReadInt32();
+        // Hero Stats
+        statHp = reader.ReadSingle();
+        statCorruption = reader.ReadSingle();
+        // Hero Quest
+        if (reader.ReadBoolean())
+        {
+            questId = reader.ReadString();
+            questTimer = reader.ReadSingle();
+            questEvolution = reader.ReadInt32();
+            questDifficulty = (Quest.QuestDifficulty)Enum.Parse(typeof(Quest.QuestDifficulty), reader.ReadString(), true);
+            talkerType = (QuestTalker.TalkerType)Enum.Parse(typeof(QuestTalker.TalkerType), reader.ReadString());
+            talkerGrade = (QuestTalker.TalkerGrade)Enum.Parse(typeof(QuestTalker.TalkerGrade), reader.ReadString());
+        }
+    }
+}
+
+static public class SaveManager
+{
+    public delegate void OnSave(ref SaveData saveData);
+    static public event OnSave onSave;
+
+    static public string DirectoryPath { private set; get; } = string.Empty;
+    static public bool HasData { private set; get; } = false;
+    static public SaveData saveData;
+
+    static public void UnselectSave()
+    {
+
+    }
+
+    static public void SelectSave(int selectedSave)
+    {
+        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + "/";
 
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
         {
             Directory.CreateDirectory(Application.persistentDataPath + "/Save");
         }
 
-        HasData = false;
-
-        //SelectSave(1);
-    }
-
-    public void SelectSave(int selectedSave)
-    {
-        this.selectedSave = selectedSave;
-        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + "/";
-
         if (!Directory.Exists(DirectoryPath))
         {
             Directory.CreateDirectory(DirectoryPath);
         }
-        else
+
+        try
         {
-            HasData = true; // pas ouf temporaire
+            saveData.Load(DirectoryPath);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+
+            HasData = false; // can't load correctly the datas
+            // TODO : destroy corrupted datas
         }
     }
 
-    public void Save()
+    static public void Save()
     {
-        onSave?.Invoke(DirectoryPath);
+        if (DirectoryPath == string.Empty)
+        {
+            return;
+        }
+
+        onSave?.Invoke(ref saveData);
+
+        try
+        {
+            saveData.Save(DirectoryPath);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+
+            // TODO : destroy corrupted datas
+        }
     }
 
     //const string filePathExample = "/Player.s";

@@ -63,6 +63,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
     {
         base.Start();
 
+        canTriggerTraps = false;
         factory = new StateFactory<DamoclesStateMachine>(this);
         currentState = factory.GetState<DamoclesWanderingState>();
 
@@ -192,7 +193,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
 
     public void MoveTo(Vector3 posToMove)
     {
-        if (!agent.enabled)
+        if (!agent.enabled || IsFreeze)
             return;
 
         agent.SetDestination(posToMove);
