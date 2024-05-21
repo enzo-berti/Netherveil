@@ -26,6 +26,8 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
     float teleportCooldown = 0f;
     float teleportAnimDelay = 0f;
 
+    List<GameObject> clones = new();
+
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -105,6 +107,8 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
         {
             Context.Animator.ResetTrigger("Teleport");
             Context.Animator.SetTrigger("Teleport");
+
+            Context.TeleportVFX.Play();
         }
 
         teleportAnimDelay += Time.deltaTime;
@@ -118,6 +122,8 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
             GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.transform.position, Context.transform.rotation);
             clone.GetComponentInChildren<ErecrosCloneBehaviour>().Explode(Context);
             Context.transform.position = teleportPos[0];
+
+            clones.Add(clone);
 
             Vector3 bossToPlayer = Context.Player.transform.position - Context.transform.position;
             bossToPlayer.y = 0f;

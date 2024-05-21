@@ -1,4 +1,5 @@
 using StateMachine;
+using System.Collections;
 using UnityEngine;
 
 public class KlopsAttackState : BaseState<KlopsStateMachine>
@@ -77,6 +78,7 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
             fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
             fireball.GetComponent<Fireball>().launcher = Context;
             fireball.transform.LookAt(Utilities.Player.transform);
+            GameObject.Destroy(fireball, 3f);
             hasShot = true;
         }
         if (currentTime >= timeBeforeChangeState)
@@ -90,4 +92,5 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         base.SwitchState(newState);
         Context.currentState = newState;
     }
+
 }

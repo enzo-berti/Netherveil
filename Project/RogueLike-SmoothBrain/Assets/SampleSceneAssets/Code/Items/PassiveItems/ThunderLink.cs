@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ThunderLink : ItemEffect, IPassiveItem
 {
@@ -19,6 +18,11 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly float chance = 0.2f;
     bool allSpearsSet = false;
     public int displayDamages;
+
+    public ThunderLink()
+    {
+        displayDamages = (int)(2f * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
+    }
 
     public void OnRetrieved()
     {
@@ -35,13 +39,13 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void DeleteEletricLinks()
     {
-        CoroutineManager.Instance.StopCoroutine(thunderlinkRoutine);
-        CoroutineManager.Instance.StopCoroutine(moveRoutine);
+        if(thunderlinkRoutine != null)
+            CoroutineManager.Instance.StopCoroutine(thunderlinkRoutine);
+        if(moveRoutine != null)
+            CoroutineManager.Instance.StopCoroutine(moveRoutine);
         thunderlinkRoutine = null;
         moveRoutine = null;
 
-        spears.Clear();
-        thunderLinkColliders.Clear();
 
         for (int i = 0; i < thunderLinkVFXs.Count; i++)
         {
@@ -49,6 +53,8 @@ public class ThunderLink : ItemEffect, IPassiveItem
             GameObject.Destroy(thunderLinkLineRenderers[i].gameObject);
         }
 
+        spears.Clear();
+        thunderLinkColliders.Clear();
         thunderLinkVFXs.Clear();
         thunderLinkLineRenderers.Clear();
     }

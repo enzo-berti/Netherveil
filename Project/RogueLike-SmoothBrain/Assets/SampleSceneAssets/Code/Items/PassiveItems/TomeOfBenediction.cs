@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TomeOfBenediction : ItemEffect , IPassiveItem 
 {
-    readonly int value = 15;
+    readonly int value = 25;
     public void OnRetrieved() 
     {
         GameObject.FindWithTag("Player").GetComponent<Hero>().Stats.DecreaseValue(Stat.CORRUPTION, value);

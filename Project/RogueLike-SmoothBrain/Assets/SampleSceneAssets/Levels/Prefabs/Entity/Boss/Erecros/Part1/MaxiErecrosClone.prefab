@@ -30,7 +30,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8305847898690680181}
-  - {fileID: 4523383896779777375}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &360608581790977259
@@ -169,7 +168,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8305847898690680181}
+  m_Father: {fileID: 4523383896779777375}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!2083052967 &7189710525136306571
 VisualEffect:
@@ -329,8 +328,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5267984480908447844}
-  - {fileID: 396491140162228377}
   - {fileID: 3252981522673428339}
+  - {fileID: 4523383896779777375}
   m_Father: {fileID: 2799082595357482665}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &5964860409853378483
@@ -447,6 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b000e066d9e0fd47bbca4c9f665a86e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 2304593061921704478}
   attackHitbox: {fileID: 8814618729154696440}
   explosionSound:
     reference:
@@ -485,8 +485,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 396491140162228377}
   - {fileID: 9072242315353978459}
-  m_Father: {fileID: 2799082595357482665}
+  m_Father: {fileID: 8305847898690680181}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1631496848798573550
 PrefabInstance:
@@ -509,7 +510,7 @@ PrefabInstance:
     - target: {fileID: 495557458418339345, guid: 61e802961204b62419e06013a0aaadbf,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
-      value: -2.5611396e-18
+      value: 10.1
       objectReference: {fileID: 0}
     - target: {fileID: 495557458418339345, guid: 61e802961204b62419e06013a0aaadbf,
         type: 3}
@@ -519,7 +520,7 @@ PrefabInstance:
     - target: {fileID: 495557458418339345, guid: 61e802961204b62419e06013a0aaadbf,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.z
-      value: -0.05615905
+      value: -36.55616
       objectReference: {fileID: 0}
     - target: {fileID: 495557458418339345, guid: 61e802961204b62419e06013a0aaadbf,
         type: 3}
@@ -660,6 +661,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5d21d97954db45949b71d790ee6137b3, type: 2}
     - target: {fileID: 7538775946762833600, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -692,6 +698,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bad904c67b36e9144ba2622ed1d8b8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &2304593061921704478 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 8f0d4fd8a005aa34687c2fdd844091fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 5661335361027897231}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &2742136146608929103 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7538775946762833600, guid: 8f0d4fd8a005aa34687c2fdd844091fe,

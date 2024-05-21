@@ -3,6 +3,7 @@ using UnityEngine;
 public class ShockwaveBracelet : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 20f;
+    public bool TimeBased { get; set; } = true;
     public readonly float displayValue;
     readonly int AOE_DAMAGES;
 

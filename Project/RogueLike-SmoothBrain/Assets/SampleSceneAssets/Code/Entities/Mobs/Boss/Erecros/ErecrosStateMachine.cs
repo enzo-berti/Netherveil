@@ -62,9 +62,12 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     [SerializeField] VisualEffect shieldVFX;
     [SerializeField] VisualEffect shockwaveVFX;
+    [SerializeField] VisualEffect teleportVFX;
+    [SerializeField] VisualEffect prisonVFX;
     [SerializeField] GameObject clonePrefab;
     [SerializeField] GameObject prisonTorusPrefab;
     [SerializeField] GameObject propsParent;
+    [SerializeField] SphereCollider summonCollider;
 
     Rigidbody[] props;
     List<Collider> propsColliders = new();
@@ -95,11 +98,14 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
+    public VisualEffect PrisonVFX { get => prisonVFX; }
+    public VisualEffect TeleportVFX { get => teleportVFX; }
     public GameObject ClonePrefab { get => clonePrefab; }
     public GameObject PrisonTorusPrefab { get => prisonTorusPrefab; }
     public GameObject PropsParent { get => propsParent; }
     public Rigidbody[] PropsRB { get => props; }
     public List<Collider> PropsColliders { get => propsColliders; }
+    public SphereCollider SummonCollider { get => summonCollider; }
 
     #endregion
 
@@ -132,6 +138,10 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         sounds.intro.Play(transform.position);
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
+
+        // Cinematics
+        cinematic.Play();
+        isInCinematic = true;
     }
 
     protected override void Update()
@@ -156,6 +166,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         else
         {
             sounds.shieldHit.Play(transform.position, true);
+            FloatingTextGenerator.CreateActionText(transform.position, "Blocked!");
         }
     }
 
