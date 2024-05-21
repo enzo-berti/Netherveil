@@ -12,6 +12,7 @@ public struct SaveData
     public string seed;
     // Map
     public int seedIteration;
+    public List<int> roomCleareds;
     // Hero
     public bool doneQuestQThisStage;
     public bool doneQuestQTApprenticeThisStage;
@@ -40,6 +41,7 @@ public struct SaveData
         seed = string.Empty;
 
         seedIteration = 0;
+        roomCleareds = new List<int>();
 
         doneQuestQThisStage = false;
         doneQuestQTApprenticeThisStage = false;
@@ -59,6 +61,8 @@ public struct SaveData
         talkerType = QuestTalker.TalkerType.SHAMAN;
         talkerGrade = QuestTalker.TalkerGrade.APPRENTICE;
         questEvolution = 0;
+
+        hasData = false;
     }
 
     public readonly void Save(string filePath)
@@ -71,6 +75,11 @@ public struct SaveData
         writer.Write(seed);
         // Map
         writer.Write(seedIteration);
+        writer.Write(roomCleareds.Count);
+        foreach (var idroom in roomCleareds)
+        {
+            writer.Write(idroom);
+        }
         // Hero
         writer.Write(doneQuestQThisStage);
         writer.Write(doneQuestQTApprenticeThisStage);
@@ -96,6 +105,7 @@ public struct SaveData
         writer.Write(questId.Any());
         if (questId.Any())
         {
+            Debug.Log("...");
             writer.Write(questId);
             writer.Write(questTimer);
             writer.Write(questEvolution);
@@ -107,8 +117,8 @@ public struct SaveData
 
     public void Load(string filePath)
     {
-        hasData = false;
         Reset();
+
         if (!File.Exists(filePath))
         {
             return;
@@ -122,6 +132,12 @@ public struct SaveData
         seed = reader.ReadString();
         // Map
         seedIteration = reader.ReadInt32();
+        int roomClearedCount = reader.ReadInt32();
+        roomCleareds = new List<int>(roomClearedCount);
+        for (int i = 0; i < roomClearedCount; i++)
+        {
+            roomCleareds.Add(reader.ReadInt32());
+        }
         // Hero
         doneQuestQThisStage = reader.ReadBoolean();
         doneQuestQTApprenticeThisStage = reader.ReadBoolean();
@@ -134,7 +150,7 @@ public struct SaveData
         }
         // Hero passiveItems
         int itemCounts = reader.ReadInt32();
-        passiveItemNames = new List<string>();
+        passiveItemNames = new List<string>(itemCounts);
         for (int i = 0; i < itemCounts; i++)
         {
             passiveItemNames.Add(reader.ReadString());
