@@ -13,6 +13,7 @@
 using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
@@ -29,6 +30,7 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
     float delayBetweenLaunch = 0.4f;
     float launchTimer;
     int iterator = 0;
+    bool launchAnimPlayed = false;
 
     List<Collider> activeColliders = new();
 
@@ -60,11 +62,17 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
             targetPos.Add(Context.transform.position + Context.transform.up * Context.Height + customVector);
             props[i].velocity = (targetPos.Last() - props[i].transform.position).normalized * 20f;
 
-            props[i].GetComponent<ErecrosWeaponBehaviour>().enabled = true;
-            props[i].GetComponent<ErecrosWeaponBehaviour>().PlayFlying();
+            ErecrosWeaponBehaviour propComponent = props[i].GetComponent<ErecrosWeaponBehaviour>();
+
+            propComponent.enabled = true;
+            propComponent.ignoreCollisions = true;
+            propComponent.PlayFlying();
 
             onBoss.Add(false);
             launched.Add(false);
+
+            Context.Animator.ResetTrigger("CallWeapon");
+            Context.Animator.SetTrigger("CallWeapon");
         }
     }
 
@@ -142,8 +150,15 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
 
                 Context.Sounds.throwWeapon.Play(Context.transform.position, true);
                 props[iterator].GetComponent<ErecrosWeaponBehaviour>().PlayFlying();
+                launchAnimPlayed = false;
 
                 iterator++;
+            }
+            else if (launchTimer >= delayBetweenLaunch - 0.2f && !launchAnimPlayed)
+            {
+                Context.Animator.ResetTrigger("ThrowWeapon");
+                Context.Animator.SetTrigger("ThrowWeapon");
+                launchAnimPlayed = true;
             }
         }
         else
@@ -196,6 +211,7 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
             props[i].velocity = Vector3.zero;
             onBoss[i] = true;
 
+            props[i].GetComponent<ErecrosWeaponBehaviour>().ignoreCollisions = false;
             Context.PropsColliders[i].enabled = true;
             activeColliders.Add(Context.PropsColliders[i]);
 
