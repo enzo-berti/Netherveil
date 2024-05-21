@@ -58,14 +58,17 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     [SerializeField] int part;
     [SerializeField] int phase;
 
+    [SerializeField] GameObject miniPrefab;
+    [SerializeField] GameObject maxiPrefab;
+
     [SerializeField] GameObject[] enemiesPrefabs;
 
     [SerializeField] VisualEffect shieldVFX;
     [SerializeField] VisualEffect shockwaveVFX;
     [SerializeField] VisualEffect teleportVFX;
     [SerializeField] VisualEffect prisonVFX;
+
     [SerializeField] GameObject clonePrefab;
-    [SerializeField] GameObject prisonTorusPrefab;
     [SerializeField] GameObject propsParent;
     [SerializeField] SphereCollider summonCollider;
 
@@ -101,7 +104,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public VisualEffect PrisonVFX { get => prisonVFX; }
     public VisualEffect TeleportVFX { get => teleportVFX; }
     public GameObject ClonePrefab { get => clonePrefab; }
-    public GameObject PrisonTorusPrefab { get => prisonTorusPrefab; }
     public GameObject PropsParent { get => propsParent; }
     public Rigidbody[] PropsRB { get => props; }
     public List<Collider> PropsColliders { get => propsColliders; }
@@ -127,21 +129,24 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
         }
 
-        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
-        if (gameMusic != null)
-        {
-            gameMusic.SetActive(false);
-        }
-
-        sounds.music.Play();
-
-        sounds.intro.Play(transform.position);
-
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
-        // Cinematics
-        cinematic.Play();
-        isInCinematic = true;
+        if (part == 1)
+        {
+            gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+            if (gameMusic != null)
+            {
+                gameMusic.SetActive(false);
+            }
+
+            sounds.music.Play();
+
+            sounds.intro.Play(transform.position);
+
+            // Cinematics
+            cinematic.Play();
+            isInCinematic = true;
+        }
     }
 
     protected override void Update()
@@ -151,6 +156,16 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
         if (IsKnockbackable)
             IsKnockbackable = false;
+
+        if (phase < 2)
+        {
+            if (stats.GetValue(Stat.HP) <= initialHP / 2f)
+            {
+                phase++;
+            }
+        }
+
+        Debug.Log("Phase : " + phase + " // Part : " + part);
 
         base.Update();
         currentState.Update();
@@ -182,16 +197,24 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public void Death()
     {
-        animator.speed = 1;
-        OnDeath?.Invoke(transform.position);
-        Utilities.Hero.OnKill?.Invoke(this);
+        if (part == 1)
+        {
+            Instantiate(maxiPrefab, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
+        else if (part == 2)
+        {
+            animator.speed = 1;
+            OnDeath?.Invoke(transform.position);
+            Utilities.Hero.OnKill?.Invoke(this);
 
-        if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
+            if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
 
-        if (gameMusic != null)
-            gameMusic.SetActive(true);
+            if (gameMusic != null)
+                gameMusic.SetActive(true);
 
-        currentState = factory.GetState<ErecrosDeathState>();
+            currentState = factory.GetState<ErecrosDeathState>();
+        }
     }
 
     public void MoveTo(Vector3 posToMove)
