@@ -23,8 +23,6 @@ public class Fireball : MonoBehaviour, IReflectable
 
     void Start()
     {
-        Destroy(gameObject, 3.0f);
-
         radius = GetComponent<CapsuleCollider>().radius;
         Vector3 dir = direction;
         dir.y = 0;

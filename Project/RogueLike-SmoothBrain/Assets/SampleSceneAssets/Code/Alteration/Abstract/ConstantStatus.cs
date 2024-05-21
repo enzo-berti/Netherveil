@@ -16,7 +16,6 @@ public abstract class ConstantStatus : Status
     public sealed override void ApplyEffect(Entity target)
     {
         base.ApplyEffect(target);
-        DoEffect();
     }
 
     public override void DoEffect()
