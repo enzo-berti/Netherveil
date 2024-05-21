@@ -35,13 +35,13 @@ public class ThunderLink : ItemEffect, IPassiveItem
 
     private void DeleteEletricLinks()
     {
-        CoroutineManager.Instance.StopCoroutine(thunderlinkRoutine);
-        CoroutineManager.Instance.StopCoroutine(moveRoutine);
+        if(thunderlinkRoutine != null)
+            CoroutineManager.Instance.StopCoroutine(thunderlinkRoutine);
+        if(moveRoutine != null)
+            CoroutineManager.Instance.StopCoroutine(moveRoutine);
         thunderlinkRoutine = null;
         moveRoutine = null;
 
-        spears.Clear();
-        thunderLinkColliders.Clear();
 
         for (int i = 0; i < thunderLinkVFXs.Count; i++)
         {
@@ -49,6 +49,8 @@ public class ThunderLink : ItemEffect, IPassiveItem
             GameObject.Destroy(thunderLinkLineRenderers[i].gameObject);
         }
 
+        spears.Clear();
+        thunderLinkColliders.Clear();
         thunderLinkVFXs.Clear();
         thunderLinkLineRenderers.Clear();
     }
