@@ -30,7 +30,9 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         public Sound shieldHit; //
         public Sound shockwave;
         public Sound invocation; //
-        public Sound throwWeapon;
+        public Sound throwWeapon; //
+        public Sound walk;
+        public Sound music;
     }
 
     public enum ErecrosColliders
@@ -48,6 +50,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     float attackCooldown = 1f;
     float initialHP;
     CameraUtilities cameraUtilities;
+
+    GameObject gameMusic;
 
     float height = 0f;
 
@@ -117,6 +121,14 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
         }
 
+        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(false);
+        }
+
+        sounds.music.Play();
+
         height = GetComponentInChildren<Renderer>().bounds.size.y;
     }
 
@@ -162,6 +174,9 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         Utilities.Hero.OnKill?.Invoke(this);
 
         if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
+
+        if (gameMusic != null)
+            gameMusic.SetActive(true);
 
         currentState = factory.GetState<ErecrosDeathState>();
     }

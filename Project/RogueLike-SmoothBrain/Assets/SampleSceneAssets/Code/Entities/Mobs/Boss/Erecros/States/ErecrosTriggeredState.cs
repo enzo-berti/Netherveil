@@ -56,6 +56,8 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
 
         Context.MoveTo(Context.Player.transform.position);
 
+        Context.Sounds.walk.Play(Context.transform.position);
+
         Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
 
     }

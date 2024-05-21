@@ -25,10 +25,12 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (!hitMap)
-        {
-            sounds.flying.Play(transform.position);
-        }
+
+    }
+
+    public void PlayFlying()
+    {
+        sounds.flying.Play(transform.position);
     }
 
     public void Reset()
