@@ -13,6 +13,7 @@ public class GameOver : MonoBehaviour
 
     public CinemachineVirtualCamera mainCam;
     public CinemachineVirtualCamera deathCam;
+    public Sound deathClockSound;
 
     public bool GameOverActive => gameObject.activeSelf;
 
@@ -44,6 +45,7 @@ public class GameOver : MonoBehaviour
         }
 
         AudioManager.Instance.StopAllMusics();
+        deathClockSound.Play();
         DisableAllMob();
         StartCoroutine(IncreaseAlpha());
     }

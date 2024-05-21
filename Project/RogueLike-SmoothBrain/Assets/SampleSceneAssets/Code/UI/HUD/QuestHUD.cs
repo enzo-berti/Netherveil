@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class QuestHUD : MonoBehaviour
 {
-    private Hero player;
     [SerializeField] private TMP_Text description;
     [SerializeField] private TMP_Text title;
     [SerializeField] private TMP_Text rewardText;
@@ -23,8 +22,6 @@ public class QuestHUD : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Hero>();
-
         lostOrFinishedText.SetText("No Quests...");
         EmptyQuestTexts();
 
@@ -89,21 +86,21 @@ public class QuestHUD : MonoBehaviour
 
     private void UpdateUI()
     {
-        bool hasQuest = player.CurrentQuest != null;
+        bool hasQuest = Utilities.Hero.CurrentQuest != null;
 
         if (hasQuest)
         {
             lostOrFinishedText.SetText(string.Empty);
 
-            string rewardName = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? 
+            string rewardName = Utilities.Hero.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ? 
                 $"<sprite name=\"corruption\">" : 
                 $"<sprite name=\"benediction\">";
 
-            int absValue = Mathf.Abs(player.CurrentQuest.CorruptionModifierValue);
+            int absValue = Mathf.Abs(Utilities.Hero.CurrentQuest.CorruptionModifierValue);
 
-            if (player.CurrentQuest.Datas.HasDifferentGrades)
+            if (Utilities.Hero.CurrentQuest.Datas.HasDifferentGrades)
             {
-                switch (player.CurrentQuest.Difficulty)
+                switch (Utilities.Hero.CurrentQuest.Difficulty)
                 {
                     case Quest.QuestDifficulty.EASY:
                         difficultyText.SetText("<color=green>Easy</color>");
@@ -125,14 +122,14 @@ public class QuestHUD : MonoBehaviour
             }
 
             //
-            string titleText = player.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ?
-                $"<color=purple>{player.CurrentQuest.Datas.idName}</color>" :
-                $"<color=yellow>{player.CurrentQuest.Datas.idName}</color>";
+            string titleText = Utilities.Hero.CurrentQuest.TalkerType == QuestTalker.TalkerType.SHAMAN ?
+                $"<color=purple>{Utilities.Hero.CurrentQuest.Datas.idName}</color>" :
+                $"<color=yellow>{Utilities.Hero.CurrentQuest.Datas.idName}</color>";
 
             title.SetText(titleText);
-            description.SetText(player.CurrentQuest.Datas.Description);
+            description.SetText(Utilities.Hero.CurrentQuest.Datas.Description);
             rewardText.SetText($"\n <color=yellow>Reward : </color> {absValue} {rewardName}");
-            progressText.SetText(player.CurrentQuest.progressText + "\n" + GetTimeString());
+            progressText.SetText(Utilities.Hero.CurrentQuest.progressText + "\n" + GetTimeString());
 
             description.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         }
@@ -144,12 +141,12 @@ public class QuestHUD : MonoBehaviour
 
     private string GetTimeString()
     {
-        if(!player.CurrentQuest.Datas.LimitedTime || player.CurrentQuest.IsQuestFinished())
+        if(!Utilities.Hero.CurrentQuest.Datas.LimitedTime || Utilities.Hero.CurrentQuest.IsQuestFinished())
             return string.Empty;
 
-        if (player.CurrentQuest.CurrentQuestTimer < 60)
-            return "<color=red>" + Math.Round(player.CurrentQuest.CurrentQuestTimer, player.CurrentQuest.CurrentQuestTimer < 1 ? 1 : 0) + " seconds remaining</color>";
+        if (Utilities.Hero.CurrentQuest.CurrentQuestTimer < 60)
+            return "<color=red>" + Math.Round(Utilities.Hero.CurrentQuest.CurrentQuestTimer, Utilities.Hero.CurrentQuest.CurrentQuestTimer < 1 ? 1 : 0) + " seconds remaining</color>";
         else
-            return Math.Round(player.CurrentQuest.CurrentQuestTimer, 0) + " seconds remaining";
+            return Math.Round(Utilities.Hero.CurrentQuest.CurrentQuestTimer, 0) + " seconds remaining";
     }
 }
