@@ -21,7 +21,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
         MapUtilities.onFirstEnter += StealStats;
         MapUtilities.onExitRoom += ResetStats;
 
-        for(int i = 0; i< (int)StolenStats.NB; i++)
+        for (int i = 0; i < (int)StolenStats.NB; i++)
         {
             statsStolen.Add(new List<float>());
         }
@@ -53,7 +53,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
             mob.StatSuckerVFX.GetComponent<VFXStopper>().Duration = 1f;
             mob.StatSuckerVFX.GetComponent<VFXStopper>().PlayVFX();
 
-            if(mob.Stats.HasStat(Stat.HP))
+            if (mob.Stats.HasStat(Stat.HP))
             {
                 hpStolen = (int)(mob.Stats.GetMaxValue(Stat.HP) * stealPourcentage);
             }
@@ -63,7 +63,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
                 atkStolen = mob.Stats.GetValue(Stat.ATK) * stealPourcentage;
             }
 
-            if(mob.Stats.HasStat(Stat.SPEED))
+            if (mob.Stats.HasStat(Stat.SPEED))
             {
                 speedStolen = mob.Stats.GetValue(Stat.SPEED) * stealPourcentage;
             }
@@ -78,19 +78,17 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
             mob.Stats.DecreaseMaxValue(Stat.HP, hpStolen);
             mob.Stats.DecreaseValue(Stat.HP, hpStolen, false);
 
-            hero.Stats.IncreaseValue(Stat.ATK, atkStolen);
-
+            hero.Stats.IncreaseValue(Stat.ATK, atkStolen, clampToMaxValue: false);
             mob.Stats.DecreaseValue(Stat.ATK, atkStolen, false);
 
-            hero.Stats.IncreaseValue(Stat.SPEED, speedStolen);
-
+            hero.Stats.IncreaseValue(Stat.SPEED, speedStolen, clampToMaxValue: false);
             mob.Stats.DecreaseValue(Stat.SPEED, speedStolen, false);
         }
     }
 
     private void ResetStats()
     {
-        if(!hasStolenStats)
+        if (!hasStolenStats)
         {
             foreach (List<float> statsStolenList in statsStolen)
             {
@@ -98,6 +96,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
             }
             return;
         }
+
 
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
 
@@ -108,22 +107,22 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
         }
 
         //protect player from dying when decreasing bonus HP
-        if(hero.Stats.GetValue(Stat.HP) <= 0)
+        if (hero.Stats.GetValue(Stat.HP) <= 0)
         {
             hero.Stats.SetValue(Stat.HP, 1);
         }
 
         foreach (float statStolen in statsStolen[(int)StolenStats.ATK])
         {
-            hero.Stats.DecreaseValue(Stat.ATK, statStolen, false);
+            hero.Stats.DecreaseValue(Stat.ATK, statStolen, false, takeOverloadIntoAccount: true);
         }
 
         foreach (float statStolen in statsStolen[(int)StolenStats.SPD])
         {
-            hero.Stats.DecreaseValue(Stat.SPEED, statStolen, false);
+            hero.Stats.DecreaseValue(Stat.SPEED, statStolen, false, takeOverloadIntoAccount: true);
         }
 
-        foreach(List<float> statsStolenList in statsStolen)
+        foreach (List<float> statsStolenList in statsStolen)
         {
             statsStolenList.Clear();
         }
