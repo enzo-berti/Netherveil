@@ -3,20 +3,21 @@ using UnityEngine;
 public class PressurePlateTrap : MonoBehaviour
 {
     [SerializeField] ParticleSystem vfx;
-    public GameObject[] trapToActivate;
-    private bool canActive = true;
-    public Sound activeSound;
-    public GameObject plateToMove;
+    [SerializeField] private GameObject[] trapToActivate;
+    [SerializeField] private Sound activeSound;
+    [SerializeField] private GameObject plateToMove;
+
+    private bool isPressed = false;
     private Vector3 intialePos;
 
-    private void Start()
+    private void Awake()
     {
         intialePos = plateToMove.transform.position;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (canActive && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
+        if (!isPressed && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
         {
             ActivateTraps();
         }
@@ -24,9 +25,9 @@ public class PressurePlateTrap : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!canActive && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
+        if (isPressed && other.TryGetComponent(out IDamageable damageable) && (damageable as MonoBehaviour).TryGetComponent(out Entity entity) && entity.canTriggerTraps)
         {
-            canActive = true;
+            isPressed = false;
             plateToMove.transform.position = intialePos;
         }
     }
@@ -44,6 +45,6 @@ public class PressurePlateTrap : MonoBehaviour
         plateToMove.transform.position = new Vector3(intialePos.x, intialePos.y - .1f, intialePos.z);
         vfx.Play();
         activeSound.Play(transform.position);
-        canActive = false;
+        isPressed = true;
     }
 }
