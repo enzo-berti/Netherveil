@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class DialogueTreeRunner : MonoBehaviour
@@ -312,11 +313,34 @@ public class DialogueTreeRunner : MonoBehaviour
         dialogueMesh.text = string.Empty;
         isRunning = true;
         isLaunched = true;
-        foreach (var letter in dialogue)
+        for(int i = 0; i < dialogue.Length; i++)
         {
+            string word = dialogue[i].ToString();
+            if(word == "<")
+            {
+                i++;
+                char nextChar = dialogue[i];
+                word += nextChar;
+                while (nextChar != '>')
+                {
+                    i++;
+                    nextChar = dialogue[i];
+                    word += nextChar;
+                }
+            }
             yield return new WaitForSeconds(letterDelay);
-            dialogueMesh.text += letter;
+            dialogueMesh.text += word;
         }
+        //foreach (var letter in dialogue)
+        //{
+        //    string word = letter.ToString();
+        //    if(letter == '<')
+        //    {
+
+        //    }
+        //    yield return new WaitForSeconds(letterDelay);
+        //    dialogueMesh.text += word;
+        //}
         isRunning = false;
         dialogueMesh.text = dialogue;
         if (tree.currentNode is ChoiceDialogueNode)

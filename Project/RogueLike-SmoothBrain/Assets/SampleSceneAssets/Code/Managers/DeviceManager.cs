@@ -23,6 +23,8 @@ public class DeviceManager : MonoBehaviour
     bool canSwitchDevice = true;
     readonly float TIMER_SWITCH_DEVICE = 0.25f;
 
+    public static bool ForceMouseInvisible = false;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Load()
     {
@@ -158,8 +160,11 @@ public class DeviceManager : MonoBehaviour
                 debugText.SetText("KB");
             }
             //should be confined here but for debug reasons we'll put None
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (!ForceMouseInvisible)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
             playerInput.FindActionMap("Gamepad", throwIfNotFound: true).Disable();
             playerInput.FindActionMap("Keyboard", throwIfNotFound: true).Enable();
             DisableGameplayInputsIfNecessary();
@@ -172,7 +177,7 @@ public class DeviceManager : MonoBehaviour
 
     private static void DisableGameplayInputsIfNecessary()
     {
-        if (Utilities.Player != null)
+        if (Utilities.Player != null && Utilities.PlayerInput.IsSpawning)
         {
             Utilities.PlayerInput.DisableGameplayInputs();
         }
