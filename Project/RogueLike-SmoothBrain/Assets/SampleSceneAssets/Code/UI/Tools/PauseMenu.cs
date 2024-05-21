@@ -74,6 +74,7 @@ public class PauseMenu : MonoBehaviour
         EventSystem.current.gameObject.SetActive(false);
         Time.timeScale = 1f;
         LevelLoader.current.LoadScene("MainMenu", true);
+        AudioManager.Instance.ResumeAllSounds();
     }
 
     public void Quit()
