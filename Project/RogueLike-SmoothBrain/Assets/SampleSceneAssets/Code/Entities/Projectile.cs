@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour, IProjectile
@@ -6,6 +7,7 @@ public abstract class Projectile : MonoBehaviour, IProjectile
     [SerializeField] protected int damage = 5;
     [SerializeField] protected float speed = 30f;
     [SerializeField] protected float lifeTime = 5f;
+    public static event Action<IDamageable, IAttacker> OnProjectileHit;
 
     public enum DamageState
     {
@@ -40,6 +42,7 @@ public abstract class Projectile : MonoBehaviour, IProjectile
         IDamageable damageableObject = other.GetComponent<IDamageable>();
         if (damageableObject != null)
         {
+            OnProjectileHit?.Invoke(damageableObject, null);
             damageableObject.ApplyDamage(damage, null);
 
             if (elementalDamage != DamageState.NORMAL && TryGetComponent<Entity>(out var entity))
