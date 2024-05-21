@@ -40,17 +40,29 @@ public class Stats
     }
 
     /// <summary>
-    /// Get value of a stat, if there is a coeff, returns value * coeff ( After coeff, value can be grater than max value )
+    /// Get value of a stat, if there is a coeff, returns value * coeff
     /// </summary>
     /// <param name="info"></param>
     /// <returns></returns>
-    public float GetValue(Stat info)
+    public float GetValue(Stat info, bool isFinalResultClampedToMax = true)
     {
         foreach (StatInfo stat in stats)
         {
             if (stat.stat == info)
             {
                 float coeff = stat.hasCoeff ? stat.coeff : 1;
+                if(isFinalResultClampedToMax)
+                {
+                    if(stat.hasMaxStat)
+                    {
+                        return Mathf.Min(stat.value * coeff, stat.maxValue);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Can't find max value for {info} in {name}");
+                        return stat.value * coeff;
+                    }
+                }
                 return stat.value * coeff;
             }
         }
