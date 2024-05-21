@@ -172,7 +172,7 @@ public class DeviceManager : MonoBehaviour
 
     private static void DisableGameplayInputsIfNecessary()
     {
-        if (Utilities.Player != null)
+        if (Utilities.Player != null && Utilities.PlayerInput.IsSpawning)
         {
             Utilities.PlayerInput.DisableGameplayInputs();
         }
