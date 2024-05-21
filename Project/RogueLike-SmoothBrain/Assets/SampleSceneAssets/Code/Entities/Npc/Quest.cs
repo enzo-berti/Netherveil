@@ -182,8 +182,6 @@ public abstract class Quest : ISavable
 
     public virtual void LoadSave()
     {
-        // Quest informations need to be load outside of quest to be able to construct the class correctly
-
         // Quest values
         CurrentQuestTimer = SaveManager.saveData.questTimer;
     }
@@ -204,6 +202,7 @@ public abstract class Quest : ISavable
         quest.CorruptionModifierValue = quest.Datas.CorruptionModifierValue;
         quest.difficulty = quest.Datas.HasDifferentGrades ? (QuestDifficulty)difficulty : QuestDifficulty.MEDIUM;
         InitDescription(ref quest.Datas.Description);
+
         return quest;
     }
 
@@ -223,6 +222,7 @@ public abstract class Quest : ISavable
         quest.difficulty = difficulty;
         InitDescription(ref quest.Datas.Description);
         quest.LoadSave();
+
         return quest;
     }
 

@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ThunderLink : ItemEffect, IPassiveItem
 {
@@ -19,6 +18,11 @@ public class ThunderLink : ItemEffect, IPassiveItem
     readonly float chance = 0.2f;
     bool allSpearsSet = false;
     public int displayDamages;
+
+    public ThunderLink()
+    {
+        displayDamages = (int)(2f * Utilities.Hero.Stats.GetCoeff(Stat.ATK));
+    }
 
     public void OnRetrieved()
     {

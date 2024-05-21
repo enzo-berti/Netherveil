@@ -27,19 +27,12 @@ namespace Map.Generation
 
         private void Awake()
         {
-            //if (SaveManager.HasData)
-            //{
-            //    LoadSave();
-            //}
-            //else
-            //{
-                Seed.RandomizeSeed();
+            Seed.RandomizeSeed();
 
-                if (!isRandom)
-                {
-                    Seed.Set(seed);
-                }
-            //}
+            if (!isRandom)
+            {
+                Seed.Set(seed);
+            }
 
             seed = Seed.seed;
             SaveManager.saveData.seed = Seed.seed;

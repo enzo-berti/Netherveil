@@ -1,5 +1,3 @@
-using System.IO;
-
 public class BeastHunter : Quest
 {
     int currentNumber = 0;

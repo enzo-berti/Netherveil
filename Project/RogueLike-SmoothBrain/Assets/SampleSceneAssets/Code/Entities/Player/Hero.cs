@@ -665,7 +665,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         if (saveData.questId.Any())
         {
             CurrentQuest = Quest.LoadClassWithSave(saveData.questId, saveData.questDifficulty, saveData.talkerType, saveData.talkerGrade);
+            CurrentQuest.LoadSave();
         }
+
         Inventory.LoadSave();
 
         stats.SetValue(Stat.CORRUPTION, saveData.statCorruption);
