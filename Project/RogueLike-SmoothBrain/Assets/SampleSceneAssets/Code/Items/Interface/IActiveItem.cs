@@ -33,6 +33,10 @@ public interface IActiveItem : IItem
     {
         ItemEffect effect = this as ItemEffect;
         effect.CurrentEnergy += 1;
+        if(effect.CurrentEnergy > Cooldown)
+        {
+            effect.CurrentEnergy = Cooldown;
+        }
         OnActiveItemCooldownUpdatedRoomBased?.Invoke(effect);
     }
 }

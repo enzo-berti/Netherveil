@@ -9,6 +9,10 @@ public class MobDeathBehaviour : StateMachineBehaviour
     {
         if(stateInfo.normalizedTime > 0.9f)
         {
+            if (stateInfo.normalizedTime < 0.9f + Time.deltaTime)
+            {
+                AudioManager.Instance.PlaySound(AudioManager.Instance.DeathVFXSFX, animator.transform.parent.position);
+            }
             GameObject.Destroy(GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Death"), animator.transform.parent.position, Quaternion.identity), 3f);
         }
     }

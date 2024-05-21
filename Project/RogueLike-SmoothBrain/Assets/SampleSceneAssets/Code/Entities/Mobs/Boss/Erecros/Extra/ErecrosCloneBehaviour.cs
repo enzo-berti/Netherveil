@@ -9,6 +9,8 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
     CameraUtilities cameraUtilities;
 
+    [SerializeField] Animator animator;
+
     [SerializeField] Collider attackHitbox;
     [SerializeField] Sound explosionSound;
 
@@ -67,6 +69,13 @@ public class ErecrosCloneBehaviour : MonoBehaviour
                 player.ApplyDamage(10, attacker);
                 playerHit = true;
             }
+
+            if (timer >= explosionDuration - 0.4f)
+            {
+                animator.ResetTrigger("Explode");
+                animator.SetTrigger("Explode");
+            }
+
         } while (timer < explosionDuration && !playerHit);
 
         yield return null;
