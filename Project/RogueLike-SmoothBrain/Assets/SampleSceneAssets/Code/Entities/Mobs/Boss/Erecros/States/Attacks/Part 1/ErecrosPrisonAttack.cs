@@ -21,8 +21,10 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
-    float torusRadius = 0f;
+    //float torusRadius = 0f;
     float dashDistance;
+    float prisonRadius;
+    Vector3 prisonCenter;
 
     GameObject torus;
 
@@ -40,8 +42,15 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-        torus = Object.Instantiate(Context.PrisonTorusPrefab, Context.Player.transform.position + Vector3.up, Quaternion.identity);
-        torusRadius = torus.GetComponent<Renderer>().bounds.size.x / 2f;
+        //torus = Object.Instantiate(Context.PrisonTorusPrefab, Context.Player.transform.position + Vector3.up, Quaternion.identity);
+        //torusRadius = torus.GetComponent<Renderer>().bounds.size.x / 2f;
+
+        prisonCenter = Context.Player.transform.position;
+
+        Context.PrisonVFX.transform.position = prisonCenter;
+        Context.PrisonVFX.Play();
+
+        prisonRadius = Context.PrisonVFX.GetFloat("Radius");
 
         Context.Agent.isStopped = true;
 
@@ -51,10 +60,10 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         for (int i = 0; i < clonesAmount; i++)
         {
-            Vector3 spawnVector = (Context.transform.position - Context.Player.transform.position).normalized * torusRadius;
+            Vector3 spawnVector = (Context.transform.position - Context.Player.transform.position).normalized * prisonRadius;
             spawnVector = Quaternion.AngleAxis(360f / clonesAmount * i, Vector3.up) * spawnVector;
 
-            GameObject clone = Object.Instantiate(Context.ClonePrefab, Context.Player.transform.position + spawnVector, Context.transform.rotation);
+            GameObject clone = Object.Instantiate(Context.ClonePrefab, prisonCenter + spawnVector, Context.transform.rotation);
 
             FacePlayer(clone.transform);
             clones.Add(clone.transform);
@@ -84,6 +93,12 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
             attackEnded = true;
         }
 
+        Vector3 prisonCenterToPlayer = Context.Player.transform.position - prisonCenter;
+        if (prisonCenterToPlayer.sqrMagnitude > prisonRadius * prisonRadius)
+        {
+            Context.Player.transform.position = prisonCenter + prisonCenterToPlayer.normalized * prisonRadius;
+        }
+
         if (clones.Count > 0)
         {
             if (dashDistance == 0f)
@@ -103,7 +118,7 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
                 }
             }
 
-            if (dashDistance > torusRadius * 2f)
+            if (dashDistance > prisonRadius * 2f)
             {
                 Object.Destroy(clones[0].gameObject);
                 clones.RemoveAt(0);

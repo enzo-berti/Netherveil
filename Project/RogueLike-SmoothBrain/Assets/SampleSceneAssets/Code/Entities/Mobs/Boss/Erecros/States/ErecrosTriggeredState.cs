@@ -72,12 +72,18 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
 
     List<Type> GetAvailableAttacks()
     {
+        float distanceToPlayer = (Context.transform.position - Context.Player.transform.position).magnitude;
+
         List<Type> availableAttacks = new()
         {
             typeof(ErecrosTriangleDashAttack),
-            //typeof(ErecrosSummoningAttack),
             typeof(ErecrosTeleportAttack)
         };
+
+        if (distanceToPlayer >= 3f && UnityEngine.Random.Range(0, 10) < 5)
+        {
+            availableAttacks.Add(typeof(ErecrosSummoningAttack));
+        }
 
         if (Context.CurrentPart == 1)
         {
