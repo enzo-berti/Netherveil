@@ -79,11 +79,9 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
             mob.Stats.DecreaseValue(Stat.HP, hpStolen, false);
 
             hero.Stats.IncreaseValue(Stat.ATK, atkStolen);
-
             mob.Stats.DecreaseValue(Stat.ATK, atkStolen, false);
 
             hero.Stats.IncreaseValue(Stat.SPEED, speedStolen);
-
             mob.Stats.DecreaseValue(Stat.SPEED, speedStolen, false);
         }
     }
@@ -98,6 +96,7 @@ public class RuneOfEnvy : ItemEffect, IPassiveItem
             }
             return;
         }
+
 
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
 
