@@ -60,6 +60,10 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
             targetPos.Add(Context.transform.position + Context.transform.up * Context.Height + customVector);
             props[i].velocity = (targetPos.Last() - props[i].transform.position).normalized * 20f;
 
+            props[i].GetComponent<ErecrosWeaponBehaviour>().enabled = true;
+
+            Context.Sounds.throwWeapon.Play(Context.transform.position);
+
             onBoss.Add(false);
             launched.Add(false);
         }
@@ -75,6 +79,7 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
             prop.isKinematic = true;
             prop.constraints = RigidbodyConstraints.FreezeAll;
             prop.GetComponent<ErecrosWeaponBehaviour>().Reset();
+            prop.GetComponent<ErecrosWeaponBehaviour>().enabled = false;
         }
 
         Context.AttackCooldown = 1.25f + Random.Range(-0.25f, 0.25f);

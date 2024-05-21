@@ -26,14 +26,11 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         public Sound dash; //
         public Sound clone; //
         public Sound levitation;
-        public Sound prison;
+        public Sound prison; //
         public Sound shieldHit; //
         public Sound shockwave;
         public Sound invocation; //
         public Sound throwWeapon;
-        public Sound weaponHitGround;
-        public Sound weaponHitWall;
-        public Sound weaponFlying;
     }
 
     public enum ErecrosColliders
@@ -68,6 +65,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     Rigidbody[] props;
     List<Collider> propsColliders = new();
 
+    Type lastAttack = null;
+
     // CINEMATICS
     [SerializeField] private BossCinematic cinematic;
     private bool isInCinematic = false;
@@ -88,6 +87,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public int CurrentPart { get => part; }
     public int CurrentPhase { get => phase; }
     public float Height { get => height - 1.25f; }
+    public Type LastAttack { get => lastAttack; set => lastAttack = value; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
@@ -109,9 +109,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         player = Utilities.Hero;
         initialHP = stats.GetValue(Stat.HP);
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
-
-        part = 1;
-        phase = 2;
 
         props = propsParent.GetComponentsInChildren<Rigidbody>();
 
