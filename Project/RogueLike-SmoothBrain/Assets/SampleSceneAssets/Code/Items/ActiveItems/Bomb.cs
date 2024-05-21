@@ -44,7 +44,7 @@ public class Bomb : ItemEffect, IActiveItem
         explodingBomb.SetTimeToExplode(0.5f * 1.5f);
 
         explodingBomb.SetBlastDamages(damages);
-        explodingBomb.Activate();
+        explodingBomb.Activate(true);
         bombIsThrow = false;
     }
 }

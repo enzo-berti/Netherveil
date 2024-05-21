@@ -159,6 +159,11 @@ public abstract class Mobs : Entity
     protected override void Update()
     {
         base.Update();
+        // C'est bourin mais vas y ça m'a bien soulé
+        if (IsFreeze)
+        {
+            agent.isStopped = true;
+        }
         if (transform.position.y < -100f)
         {
             Destroy(transform.parent.gameObject);
