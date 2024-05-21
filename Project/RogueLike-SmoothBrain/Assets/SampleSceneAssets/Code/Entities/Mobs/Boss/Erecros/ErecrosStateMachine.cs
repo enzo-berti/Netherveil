@@ -26,14 +26,13 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         public Sound dash; //
         public Sound clone; //
         public Sound levitation;
-        public Sound prison;
+        public Sound prison; //
         public Sound shieldHit; //
         public Sound shockwave;
         public Sound invocation; //
-        public Sound throwWeapon;
-        public Sound weaponHitGround;
-        public Sound weaponHitWall;
-        public Sound weaponFlying;
+        public Sound throwWeapon; //
+        public Sound walk;
+        public Sound music;
     }
 
     public enum ErecrosColliders
@@ -52,6 +51,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     float initialHP;
     CameraUtilities cameraUtilities;
 
+    GameObject gameMusic;
+
     float height = 0f;
 
     [SerializeField] int part;
@@ -67,6 +68,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     Rigidbody[] props;
     List<Collider> propsColliders = new();
+
+    Type lastAttack = null;
 
     // CINEMATICS
     [SerializeField] private BossCinematic cinematic;
@@ -88,6 +91,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public int CurrentPart { get => part; }
     public int CurrentPhase { get => phase; }
     public float Height { get => height - 1.25f; }
+    public Type LastAttack { get => lastAttack; set => lastAttack = value; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
@@ -110,15 +114,22 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         initialHP = stats.GetValue(Stat.HP);
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
-        part = 1;
-        phase = 2;
-
         props = propsParent.GetComponentsInChildren<Rigidbody>();
 
         foreach (Rigidbody prop in props)
         {
             propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
         }
+
+        gameMusic = GameObject.FindGameObjectWithTag("GameMusic");
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(false);
+        }
+
+        sounds.music.Play();
+
+        sounds.intro.Play(transform.position);
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
     }
@@ -165,6 +176,9 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         Utilities.Hero.OnKill?.Invoke(this);
 
         if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
+
+        if (gameMusic != null)
+            gameMusic.SetActive(true);
 
         currentState = factory.GetState<ErecrosDeathState>();
     }

@@ -80,6 +80,8 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
 
         RemoveDeadEnemies();
 
+        Context.Sounds.levitation.Play(Context.transform.position);
+
         attackEnded = enemies.Count <= 0f;
     }
 

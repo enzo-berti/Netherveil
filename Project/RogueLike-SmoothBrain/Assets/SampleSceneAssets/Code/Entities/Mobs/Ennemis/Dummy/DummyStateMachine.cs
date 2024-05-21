@@ -15,7 +15,8 @@ public class DummyStateMachine : Mobs, IDummy
         COMBO_FINISH,
         CHARGED_ATTACK,
         DISTANCE_ATTACK,
-        DASH_ATTACK
+        DASH_ATTACK,
+        TRAPS
     }
 
     private int hitHash;

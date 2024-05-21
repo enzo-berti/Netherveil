@@ -47,6 +47,8 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
 
         DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.25f);
         Context.CameraUtilities.ShakeCamera(0.3f, 1f, EasingFunctions.EaseInQuint);
+
+        Context.Sounds.shockwave.Play(Context.transform.position);
     }
 
     // This method will be called only once after the last update.
@@ -57,7 +59,7 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
 
         Context.PlayerHit = false;
 
-        Context.AttackCooldown = 1.25f + Random.Range(-0.25f, 0.25f);
+        Context.AttackCooldown = Random.Range(0, 10) < 3 ? 1.25f + Random.Range(-0.25f, 0.25f) : 0f;
     }
 
     // This method will be called every frame.
@@ -77,7 +79,7 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
         {
             pause += Time.deltaTime;
 
-            if (pause >= 1f)
+            if (pause >= 0.25f)
             {
                 attackEnded = true;
             }
