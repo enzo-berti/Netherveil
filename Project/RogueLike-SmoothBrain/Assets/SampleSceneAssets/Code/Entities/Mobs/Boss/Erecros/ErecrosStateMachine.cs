@@ -129,6 +129,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
         sounds.music.Play();
 
+        sounds.intro.Play(transform.position);
+
         height = GetComponentInChildren<Renderer>().bounds.size.y;
     }
 
