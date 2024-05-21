@@ -32,6 +32,8 @@ public struct SaveData
     public QuestTalker.TalkerGrade talkerGrade;
     public int questEvolution;
 
+    public bool hasData;
+
     public readonly void Save(string filePath)
     {
         using var stream = File.Open(filePath, FileMode.Create);
@@ -78,6 +80,8 @@ public struct SaveData
 
     public void Load(string filePath)
     {
+        hasData = false;
+
         using var stream = File.Open(filePath, FileMode.Open);
         using var reader = new BinaryReader(stream, Encoding.UTF8, false);
 
@@ -117,6 +121,8 @@ public struct SaveData
             talkerType = (QuestTalker.TalkerType)Enum.Parse(typeof(QuestTalker.TalkerType), reader.ReadString());
             talkerGrade = (QuestTalker.TalkerGrade)Enum.Parse(typeof(QuestTalker.TalkerGrade), reader.ReadString());
         }
+
+        hasData = true;
     }
 }
 
@@ -126,7 +132,6 @@ static public class SaveManager
     static public event OnSave onSave;
 
     static public string DirectoryPath { private set; get; } = string.Empty;
-    static public bool HasData { private set; get; } = false;
     static public SaveData saveData;
 
     static public void UnselectSave()
@@ -155,8 +160,6 @@ static public class SaveManager
         catch (Exception e)
         {
             Debug.LogException(e);
-
-            HasData = false; // can't load correctly the datas
             // TODO : destroy corrupted datas
         }
     }
