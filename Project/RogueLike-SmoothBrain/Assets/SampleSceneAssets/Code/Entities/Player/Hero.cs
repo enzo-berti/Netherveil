@@ -516,8 +516,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         if (CurrentAlignmentStep <= -2 && !isLoading)
         {
             StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
-            "<color=yellow><b>Ezreal Attack</b></color>",
-            $"When being over 75% HP and doing the finisher of you basic attack combo, you can throw a light arc that will do damages to all enemies touched during travel.",
+            "<color=yellow><b>Light Arc</b></color>",
+            $"When being over <color=#a52a2aff>{playerInput.EZREAL_ATTACK_THRESHOLD * 100f}% HP</color> and doing " +
+            $"the <color=#a52a2aff>finisher</color> of you basic attack combo, you can throw " +
+            $"a <color=#a52a2aff>light arc</color> that will do " +
+            $"{(int)((Utilities.Hero.Stats.GetValueWithoutCoeff(Stat.ATK) + Utilities.PlayerController.FINISHER_DAMAGES) * Utilities.Hero.Stats.GetCoeff(Stat.ATK))} damages to all enemies touched during travel.",
             "BenedictionVideo",
             "SpecialAbilityBackgroundBenediction"));
         }

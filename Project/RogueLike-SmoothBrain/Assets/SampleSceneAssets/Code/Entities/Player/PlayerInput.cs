@@ -47,6 +47,7 @@ public class PlayerInput : MonoBehaviour
     float chargedAttackScaleSize = 0f;
     float chargedAttackVFXMaxSize = 0f;
     bool hasLaunchBlink = false;
+    public readonly float EZREAL_ATTACK_THRESHOLD = 0.75f;
     public float ChargedAttackCoef { get; private set; } = 0f;
     public bool LaunchedChargedAttack { get; private set; } = false;
     readonly List<Collider> dashAttackAlreadyAttacked = new();
@@ -582,7 +583,7 @@ public class PlayerInput : MonoBehaviour
     private bool CanLaunchEzrealAttack()
     {
         return hero.CurrentAlignmentStep <= -2 &&
-            hero.Stats.GetValue(Stat.HP) / hero.Stats.GetMaxValue(Stat.HP) >= 0.75f &&
+            hero.Stats.GetValue(Stat.HP) / hero.Stats.GetMaxValue(Stat.HP) >= EZREAL_ATTACK_THRESHOLD &&
             controller.ComboCount == controller.MAX_COMBO_COUNT - 1;
     }
     #endregion
