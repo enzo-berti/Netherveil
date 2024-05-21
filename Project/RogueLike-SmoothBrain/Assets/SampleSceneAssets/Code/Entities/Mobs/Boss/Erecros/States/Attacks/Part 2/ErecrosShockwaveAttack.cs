@@ -48,8 +48,6 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
         Context.Animator.ResetTrigger("Shockwave");
         Context.Animator.SetTrigger("Shockwave");
 
-        Context.Sounds.shockwave.Play(Context.transform.position);
-
         Context.StartCoroutine(ShockwaveCoroutine());
     }
 
@@ -84,6 +82,8 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
 
         DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.25f);
         Context.CameraUtilities.ShakeCamera(0.3f, 1f, EasingFunctions.EaseInQuint);
+
+        Context.Sounds.shockwave.Play(Context.transform.position);
 
         while (angle < 360)
         {

@@ -26,6 +26,8 @@ public class ExplodingBomb : MonoBehaviour
     private Coroutine explosionRoutine;
     IAttacker launcher = null;
 
+    bool damageToEnemy = false;
+
     public enum Type
     {
         ITEM,
@@ -86,9 +88,10 @@ public class ExplodingBomb : MonoBehaviour
         StartCoroutine(ThrowToPosCoroutine(pos, throwTime));
     }
 
-    public void Activate()
+    public void Activate(bool _damageToEnemy = false)
     {
         //isActive = true;
+        damageToEnemy = _damageToEnemy;
         StartCoroutine(ActivateRoutine());
     }
 
@@ -100,6 +103,7 @@ public class ExplodingBomb : MonoBehaviour
 
     public void Explode()
     {
+        
         if (explosionRoutine == null)
             explosionRoutine = StartCoroutine(ExplodeRoutine());
     }
@@ -107,8 +111,19 @@ public class ExplodingBomb : MonoBehaviour
     private IEnumerator ExplodeRoutine()
     {
         Physics.OverlapSphere(this.transform.position, BlastDiameter / 2f - BlastDiameter / 8f, damageLayer)
-            .Select(entity => entity.GetComponent<Hero>())
-            .Where(entity => entity != null)
+            .Select(entity => entity.GetComponent<IDamageable>())
+            .Where((entity) =>
+            {
+                if(damageToEnemy)
+                {
+                    return entity != null && (entity as Mobs);
+                }
+                else
+                {
+                    return entity != null && (entity as Hero);
+                }
+            }
+            )
             .ToList()
             .ForEach(currentEntity =>
             {

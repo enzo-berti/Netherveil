@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Freeze : ConstantStatus
 {
-    float baseAgentSpeed;
     Material freezeMat = null;
     public Freeze(float _duration, float _chance) : base(_duration, _chance)
     {
@@ -23,9 +22,12 @@ public class Freeze : ConstantStatus
     {
         if (target != null)
         {
-            baseAgentSpeed = target.Stats.GetValue(Stat.SPEED);
            // target.Stats.SetValue(Stat.SPEED, 0);
             target.isFreeze += 1;
+            if (target as Mobs)
+            {
+                (target as Mobs).Agent.isStopped = true;
+            }
         }
     }
 
@@ -34,8 +36,12 @@ public class Freeze : ConstantStatus
         if(target == null)
             return;
 
-        target.Stats.SetValue(Stat.SPEED, baseAgentSpeed);
         target.isFreeze -= 1;
+        if(target as Mobs)
+        {
+            (target as Mobs).Agent.isStopped = false;
+        }
+        
         target.GetComponentInChildren<Animator>().speed = 1;
         Renderer[] renderers = target.GetComponentsInChildren<SkinnedMeshRenderer>();
 

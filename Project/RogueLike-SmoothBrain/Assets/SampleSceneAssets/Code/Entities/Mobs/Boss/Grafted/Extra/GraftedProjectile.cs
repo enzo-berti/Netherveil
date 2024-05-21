@@ -8,6 +8,7 @@ public class GraftedProjectile : Projectile
     Vector3 direction;
     GraftedStateMachine grafted;
     float tempSpeed = -1;
+    public Sound explosionSound;
 
     [SerializeField] List<GameObject> projectileList = new List<GameObject>();
 
@@ -67,6 +68,7 @@ public class GraftedProjectile : Projectile
         {
             if (((1 << other.gameObject.layer) & LayerMask.GetMask("Map")) != 0 && !other.isTrigger)
             {
+                explosionSound.Play(transform.position);
                 Destroy(gameObject);
                 Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
                 return;
@@ -87,6 +89,7 @@ public class GraftedProjectile : Projectile
             }
 
             grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
+            explosionSound.Play(transform.position);
             Destroy(gameObject);
             Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
         }

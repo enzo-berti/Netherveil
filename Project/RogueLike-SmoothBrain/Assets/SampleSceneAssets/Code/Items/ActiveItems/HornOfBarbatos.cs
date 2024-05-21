@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class HornOfBarbatos : ItemEffect, IActiveItem
 {
-    public float Cooldown { get; set; } = 35f;
+    private IActiveItem activeItem { get => this; }
+    public float Cooldown { get; set; } = 1f;
+    public bool TimeBased { get; set; } = false;
 #pragma warning disable IDE0052 // Supprimer les membres privés non lus
     private float increaseValue = 0.2f;
     private readonly float displayValue;
@@ -23,11 +25,13 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     {
         displayValue = Cooldown;
         MapUtilities.onExitRoom += ResetStat;
+        MapUtilities.onExitRoom += activeItem.WaitToUseRoom;
     }
 
     ~HornOfBarbatos()
     {
         MapUtilities.onExitRoom -= ResetStat;
+        MapUtilities.onExitRoom -= activeItem.WaitToUseRoom;
     }
 
     public void Activate()

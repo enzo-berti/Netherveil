@@ -110,6 +110,8 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
             else if (!launched[i])
             {
                 props[i].transform.position = new Vector3(props[i].transform.position.x, targetPos[i].y + Mathf.Sin(5f * Time.time + i * 5f) * 0.25f, props[i].transform.position.z);
+
+                LookAtTarget(props[i].transform, props[i].transform.position + Vector3.forward, 10f);
             }
             else if (!props[i].GetComponent<ErecrosWeaponBehaviour>().hitMap)
             {
@@ -117,7 +119,7 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
                 {
                     Context.AttackCollide(activeColliders);
                 }
-                LookAtTarget(props[i].transform, props[i].transform.position + props[i].velocity);
+                LookAtTarget(props[i].transform, props[i].transform.position + props[i].velocity, 10f);
             }
             else
             {
@@ -202,11 +204,12 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
 
         props[i].velocity = (targetPos[i] - props[i].transform.position).normalized * 10f;
 
-        LookAtTarget(props[i].transform, targetPos[i]);
+        //LookAtTarget(props[i].transform, targetPos[i]);
+
+        LookAtTarget(props[i].transform, props[i].transform.position * 2 - targetPos[i]);
 
         if (Vector3.Distance(props[i].transform.position, targetPos[i]) <= 0.1f)
         {
-            props[i].transform.LookAt(props[i].transform.position + Context.transform.forward);
             props[i].transform.parent = Context.transform;
             props[i].velocity = Vector3.zero;
             onBoss[i] = true;
