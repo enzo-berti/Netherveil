@@ -84,7 +84,7 @@ public class QuestHUD : MonoBehaviour
         Quest.OnQuestUpdated -= UpdateUI;
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         bool hasQuest = Utilities.Hero.CurrentQuest != null;
 
