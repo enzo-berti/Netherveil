@@ -41,7 +41,7 @@ public class PressurePlateTrap : MonoBehaviour
             }
         }
 
-        plateToMove.transform.position = new Vector3(intialePos.x, intialePos.y - .2f, intialePos.z);
+        plateToMove.transform.position = new Vector3(intialePos.x, intialePos.y - .1f, intialePos.z);
         vfx.Play();
         activeSound.Play(transform.position);
         canActive = false;
