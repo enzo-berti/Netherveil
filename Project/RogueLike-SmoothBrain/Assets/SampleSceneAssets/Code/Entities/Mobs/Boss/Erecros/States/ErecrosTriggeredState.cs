@@ -89,7 +89,10 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         {
             if (Context.CurrentPhase == 2)
             {
-                availableAttacks.Add(typeof(ErecrosPrisonAttack));
+                if (distanceToPlayer > Context.PrisonVFX.GetFloat("Radius"))
+                {
+                    availableAttacks.Add(typeof(ErecrosPrisonAttack));
+                }
             }
         }
         else if (Context.CurrentPart == 2)
