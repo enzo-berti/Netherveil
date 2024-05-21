@@ -56,8 +56,7 @@ public class PlayerInput : MonoBehaviour
 
     //used to cancel queued attacks when pressing another button during attack sequence
     bool ForceReturnToMove = false;
-
-    public bool GameplayInputsDisabled { get; private set; } = false;
+    public bool IsSpawning { get; private set; } = false;
 
     [Header("Easing")]
     [SerializeField] EasingFunctions.EaseName easeUnzoom;
@@ -87,11 +86,13 @@ public class PlayerInput : MonoBehaviour
         PauseMenu.OnPause += DisableGameplayInputs;
         PauseMenu.OnUnpause += EnableGameplayInputs;
         MapUtilities.onFinishStage += RetrieveSpear;
+        IsSpawning = true;
 
         // Wait 2.8 seconds before move to Start cinematic
         DisableGameplayInputs();
         hero.State = (int)Hero.PlayerState.MOTIONLESS;
         yield return new WaitForSeconds(2.8f);
+        IsSpawning = false;
         EnableGameplayInputs();
         hero.State = (int)Entity.EntityState.MOVE;
     }
@@ -369,17 +370,20 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    private static void Pause(InputAction.CallbackContext ctx)
+    private void Pause(InputAction.CallbackContext ctx)
     {
+        if (IsSpawning)
+            return;
+
         HudHandler.current.PauseMenu.Toggle();
     }
 
-    private static void ToggleQuest(InputAction.CallbackContext ctx)
+    private void ToggleQuest(InputAction.CallbackContext ctx)
     {
         HudHandler.current.QuestHUD.Toggle();
     }
 
-    private static void ToggleMap(InputAction.CallbackContext ctx)
+    private void ToggleMap(InputAction.CallbackContext ctx)
     {
         HudHandler.current.MapHUD.Toggle();
     }
@@ -654,8 +658,6 @@ public class PlayerInput : MonoBehaviour
 
     public void DisableGameplayInputs()
     {
-        GameplayInputsDisabled = true;
-
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Move"].Disable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Basic Attack"].Disable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Disable();
@@ -681,8 +683,6 @@ public class PlayerInput : MonoBehaviour
 
     public void EnableGameplayInputs()
     {
-        GameplayInputsDisabled = false;
-
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Move"].Enable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Basic Attack"].Enable();
         playerInputMap.actions.FindActionMap("Gamepad", throwIfNotFound: true)["Dash"].Enable();
