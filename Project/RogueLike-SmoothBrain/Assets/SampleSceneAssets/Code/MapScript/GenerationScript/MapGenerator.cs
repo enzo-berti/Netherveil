@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Map.Generation
 {
-    public class MapGenerator : MonoBehaviour
+    public class MapGenerator : MonoBehaviour, ISavable
     {
         // monkey variables
         [SerializeField] private Material miniMapMat;
@@ -17,24 +17,25 @@ namespace Map.Generation
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
 
         // Map variables
-        public List<int> roomClearId = new List<int>();
+        public List<int> roomClearId;
         private int iterationSeedRegister = 0;
         public int Stage { get; private set; } = 0;
 
         private void Awake()
         {
+            LoadSave();
+
             Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
 
-            //SaveManager.onSave += Save;
+            SaveManager.onSave += Save;
         }
 
         private void LateUpdate()
         {
             if (generate)
             {
-                ResetMapDatas();
-
                 generate = false;
+                ResetMapDatas();
                 Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
             }
         }
@@ -42,6 +43,23 @@ namespace Map.Generation
         private void OnDestroy()
         {
             MapUtilities.ResetActions();
+        }
+
+        public void Save(ref SaveData save)
+        {
+            save.roomCleareds = roomClearId;
+            save.seedIteration = iterationSeedRegister;
+        }
+
+        public void LoadSave()
+        {
+            if (!SaveManager.saveData.hasData)
+            {
+                return;
+            }
+
+            roomClearId = SaveManager.saveData.roomCleareds;
+            Seed.Iterate(SaveManager.saveData.seedIteration);
         }
 
         private void ResetMapDatas()
