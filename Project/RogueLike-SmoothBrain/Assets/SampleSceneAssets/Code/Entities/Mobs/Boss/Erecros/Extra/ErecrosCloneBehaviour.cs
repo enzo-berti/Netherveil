@@ -9,7 +9,7 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
     CameraUtilities cameraUtilities;
 
-    [SerializeField] Animator animator;
+    public Animator animator;
 
     [SerializeField] Collider attackHitbox;
     [SerializeField] Sound explosionSound;
@@ -37,12 +37,25 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
         Object.Destroy(transform.parent.gameObject, timeToExplode + explosionDuration);
 
+        Vector3 direction = default;
+
         while (timer < timeToExplode)
         {
             timer += Time.deltaTime;
 
-            LookAtPlayer(player.transform);
-            transform.position += (player.transform.position - transform.position).normalized * 5f * Time.deltaTime;
+
+            if (timer >= 0.8)
+            {
+                transform.position += direction.normalized * 15f * Time.deltaTime;
+
+                animator.ResetTrigger("Dash");
+                animator.SetTrigger("Dash");
+            }
+            else
+            {
+                LookAtPlayer(player.transform);
+                direction = player.transform.position - transform.position;
+            }
 
             yield return null;
         }
@@ -70,12 +83,7 @@ public class ErecrosCloneBehaviour : MonoBehaviour
                 playerHit = true;
             }
 
-            if (timer >= explosionDuration - 0.4f)
-            {
-                animator.ResetTrigger("Explode");
-                animator.SetTrigger("Explode");
-            }
-
+            yield return null;
         } while (timer < explosionDuration && !playerHit);
 
         yield return null;
