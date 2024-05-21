@@ -115,6 +115,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     const float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
     float takeDamageCoeff = 1f;
 
+    readonly float DAMOCLES_SWORD_DURATION = 3f;
+    readonly float DAMOCLES_SWORD_TRIGGER_PERCENT = 0.3f;
+
     protected override void Start()
     {
         base.Start();
@@ -510,10 +513,14 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     private void BenedictionUpgrade()
     {
-        //if (CurrentAlignmentStep <= -2 && !isLoading)
-        //{
-        //    StartCoroutine(OpenSpecialAbilityTab());
-        //}
+        if (CurrentAlignmentStep <= -2 && !isLoading)
+        {
+            StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
+            "<color=yellow><b>Ezreal Attack</b></color>",
+            $"When being over 75% HP and doing the finisher of you basic attack combo, you can throw a light arc that will do damages to all enemies touched during travel.",
+            "BenedictionVideo",
+            "SpecialAbilityBackgroundBenediction"));
+        }
         Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
         Stats.IncreaseValue(Stat.HP, BENEDICTION_HP_STEP);
     }
@@ -551,10 +558,16 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     private void CorruptionUpgrade()
     {
-        //if (CurrentAlignmentStep >= 2 && !isLoading)
-        //{
-        //    StartCoroutine(OpenSpecialAbilityTab());
-        //}
+        if (CurrentAlignmentStep >= 2 && !isLoading)
+        {
+            StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
+            "<color=#44197c><b>Fate's Blade</b></color>",
+            $"When hitting an enemy, you have {DAMOCLES_SWORD_TRIGGER_PERCENT * 100f}% chance to apply <color=purple><b>Fate's Blade</b></color>, " +
+            $"that will create a <color=purple>sword</color> on top of the target that will <color=purple>fall</color> on him after {DAMOCLES_SWORD_DURATION} seconds, " +
+            $"dealing <color=purple>{(int)(Utilities.Hero.Stats.GetValue(Stat.ATK) * 2)}</color> AOE Damages.",
+            "CorruptionVideo",
+            "SpecialAbilityBackgroundCoruption"));
+        }
         takeDamageCoeff += CORRUPTION_TAKE_DAMAGE_COEF_STEP;
         Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
         Stats.IncreaseValue(Stat.ATK, CORRUPTION_ATK_STEP);
