@@ -15,6 +15,8 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
     }
     [SerializeField] WeaponSound sounds;
 
+    [HideInInspector] public bool ignoreCollisions = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +27,16 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
 
     private void Update()
     {
+        if (transform.position.y <= -0.1f && !hitMap && !ignoreCollisions)
+        {
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            rb.velocity = Vector3.zero;
 
+            sounds.flying.Stop();
+            sounds.hitmap.Play(transform.position);
+            hitMap = true;
+        }
     }
 
     public void PlayFlying()
@@ -40,12 +51,29 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        rb.isKinematic = true;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        rb.velocity = Vector3.zero;
+        if (!hitMap && !ignoreCollisions)
+        {
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            rb.velocity = Vector3.zero;
 
-        sounds.flying.Stop();
-        sounds.hitmap.Play(transform.position);
-        hitMap = true;
+            sounds.flying.Stop();
+            sounds.hitmap.Play(transform.position);
+            hitMap = true;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (!hitMap && !ignoreCollisions)
+        {
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            rb.velocity = Vector3.zero;
+
+            sounds.flying.Stop();
+            sounds.hitmap.Play(transform.position);
+            hitMap = true;
+        }
     }
 }
