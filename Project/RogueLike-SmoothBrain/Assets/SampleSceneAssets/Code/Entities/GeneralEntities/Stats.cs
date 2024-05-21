@@ -44,14 +44,49 @@ public class Stats
     /// </summary>
     /// <param name="info"></param>
     /// <returns></returns>
-    public float GetValue(Stat info)
+    public float GetValue(Stat info, bool isFinalResultClampedToMax = true)
     {
         foreach (StatInfo stat in stats)
         {
             if (stat.stat == info)
             {
                 float coeff = stat.hasCoeff ? stat.coeff : 1;
+                if(isFinalResultClampedToMax)
+                {
+                    if(stat.hasMaxStat)
+                    {
+                        return Mathf.Min(stat.value * coeff, stat.maxValue);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Can't find max value for {info} in {name}");
+                        return stat.value * coeff;
+                    }
+                }
                 return stat.value * coeff;
+            }
+        }
+
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+
+    public float GetValueClampedWithCoeff(Stat info)
+    {
+        return Mathf.Min(GetValue(info), GetMaxValue(info));
+    }
+    /// <summary>
+    /// Returns straight value
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
+    public float GetValueWithoutCoeff(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.value;
             }
         }
 
@@ -96,24 +131,7 @@ public class Stats
         Debug.LogWarning($"Can't find {info} in {name}");
         return -1.0f;
     }
-    /// <summary>
-    /// Returns straight value
-    /// </summary>
-    /// <param name="info"></param>
-    /// <returns></returns>
-    public float GetValueWithoutCoeff(Stat info)
-    {
-        foreach (StatInfo stat in stats)
-        {
-            if (stat.stat == info)
-            {
-                return stat.value;
-            }
-        }
-
-        Debug.LogWarning($"Can't find {info} in {name}");
-        return -1.0f;
-    }
+    
 
     /// <summary>
     /// Get the maximum value of a stat

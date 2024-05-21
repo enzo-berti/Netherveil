@@ -143,7 +143,7 @@ public class DamoclesStateMachine : Mobs, IDamocles
             }
         }
 
-        if (currentState is DamoclesWanderingState || currentState is DamoclesTriggeredState)
+        if (currentState is DamoclesWanderingState || (currentState is DamoclesTriggeredState && !player))
         {
             currentState = factory.GetState<DamoclesTriggeredState>();
             player = Utilities.Hero;
