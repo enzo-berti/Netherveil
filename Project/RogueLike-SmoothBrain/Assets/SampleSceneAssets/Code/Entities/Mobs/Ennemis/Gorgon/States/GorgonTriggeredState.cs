@@ -30,6 +30,11 @@ public class GorgonTriggeredState : BaseState<GorgonStateMachine>
         {
             thisToPlayerSqrMagnitude = Vector3.SqrMagnitude(Context.Player.transform.position - Context.transform.position);
             sqrAtkRange = Context.Stats.GetValue(Stat.ATK_RANGE) * Context.Stats.GetValue(Stat.ATK_RANGE);
+            if(Context.gameObject.GetComponentInChildren<ExplodingBomb>() == null)
+            {
+                SwitchState(Factory.GetState<GorgonWanderingState>());
+                return;
+            }
             sqrGorgonBombDiameter = Context.gameObject.GetComponentInChildren<ExplodingBomb>().BlastDiameter * Context.gameObject.GetComponentInChildren<ExplodingBomb>().BlastDiameter;
         }
 
