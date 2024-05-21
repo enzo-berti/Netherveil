@@ -66,8 +66,6 @@ public struct SaveData
         using var stream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(stream, Encoding.UTF8, false);
 
-        Debug.Log(name + " " + filePath);
-
         // Player
         writer.Write(name);
         writer.Write(seed);
@@ -175,7 +173,6 @@ static public class SaveManager
 
     static public void SelectSave(int selectedSave)
     {
-        Debug.Log(selectedSave);
         FilePath = Application.persistentDataPath + "/Save/" + selectedSave.ToString();
 
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))

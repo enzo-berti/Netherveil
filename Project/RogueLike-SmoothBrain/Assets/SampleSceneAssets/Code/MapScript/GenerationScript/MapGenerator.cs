@@ -7,10 +7,6 @@ namespace Map.Generation
 {
     public class MapGenerator : MonoBehaviour
     {
-        // Debuging purpose only
-        [SerializeField] private bool isRandom = true;
-        [SerializeField] private string seed;
-
         // monkey variables
         [SerializeField] private Material miniMapMat;
         [HideInInspector] public bool generate = false; 
@@ -27,16 +23,6 @@ namespace Map.Generation
 
         private void Awake()
         {
-            Seed.RandomizeSeed();
-
-            if (!isRandom)
-            {
-                Seed.Set(seed);
-            }
-
-            seed = Seed.seed;
-            SaveManager.saveData.seed = Seed.seed;
-
             Generate(new GenerationParameters(nbNormal: 6, nbTreasure: 2, nbMerchant: 1, nbSecret: 0, nbMiniBoss: 0, nbBoss: 1));
 
             //SaveManager.onSave += Save;

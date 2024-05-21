@@ -17,6 +17,8 @@ public class SaveBook : MonoBehaviour
 
     [SerializeField] private TMP_Text nameTMP;
     [SerializeField] private TMP_Text seedTMP;
+    [SerializeField] private TMP_InputField inputName;
+    [SerializeField] private TMP_InputField inputSeed;
 
     [SerializeField] private int saveNumber = 0;
     private bool saveRegister = false;
@@ -66,8 +68,8 @@ public class SaveBook : MonoBehaviour
         SaveRegister = SaveManager.saveData.hasData;
         if (SaveManager.saveData.hasData)
         {
-            nameTMP.text = SaveManager.saveData.name;
-            seedTMP.text = SaveManager.saveData.seed;
+            nameTMP.text = "Name : " + SaveManager.saveData.name;
+            seedTMP.text = "Seed : " + SaveManager.saveData.seed;
         }
 
         if (routine != null)
@@ -78,19 +80,30 @@ public class SaveBook : MonoBehaviour
 
     public void StartBook()
     {
-        Debug.Log("SELECT");
-        if (nameTMP.text.Any())
+        if (SaveManager.saveData.hasData)
         {
-            SaveManager.saveData.name = nameTMP.text;
+            Seed.Set(SaveManager.saveData.seed);
         }
         else
         {
-            SaveManager.saveData.name = "Hero";
-        }
+            if (inputName.text.Any())
+            {
+                SaveManager.saveData.name = inputName.text;
+            }
+            else
+            {
+                SaveManager.saveData.name = "Hero";
+            }
 
-        if (seedTMP.text.Any())
-        {
-            Seed.seed = seedTMP.text;
+            if (inputSeed.text.Any())
+            {
+                SaveManager.saveData.seed = inputSeed.text;
+                Seed.Set(inputSeed.text);
+            }
+            else
+            {
+                Seed.RandomizeSeed();
+            }
         }
     }
 
