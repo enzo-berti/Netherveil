@@ -128,6 +128,12 @@ namespace PrefabLightMapBaker
         {
             foreach (var info in lightsInfo)
             {
+                if (info.light == null)
+                {
+                    Debug.LogError("Try to change light baking of a prefab not baked");
+                    continue;
+                }
+
                 info.light.bakingOutput = new LightBakingOutput
                 {
                     isBaked = true,

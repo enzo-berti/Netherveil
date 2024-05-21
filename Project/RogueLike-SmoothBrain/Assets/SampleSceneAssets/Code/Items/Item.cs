@@ -25,7 +25,7 @@ public class Item : MonoBehaviour
         }
     }
     public static List<List<ItemData>> ItemPool;
-    public static readonly int PRICE_PER_RARITY = 30;
+    public const int PRICE_PER_RARITY = 30;
 
     [SerializeField] private bool isRandomized = true;
     [SerializeField] private ItemDatabase database;
@@ -55,9 +55,6 @@ public class Item : MonoBehaviour
             }
         }
 
-    }
-    private void Start()
-    {
         if (itemEffect == null)
         {
             if (isRandomized)
@@ -66,8 +63,8 @@ public class Item : MonoBehaviour
             }
             CreateItem();
         }
-
     }
+
     public static void InvokeOnRetrieved(ItemEffect effect)
     {
         OnRetrieved?.Invoke(effect);

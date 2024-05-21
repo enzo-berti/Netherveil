@@ -3,11 +3,10 @@
 // "currentState" can be set in the start with : currentState = factory.GetState<YOUR_STATE>();
 
 using StateMachine; // include all script about stateMachine
-using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.VFX;
 using UnityEditor;
-using Unity.Collections;
+using UnityEngine;
+using UnityEngine.VFX;
 
 public class GraftedStateMachine : Mobs, IGrafted
 {

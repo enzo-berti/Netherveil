@@ -11,8 +11,10 @@ public struct SaveData
     public string name;
     public string seed;
     // Map
+    public int stage;
     public int seedIteration;
     public List<int> roomCleareds;
+    public List<int> altarCleareds;
     // Hero
     public bool doneQuestQThisStage;
     public bool doneQuestQTApprenticeThisStage;
@@ -40,8 +42,10 @@ public struct SaveData
         name = "Hero";
         seed = string.Empty;
 
+        stage = 0;
         seedIteration = 0;
         roomCleareds = new List<int>();
+        altarCleareds = new List<int>();
 
         doneQuestQThisStage = false;
         doneQuestQTApprenticeThisStage = false;
@@ -74,11 +78,17 @@ public struct SaveData
         writer.Write(name);
         writer.Write(seed);
         // Map
+        writer.Write(stage);
         writer.Write(seedIteration);
         writer.Write(roomCleareds.Count);
         foreach (var idroom in roomCleareds)
         {
             writer.Write(idroom);
+        }
+        writer.Write(altarCleareds.Count());
+        foreach (var idAltar in altarCleareds)
+        {
+            writer.Write(idAltar);
         }
         // Hero
         writer.Write(doneQuestQThisStage);
@@ -105,7 +115,6 @@ public struct SaveData
         writer.Write(questId.Any());
         if (questId.Any())
         {
-            Debug.Log("...");
             writer.Write(questId);
             writer.Write(questTimer);
             writer.Write(questEvolution);
@@ -131,12 +140,19 @@ public struct SaveData
         name = reader.ReadString();
         seed = reader.ReadString();
         // Map
+        stage = reader.ReadInt32();
         seedIteration = reader.ReadInt32();
         int roomClearedCount = reader.ReadInt32();
         roomCleareds = new List<int>(roomClearedCount);
         for (int i = 0; i < roomClearedCount; i++)
         {
             roomCleareds.Add(reader.ReadInt32());
+        }
+        int altarClearedCount = reader.ReadInt32();
+        altarCleareds = new List<int>(altarClearedCount);
+        for (int i = 0; i < altarClearedCount; i++)
+        {
+            altarCleareds.Add(reader.ReadInt32());
         }
         // Hero
         doneQuestQThisStage = reader.ReadBoolean();

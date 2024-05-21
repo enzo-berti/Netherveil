@@ -236,6 +236,11 @@ namespace Map
             LocalEnterEvents();
             LocalExitEvents();
             RoomEvents.hasLeaved = true; // to ensure not being blocked
+
+            if (roomData.Type == RoomType.Boss)
+            {
+                Seed.Iterate(2);
+            }
         }
     }
 }

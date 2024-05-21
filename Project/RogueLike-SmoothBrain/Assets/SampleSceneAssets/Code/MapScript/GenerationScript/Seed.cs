@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
@@ -7,7 +6,7 @@ namespace Map.Generation
     static public class Seed
     {
         static private readonly int seedSize = 8;
-        static public string seed = "0";
+        static public string seed = "XXXXXXXX";
         static public int Iteration { private set; get; } = 0;
 
         static private System.Random random = new System.Random(0);
@@ -73,15 +72,6 @@ namespace Map.Generation
         {
             Iteration++;
             return (float)random.NextDouble();
-        }
-
-        static float NextFloat()
-        {
-            Iteration++;
-            double mantissa = (random.NextDouble() * 2.0) - 1.0;
-            // choose -149 instead of -126 to also generate subnormal floats (*)
-            double exponent = Math.Pow(2.0, random.Next(-126, 128));
-            return (float)(mantissa * exponent);
         }
 
         static public List<T> RandList<T>(List<T> list)

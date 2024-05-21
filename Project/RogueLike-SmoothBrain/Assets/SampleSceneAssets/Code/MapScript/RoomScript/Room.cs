@@ -24,7 +24,7 @@ namespace Map
             }
         }
 
-        public List<Room> neighbor = new List<Room>();
+        readonly public List<Room> neighbor = new List<Room>();
 
         private void OnValidate()
         {

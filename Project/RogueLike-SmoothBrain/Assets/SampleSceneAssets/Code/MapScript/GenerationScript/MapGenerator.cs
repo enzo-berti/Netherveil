@@ -18,7 +18,7 @@ namespace Map.Generation
 
         // Map variables
         public List<int> roomClearId;
-        private int iterationSeedRegister = 0;
+        public int iterationSeedRegister = 0;
         public int Stage { get; private set; } = 0;
 
         private void Awake()
@@ -42,13 +42,16 @@ namespace Map.Generation
 
         private void OnDestroy()
         {
+            SaveManager.onSave -= Save;
             MapUtilities.ResetActions();
         }
 
         public void Save(ref SaveData save)
         {
+            save.stage = Stage;
             save.roomCleareds = roomClearId;
             save.seedIteration = iterationSeedRegister;
+            Debug.Log("SAVE : " + iterationSeedRegister + " " + Seed.Iteration);
         }
 
         public void LoadSave()
@@ -58,8 +61,10 @@ namespace Map.Generation
                 return;
             }
 
+            Stage = SaveManager.saveData.stage - 1;
             roomClearId = SaveManager.saveData.roomCleareds;
             Seed.Iterate(SaveManager.saveData.seedIteration);
+            iterationSeedRegister = SaveManager.saveData.seedIteration;
         }
 
         private void ResetMapDatas()
