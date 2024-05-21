@@ -56,21 +56,25 @@ public class ItemBar : MonoBehaviour
         Utilities.Hero.OnCorruptionMaxUpgrade += OnSpecialAbilityAdd;
         Utilities.Hero.OnCorruptionMaxDrawback += OnSpecialAbilityRemove;
         Utilities.Hero.OnBenedictionMaxDrawback += OnSpecialAbilityRemove;
-        IActiveItem.OnActiveItemCooldownStarted += ActiveItemCooldown;
+        IActiveItem.OnActiveItemCooldownStartedTimeBased += ActiveItemCooldown;
         ISpecialAbility.OnSpecialAbilityActivated += SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB += UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad += UpdateGamepadBiding;
         PauseMenu.OnUnpause += UpdateBinding;
+
+        IActiveItem.OnActiveItemCooldownUpdatedRoomBased += ActivateItemCooldownRoomBased;
     }
 
     private void OnDisable()
     {
         Item.OnRetrieved -= OnItemAdd;
-        IActiveItem.OnActiveItemCooldownStarted -= ActiveItemCooldown;
+        IActiveItem.OnActiveItemCooldownStartedTimeBased -= ActiveItemCooldown;
         ISpecialAbility.OnSpecialAbilityActivated -= SpecialAbilityCooldown;
         DeviceManager.OnChangedToKB -= UpdateKeyboardBiding;
         DeviceManager.OnChangedToGamepad -= UpdateGamepadBiding;
         PauseMenu.OnUnpause -= UpdateBinding;
+
+        IActiveItem.OnActiveItemCooldownUpdatedRoomBased -= ActivateItemCooldownRoomBased;
 
         if (displayRoutine != null)
         {
@@ -168,6 +172,14 @@ public class ItemBar : MonoBehaviour
             StopCoroutine(cooldownRoutine);
 
         cooldownRoutine = StartCoroutine(CooldownRoutine(cooldown, specialItemFrame));
+    }
+
+    private void ActivateItemCooldownRoomBased(ItemEffect itemEffect)
+    {
+        ItemData data = database.GetItem(itemEffect.Name);
+        Sprite item = Sprite.Create((Texture2D)data.icon, new Rect(0.0f, 0.0f, data.icon.width, data.icon.height), new Vector2(0.5f, 0.5f), 100.0f);
+        specialItemFrame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
+        specialItemFrame.SetCooldown(itemEffect.CurrentEnergy, (itemEffect as IActiveItem).Cooldown);
     }
 
     private void SpecialAbilityCooldown()
