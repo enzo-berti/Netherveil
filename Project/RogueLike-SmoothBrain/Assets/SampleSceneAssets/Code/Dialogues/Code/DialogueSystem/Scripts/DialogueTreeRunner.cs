@@ -318,14 +318,15 @@ public class DialogueTreeRunner : MonoBehaviour
             string word = dialogue[i].ToString();
             if(word == "<")
             {
-                int delta = 1;
-                char nextChar = dialogue[i + delta];
-                while(nextChar != '>')
+                char nextChar;
+                do
                 {
+                    i++;
+                    nextChar = dialogue[i];
                     word += nextChar;
-                    delta++;
-                    nextChar = dialogue[i + delta];
-                }
+                    i++;
+                    nextChar = dialogue[i];
+                } while (nextChar != '>');
             }
             yield return new WaitForSeconds(letterDelay);
             dialogueMesh.text += word;
