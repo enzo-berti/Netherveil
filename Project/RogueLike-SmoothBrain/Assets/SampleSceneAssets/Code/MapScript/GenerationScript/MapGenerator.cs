@@ -51,7 +51,6 @@ namespace Map.Generation
             save.stage = Stage;
             save.roomCleareds = roomClearId;
             save.seedIteration = iterationSeedRegister;
-            Debug.Log("SAVE : " + iterationSeedRegister + " " + Seed.Iteration);
         }
 
         public void LoadSave()
