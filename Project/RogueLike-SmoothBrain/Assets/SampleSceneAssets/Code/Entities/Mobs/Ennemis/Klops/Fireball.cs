@@ -12,6 +12,7 @@ public class Fireball : MonoBehaviour, IReflectable
 
     public Vector3 Direction { get => direction; set => direction = value; }
     public bool IsReflected { get; set; }
+    public bool CanBeReflected { get; set; } = false;
 
     public float FireballSpeed = 2f;
 
