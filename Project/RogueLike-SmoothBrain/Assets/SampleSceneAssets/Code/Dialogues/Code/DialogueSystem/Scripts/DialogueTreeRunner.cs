@@ -323,9 +323,9 @@ public class DialogueTreeRunner : MonoBehaviour
                 word += nextChar;
                 while (nextChar != '>')
                 {
+                    i++;
                     nextChar = dialogue[i];
                     word += nextChar;
-                    i++;
                 }
             }
             yield return new WaitForSeconds(letterDelay);
