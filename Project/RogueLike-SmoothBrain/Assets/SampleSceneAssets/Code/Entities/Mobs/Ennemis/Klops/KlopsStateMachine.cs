@@ -131,7 +131,7 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         ApplyDamagesMob(_value, klopsSounds.hitSound, Death, notEffectDamage);
 
-        if (currentState is KlopsWanderingState || currentState is KlopsTriggeredState)
+        if (currentState is KlopsWanderingState || (currentState is KlopsTriggeredState && !player))
         {
             currentState = factory.GetState<KlopsTriggeredState>();
             player = Utilities.Hero;

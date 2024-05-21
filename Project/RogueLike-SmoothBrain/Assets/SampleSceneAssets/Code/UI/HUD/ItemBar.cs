@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class ItemBar : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private Transform itemPassiveTransform;
     [SerializeField] private ItemFrame framePf;
     [SerializeField] private GameObject panelToToggle;
+    [SerializeField] private GameObject textNoItems;
 
     [Header("Backgrounds")]
     [SerializeField] private Sprite backDamnation;
@@ -115,6 +117,11 @@ public class ItemBar : MonoBehaviour
 
     private void OnItemAdd(ItemEffect itemAdd)
     {
+        if (textNoItems.activeSelf == true)
+        {
+            textNoItems.SetActive(false);
+        }
+
         ItemData data = database.GetItem(itemAdd.Name);
         Sprite item = Sprite.Create((Texture2D)data.icon, new Rect(0.0f, 0.0f, data.icon.width, data.icon.height), new Vector2(0.5f, 0.5f), 100.0f);
 
@@ -122,11 +129,12 @@ public class ItemBar : MonoBehaviour
         {
             ItemFrame frame = Instantiate(framePf, itemPassiveTransform);
             frame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
-            frame.SetPanel(panelToToggle,itemAdd.Name, ItemDescription.GetDescription(data.idName));
+            frame.GetComponent<ItemSelector>().SetPanel(panelToToggle,itemAdd.Name, ItemDescription.GetDescription(data.idName), data.Type.ToString());
         }
         else if (itemAdd is IActiveItem)
         {
             specialItemFrame.SetFrame(backItemActiveNormal[(int)data.RarityTier], item);
+            specialItemFrame.GetComponent<ItemSelector>().SetPanel(panelToToggle, itemAdd.Name, ItemDescription.GetDescription(data.idName), data.Type.ToString());
         }
     }
 

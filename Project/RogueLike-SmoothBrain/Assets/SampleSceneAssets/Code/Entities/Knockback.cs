@@ -113,7 +113,10 @@ public class Knockback : MonoBehaviour
             Vector3 lastPos = transform.position;
             Vector3 nextPos = Vector3.Lerp(startKnockback, endKnockback, factor);
 
-            hitObstacle = Physics.OverlapSphere(transform.position + direction * Vector3.Distance(lastPos, nextPos) + Vector3.up, 0.5f, ~LayerMask.GetMask("Entity")).Any();
+            Collider[] collide = Physics.OverlapSphere(transform.position + direction * Vector3.Distance(lastPos, nextPos) + Vector3.up, 0.5f, ~LayerMask.GetMask("Entity"))
+                                        .Where(x => x.GetComponent<Collider>().isTrigger == false)
+                                        .ToArray();
+            hitObstacle = collide.Any();
             if (hitObstacle)
             {
                 onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);

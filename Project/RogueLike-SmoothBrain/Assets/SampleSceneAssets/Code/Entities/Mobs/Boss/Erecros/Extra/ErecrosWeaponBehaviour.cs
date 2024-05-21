@@ -1,6 +1,4 @@
-using FMOD.Studio;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ErecrosWeaponBehaviour : MonoBehaviour
@@ -9,12 +7,30 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
 
     [HideInInspector] public bool hitMap = false;
 
+    [Serializable]
+    public class WeaponSound
+    {
+        public Sound flying;
+        public Sound hitmap;
+    }
+    [SerializeField] WeaponSound sounds;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
         Reset();
+    }
+
+    private void Update()
+    {
+
+    }
+
+    public void PlayFlying()
+    {
+        sounds.flying.Play(transform.position);
     }
 
     public void Reset()
@@ -28,6 +44,8 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.velocity = Vector3.zero;
 
+        sounds.flying.Stop();
+        sounds.hitmap.Play(transform.position);
         hitMap = true;
     }
 }

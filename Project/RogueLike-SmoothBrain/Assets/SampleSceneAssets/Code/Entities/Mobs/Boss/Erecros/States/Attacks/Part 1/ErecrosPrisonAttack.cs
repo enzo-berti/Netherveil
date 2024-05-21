@@ -47,6 +47,8 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         int clonesAmount = 16;
 
+        Context.Sounds.prison.Play(Context.transform.position);
+
         for (int i = 0; i < clonesAmount; i++)
         {
             Vector3 spawnVector = (Context.transform.position - Context.Player.transform.position).normalized * torusRadius;
@@ -87,6 +89,7 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
             if (dashDistance == 0f)
             {
                 FacePlayer(clones[0].transform);
+                Context.Sounds.dash.Play(clones[0].transform.position);
             }
 
             clones[0].position += clones[0].forward * 15f * Time.deltaTime;

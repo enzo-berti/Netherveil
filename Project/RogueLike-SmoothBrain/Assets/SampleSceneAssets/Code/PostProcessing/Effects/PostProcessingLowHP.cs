@@ -1,4 +1,5 @@
 using PostProcessingEffects;
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -26,6 +27,7 @@ public class PostProcessingLowHP : MonoBehaviour
             hero.OnTakeDamage += Active;
             hero.OnHeal += Desactive;
             hero.OnDeath += DesactiveAtDeath;
+            hero.Stats.onStatChange += DesactiveAtDeath;
         }
         else
         {
@@ -74,5 +76,18 @@ public class PostProcessingLowHP : MonoBehaviour
     private void DesactiveAtDeath(Vector3 _)
     {
        activePostProcessing = false;
+    }
+
+    private void DesactiveAtDeath(Stat stat)
+    {
+        if (stat != Stat.HP)
+        {
+            return;
+        }
+
+        if (Utilities.Hero.Stats.GetValue(Stat.HP) > (Utilities.Hero.Stats.GetMaxValue(Stat.HP) / 4f))
+        {
+            activePostProcessing = false;
+        }
     }
 }
