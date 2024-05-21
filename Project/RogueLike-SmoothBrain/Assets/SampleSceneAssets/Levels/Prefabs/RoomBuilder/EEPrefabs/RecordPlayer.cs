@@ -7,6 +7,7 @@ public class RecordPlayer : MonoBehaviour, IInterractable
 {
 
     public EventReference AllMyTearsMusic;
+    public EventReference EnzoMusic;
     [SerializeField] ParticleSystem MusicNote;
     bool IsCollide;
     bool IsMusicPlaying = false;
@@ -44,7 +45,20 @@ public class RecordPlayer : MonoBehaviour, IInterractable
 
     void playMusic()
     {
-        eventMusic = AudioManager.Instance.PlaySound(AllMyTearsMusic);
+        switch (UnityEngine.Random.Range(0, 2))
+        {
+            case 0:
+                eventMusic = AudioManager.Instance.PlaySound(AllMyTearsMusic);
+                break;
+            case 1:
+                eventMusic = AudioManager.Instance.PlaySound(EnzoMusic);
+                break;
+            default:
+                eventMusic = AudioManager.Instance.PlaySound(AllMyTearsMusic);
+                break;
+        }
+
+        
         MusicNote.Play();
         eventMusic.getPlaybackState(out PLAYBACK_STATE playbackState);
         eventMusic.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject.transform));

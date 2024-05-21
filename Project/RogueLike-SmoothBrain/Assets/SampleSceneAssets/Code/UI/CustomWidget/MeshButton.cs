@@ -81,7 +81,6 @@ namespace MeshUI
         public void OnPress()
         {
             onPress?.Invoke();
-            Select();
         }
 
         public void OnRelease()
@@ -92,7 +91,6 @@ namespace MeshUI
         public override void OnSelect(BaseEventData eventData)
         {
             base.OnSelect(eventData);
-            Select();
             OnHover();
             isSelect = true;
         }
