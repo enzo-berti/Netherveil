@@ -337,10 +337,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         {
             ManageCorruptionUpgrade(curStep);
         }
-        else
-        {
-            ReactivateDefaultArmor();
-        }
     }
 
     private void TriggerAnimAndVFX(int curStep, int lastStep)
@@ -433,15 +429,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
                 {
                     BenedictionDrawback();
                 }
-
-                //foreach (GameObject armorPiece in BenedictionArmorsToActivatePerStep[i].data)
-                //{
-                //    armorPiece.SetActive(false);
-                //}
-                //foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
-                //{
-                //    armorPiece.SetActive(true);
-                //}
             }
             else if (lastStep > 0) //corruption drawbacks
             {
@@ -453,15 +440,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
                 {
                     CorruptionDrawback();
                 }
-
-                //foreach (GameObject armorPiece in CorruptionArmorsToActivatePerStep[i].data)
-                //{
-                //    armorPiece.SetActive(false);
-                //}
-                //foreach (GameObject armorPiece in NormalArmorsToActivatePerStep[i].data)
-                //{
-                //    armorPiece.SetActive(true);
-                //}
             }
         }
     }
