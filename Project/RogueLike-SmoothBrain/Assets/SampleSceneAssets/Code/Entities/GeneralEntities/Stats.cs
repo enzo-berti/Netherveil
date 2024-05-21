@@ -40,7 +40,7 @@ public class Stats
     }
 
     /// <summary>
-    /// Get value of a stat, if there is a coeff, returns value * coeff
+    /// Get value of a stat, if there is a coeff, returns value * coeff ( After coeff, value can be grater than max value )
     /// </summary>
     /// <param name="info"></param>
     /// <returns></returns>
@@ -52,6 +52,29 @@ public class Stats
             {
                 float coeff = stat.hasCoeff ? stat.coeff : 1;
                 return stat.value * coeff;
+            }
+        }
+
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+
+    public float GetValueClampedWithCoeff(Stat info)
+    {
+        return Mathf.Min(GetValue(info), GetMaxValue(info));
+    }
+    /// <summary>
+    /// Returns straight value
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
+    public float GetValueWithoutCoeff(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.value;
             }
         }
 
@@ -96,24 +119,7 @@ public class Stats
         Debug.LogWarning($"Can't find {info} in {name}");
         return -1.0f;
     }
-    /// <summary>
-    /// Returns straight value
-    /// </summary>
-    /// <param name="info"></param>
-    /// <returns></returns>
-    public float GetValueWithoutCoeff(Stat info)
-    {
-        foreach (StatInfo stat in stats)
-        {
-            if (stat.stat == info)
-            {
-                return stat.value;
-            }
-        }
-
-        Debug.LogWarning($"Can't find {info} in {name}");
-        return -1.0f;
-    }
+    
 
     /// <summary>
     /// Get the maximum value of a stat
