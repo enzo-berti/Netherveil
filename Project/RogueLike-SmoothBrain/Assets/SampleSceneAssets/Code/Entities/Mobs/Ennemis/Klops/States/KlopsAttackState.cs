@@ -73,6 +73,7 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
         if (!hasShot && currentTime >= LaunchTime && fireball != null)
         {
             Context.KlopsSound.attackSound.Play(Context.transform.position);
+            fireball.GetComponent<Fireball>().CanBeReflected = true;
             fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
             fireball.GetComponent<Fireball>().launcher = Context;
             fireball.transform.LookAt(Utilities.Player.transform);

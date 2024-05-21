@@ -7,7 +7,6 @@ using UnityEngine.VFX.Utility;
 using System.Linq;
 using Map;
 using System.Collections.Generic;
-using UnityEngine.Video;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -120,7 +119,7 @@ public abstract class Mobs : Entity
 
         AddSpawningMat();
         wanderZone.center = transform.position;
-        
+
     }
 
     private void AddSpawningMat()
@@ -248,7 +247,7 @@ public abstract class Mobs : Entity
         if (stats.GetValue(Stat.HP) <= 0 || IsInvincibleCount > 0)
             return;
 
-        if(notEffectDamage)
+        if (notEffectDamage)
         {
             _value = (int)(_value * DamageTakenMultiplicator);
         }
@@ -358,7 +357,7 @@ public abstract class Mobs : Entity
         hit.EnableMat();
         float timer = 0;
         float alpha;
-        while(timer < 1f)
+        while (timer < 1f)
         {
             alpha = EasingFunctions.EaseInExpo(timer) / 5f;
             hit.SetAlpha(alpha);
