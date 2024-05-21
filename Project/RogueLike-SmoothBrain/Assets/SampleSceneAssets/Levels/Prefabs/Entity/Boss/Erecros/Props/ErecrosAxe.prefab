@@ -81,7 +81,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.49231148, y: 0.1146729, z: 1.241581}
+  m_Size: {x: 0.5, y: 0.5, z: 1.241581}
   m_Center: {x: 0.001250267, y: 0, z: 0.6188164}
 --- !u!114 &1956998313017055166
 MonoBehaviour:
@@ -90,12 +90,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7204864694825524849}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f4d72b5eea8ac2498a5061c767e777d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hitMap: 0
+  sounds:
+    flying:
+      reference:
+        Guid:
+          Data1: -953987107
+          Data2: 1096694957
+          Data3: -431677269
+          Data4: 71043479
+        Path: event:/Enemy/Erecros/ErecrosWeaponThrowInAir
+    hitmap:
+      reference:
+        Guid:
+          Data1: 1137478632
+          Data2: 1221846330
+          Data3: -1505303876
+          Data4: 1910734853
+        Path: event:/Enemy/Erecros/ErecrosWeaponHitWall
 --- !u!1001 &5889922688449736041
 PrefabInstance:
   m_ObjectHideFlags: 0

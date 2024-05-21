@@ -137,7 +137,7 @@ public class PestStateMachine : Mobs, IPest
     {
         ApplyDamagesMob(_value, pestSounds.takeDamageSound, Death, notEffectDamage);
 
-        if (currentState is not PestAttackingState && currentState is not PestDeathState)
+        if (currentState is not PestAttackingState && currentState is not PestDeathState && !player)
         {
             currentState = factory.GetState<PestTriggeredState>();
             player = Utilities.Hero.transform;

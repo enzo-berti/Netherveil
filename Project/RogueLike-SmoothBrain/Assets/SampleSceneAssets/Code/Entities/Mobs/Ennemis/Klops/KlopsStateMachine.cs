@@ -48,7 +48,7 @@ public class KlopsStateMachine : Mobs, IKlops
     public Entity[] NearbyEntities { get => nearbyEntities; }
     public Animator Animator { get => animator; }
     public KlopsSounds KlopsSound { get => klopsSounds; }
-    public VisualEffect ExplodingVFX {  get => explodingVFX; }
+    public VisualEffect ExplodingVFX { get => explodingVFX; }
 
     protected override void Start()
     {
@@ -131,7 +131,7 @@ public class KlopsStateMachine : Mobs, IKlops
     {
         ApplyDamagesMob(_value, klopsSounds.hitSound, Death, notEffectDamage);
 
-        if (currentState is KlopsWanderingState || currentState is KlopsTriggeredState)
+        if (currentState is KlopsWanderingState || (currentState is KlopsTriggeredState && !player))
         {
             currentState = factory.GetState<KlopsTriggeredState>();
             player = Utilities.Hero;

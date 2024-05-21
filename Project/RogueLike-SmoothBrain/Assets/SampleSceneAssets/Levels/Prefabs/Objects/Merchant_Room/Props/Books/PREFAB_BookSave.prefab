@@ -266,7 +266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5937803618481274460
 RectTransform:
   m_ObjectHideFlags: 0
@@ -330,7 +330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6820946952144400308
 RectTransform:
   m_ObjectHideFlags: 0
@@ -735,6 +735,9 @@ MonoBehaviour:
   openObject: {fileID: 8845973407825635532}
   savePart: {fileID: 1500780075772966348}
   notSavePart: {fileID: 1786082523963549789}
+  nameTMP: {fileID: 6977431621845574777}
+  seedTMP: {fileID: 3257624497075196519}
+  saveNumber: 0
 --- !u!1 &2988214895067287138
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,8 +806,7 @@ MonoBehaviour:
   m_text: Seed
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
-  m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -938,8 +940,7 @@ MonoBehaviour:
   m_text: Player name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acf6e2331349adf499ead9e1755484bb, type: 2}
-  m_sharedMaterial: {fileID: 8971606365111205377, guid: acf6e2331349adf499ead9e1755484bb,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1015,18 +1016,63 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 342790815526505895, guid: ab63ff25647193549af0e966ecb25376,
         type: 3}
+      propertyPath: m_Text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 342790815526505895, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
       propertyPath: m_CharacterLimit
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 740514133203903850, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 740514133203903850, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
     - target: {fileID: 3550847045576697718, guid: ab63ff25647193549af0e966ecb25376,
         type: 3}
       propertyPath: m_Name
       value: ContentInputFieldSeed
       objectReference: {fileID: 0}
+    - target: {fileID: 4924094901459685466, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
     - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
         type: 3}
       propertyPath: m_text
       value: Seed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 8100545466299059334, guid: ab63ff25647193549af0e966ecb25376,
         type: 3}
@@ -1553,15 +1599,50 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6820946952144400308}
     m_Modifications:
+    - target: {fileID: 740514133203903850, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
     - target: {fileID: 3550847045576697718, guid: ab63ff25647193549af0e966ecb25376,
         type: 3}
       propertyPath: m_Name
       value: ContentInputFieldName
       objectReference: {fileID: 0}
+    - target: {fileID: 4924094901459685466, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
     - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
         type: 3}
       propertyPath: m_text
       value: player name
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: beee37abc65561c43bdc562787cfb9c7, type: 2}
+    - target: {fileID: 5846310715895827007, guid: ab63ff25647193549af0e966ecb25376,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 8100545466299059334, guid: ab63ff25647193549af0e966ecb25376,
         type: 3}

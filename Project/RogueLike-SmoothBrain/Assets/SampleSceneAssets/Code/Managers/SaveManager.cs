@@ -8,10 +8,10 @@ using UnityEngine;
 public struct SaveData
 {
     // Player
-    public string Name;
-    public string Seed;
+    public string name;
+    public string seed;
     // Map
-    public int SeedIteration;
+    public int seedIteration;
     // Hero
     public bool doneQuestQThisStage;
     public bool doneQuestQTApprenticeThisStage;
@@ -32,16 +32,47 @@ public struct SaveData
     public QuestTalker.TalkerGrade talkerGrade;
     public int questEvolution;
 
+    public bool hasData;
+
+    private void Reset()
+    {
+        name = "Hero";
+        seed = string.Empty;
+
+        seedIteration = 0;
+
+        doneQuestQThisStage = false;
+        doneQuestQTApprenticeThisStage = false;
+        clearedTuto = false;
+
+        activeItemName = string.Empty;
+        activeItemCooldown = 0f;
+        passiveItemNames = new List<string>();
+        bloodValue = 0;
+
+        statHp = 0f;
+        statCorruption = 0f;
+
+        questId = string.Empty;
+        questTimer = 0f;
+        questDifficulty = Quest.QuestDifficulty.EASY;
+        talkerType = QuestTalker.TalkerType.SHAMAN;
+        talkerGrade = QuestTalker.TalkerGrade.APPRENTICE;
+        questEvolution = 0;
+    }
+
     public readonly void Save(string filePath)
     {
         using var stream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(stream, Encoding.UTF8, false);
 
+        Debug.Log(name + " " + filePath);
+
         // Player
-        writer.Write(Name);
-        writer.Write(Seed);
+        writer.Write(name);
+        writer.Write(seed);
         // Map
-        writer.Write(SeedIteration);
+        writer.Write(seedIteration);
         // Hero
         writer.Write(doneQuestQThisStage);
         writer.Write(doneQuestQTApprenticeThisStage);
@@ -78,14 +109,21 @@ public struct SaveData
 
     public void Load(string filePath)
     {
+        hasData = false;
+        Reset();
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
         using var stream = File.Open(filePath, FileMode.Open);
         using var reader = new BinaryReader(stream, Encoding.UTF8, false);
 
         // Player
-        Name = reader.ReadString();
-        Seed = reader.ReadString();
+        name = reader.ReadString();
+        seed = reader.ReadString();
         // Map
-        SeedIteration = reader.ReadInt32();
+        seedIteration = reader.ReadInt32();
         // Hero
         doneQuestQThisStage = reader.ReadBoolean();
         doneQuestQTApprenticeThisStage = reader.ReadBoolean();
@@ -117,6 +155,8 @@ public struct SaveData
             talkerType = (QuestTalker.TalkerType)Enum.Parse(typeof(QuestTalker.TalkerType), reader.ReadString());
             talkerGrade = (QuestTalker.TalkerGrade)Enum.Parse(typeof(QuestTalker.TalkerGrade), reader.ReadString());
         }
+
+        hasData = true;
     }
 }
 
@@ -125,45 +165,44 @@ static public class SaveManager
     public delegate void OnSave(ref SaveData saveData);
     static public event OnSave onSave;
 
-    static public string DirectoryPath { private set; get; } = string.Empty;
-    static public bool HasData { private set; get; } = false;
+    static public string FilePath { private set; get; } = string.Empty;
     static public SaveData saveData;
 
-    static public void UnselectSave()
+    static public void EraseSave()
     {
 
     }
 
     static public void SelectSave(int selectedSave)
     {
-        DirectoryPath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + "/";
+        Debug.Log(selectedSave);
+        FilePath = Application.persistentDataPath + "/Save/" + selectedSave.ToString();
 
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
         {
             Directory.CreateDirectory(Application.persistentDataPath + "/Save");
         }
 
-        if (!Directory.Exists(DirectoryPath))
-        {
-            Directory.CreateDirectory(DirectoryPath);
-        }
+        Load();
+    }
 
+    static private void Load()
+    {
         try
         {
-            saveData.Load(DirectoryPath);
+            saveData.Load(FilePath);
         }
         catch (Exception e)
         {
             Debug.LogException(e);
 
-            HasData = false; // can't load correctly the datas
-            // TODO : destroy corrupted datas
+            File.Delete(FilePath);
         }
     }
 
     static public void Save()
     {
-        if (DirectoryPath == string.Empty)
+        if (FilePath == string.Empty)
         {
             return;
         }
@@ -172,49 +211,13 @@ static public class SaveManager
 
         try
         {
-            saveData.Save(DirectoryPath);
+            saveData.Save(FilePath);
         }
         catch (Exception e)
         {
             Debug.LogException(e);
 
-            // TODO : destroy corrupted datas
+            File.Delete(FilePath);
         }
     }
-
-    //const string filePathExample = "/Player.s";
-    //public void ExampleLoad()
-    //{
-    //    string directoryPath = SaveManager.instance.DirectoryPath;
-    //
-    //    if (File.Exists(directoryPath + filePath))
-    //    {
-    //        using (var stream = File.Open(directoryPath + filePath, FileMode.Open))
-    //        {
-    //            using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-    //            {
-    //                Debug.Log(reader.ReadSingle());
-    //                Debug.Log(reader.ReadString());
-    //                Debug.Log(reader.ReadInt32());
-    //                Debug.Log(reader.ReadBoolean());
-    //            }
-    //        }
-    //    }
-    //}
-    //
-    //public void ExampleSave(string directoryPath)
-    //{
-    //    using (var stream = File.Open(directoryPath + filePath, FileMode.Create))
-    //    {
-    //        using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
-    //        {
-    //            writer.Write(1.250F);
-    //            writer.Write(@"c:\Temp");
-    //            writer.Write(10);
-    //            writer.Write(true);
-    //        }
-    //
-    //        stream.Close();
-    //    }
-    //}
 }

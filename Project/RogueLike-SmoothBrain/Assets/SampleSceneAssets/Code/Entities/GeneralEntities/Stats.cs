@@ -44,13 +44,24 @@ public class Stats
     /// </summary>
     /// <param name="info"></param>
     /// <returns></returns>
-    public float GetValue(Stat info)
+    public float GetValue(Stat info, bool isFinalResultClampedToMax = true)
     {
         foreach (StatInfo stat in stats)
         {
             if (stat.stat == info)
             {
                 float coeff = stat.hasCoeff ? stat.coeff : 1;
+                if(isFinalResultClampedToMax)
+                {
+                    if(stat.hasMaxStat)
+                    {
+                        return Mathf.Min(stat.value * coeff, stat.maxValue);
+                    }
+                    else
+                    {
+                        return stat.value * coeff;
+                    }
+                }
                 return stat.value * coeff;
             }
         }
@@ -59,17 +70,9 @@ public class Stats
         return -1.0f;
     }
 
-    public float GetLastValue(Stat info)
+    public float GetValueClampedWithCoeff(Stat info)
     {
-        foreach (StatInfo stat in stats)
-        {
-            if (stat.stat == info)
-            {
-                return stat.lastValue;
-            }
-        }
-        Debug.LogWarning($"Can't find {info} in {name}");
-        return -1.0f;
+        return Mathf.Min(GetValue(info), GetMaxValue(info));
     }
     /// <summary>
     /// Returns straight value
@@ -89,6 +92,45 @@ public class Stats
         Debug.LogWarning($"Can't find {info} in {name}");
         return -1.0f;
     }
+
+    public float GetOverload(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.overload;
+            }
+        }
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+
+    public float GetUnderload(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.underload;
+            }
+        }
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+    public float GetLastValue(Stat info)
+    {
+        foreach (StatInfo stat in stats)
+        {
+            if (stat.stat == info)
+            {
+                return stat.lastValue;
+            }
+        }
+        Debug.LogWarning($"Can't find {info} in {name}");
+        return -1.0f;
+    }
+    
 
     /// <summary>
     /// Get the maximum value of a stat
@@ -161,7 +203,13 @@ public class Stats
     #endregion
 
     #region ValueChange
-    public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue = true)
+    /// <summary>
+    /// Increase value by increasingValue. If clampToMaxValue is false,the non-clamped value will be added in an overload member
+    /// </summary>
+    /// <param name="info"></param>
+    /// <param name="increasingValue"></param>
+    /// <param name="clampToMaxValue"></param>
+    public void IncreaseValue(Stat info, float increasingValue, bool clampToMaxValue = true, bool takeUnderloadIntoAccount = false)
     {
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
@@ -182,7 +230,7 @@ public class Stats
             }
             else
             {
-                if (stats[index].underload > 0)
+                if (takeUnderloadIntoAccount && stats[index].underload > 0)
                 {
                     float realIncrease = increasingValue - stats[index].underload;
                     stats[index].underload -= increasingValue;
@@ -239,7 +287,7 @@ public class Stats
         }
     }
 
-    public void DecreaseValue(Stat info, float decreasingValue, bool clampToMinValue = true)
+    public void DecreaseValue(Stat info, float decreasingValue, bool clampToMinValue = true, bool takeOverloadIntoAccount = false)
     {
         int index = stats.FindIndex(x => x.stat == info);
         if (index != -1)
@@ -261,7 +309,21 @@ public class Stats
 
 
             else
-                stats[index].value -= decreasingValue;
+            {
+                if (takeOverloadIntoAccount && stats[index].overload > 0)
+                {
+                    float realIncrease = decreasingValue - stats[index].overload;
+                    stats[index].overload -= decreasingValue;
+                    if (realIncrease > 0.0f)
+                    {
+                        stats[index].overload = 0;
+                        stats[index].value -= realIncrease;
+                    }
+                }
+                else
+                    stats[index].value -= decreasingValue;
+            }
+                
 
             if (baseValue != stats[index].value) onStatChange?.Invoke(info);
         }
@@ -681,17 +743,23 @@ public class Stats
         if (indexIncrease != -1)
         {
             float realIncrease = increasingValue;
+            // If there is underload
             if (stats[indexIncrease].underload > 0)
             {
                 realIncrease -= stats[indexIncrease].underload;
                 stats[indexIncrease].underload -= increasingValue;
             }
+            // If realIncrease not null
             if (realIncrease > 0f)
             {
+                // Security to make underload = 0 even if it should be by entering this if state
                 stats[indexIncrease].underload = 0;
+                // If increasing value makes it greater than maxValue
                 if (stats[indexIncrease].value + realIncrease > stats[indexIncrease].maxValue)
                 {
+                    // Set overload increase value
                     float overloardValue = stats[indexIncrease].value + realIncrease - stats[indexIncrease].maxValue;
+                    // Set value to the max value
                     stats[indexIncrease].value = stats[indexIncrease].maxValue;
                     stats[indexIncrease].overload += overloardValue;
                 }

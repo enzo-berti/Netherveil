@@ -158,7 +158,7 @@ public class ZiggoStateMachine : Mobs, IZiggo
     {
         ApplyDamagesMob(_value, ziggoSounds.hitSound, Death, notEffectDamage);
 
-        if (currentState is ZiggoWanderingState || currentState is ZiggoTriggeredState)
+        if (currentState is ZiggoWanderingState || (currentState is ZiggoTriggeredState && !player))
         {
             currentState = factory.GetState<ZiggoTriggeredState>();
             player = Utilities.Hero;

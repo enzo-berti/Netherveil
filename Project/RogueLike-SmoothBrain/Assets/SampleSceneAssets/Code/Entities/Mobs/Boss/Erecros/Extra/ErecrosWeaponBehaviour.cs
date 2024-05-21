@@ -1,6 +1,4 @@
-using FMOD.Studio;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ErecrosWeaponBehaviour : MonoBehaviour
@@ -8,6 +6,16 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
     Rigidbody rb;
 
     [HideInInspector] public bool hitMap = false;
+
+    [Serializable]
+    public class WeaponSound
+    {
+        public Sound flying;
+        public Sound hitmap;
+    }
+    [SerializeField] WeaponSound sounds;
+
+    [HideInInspector] public bool ignoreCollisions = false;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +25,25 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
         Reset();
     }
 
+    private void Update()
+    {
+        if (transform.position.y <= -0.1f && !hitMap && !ignoreCollisions)
+        {
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            rb.velocity = Vector3.zero;
+
+            sounds.flying.Stop();
+            sounds.hitmap.Play(transform.position);
+            hitMap = true;
+        }
+    }
+
+    public void PlayFlying()
+    {
+        sounds.flying.Play(transform.position);
+    }
+
     public void Reset()
     {
         hitMap = false;
@@ -24,10 +51,29 @@ public class ErecrosWeaponBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        rb.isKinematic = true;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        rb.velocity = Vector3.zero;
+        if (!hitMap && !ignoreCollisions)
+        {
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            rb.velocity = Vector3.zero;
 
-        hitMap = true;
+            sounds.flying.Stop();
+            sounds.hitmap.Play(transform.position);
+            hitMap = true;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (!hitMap && !ignoreCollisions)
+        {
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            rb.velocity = Vector3.zero;
+
+            sounds.flying.Stop();
+            sounds.hitmap.Play(transform.position);
+            hitMap = true;
+        }
     }
 }

@@ -1,4 +1,7 @@
+using Map.Generation;
 using System.Collections;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class SaveBook : MonoBehaviour
@@ -12,6 +15,10 @@ public class SaveBook : MonoBehaviour
     [SerializeField] private GameObject savePart;
     [SerializeField] private GameObject notSavePart;
 
+    [SerializeField] private TMP_Text nameTMP;
+    [SerializeField] private TMP_Text seedTMP;
+
+    [SerializeField] private int saveNumber = 0;
     private bool saveRegister = false;
     private float durationMovementIn = 1.0f;
     private float durationMovementOut = 1.0f;
@@ -54,15 +61,42 @@ public class SaveBook : MonoBehaviour
 
     public void Open()
     {
+        SaveManager.SelectSave(saveNumber);
+
+        SaveRegister = SaveManager.saveData.hasData;
+        if (SaveManager.saveData.hasData)
+        {
+            nameTMP.text = SaveManager.saveData.name;
+            seedTMP.text = SaveManager.saveData.seed;
+        }
+
         if (routine != null)
             StopCoroutine(routine);
 
         routine = StartCoroutine(OpenRoutine());
     }
 
+    public void StartBook()
+    {
+        Debug.Log("SELECT");
+        if (nameTMP.text.Any())
+        {
+            SaveManager.saveData.name = nameTMP.text;
+        }
+        else
+        {
+            SaveManager.saveData.name = "Hero";
+        }
+
+        if (seedTMP.text.Any())
+        {
+            Seed.seed = seedTMP.text;
+        }
+    }
+
     private IEnumerator CloseRoutine()
     {
-        float elapsed = 0.0f;
+        float elapsed = 0f;
         bookAnimator.SetBool("IsOpen", false);
 
         while (elapsed < durationMovementOut)

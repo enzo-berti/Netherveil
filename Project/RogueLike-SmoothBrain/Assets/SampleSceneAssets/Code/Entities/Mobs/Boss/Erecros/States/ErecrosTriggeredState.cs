@@ -20,8 +20,6 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
     public ErecrosTriggeredState(ErecrosStateMachine currentContext, StateFactory<ErecrosStateMachine> currentFactory)
         : base(currentContext, currentFactory) { }
 
-    Type lastAttack = null;
-
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
@@ -33,8 +31,8 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         //    {
         //        List<Type> availableAttacks = GetAvailableAttacks();
 
-        //        lastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
-        //        SwitchState(Factory.GetState(lastAttack));
+        //        Context.LastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
+        //        SwitchState(Factory.GetState(Context.LastAttack));
         //    }
         //}
     }
@@ -58,6 +56,8 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
 
         Context.MoveTo(Context.Player.transform.position);
 
+        Context.Sounds.walk.Play(Context.transform.position);
+
         Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
 
     }
@@ -75,35 +75,30 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         List<Type> availableAttacks = new()
         {
             typeof(ErecrosTriangleDashAttack),
-            typeof(ErecrosSummoningAttack),
-            typeof(ErecrosTeleportAttack),
+            //typeof(ErecrosSummoningAttack),
+            typeof(ErecrosTeleportAttack)
         };
 
         if (Context.CurrentPart == 1)
         {
-            if (Context.CurrentPhase == 1)
+            if (Context.CurrentPhase == 2)
             {
                 availableAttacks.Add(typeof(ErecrosPrisonAttack));
             }
         }
         else if (Context.CurrentPart == 2)
         {
-            if (Context.CurrentPhase == 1)
-            {
-                availableAttacks.Add(typeof(ErecrosShockwaveAttack));
-            }
-            else if (Context.CurrentPhase == 2)
+            availableAttacks.Add(typeof(ErecrosShockwaveAttack));
+
+            if (Context.CurrentPhase == 2)
             {
                 availableAttacks.Add(typeof(ErecrosWeaponThrowAttack));
             }
         }
 
-        if (lastAttack != null)
+        if (availableAttacks.Contains(Context.LastAttack))
         {
-            if (availableAttacks.Contains(lastAttack))
-            {
-                availableAttacks.Remove(lastAttack);
-            }
+            availableAttacks.Remove(Context.LastAttack);
         }
 
         return availableAttacks;
