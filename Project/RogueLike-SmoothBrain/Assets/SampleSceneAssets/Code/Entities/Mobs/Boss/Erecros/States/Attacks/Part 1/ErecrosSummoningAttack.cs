@@ -21,6 +21,8 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
 
     bool attackEnded = false;
 
+    float attackDuration = 20f;
+
     List<Mobs> enemies = new();
     float spawnRadius = 4f;
 
@@ -38,7 +40,7 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
     {
         Context.Agent.isStopped = true;
 
-        int iterations = (Context.CurrentPhase > 1 || Context.CurrentPart > 1) ? 6 : 4; 
+        int iterations = (Context.CurrentPhase > 1 || Context.CurrentPart > 1) ? 6 : 4;
 
         for (int i = 0; i < iterations; i++)
         {
@@ -55,6 +57,8 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
         Context.Animator.ResetTrigger("Invoke");
         Context.Animator.SetTrigger("Invoke");
 
+        Context.SummonCollider.enabled = true;
+
         Context.ShieldVFX.Reinit();
         Context.ShieldVFX.Play();
     }
@@ -63,7 +67,7 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
     protected override void ExitState()
     {
         Context.Agent.isStopped = false;
-        Context.AttackCooldown = 2f + Random.Range(-0.25f, 0.25f);
+        Context.SummonCollider.enabled = false;
 
         Context.ShieldVFX.Stop();
 
@@ -76,13 +80,15 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        attackDuration -= Time.deltaTime;
+
         Context.LookAtTarget(Context.Player.transform.position, 5f);
 
         RemoveDeadEnemies();
 
         Context.Sounds.levitation.Play(Context.transform.position);
 
-        attackEnded = enemies.Count <= 0f;
+        attackEnded = enemies.Count <= 0f || attackDuration <= 0;
     }
 
     // This method will be called on state switch.

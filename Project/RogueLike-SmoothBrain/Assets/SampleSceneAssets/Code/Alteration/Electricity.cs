@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Electricity : OverTimeStatus
 {
-    private float entityBaseSpeed;
     const float stunTime = 0.5f;
     private bool isStunCoroutineOn = false;
     public Electricity(float duration, float chance) : base(duration, chance)
@@ -16,7 +15,7 @@ public class Electricity : OverTimeStatus
     }
     public override bool CanApplyEffect(Entity target)
     {
-        return target.Stats.HasStat(Stat.SPEED);
+        return true;
     }
 
     public override Status DeepCopy()
@@ -28,7 +27,10 @@ public class Electricity : OverTimeStatus
 
     public override void OnFinished()
     {
-        target.Stats.SetValue(Stat.SPEED, entityBaseSpeed);
+        if(target as Mobs != null)
+        {
+            (target as Mobs).Agent.isStopped = false;
+        }
     }
 
     protected override void Effect()
@@ -47,14 +49,21 @@ public class Electricity : OverTimeStatus
         isStunCoroutineOn = true;
         target.isFreeze += 1;
         target.GetComponentInChildren<Animator>().speed = 0;
+        if (target as Mobs != null)
+        {
+            (target as Mobs).Agent.isStopped = true;
+        }
         yield return new WaitForSeconds(stunTime);
         target.isFreeze -= 1;
+        if (target as Mobs != null)
+        {
+            (target as Mobs).Agent.isStopped = false;
+        }
         target.GetComponentInChildren<Animator>().speed = 1;
         isStunCoroutineOn = false;
     }
 
     protected override void PlayStatus()
     {
-        entityBaseSpeed = target.Stats.GetValue(Stat.SPEED);
     }
 }
