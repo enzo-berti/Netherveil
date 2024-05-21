@@ -119,7 +119,6 @@ public class Knockback : MonoBehaviour
             hitObstacle = collide.Any();
             if (hitObstacle)
             {
-                Debug.Log(collide, collide.First());
                 onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);
             }
             else
