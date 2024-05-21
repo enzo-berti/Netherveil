@@ -8,20 +8,16 @@ public class ItemFrame : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 {
     [SerializeField] protected Image background;
     [SerializeField] protected Image item;
-    private Button itemButton;
     private string description;
-    private string name;
+    private string nameItem;
+    private string state;
     private GameObject panel;
 
     private void Awake()
     {
-        if (item != null && item.GetComponent<Button>() == null)
+        if (item != null && item.GetComponent<Selectable>() == null)
         {
-            itemButton = item.gameObject.AddComponent<Button>();
-        }
-        else
-        {
-            itemButton = item.GetComponent<Button>();
+            item.gameObject.AddComponent<Selectable>();
         }
     }
 
@@ -40,12 +36,12 @@ public class ItemFrame : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             this.item.gameObject.SetActive(false);
     }
 
-    public void SetPanel(GameObject _panel,string _name, string _description)
+    public void SetPanel(GameObject _panel,string _name, string _description, string _state)
     {
         panel = _panel;
-        name = _name;
+        nameItem = _name;
         description = _description;
-        
+        state = _state;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -53,8 +49,9 @@ public class ItemFrame : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (description != null)
         {
             panel.SetActive(true);
-            panel.GetComponentsInChildren<TextMeshProUGUI>()[0].text = name;
+            panel.GetComponentsInChildren<TextMeshProUGUI>()[0].text = nameItem;
             panel.GetComponentsInChildren<TextMeshProUGUI>()[1].text = description;
+            panel.GetComponentsInChildren<TextMeshProUGUI>()[2].text = state;
         }
     }
 

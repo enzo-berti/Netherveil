@@ -649,7 +649,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     public void LoadSave()
     {
-        if (!SaveManager.HasData)
+        if (!SaveManager.saveData.hasData)
         {
             return;
         }
