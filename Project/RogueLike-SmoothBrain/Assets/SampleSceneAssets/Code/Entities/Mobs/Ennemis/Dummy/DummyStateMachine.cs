@@ -113,6 +113,9 @@ public class DummyStateMachine : Mobs, IDummy
             case Weakness.DASH_ATTACK:
                 Utilities.Hero.OnDashAttack += TriggerAttackBool;
                 break;
+            case Weakness.TRAPS:
+                Projectile.OnProjectileHit += TriggerAttackBool;
+                break;
         }
     }
 
@@ -131,6 +134,9 @@ public class DummyStateMachine : Mobs, IDummy
                 break;
             case Weakness.DASH_ATTACK:
                 Utilities.Hero.OnDashAttack -= TriggerAttackBool;
+                break;
+            case Weakness.TRAPS:
+                Projectile.OnProjectileHit -= TriggerAttackBool;
                 break;
         }
     }

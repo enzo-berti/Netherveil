@@ -1,4 +1,6 @@
+using Map.Generation;
 using System.Collections;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -61,11 +63,11 @@ public class SaveBook : MonoBehaviour
     {
         SaveManager.SelectSave(saveNumber);
 
+        SaveRegister = SaveManager.saveData.hasData;
         if (SaveManager.saveData.hasData)
         {
-            SaveRegister = true;
-            nameTMP.text = SaveManager.saveData.Name;
-            seedTMP.text = SaveManager.saveData.Seed;
+            nameTMP.text = SaveManager.saveData.name;
+            seedTMP.text = SaveManager.saveData.seed;
         }
 
         if (routine != null)
@@ -74,9 +76,27 @@ public class SaveBook : MonoBehaviour
         routine = StartCoroutine(OpenRoutine());
     }
 
+    public void StartBook()
+    {
+        Debug.Log("SELECT");
+        if (nameTMP.text.Any())
+        {
+            SaveManager.saveData.name = nameTMP.text;
+        }
+        else
+        {
+            SaveManager.saveData.name = "Hero";
+        }
+
+        if (seedTMP.text.Any())
+        {
+            Seed.seed = seedTMP.text;
+        }
+    }
+
     private IEnumerator CloseRoutine()
     {
-        float elapsed = 0.0f;
+        float elapsed = 0f;
         bookAnimator.SetBool("IsOpen", false);
 
         while (elapsed < durationMovementOut)

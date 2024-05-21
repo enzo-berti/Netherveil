@@ -11,6 +11,7 @@
 // }
 
 using StateMachine; // include all scripts about StateMachines
+using System.Collections;
 using UnityEngine;
 
 public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
@@ -20,7 +21,6 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
 
     bool attackEnded = false;
     float angle;
-    float pause = 0f;
 
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
@@ -45,10 +45,12 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
 
         Context.ShockwaveVFX.transform.position = Context.transform.position + vfxVector;
 
-        DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.25f);
-        Context.CameraUtilities.ShakeCamera(0.3f, 1f, EasingFunctions.EaseInQuint);
+        Context.Animator.ResetTrigger("Shockwave");
+        Context.Animator.SetTrigger("Shockwave");
 
         Context.Sounds.shockwave.Play(Context.transform.position);
+
+        Context.StartCoroutine(ShockwaveCoroutine());
     }
 
     // This method will be called only once after the last update.
@@ -65,30 +67,7 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        if (angle < 360)
-        {
-            angle += 600f * Time.deltaTime;
 
-            Vector3 vfxVector = Context.transform.forward * 4f;
-            vfxVector = Quaternion.AngleAxis(angle, Vector3.up) * vfxVector;
-            vfxVector.y = 0f;
-
-            Context.ShockwaveVFX.transform.position = Vector3.MoveTowards(Context.ShockwaveVFX.transform.position, Context.transform.position + vfxVector, 50f * Time.deltaTime);
-        }
-        else
-        {
-            pause += Time.deltaTime;
-
-            if (pause >= 0.25f)
-            {
-                attackEnded = true;
-            }
-        }
-
-        if (!Context.PlayerHit)
-        {
-            Context.AttackCollide(Context.Attacks[(int)ErecrosStateMachine.ErecrosColliders.SPINNING_ATTACK].data);
-        }
     }
 
     // This method will be called on state switch.
@@ -97,5 +76,39 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
     {
         base.SwitchState(newState);
         Context.currentState = newState;
+    }
+
+    IEnumerator ShockwaveCoroutine()
+    {
+        yield return new WaitForSeconds(1);
+
+        DeviceManager.Instance.ApplyVibrations(0.8f, 0.8f, 0.25f);
+        Context.CameraUtilities.ShakeCamera(0.3f, 1f, EasingFunctions.EaseInQuint);
+
+        while (angle < 360)
+        {
+            angle += 600f * Time.deltaTime;
+
+            Vector3 vfxVector = Context.transform.forward * 4f;
+            vfxVector = Quaternion.AngleAxis(angle, Vector3.up) * vfxVector;
+            vfxVector.y = 0f;
+
+            Context.ShockwaveVFX.transform.position = Vector3.MoveTowards(Context.ShockwaveVFX.transform.position, Context.transform.position + vfxVector, 50f * Time.deltaTime);
+
+            if (!Context.PlayerHit)
+            {
+                Context.AttackCollide(Context.Attacks[(int)ErecrosStateMachine.ErecrosColliders.SPINNING_ATTACK].data);
+            }
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.25f);
+
+        angle = 0f;
+        Context.DisableHitboxes();
+        attackEnded = true;
+
+        yield return null;
     }
 }
