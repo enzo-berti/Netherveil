@@ -446,7 +446,6 @@ public class EntityDrawer : Editor
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("No GUI implemented for : " + fieldToDisplay);
-                Debug.LogWarning(e);
                 EditorGUILayout.EndHorizontal();
             }
 
