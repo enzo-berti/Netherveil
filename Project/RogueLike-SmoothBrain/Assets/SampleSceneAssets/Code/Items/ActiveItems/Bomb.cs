@@ -5,6 +5,8 @@ using UnityEngine.XR;
 public class Bomb : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 10f;
+    public bool TimeBased { get; set; } = true;
+
     public static bool bombIsThrow;
     private GameObject bombPf;
     readonly int damages = 15;
@@ -42,7 +44,7 @@ public class Bomb : ItemEffect, IActiveItem
         explodingBomb.SetTimeToExplode(0.5f * 1.5f);
 
         explodingBomb.SetBlastDamages(damages);
-        explodingBomb.Activate();
+        explodingBomb.Activate(true);
         bombIsThrow = false;
     }
 }

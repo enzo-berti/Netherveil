@@ -5,6 +5,7 @@ using UnityEngine;
 public class RuneOfSloth : ItemEffect, IActiveItem
 {
     public float Cooldown { get; set; } = 30f;
+    public bool TimeBased { get; set; } = true;
     private readonly float duration = 3f;
 #pragma warning disable IDE0052 // Supprimer les membres privés non lus
     private readonly float displayValue;
