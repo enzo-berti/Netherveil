@@ -18,18 +18,18 @@ public class GorgonEyeSpawner : MonoBehaviour
     {
         if (gorgon.HasLaunchAnim)
         {
-            if(!spawnEyeCoroutineOn)
+            if (!spawnEyeCoroutineOn)
             {
                 currentEye.gameObject.transform.parent = null;
             }
-            
+
         }
         else if (gorgon.HasRemovedHead)
         {
             if (!spawnEyeCoroutineOn)
             {
                 currentEye.gameObject.transform.parent = handPos;
-               StartCoroutine(SpawnEye());
+                StartCoroutine(SpawnEye());
             }
         }
 
@@ -45,10 +45,14 @@ public class GorgonEyeSpawner : MonoBehaviour
         go.transform.localScale = Vector3.zero;
         while (timer < 1.0f)
         {
-            timer += Time.deltaTime / 2.0f;
-            timer = timer > 1f ? 1f : timer;
-            float curScale = Mathf.Lerp(0, wantedScale, timer);
-            go.transform.localScale = new Vector3(curScale, curScale, curScale);
+            if (!gorgon.IsFreeze)
+            {
+                timer += Time.deltaTime / 2.0f;
+                timer = timer > 1f ? 1f : timer;
+                float curScale = Mathf.Lerp(0, wantedScale, timer);
+                go.transform.localScale = new Vector3(curScale, curScale, curScale);
+            }
+
             yield return null;
         }
         spawnEyeCoroutineOn = false;
