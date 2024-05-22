@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1283209200333425057}
+  m_Father: {fileID: 6303315340493100323}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!2083052967 &8977965128064781933
 VisualEffect:
@@ -51,7 +51,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0.75
+      - m_Value: 1.25
         m_Name: TimeToExplode
         m_Overridden: 1
       - m_Value: 1
@@ -152,8 +152,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7329617244991637471}
   - {fileID: 2758133282556023863}
-  m_Father: {fileID: 6597866475834236010}
+  m_Father: {fileID: 1283209200333425057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4358589382496920653
 GameObject:
@@ -185,7 +186,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1283209200333425057}
-  - {fileID: 6303315340493100323}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6859407286501875505
@@ -356,13 +356,13 @@ Transform:
   m_GameObject: {fileID: 8787006369054971081}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.53, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7247481542723352870}
-  - {fileID: 7329617244991637471}
   - {fileID: 1352617385662206060}
+  - {fileID: 6303315340493100323}
   m_Father: {fileID: 6597866475834236010}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &742454038995102756
@@ -466,7 +466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mRenderer:
-  - {fileID: 0}
+  - {fileID: 7856358909252582627}
 --- !u!114 &1294631122805796244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b000e066d9e0fd47bbca4c9f665a86e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  VFXBomb: {fileID: 8977965128064781933}
+  animator: {fileID: 3635555834345579356}
   attackHitbox: {fileID: 5431662252164281269}
   explosionSound:
     reference:
@@ -515,7 +516,7 @@ PrefabInstance:
     - target: {fileID: 495557458418339345, guid: 61e802961204b62419e06013a0aaadbf,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
-      value: -3.53
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 495557458418339345, guid: 61e802961204b62419e06013a0aaadbf,
         type: 3}
@@ -675,7 +676,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 06a06c5c6e75fef45954f3d31650ed7e, type: 2}
+      objectReference: {fileID: 9100000, guid: 0572e261b7ba50a4d86ec992ab40a71d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -685,6 +686,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3186061586354616088}
   m_SourcePrefab: {fileID: 100100000, guid: fa991de5c51d9714a88a8705d0cde647, type: 3}
+--- !u!95 &3635555834345579356 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: fa991de5c51d9714a88a8705d0cde647,
+    type: 3}
+  m_PrefabInstance: {fileID: 7142290563373784781}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4166296533594142263 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2679874932307580678, guid: fa991de5c51d9714a88a8705d0cde647,

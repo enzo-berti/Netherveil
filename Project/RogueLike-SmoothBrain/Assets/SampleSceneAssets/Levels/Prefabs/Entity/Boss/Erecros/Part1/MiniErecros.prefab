@@ -157,7 +157,7 @@ Transform:
   m_LocalScale: {x: 5.5343, y: 5.5343, z: 5.5343}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2584217418752851555}
+  m_Father: {fileID: 2099294961770591830}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &3121270679592766814
 SphereCollider:
@@ -783,7 +783,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2099294961770591830}
-  - {fileID: 9123809276079312734}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7308873140787013269
@@ -973,6 +972,7 @@ Transform:
   - {fileID: 3211559771764899340}
   - {fileID: 3924765513420066869}
   - {fileID: 7938360880839193315}
+  - {fileID: 9123809276079312734}
   m_Father: {fileID: 2584217418752851555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1140400019201033103
@@ -1039,7 +1039,7 @@ NavMeshAgent:
   m_Acceleration: 999
   avoidancePriority: 50
   m_AngularSpeed: 500
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1084,7 +1084,7 @@ MonoBehaviour:
       hasMaxStat: 1
       hasMinStat: 0
       hasCoeff: 0
-      value: 5
+      value: 15
       lastValue: 0
       coeff: 0
       maxValue: 500
@@ -1265,24 +1265,24 @@ MonoBehaviour:
     walk:
       reference:
         Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
+          Data1: 2073449533
+          Data2: 1255359486
+          Data3: -1633867879
+          Data4: 203384824
+        Path: event:/Enemy/Erecros/ErecrosLittleFly
     music:
       reference:
         Guid:
-          Data1: 0
-          Data2: 0
-          Data3: 0
-          Data4: 0
-        Path: 
+          Data1: 703375510
+          Data2: 1265416112
+          Data3: 1237154445
+          Data4: 424122267
+        Path: event:/Musics/FinalBossMusic
   attackColliders:
   - data:
     - {fileID: 4554536712987986995}
   part: 1
-  phase: 1
+  phase: 2
   miniPrefab: {fileID: 7199794386380442706}
   maxiPrefab: {fileID: 2271514520736511952, guid: dc6c5d2702d8ca94fb5367301dba02c9,
     type: 3}
@@ -1924,22 +1924,22 @@ PrefabInstance:
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.894375
+      value: 0.8184346
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.2316177
+      value: 0.22203837
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.37046227
+      value: 0.51147723
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.09593919
+      value: -0.13876192
       objectReference: {fileID: 0}
     - target: {fileID: 4020952985578771436, guid: 5c88c906649771a43bd23b9c1322fdf2,
         type: 3}

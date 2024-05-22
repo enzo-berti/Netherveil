@@ -4,7 +4,7 @@ using UnityEngine.VFX;
 
 public class ErecrosCloneBehaviour : MonoBehaviour
 {
-    VisualEffect VFXBomb;
+    [SerializeField] VisualEffect VFXBomb;
     IAttacker attacker;
 
     CameraUtilities cameraUtilities;
@@ -16,8 +16,6 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
     private void Awake()
     {
-        VFXBomb = GetComponentInChildren<VisualEffect>();
-
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
     }
 
@@ -42,7 +40,6 @@ public class ErecrosCloneBehaviour : MonoBehaviour
         while (timer < timeToExplode)
         {
             timer += Time.deltaTime;
-
 
             if (timer >= 0.8)
             {

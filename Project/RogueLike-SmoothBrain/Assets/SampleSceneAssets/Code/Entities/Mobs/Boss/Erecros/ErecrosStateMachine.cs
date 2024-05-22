@@ -55,8 +55,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     float height = 0f;
 
-    [SerializeField] int part;
-    [SerializeField] int phase;
+    public int part;
+    public int phase;
 
     [SerializeField] GameObject miniPrefab;
     [SerializeField] GameObject maxiPrefab;
@@ -122,13 +122,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         initialHP = stats.GetValue(Stat.HP);
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
-        props = propsParent.GetComponentsInChildren<Rigidbody>();
-
-        foreach (Rigidbody prop in props)
-        {
-            propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
-        }
-
         height = GetComponentInChildren<Renderer>().bounds.size.y;
 
         if (part == 1)
@@ -144,8 +137,17 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             sounds.intro.Play(transform.position);
 
             // Cinematics
-            cinematic.Play();
-            isInCinematic = true;
+            //cinematic.Play();
+            //isInCinematic = true;
+        }
+        else if (part == 2)
+        {
+            props = propsParent.GetComponentsInChildren<Rigidbody>();
+
+            foreach (Rigidbody prop in props)
+            {
+                propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
+            }
         }
     }
 
@@ -164,8 +166,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
                 phase++;
             }
         }
-
-        Debug.Log("Phase : " + phase + " // Part : " + part);
 
         base.Update();
         currentState.Update();
@@ -204,6 +204,13 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         }
         else if (part == 2)
         {
+            ErecrosStateMachine part3Boss = Instantiate(miniPrefab, transform.position, Quaternion.identity).GetComponentInChildren<ErecrosStateMachine>();
+            part3Boss.stats.SetValue(Stat.HP, 10);
+            part3Boss.part = 3;
+            Destroy(gameObject);
+        }
+        else if (part == 3)
+        {
             animator.speed = 1;
             OnDeath?.Invoke(transform.position);
             Utilities.Hero.OnKill?.Invoke(this);
@@ -212,6 +219,9 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
             if (gameMusic != null)
                 gameMusic.SetActive(true);
+
+            animator.ResetTrigger("Death");
+            animator.SetTrigger("Death");
 
             currentState = factory.GetState<ErecrosDeathState>();
         }

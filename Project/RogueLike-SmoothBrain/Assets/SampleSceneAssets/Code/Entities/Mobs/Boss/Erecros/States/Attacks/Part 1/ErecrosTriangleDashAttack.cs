@@ -83,7 +83,7 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
         foreach (ErecrosCloneBehaviour clone in cloneBehaviours)
         {
             clone.DisableDebugCollider();
-            Object.Destroy(clone.gameObject);
+            Object.Destroy(clone.transform.parent.gameObject);
         }
 
         Context.PlayerHit = false;
@@ -110,6 +110,13 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
                 Context.Stats.IncreaseCoeffValue(Stat.SPEED, 4f);
 
                 Context.Sounds.dash.Play(Context.transform.position);
+
+                foreach (ErecrosCloneBehaviour clone in cloneBehaviours)
+                {
+                    clone.animator.ResetTrigger("Dash");
+                    clone.animator.SetTrigger("Dash");
+                }
+
                 dashed = true;
             }
         }

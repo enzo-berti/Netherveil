@@ -10,6 +10,7 @@
 //      }
 // }
 
+using FMOD;
 using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,12 +22,9 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
-    //float torusRadius = 0f;
     float dashDistance;
     float prisonRadius;
     Vector3 prisonCenter;
-
-    GameObject torus;
 
     List<Transform> clones = new();
 
@@ -42,9 +40,6 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
     // This method will be called only once before the update.
     protected override void EnterState()
     {
-        //torus = Object.Instantiate(Context.PrisonTorusPrefab, Context.Player.transform.position + Vector3.up, Quaternion.identity);
-        //torusRadius = torus.GetComponent<Renderer>().bounds.size.x / 2f;
-
         prisonCenter = Context.Player.transform.position;
 
         Context.PrisonVFX.transform.position = prisonCenter;
@@ -56,11 +51,12 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         int clonesAmount = 16;
 
+
         Context.Sounds.prison.Play(Context.transform.position);
 
         for (int i = 0; i < clonesAmount; i++)
         {
-            Vector3 spawnVector = (Context.transform.position - Context.Player.transform.position).normalized * prisonRadius;
+            Vector3 spawnVector = (Context.transform.position - Context.Player.transform.position).normalized * (prisonRadius + 0.5f);
             spawnVector = Quaternion.AngleAxis(360f / clonesAmount * i, Vector3.up) * spawnVector;
 
             GameObject clone = Object.Instantiate(Context.ClonePrefab, prisonCenter + spawnVector, Context.transform.rotation);
@@ -68,6 +64,9 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
             FacePlayer(clone.transform);
             clones.Add(clone.transform);
         }
+
+        Context.Animator.ResetTrigger("Prison");
+        Context.Animator.SetTrigger("Prison");
     }
 
     // This method will be called only once after the last update.
@@ -75,12 +74,16 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
     {
         Context.Agent.isStopped = false;
 
-        Object.Destroy(torus);
-
         foreach (Transform clone in clones)
         {
             Object.Destroy(clone.gameObject);
         }
+
+        Context.Animator.ResetTrigger("PrisonEnded");
+        Context.Animator.SetTrigger("PrisonEnded");
+
+        //Context.PrisonVFX.Reinit();
+        //Context.PrisonVFX.Stop();
 
         Context.AttackCooldown = 2f + Random.Range(-0.25f, 0.25f);
     }
@@ -88,11 +91,6 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
-        if (Input.GetKey(KeyCode.V))
-        {
-            attackEnded = true;
-        }
-
         Vector3 prisonCenterToPlayer = Context.Player.transform.position - prisonCenter;
         if (prisonCenterToPlayer.sqrMagnitude > prisonRadius * prisonRadius)
         {
@@ -101,24 +99,29 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         if (clones.Count > 0)
         {
+            ErecrosCloneBehaviour cloneBehaviour = clones[0].GetComponentInChildren<ErecrosCloneBehaviour>();
+
             if (dashDistance == 0f)
             {
                 FacePlayer(clones[0].transform);
                 Context.Sounds.dash.Play(clones[0].transform.position);
+
+                cloneBehaviour.animator.ResetTrigger("Dash");
+                cloneBehaviour.animator.SetTrigger("Dash");
             }
 
-            clones[0].position += clones[0].forward * 15f * Time.deltaTime;
-            dashDistance += 15f * Time.deltaTime;
+            clones[0].position += clones[0].forward * 20f * Time.deltaTime;
+            dashDistance += 20f * Time.deltaTime;
 
             if (!Context.PlayerHit)
             {
-                if (clones[0].GetComponentInChildren<ErecrosCloneBehaviour>().AttackCollide(Context))
+                if (cloneBehaviour.AttackCollide(Context))
                 {
                     Context.PlayerHit = true;
                 }
             }
 
-            if (dashDistance > prisonRadius * 2f)
+            if (dashDistance > prisonRadius * 2f + 1)
             {
                 Object.Destroy(clones[0].gameObject);
                 clones.RemoveAt(0);
