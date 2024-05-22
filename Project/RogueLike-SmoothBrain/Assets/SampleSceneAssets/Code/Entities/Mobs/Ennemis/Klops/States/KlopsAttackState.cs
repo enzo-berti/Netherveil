@@ -18,8 +18,6 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
     bool endState = false;
     bool hasShot = false;
     bool hasAnim = false;
-
-    GameObject fireball;
     public KlopsAttackState(KlopsStateMachine currentContext, StateFactory<KlopsStateMachine> currentFactory) : base(currentContext, currentFactory)
     {
     }
@@ -59,26 +57,26 @@ public class KlopsAttackState : BaseState<KlopsStateMachine>
 
         if (!hasAnim && currentTime >= BeginToAttackTime)
         {
-            fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
-            fireball.transform.localScale = Vector3.zero;
+            Context.Fireball = GameObject.Instantiate(Context.FireballPrefab, Context.FireballSpawn.position, Quaternion.identity);
+            Context.Fireball.transform.localScale = Vector3.zero;
             Context.Animator.ResetTrigger("Attack");
             Context.Animator.SetTrigger("Attack");
             hasAnim = true;
         }
-        else if (!hasShot && currentTime >= TimeBeforeChargingFireball && fireball != null)
+        else if (!hasShot && currentTime >= TimeBeforeChargingFireball && Context.Fireball != null)
         {
             scalingTimer += Time.deltaTime / (LaunchTime - TimeBeforeChargingFireball);
-            fireball.transform.localScale = Vector3.Lerp(Vector3.zero, fireballScale, scalingTimer);
-            fireball.transform.position = Context.FireballSpawn.position;
+            Context.Fireball.transform.localScale = Vector3.Lerp(Vector3.zero, fireballScale, scalingTimer);
+            Context.Fireball.transform.position = Context.FireballSpawn.position;
         }
-        if (!hasShot && currentTime >= LaunchTime && fireball != null)
+        if (!hasShot && currentTime >= LaunchTime && Context.Fireball != null)
         {
             Context.KlopsSound.attackSound.Play(Context.transform.position);
-            fireball.GetComponent<Fireball>().CanBeReflected = true;
-            fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
-            fireball.GetComponent<Fireball>().launcher = Context;
-            fireball.transform.LookAt(Utilities.Player.transform);
-            GameObject.Destroy(fireball, 3f);
+            Context.Fireball.GetComponent<Fireball>().CanBeReflected = true;
+            Context.Fireball.GetComponent<Fireball>().Direction = Utilities.Player.transform.position - Context.transform.position;
+            Context.Fireball.GetComponent<Fireball>().launcher = Context;
+            Context.Fireball.transform.LookAt(Utilities.Player.transform);
+            GameObject.Destroy(Context.Fireball, 3f);
             hasShot = true;
         }
         if (currentTime >= timeBeforeChangeState)
