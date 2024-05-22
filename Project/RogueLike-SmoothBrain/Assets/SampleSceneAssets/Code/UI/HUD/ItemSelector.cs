@@ -47,7 +47,7 @@ public class ItemSelector : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnSelect(BaseEventData eventData)
     {
-        if (string.IsNullOrEmpty(description))
+        if (string.IsNullOrEmpty(description) || DeviceManager.Instance.IsPlayingKB())
             return;
 
         panel.SetDescription(name, state, description);
@@ -57,7 +57,7 @@ public class ItemSelector : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnDeselect(BaseEventData eventData)
     {
-        if (string.IsNullOrEmpty(description))
+        if (string.IsNullOrEmpty(description) || DeviceManager.Instance.IsPlayingKB())
             return;
 
         panel.Toggle(false);
