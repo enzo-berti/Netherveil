@@ -262,10 +262,10 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
         activeColliders.Add(Context.PropsColliders[i]);
 
         yield return new WaitForSeconds(0.5f);
+
         onBoss[i] = true;
         yield return null;
     }
-
 
     #endregion
 }

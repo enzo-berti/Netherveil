@@ -140,7 +140,7 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
 
                 if (!Context.PlayerHit)
                 {
-                    if (clone.AttackCollide(Context))
+                    if (clone.AttackCollide(Context, Context.DebugMode))
                     {
                         Context.PlayerHit = true;
                     }

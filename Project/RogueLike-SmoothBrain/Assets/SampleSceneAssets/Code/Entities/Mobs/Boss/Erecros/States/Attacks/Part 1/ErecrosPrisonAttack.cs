@@ -12,9 +12,7 @@
 
 using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 {
@@ -22,12 +20,15 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
-    
+
     Vector3 prisonCenter;
     float prisonRadius;
     float dashDistance;
 
-    float delayBetweenDash = 1f;
+    float delayBeforeDash = 0.5f;
+    bool waiting = false;
+
+    int randomClone = 0;
 
     List<Transform> clones = new();
 
@@ -58,7 +59,7 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         for (int i = 0; i < clonesAmount; i++)
         {
-            Vector3 spawnVector = (Context.transform.position - Context.Player.transform.position).normalized * (prisonRadius + 0.5f);
+            Vector3 spawnVector = (Context.transform.position - prisonCenter).normalized * (prisonRadius + 2f);
             spawnVector = Quaternion.AngleAxis(360f / clonesAmount * i, Vector3.up) * spawnVector;
 
             GameObject clone = Object.Instantiate(Context.ClonePrefab, prisonCenter + spawnVector, Context.transform.rotation);
@@ -100,6 +101,9 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
     // This method will be called every frame.
     protected override void UpdateState()
     {
+        Vector2 sex = Camera.main.WorldToViewportPoint(prisonCenter);
+        Context.Vignette.center.Override(sex + new Vector2(0, 0.05f));
+
         Vector3 prisonCenterToPlayer = Context.Player.transform.position - prisonCenter;
         if (prisonCenterToPlayer.sqrMagnitude > (prisonRadius - 0.5f) * (prisonRadius - 0.5f))
         {
@@ -108,45 +112,61 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         if (clones.Count > 0)
         {
-            ErecrosCloneBehaviour cloneBehaviour = clones[0].GetComponentInChildren<ErecrosCloneBehaviour>();
+            ErecrosCloneBehaviour cloneBehaviour = clones[randomClone].GetComponentInChildren<ErecrosCloneBehaviour>();
 
             if (dashDistance == 0f)
             {
-                FacePlayer(clones[0].transform);
-                Context.Sounds.dash.Play(clones[0].transform.position);
+                FacePlayer(clones[randomClone].transform);
+                Context.Sounds.dash.Play(clones[randomClone].transform.position);
 
                 cloneBehaviour.animator.ResetTrigger("Dash");
                 cloneBehaviour.animator.SetTrigger("Dash");
             }
 
-            clones[0].position += clones[0].forward * 20f * Time.deltaTime;
-            dashDistance += 20f * Time.deltaTime;
-
-            if (!Context.PlayerHit)
+            if (!waiting)
             {
-                if (cloneBehaviour.AttackCollide(Context))
-                {
-                    Context.PlayerHit = true;
-                }
+                clones[randomClone].position += clones[randomClone].forward * 20f * Time.deltaTime;
+                dashDistance += 20f * Time.deltaTime;
             }
 
-            if (dashDistance > prisonRadius * 2f + 1)
+            if (dashDistance >= 2f)
             {
-                Context.Clones.Remove(clones[0].gameObject);
-                Object.Destroy(clones[0].gameObject);
-                clones.RemoveAt(0);
-                dashDistance = 0f;
-                Context.PlayerHit = false;
-                return;
+                if (delayBeforeDash > 0f)
+                {
+                    delayBeforeDash -= Time.deltaTime;
+                    waiting = true;
+                    return;
+                }
+
+                waiting = false;
+
+                if (!Context.PlayerHit)
+                {
+                    if (cloneBehaviour.AttackCollide(Context, Context.DebugMode))
+                    {
+                        Context.PlayerHit = true;
+                    }
+                }
+
+                if (dashDistance > (prisonRadius + 2f) * 2f)
+                {
+                    Context.Clones.Remove(clones[randomClone].gameObject);
+                    Object.Destroy(clones[randomClone].gameObject);
+                    clones.RemoveAt(randomClone);
+                    dashDistance = 0f;
+
+                    delayBeforeDash = 2f;
+
+                    randomClone = Random.Range(0, clones.Count);
+                    Context.PlayerHit = false;
+                    return;
+                }
             }
         }
         else
         {
             attackEnded = true;
         }
-
-        Vector2 sex = Camera.main.WorldToViewportPoint(prisonCenter);
-        Context.Vignette.center.Override(sex + new Vector2(0, 0.05f));
     }
 
     // This method will be called on state switch.
