@@ -54,17 +54,21 @@ public class ErecrosTeleportAttack : BaseState<ErecrosStateMachine>
             }
         }
 
-        Vector3 newRandomPos = Context.transform.position;
-        do
-        {
-            Vector2 randomDirection2D = Random.insideUnitCircle.normalized;
-            Vector3 randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
+        //Vector3 newRandomPos = Context.transform.position;
+        //do
+        //{
+        //Vector2 randomDirection2D = Random.insideUnitCircle.normalized;
+        //Vector3 randomDirection3D = new Vector3(randomDirection2D.x, 0, randomDirection2D.y);
 
-            newRandomPos = Context.Player.transform.position + randomDirection3D * Random.Range(8f, 12f);
+        //newRandomPos = Context.Player.transform.position + randomDirection3D * Random.Range(8f, 12f);
 
-        } while (!NavMesh.SamplePosition(newRandomPos, out hit, 0.1f, NavMesh.AllAreas) || newRandomPos == Context.Player.transform.position);
+        //} while (!NavMesh.SamplePosition(newRandomPos, out hit, 0.1f, NavMesh.AllAreas) || newRandomPos == Context.Player.transform.position);
 
-        teleportPos.Add(newRandomPos);
+
+        Vector3 newPos2 = Context.transform.position + (Context.RoomCenter.position - Context.transform.position).normalized * Random.Range(8f, 12f);
+        newPos2.y = Context.transform.position.y;
+
+        teleportPos.Add(newPos2);
     }
 
     // This method will be called only once after the last update.
