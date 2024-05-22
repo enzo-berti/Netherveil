@@ -14,7 +14,7 @@ public class DamoclesSword : ConstantStatus
     public DamoclesSword(float _duration, float _chance) : base(_duration, _chance)
     {
         isStackable = false;
-        damages = (int)(Utilities.Hero.Stats.GetValue(Stat.ATK) * 2);
+        damages = Utilities.PlayerController.DAMOCLES_SWORD_DAMAGES;
     }
 
     public override Status DeepCopy()
