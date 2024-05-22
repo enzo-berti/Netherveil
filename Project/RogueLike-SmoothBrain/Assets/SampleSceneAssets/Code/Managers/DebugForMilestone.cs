@@ -71,7 +71,7 @@ public class DebugForMilestone : MonoBehaviour
             for (int i = 0; i < 10; i++)
                 FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, "<sprite name=\"omg\">", 3);
         }
-        if(Input.GetKeyDown(KeyCode.KeypadMultiply))
+        if (Input.GetKeyDown(KeyCode.KeypadMultiply))
         {
             foreach (var enemy in MapUtilities.currentRoomData.Enemies)
             {
@@ -84,6 +84,10 @@ public class DebugForMilestone : MonoBehaviour
                     }
                 }
             }
+        }
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            LevelLoader.current.LoadScene("Outro", true);
         }
     }
 }
