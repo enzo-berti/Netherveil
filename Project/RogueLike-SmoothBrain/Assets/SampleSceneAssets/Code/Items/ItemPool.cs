@@ -23,26 +23,26 @@ public class ItemPool
     #endregion
 
     #region Members
-    List<List<string>> itemPerTier;
+    public List<List<string>> itemsPerTier;
     #endregion
 
     #region Methods
     public ItemPool()
     {
         ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");
-        itemPerTier = new List<List<string>>();
+        itemsPerTier = new List<List<string>>();
         for (int i = 0; i < Enum.GetNames(typeof(ItemData.Rarity)).Length; i++)
         {
             // Adding pool for each Rarity
-            itemPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
+            itemsPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
         }
     }
 
     public bool IsPoolEmpty()
     {
-        for(int i = 0; i < itemPerTier.Count; i++)
+        for(int i = 0; i < itemsPerTier.Count; i++)
         {
-            if (itemPerTier[i].Count > 0)
+            if (itemsPerTier[i].Count > 0)
                 return false;
         }
         return true;
@@ -75,19 +75,19 @@ public class ItemPool
                 break;
             }
         }
-        int randomItemIndex = Seed.Range(0, itemPerTier[indexRarity].Count);
-        string toReturn =  itemPerTier[indexRarity][randomItemIndex];
+        int randomItemIndex = Seed.Range(0, itemsPerTier[indexRarity].Count);
+        string toReturn =  itemsPerTier[indexRarity][randomItemIndex];
         RemoveItemFromPool(indexRarity, toReturn);
         return toReturn;
     }
 
     private void RemoveItemFromPool(int rarityIndex, string name)
     {
-        itemPerTier[rarityIndex].Remove(name);
-        if (itemPerTier[rarityIndex].Count == 0)
+        itemsPerTier[rarityIndex].Remove(name);
+        if (itemsPerTier[rarityIndex].Count == 0)
         {
             UpdateRarityWeight(rarityIndex);
-            itemPerTier.RemoveAt(rarityIndex);
+            itemsPerTier.RemoveAt(rarityIndex);
         }
     }
     #endregion

@@ -13,9 +13,11 @@ public struct SaveData
     // Map
     public int stage;
     public int seedIteration;
-    public List<int> roomCleareds;
-    public List<int> altarCleareds;
+    public List<int> roomsCleared;
+    // InGame
+    public List<int> altarsCleared;
     public int altarCount;
+    public List<List<string>> itemsPool;
     // Hero
     public bool doneQuestQThisStage;
     public bool doneQuestQTApprenticeThisStage;
@@ -45,9 +47,11 @@ public struct SaveData
 
         stage = 0;
         seedIteration = 0;
-        roomCleareds = new List<int>();
-        altarCleareds = new List<int>();
+        roomsCleared = new List<int>();
+
+        altarsCleared = new List<int>();
         altarCount = 0;
+        itemsPool = new List<List<string>>();
 
         doneQuestQThisStage = false;
         doneQuestQTApprenticeThisStage = false;
@@ -82,17 +86,27 @@ public struct SaveData
         // Map
         writer.Write(stage);
         writer.Write(seedIteration);
-        writer.Write(roomCleareds.Count);
-        foreach (var idroom in roomCleareds)
+        writer.Write(roomsCleared.Count);
+        foreach (var idroom in roomsCleared)
         {
             writer.Write(idroom);
         }
-        writer.Write(altarCleareds.Count());
-        foreach (var idAltar in altarCleareds)
+        // InGame
+        writer.Write(altarsCleared.Count());
+        foreach (var idAltar in altarsCleared)
         {
             writer.Write(idAltar);
         }
         writer.Write(altarCount);
+        writer.Write(itemsPool.Count());
+        foreach (var itemsRarity in itemsPool)
+        {
+            writer.Write(itemsRarity.Count());
+            foreach (var item in itemsRarity)
+            {
+                writer.Write(item);
+            }
+        }
         // Hero
         writer.Write(doneQuestQThisStage);
         writer.Write(doneQuestQTApprenticeThisStage);
@@ -146,18 +160,30 @@ public struct SaveData
         stage = reader.ReadInt32();
         seedIteration = reader.ReadInt32();
         int roomClearedCount = reader.ReadInt32();
-        roomCleareds = new List<int>(roomClearedCount);
+        roomsCleared = new List<int>(roomClearedCount);
         for (int i = 0; i < roomClearedCount; i++)
         {
-            roomCleareds.Add(reader.ReadInt32());
+            roomsCleared.Add(reader.ReadInt32());
         }
+        // InGame
         int altarClearedCount = reader.ReadInt32();
-        altarCleareds = new List<int>(altarClearedCount);
+        altarsCleared = new List<int>(altarClearedCount);
         for (int i = 0; i < altarClearedCount; i++)
         {
-            altarCleareds.Add(reader.ReadInt32());
+            altarsCleared.Add(reader.ReadInt32());
         }
         altarCount = reader.ReadInt32();
+        int itemsRarityCount = reader.ReadInt32();
+        itemsPool = new List<List<string>>(itemsRarityCount);
+        for (int i = 0; i < itemsRarityCount; i++)
+        {
+            int itemsCount = reader.ReadInt32();
+            itemsPool.Add(new List<string>(itemsCount));
+            for (int j = 0; j < itemsCount; j++)
+            {
+                itemsPool[i].Add(reader.ReadString());
+            }
+        }
         // Hero
         doneQuestQThisStage = reader.ReadBoolean();
         doneQuestQTApprenticeThisStage = reader.ReadBoolean();
@@ -227,7 +253,7 @@ static public class SaveManager
         }
         catch (Exception e)
         {
-            Debug.LogException(e);
+            Debug.LogWarning("Can't load file : " + e);
 
             File.Delete(FilePath);
         }
@@ -248,7 +274,7 @@ static public class SaveManager
         }
         catch (Exception e)
         {
-            Debug.LogException(e);
+            Debug.LogWarning("Can't save : " + e);
 
             File.Delete(FilePath);
         }

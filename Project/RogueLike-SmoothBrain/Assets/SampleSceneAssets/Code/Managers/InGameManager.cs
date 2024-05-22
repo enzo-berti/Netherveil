@@ -1,4 +1,5 @@
 using Map.Generation;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class InGameManager : MonoBehaviour, ISavable
@@ -9,6 +10,7 @@ public class InGameManager : MonoBehaviour, ISavable
 
     public int altarCountRegister = 0;
     public int seedIterationRegister = 0;
+    public List<List<string>> itemsPoolRegister;
 
     private ItemPool itemPool;
     public static ItemPool ItemPool { get { return current.itemPool; } }
@@ -18,6 +20,13 @@ public class InGameManager : MonoBehaviour, ISavable
         LoadSave();
         SaveManager.onSave += Save;
         itemPool = new();
+    }
+
+    public void RegisterGameValues()
+    {
+        seedIterationRegister = Seed.Iteration;
+        altarCountRegister = ItemAltar.altarCount;
+        itemsPoolRegister = ItemPool.itemsPerTier;
     }
 
     /// <summary>
@@ -32,9 +41,11 @@ public class InGameManager : MonoBehaviour, ISavable
 
         ItemAltar.altarCount = SaveManager.saveData.altarCount;
         Seed.Iterate(SaveManager.saveData.seedIteration);
+        itemPool.itemsPerTier = SaveManager.saveData.itemsPool;
 
         altarCountRegister = ItemAltar.altarCount;
         seedIterationRegister = Seed.Iteration;
+        itemsPoolRegister = itemPool.itemsPerTier;
     }
 
     /// <summary>
@@ -44,5 +55,6 @@ public class InGameManager : MonoBehaviour, ISavable
     {
         save.altarCount = altarCountRegister;
         save.seedIteration = seedIterationRegister;
+        save.itemsPool = itemsPoolRegister;
     }
 }

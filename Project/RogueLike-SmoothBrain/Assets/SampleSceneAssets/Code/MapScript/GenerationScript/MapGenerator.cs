@@ -48,7 +48,7 @@ namespace Map.Generation
         public void Save(ref SaveData save)
         {
             save.stage = Stage;
-            save.roomCleareds = roomClearId;
+            save.roomsCleared = roomClearId;
         }
 
         public void LoadSave()
@@ -59,7 +59,7 @@ namespace Map.Generation
             }
 
             Stage = SaveManager.saveData.stage - 1;
-            roomClearId = SaveManager.saveData.roomCleareds;
+            roomClearId = SaveManager.saveData.roomsCleared;
         }
 
         private void ResetMapDatas()
@@ -102,8 +102,7 @@ namespace Map.Generation
         public void Generate(GenerationParameters genParam)
         {
             Stage++;
-            InGameManager.current.seedIterationRegister = Seed.Iteration;
-            InGameManager.current.altarCountRegister = ItemAltar.altarCount;
+            InGameManager.current.RegisterGameValues();
 
             ChangeMiniMapColor();
 
