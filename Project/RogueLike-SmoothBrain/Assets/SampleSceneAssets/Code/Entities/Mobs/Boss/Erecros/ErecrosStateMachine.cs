@@ -80,6 +80,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     Rigidbody[] props;
     List<Collider> propsColliders = new();
 
+    [SerializeField] Transform roomCenter;
+
     Type lastAttack = null;
 
     // CINEMATICS
@@ -103,6 +105,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public int CurrentPhase { get => phase; }
     public float Height { get => height - 1.25f; }
     public Type LastAttack { get => lastAttack; set => lastAttack = value; }
+    public Transform RoomCenter { get => roomCenter; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
@@ -143,8 +146,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             sounds.intro.Play(transform.position);
 
             // Cinematics
-            //cinematic.Play();
-            //isInCinematic = true;
+            cinematic.Play();
+            isInCinematic = true;
         }
         else if (part == 2)
         {
@@ -155,10 +158,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
                 propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
             }
         }
-
-        // Cinematics
-        cinematic.Play();
-        isInCinematic = true;
     }
 
     protected override void Update()
