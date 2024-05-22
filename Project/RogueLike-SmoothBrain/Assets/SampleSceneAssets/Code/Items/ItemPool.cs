@@ -94,7 +94,6 @@ public class ItemPool
                 itemsPerTier.RemoveAt(i);
             }
         }
-        UnityEngine.Debug.Log("toShare => " + toShare);
         toShare /= rarityWeighting.Count;
         for (int i = 0; i < rarityWeighting.Count; i++)
         {
