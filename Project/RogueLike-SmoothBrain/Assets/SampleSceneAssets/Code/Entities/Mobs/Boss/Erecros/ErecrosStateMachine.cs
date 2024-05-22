@@ -183,7 +183,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Dollar))
+        if (Input.GetKeyDown(KeyCode.Y))
         {
             toggleDebugMode = !toggleDebugMode;
         }

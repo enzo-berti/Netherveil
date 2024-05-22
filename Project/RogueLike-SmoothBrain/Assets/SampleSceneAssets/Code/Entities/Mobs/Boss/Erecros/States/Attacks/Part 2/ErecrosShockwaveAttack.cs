@@ -97,7 +97,7 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
 
             if (!Context.PlayerHit)
             {
-                Context.AttackCollide(Context.Attacks[(int)ErecrosStateMachine.ErecrosColliders.SPINNING_ATTACK].data);
+                Context.AttackCollide(Context.Attacks[(int)ErecrosStateMachine.ErecrosColliders.SPINNING_ATTACK].data, debugMode: Context.DebugMode);
             }
 
             yield return null;

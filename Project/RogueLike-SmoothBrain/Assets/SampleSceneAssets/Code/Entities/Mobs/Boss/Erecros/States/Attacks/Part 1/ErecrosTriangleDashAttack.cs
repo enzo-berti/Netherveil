@@ -124,7 +124,7 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
         {
             if (!Context.PlayerHit)
             {
-                Context.AttackCollide(Context.Attacks[(int)ErecrosStateMachine.ErecrosColliders.DASH].data, debugMode: true);
+                Context.AttackCollide(Context.Attacks[(int)ErecrosStateMachine.ErecrosColliders.DASH].data, debugMode: Context.DebugMode);
             }
 
             dashDistance -= Context.Stats.GetValue(Stat.SPEED) * Time.deltaTime;

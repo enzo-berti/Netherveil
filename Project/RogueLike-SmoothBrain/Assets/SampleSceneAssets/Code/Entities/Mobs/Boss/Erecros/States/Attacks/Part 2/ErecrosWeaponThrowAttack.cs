@@ -117,7 +117,7 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
             {
                 if (!Context.PlayerHit)
                 {
-                    Context.AttackCollide(activeColliders);
+                    Context.AttackCollide(activeColliders, debugMode: Context.DebugMode);
                 }
                 LookAtTarget(props[i].transform, props[i].transform.position + props[i].velocity, 10f);
             }

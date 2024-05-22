@@ -23,23 +23,23 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        //if (Context.DebugMode)
-        //{
-        //    UseDebugKeys();
-        //}
-        //else
-        //{
-        if (Context.AttackCooldown <= 0f && Context.CurrentPart != 3)
+        if (Context.DebugMode)
         {
-            if (Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+            UseDebugKeys();
+        }
+        else
+        {
+            if (Context.AttackCooldown <= 0f && Context.CurrentPart != 3)
             {
-                List<Type> availableAttacks = GetAvailableAttacks();
+                if (Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+                {
+                    List<Type> availableAttacks = GetAvailableAttacks();
 
-                Context.LastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
-                SwitchState(Factory.GetState(Context.LastAttack));
+                    Context.LastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
+                    SwitchState(Factory.GetState(Context.LastAttack));
+                }
             }
         }
-        //}
     }
 
     // This method will be called only once before the update.
@@ -84,7 +84,7 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
             typeof(ErecrosTeleportAttack)
         };
 
-        if (distanceToPlayer >= 3f && UnityEngine.Random.Range(0, 10) < 5)
+        if (distanceToPlayer >= 3f && UnityEngine.Random.Range(0, 10) < 3)
         {
             availableAttacks.Add(typeof(ErecrosSummoningAttack));
         }

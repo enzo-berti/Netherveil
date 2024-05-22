@@ -86,6 +86,15 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
 
         Context.Sounds.levitation.Play(Context.transform.position);
 
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            foreach (var enemy in enemies)
+            {
+                enemy.GetComponent<IDamageable>().Death();
+            }
+            enemies.Clear();
+        }
+
         attackEnded = enemies.Count <= 0f;
     }
 
