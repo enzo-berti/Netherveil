@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class ItemBar : MonoBehaviour
 {
@@ -39,6 +38,8 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private InputActionReference keyboardAbility;
     [SerializeField] private InputActionReference gamepadActive;
     [SerializeField] private InputActionReference gamepadAbility;
+
+    public bool ToggleOn { get { return toggleOn; } }
 
     private void Start()
     {
@@ -87,7 +88,7 @@ public class ItemBar : MonoBehaviour
 
     private void UpdateBinding()
     {
-        if(DeviceManager.Instance.IsPlayingKB())
+        if (DeviceManager.Instance.IsPlayingKB())
         {
             UpdateKeyboardBiding();
         }
@@ -100,7 +101,7 @@ public class ItemBar : MonoBehaviour
     private void UpdateKeyboardBiding()
     {
         string keyActive = keyboardActive.action.bindings.First().path.Split("/").Last();
-        if(specialItemFrame != null)
+        if (specialItemFrame != null)
             specialItemFrame.SetKey(iconsList.kb.GetSprite(keyActive), keyActive.ToUpper());
 
         string keyAbility = keyboardAbility.action.bindings.First().path.Split("/").Last();
@@ -133,12 +134,12 @@ public class ItemBar : MonoBehaviour
         {
             ItemFrame frame = Instantiate(framePf, itemPassiveTransform);
             frame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
-            frame.GetComponent<ItemSelector>().SetPanel(panelToToggle,itemAdd.Name, ItemDescription.GetDescription(data.idName), data.Type.ToString());
+            frame.GetComponent<ItemSelector>().SetPanelDescriton(itemAdd.Name, data.Type.ToString(), ItemDescription.GetDescription(data.idName));
         }
         else if (itemAdd is IActiveItem)
         {
             specialItemFrame.SetFrame(backItemActiveNormal[(int)data.RarityTier], item);
-            specialItemFrame.GetComponent<ItemSelector>().SetPanel(panelToToggle, itemAdd.Name, ItemDescription.GetDescription(data.idName), data.Type.ToString());
+            specialItemFrame.GetComponent<ItemSelector>().SetPanelDescriton(itemAdd.Name, data.Type.ToString(), ItemDescription.GetDescription(data.idName));
         }
     }
 
@@ -152,7 +153,7 @@ public class ItemBar : MonoBehaviour
         else if (ability as DivineShield != null)
         {
             specialAbilityFrame.SetFrame(backDivine, divineSprite);
-        } 
+        }
     }
 
     private void OnSpecialAbilityRemove()
