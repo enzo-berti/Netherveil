@@ -178,7 +178,7 @@ public class ItemBar : MonoBehaviour
     private void ActivateItemCooldownRoomBased(ItemEffect itemEffect)
     {
         ItemData data = database.GetItem(itemEffect.Name);
-        if(!(data as IActiveItem).TimeBased)
+        if(!(itemEffect as IActiveItem).TimeBased)
         {
             Sprite item = Sprite.Create((Texture2D)data.icon, new Rect(0.0f, 0.0f, data.icon.width, data.icon.height), new Vector2(0.5f, 0.5f), 100.0f);
             specialItemFrame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
