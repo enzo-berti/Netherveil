@@ -84,7 +84,7 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
             typeof(ErecrosTeleportAttack)
         };
 
-        if (distanceToPlayer >= 3f && UnityEngine.Random.Range(0, 10) < 7)
+        if (distanceToPlayer >= 3f && UnityEngine.Random.Range(0, 10) < 3)
         {
             availableAttacks.Add(typeof(ErecrosSummoningAttack));
         }
@@ -105,6 +105,8 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
 
             if (Context.CurrentPhase == 2)
             {
+                availableAttacks.Add(typeof(ErecrosWeaponThrowAttack));
+                availableAttacks.Add(typeof(ErecrosWeaponThrowAttack));
                 availableAttacks.Add(typeof(ErecrosWeaponThrowAttack));
             }
         }

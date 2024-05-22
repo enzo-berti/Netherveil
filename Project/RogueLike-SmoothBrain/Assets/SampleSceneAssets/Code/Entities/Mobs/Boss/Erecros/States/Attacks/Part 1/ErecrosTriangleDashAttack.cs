@@ -65,6 +65,8 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
             lookRotation = Quaternion.LookRotation(mobToPlayer);
             clone.transform.rotation = lookRotation;
 
+            Context.Clones.Add(clone);
+
             cloneBehaviours.Add(clone.GetComponentInChildren<ErecrosCloneBehaviour>());
         }
 
@@ -83,6 +85,7 @@ public class ErecrosTriangleDashAttack : BaseState<ErecrosStateMachine>
         foreach (ErecrosCloneBehaviour clone in cloneBehaviours)
         {
             clone.DisableDebugCollider();
+            Context.Clones.Remove(clone.transform.parent.gameObject);
             Object.Destroy(clone.transform.parent.gameObject);
         }
 
