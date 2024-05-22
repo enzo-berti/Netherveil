@@ -170,6 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   publicFade: {fileID: 922793163}
+  altarCountRegister: 0
+  seedIterationRegister: 0
 --- !u!1 &165144575
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,28 +422,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2021664835}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &690875984 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2723031262878214033, guid: 059499b2cd72808418feb2d5e576d0ef,
-    type: 3}
-  m_PrefabInstance: {fileID: 2021664835}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &690875988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 690875984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8520df904e48546a3e68667a440c80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: {fileID: 1310512506}
-  state: {fileID: 1267720962}
-  description: {fileID: 1271455528}
-  durationScale: 0.1
 --- !u!224 &724768874 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1901817442111093375, guid: 059499b2cd72808418feb2d5e576d0ef,
@@ -762,48 +742,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1567488009}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1267720962 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2743290105689324605, guid: 059499b2cd72808418feb2d5e576d0ef,
-    type: 3}
-  m_PrefabInstance: {fileID: 2021664835}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1271455528 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8753093656511373435, guid: 059499b2cd72808418feb2d5e576d0ef,
-    type: 3}
-  m_PrefabInstance: {fileID: 2021664835}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1294629352 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 48089006745291863, guid: 8099cd88fef1bba4ab8fef12d15d07fe,
     type: 3}
   m_PrefabInstance: {fileID: 3240248005520757999}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1310512506 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7640484863488378831, guid: 059499b2cd72808418feb2d5e576d0ef,
-    type: 3}
-  m_PrefabInstance: {fileID: 2021664835}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1328264845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1681,7 +1625,7 @@ PrefabInstance:
     - target: {fileID: 5458172950539555823, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5458172950539555823, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
@@ -1781,7 +1725,7 @@ PrefabInstance:
     - target: {fileID: 7609575117156047535, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7609575117156047535, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
@@ -1826,11 +1770,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2723031262878214033, guid: 059499b2cd72808418feb2d5e576d0ef,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 690875988}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 059499b2cd72808418feb2d5e576d0ef, type: 3}
 --- !u!1001 &2087435833
 PrefabInstance:

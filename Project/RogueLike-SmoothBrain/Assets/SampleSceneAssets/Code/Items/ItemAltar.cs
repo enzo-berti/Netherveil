@@ -23,7 +23,7 @@ public class ItemAltar : MonoBehaviour, ISavable
 
     public void LoadSave()
     {
-        if (SaveManager.saveData.altarCleareds.Contains(altarId))
+        if (SaveManager.saveData.altarCleareds != null && SaveManager.saveData.altarCleareds.Contains(altarId))
         {
             if (item != null)
             {
