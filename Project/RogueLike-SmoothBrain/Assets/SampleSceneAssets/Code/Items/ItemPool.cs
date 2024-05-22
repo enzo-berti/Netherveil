@@ -7,6 +7,20 @@ using UnityEngine;
 
 public class ItemPool
 {
+    #region Debug
+
+    private string[] MustHaveItem = {"BelzebuthBelt", "MonsterHeart", "PoisonAmulet" };
+
+    private readonly bool debug = false;
+   
+    private List<Color> debugColors = new List<Color>()
+    { Color.grey,
+    Color.green,
+    Color.blue,
+    Color.magenta,
+    Color.yellow};
+
+    #endregion
     #region Tier Chance
     private const float CommonChance = 0.2f;
     private const float UncommonChance = 0.4f;
@@ -14,8 +28,6 @@ public class ItemPool
     private const float EpicChance = 0.1f;
     private const float LegendaryChance = 0.05f;
     private const string DefaultItem = "MonsterHeart";
-
-    private const bool debug = false;
     private List<float> rarityWeighting = new List<float>()
     {
         CommonChance,
@@ -24,15 +36,12 @@ public class ItemPool
         EpicChance,
         LegendaryChance
     };
-    private List<Color> debugColors = new List<Color>()
-    { Color.grey,
-    Color.green,
-    Color.blue,
-    Color.magenta,
-    Color.yellow};
+
+
     #endregion
 
     #region Members
+    
     public List<List<string>> itemsPerTier;
     Stack<string> itemPool;
     #endregion
@@ -49,7 +58,7 @@ public class ItemPool
             itemsPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
         }
         UpdateRarityWeight();
-        Init();
+        Init(MustHaveItem);
     }
     public void Init()
     {
@@ -61,6 +70,27 @@ public class ItemPool
             if(debug) Debug.Log("<color=#" + debugColors[(int)itemDatabase.GetItem(item).RarityTier].ToHexString() + ">" + item + "</color>");
         }
         itemPool.Reverse();
+    }
+    public void Init(params string[] firstItems)
+    {
+        ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");
+        while (!IsPoolEmpty())
+        {
+            string item = GetRandomItemName();
+            if (firstItems.Contains(item)) continue;
+            itemPool.Push(item);
+            if (debug) Debug.Log("<color=#" + debugColors[(int)itemDatabase.GetItem(item).RarityTier].ToHexString() + ">" + item + "</color>");
+        }
+        itemPool.Reverse();
+        if (firstItems.Length > 0)
+        {
+            firstItems.Reverse();
+            foreach (var item in firstItems)
+            {
+                itemPool.Push(item);
+            }
+        }
+        
     }
     public bool IsPoolEmpty()
     {
@@ -94,7 +124,6 @@ public class ItemPool
                 itemsPerTier.RemoveAt(i);
             }
         }
-        UnityEngine.Debug.Log("toShare => " + toShare);
         toShare /= rarityWeighting.Count;
         for (int i = 0; i < rarityWeighting.Count; i++)
         {
@@ -124,6 +153,24 @@ public class ItemPool
         return toReturn;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns>Get precise item if it still in the ItemPool</returns>
+    private string GetPreciseItemInPool(string name)
+    {
+        if(IsPoolEmpty()) return DefaultItem;
+        for(int i = 0; i < itemsPerTier.Count; i++)
+        {
+            if (itemsPerTier[i].Contains(name))
+            {
+                RemoveItemFromPool(i, name);
+                return name;
+            }
+        }
+        return DefaultItem;
+    }
     public string GetItem()
     {
         return itemPool.Pop();
@@ -137,6 +184,22 @@ public class ItemPool
             UpdateRarityWeight(rarityIndex);
             itemsPerTier.RemoveAt(rarityIndex);
         }
+    }
+    private void RemoveItemFromPool(string name)
+    {
+        for(int i = 0; i < itemsPerTier.Count;i++)
+        {
+            if (itemsPerTier[i].Contains(name))
+            {
+                itemsPerTier[i].Remove(name);
+                if (itemsPerTier[i].Count == 0)
+                {
+                    UpdateRarityWeight(i);
+                    itemsPerTier.RemoveAt(i);
+                }
+            }
+        }
+        
     }
     #endregion
 }
