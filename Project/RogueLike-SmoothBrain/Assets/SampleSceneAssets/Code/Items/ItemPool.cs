@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 using Map.Generation;
-using static UnityEditor.Progress;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ItemPool
 {
