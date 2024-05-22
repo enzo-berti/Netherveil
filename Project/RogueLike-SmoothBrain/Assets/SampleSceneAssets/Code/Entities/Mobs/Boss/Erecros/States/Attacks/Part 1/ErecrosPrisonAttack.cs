@@ -10,11 +10,11 @@
 //      }
 // }
 
-using FMOD;
 using StateMachine; // include all scripts about StateMachines
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.Rendering;
 
 public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 {
@@ -22,9 +22,12 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         : base(currentContext, currentFactory) { }
 
     bool attackEnded = false;
-    float dashDistance;
-    float prisonRadius;
+    
     Vector3 prisonCenter;
+    float prisonRadius;
+    float dashDistance;
+
+    float delayBetweenDash = 1f;
 
     List<Transform> clones = new();
 
@@ -51,7 +54,6 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         int clonesAmount = 16;
 
-
         Context.Sounds.prison.Play(Context.transform.position);
 
         for (int i = 0; i < clonesAmount; i++)
@@ -66,6 +68,8 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
             Context.Clones.Add(clone);
         }
+
+        Context.Vignette.active = true;
 
         Context.Animator.ResetTrigger("Prison");
         Context.Animator.SetTrigger("Prison");
@@ -85,6 +89,8 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         Context.Animator.ResetTrigger("PrisonEnded");
         Context.Animator.SetTrigger("PrisonEnded");
 
+        Context.Vignette.active = false;
+
         //Context.PrisonVFX.Reinit();
         //Context.PrisonVFX.Stop();
 
@@ -95,9 +101,9 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
     protected override void UpdateState()
     {
         Vector3 prisonCenterToPlayer = Context.Player.transform.position - prisonCenter;
-        if (prisonCenterToPlayer.sqrMagnitude > prisonRadius * prisonRadius)
+        if (prisonCenterToPlayer.sqrMagnitude > (prisonRadius - 0.5f) * (prisonRadius - 0.5f))
         {
-            Context.Player.transform.position = prisonCenter + prisonCenterToPlayer.normalized * prisonRadius;
+            Context.Player.transform.position = prisonCenter + prisonCenterToPlayer.normalized * (prisonRadius - 0.5f);
         }
 
         if (clones.Count > 0)
@@ -138,6 +144,9 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         {
             attackEnded = true;
         }
+
+        Vector2 sex = Camera.main.WorldToViewportPoint(prisonCenter);
+        Context.Vignette.center.Override(sex + new Vector2(0, 0.05f));
     }
 
     // This method will be called on state switch.
