@@ -66,8 +66,8 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
         Context.Agent.isStopped = false;
         Context.SummonCollider.enabled = false;
 
-        //Context.ShieldVFX.Reinit();
-        //Context.ShieldVFX.Stop();
+        Context.ShieldVFX.Reinit();
+        Context.ShieldVFX.Stop();
 
         Context.Sounds.teleport.Stop();
 
