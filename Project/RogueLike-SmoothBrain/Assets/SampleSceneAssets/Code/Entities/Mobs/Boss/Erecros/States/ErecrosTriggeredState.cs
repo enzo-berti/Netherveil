@@ -40,8 +40,6 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
             }
         }
         //}
-
-        Debug.Log(Context.AttackCooldown);
     }
 
     // This method will be called only once before the update.
@@ -66,7 +64,6 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         Context.Sounds.walk.Play(Context.transform.position);
 
         Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
-
     }
 
     // This method will be called on state switch.
