@@ -134,7 +134,13 @@ public class SonielStateMachine : Mobs, ISoniel
 
     protected override void Update()
     {
-        if (IsFreeze || IsSpawning || isInCinematic)
+        if (isInCinematic)
+        {
+            transform.rotation = Quaternion.LookRotation(transform.position - Utilities.Hero.transform.position);
+            return;
+        }
+
+        if (IsFreeze || IsSpawning)
             return;
 
         base.Update();
