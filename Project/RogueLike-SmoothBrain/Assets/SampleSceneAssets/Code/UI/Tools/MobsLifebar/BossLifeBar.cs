@@ -45,16 +45,19 @@ public class BossLifeBar : MonoBehaviour
 
     public void ValueChanged(float value)
     {
-        // update life bar
-        this.value = value;
-        lifeBarSlider.fillAmount = FactorValue;
+        if (gameObject.activeInHierarchy)
+        {
+            // update life bar
+            this.value = value;
+            lifeBarSlider.fillAmount = FactorValue;
 
-        // stop damage update if is running
-        if (damageRoutine != null)
-            StopCoroutine(damageRoutine);
+            // stop damage update if is running
+            if (damageRoutine != null)
+                StopCoroutine(damageRoutine);
 
-        // start damage update
-        damageRoutine = StartCoroutine(DamageBarCoroutine(damageDisplayTime));
+            // start damage update
+            damageRoutine = StartCoroutine(DamageBarCoroutine(damageDisplayTime));
+        }
     }
 
     #region COROUTINE
