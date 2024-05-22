@@ -151,6 +151,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     {
         if (IsInvincibleCount > 0)
         {
+            FloatingTextGenerator.CreateEffectDamageText(0, transform.position, Color.red);
             return;
         }
 
