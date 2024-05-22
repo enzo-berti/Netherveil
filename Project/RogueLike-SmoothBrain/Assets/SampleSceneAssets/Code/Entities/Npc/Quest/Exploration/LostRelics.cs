@@ -15,6 +15,20 @@ public class LostRelics : Quest
     public override void LoadSave()
     {
         base.LoadSave();
+        switch (difficulty)
+        {
+            case QuestDifficulty.EASY:
+                MAX_NUMBER = 1;
+                break;
+            case QuestDifficulty.MEDIUM:
+                CorruptionModifierValue += 5;
+                MAX_NUMBER = 2;
+                break;
+            case QuestDifficulty.HARD:
+                CorruptionModifierValue += 10;
+                MAX_NUMBER = 3;
+                break;
+        }
 
         currentNumber = SaveManager.saveData.questEvolution;
     }
@@ -26,7 +40,7 @@ public class LostRelics : Quest
 
         currentNumber = MapUtilities.nbEnterRoomByType[RoomType.Treasure];
         MAX_NUMBER = MapUtilities.nbRoomByType[RoomType.Treasure];
-        progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
+        progressText = $"NB TREASURE/SHOP ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
         MapUtilities.onFirstEnter += UpdateCount;
     }
 
@@ -42,9 +56,9 @@ public class LostRelics : Quest
 
     private void UpdateCount()
     {
-        if (!IsQuestFinished() && MapUtilities.currentRoomData.Type == RoomType.Treasure)
+        if (!IsQuestFinished() && (MapUtilities.currentRoomData.Type == RoomType.Treasure || MapUtilities.currentRoomData.Type == RoomType.Merchant))
         {
-            currentNumber = MapUtilities.nbEnterRoomByType[RoomType.Treasure];
+            currentNumber = MapUtilities.nbEnterRoomByType[RoomType.Treasure] + MapUtilities.nbEnterRoomByType[RoomType.Merchant];
             progressText = $"NB TREASURE ROOM DISCOVERED : {currentNumber}/{MAX_NUMBER}";
         }
         QuestUpdated();
