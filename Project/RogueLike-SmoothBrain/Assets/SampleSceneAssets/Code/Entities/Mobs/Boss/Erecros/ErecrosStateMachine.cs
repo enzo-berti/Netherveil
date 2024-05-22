@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using FMODUnity;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -69,6 +71,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     [SerializeField] GameObject[] enemiesPrefabs;
 
+    [SerializeField] Volume volume;
     [SerializeField] VisualEffect shieldVFX;
     [SerializeField] VisualEffect shockwaveVFX;
     [SerializeField] VisualEffect teleportVFX;
@@ -113,6 +116,14 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public List<GameObject> Clones { get => clones; set => clones = value; }
     public Coroutine CurrentCouroutine { get => currentCoroutine; set => currentCoroutine = value; }
 
+    public Vignette Vignette
+    {
+        get
+        {
+            volume.profile.TryGet(out Vignette vignette);
+            return vignette;
+        }
+    }
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
     public VisualEffect PrisonVFX { get => prisonVFX; }
@@ -251,6 +262,10 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
             if (gameMusic != null)
                 gameMusic.SetActive(true);
+
+            musicEmitter.Stop();
+
+            AudioManager.Instance.StopAllSounds();
 
             animator.ResetTrigger("Death");
             animator.SetTrigger("Death");
