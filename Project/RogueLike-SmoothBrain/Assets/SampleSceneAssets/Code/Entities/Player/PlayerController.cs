@@ -54,10 +54,72 @@ public class PlayerController : MonoBehaviour
     public int ComboCount { get; set; } = 0;
     public readonly int MAX_COMBO_COUNT = 3;
     public readonly int CHARGED_ATTACK_KNOCKBACK_COEFF = 3;
-    public int FINISHER_DAMAGES { get; private set; }
-    public int BASIC_ATTACK_DAMAGES { get; private set; }
-    public int SPEAR_DAMAGES { get; private set; }
-    public int CHARGED_ATTACK_DAMAGES { get; private set; }
+    public int FINISHER_DAMAGES 
+    { 
+        get 
+        {
+            if(hero == null)
+                return 0;
+
+            return (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 2);
+        }
+    }
+    public int BASIC_ATTACK_DAMAGES
+    {
+        get
+        {
+            if (hero == null)
+                return 0;
+
+            return (int)hero.Stats.GetValueWithoutCoeff(Stat.ATK);
+        }
+    }
+    public int SPEAR_DAMAGES
+    {
+        get
+        {
+            if (hero == null)
+                return 0;
+
+            return 0;
+        }
+    }
+    public int CHARGED_ATTACK_DAMAGES
+    {
+        get
+        {
+            if (hero == null)
+                return 0;
+
+            return (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 16);
+        }
+    }
+
+    public int EZREAL_ATTACK_DAMAGES
+    {
+        get
+        {
+            if (hero == null)
+                return 0;
+
+            return (int)((hero.Stats.GetValueWithoutCoeff(Stat.ATK) + FINISHER_DAMAGES) * hero.Stats.GetCoeff(Stat.ATK));
+        }
+    }
+
+    public int DAMOCLES_SWORD_DAMAGES
+    {
+        get
+        {
+            if (hero == null)
+                return 0;
+
+            return (int)(hero.Stats.GetValue(Stat.ATK) * 2);
+        }
+    }
+
+    public readonly float DIVINE_SHIELD_DURATION = 5f;
+    public readonly float DAMOCLES_SWORD_DURATION = 3f;
+    public readonly float DAMOCLES_SWORD_TRIGGER_PERCENT = 0.3f;
 
     //animator hashs
     public int SpeedHash { get; private set; }
@@ -120,11 +182,6 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInChildren<Animator>();
-
-        FINISHER_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 2);
-        BASIC_ATTACK_DAMAGES = (int)hero.Stats.GetValueWithoutCoeff(Stat.ATK);
-        SPEAR_DAMAGES = 0;
-        CHARGED_ATTACK_DAMAGES = (int)(hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 16);
     }
 
     private void Start()

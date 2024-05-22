@@ -115,9 +115,6 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     const float MAX_LIFESTEAL_HP_PERCENTAGE = 0.75f;
     float takeDamageCoeff = 1f;
 
-    readonly float DAMOCLES_SWORD_DURATION = 3f;
-    readonly float DAMOCLES_SWORD_TRIGGER_PERCENT = 0.3f;
-
     protected override void Start()
     {
         base.Start();
@@ -520,7 +517,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             $"When being over <color=#a52a2aff>{playerInput.EZREAL_ATTACK_THRESHOLD * 100f}% HP</color> and doing " +
             $"the <color=#a52a2aff>finisher</color> of you basic attack combo, you can throw " +
             $"a <color=#a52a2aff>light arc</color> that will do " +
-            $"{(int)((Utilities.Hero.Stats.GetValueWithoutCoeff(Stat.ATK) + Utilities.PlayerController.FINISHER_DAMAGES) * Utilities.Hero.Stats.GetCoeff(Stat.ATK))} damages to all enemies touched during travel.",
+            $"{playerController.EZREAL_ATTACK_DAMAGES} damages to all enemies touched during travel.",
             "BenedictionVideo",
             "SpecialAbilityBackgroundBenediction"));
         }
@@ -565,9 +562,9 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         {
             StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=#44197c><b>Fate's Blade</b></color>",
-            $"When hitting an enemy, you have {DAMOCLES_SWORD_TRIGGER_PERCENT * 100f}% chance to apply <color=purple><b>Fate's Blade</b></color>, " +
-            $"that will create a <color=purple>sword</color> on top of the target that will <color=purple>fall</color> on him after {DAMOCLES_SWORD_DURATION} seconds, " +
-            $"dealing <color=purple>{(int)(Utilities.Hero.Stats.GetValue(Stat.ATK) * 2)}</color> AOE Damages.",
+            $"When hitting an enemy, you have {playerController.DAMOCLES_SWORD_TRIGGER_PERCENT * 100f}% chance to apply <color=purple><b>Fate's Blade</b></color>, " +
+            $"that will create a <color=purple>sword</color> on top of the target that will <color=purple>fall</color> on him after {playerController.DAMOCLES_SWORD_DURATION} seconds, " +
+            $"dealing <color=purple>{playerController.DAMOCLES_SWORD_DAMAGES}</color> AOE Damages.",
             "CorruptionVideo",
             "SpecialAbilityBackgroundCoruption"));
         }
