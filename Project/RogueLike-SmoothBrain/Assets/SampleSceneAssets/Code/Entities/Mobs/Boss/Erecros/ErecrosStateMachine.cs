@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using FMODUnity;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -36,7 +37,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         public Sound invocation; //
         public Sound throwWeapon; //
         public Sound walk;
-        public Sound music;
     }
 
     public enum ErecrosColliders
@@ -56,6 +56,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     CameraUtilities cameraUtilities;
 
     GameObject gameMusic;
+    [SerializeField] private StudioEventEmitter musicEmitter;
 
     float height = 0f;
 
@@ -142,7 +143,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
                 gameMusic.SetActive(false);
             }
 
-            sounds.music.Play();
+            musicEmitter.Play();
 
             sounds.intro.Play(transform.position);
 
@@ -237,8 +238,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
             animator.ResetTrigger("Death");
             animator.SetTrigger("Death");
-
-            sounds.music.Stop();
 
             currentState = factory.GetState<ErecrosDeathState>();
         }
