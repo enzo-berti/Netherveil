@@ -180,7 +180,12 @@ public class ItemBar : MonoBehaviour
         ItemData data = database.GetItem(itemEffect.Name);
         Sprite item = Sprite.Create((Texture2D)data.icon, new Rect(0.0f, 0.0f, data.icon.width, data.icon.height), new Vector2(0.5f, 0.5f), 100.0f);
         specialItemFrame.SetFrame(rarityBackItemSprite[(int)data.RarityTier], item);
+        specialItemFrame.ToggleCooldown(true);
         specialItemFrame.SetCooldown(itemEffect.CurrentEnergy, (itemEffect as IActiveItem).Cooldown);
+        if(itemEffect.CurrentEnergy / (itemEffect as IActiveItem).Cooldown == 1)
+        {
+            specialItemFrame.ToggleCooldown(false);
+        }
     }
 
     private void SpecialAbilityCooldown()
