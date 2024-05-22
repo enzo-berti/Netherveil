@@ -8,6 +8,7 @@ public class InGameManager : MonoBehaviour
 
     private void Awake()
     {
+        ItemAltar.altarCount = 0;
         current = this;
     }
 }
