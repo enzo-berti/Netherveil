@@ -1792,6 +1792,7 @@ GameObject:
   - component: {fileID: 3667391158469644947}
   - component: {fileID: 69555808829254659}
   - component: {fileID: 2787148530167240670}
+  - component: {fileID: 1903577236967432213}
   m_Layer: 5
   m_Name: ItemDescriptionPanel
   m_TagString: Untagged
@@ -1859,6 +1860,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1903577236967432213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2723031262878214033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8520df904e48546a3e68667a440c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: {fileID: 7640484863488378831}
+  state: {fileID: 2743290105689324605}
+  description: {fileID: 8753093656511373435}
+  durationScale: 0.1
 --- !u!1 &2836719471998619927
 GameObject:
   m_ObjectHideFlags: 0
@@ -1960,7 +1977,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
+  m_fontSize: 37.35
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8110,7 +8127,7 @@ PrefabInstance:
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
@@ -8172,7 +8189,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6406920796434486653, guid: 7dc6735c01c972648b21cc0865688aaf, type: 3}
+    - {fileID: 7529476564196091478, guid: 7dc6735c01c972648b21cc0865688aaf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -8246,7 +8265,7 @@ PrefabInstance:
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5239288893116475537, guid: 7dc6735c01c972648b21cc0865688aaf,
         type: 3}
