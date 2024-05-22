@@ -205,7 +205,7 @@ static public class SaveManager
 
     static public void SelectSave(int selectedSave)
     {
-        FilePath = Application.persistentDataPath + "/Save/" + selectedSave.ToString();
+        FilePath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + ".s";
 
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
         {
