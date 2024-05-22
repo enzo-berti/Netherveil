@@ -9,9 +9,9 @@ public class ItemPool
 {
     #region Debug
 
-    private string[] MustHaveItem = {"BelzebuthBelt", "MonsterHeart", "PoisonAmulet" };
+    private string[] MustHaveItem = { "BelzebuthBelt", "GhostlySpears", "ThunderLink", "SpearStrike", "RuneOfEnvy", "TearOfZeus" };
 
-    private readonly bool debug = false;
+    private readonly bool debug = true;
    
     private List<Color> debugColors = new List<Color>()
     { Color.grey,
@@ -55,7 +55,7 @@ public class ItemPool
         for (int i = 0; i < Enum.GetNames(typeof(ItemData.Rarity)).Length; i++)
         {
             // Adding pool for each Rarity
-            itemsPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
+            itemsPerTier.Add(itemDatabase.datas.Where(x => (Convert.ToInt32(x.RarityTier) == i && x.isInGame)).Select(x => x.idName).ToList());
         }
         UpdateRarityWeight();
         Init(MustHaveItem);

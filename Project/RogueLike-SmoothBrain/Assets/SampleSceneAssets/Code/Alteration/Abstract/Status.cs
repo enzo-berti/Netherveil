@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
@@ -48,6 +49,7 @@ public abstract class Status
     public abstract bool CanApplyEffect(Entity target);
     public virtual void ApplyEffect(Entity target)
     {
+        if (this.GetType() == typeof(Electricity) || this.GetType() == typeof(Freeze)) return;
         AddStack(1);
         PlayStatus();
         CoroutineManager.Instance.StartCoroutine(ManageStack());

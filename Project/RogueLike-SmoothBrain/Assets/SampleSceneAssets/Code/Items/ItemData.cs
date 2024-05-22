@@ -26,6 +26,7 @@ public class ItemData : IComparable<ItemData>
     public Mesh mesh;
     [Multiline] public string Description;
     public Texture icon;
+    public bool isInGame = true;
 
     public int CompareTo(ItemData other)
     {

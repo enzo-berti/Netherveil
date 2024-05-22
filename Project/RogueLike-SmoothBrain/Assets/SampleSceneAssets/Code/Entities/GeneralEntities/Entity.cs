@@ -230,6 +230,7 @@ public abstract class Entity : MonoBehaviour
             Debug.Log("Status can't be applied on " + this.name);
             return false;
         }
+        if (status.GetType() == typeof(Electricity) || status.GetType() == typeof(Freeze)) return false;
         else
         {
             if(this.IsInvincibleCount > 0 || (this is Mobs && (this as Mobs).IsSpawning))

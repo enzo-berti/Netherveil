@@ -59,8 +59,8 @@ public class WindowItemDatabase : EditorWindow
         for (int i = 0; i < searchItems.Count; i++)
         {
             ItemData item = searchItems[i];
-
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+            item.isInGame = EditorGUILayout.Toggle(item.isInGame, GUILayout.Width(40));
             
             EditorGUILayout.BeginVertical(GUILayout.Width(SizeArea));
             GUI.backgroundColor = new Color(0.882f, 0.58f, 1f);
@@ -72,6 +72,7 @@ public class WindowItemDatabase : EditorWindow
             }
             EditorGUILayout.EndVertical();
             GUI.backgroundColor = Color.white;
+            
             item.RarityTier = (ItemData.Rarity)EditorGUILayout.EnumPopup(item.RarityTier, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             item.Type = (ItemData.ItemType)EditorGUILayout.EnumPopup(item.Type, GUILayout.Width(SizeArea), GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical();
