@@ -223,6 +223,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         if (part < 3)
         {
             nextPartGO.SetActive(true);
+            nextPartGO.transform.position = transform.position;
             Destroy(gameObject);
         }
         else
@@ -231,12 +232,13 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             OnDeath?.Invoke(transform.position);
             Utilities.Hero.OnKill?.Invoke(this);
 
-
             if (gameMusic != null)
                 gameMusic.SetActive(true);
 
             animator.ResetTrigger("Death");
             animator.SetTrigger("Death");
+
+            sounds.music.Stop();
 
             currentState = factory.GetState<ErecrosDeathState>();
         }
