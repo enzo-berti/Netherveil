@@ -508,7 +508,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         {
             StartCoroutine(OpenSpecialAbilityTab(playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=yellow><b>Divine Shield</b></color>",
-            "On activation, creates a <color=#a52a2aff><b>shield</b></color> around you that <color=#a52a2aff><b>nullifies damages</b></color> for a small amount of time.",
+            $"On activation, creates a <color=#a52a2aff><b>shield</b></color> around you that <color=#a52a2aff><b>nullifies damages</b></color> for {playerController.DIVINE_SHIELD_DURATION} seconds.",
             "DivineShield",
             "SpecialAbilityBackgroundBenediction"));
             divineShieldVideoShown = true;
@@ -522,7 +522,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=yellow><b>Light Arc</b></color>",
             $"When being over <color=#a52a2aff>{playerInput.EZREAL_ATTACK_THRESHOLD * 100f}% HP</color> and doing " +
-            $"the <color=#a52a2aff>finisher</color> of you basic attack combo, you can throw " +
+            $"the <color=#a52a2aff>finisher</color> of your basic attack combo, you can throw " +
             $"a <color=#a52a2aff>light arc</color> that will do " +
             $"{playerController.EZREAL_ATTACK_DAMAGES} damages to all enemies touched during travel.",
             "EzrealAttack",
