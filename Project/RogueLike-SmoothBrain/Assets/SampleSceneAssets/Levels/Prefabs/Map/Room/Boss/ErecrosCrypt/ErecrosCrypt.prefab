@@ -1617,7 +1617,7 @@ PlayableDirector:
   - key: {fileID: -5971431554647069067, guid: 8584c235f2e350c43a36db21c9dfa6ca, type: 2}
     value: {fileID: 4012734414279988538}
   - key: {fileID: -2172720063801753832, guid: 8584c235f2e350c43a36db21c9dfa6ca, type: 2}
-    value: {fileID: 633522586729819751}
+    value: {fileID: 3413661401315947569}
   - key: {fileID: -8302324072196698989, guid: 8584c235f2e350c43a36db21c9dfa6ca, type: 2}
     value: {fileID: 5469379595353536655}
   - key: {fileID: -790173311930289655, guid: 8584c235f2e350c43a36db21c9dfa6ca, type: 2}
@@ -4044,6 +4044,11 @@ PrefabInstance:
       objectReference: {fileID: 1460132765849188240}
     - target: {fileID: 6294902358278933676, guid: a3a5cd466ea3abe4fa4f7f9f7a3304b3,
         type: 3}
+      propertyPath: nextPartGO
+      value: 
+      objectReference: {fileID: 2906479652016640096}
+    - target: {fileID: 6294902358278933676, guid: a3a5cd466ea3abe4fa4f7f9f7a3304b3,
+        type: 3}
       propertyPath: bossLifeBar
       value: 
       objectReference: {fileID: 7037372738300378073}
@@ -4113,9 +4118,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2291151542794507536}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &633522586729819751 stripped
+--- !u!95 &3413661401315947569 stripped
 Animator:
-  m_CorrespondingSourceObject: {fileID: 1657737391142435703, guid: a3a5cd466ea3abe4fa4f7f9f7a3304b3,
+  m_CorrespondingSourceObject: {fileID: 3500436851196223777, guid: a3a5cd466ea3abe4fa4f7f9f7a3304b3,
     type: 3}
   m_PrefabInstance: {fileID: 2291151542794507536}
   m_PrefabAsset: {fileID: 0}
@@ -4869,6 +4874,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3494982830567282963}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6010724985310778689 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7199794386380442706, guid: a3a5cd466ea3abe4fa4f7f9f7a3304b3,
+    type: 3}
+  m_PrefabInstance: {fileID: 3494982830567282963}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3564765607049217398
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5333,6 +5344,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3167462912775544150, guid: dc6c5d2702d8ca94fb5367301dba02c9,
         type: 3}
+      propertyPath: nextPartGO
+      value: 
+      objectReference: {fileID: 6010724985310778689}
+    - target: {fileID: 3167462912775544150, guid: dc6c5d2702d8ca94fb5367301dba02c9,
+        type: 3}
       propertyPath: bossLifeBar
       value: 
       objectReference: {fileID: 7037372738300378073}
@@ -5409,6 +5425,12 @@ PrefabInstance:
 --- !u!4 &1028866481069631533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4149131573260210077, guid: dc6c5d2702d8ca94fb5367301dba02c9,
+    type: 3}
+  m_PrefabInstance: {fileID: 4022815850602850224}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2906479652016640096 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2271514520736511952, guid: dc6c5d2702d8ca94fb5367301dba02c9,
     type: 3}
   m_PrefabInstance: {fileID: 4022815850602850224}
   m_PrefabAsset: {fileID: 0}
@@ -7193,7 +7215,7 @@ PrefabInstance:
     - target: {fileID: 7125106269212104173, guid: d3eca1e4a4929ff4da0ff4270b71bc71,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 16.943655
       objectReference: {fileID: 0}
     - target: {fileID: 7125106269212104173, guid: d3eca1e4a4929ff4da0ff4270b71bc71,
         type: 3}
@@ -7203,7 +7225,7 @@ PrefabInstance:
     - target: {fileID: 7125106269212104173, guid: d3eca1e4a4929ff4da0ff4270b71bc71,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -37.32589
       objectReference: {fileID: 0}
     - target: {fileID: 7125106269212104173, guid: d3eca1e4a4929ff4da0ff4270b71bc71,
         type: 3}
@@ -7248,7 +7270,7 @@ PrefabInstance:
     - target: {fileID: 7262218051093346888, guid: d3eca1e4a4929ff4da0ff4270b71bc71,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8797519071912530688, guid: d3eca1e4a4929ff4da0ff4270b71bc71,
         type: 3}
