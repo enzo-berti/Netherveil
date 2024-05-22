@@ -69,7 +69,7 @@ public class SonielProjectile : Projectile
             {
                 transform.parent = wrist;
 
-                transform.localRotation = Quaternion.Euler(isLeft ? 0 : 180, 0, isLeft ? 100 : -100);
+                transform.localRotation = Quaternion.Euler(isLeft ? 0 : 180, -90, isLeft ? 100 : -100);
                 transform.localPosition = new Vector3(0.065f, 0.035f, 0);
                 if (isLeft) transform.localPosition *= -1;
 
@@ -93,7 +93,7 @@ public class SonielProjectile : Projectile
     {
         _direction.Normalize();
         transform.Translate(_direction * (speed * Time.deltaTime + acceleration), Space.World);
-        rotationPoint = transform.position + transform.up * swordHeight / 2f;
+        rotationPoint = transform.position + transform.forward * swordHeight / 2f;
         transform.RotateAround(rotationPoint, Vector3.up, Time.deltaTime * 1000f);
     }
 
