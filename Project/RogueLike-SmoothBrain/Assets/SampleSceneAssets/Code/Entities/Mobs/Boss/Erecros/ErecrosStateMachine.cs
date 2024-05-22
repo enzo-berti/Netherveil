@@ -2,11 +2,15 @@
 // "factory" is use to get all state possible
 // "currentState" can be set in the start with : currentState = factory.GetState<YOUR_STATE>();
 
-using UnityEngine;
 using StateMachine; // include all script about stateMachine
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.VFX;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class ErecrosStateMachine : Mobs, IFinalBoss
 {
@@ -55,11 +59,12 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     float height = 0f;
 
+    bool toggleDebugMode = false;
+
     public int part;
     public int phase;
 
-    [SerializeField] GameObject miniPrefab;
-    [SerializeField] GameObject maxiPrefab;
+    [SerializeField] GameObject nextPartGO;
 
     [SerializeField] GameObject[] enemiesPrefabs;
 
@@ -74,6 +79,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     Rigidbody[] props;
     List<Collider> propsColliders = new();
+
+    [SerializeField] Transform roomCenter;
 
     Type lastAttack = null;
 
@@ -98,6 +105,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public int CurrentPhase { get => phase; }
     public float Height { get => height - 1.25f; }
     public Type LastAttack { get => lastAttack; set => lastAttack = value; }
+    public Transform RoomCenter { get => roomCenter; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
@@ -109,11 +117,13 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public List<Collider> PropsColliders { get => propsColliders; }
     public SphereCollider SummonCollider { get => summonCollider; }
 
+    public bool DebugMode { get => toggleDebugMode; set => toggleDebugMode = value; }
     #endregion
 
     protected override void Start()
     {
         base.Start();
+        bossLifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         factory = new StateFactory<ErecrosStateMachine>(this);
         currentState = factory.GetState<ErecrosTriggeredState>();
@@ -137,8 +147,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             sounds.intro.Play(transform.position);
 
             // Cinematics
-            //cinematic.Play();
-            //isInCinematic = true;
+            cinematic.Play();
+            isInCinematic = true;
         }
         else if (part == 2)
         {
@@ -149,10 +159,6 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
                 propsColliders.Add(prop.gameObject.GetComponent<BoxCollider>());
             }
         }
-
-        // Cinematics
-        cinematic.Play();
-        isInCinematic = true;
     }
 
     protected override void Update()
@@ -175,6 +181,11 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             {
                 phase++;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Dollar))
+        {
+            toggleDebugMode = !toggleDebugMode;
         }
 
         base.Update();
@@ -207,31 +218,27 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public void Death()
     {
-        if (part == 1)
+        if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
+
+        if (part < 3)
         {
-            Instantiate(maxiPrefab, transform.position, Quaternion.identity);
+            nextPartGO.SetActive(true);
+            nextPartGO.transform.position = transform.position;
             Destroy(gameObject);
         }
-        else if (part == 2)
-        {
-            ErecrosStateMachine part3Boss = Instantiate(miniPrefab, transform.position, Quaternion.identity).GetComponentInChildren<ErecrosStateMachine>();
-            part3Boss.stats.SetValue(Stat.HP, 10);
-            part3Boss.part = 3;
-            Destroy(gameObject);
-        }
-        else if (part == 3)
+        else
         {
             animator.speed = 1;
             OnDeath?.Invoke(transform.position);
             Utilities.Hero.OnKill?.Invoke(this);
-
-            if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
 
             if (gameMusic != null)
                 gameMusic.SetActive(true);
 
             animator.ResetTrigger("Death");
             animator.SetTrigger("Death");
+
+            sounds.music.Stop();
 
             currentState = factory.GetState<ErecrosDeathState>();
         }
@@ -301,5 +308,36 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             }
         }
     }
+    #endregion
+
+    #region EDITOR
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //if (!Selection.Contains(gameObject))
+        //    return;
+
+        DisplayAttackRange(360f);
+        DisplayInfos();
+    }
+
+    protected override void DisplayInfos()
+    {
+        Handles.Label(
+        transform.position + transform.up,
+        stats.GetEntityName() +
+        "\n - Health : " + stats.GetValue(Stat.HP) +
+        "\n - Speed : " + stats.GetValue(Stat.SPEED) +
+        "\n - State : " + currentState?.ToString(),
+        new GUIStyle()
+        {
+            alignment = TextAnchor.MiddleLeft,
+            normal = new GUIStyleState()
+            {
+                textColor = Color.black
+            }
+        });
+    }
+#endif
     #endregion
 }

@@ -80,7 +80,7 @@ public class DebugForMilestone : MonoBehaviour
                     var test = enemy.GetComponentInChildren<Mobs>();
                     if (test != null)
                     {
-                        test.AddStatus(new Freeze(3.0f, 1f));
+                        test.AddStatus(new Electricity(1.3f, 1f));
                     }
                 }
             }

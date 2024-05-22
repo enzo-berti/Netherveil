@@ -40,6 +40,8 @@ public class DamoclesVulnerableState : BaseState<DamoclesStateMachine>
     {
         Context.Agent.enabled = true;
         Context.Player = Utilities.Hero;
+
+        Context.Stats.SetValue(Stat.SPEED, 2);
     }
 
     // This method will be called every frame.

@@ -1,10 +1,11 @@
+using Map;
+using Map.Component;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.VFX;
-using static UnityEditor.Progress;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
@@ -55,15 +56,20 @@ public class Item : MonoBehaviour
             {
                 CreateItem();
             }
-            
         }
+        MapUtilities.onFinishStage += DestroySelf;
     }
 
     private void OnDestroy()
     {
         StopAllCoroutines();
+        MapUtilities.onFinishStage -= DestroySelf;
     }
 
+    private void DestroySelf()
+    {
+        Destroy(this.gameObject);
+    }
     public static void InvokeOnRetrieved(ItemEffect effect)
     {
         OnRetrieved?.Invoke(effect);
@@ -123,7 +129,7 @@ public class Item : MonoBehaviour
             yield return new WaitUntil(() => InGameManager.ItemPool != null);
         }
 
-        idItemName = InGameManager.ItemPool.GetRandomItemName();
+        idItemName = InGameManager.ItemPool.GetItem();
         CreateItem();
         yield return null;
     }

@@ -23,17 +23,22 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
     // This method will be called every Update to check whether or not to switch states.
     protected override void CheckSwitchStates()
     {
-        UseDebugKeys();
-
-        //if (Context.AttackCooldown <= 0f)
+        //if (Context.DebugMode)
         //{
-        //    if (Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
-        //    {
-        //        List<Type> availableAttacks = GetAvailableAttacks();
+        //    UseDebugKeys();
+        //}
+        //else
+        //{
+        if (Context.AttackCooldown <= 0f && Context.CurrentPart != 3)
+        {
+            if (Vector3.Distance(Context.Player.transform.position, Context.transform.position) <= Context.Stats.GetValue(Stat.ATK_RANGE))
+            {
+                List<Type> availableAttacks = GetAvailableAttacks();
 
-        //        Context.LastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
-        //        SwitchState(Factory.GetState(Context.LastAttack));
-        //    }
+                Context.LastAttack = availableAttacks[UnityEngine.Random.Range(0, availableAttacks.Count)];
+                SwitchState(Factory.GetState(Context.LastAttack));
+            }
+        }
         //}
     }
 
@@ -59,7 +64,6 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
         Context.Sounds.walk.Play(Context.transform.position);
 
         Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
-
     }
 
     // This method will be called on state switch.

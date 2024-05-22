@@ -2,9 +2,25 @@ using Map.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
 
 public class ItemPool
 {
+    #region Debug
+
+    private string[] MustHaveItem = {"BelzebuthBelt", "MonsterHeart", "PoisonAmulet" };
+
+    private readonly bool debug = false;
+   
+    private List<Color> debugColors = new List<Color>()
+    { Color.grey,
+    Color.green,
+    Color.blue,
+    Color.magenta,
+    Color.yellow};
+
+    #endregion
     #region Tier Chance
     private const float CommonChance = 0.2f;
     private const float UncommonChance = 0.4f;
@@ -20,29 +36,67 @@ public class ItemPool
         EpicChance,
         LegendaryChance
     };
+
+
     #endregion
 
     #region Members
-    List<List<string>> itemPerTier;
+    
+    public List<List<string>> itemsPerTier;
+    Stack<string> itemPool;
     #endregion
 
     #region Methods
     public ItemPool()
     {
         ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");
-        itemPerTier = new List<List<string>>();
+        itemsPerTier = new List<List<string>>();
+        itemPool = new Stack<string>();
         for (int i = 0; i < Enum.GetNames(typeof(ItemData.Rarity)).Length; i++)
         {
             // Adding pool for each Rarity
-            itemPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
+            itemsPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
         }
+        UpdateRarityWeight();
+        Init(MustHaveItem);
     }
-
+    public void Init()
+    {
+        ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");
+        while (!IsPoolEmpty())
+        {
+            string item = GetRandomItemName();
+            itemPool.Push(item);
+            if(debug) Debug.Log("<color=#" + debugColors[(int)itemDatabase.GetItem(item).RarityTier].ToHexString() + ">" + item + "</color>");
+        }
+        itemPool.Reverse();
+    }
+    public void Init(params string[] firstItems)
+    {
+        ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");
+        while (!IsPoolEmpty())
+        {
+            string item = GetRandomItemName();
+            if (firstItems.Contains(item)) continue;
+            itemPool.Push(item);
+            if (debug) Debug.Log("<color=#" + debugColors[(int)itemDatabase.GetItem(item).RarityTier].ToHexString() + ">" + item + "</color>");
+        }
+        itemPool.Reverse();
+        if (firstItems.Length > 0)
+        {
+            firstItems.Reverse();
+            foreach (var item in firstItems)
+            {
+                itemPool.Push(item);
+            }
+        }
+        
+    }
     public bool IsPoolEmpty()
     {
-        for(int i = 0; i < itemPerTier.Count; i++)
+        for(int i = 0; i < itemsPerTier.Count; i++)
         {
-            if (itemPerTier[i].Count > 0)
+            if (itemsPerTier[i].Count > 0)
                 return false;
         }
         return true;
@@ -53,42 +107,99 @@ public class ItemPool
         float toShare = rarityWeighting[indexEmpty];
         rarityWeighting.RemoveAt(indexEmpty);
         toShare /= rarityWeighting.Count;
-        for(int i = 0; i < rarityWeighting.Count;i++)
+        for (int i = 0; i < rarityWeighting.Count; i++)
+        {
+            rarityWeighting[i] += toShare;
+        }
+    }
+    public void UpdateRarityWeight()
+    {
+        float toShare = 0;
+        for (int i = rarityWeighting.Count - 1; i >= 0; i--)
+        {
+            if (itemsPerTier[i].Count == 0)
+            {
+                toShare += rarityWeighting[i];
+                rarityWeighting.RemoveAt(i);
+                itemsPerTier.RemoveAt(i);
+            }
+        }
+        toShare /= rarityWeighting.Count;
+        for (int i = 0; i < rarityWeighting.Count; i++)
         {
             rarityWeighting[i] += toShare;
         }
     }
 
-    public string GetRandomItemName()
+    private string GetRandomItemName()
     {
         if (IsPoolEmpty()) return DefaultItem;
 
         float randomRarity = Seed.Range();
         float currentChance = 0;
         int indexRarity = 0;
-        for(int i = rarityWeighting.Count - 1; i >= 0  ; i--)
+        for (int i = rarityWeighting.Count - 1; i >= 0; i--)
         {
             currentChance += rarityWeighting[i];
-            if(randomRarity <= currentChance)
+            if (randomRarity <= currentChance)
             {
                 indexRarity = i;
                 break;
             }
         }
-        int randomItemIndex = Seed.Range(0, itemPerTier[indexRarity].Count);
-        string toReturn =  itemPerTier[indexRarity][randomItemIndex];
+        int randomItemIndex = Seed.Range(0, itemsPerTier[indexRarity].Count);
+        string toReturn =  itemsPerTier[indexRarity][randomItemIndex];
         RemoveItemFromPool(indexRarity, toReturn);
         return toReturn;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns>Get precise item if it still in the ItemPool</returns>
+    private string GetPreciseItemInPool(string name)
+    {
+        if(IsPoolEmpty()) return DefaultItem;
+        for(int i = 0; i < itemsPerTier.Count; i++)
+        {
+            if (itemsPerTier[i].Contains(name))
+            {
+                RemoveItemFromPool(i, name);
+                return name;
+            }
+        }
+        return DefaultItem;
+    }
+    public string GetItem()
+    {
+        return itemPool.Pop();
+    }
+
     private void RemoveItemFromPool(int rarityIndex, string name)
     {
-        itemPerTier[rarityIndex].Remove(name);
-        if (itemPerTier[rarityIndex].Count == 0)
+        itemsPerTier[rarityIndex].Remove(name);
+        if (itemsPerTier[rarityIndex].Count == 0)
         {
             UpdateRarityWeight(rarityIndex);
-            itemPerTier.RemoveAt(rarityIndex);
+            itemsPerTier.RemoveAt(rarityIndex);
         }
+    }
+    private void RemoveItemFromPool(string name)
+    {
+        for(int i = 0; i < itemsPerTier.Count;i++)
+        {
+            if (itemsPerTier[i].Contains(name))
+            {
+                itemsPerTier[i].Remove(name);
+                if (itemsPerTier[i].Count == 0)
+                {
+                    UpdateRarityWeight(i);
+                    itemsPerTier.RemoveAt(i);
+                }
+            }
+        }
+        
     }
     #endregion
 }

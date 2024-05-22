@@ -122,8 +122,10 @@ public class SonielBerserk : BaseState<SonielStateMachine>
                 Context.AttackCollide(Context.Attacks[(int)SonielStateMachine.SonielAttacks.BERSERK].data, debugMode: Context.DebugMode);
             }
 
-
-            if (Context.Agent.path.status != NavMeshPathStatus.PathComplete || Context.Agent.velocity.sqrMagnitude <= 0f)
+            RaycastHit hit;
+            if (Physics.Raycast(Context.transform.position + Vector3.up * 0.5f, Context.Agent.destination - Context.transform.position, out hit, 2f, (1 << LayerMask.NameToLayer("Map") | (1 << LayerMask.NameToLayer("AvoidDashCollide"))))
+                || Context.Agent.path.status != NavMeshPathStatus.PathComplete
+                || Context.Agent.velocity.sqrMagnitude <= 0f)
             {
                 Context.Animator.ResetTrigger(stunnedHash);
                 Context.Animator.SetTrigger(stunnedHash);
