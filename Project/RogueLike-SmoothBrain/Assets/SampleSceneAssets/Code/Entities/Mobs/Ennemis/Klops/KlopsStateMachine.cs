@@ -29,6 +29,7 @@ public class KlopsStateMachine : Mobs, IKlops
     [SerializeField] GameObject fireballPrefab;
     [SerializeField] Transform fireballSpawn;
     [SerializeField] VisualEffect explodingVFX;
+    public GameObject Fireball { get; set; }
     Hero player = null;
 
     // animation hash
@@ -149,6 +150,11 @@ public class KlopsStateMachine : Mobs, IKlops
         animator.SetTrigger(deathHash);
 
         currentState = factory.GetState<KlopsDeathState>();
+
+        if(Fireball != null && !Fireball.GetComponent<Fireball>().CanBeReflected)
+        {
+            Destroy(Fireball);
+        }
 
         Animator.ResetTrigger("Death");
         Animator.SetTrigger("Death");
