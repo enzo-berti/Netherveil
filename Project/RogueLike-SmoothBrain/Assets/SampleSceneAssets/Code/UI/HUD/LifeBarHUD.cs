@@ -15,11 +15,8 @@ public class LifeBarHUD : MonoBehaviour
 
     void Update()
     {
-        if (lifeJauge.value != player.Stats.GetValue(Stat.HP))
-        {
-            lifeJauge.value = player.Stats.GetValue(Stat.HP);
-            lifeJauge.maxValue = player.Stats.GetMaxValue(Stat.HP);
-            lifeRatioText.text = lifeJauge.value.ToString() + " / " + player.Stats.GetMaxValue(Stat.HP);
-        }
+        lifeJauge.value = player.Stats.GetValue(Stat.HP);
+        lifeJauge.maxValue = player.Stats.GetMaxValue(Stat.HP);
+        lifeRatioText.text = lifeJauge.value.ToString() + " / " + player.Stats.GetMaxValue(Stat.HP);
     }
 }
