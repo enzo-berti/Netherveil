@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.VFX;
-using static UnityEditor.Progress;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
