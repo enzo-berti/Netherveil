@@ -18,10 +18,9 @@ namespace Map.Generation
 
         // Map variables
         public List<int> roomClearId;
-        public int iterationSeedRegister = 0;
         public int Stage { get; private set; } = 0;
 
-        private void Awake()
+        private void Start()
         {
             LoadSave();
 
@@ -50,7 +49,6 @@ namespace Map.Generation
         {
             save.stage = Stage;
             save.roomCleareds = roomClearId;
-            save.seedIteration = iterationSeedRegister;
         }
 
         public void LoadSave()
@@ -63,7 +61,6 @@ namespace Map.Generation
             Stage = SaveManager.saveData.stage - 1;
             roomClearId = SaveManager.saveData.roomCleareds;
             Seed.Iterate(SaveManager.saveData.seedIteration);
-            iterationSeedRegister = SaveManager.saveData.seedIteration;
         }
 
         private void ResetMapDatas()
@@ -106,7 +103,8 @@ namespace Map.Generation
         public void Generate(GenerationParameters genParam)
         {
             Stage++;
-            iterationSeedRegister = Seed.Iteration;
+            InGameManager.current.seedIterationRegister = Seed.Iteration;
+            InGameManager.current.altarCountRegister = ItemAltar.altarCount;
 
             ChangeMiniMapColor();
 
