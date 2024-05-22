@@ -63,6 +63,8 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
             FacePlayer(clone.transform);
             clones.Add(clone.transform);
+
+            Context.Clones.Add(clone);
         }
 
         Context.Animator.ResetTrigger("Prison");
@@ -76,6 +78,7 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         foreach (Transform clone in clones)
         {
+            Context.Clones.Remove(clone.gameObject);
             Object.Destroy(clone.gameObject);
         }
 
@@ -123,6 +126,7 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
             if (dashDistance > prisonRadius * 2f + 1)
             {
+                Context.Clones.Remove(clones[0].gameObject);
                 Object.Destroy(clones[0].gameObject);
                 clones.RemoveAt(0);
                 dashDistance = 0f;

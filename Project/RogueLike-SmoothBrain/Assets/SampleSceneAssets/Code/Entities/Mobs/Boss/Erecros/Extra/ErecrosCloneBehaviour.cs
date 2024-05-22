@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -8,6 +9,8 @@ public class ErecrosCloneBehaviour : MonoBehaviour
     IAttacker attacker;
 
     CameraUtilities cameraUtilities;
+
+    Coroutine explosionCoroutine = null;
 
     public Animator animator;
 
@@ -21,7 +24,15 @@ public class ErecrosCloneBehaviour : MonoBehaviour
 
     public void Explode(IAttacker _attacker)
     {
-        StartCoroutine(ExplosionCoroutine());
+        explosionCoroutine = StartCoroutine(ExplosionCoroutine());
+    }
+
+    void OnDestroy()
+    {
+        if (explosionCoroutine != null)
+        {
+            StopCoroutine(explosionCoroutine);
+        }
     }
 
     IEnumerator ExplosionCoroutine()

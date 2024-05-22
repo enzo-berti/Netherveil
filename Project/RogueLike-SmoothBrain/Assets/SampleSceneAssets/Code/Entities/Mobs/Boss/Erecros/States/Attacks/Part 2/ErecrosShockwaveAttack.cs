@@ -48,7 +48,7 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
         Context.Animator.ResetTrigger("Shockwave");
         Context.Animator.SetTrigger("Shockwave");
 
-        Context.StartCoroutine(ShockwaveCoroutine());
+        Context.CurrentCouroutine = Context.StartCoroutine(ShockwaveCoroutine());
     }
 
     // This method will be called only once after the last update.
@@ -109,6 +109,7 @@ public class ErecrosShockwaveAttack : BaseState<ErecrosStateMachine>
         Context.DisableHitboxes();
         attackEnded = true;
 
+        Context.CurrentCouroutine = null;
         yield return null;
     }
 }

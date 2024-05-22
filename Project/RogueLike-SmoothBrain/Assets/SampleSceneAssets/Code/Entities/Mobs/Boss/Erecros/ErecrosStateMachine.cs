@@ -85,6 +85,9 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     Type lastAttack = null;
 
+    List<GameObject> clones = new();
+    Coroutine currentCoroutine = null;
+
     // CINEMATICS
     [SerializeField] private BossCinematic cinematic;
     private bool isInCinematic = false;
@@ -107,6 +110,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public float Height { get => height - 1.25f; }
     public Type LastAttack { get => lastAttack; set => lastAttack = value; }
     public Transform RoomCenter { get => roomCenter; }
+    public List<GameObject> Clones { get => clones; set => clones = value; }
+    public Coroutine CurrentCouroutine { get => currentCoroutine; set => currentCoroutine = value; }
 
     public VisualEffect ShieldVFX { get => shieldVFX; }
     public VisualEffect ShockwaveVFX { get => shockwaveVFX; }
@@ -219,7 +224,18 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public void Death()
     {
-        if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
+        foreach (GameObject clone in clones)
+        {
+            Destroy(clone);
+        }
+
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+
+        // Son
+        if (part != 2) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
 
         if (part < 3)
         {
