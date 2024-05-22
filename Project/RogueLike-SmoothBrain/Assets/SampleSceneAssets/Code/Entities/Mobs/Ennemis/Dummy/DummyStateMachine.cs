@@ -24,6 +24,7 @@ public class DummyStateMachine : Mobs, IDummy
     [SerializeField] private DummySounds dummySounds;
 
     [SerializeField] private Weakness weakness;
+    [SerializeField] private FadeOutText textToFade;
     [SerializeField] private GameObject objectToDestroy;
 
     private bool triggerAttack = false;
@@ -146,6 +147,7 @@ public class DummyStateMachine : Mobs, IDummy
         AudioManager.Instance.PlaySound(AudioManager.Instance.DeathVFXSFX, transform.position);
         GameObject.Destroy(GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
         animator.speed = 1;
+        textToFade.fadeOut = true;
         Unsubscribe();
         Destroy(objectToDestroy);
         StopAllCoroutines();
