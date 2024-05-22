@@ -49,6 +49,11 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     const float CORRUPTION_LIFESTEAL_STEP = 0.03f;
     const float CORRUPTION_TAKE_DAMAGE_COEF_STEP = 0.25f;
 
+    bool damnationVeilVideoShown = false;
+    bool divineShieldVideoShown = false;
+    bool damoclesSwordVideoShown = false;
+    bool ezrealAttackVideoShown = false;
+
     //player events
     private event Action<IDamageable> onKill;
     private event IAttacker.AttackDelegate onAttack;
@@ -151,6 +156,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
     {
         if (IsInvincibleCount > 0)
         {
+            FloatingTextGenerator.CreateEffectDamageText(0, transform.position, Color.red);
             return;
         }
 
@@ -498,19 +504,20 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         stats.IncreaseValue(Stat.HEAL_COEFF, BENEDICTION_HEAL_COEF_STEP, false);
         BenedictionUpgrade();
         OnBenedictionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        if (!isLoading)
+        if (!isLoading && !divineShieldVideoShown)
         {
             StartCoroutine(OpenSpecialAbilityTab(playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=yellow><b>Divine Shield</b></color>",
             "On activation, creates a <color=#a52a2aff><b>shield</b></color> around you that <color=#a52a2aff><b>nullifies damages</b></color> for a small amount of time.",
             "DivineShield",
             "SpecialAbilityBackgroundBenediction"));
+            divineShieldVideoShown = true;
         }
     }
 
     private void BenedictionUpgrade()
     {
-        if (CurrentAlignmentStep <= -2 && !isLoading)
+        if (CurrentAlignmentStep <= -2 && !isLoading && !ezrealAttackVideoShown)
         {
             StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=yellow><b>Light Arc</b></color>",
@@ -520,6 +527,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             $"{playerController.EZREAL_ATTACK_DAMAGES} damages to all enemies touched during travel.",
             "EzrealAttack",
             "SpecialAbilityBackgroundBenediction"));
+            ezrealAttackVideoShown = true;
         }
         Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
         Stats.IncreaseValue(Stat.HP, BENEDICTION_HP_STEP);
@@ -545,7 +553,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         CanHealFromConsumables = false;
         playerController.SpecialAbility = new DamnationVeil();
         OnCorruptionMaxUpgrade?.Invoke(playerController.SpecialAbility);
-        if (!isLoading)
+        if (!isLoading && !damnationVeilVideoShown)
         {
             StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=#44197c><b>Damnation Veil</b></color>",
@@ -553,12 +561,13 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             "that <color=red>doubles the damages</color> received to all enemies touched by the zone.",
             "DamnationVeil",
             "SpecialAbilityBackgroundCoruption"));
+            damnationVeilVideoShown = true;
         }
     }
 
     private void CorruptionUpgrade()
     {
-        if (CurrentAlignmentStep >= 2 && !isLoading)
+        if (CurrentAlignmentStep >= 2 && !isLoading && !damoclesSwordVideoShown)
         {
             StartCoroutine(OpenSpecialAbilityTab(playerController.corruptionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=#44197c><b>Fate's Blade</b></color>",
@@ -567,6 +576,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             $"dealing <color=purple>{playerController.DAMOCLES_SWORD_DAMAGES}</color> AOE Damages.",
             "DamoclesSword",
             "SpecialAbilityBackgroundCoruption"));
+            damoclesSwordVideoShown = true;
         }
         takeDamageCoeff += CORRUPTION_TAKE_DAMAGE_COEF_STEP;
         Stats.IncreaseValue(Stat.LIFE_STEAL, CORRUPTION_LIFESTEAL_STEP);
