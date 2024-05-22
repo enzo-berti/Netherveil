@@ -9,7 +9,7 @@ namespace Map.Generation
     {
         // monkey variables
         [SerializeField] private Material miniMapMat;
-        [HideInInspector] public bool generate = false; 
+        [HideInInspector] public bool generate = false;
 
         // Generation variables
         private Room previousRoomSpawned = null;
