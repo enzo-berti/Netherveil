@@ -1,3 +1,4 @@
+using Map;
 using UnityEngine;
 
 public abstract class Consumable : MonoBehaviour, IConsumable
@@ -12,6 +13,7 @@ public abstract class Consumable : MonoBehaviour, IConsumable
     private void Awake()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Hero>();
+        MapUtilities.onFinishStage += DestroyOnChangeStage;
     }
 
     protected virtual void Start()
@@ -24,6 +26,16 @@ public abstract class Consumable : MonoBehaviour, IConsumable
     {
         RetrieveConsumable();
         FloatingAnimation();
+    }
+
+    private void OnDestroy()
+    {
+        MapUtilities.onFinishStage -= DestroyOnChangeStage;
+    }
+
+    private void DestroyOnChangeStage()
+    {
+        Destroy(gameObject);
     }
 
     private void FloatingAnimation()
