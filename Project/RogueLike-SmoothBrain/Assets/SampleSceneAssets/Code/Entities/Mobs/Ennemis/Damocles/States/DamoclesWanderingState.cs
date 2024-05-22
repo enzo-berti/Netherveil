@@ -24,7 +24,7 @@ public class DamoclesWanderingState : BaseState<DamoclesStateMachine>
         idleTimer = Random.Range(-0.5f, 0.5f);
         if (Context.LifeBar.gameObject.activeSelf) Context.LifeBar.FadeOutOpacity(0.5f, 0.25f);
 
-        Context.IsInvincibleCount = 1;
+        Context.IsInvincibleCount.Value = 1;
         Context.Animator.SetTrigger("BackToWalk");
     }
 
@@ -37,7 +37,7 @@ public class DamoclesWanderingState : BaseState<DamoclesStateMachine>
     // This method will be call every frame.
     protected override void UpdateState()
     {
-        Context.IsInvincibleCount = 1;
+        Context.IsInvincibleCount.Value = 1;
         if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
         {
             idleTimer += Time.deltaTime;

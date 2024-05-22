@@ -30,7 +30,7 @@ public class DamoclesTriggeredState : BaseState<DamoclesStateMachine>
     protected override void EnterState()
     {
         Context.Animator.SetTrigger("BackToWalk");
-        Context.IsInvincibleCount = 1;
+        Context.IsInvincibleCount.Value = 1;
     }
 
     // This method will be call only one time after the last update.

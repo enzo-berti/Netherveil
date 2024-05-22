@@ -41,7 +41,7 @@ public class DamoclesEnGardeState : BaseState<DamoclesStateMachine>
         stateTimer = 0f;
         stateEnded = false;
         Context.Stats.IncreaseValue(Stat.SPEED, 2);
-        Context.IsInvincibleCount = 1;
+        Context.IsInvincibleCount.Value = 1;
         Context.Animator.SetTrigger("Guard");
     }
 
