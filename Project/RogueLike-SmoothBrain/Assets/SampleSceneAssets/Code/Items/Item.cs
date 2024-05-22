@@ -122,7 +122,7 @@ public class Item : MonoBehaviour
             yield return new WaitUntil(() => InGameManager.ItemPool != null);
         }
 
-        idItemName = InGameManager.ItemPool.GetRandomItemName();
+        idItemName = InGameManager.ItemPool.GetItem();
         CreateItem();
         yield return null;
     }

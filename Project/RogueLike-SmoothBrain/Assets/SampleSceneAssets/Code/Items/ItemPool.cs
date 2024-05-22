@@ -2,6 +2,8 @@ using Map.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
 
 public class ItemPool
 {
@@ -12,6 +14,8 @@ public class ItemPool
     private const float EpicChance = 0.1f;
     private const float LegendaryChance = 0.05f;
     private const string DefaultItem = "MonsterHeart";
+
+    private const bool debug = false;
     private List<float> rarityWeighting = new List<float>()
     {
         CommonChance,
@@ -20,10 +24,17 @@ public class ItemPool
         EpicChance,
         LegendaryChance
     };
+    private List<Color> debugColors = new List<Color>()
+    { Color.grey,
+    Color.green,
+    Color.blue,
+    Color.magenta,
+    Color.yellow};
     #endregion
 
     #region Members
     public List<List<string>> itemsPerTier;
+    Stack<string> itemPool;
     #endregion
 
     #region Methods
@@ -31,13 +42,26 @@ public class ItemPool
     {
         ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");
         itemsPerTier = new List<List<string>>();
+        itemPool = new Stack<string>();
         for (int i = 0; i < Enum.GetNames(typeof(ItemData.Rarity)).Length; i++)
         {
             // Adding pool for each Rarity
             itemsPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
         }
+        UpdateRarityWeight();
+        Init();
     }
-
+    public void Init()
+    {
+        ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");
+        while (!IsPoolEmpty())
+        {
+            string item = GetRandomItemName();
+            itemPool.Push(item);
+            if(debug) Debug.Log("<color=#" + debugColors[(int)itemDatabase.GetItem(item).RarityTier].ToHexString() + ">" + item + "</color>");
+        }
+        itemPool.Reverse();
+    }
     public bool IsPoolEmpty()
     {
         for(int i = 0; i < itemsPerTier.Count; i++)
@@ -53,23 +77,42 @@ public class ItemPool
         float toShare = rarityWeighting[indexEmpty];
         rarityWeighting.RemoveAt(indexEmpty);
         toShare /= rarityWeighting.Count;
-        for(int i = 0; i < rarityWeighting.Count;i++)
+        for (int i = 0; i < rarityWeighting.Count; i++)
+        {
+            rarityWeighting[i] += toShare;
+        }
+    }
+    public void UpdateRarityWeight()
+    {
+        float toShare = 0;
+        for (int i = rarityWeighting.Count - 1; i >= 0; i--)
+        {
+            if (itemsPerTier[i].Count == 0)
+            {
+                toShare += rarityWeighting[i];
+                rarityWeighting.RemoveAt(i);
+                itemsPerTier.RemoveAt(i);
+            }
+        }
+        UnityEngine.Debug.Log("toShare => " + toShare);
+        toShare /= rarityWeighting.Count;
+        for (int i = 0; i < rarityWeighting.Count; i++)
         {
             rarityWeighting[i] += toShare;
         }
     }
 
-    public string GetRandomItemName()
+    private string GetRandomItemName()
     {
         if (IsPoolEmpty()) return DefaultItem;
 
         float randomRarity = Seed.Range();
         float currentChance = 0;
         int indexRarity = 0;
-        for(int i = rarityWeighting.Count - 1; i >= 0  ; i--)
+        for (int i = rarityWeighting.Count - 1; i >= 0; i--)
         {
             currentChance += rarityWeighting[i];
-            if(randomRarity <= currentChance)
+            if (randomRarity <= currentChance)
             {
                 indexRarity = i;
                 break;
@@ -79,6 +122,11 @@ public class ItemPool
         string toReturn =  itemsPerTier[indexRarity][randomItemIndex];
         RemoveItemFromPool(indexRarity, toReturn);
         return toReturn;
+    }
+
+    public string GetItem()
+    {
+        return itemPool.Pop();
     }
 
     private void RemoveItemFromPool(int rarityIndex, string name)
