@@ -7,7 +7,6 @@ public class DivineShield : ISpecialAbility
     public float Cooldown { get; set; } = 30f;
     public float CurrentEnergy { get; set; } = 0f;
 
-    private readonly float duration = 5f;
     private float currentTime = 0f;
     private EventInstance loopSound;
 
@@ -20,7 +19,7 @@ public class DivineShield : ISpecialAbility
     {
         ISpecialAbility.OnSpecialAbilityActivated?.Invoke();
         PlayerController playerController = Utilities.Player.GetComponent<PlayerController>();
-        playerController.DivineShieldVFX.SetFloat("Duration", duration);
+        playerController.DivineShieldVFX.SetFloat("Duration", Utilities.PlayerController.DIVINE_SHIELD_DURATION);
         playerController.DivineShieldVFX.Play();
         playerController.SpecialAbilityCoroutine = playerController.StartCoroutine(DisableDivineShield());
         Utilities.Hero.IsInvincibleCount++;
@@ -30,7 +29,7 @@ public class DivineShield : ISpecialAbility
 
     IEnumerator DisableDivineShield()
     {
-        while (currentTime < duration)
+        while (currentTime < Utilities.PlayerController.DIVINE_SHIELD_DURATION)
         {
             currentTime += Time.deltaTime;
             yield return null;
