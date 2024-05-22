@@ -15,6 +15,7 @@ public struct SaveData
     public int seedIteration;
     public List<int> roomCleareds;
     public List<int> altarCleareds;
+    public int altarCount;
     // Hero
     public bool doneQuestQThisStage;
     public bool doneQuestQTApprenticeThisStage;
@@ -46,6 +47,7 @@ public struct SaveData
         seedIteration = 0;
         roomCleareds = new List<int>();
         altarCleareds = new List<int>();
+        altarCount = 0;
 
         doneQuestQThisStage = false;
         doneQuestQTApprenticeThisStage = false;
@@ -90,6 +92,7 @@ public struct SaveData
         {
             writer.Write(idAltar);
         }
+        writer.Write(altarCount);
         // Hero
         writer.Write(doneQuestQThisStage);
         writer.Write(doneQuestQTApprenticeThisStage);
@@ -154,6 +157,7 @@ public struct SaveData
         {
             altarCleareds.Add(reader.ReadInt32());
         }
+        altarCount = reader.ReadInt32();
         // Hero
         doneQuestQThisStage = reader.ReadBoolean();
         doneQuestQTApprenticeThisStage = reader.ReadBoolean();
@@ -205,7 +209,7 @@ static public class SaveManager
 
     static public void SelectSave(int selectedSave)
     {
-        FilePath = Application.persistentDataPath + "/Save/" + selectedSave.ToString();
+        FilePath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + ".s";
 
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
         {

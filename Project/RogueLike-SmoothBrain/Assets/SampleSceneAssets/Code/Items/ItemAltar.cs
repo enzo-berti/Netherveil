@@ -25,7 +25,10 @@ public class ItemAltar : MonoBehaviour, ISavable
     {
         if (SaveManager.saveData.altarCleareds.Contains(altarId))
         {
-            Destroy(item.gameObject);
+            if (item != null)
+            {
+                Destroy(item.gameObject);
+            }
         }
     }
 

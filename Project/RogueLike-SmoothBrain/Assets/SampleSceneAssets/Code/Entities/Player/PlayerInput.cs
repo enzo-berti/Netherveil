@@ -369,11 +369,11 @@ public class PlayerInput : MonoBehaviour
 
         if (items != null)
         {
+            if (EventSystem.current.currentSelectedGameObject == items.gameObject)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
             EventSystem.current.SetSelectedGameObject(items.gameObject);
-        }
-        else
-        {
-            Debug.LogWarning("Objet non trouvé");
         }
     }
 

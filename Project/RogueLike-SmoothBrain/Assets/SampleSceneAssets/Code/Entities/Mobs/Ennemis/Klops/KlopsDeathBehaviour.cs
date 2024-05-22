@@ -30,7 +30,7 @@ public class KlopsDeathBehaviour : StateMachineBehaviour
     private IEnumerator BeforeDestroy(Animator animator, float time)
     {
         mobTransform.gameObject.SetActive(false);
-        yield return new WaitForSeconds(time + 0.5f);
+        yield return new WaitForSeconds(time);
         Destroy(mobTransform.parent.gameObject);
     }
 
