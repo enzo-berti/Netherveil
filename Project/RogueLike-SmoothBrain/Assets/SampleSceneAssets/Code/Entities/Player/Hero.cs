@@ -645,7 +645,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     public static void CallCorruptionBenedictionText(int value)
     {
-        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, (value < 0 ? "-" : "+") + $"{Mathf.Abs(value)}" + (value < 0 ? " Benediction" : " Corruption"),
+        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position,$"+{Mathf.Abs(value)}" + (value < 0 ? " <sprite name=\"benediction\">" : " <sprite name=\"corruption\">"),
             value < 0 ? benedictionColor : corruptionColor);
     }
 
