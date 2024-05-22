@@ -103,6 +103,7 @@ public class SaveBook : MonoBehaviour
             else
             {
                 Seed.RandomizeSeed();
+                SaveManager.saveData.seed = Seed.seed;
             }
         }
     }
