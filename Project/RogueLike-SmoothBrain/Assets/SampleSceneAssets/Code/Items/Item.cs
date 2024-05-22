@@ -1,3 +1,5 @@
+using Map;
+using Map.Component;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,15 +56,20 @@ public class Item : MonoBehaviour
             {
                 CreateItem();
             }
-            
         }
+        MapUtilities.onFinishStage += DestroySelf;
     }
 
     private void OnDestroy()
     {
         StopAllCoroutines();
+        MapUtilities.onFinishStage -= DestroySelf;
     }
 
+    private void DestroySelf()
+    {
+        Destroy(this.gameObject);
+    }
     public static void InvokeOnRetrieved(ItemEffect effect)
     {
         OnRetrieved?.Invoke(effect);
