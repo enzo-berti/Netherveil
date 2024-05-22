@@ -503,7 +503,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             StartCoroutine(OpenSpecialAbilityTab(playerController.benedictionUpgradeVFX.GetComponent<VFXStopper>().Duration,
             "<color=yellow><b>Divine Shield</b></color>",
             "On activation, creates a <color=#a52a2aff><b>shield</b></color> around you that <color=#a52a2aff><b>nullifies damages</b></color> for a small amount of time.",
-            "BenedictionVideo",
+            "DivineShield",
             "SpecialAbilityBackgroundBenediction"));
         }
     }
@@ -518,7 +518,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             $"the <color=#a52a2aff>finisher</color> of you basic attack combo, you can throw " +
             $"a <color=#a52a2aff>light arc</color> that will do " +
             $"{playerController.EZREAL_ATTACK_DAMAGES} damages to all enemies touched during travel.",
-            "BenedictionVideo",
+            "EzrealAttack",
             "SpecialAbilityBackgroundBenediction"));
         }
         Stats.IncreaseMaxValue(Stat.HP, BENEDICTION_HP_STEP);
@@ -551,7 +551,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             "<color=#44197c><b>Damnation Veil</b></color>",
             "On activation, creates a <color=purple><b>damnation zone</b></color> that applies the <color=purple><b>damnation effect</b></color> " +
             "that <color=red>doubles the damages</color> received to all enemies touched by the zone.",
-            "CorruptionVideo",
+            "DamnationVeil",
             "SpecialAbilityBackgroundCoruption"));
         }
     }
@@ -565,7 +565,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             $"When hitting an enemy, you have {playerController.DAMOCLES_SWORD_TRIGGER_PERCENT * 100f}% chance to apply <color=purple><b>Fate's Blade</b></color>, " +
             $"that will create a <color=purple>sword</color> on top of the target that will <color=purple>fall</color> on him after {playerController.DAMOCLES_SWORD_DURATION} seconds, " +
             $"dealing <color=purple>{playerController.DAMOCLES_SWORD_DAMAGES}</color> AOE Damages.",
-            "CorruptionVideo",
+            "DamoclesSword",
             "SpecialAbilityBackgroundCoruption"));
         }
         takeDamageCoeff += CORRUPTION_TAKE_DAMAGE_COEF_STEP;
@@ -629,6 +629,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
             GameResources.Get<VideoClip>(videoName),
             GameResources.Get<Sprite>(backgroundName));
 
+        HudHandler.current.DescriptionTab.CloseTab();
         HudHandler.current.DescriptionTab.OpenTab();
     }
 

@@ -107,6 +107,13 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
                         else if (tripleThrustCoroutine != null)
                         {
                             Context.StopCoroutine(tripleThrustCoroutine);
+
+                            Transform thrustTransform = Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data[0].transform;
+                            Transform vfxTransform = Context.TripleThrustVFX.transform;
+
+                            vfxTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
+                            thrustTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
+
                             tripleThrustCoroutine = Context.StartCoroutine(ThrustAttack());
                         }
                     }
@@ -172,6 +179,9 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
 
             yield return null;
         }
+
+        vfxTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
+        thrustTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
     }
 
     #endregion
