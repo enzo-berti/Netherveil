@@ -8,6 +8,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class ErecrosStateMachine : Mobs, IFinalBoss
 {
     [HideInInspector]
@@ -302,5 +306,36 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             }
         }
     }
+    #endregion
+
+    #region EDITOR
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        //if (!Selection.Contains(gameObject))
+        //    return;
+
+        DisplayAttackRange(360f);
+        DisplayInfos();
+    }
+
+    protected override void DisplayInfos()
+    {
+        Handles.Label(
+        transform.position + transform.up,
+        stats.GetEntityName() +
+        "\n - Health : " + stats.GetValue(Stat.HP) +
+        "\n - Speed : " + stats.GetValue(Stat.SPEED) +
+        "\n - State : " + currentState?.ToString(),
+        new GUIStyle()
+        {
+            alignment = TextAnchor.MiddleLeft,
+            normal = new GUIStyleState()
+            {
+                textColor = Color.black
+            }
+        });
+    }
+#endif
     #endregion
 }
