@@ -236,6 +236,10 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             if (gameMusic != null)
                 gameMusic.SetActive(true);
 
+            musicEmitter.Stop();
+
+            AudioManager.Instance.StopAllSounds();
+
             animator.ResetTrigger("Death");
             animator.SetTrigger("Death");
 
