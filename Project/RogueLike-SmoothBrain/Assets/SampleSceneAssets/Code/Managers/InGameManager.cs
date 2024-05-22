@@ -23,6 +23,11 @@ public class InGameManager : MonoBehaviour, ISavable
     /// </summary>
     public void LoadSave()
     {
+        if (!SaveManager.saveData.hasData)
+        {
+            return;
+        }
+
         ItemAltar.altarCount = SaveManager.saveData.altarCount;
         Seed.Iterate(SaveManager.saveData.seedIteration);
 

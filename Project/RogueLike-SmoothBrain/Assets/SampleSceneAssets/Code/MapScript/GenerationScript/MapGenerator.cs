@@ -60,7 +60,6 @@ namespace Map.Generation
 
             Stage = SaveManager.saveData.stage - 1;
             roomClearId = SaveManager.saveData.roomCleareds;
-            Seed.Iterate(SaveManager.saveData.seedIteration);
         }
 
         private void ResetMapDatas()
