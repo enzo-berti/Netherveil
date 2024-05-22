@@ -10,12 +10,14 @@ public class InGameManager : MonoBehaviour, ISavable
     public int altarCountRegister = 0;
     public int seedIterationRegister = 0;
 
+    private ItemPool itemPool;
+    public static ItemPool ItemPool { get { return current.itemPool; } }
     private void Awake()
     {
         current = this;
-
         LoadSave();
         SaveManager.onSave += Save;
+        itemPool = new();
     }
 
     /// <summary>
