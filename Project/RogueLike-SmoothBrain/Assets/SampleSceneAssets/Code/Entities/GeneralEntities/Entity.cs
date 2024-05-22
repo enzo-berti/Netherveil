@@ -62,10 +62,91 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
+    public class InvincibilityCount
+    {
+        /// <summary>
+        /// dont increment/decrement this value, use the class to increment/decrement
+        /// </summary>
+        public int Value { get; set; } = 0;
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        public static InvincibilityCount operator +(InvincibilityCount invincibilityCount, int increment)
+        {
+            invincibilityCount.Value += increment;
+            invincibilityCount.Value = Mathf.Max(0, invincibilityCount.Value);
+            return invincibilityCount;
+        }
+
+        public static InvincibilityCount operator -(InvincibilityCount invincibilityCount, int decrement)
+        {
+            invincibilityCount.Value -= decrement;
+            invincibilityCount.Value = Mathf.Max(0, invincibilityCount.Value);
+            return invincibilityCount;
+        }
+
+        public static InvincibilityCount operator ++(InvincibilityCount invincibilityCount)
+        {
+            invincibilityCount.Value++;
+            invincibilityCount.Value = Mathf.Max(0, invincibilityCount.Value);
+            return invincibilityCount;
+        }
+
+        public static InvincibilityCount operator --(InvincibilityCount invincibilityCount)
+        {
+            invincibilityCount.Value--;
+            invincibilityCount.Value = Mathf.Max(0, invincibilityCount.Value);
+            return invincibilityCount;
+        }
+
+        public static bool operator ==(InvincibilityCount invincibilityCount, int toCompare)
+        {
+            return invincibilityCount.Value == toCompare;
+        }
+
+        public static bool operator !=(InvincibilityCount invincibilityCount, int toCompare)
+        {
+            return invincibilityCount.Value != toCompare;
+        }
+
+        public static bool operator >(InvincibilityCount invincibilityCount, int toCompare)
+        {
+            return invincibilityCount.Value > toCompare;
+        }
+
+        public static bool operator <(InvincibilityCount invincibilityCount, int toCompare)
+        {
+            return invincibilityCount.Value < toCompare;
+        }
+
+        public static bool operator <=(InvincibilityCount invincibilityCount, int toCompare)
+        {
+            return invincibilityCount.Value <= toCompare;
+        }
+
+        public static bool operator >=(InvincibilityCount invincibilityCount, int toCompare)
+        {
+            return invincibilityCount.Value >= toCompare;
+        }
+    }
+
     //not a bool because if you get multiple invincibility sources at the same time,
     //if one would go away, he would put the bool at false but it would break the invincibility from other sources too,
     //so it is a count that means the entity is invincible if this variable is over zero.
-    public byte IsInvincibleCount = 0;
+    public InvincibilityCount IsInvincibleCount = new();
 
     private int state = (int)EntityState.MOVE;
     public int State
