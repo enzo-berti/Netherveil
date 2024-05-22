@@ -57,14 +57,14 @@ public class DamoclesJumpAttackState : BaseState<DamoclesStateMachine>
         curState = State.Start;
         stateEnded = false;
         isTargetTouched = false;
-        Context.Stats.SetValue(Stat.SPEED, 5);
+        Context.Stats.IncreaseValue(Stat.SPEED, 1);
         Context.Agent.enabled = false;
     }
 
     // This method will be call only one time after the last update.
     protected override void ExitState()
     {
-
+        Context.Stats.DecreaseValue(Stat.SPEED, 1);
     }
 
     // This method will be call every frame.
