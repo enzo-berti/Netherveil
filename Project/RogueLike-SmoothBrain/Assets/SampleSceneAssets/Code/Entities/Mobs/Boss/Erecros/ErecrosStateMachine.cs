@@ -2,10 +2,10 @@
 // "factory" is use to get all state possible
 // "currentState" can be set in the start with : currentState = factory.GetState<YOUR_STATE>();
 
-using UnityEngine;
 using StateMachine; // include all script about stateMachine
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.VFX;
 
 public class ErecrosStateMachine : Mobs, IFinalBoss
@@ -55,11 +55,12 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     float height = 0f;
 
+    bool toggleDebugMode = false;
+
     public int part;
     public int phase;
 
-    [SerializeField] GameObject miniPrefab;
-    [SerializeField] GameObject maxiPrefab;
+    [SerializeField] GameObject nextPartGO;
 
     [SerializeField] GameObject[] enemiesPrefabs;
 
@@ -109,6 +110,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public List<Collider> PropsColliders { get => propsColliders; }
     public SphereCollider SummonCollider { get => summonCollider; }
 
+    public bool DebugMode { get => toggleDebugMode; set => toggleDebugMode = value; }
     #endregion
 
     protected override void Start()
@@ -177,6 +179,11 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Dollar))
+        {
+            toggleDebugMode = !toggleDebugMode;
+        }
+
         base.Update();
         currentState.Update();
     }
@@ -207,25 +214,19 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
     public void Death()
     {
-        if (part == 1)
+        if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
+
+        if (part < 3)
         {
-            Instantiate(maxiPrefab, transform.position, Quaternion.identity);
+            nextPartGO.SetActive(true);
             Destroy(gameObject);
         }
-        else if (part == 2)
-        {
-            ErecrosStateMachine part3Boss = Instantiate(miniPrefab, transform.position, Quaternion.identity).GetComponentInChildren<ErecrosStateMachine>();
-            part3Boss.stats.SetValue(Stat.HP, 10);
-            part3Boss.part = 3;
-            Destroy(gameObject);
-        }
-        else if (part == 3)
+        else
         {
             animator.speed = 1;
             OnDeath?.Invoke(transform.position);
             Utilities.Hero.OnKill?.Invoke(this);
 
-            if (part <= 1) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
 
             if (gameMusic != null)
                 gameMusic.SetActive(true);
