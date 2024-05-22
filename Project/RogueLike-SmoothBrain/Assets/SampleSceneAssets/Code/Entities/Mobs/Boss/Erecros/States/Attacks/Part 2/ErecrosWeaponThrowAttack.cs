@@ -11,6 +11,7 @@
 // }
 
 using StateMachine; // include all scripts about StateMachines
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -73,6 +74,8 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
 
             Context.Animator.ResetTrigger("CallWeapon");
             Context.Animator.SetTrigger("CallWeapon");
+
+            Context.StartCoroutine(GetToBoss(i));
         }
     }
 
@@ -104,7 +107,7 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
         {
             if (!onBoss[i])
             {
-                GetToBoss(i);
+                //GetToBoss(i);
                 allOnBoss = false;
             }
             else if (!launched[i])
@@ -195,31 +198,72 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
         _launcher.transform.localRotation = Quaternion.Slerp(_launcher.transform.localRotation, lookRotation, _speed * Time.deltaTime);
     }
 
-    void GetToBoss(int i)
+    //void GetToBoss(int i)
+    //{
+    //    Vector3 customVector = Context.transform.right * 2f;
+    //    customVector = Quaternion.AngleAxis(180f / (props.Length - 1) * i, Context.transform.forward) * customVector;
+
+    //    targetPos[i] = Context.transform.position + Context.transform.up * Context.Height + customVector;
+
+    //    props[i].velocity = (targetPos[i] - props[i].transform.position).normalized * 10f;
+
+    //    //LookAtTarget(props[i].transform, targetPos[i]);
+
+    //    LookAtTarget(props[i].transform, props[i].transform.position * 2 - targetPos[i]);
+
+    //    if (Vector3.Distance(props[i].transform.position, targetPos[i]) <= 0.1f)
+    //    {
+    //        props[i].transform.parent = Context.transform;
+    //        props[i].velocity = Vector3.zero;
+    //        onBoss[i] = true;
+
+    //        props[i].GetComponent<ErecrosWeaponBehaviour>().ignoreCollisions = false;
+    //        Context.PropsColliders[i].enabled = true;
+    //        activeColliders.Add(Context.PropsColliders[i]);
+
+    //        targetPos[i] = props[i].transform.position;
+    //    }
+    //}
+
+
+    IEnumerator GetToBoss(int i, float _duration = 2f)
     {
-        Vector3 customVector = Context.transform.right * 2f;
-        customVector = Quaternion.AngleAxis(180f / (props.Length - 1) * i, Context.transform.forward) * customVector;
+        float timer = 0f;
 
-        targetPos[i] = Context.transform.position + Context.transform.up * Context.Height + customVector;
+        Vector3 startingPoint = props[i].transform.position;
 
-        props[i].velocity = (targetPos[i] - props[i].transform.position).normalized * 10f;
-
-        //LookAtTarget(props[i].transform, targetPos[i]);
-
-        LookAtTarget(props[i].transform, props[i].transform.position * 2 - targetPos[i]);
-
-        if (Vector3.Distance(props[i].transform.position, targetPos[i]) <= 0.1f)
+        while (timer < 1f)
         {
-            props[i].transform.parent = Context.transform;
-            props[i].velocity = Vector3.zero;
-            onBoss[i] = true;
+            timer += Time.deltaTime / _duration;
+            Mathf.Clamp01(timer);
 
-            props[i].GetComponent<ErecrosWeaponBehaviour>().ignoreCollisions = false;
-            Context.PropsColliders[i].enabled = true;
-            activeColliders.Add(Context.PropsColliders[i]);
+            Vector3 customVector = Context.transform.right * 2f;
+            customVector = Quaternion.AngleAxis(180f / (props.Length - 1) * i, Context.transform.forward) * customVector;
+            targetPos[i] = Context.transform.position + Context.transform.up * Context.Height + customVector;
+            bool isRight = Vector3.Cross(Context.transform.forward, props[i].transform.position - targetPos[i]).y > 0;
 
-            targetPos[i] = props[i].transform.position;
+            Vector3 endPoint = targetPos[i];
+            Vector3 point1 = targetPos[i] + (Context.transform.forward + (isRight ? Context.transform.right : -Context.transform.right)).normalized * 5f;
+            Vector3 point2 = targetPos[i] + Context.transform.forward * 5f;
+
+            props[i].transform.position = BezierUtility.CalculateCubicBezierPoint(EasingFunctions.EaseOutQuad(timer), startingPoint, point1, point2, endPoint);
+
+            LookAtTarget(props[i].transform, props[i].transform.position * 2 - targetPos[i]);
+            props[i].transform.position += new Vector3(0f, Mathf.Sin(5f * Time.time + i * 5f) * 0.25f, 0f);
+            yield return null;
         }
+
+        props[i].transform.position = targetPos[i];
+        props[i].transform.parent = Context.transform;
+        props[i].velocity = Vector3.zero;
+
+        props[i].GetComponent<ErecrosWeaponBehaviour>().ignoreCollisions = false;
+        Context.PropsColliders[i].enabled = true;
+        activeColliders.Add(Context.PropsColliders[i]);
+
+        yield return new WaitForSeconds(0.5f);
+        onBoss[i] = true;
+        yield return null;
     }
 
 

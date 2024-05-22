@@ -52,6 +52,8 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
     protected override void ExitState()
     {
         Context.Animator.SetBool("Walk", false);
+
+        Context.Sounds.walk.Stop();
     }
 
     // This method will be called every frame.
@@ -61,9 +63,17 @@ public class ErecrosTriggeredState : BaseState<ErecrosStateMachine>
 
         Context.MoveTo(Context.Player.transform.position);
 
-        Context.Sounds.walk.Play(Context.transform.position);
+        if (Context.Agent.remainingDistance <= Context.Agent.stoppingDistance)
+        {
+            Context.Animator.SetBool("Walk", false);
+            Context.Sounds.walk.Stop();
+        }
+        else
+        {
+            Context.Animator.SetBool("Walk", true);
+            Context.Sounds.walk.Play(Context.transform.position);
+        }
 
-        Context.Animator.SetBool("Walk", Context.Agent.remainingDistance > Context.Agent.stoppingDistance);
     }
 
     // This method will be called on state switch.

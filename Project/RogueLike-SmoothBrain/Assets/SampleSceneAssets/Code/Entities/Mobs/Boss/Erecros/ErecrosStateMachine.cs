@@ -110,7 +110,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public GameObject[] EnemiesPrefabs { get => enemiesPrefabs; }
     public int CurrentPart { get => part; }
     public int CurrentPhase { get => phase; }
-    public float Height { get => height - 1.25f; }
+    public float Height { get => 3.5f; }
     public Type LastAttack { get => lastAttack; set => lastAttack = value; }
     public Transform RoomCenter { get => roomCenter; }
     public List<GameObject> Clones { get => clones; set => clones = value; }
@@ -244,6 +244,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         {
             StopCoroutine(currentCoroutine);
         }
+
+        sounds.levitation.Stop();
 
         // Son
         if (part != 2) sounds.miniDeath.Play(transform.position); else sounds.maxiDeath.Play(transform.position);
