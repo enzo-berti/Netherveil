@@ -23,7 +23,7 @@ public class ItemAltar : MonoBehaviour, ISavable
 
     public void LoadSave()
     {
-        if (SaveManager.saveData.altarCleareds != null && SaveManager.saveData.altarCleareds.Contains(altarId))
+        if (SaveManager.saveData.altarsCleared != null && SaveManager.saveData.altarsCleared.Contains(altarId))
         {
             if (item != null)
             {
@@ -36,7 +36,7 @@ public class ItemAltar : MonoBehaviour, ISavable
     {
         if (GetComponentInChildren<Item>() == null)
         {
-            save.altarCleareds.Add(altarId);
+            save.altarsCleared.Add(altarId);
         }
     }
 }
