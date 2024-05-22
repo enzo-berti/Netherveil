@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -54,6 +55,21 @@ namespace PostProcessingEffects
         public void Enable()
         {
             volume.gameObject.SetActive(true);
+
+            Hero hero = Utilities.Hero;
+            if (hero != null)
+            {
+                hero.OnDeath += StopAllEffect;
+            }
+        }
+
+        private void OnDisable()
+        {
+            Hero hero = Utilities.Hero;
+            if (hero != null)
+            {
+                hero.OnDeath -= StopAllEffect;
+            }
         }
 
         public void Disable()
@@ -109,6 +125,11 @@ namespace PostProcessingEffects
         {
             Effect cur = (Effect)Enum.Parse(typeof(Effect), effect.ToString());
             Stop(cur, true);
+        }
+
+        public void StopAllEffect(Vector3 _)
+        {
+            effectIsPlaying = false;
         }
 
         public void Stop(Effect effect, bool forceCancelPrevious = true)
