@@ -1,15 +1,16 @@
-using Map.Generation;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.VFX;
+using static UnityEditor.Progress;
 
 // This class is the item that is rendered in the 3D world
 [Serializable]
 public class Item : MonoBehaviour
 {
+
     public static event Action<ItemEffect> OnRetrieved;
     public static event Action OnLateRetrieved;
     public static event Action OnChangePriceCoef;
@@ -24,7 +25,6 @@ public class Item : MonoBehaviour
             OnChangePriceCoef?.Invoke();
         }
     }
-    public static List<List<ItemData>> ItemPool;
     public const int PRICE_PER_RARITY = 30;
 
     [SerializeField] private bool isRandomized = true;
@@ -45,24 +45,23 @@ public class Item : MonoBehaviour
 
     private void Awake()
     {
-        if (ItemPool == null)
-        {
-            ItemPool = new List<List<ItemData>>();
-            for (int i = 0; i < Enum.GetNames(typeof(ItemData.Rarity)).Length; i++)
-            {
-                // Adding pool for each Rarity
-                ItemPool.Add(database.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).ToList());
-            }
-        }
-
         if (itemEffect == null)
         {
             if (isRandomized)
             {
                 RandomizeItem(this);
             }
-            CreateItem();
+            else
+            {
+                CreateItem();
+            }
+            
         }
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 
     public static void InvokeOnRetrieved(ItemEffect effect)
@@ -83,80 +82,7 @@ public class Item : MonoBehaviour
     }
     static public void RandomizeItem(Item item)
     {
-        bool isEveryPoolEmpty = true;
-        // If every pool empty then spawn MonsterHeart
-        for (int i = 0; i < ItemPool.Count; i++)
-        {
-            if (ItemPool[i].Count > 0)
-            {
-                isEveryPoolEmpty = false;
-                break;
-            }
-        }
-        if (isEveryPoolEmpty)
-        {
-            item.idItemName = "MonsterHeart";
-            return;
-        }
-        // List every item name in each pool ( Common, uncommon... )
-        List<List<string>> allItemsByPool = new();
-        for (int j = 0; j < ItemPool.Count; j++)
-        {
-            allItemsByPool.Add(new List<string>());
-            for (int k = 0; k < ItemPool[j].Count; k++)
-            {
-                allItemsByPool[j].Add(ItemPool[j][k].idName);
-            }
-        }
-
-        // Copy list of weighting
-        List<float> currentRarityWeighting = ItemData.rarityWeighting;
-        // Then we will modify it, because some pools are empty
-        for (int test = allItemsByPool.Count - 1; test >= 0; test--)
-        {
-            // If a pool is empty ( no more common item for exemple )
-            if (allItemsByPool[test].Count == 0)
-            {
-                float chanceToDivide = currentRarityWeighting[test];
-                // We remove the empty pool in rarity weighting
-                currentRarityWeighting.RemoveAt(test);
-                chanceToDivide /= currentRarityWeighting.Count;
-
-                for (int iWeighting = 0; iWeighting < currentRarityWeighting.Count; iWeighting++)
-                {
-                    currentRarityWeighting[iWeighting] += chanceToDivide;
-                }
-                // And we remove the pool
-                allItemsByPool.RemoveAt(test);
-                ItemPool.RemoveAt(test);
-            }
-
-        }
-
-        float chanceForRarity = Seed.Range();
-        float currentChance = 0;
-        int indexRarity;
-        for (indexRarity = 0; indexRarity < currentRarityWeighting.Count; indexRarity++)
-        {
-            currentChance += currentRarityWeighting[indexRarity];
-            if (chanceForRarity < currentChance)
-            {
-                break;
-            }
-        }
-
-        int indexInPool = Seed.Range(0, allItemsByPool[indexRarity].Count);
-        item.idItemName = allItemsByPool[indexRarity][indexInPool];
-        for (int poolIndex = 0; poolIndex < ItemPool.Count; poolIndex++)
-        {
-            var test = ItemPool[poolIndex].FirstOrDefault(x => x.idName == item.idItemName);
-            if (test != null)
-            {
-                ItemPool[poolIndex].Remove(test);
-                return;
-            }
-        }
-
+        item.StartCoroutine(item.CursedCoroutine());
     }
     public void RandomizeItem()
     {
@@ -188,5 +114,17 @@ public class Item : MonoBehaviour
         auraVFX.SetFloat("Orbs amount", (float)(data.RarityTier + 1));
         auraVFX.SetVector4("Color", rarityColor);
         auraVFX.Play();
+    }
+
+    private IEnumerator CursedCoroutine()
+    {
+        if (InGameManager.ItemPool == null)
+        {
+            yield return new WaitUntil(() => InGameManager.ItemPool != null);
+        }
+
+        idItemName = InGameManager.ItemPool.GetRandomItemName();
+        CreateItem();
+        yield return null;
     }
 }

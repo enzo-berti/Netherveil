@@ -36,7 +36,6 @@ public class ItemPool
             // Adding pool for each Rarity
             itemPerTier.Add(itemDatabase.datas.Where(x => Convert.ToInt32(x.RarityTier) == i).Select(x => x.idName).ToList());
         }
-
     }
 
     public bool IsPoolEmpty()
