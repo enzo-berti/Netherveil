@@ -123,6 +123,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     protected override void Start()
     {
         base.Start();
+        bossLifeBar.ValueChanged(stats.GetValue(Stat.HP));
 
         factory = new StateFactory<ErecrosStateMachine>(this);
         currentState = factory.GetState<ErecrosTriggeredState>();
