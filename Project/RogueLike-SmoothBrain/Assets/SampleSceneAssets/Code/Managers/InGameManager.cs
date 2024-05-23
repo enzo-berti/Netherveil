@@ -42,7 +42,7 @@ public class InGameManager : MonoBehaviour, ISavable
 
         ItemAltar.altarCount = SaveManager.saveData.altarCount;
         Seed.Iterate(SaveManager.saveData.seedIteration);
-        itemPool.itemPool = new Stack<string>(SaveManager.saveData.itemsPool);
+        //itemPool.itemPool = new Stack<string>(SaveManager.saveData.itemsPool);
 
         altarCountRegister = ItemAltar.altarCount;
         seedIterationRegister = Seed.Iteration;
