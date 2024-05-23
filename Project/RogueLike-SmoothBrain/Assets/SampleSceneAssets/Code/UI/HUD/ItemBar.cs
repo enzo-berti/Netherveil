@@ -216,6 +216,8 @@ public class ItemBar : MonoBehaviour
         }
 
         frame.ToggleCooldown(false);
+
+        cooldownRoutine = null;
     }
 
     public void Toggle(float delay = 0.0f)
