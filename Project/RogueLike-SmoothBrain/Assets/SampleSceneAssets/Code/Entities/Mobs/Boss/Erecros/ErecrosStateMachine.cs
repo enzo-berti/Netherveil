@@ -76,6 +76,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     [SerializeField] VisualEffect shockwaveVFX;
     [SerializeField] VisualEffect teleportVFX;
     [SerializeField] VisualEffect prisonVFX;
+    [SerializeField] VisualEffect thunderVFX;
 
     [SerializeField] GameObject clonePrefab;
     [SerializeField] GameObject propsParent;
@@ -150,6 +151,11 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         cameraUtilities = Camera.main.GetComponent<CameraUtilities>();
 
         height = GetComponentInChildren<Renderer>().bounds.size.y;
+
+        if (part > 1)
+        {
+            Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), animator.transform.parent.position, Quaternion.identity), 3f);
+        }
 
         if (part == 1)
         {

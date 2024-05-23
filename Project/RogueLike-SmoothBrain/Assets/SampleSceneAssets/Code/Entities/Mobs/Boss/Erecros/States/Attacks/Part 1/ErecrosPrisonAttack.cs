@@ -25,7 +25,7 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
     float prisonRadius;
     float dashDistance;
 
-    float delayBeforeDash = 0.5f;
+    float delayBeforeDash = 0.3f;
     bool waiting = false;
 
     int randomClone = 0;
@@ -53,7 +53,7 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
         Context.Agent.isStopped = true;
 
-        int clonesAmount = 16;
+        int clonesAmount = 8;
 
         Context.Sounds.prison.Play(Context.transform.position);
 
@@ -61,8 +61,11 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
         {
             Vector3 spawnVector = (Context.transform.position - prisonCenter).normalized * (prisonRadius + 2f);
             spawnVector = Quaternion.AngleAxis(360f / clonesAmount * i, Vector3.up) * spawnVector;
+            spawnVector.y = 0f;
 
-            GameObject clone = Object.Instantiate(Context.ClonePrefab, prisonCenter + spawnVector, Context.transform.rotation);
+            GameObject clone = Object.Instantiate(Context.ClonePrefab, prisonCenter + spawnVector, Quaternion.identity);
+            clone.SetActive(false);
+            clone.transform.GetChild(0).GetChild(0).transform.position -= new Vector3(0, 2, 0);
 
             FacePlayer(clone.transform);
             clones.Add(clone.transform);
@@ -116,20 +119,31 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
 
             if (dashDistance == 0f)
             {
+                clones[randomClone].gameObject.SetActive(true);
                 FacePlayer(clones[randomClone].transform);
                 Context.Sounds.dash.Play(clones[randomClone].transform.position);
+            }
 
-                cloneBehaviour.animator.ResetTrigger("Dash");
-                cloneBehaviour.animator.SetTrigger("Dash");
+            if (delayBeforeDash > 0f)
+            {
+                FacePlayer(clones[randomClone].transform);
             }
 
             if (!waiting)
             {
-                clones[randomClone].position += clones[randomClone].forward * 20f * Time.deltaTime;
+                if (delayBeforeDash > 0f)
+                {
+                    clones[randomClone].position += (prisonCenter - clones[randomClone].transform.position).normalized * 20f * Time.deltaTime;
+                }
+                else
+                {
+                    clones[randomClone].position += clones[randomClone].forward * 20f * Time.deltaTime;
+                }
+
                 dashDistance += 20f * Time.deltaTime;
             }
 
-            if (dashDistance >= 2f)
+            if (dashDistance >= 3f)
             {
                 if (delayBeforeDash > 0f)
                 {
@@ -137,6 +151,9 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
                     waiting = true;
                     return;
                 }
+
+                cloneBehaviour.animator.ResetTrigger("Dash");
+                cloneBehaviour.animator.SetTrigger("Dash");
 
                 waiting = false;
 
@@ -148,14 +165,14 @@ public class ErecrosPrisonAttack : BaseState<ErecrosStateMachine>
                     }
                 }
 
-                if (dashDistance > (prisonRadius + 2f) * 2f)
+                if (dashDistance > prisonRadius * 2f + 2f)
                 {
                     Context.Clones.Remove(clones[randomClone].gameObject);
                     Object.Destroy(clones[randomClone].gameObject);
                     clones.RemoveAt(randomClone);
                     dashDistance = 0f;
 
-                    delayBeforeDash = 2f;
+                    delayBeforeDash = 0.5f;
 
                     randomClone = Random.Range(0, clones.Count);
                     Context.PlayerHit = false;

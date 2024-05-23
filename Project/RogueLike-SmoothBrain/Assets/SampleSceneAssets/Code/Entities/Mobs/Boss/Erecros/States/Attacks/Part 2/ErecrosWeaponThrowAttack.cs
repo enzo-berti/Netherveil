@@ -261,8 +261,6 @@ public class ErecrosWeaponThrowAttack : BaseState<ErecrosStateMachine>
         Context.PropsColliders[i].enabled = true;
         activeColliders.Add(Context.PropsColliders[i]);
 
-        yield return new WaitForSeconds(0.5f);
-
         onBoss[i] = true;
         yield return null;
     }
