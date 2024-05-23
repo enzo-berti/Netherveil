@@ -43,7 +43,7 @@ public class ItemPool
     #region Members
     
     public List<List<string>> itemsPerTier;
-    Stack<string> itemPool;
+    public Stack<string> itemPool;
     #endregion
 
     #region Methods
@@ -60,6 +60,12 @@ public class ItemPool
         UpdateRarityWeight();
         Init(MustHaveItem);
     }
+
+    public ItemPool(List<string> itemsId)
+    {
+
+    }
+
     public void Init()
     {
         ItemDatabase itemDatabase = GameResources.Get<ItemDatabase>("ItemDatabase");

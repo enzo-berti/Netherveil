@@ -17,7 +17,7 @@ public struct SaveData
     // InGame
     public List<int> altarsCleared;
     public int altarCount;
-    public List<List<string>> itemsPool;
+    public List<string> itemsPool;
     // Hero
     public bool doneQuestQThisStage;
     public bool doneQuestQTApprenticeThisStage;
@@ -51,7 +51,7 @@ public struct SaveData
 
         altarsCleared = new List<int>();
         altarCount = 0;
-        itemsPool = new List<List<string>>();
+        itemsPool = new List<string>();
 
         doneQuestQThisStage = false;
         doneQuestQTApprenticeThisStage = false;
@@ -99,13 +99,9 @@ public struct SaveData
         }
         writer.Write(altarCount);
         writer.Write(itemsPool.Count());
-        foreach (var itemsRarity in itemsPool)
+        foreach (var item in itemsPool)
         {
-            writer.Write(itemsRarity.Count());
-            foreach (var item in itemsRarity)
-            {
-                writer.Write(item);
-            }
+            writer.Write(item);
         }
         // Hero
         writer.Write(doneQuestQThisStage);
@@ -174,15 +170,10 @@ public struct SaveData
         }
         altarCount = reader.ReadInt32();
         int itemsRarityCount = reader.ReadInt32();
-        itemsPool = new List<List<string>>(itemsRarityCount);
+        itemsPool = new List<string>(itemsRarityCount);
         for (int i = 0; i < itemsRarityCount; i++)
         {
-            int itemsCount = reader.ReadInt32();
-            itemsPool.Add(new List<string>(itemsCount));
-            for (int j = 0; j < itemsCount; j++)
-            {
-                itemsPool[i].Add(reader.ReadString());
-            }
+            itemsPool.Add(reader.ReadString());
         }
         // Hero
         doneQuestQThisStage = reader.ReadBoolean();

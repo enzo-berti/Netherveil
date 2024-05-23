@@ -10,23 +10,24 @@ public class InGameManager : MonoBehaviour, ISavable
 
     public int altarCountRegister = 0;
     public int seedIterationRegister = 0;
-    public List<List<string>> itemsPoolRegister;
+    public List<string> itemsPoolRegister = new List<string>();
 
     private ItemPool itemPool;
     public static ItemPool ItemPool { get { return current.itemPool; } }
     private void Awake()
     {
         current = this;
+        itemPool = new();
+
         LoadSave();
         SaveManager.onSave += Save;
-        itemPool = new();
     }
 
     public void RegisterGameValues()
     {
         seedIterationRegister = Seed.Iteration;
         altarCountRegister = ItemAltar.altarCount;
-        itemsPoolRegister = ItemPool.itemsPerTier;
+        //itemsPoolRegister = new List<string>(ItemPool.itemPool);
     }
 
     /// <summary>
@@ -41,11 +42,11 @@ public class InGameManager : MonoBehaviour, ISavable
 
         ItemAltar.altarCount = SaveManager.saveData.altarCount;
         Seed.Iterate(SaveManager.saveData.seedIteration);
-        itemPool.itemsPerTier = SaveManager.saveData.itemsPool;
+        itemPool.itemPool = new Stack<string>(SaveManager.saveData.itemsPool);
 
         altarCountRegister = ItemAltar.altarCount;
         seedIterationRegister = Seed.Iteration;
-        itemsPoolRegister = itemPool.itemsPerTier;
+        //itemsPoolRegister = new List<string>(ItemPool.itemPool);
     }
 
     /// <summary>
@@ -55,6 +56,6 @@ public class InGameManager : MonoBehaviour, ISavable
     {
         save.altarCount = altarCountRegister;
         save.seedIteration = seedIterationRegister;
-        save.itemsPool = itemsPoolRegister;
+        //save.itemsPool = itemsPoolRegister;
     }
 }
