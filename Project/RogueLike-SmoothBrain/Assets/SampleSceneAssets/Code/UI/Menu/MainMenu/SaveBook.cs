@@ -108,6 +108,13 @@ public class SaveBook : MonoBehaviour
         }
     }
 
+    public void DeleteSave()
+    {
+        SaveRegister = false;
+        SaveManager.EraseSave(saveNumber);
+        SaveManager.SelectSave(saveNumber);
+    }
+
     private IEnumerator CloseRoutine()
     {
         float elapsed = 0f;

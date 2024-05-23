@@ -40,7 +40,7 @@ public struct SaveData
 
     public bool hasData;
 
-    private void Reset()
+    public void Reset()
     {
         name = "Hero";
         seed = string.Empty;
@@ -216,17 +216,46 @@ static public class SaveManager
     public delegate void OnSave(ref SaveData saveData);
     static public event OnSave onSave;
 
-    static public string FilePath { private set; get; } = string.Empty;
+    static public string CurrentSavePath { private set; get; } = string.Empty;
     static public SaveData saveData;
 
-    static public void EraseSave()
+    static public string GetSavePath(int selectedSave)
     {
+        return Application.persistentDataPath + "/Save/" + selectedSave.ToString() + ".s";
+    }
 
+    static public void EraseCurrentSave()
+    {
+        if (!CurrentSavePath.Any())
+        {
+            return;
+        }
+
+        try
+        {
+            File.Delete(CurrentSavePath);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Can't delete current save : " + ex.Message);
+        }
+    }
+
+    static public void EraseSave(int selectedSave)
+    {
+        string selectedSavePath = GetSavePath(selectedSave);
+
+        File.Delete(selectedSavePath);
+
+        if (selectedSavePath == CurrentSavePath)
+        {
+            saveData.Reset();
+        }
     }
 
     static public void SelectSave(int selectedSave)
     {
-        FilePath = Application.persistentDataPath + "/Save/" + selectedSave.ToString() + ".s";
+        CurrentSavePath = GetSavePath(selectedSave);
 
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
         {
@@ -240,19 +269,19 @@ static public class SaveManager
     {
         try
         {
-            saveData.Load(FilePath);
+            saveData.Load(CurrentSavePath);
         }
         catch (Exception e)
         {
             Debug.LogWarning("Can't load file : " + e);
 
-            File.Delete(FilePath);
+            File.Delete(CurrentSavePath);
         }
     }
 
     static public void Save()
     {
-        if (FilePath == string.Empty)
+        if (CurrentSavePath == string.Empty)
         {
             return;
         }
@@ -261,13 +290,13 @@ static public class SaveManager
 
         try
         {
-            saveData.Save(FilePath);
+            saveData.Save(CurrentSavePath);
         }
         catch (Exception e)
         {
             Debug.LogWarning("Can't save : " + e);
 
-            File.Delete(FilePath);
+            File.Delete(CurrentSavePath);
         }
     }
 }
