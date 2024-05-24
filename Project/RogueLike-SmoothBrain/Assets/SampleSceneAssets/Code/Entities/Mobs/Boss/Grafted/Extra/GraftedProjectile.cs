@@ -70,7 +70,7 @@ public class GraftedProjectile : Projectile
             {
                 explosionSound.Play(transform.position);
                 Destroy(gameObject);
-                Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
+                Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 30f);
                 return;
             }
         }
@@ -91,7 +91,7 @@ public class GraftedProjectile : Projectile
             grafted.ApplyKnockback(damageableObject, grafted, knockbackDirection);
             explosionSound.Play(transform.position);
             Destroy(gameObject);
-            Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
+            Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 30f);
         }
     }
 }

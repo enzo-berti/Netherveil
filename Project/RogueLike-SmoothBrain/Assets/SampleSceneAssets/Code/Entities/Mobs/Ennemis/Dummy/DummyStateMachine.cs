@@ -145,7 +145,7 @@ public class DummyStateMachine : Mobs, IDummy
     public void Death()
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.DeathVFXSFX, transform.position);
-        GameObject.Destroy(GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 3f);
+        GameObject.Destroy(GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Death"), transform.position, Quaternion.identity), 30f);
         animator.speed = 1;
         textToFade.fadeOut = true;
         Unsubscribe();

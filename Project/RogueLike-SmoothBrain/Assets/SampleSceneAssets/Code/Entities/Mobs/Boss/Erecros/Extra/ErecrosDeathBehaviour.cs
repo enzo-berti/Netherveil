@@ -6,7 +6,7 @@ public class ErecrosDeathBehaviour : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         AudioManager.Instance.PlaySound(AudioManager.Instance.DeathVFXSFX, animator.transform.parent.position);
-        Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), animator.transform.parent.position, Quaternion.identity), 3f);
+        Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), animator.transform.parent.position, Quaternion.identity), 30f);
         Destroy(animator.transform.parent.parent.gameObject);
 
         LevelLoader.current.LoadScene("Outro", true);

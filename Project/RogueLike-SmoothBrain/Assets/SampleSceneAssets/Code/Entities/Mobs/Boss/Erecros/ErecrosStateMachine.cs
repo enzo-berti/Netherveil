@@ -154,7 +154,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
 
         if (part > 1)
         {
-            Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), animator.transform.parent.position, Quaternion.identity), 3f);
+            Destroy(Instantiate(GameResources.Get<GameObject>("VFX_Death"), animator.transform.parent.position, Quaternion.identity), 30f);
         }
 
         if (part == 1)
