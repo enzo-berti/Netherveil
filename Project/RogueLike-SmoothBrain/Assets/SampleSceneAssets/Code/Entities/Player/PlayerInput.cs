@@ -54,6 +54,7 @@ public class PlayerInput : MonoBehaviour
     bool applyVibrationsDashAttack = true;
     public bool LaunchedDashAttack { get; private set; } = false;
     private bool triggeredDashAttack = false;
+    public bool TriggeredDash { get; private set; } = false;
 
     readonly float ZOOM_DEZOOM_TIME = 0.2f;
 
@@ -277,10 +278,11 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            controller.RotatePlayerToDeviceAndMargin();
+            controller.RotatePlayerToDeviceAndMargin(orientationErrorMargin: false);
             DashDir = transform.forward;
         }
 
+        TriggeredDash = true;
         animator.ResetTrigger(controller.DashHash);
         animator.SetTrigger(controller.DashHash);
     }
@@ -427,6 +429,7 @@ public class PlayerInput : MonoBehaviour
         }
         hero.IsInvincibleCount--;
         triggeredDashAttack = false;
+        TriggeredDash = false;
     }
 
     public void StartChargedAttackCasting()

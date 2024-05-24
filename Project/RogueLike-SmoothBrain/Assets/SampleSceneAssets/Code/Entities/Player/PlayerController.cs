@@ -445,9 +445,8 @@ public class PlayerController : MonoBehaviour
     /// or to joystick direction if using gamepad
     /// and orients automatically the player to an enemy if in the attack cone
     /// </summary>
-    public void RotatePlayerToDeviceAndMargin()
+    public void RotatePlayerToDeviceAndMargin(bool orientationErrorMargin = true)
     {
-
         if (DeviceManager.Instance.IsPlayingKB())
         {
             MouseOrientation();
@@ -456,7 +455,9 @@ public class PlayerController : MonoBehaviour
         {
             JoystickOrientation();
         }
-        OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
+
+        if(orientationErrorMargin)
+            OrientationErrorMargin(hero.Stats.GetValue(Stat.ATK_RANGE));
     }
 
     /// <summary>
@@ -522,7 +523,7 @@ public class PlayerController : MonoBehaviour
     #region CONTROLS_CONDITIONS
     private bool CanMove()
     {
-        return hero.State == (int)Entity.EntityState.MOVE && playerInput.Direction != Vector2.zero;
+        return hero.State == (int)Entity.EntityState.MOVE && playerInput.Direction != Vector2.zero && !playerInput.TriggeredDash;
     }
 
     private bool CanApplyGravity()
