@@ -107,13 +107,6 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
                         else if (tripleThrustCoroutine != null)
                         {
                             Context.StopCoroutine(tripleThrustCoroutine);
-
-                            Transform thrustTransform = Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data[0].transform;
-                            Transform vfxTransform = Context.TripleThrustVFX.transform;
-
-                            vfxTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
-                            thrustTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
-
                             tripleThrustCoroutine = Context.StartCoroutine(ThrustAttack());
                         }
                     }
@@ -160,54 +153,27 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
 
     private IEnumerator ThrustAttack()
     {
-        //Transform thrustTransform = Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data[0].transform;
-        //Transform vfxTransform = Context.TripleThrustVFX.transform;
-
-        //vfxTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
-        //thrustTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
-
-        //Vector3 endPos = thrustTransform.transform.position + Context.transform.forward * THRUST_LENGTH;
-        //endPos.y = Context.transform.position.y;     
-
-        //while (thrustTransform.transform.position != endPos)
-        //{
-        //    vfxTransform.transform.position = Vector3.MoveTowards(Context.TripleThrustVFX.transform.position, endPos, THRUST_SPEED * Time.deltaTime);
-        //    thrustTransform.position = Vector3.MoveTowards(thrustTransform.position, endPos, THRUST_SPEED * Time.deltaTime);
-
-        //    if(!Context.PlayerHit)
-        //        Context.AttackCollide(Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data, debugMode: false);
-
-        //    yield return null;
-        //}
-
-        //vfxTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
-        //thrustTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
-
         Transform thrustTransform = Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data[0].transform;
         Transform vfxTransform = Context.TripleThrustVFX.transform;
+        thrustTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
+        vfxTransform.position = new Vector3(Context.transform.position.x, 0f, Context.transform.position.z);
 
-        vfxTransform.position = Context.transform.position;
-        thrustTransform.position = Context.transform.position;
+        Vector3 endPos = thrustTransform.position + Context.transform.forward * THRUST_LENGTH;
+        endPos.y = 0f;
 
-        Vector3 endPos = thrustTransform.transform.position + Context.transform.forward * THRUST_LENGTH;
-        endPos.y = Context.transform.position.y;
-
-        while (thrustTransform.transform.position != endPos)
+        while (Vector3.Distance(thrustTransform.position, endPos) > 0.2f)
         {
-            vfxTransform.transform.position = Vector3.MoveTowards(Context.TripleThrustVFX.transform.position, endPos, THRUST_SPEED * Time.deltaTime);
             thrustTransform.position = Vector3.MoveTowards(thrustTransform.position, endPos, THRUST_SPEED * Time.deltaTime);
-
-            vfxTransform.transform.position = new Vector3(vfxTransform.transform.position.x, Context.transform.position.y, vfxTransform.transform.position.z);
-            thrustTransform.position = new Vector3(thrustTransform.position.x, Context.transform.position.y, thrustTransform.position.z);
+            vfxTransform.position = Vector3.MoveTowards(vfxTransform.position, endPos, THRUST_SPEED * Time.deltaTime);
 
             if (!Context.PlayerHit)
-                Context.AttackCollide(Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data, debugMode: false);
+                Context.AttackCollide(Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data, debugMode: true);
 
             yield return null;
         }
 
-        vfxTransform.position = Context.transform.position;
-        thrustTransform.position = Context.transform.position;
+        thrustTransform.position = new Vector3(Context.transform.position.x , 0f, Context.transform.position.z);
+        vfxTransform.position = new Vector3(Context.transform.position.x , 0f, Context.transform.position.z);
     }
 
     #endregion
