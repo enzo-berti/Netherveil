@@ -26,7 +26,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
-        if (settings.gameObject.activeSelf || gameOverPage.GameOverActive)
+        if (settings.gameObject.activeSelf || gameOverPage.GameOverActive || HudHandler.current.DescriptionTab.isOpen)
             return;
 
         Time.timeScale = 0.0f;

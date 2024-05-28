@@ -15,6 +15,7 @@ public class DescriptionTabHUD : MonoBehaviour
     [SerializeField] private Button CloseButton;
     float duration = 0.1f;
     private Coroutine displayRoutine;
+    public bool isOpen = false;
 
     private void OnDisable()
     {
@@ -23,6 +24,7 @@ public class DescriptionTabHUD : MonoBehaviour
             StopCoroutine(displayRoutine);
             tabRectTransform.localScale = Vector3.zero;
         }
+        isOpen = false;
     }
 
     public void SetTab(string title, string description, VideoClip clip, Sprite background)
@@ -42,6 +44,7 @@ public class DescriptionTabHUD : MonoBehaviour
 
         StartCoroutine(PauseGame());
         EventSystem.current.SetSelectedGameObject(CloseButton.gameObject);
+        isOpen = true;
     }
 
     public void CloseTab()
@@ -52,11 +55,14 @@ public class DescriptionTabHUD : MonoBehaviour
         displayRoutine = StartCoroutine(tabRectTransform.DownScaleCoroutine(duration));
 
         Time.timeScale = 1;
+        Utilities.PlayerInput.EnableGameplayInputs();
+        isOpen = false;
     }
 
     private IEnumerator PauseGame()
     {
         yield return new WaitForSeconds(duration);
         Time.timeScale = 0;
+        Utilities.PlayerInput.DisableGameplayInputs();
     }
 }
