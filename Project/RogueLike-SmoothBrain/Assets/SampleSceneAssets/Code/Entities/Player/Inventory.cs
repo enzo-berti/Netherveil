@@ -70,10 +70,7 @@ public class Inventory : ISavable
     public int Keys = 0;
     private void AddActiveItem(IActiveItem item)
     {
-        if (activeItem != null)
-        {
-            (activeItem as IPassiveItem)?.OnRemove();
-        }
+        activeItem?.OnRemove();
         activeItem = item;
     }
 
@@ -99,7 +96,7 @@ public class Inventory : ISavable
         }
         if (activeItem != null)
         {
-            (activeItem as IPassiveItem)?.OnRemove();
+            activeItem?.OnRemove();
             activeItem = null;
         }
     }
@@ -157,7 +154,7 @@ public class Inventory : ISavable
         {
             AddPassiveItem(itemEffect as IPassiveItem);
         }
-        (itemEffect as IPassiveItem)?.OnRetrieved();
+        (itemEffect as IItem)?.OnRetrieved();
         itemEffect.HasBeenRetreived = true;
     }
 
@@ -179,7 +176,7 @@ public class Inventory : ISavable
         {
             AddPassiveItem(itemEffect as IPassiveItem);
         }
-        (itemEffect as IPassiveItem)?.OnRetrieved();
+        (itemEffect as IItem)?.OnRetrieved();
         itemEffect.HasBeenRetreived = true;
     }
 

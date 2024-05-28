@@ -12,6 +12,7 @@ public class ShockwaveBracelet : ItemEffect, IActiveItem
         AOE_DAMAGES = (int)(Utilities.Hero.Stats.GetValueWithoutCoeff(Stat.ATK) * 3);
         displayValue = Cooldown;
     }
+
     public void Activate()
     {
         Hero hero = GameObject.FindWithTag("Player").GetComponent<Hero>();
@@ -41,5 +42,15 @@ public class ShockwaveBracelet : ItemEffect, IActiveItem
 
         GameObject.Destroy(shockwaveCollider, 3f);
         GameObject.Destroy(shockwaveVFX, 3f);
+    }
+
+    public void OnRetrieved()
+    {
+
+    }
+
+    public void OnRemove()
+    {
+
     }
 }

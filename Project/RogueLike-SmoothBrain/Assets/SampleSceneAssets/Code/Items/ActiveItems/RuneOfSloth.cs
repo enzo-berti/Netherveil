@@ -32,4 +32,13 @@ public class RuneOfSloth : ItemEffect, IActiveItem
                 currentEntity.AddStatus(new Freeze(duration, 1));
             });
     }
+
+    public void OnRetrieved()
+    {
+        
+    }
+
+    public void OnRemove()
+    {
+    }
 } 

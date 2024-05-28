@@ -17,8 +17,8 @@ public class Bomb : ItemEffect, IActiveItem
     public Bomb()
     {
         displayValue = Cooldown;
-        bombPf = GameResources.Get<GameObject>("Bomb");
     }
+
     public void Activate()
     {
         GameObject player = Utilities.Player;
@@ -26,7 +26,6 @@ public class Bomb : ItemEffect, IActiveItem
         player.GetComponent<PlayerController>().RotatePlayerToDeviceAndMargin();
 
         CoroutineManager.Instance.StartCoroutine(WaitLaunch(player));
-        
     }
 
     private IEnumerator WaitLaunch(GameObject player)
@@ -46,5 +45,15 @@ public class Bomb : ItemEffect, IActiveItem
         explodingBomb.SetBlastDamages(damages);
         explodingBomb.Activate(true);
         bombIsThrow = false;
+    }
+
+    public void OnRetrieved()
+    {
+        bombPf = GameResources.Get<GameObject>("Bomb");
+    }
+
+    public void OnRemove()
+    {
+      
     }
 }

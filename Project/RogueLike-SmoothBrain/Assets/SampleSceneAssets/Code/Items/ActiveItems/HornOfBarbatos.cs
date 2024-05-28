@@ -8,7 +8,7 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     public float Cooldown { get; set; } = 1f;
     public bool TimeBased { get; set; } = false;
 #pragma warning disable IDE0052 // Supprimer les membres privés non lus
-    private float increaseValue = 0.2f;
+    private readonly float increaseValue = 0.2f;
     private readonly float displayValue;
 #pragma warning restore IDE0052 // Supprimer les membres privés non lus
     List<float> changesList = new List<float>();
@@ -24,11 +24,15 @@ public class HornOfBarbatos : ItemEffect, IActiveItem
     public HornOfBarbatos()
     {
         displayValue = Cooldown;
+    }
+
+    public void OnRetrieved()
+    {
         MapUtilities.onExitRoom += ResetStat;
         MapUtilities.onExitRoom += activeItem.WaitToUseRoom;
     }
 
-    ~HornOfBarbatos()
+    public void OnRemove()
     {
         MapUtilities.onExitRoom -= ResetStat;
         MapUtilities.onExitRoom -= activeItem.WaitToUseRoom;
