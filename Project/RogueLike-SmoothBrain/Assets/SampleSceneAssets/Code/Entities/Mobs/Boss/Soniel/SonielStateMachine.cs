@@ -97,6 +97,18 @@ public class SonielStateMachine : Mobs, ISoniel
 
     #endregion
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        if (gameMusic != null)
+        {
+            gameMusic.SetActive(true);
+        }
+        sounds.music.Stop();
+
+        StopAllCoroutines();
+    }
+
     protected override void Start()
     {
         base.Start();

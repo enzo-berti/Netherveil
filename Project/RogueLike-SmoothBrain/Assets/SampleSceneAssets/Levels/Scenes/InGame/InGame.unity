@@ -172,6 +172,7 @@ MonoBehaviour:
   publicFade: {fileID: 922793163}
   altarCountRegister: 0
   seedIterationRegister: 0
+  itemsPoolRegister: []
 --- !u!1 &165144575
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,8 +407,8 @@ MonoBehaviour:
       Data4: 550465462
     Path: event:/Ambient/CaveAmbient
   Event: 
-  PlayEvent: 1
-  StopEvent: 2
+  PlayEvent: 11
+  StopEvent: 12
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
@@ -1434,6 +1435,16 @@ PrefabInstance:
       objectReference: {fileID: 1753233089}
     - target: {fileID: 181109944983116964, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
+      propertyPath: music
+      value: 
+      objectReference: {fileID: 1693338088}
+    - target: {fileID: 181109944983116964, guid: 059499b2cd72808418feb2d5e576d0ef,
+        type: 3}
+      propertyPath: ambiance
+      value: 
+      objectReference: {fileID: 509266035}
+    - target: {fileID: 181109944983116964, guid: 059499b2cd72808418feb2d5e576d0ef,
+        type: 3}
       propertyPath: settings
       value: 
       objectReference: {fileID: 320163293}
@@ -1575,7 +1586,7 @@ PrefabInstance:
     - target: {fileID: 2378844969024337725, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 436
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2378844969024337725, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
@@ -1585,7 +1596,7 @@ PrefabInstance:
     - target: {fileID: 2378844969024337725, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 382
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2378844969024337725, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
@@ -1635,7 +1646,7 @@ PrefabInstance:
     - target: {fileID: 5458172950539555823, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5458172950539555823, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
@@ -1735,7 +1746,7 @@ PrefabInstance:
     - target: {fileID: 7609575117156047535, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7609575117156047535, guid: 059499b2cd72808418feb2d5e576d0ef,
         type: 3}

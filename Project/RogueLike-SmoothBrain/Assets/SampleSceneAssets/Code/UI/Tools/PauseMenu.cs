@@ -61,6 +61,8 @@ public class PauseMenu : MonoBehaviour
     {
         EventSystem.current.gameObject.SetActive(false);
         LevelLoader.current.LoadScene(SceneManager.GetActiveScene().buildIndex, true);
+        AudioManager.Instance.ResumeAllMusics();
+
     }
 
     public void Setting()
