@@ -7,7 +7,8 @@ using UnityEngine.InputSystem.Samples.RebindUI;
 
 public class ItemBar : MonoBehaviour
 {
-    private Coroutine cooldownRoutine;
+    private Coroutine cooldownActiveRoutine;
+    private Coroutine cooldownSpecialRoutine;
     private Coroutine displayRoutine;
     private bool toggleOn;
 
@@ -169,10 +170,10 @@ public class ItemBar : MonoBehaviour
 
         float cooldown = (itemEffect as IActiveItem).Cooldown;
 
-        if (cooldownRoutine != null)
-            StopCoroutine(cooldownRoutine);
+        if (cooldownActiveRoutine != null)
+            StopCoroutine(cooldownActiveRoutine);
 
-        cooldownRoutine = StartCoroutine(CooldownRoutine(cooldown, specialItemFrame));
+        cooldownActiveRoutine = StartCoroutine(CooldownRoutine(cooldown, specialItemFrame));
     }
 
     private void ActivateItemCooldownRoomBased(ItemEffect itemEffect)
@@ -195,10 +196,10 @@ public class ItemBar : MonoBehaviour
     {
         float cooldown = Utilities.Player.GetComponent<PlayerController>().SpecialAbility.Cooldown;
 
-        if (cooldownRoutine != null)
-            StopCoroutine(cooldownRoutine);
+        if (cooldownSpecialRoutine != null)
+            StopCoroutine(cooldownSpecialRoutine);
 
-        cooldownRoutine = StartCoroutine(CooldownRoutine(cooldown, specialAbilityFrame));
+        cooldownSpecialRoutine = StartCoroutine(CooldownRoutine(cooldown, specialAbilityFrame));
     }
 
     private IEnumerator CooldownRoutine(float duration, SpecialItemFrame frame)
@@ -216,8 +217,6 @@ public class ItemBar : MonoBehaviour
         }
 
         frame.ToggleCooldown(false);
-
-        cooldownRoutine = null;
     }
 
     public void Toggle(float delay = 0.0f)

@@ -11,7 +11,7 @@ public class ItemPool
 
     private string[] MustHaveItem = { "BelzebuthBelt", "GhostlySpears", "ThunderLink", "SpearStrike", "RuneOfEnvy", "TearOfZeus" };
 
-    private readonly bool debug = true;
+    private readonly bool debug = false;
    
     private List<Color> debugColors = new List<Color>()
     { Color.grey,
