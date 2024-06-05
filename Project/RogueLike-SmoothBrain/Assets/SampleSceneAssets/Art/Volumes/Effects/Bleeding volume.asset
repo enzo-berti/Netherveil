@@ -93,28 +93,6 @@ MonoBehaviour:
   bladeRotation:
     m_OverrideState: 1
     m_Value: 0
---- !u!114 &-6826510763261318667
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
-  m_Name: LiftGammaGain
-  m_EditorClassIdentifier: 
-  active: 1
-  lift:
-    m_OverrideState: 1
-    m_Value: {x: 1, y: 0, z: 0.005206108, w: -0.017513134}
-  gamma:
-    m_OverrideState: 1
-    m_Value: {x: 1, y: 0.98696333, z: 0.8939837, w: -0.06607929}
-  gain:
-    m_OverrideState: 0
-    m_Value: {x: 0, y: 0.6971302, z: 1, w: -0.21015759}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,8 +113,6 @@ MonoBehaviour:
   - {fileID: 3150391447891472227}
   - {fileID: -7865310311688273233}
   - {fileID: 3979173923270992394}
-  - {fileID: 7353484956815377063}
-  - {fileID: -6826510763261318667}
 --- !u!114 &192467713754813812
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -158,7 +134,7 @@ MonoBehaviour:
     m_Value: 12
   colorFilter:
     m_OverrideState: 1
-    m_Value: {r: 1.2265338, g: 1.1779659, b: 1.3074805, a: 1}
+    m_Value: {r: 1.2515545, g: 1.1511941, b: 1.1531396, a: 1}
   hueShift:
     m_OverrideState: 0
     m_Value: 0
@@ -220,7 +196,7 @@ MonoBehaviour:
   active: 1
   color:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
+    m_Value: {r: 0.4433962, g: 0, b: 0, a: 1}
   center:
     m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
@@ -271,37 +247,3 @@ MonoBehaviour:
   balance:
     m_OverrideState: 1
     m_Value: -44
---- !u!114 &7353484956815377063
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 558a8e2b6826cf840aae193990ba9f2e, type: 3}
-  m_Name: ShadowsMidtonesHighlights
-  m_EditorClassIdentifier: 
-  active: 1
-  shadows:
-    m_OverrideState: 1
-    m_Value: {x: 0.6707448, y: 0.86073726, z: 1, w: 0.122591875}
-  midtones:
-    m_OverrideState: 0
-    m_Value: {x: 1, y: 1, z: 1, w: -0.052539397}
-  highlights:
-    m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: -0.29772326}
-  shadowsStart:
-    m_OverrideState: 0
-    m_Value: 0
-  shadowsEnd:
-    m_OverrideState: 0
-    m_Value: 0.32
-  highlightsStart:
-    m_OverrideState: 0
-    m_Value: 0.55
-  highlightsEnd:
-    m_OverrideState: 0
-    m_Value: 1
