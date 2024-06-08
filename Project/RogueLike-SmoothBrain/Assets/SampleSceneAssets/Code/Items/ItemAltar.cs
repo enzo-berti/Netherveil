@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ItemAltar : MonoBehaviour, ISavable
 {
-    public static int altarCount = 0;
-    private int altarId = 0;
+    public static int altarCount;
+    private int altarId;
 
     private Item item = null;
 

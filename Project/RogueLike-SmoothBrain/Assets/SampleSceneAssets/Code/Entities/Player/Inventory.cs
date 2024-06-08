@@ -217,7 +217,7 @@ public class Inventory : ISavable
         int passiveItemCount = saveData.Get<int>("passiveItemCount");
         for (int i = 0; i < passiveItemCount; i++)
         {
-            AddItem(saveData.Get<string>("passiveItemCount" + i));
+            AddItem(saveData.Get<string>("passiveItem" + i));
         }
 
         foreach (var item in PassiveItems)

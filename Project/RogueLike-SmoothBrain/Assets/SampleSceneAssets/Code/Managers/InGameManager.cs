@@ -18,6 +18,7 @@ public class InGameManager : MonoBehaviour, ISavable
     {
         current = this;
         itemPool = new();
+        ItemAltar.altarCount = 0;
 
         LoadSave();
         SaveManager.onSave += Save;
