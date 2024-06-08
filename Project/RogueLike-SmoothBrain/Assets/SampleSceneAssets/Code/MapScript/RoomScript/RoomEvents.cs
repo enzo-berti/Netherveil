@@ -143,7 +143,7 @@ namespace Map
             {
                 if (transform.parent.parent.GetChild(i) == transform.parent)
                 {
-                    FindObjectOfType<MapGenerator>().roomClearId.Add(i);
+                    FindObjectOfType<MapGenerator>().roomClearIds.Add(i);
                     break;
                 }
             }

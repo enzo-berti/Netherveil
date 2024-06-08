@@ -23,20 +23,21 @@ public class ItemAltar : MonoBehaviour, ISavable
 
     public void LoadSave()
     {
-        if (SaveManager.saveData.altarsCleared != null && SaveManager.saveData.altarsCleared.Contains(altarId))
+        SaveData saveData = SaveManager.saveData;
+        if (!saveData.hasData)
         {
-            if (item != null)
-            {
-                Destroy(item.gameObject);
-            }
+            return;
+        }
+
+        if (saveData.Get<bool>(altarId.ToString()) && item != null)
+        {
+            Destroy(item.gameObject);
         }
     }
 
-    public void Save(ref SaveData save)
+    public void Save(SaveData save)
     {
-        if (GetComponentInChildren<Item>() == null)
-        {
-            save.altarsCleared.Add(altarId);
-        }
+        SaveData saveData = SaveManager.saveData;
+        saveData.Set(altarId.ToString(), GetComponentInChildren<Item>() == null);
     }
 }

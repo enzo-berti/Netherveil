@@ -1,5 +1,5 @@
 public interface ISavable
 {
-    public void Save(ref SaveData save);
+    public void Save(SaveData saveData);
     public void LoadSave();
 }

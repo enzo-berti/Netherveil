@@ -68,8 +68,8 @@ public class SaveBook : MonoBehaviour
         SaveRegister = SaveManager.saveData.hasData;
         if (SaveManager.saveData.hasData)
         {
-            nameTMP.text = "Name : " + SaveManager.saveData.name;
-            seedTMP.text = "Seed : " + SaveManager.saveData.seed;
+            nameTMP.text = "Name : " + SaveManager.saveData.Get<string>("name");
+            seedTMP.text = "Seed : " + SaveManager.saveData.Get<string>("seed");
         }
 
         if (routine != null)
@@ -82,28 +82,28 @@ public class SaveBook : MonoBehaviour
     {
         if (SaveManager.saveData.hasData)
         {
-            Seed.Set(SaveManager.saveData.seed);
+            Seed.Set(SaveManager.saveData.Get<string>("seed"));
         }
         else
         {
             if (inputName.text.Any())
             {
-                SaveManager.saveData.name = inputName.text;
+                SaveManager.saveData.Set("name", inputName.text);
             }
             else
             {
-                SaveManager.saveData.name = "Hero";
+                SaveManager.saveData.Set("name", "Hero");
             }
 
             if (inputSeed.text.Any())
             {
-                SaveManager.saveData.seed = inputSeed.text;
+                SaveManager.saveData.Set("seed", inputSeed.text);
                 Seed.Set(inputSeed.text);
             }
             else
             {
                 Seed.RandomizeSeed();
-                SaveManager.saveData.seed = Seed.seed;
+                SaveManager.saveData.Set("seed", Seed.seed);
             }
         }
     }

@@ -6,17 +6,17 @@ public class TestOfEndurance : Quest
     int NB_ROOM_SURVIVING;
     const float HP_PERCENTAGE_THRESHOLD = 0.25f;
 
-    public override void Save(ref SaveData saveData)
+    public override void Save(SaveData saveData)
     {
-        base.Save(ref saveData);
-        saveData.questEvolution = currentSurvivedRoom;
+        base.Save(saveData);
+        saveData.Set("questEvolution", currentSurvivedRoom);
     }
 
     public override void LoadSave()
     {
         base.LoadSave();
 
-        currentSurvivedRoom = SaveManager.saveData.questEvolution;
+        currentSurvivedRoom = SaveManager.saveData.Get<int>("questEvolution");
     }
 
 

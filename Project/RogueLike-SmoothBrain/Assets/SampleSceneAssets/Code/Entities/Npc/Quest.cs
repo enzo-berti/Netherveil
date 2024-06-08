@@ -170,20 +170,20 @@ public abstract class Quest : ISavable
         yield break;
     }
 
-    public virtual void Save(ref SaveData save)
+    public virtual void Save(SaveData save)
     {
-        save.questId = Datas.idName;
-        save.questDifficulty = difficulty;
-        save.talkerType = talkerType;
-        save.talkerGrade = talkerGrade;
+        save.Set("questId", Datas.idName);
+        save.Set("questDifficulty", difficulty);
+        save.Set("talkerType", talkerType);
+        save.Set("talkerGrade", talkerGrade);
 
-        save.questTimer = CurrentQuestTimer;
+        save.Set("questTimer", CurrentQuestTimer);
     }
 
     public virtual void LoadSave()
     {
         // Quest values
-        CurrentQuestTimer = SaveManager.saveData.questTimer;
+        CurrentQuestTimer = SaveManager.saveData.Get<float>("questTimer");
     }
 
     #region STATIC_METHODS

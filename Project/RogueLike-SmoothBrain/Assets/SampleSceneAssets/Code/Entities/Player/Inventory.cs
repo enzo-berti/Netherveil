@@ -180,41 +180,44 @@ public class Inventory : ISavable
         itemEffect.HasBeenRetreived = true;
     }
 
-    public void Save(ref SaveData save)
+    public void Save(SaveData saveData)
     {
         // Active Item
         if (ActiveItem != null)
         {
-            save.activeItemName = ActiveItem.GetType().ToString();
-            save.activeItemCooldown = ActiveItem.Cooldown;
+            saveData.Set("activeItemName", ActiveItem.GetType().ToString());
+            saveData.Set("activeItemCooldown", ActiveItem.Cooldown);
         }
         else
         {
-            save.activeItemName = string.Empty;
+            saveData.Set("activeItemName", string.Empty);
         }
 
         // Passive Items
-        save.passiveItemNames = new List<string>();
-        foreach (var item in PassiveItems)
+        saveData.Set("passiveItemCount", PassiveItems.Count);
+        for (int i = 0; i < PassiveItems.Count; i++)
         {
-            save.passiveItemNames.Add(item.GetType().ToString());
+            saveData.Set("passiveItem" + i, PassiveItems[i].GetType().ToString());
         }
 
-        save.bloodValue = Blood.Value;
+        saveData.Set("inventoryBlood", Blood.Value);
     }
 
     public void LoadSave()
     {
-        if (SaveManager.saveData.activeItemName != string.Empty)
+        SaveData saveData = SaveManager.saveData;
+
+        if (saveData.Get<string>("activeItemName") != string.Empty)
         {
-            AddItem(SaveManager.saveData.activeItemName);
-            ActiveItem.Cooldown = SaveManager.saveData.activeItemCooldown;
+            AddItem(saveData.Get<string>("activeItemName"));
+            ActiveItem.Cooldown = saveData.Get<float>("activeItemCooldown");
             Item.InvokeOnRetrieved(ActiveItem as ItemEffect);
         }
 
-        foreach (var itemName in SaveManager.saveData.passiveItemNames)
+        int passiveItemCount = saveData.Get<int>("passiveItemCount");
+        for (int i = 0; i < passiveItemCount; i++)
         {
-            AddItem(itemName);
+            AddItem(saveData.Get<string>("passiveItemCount" + i));
         }
 
         foreach (var item in PassiveItems)
@@ -222,6 +225,6 @@ public class Inventory : ISavable
             Item.InvokeOnRetrieved(item as ItemEffect);
         }
 
-        Blood.Add(SaveManager.saveData.bloodValue);
+        Blood.Add(saveData.Get<int>("inventoryBlood"));
     }
 }

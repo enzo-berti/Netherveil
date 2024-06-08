@@ -40,8 +40,8 @@ public class InGameManager : MonoBehaviour, ISavable
             return;
         }
 
-        ItemAltar.altarCount = SaveManager.saveData.altarCount;
-        Seed.Iterate(SaveManager.saveData.seedIteration);
+        ItemAltar.altarCount = SaveManager.saveData.Get<int>("altarCount");
+        Seed.Iterate(SaveManager.saveData.Get<int>("seedIteration"));
         //itemPool.itemPool = new Stack<string>(SaveManager.saveData.itemsPool);
 
         altarCountRegister = ItemAltar.altarCount;
@@ -52,10 +52,10 @@ public class InGameManager : MonoBehaviour, ISavable
     /// <summary>
     /// Save all the statics variables of the game
     /// </summary>
-    public void Save(ref SaveData save)
+    public void Save(SaveData save)
     {
-        save.altarCount = altarCountRegister;
-        save.seedIteration = seedIterationRegister;
+        save.Set("altarCount", altarCountRegister);
+        save.Set("seedIteration", seedIterationRegister);
         //save.itemsPool = itemsPoolRegister;
     }
 }

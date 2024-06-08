@@ -5,135 +5,111 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public struct SaveData
+public class SaveData
 {
-    // Player
-    public string name;
-    public string seed;
-    // Map
-    public int stage;
-    public int seedIteration;
-    public List<int> roomsCleared;
-    // InGame
-    public List<int> altarsCleared;
-    public int altarCount;
-    public List<string> itemsPool;
-    // Hero
-    public bool doneQuestQThisStage;
-    public bool doneQuestQTApprenticeThisStage;
-    public bool clearedTuto;
-    // Hero Items
-    public string activeItemName;
-    public float activeItemCooldown;
-    public List<string> passiveItemNames;
-    public int bloodValue;
-    // Hero Stats
-    public float statHp;
-    public float statCorruption;
-    // Hero Quest
-    public string questId;
-    public float questTimer;
-    public Quest.QuestDifficulty questDifficulty;
-    public QuestTalker.TalkerType talkerType;
-    public QuestTalker.TalkerGrade talkerGrade;
-    public int questEvolution;
+    private readonly Dictionary<Type, Dictionary<string, object>> data = new()
+    {
+        { typeof(int), new Dictionary<string, object>() },
+        { typeof(float), new Dictionary<string, object>() },
+        { typeof(string), new Dictionary<string, object>() },
+        { typeof(bool), new Dictionary<string, object>() },
+    };
 
     public bool hasData;
 
     public void Reset()
     {
-        name = "Hero";
-        seed = string.Empty;
-
-        stage = 0;
-        seedIteration = 0;
-        roomsCleared = new List<int>();
-
-        altarsCleared = new List<int>();
-        altarCount = 0;
-        itemsPool = new List<string>();
-
-        doneQuestQThisStage = false;
-        doneQuestQTApprenticeThisStage = false;
-        clearedTuto = false;
-
-        activeItemName = string.Empty;
-        activeItemCooldown = 0f;
-        passiveItemNames = new List<string>();
-        bloodValue = 0;
-
-        statHp = 0f;
-        statCorruption = 0f;
-
-        questId = string.Empty;
-        questTimer = 0f;
-        questDifficulty = Quest.QuestDifficulty.EASY;
-        talkerType = QuestTalker.TalkerType.SHAMAN;
-        talkerGrade = QuestTalker.TalkerGrade.APPRENTICE;
-        questEvolution = 0;
-
+        foreach (var dic in data.Values)
+        {
+            dic.Clear();
+        }
         hasData = false;
     }
 
-    public readonly void Save(string filePath)
+    public void Set<T>(string key, T value)
+    {
+        Type type = typeof(T).IsEnum ? typeof(int) : typeof(T);
+
+        object objectValue;
+        if (typeof(T).IsEnum)
+        {
+            objectValue = (int)(object)value; // cast enum into an int
+        }
+        else
+        {
+            objectValue = value;
+        }
+
+        if (!data.ContainsKey(typeof(string)))
+        {
+            throw new Exception("Can't set " + key + " : " + type + " is not supported");
+        }
+
+        if (data[type].ContainsKey(key))
+        {
+            data[type][key] = objectValue;
+        }
+        else
+        {
+            data[type].Add(key, objectValue);
+        }
+    }
+
+    public T Get<T>(string key)
+    {
+        Type type = typeof(T).IsEnum ? typeof(int) : typeof(T);
+        if (!data.ContainsKey(type))
+        {
+            throw new Exception("Can't get " + key + " : " + type + " is not supported");
+        }
+
+        return (T)data[type][key];
+    }
+
+    public void Save(string filePath)
     {
         using var stream = File.Open(filePath, FileMode.Create);
         using var writer = new BinaryWriter(stream, Encoding.UTF8, false);
 
-        // Player
-        writer.Write(name);
-        writer.Write(seed);
-        // Map
-        writer.Write(stage);
-        writer.Write(seedIteration);
-        writer.Write(roomsCleared.Count);
-        foreach (var idroom in roomsCleared)
+        writer.Write(data.Count);
+        foreach (Type type in data.Keys)
         {
-            writer.Write(idroom);
-        }
-        // InGame
-        writer.Write(altarsCleared.Count());
-        foreach (var idAltar in altarsCleared)
-        {
-            writer.Write(idAltar);
-        }
-        writer.Write(altarCount);
-        writer.Write(itemsPool.Count());
-        foreach (var item in itemsPool)
-        {
-            writer.Write(item);
-        }
-        // Hero
-        writer.Write(doneQuestQThisStage);
-        writer.Write(doneQuestQTApprenticeThisStage);
-        writer.Write(clearedTuto);
-        // Hero activeItem
-        writer.Write(activeItemName.Any());
-        if (activeItemName.Any())
-        {
-            writer.Write(activeItemName);
-            writer.Write(activeItemCooldown);
-        }
-        // Hero passiveItems
-        writer.Write(passiveItemNames.Count);
-        foreach (var itemName in passiveItemNames)
-        {
-            writer.Write(itemName);
-        }
-        writer.Write(bloodValue);
-        // Hero Stats
-        writer.Write(statHp);
-        writer.Write(statCorruption);
-        // Hero Quest
-        writer.Write(questId.Any());
-        if (questId.Any())
-        {
-            writer.Write(questId);
-            writer.Write(questTimer);
-            writer.Write(questEvolution);
-            writer.Write(questDifficulty.ToString());
-            writer.Write(talkerType.ToString());
-            writer.Write(talkerGrade.ToString());
+            if (type != typeof(int) && type != typeof(float) && type != typeof(string) && type != typeof(bool))
+            {
+                Debug.LogWarning("Can't save " + type.Name + " : " + type + " is not supported");
+
+                // need to write the count to 0 or the saveMng will load invalid datas
+                writer.Write(type.AssemblyQualifiedName);
+                writer.Write(0);
+
+                continue;
+            }
+
+            writer.Write(type.AssemblyQualifiedName);
+            writer.Write(data[type].Count);
+
+            foreach (string objectKey in data[type].Keys)
+            {
+                object objectValue = data[type][objectKey];
+
+                writer.Write(objectKey);
+                if (type == typeof(int))
+                {
+                    writer.Write((int)objectValue);
+                }
+                else if (type == typeof(float))
+                {
+                    writer.Write((float)objectValue);
+                }
+                else if (type == typeof(string))
+                {
+                    writer.Write((string)objectValue);
+                }
+                else if (type == typeof(bool))
+                {
+                    writer.Write((bool)objectValue);
+                }
+            }
         }
     }
 
@@ -149,62 +125,37 @@ public struct SaveData
         using var stream = File.Open(filePath, FileMode.Open);
         using var reader = new BinaryReader(stream, Encoding.UTF8, false);
 
-        // Player
-        name = reader.ReadString();
-        seed = reader.ReadString();
-        // Map
-        stage = reader.ReadInt32();
-        seedIteration = reader.ReadInt32();
-        int roomClearedCount = reader.ReadInt32();
-        roomsCleared = new List<int>(roomClearedCount);
-        for (int i = 0; i < roomClearedCount; i++)
+        int typeCount = reader.ReadInt32();
+        for (int j = 0; j < typeCount; j++)
         {
-            roomsCleared.Add(reader.ReadInt32());
-        }
-        // InGame
-        int altarClearedCount = reader.ReadInt32();
-        altarsCleared = new List<int>(altarClearedCount);
-        for (int i = 0; i < altarClearedCount; i++)
-        {
-            altarsCleared.Add(reader.ReadInt32());
-        }
-        altarCount = reader.ReadInt32();
-        int itemsRarityCount = reader.ReadInt32();
-        itemsPool = new List<string>(itemsRarityCount);
-        for (int i = 0; i < itemsRarityCount; i++)
-        {
-            itemsPool.Add(reader.ReadString());
-        }
-        // Hero
-        doneQuestQThisStage = reader.ReadBoolean();
-        doneQuestQTApprenticeThisStage = reader.ReadBoolean();
-        clearedTuto = reader.ReadBoolean();
-        // Hero activeItem
-        if (reader.ReadBoolean())
-        {
-            activeItemName = reader.ReadString();
-            activeItemCooldown = reader.ReadSingle();
-        }
-        // Hero passiveItems
-        int itemCounts = reader.ReadInt32();
-        passiveItemNames = new List<string>(itemCounts);
-        for (int i = 0; i < itemCounts; i++)
-        {
-            passiveItemNames.Add(reader.ReadString());
-        }
-        bloodValue = reader.ReadInt32();
-        // Hero Stats
-        statHp = reader.ReadSingle();
-        statCorruption = reader.ReadSingle();
-        // Hero Quest
-        if (reader.ReadBoolean())
-        {
-            questId = reader.ReadString();
-            questTimer = reader.ReadSingle();
-            questEvolution = reader.ReadInt32();
-            questDifficulty = (Quest.QuestDifficulty)Enum.Parse(typeof(Quest.QuestDifficulty), reader.ReadString(), true);
-            talkerType = (QuestTalker.TalkerType)Enum.Parse(typeof(QuestTalker.TalkerType), reader.ReadString());
-            talkerGrade = (QuestTalker.TalkerGrade)Enum.Parse(typeof(QuestTalker.TalkerGrade), reader.ReadString());
+            Type objectType = Type.GetType(reader.ReadString());
+
+            int objectCount = reader.ReadInt32();
+            for (int i = 0; i < objectCount; i++)
+            {
+                string objectKey = reader.ReadString();
+                if (objectType == typeof(int))
+                {
+                    data[objectType].Add(objectKey, reader.ReadInt32());
+                }
+                else if (objectType == typeof(float))
+                {
+                    data[objectType].Add(objectKey, reader.ReadSingle());
+                }
+                else if (objectType == typeof(string))
+                {
+                    data[objectType].Add(objectKey, reader.ReadString());
+                }
+                else if (objectType == typeof(bool))
+                {
+                    data[objectType].Add(objectKey, reader.ReadBoolean());
+                }
+                else
+                {
+                    Debug.LogError(objectType);
+                    throw new Exception("wtf");
+                }
+            }
         }
 
         hasData = true;
@@ -213,11 +164,11 @@ public struct SaveData
 
 static public class SaveManager
 {
-    public delegate void OnSave(ref SaveData saveData);
+    public delegate void OnSave(SaveData saveData);
     static public event OnSave onSave;
 
     static public string CurrentSavePath { private set; get; } = string.Empty;
-    static public SaveData saveData;
+    static public SaveData saveData = new SaveData();
 
     static public string GetSavePath(int selectedSave)
     {
@@ -281,12 +232,12 @@ static public class SaveManager
 
     static public void Save()
     {
-        if (CurrentSavePath == string.Empty)
+        if (!CurrentSavePath.Any())
         {
             return;
         }
 
-        onSave?.Invoke(ref saveData);
+        onSave?.Invoke(saveData);
 
         try
         {

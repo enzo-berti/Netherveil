@@ -5,17 +5,17 @@ public class DontDealWithMe : Quest
     int currentNumber = 0;
     int MAX_NUMBER;
 
-    public override void Save(ref SaveData saveData)
+    public override void Save(SaveData saveData)
     {
-        base.Save(ref saveData);
-        saveData.questEvolution = currentNumber;
+        base.Save(saveData);
+        saveData.Set("questEvolution", currentNumber);
     }
 
     public override void LoadSave()
     {
         base.LoadSave();
 
-        currentNumber = SaveManager.saveData.questEvolution;
+        currentNumber = SaveManager.saveData.Get<int>("questEvolution");
     }
 
 

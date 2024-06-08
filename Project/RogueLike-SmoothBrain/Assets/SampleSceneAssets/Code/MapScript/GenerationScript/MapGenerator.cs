@@ -17,7 +17,7 @@ namespace Map.Generation
         static private readonly int[] availableRotations = new int[] { 0, 90, 180, 270 };
 
         // Map variables
-        public List<int> roomClearId;
+        public List<int> roomClearIds;
         public int Stage { get; private set; } = 0;
 
         private void Start()
@@ -45,31 +45,43 @@ namespace Map.Generation
             MapUtilities.ResetActions();
         }
 
-        public void Save(ref SaveData save)
+        public void Save(SaveData saveData)
         {
-            save.stage = Stage;
-            save.roomsCleared = roomClearId;
+            saveData.Set("stage", Stage);
+
+            saveData.Set("nbRoomCleared", roomClearIds.Count);
+            for (int i = 0; i < roomClearIds.Count; i++)
+            {
+                saveData.Set("roomCleared" + i, roomClearIds[i]);
+            }
         }
 
         public void LoadSave()
         {
-            if (!SaveManager.saveData.hasData)
+            SaveData saveData = SaveManager.saveData;
+            if (!saveData.hasData)
             {
                 return;
             }
 
-            Stage = SaveManager.saveData.stage - 1;
-            roomClearId = SaveManager.saveData.roomsCleared;
+            Stage = saveData.Get<int>("stage") - 1;
+
+            int nbRoomCleared = saveData.Get<int>("nbRoomCleared");
+            roomClearIds = new List<int>(nbRoomCleared);
+            for (int i = 0; i < nbRoomCleared; i++)
+            {
+                roomClearIds.Add(saveData.Get<int>("roomCleared" + i));
+            }
         }
 
         private void ResetMapDatas()
         {
-            roomClearId.Clear();
+            roomClearIds.Clear();
         }
 
         private void ClearRooms()
         {
-            foreach (int index in roomClearId)
+            foreach (int index in roomClearIds)
             {
                 Room room = transform.GetChild(index).GetComponent<Room>();
 

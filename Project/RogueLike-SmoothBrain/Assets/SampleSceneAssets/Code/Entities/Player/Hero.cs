@@ -645,7 +645,7 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     public static void CallCorruptionBenedictionText(int value)
     {
-        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position,$"+{Mathf.Abs(value)}" + (value < 0 ? " <sprite name=\"benediction\">" : " <sprite name=\"corruption\">"),
+        FloatingTextGenerator.CreateActionText(Utilities.Player.transform.position, $"+{Mathf.Abs(value)}" + (value < 0 ? " <sprite name=\"benediction\">" : " <sprite name=\"corruption\">"),
             value < 0 ? benedictionColor : corruptionColor);
     }
 
@@ -657,25 +657,25 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
 
     #region SAVE_AND_LOAD
 
-    public void Save(ref SaveData save)
+    public void Save(SaveData save)
     {
-        save.doneQuestQThisStage = DoneQuestQTThiStage;
-        save.doneQuestQTApprenticeThisStage = DoneQuestQTApprenticeThisStage;
-        save.clearedTuto = ClearedTuto;
+        save.Set("doneQuestQTThiStage", DoneQuestQTThiStage);
+        save.Set("doneQuestQTApprenticeThisStage", DoneQuestQTApprenticeThisStage);
+        save.Set("clearedTuto", ClearedTuto);
 
-        save.statHp = stats.GetValue(Stat.HP);
-        save.statCorruption = stats.GetValue(Stat.CORRUPTION);
+        save.Set("heroHp", stats.GetValue(Stat.HP));
+        save.Set("heroCorruption", stats.GetValue(Stat.CORRUPTION));
 
         if (currentQuest != null)
         {
-            currentQuest.Save(ref save);
+            currentQuest.Save(save);
         }
         else
         {
-            save.questId = string.Empty;
+            save.Set("questId", string.Empty);
         }
 
-        Inventory.Save(ref save);
+        Inventory.Save(save);
     }
 
     public void LoadSave()
@@ -688,23 +688,24 @@ public class Hero : Entity, IDamageable, IAttacker, IBlastable, ISavable
         isLoading = true;
         SaveData saveData = SaveManager.saveData;
 
-        DoneQuestQTThiStage = saveData.doneQuestQThisStage;
-        DoneQuestQTApprenticeThisStage = saveData.doneQuestQTApprenticeThisStage;
-        ClearedTuto = saveData.clearedTuto;
+        DoneQuestQTThiStage = saveData.Get<bool>("doneQuestQTThiStage");
+        DoneQuestQTApprenticeThisStage = saveData.Get<bool>("doneQuestQTApprenticeThisStage");
+        ClearedTuto = saveData.Get<bool>("clearedTuto");
 
-        if (saveData.questId.Any())
+        string questId = saveData.Get<string>("questId");
+        if (questId.Any())
         {
-            CurrentQuest = Quest.LoadClassWithSave(saveData.questId, saveData.questDifficulty, saveData.talkerType, saveData.talkerGrade);
+            CurrentQuest = Quest.LoadClassWithSave(questId, saveData.Get<Quest.QuestDifficulty>("questDifficulty"), saveData.Get<QuestTalker.TalkerType>("talkerType"), saveData.Get<QuestTalker.TalkerGrade>("talkerGrade"));
             CurrentQuest.LoadSave();
         }
 
         Inventory.LoadSave();
 
-        stats.SetValue(Stat.CORRUPTION, saveData.statCorruption);
+        stats.SetValue(Stat.CORRUPTION, saveData.Get<float>("heroCorruption"));
         canLaunchUpgrade = true;
         ChangeStatsBasedOnAlignment();
 
-        stats.SetValue(Stat.HP, saveData.statHp);
+        stats.SetValue(Stat.HP, saveData.Get<float>("heroHp"));
 
         isLoading = false;
     }
