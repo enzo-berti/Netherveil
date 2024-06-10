@@ -46,22 +46,32 @@ namespace Map
 
             // create data of the map
             roomData = new RoomData(room, enemies);
-        }
 
-        private void Start()
-        {
             if (!enterRoomCalled)
             {
                 Unclear();
             }
-            else
+        }
+
+        private void Start()
+        {
+            //if (!enterRoomCalled)
+            //{
+            //    Unclear();
+            //}
+            //else
+            //{
+            //    // je suis obligé de faire ça pour que la seed soit correcte
+            //    // par rapport à l'ancienne sauvegarde si le joueur tue un boss
+            //    if (roomData.Type == RoomType.Boss)
+            //    {
+            //        //Seed.Iterate(3);
+            //    }
+            //}
+
+            if (roomData.Type == RoomType.Lobby)
             {
-                // je suis obligé de faire ça pour que la seed soit correcte
-                // par rapport à l'ancienne sauvegarde si le joueur tue un boss
-                if (roomData.Type == RoomType.Boss)
-                {
-                    //Seed.Iterate(3);
-                }
+                EnterEvents();
             }
 
             // set bool to true to not call the events in the room if there is no enemy
@@ -89,6 +99,7 @@ namespace Map
             {
                 c.Set();
             }
+            Debug.Log(room.neighbor.Count);
             // set all neighbor elements has undiscovered
             foreach (Room neighbor in room.neighbor)
             {
@@ -121,8 +132,6 @@ namespace Map
         {
             LocalEnterEvents();
 
-            Debug.Log("ENTER " + transform.parent.name, this);
-
             // global events
             MapUtilities.onEarlyFirstEnter?.Invoke();
             MapUtilities.onFirstEnter?.Invoke();
@@ -149,8 +158,6 @@ namespace Map
                     break;
                 }
             }
-
-            Debug.Log("EXIT " + transform.parent.name, this);
 
             // global events
             MapUtilities.onFirstExit?.Invoke();
@@ -227,11 +234,6 @@ namespace Map
             if (roomUI)
             {
                 roomUI.gameObject.SetActive(false);
-            }
-
-            if (roomData.Type == RoomType.Lobby)
-            {
-                EnterEvents();
             }
         }
 
