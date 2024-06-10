@@ -121,6 +121,8 @@ namespace Map
         {
             LocalEnterEvents();
 
+            Debug.Log("ENTER " + transform.parent.name, this);
+
             // global events
             MapUtilities.onEarlyFirstEnter?.Invoke();
             MapUtilities.onFirstEnter?.Invoke();
@@ -135,7 +137,7 @@ namespace Map
             enemies.SetActive(false);
         }
 
-        private void ExitEvents()
+        private void FirstExitEvents()
         {
             LocalExitEvents();
 
@@ -147,6 +149,8 @@ namespace Map
                     break;
                 }
             }
+
+            Debug.Log("EXIT " + transform.parent.name, this);
 
             // global events
             MapUtilities.onFirstExit?.Invoke();
@@ -199,11 +203,11 @@ namespace Map
 
         private void OnTriggerExit(Collider other)
         {
-            if ( other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player"))
             {
-                if (!exitRoomCalled)
+                if (!exitRoomCalled && !hasLeaved)
                 {
-                    ExitEvents();
+                    FirstExitEvents();
                 }
 
                 MapUtilities.onEarlyExitRoom?.Invoke();
