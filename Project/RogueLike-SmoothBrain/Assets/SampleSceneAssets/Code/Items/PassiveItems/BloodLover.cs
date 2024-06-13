@@ -13,7 +13,7 @@ public class BloodLover : ItemEffect , IPassiveItem
     public void OnRetrieved() 
     {
         berserkerVFX = GameObject.Instantiate(GameResources.Get<GameObject>("VFX_Berserk"), Utilities.Player.transform.parent.Find("UnmovableVFXs")).GetComponent<VisualEffect>();
-        berserkerVFX.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", Utilities.Player.GetComponent<PlayerController>().BodyMesh);
+        berserkerVFX.SetSkinnedMeshRenderer("New SkinnedMeshRenderer", Utilities.Player.GetComponentInChildren<SkinnedMeshRenderer>());
         //here i take .parent of vfxTarget because rendering is better like this
         berserkerVFX.GetComponent<VFXPropertyBinder>().GetPropertyBinders<VFXTransformBinderCustom>().ToArray()[0].Target = Utilities.Player.GetComponentInChildren<VFXTarget>().transform.parent;
         Utilities.Hero.Stats.onStatChange += Effect;

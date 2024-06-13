@@ -139,7 +139,6 @@ public class PlayerController : MonoBehaviour
     public int PouringBloodHash { get; private set; }
 
     [Header("VFXs")]
-    [SerializeField] SkinnedMeshRenderer bodyMesh;
     public List<VisualEffect> SpearAttacksVFX;
     public VisualEffect DashAttackVFX;
     public VisualEffect HitVFX;
@@ -154,8 +153,6 @@ public class PlayerController : MonoBehaviour
     public VisualEffect DashShieldVFX;
     public VisualEffect RuneOfSlothVFX;
     public VisualEffect RuneOfPrideVFX;
-
-    public SkinnedMeshRenderer BodyMesh { get => bodyMesh; }
 
     [Header("SFXs")]
     public EventReference DashSFX;

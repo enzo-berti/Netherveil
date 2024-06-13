@@ -1,4 +1,4 @@
-public interface IFinalBoss : IAttacker, IDamageable, IMovable, IBlastable
+public interface IFinalBoss : IAttacker, IDamageable, IMovable, IBlastable, IBoss
 {
 
 }

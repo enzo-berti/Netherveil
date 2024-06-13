@@ -73,6 +73,7 @@ public class ErecrosSummoningAttack : BaseState<ErecrosStateMachine>
 
         Context.Animator.ResetTrigger("EnemiesDead");
         Context.Animator.SetTrigger("EnemiesDead");
+        Context.HasDoneSummoningPhase = true;
 
         Context.AttackCooldown = 1.25f + Random.Range(-0.25f, 0.25f);
     }

@@ -136,6 +136,8 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
     public SphereCollider SummonCollider { get => summonCollider; }
 
     public bool DebugMode { get => toggleDebugMode; set => toggleDebugMode = value; }
+
+    public bool HasDoneSummoningPhase = false;
     #endregion
 
     protected override void Start()
@@ -176,6 +178,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         else if (part == 2)
         {
             props = propsParent.GetComponentsInChildren<Rigidbody>();
+            HasDoneSummoningPhase = false;
 
             foreach (Rigidbody prop in props)
             {
