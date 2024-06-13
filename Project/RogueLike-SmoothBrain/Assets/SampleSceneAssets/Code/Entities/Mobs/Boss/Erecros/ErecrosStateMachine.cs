@@ -179,6 +179,7 @@ public class ErecrosStateMachine : Mobs, IFinalBoss
         {
             props = propsParent.GetComponentsInChildren<Rigidbody>();
             HasDoneSummoningPhase = false;
+            bossLifeBar.ResetBars();
 
             foreach (Rigidbody prop in props)
             {

@@ -60,6 +60,15 @@ public class BossLifeBar : MonoBehaviour
         }
     }
 
+    public void ResetBars()
+    {
+        if (damageRoutine != null)
+            StopCoroutine(damageRoutine);
+
+        lifeBarSlider.fillAmount = 1;
+        damageBarSlider.fillAmount = 1;
+    }
+
     #region COROUTINE
 
     private IEnumerator DamageBarCoroutine(float duration)
