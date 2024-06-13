@@ -355,12 +355,10 @@ public class PlayerInput : MonoBehaviour
 
     private void SkipDialogue(InputAction.CallbackContext ctx)
     {
-        DialogueTreeRunner DTRunner = FindAnyObjectByType<DialogueTreeRunner>();
-
-        if (!DTRunner.IsStarted)
+        if (controller == null || !controller.DialogueTreeRunnerStarted)
             return;
 
-        DTRunner.UpdateDialogue();
+        controller.DialogueTreeRunnerGet.UpdateDialogue();
     }
 
     private void ToggleItemDescription(InputAction.CallbackContext ctx)
@@ -541,7 +539,7 @@ public class PlayerInput : MonoBehaviour
     {
         return (hero.State == (int)Entity.EntityState.MOVE ||
             (hero.State == (int)Entity.EntityState.ATTACK && !attackQueue))
-             && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
+             && !controller.Spear.IsThrown && !ForceReturnToMove && !controller.DialogueTreeRunnerStarted;
     }
 
     private bool CanDashAttack()
@@ -553,25 +551,25 @@ public class PlayerInput : MonoBehaviour
         Vector3 capsuleBase = playerTr.position;
         Vector3 capsuleTop = new Vector3(capsuleBase.x, capsuleBase.y + Utilities.CharacterController.height, capsuleBase.z);
         return hero.State == (int)Hero.PlayerState.DASH && Physics.OverlapCapsule(capsuleBase, capsuleTop, Utilities.CharacterController.radius, LayerMask.GetMask("AvoidDashCollide")).Length == 0
-        && !controller.Spear.IsThrown && !ForceReturnToMove && !dialogueTreeRunner.IsStarted;
+        && !controller.Spear.IsThrown && !ForceReturnToMove && !controller.DialogueTreeRunnerStarted;
     }
 
     private bool CanCastChargedAttack()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
             || hero.State == (int)Entity.EntityState.ATTACK)
-            && !controller.Spear.IsThrown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
+            && !controller.Spear.IsThrown && !LaunchedChargedAttack && !controller.DialogueTreeRunnerStarted;
     }
 
     private bool CanRetrieveSpear()
     {
-        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown && !dialogueTreeRunner.IsStarted;
+        return hero.State == (int)Entity.EntityState.MOVE && controller.Spear.IsThrown && !controller.DialogueTreeRunnerStarted;
     }
 
     private bool CanDash()
     {
         return (hero.State == (int)Entity.EntityState.MOVE
-            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack && !dialogueTreeRunner.IsStarted;
+            || hero.State == (int)Entity.EntityState.ATTACK) && !dashInCooldown && !LaunchedChargedAttack && !controller.DialogueTreeRunnerStarted;
     }
 
     private bool CanResetCombo()

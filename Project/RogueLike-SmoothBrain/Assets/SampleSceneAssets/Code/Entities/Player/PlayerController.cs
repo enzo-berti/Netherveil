@@ -173,6 +173,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform leftHandTransform;
     public Transform LeftHandTransform { get => leftHandTransform; }
 
+    public DialogueTreeRunner DialogueTreeRunnerGet { get => dialogueTreeRunner; }
+    public bool DialogueTreeRunnerStarted { get => dialogueTreeRunner != null && dialogueTreeRunner.IsStarted; }
+
     private void Awake()
     {
         hero = GetComponent<Hero>();
@@ -531,7 +534,7 @@ public class PlayerController : MonoBehaviour
     private bool CanUpdatePhysic()
     {
         return hero.State != (int)Hero.PlayerState.KNOCKBACK && hero.State != (int)Hero.PlayerState.UPGRADING_STATS
-            && characterController != null && characterController.enabled && !dialogueTreeRunner.IsStarted;
+            && characterController != null && characterController.enabled && !DialogueTreeRunnerStarted;
     }
 
     #endregion
@@ -542,7 +545,7 @@ public class PlayerController : MonoBehaviour
     {
         //used so that you don't see the character running while in transition between the normal attack and the charged attack casting
         float magnitudeCoef = 10;
-        if (playerInput.LaunchedChargedAttack || dialogueTreeRunner.IsStarted)
+        if (playerInput.LaunchedChargedAttack || DialogueTreeRunnerStarted)
         {
             magnitudeCoef = 0f;
         }
