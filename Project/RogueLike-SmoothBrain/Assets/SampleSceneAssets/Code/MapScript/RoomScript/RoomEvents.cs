@@ -1,10 +1,9 @@
-using Map.Component;
 using Map.Generation;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-namespace Map
+namespace Map.Component
 {
     public class RoomEvents : MonoBehaviour
     {
@@ -46,20 +45,11 @@ namespace Map
 
             // create data of the map
             roomData = new RoomData(room, enemies);
-
-            if (!enterRoomCalled)
-            {
-                Unclear();
-            }
         }
 
         private void Start()
         {
-            //if (!enterRoomCalled)
-            //{
-            //    Unclear();
-            //}
-            //else
+            //if (roomCleared)
             //{
             //    // je suis obligé de faire ça pour que la seed soit correcte
             //    // par rapport à l'ancienne sauvegarde si le joueur tue un boss
@@ -99,9 +89,9 @@ namespace Map
             {
                 c.Set();
             }
-            Debug.Log(room.neighbor.Count);
+
             // set all neighbor elements has undiscovered
-            foreach (Room neighbor in room.neighbor)
+            foreach (Room neighbor in room.neighbors)
             {
                 foreach (var c in neighbor.GetComponentsInChildren<MapLayer>(true))
                 {
@@ -222,7 +212,7 @@ namespace Map
             }
         }
 
-        private void Unclear()
+        public void Unclear()
         {
             enemies.SetActive(false);
             foreach (var c in room.GetComponentsInChildren<MapLayer>(true))

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
@@ -79,13 +80,19 @@ namespace Map.Generation
             roomClearIds.Clear();
         }
 
-        private void ClearRooms()
+        private void InitRooms()
         {
-            foreach (int index in roomClearIds)
+            for (int i = 0; i < transform.childCount; i++)
             {
-                Room room = transform.GetChild(index).GetComponent<Room>();
-
-                room.ClearPreset();
+                Room room = transform.GetChild(i).GetComponent<Room>();
+                if (roomClearIds.Contains(i))
+                {
+                    room.ClearPreset();
+                }
+                else
+                {
+                    room.RoomEvents.Unclear();
+                }
             }
         }
 
@@ -129,7 +136,7 @@ namespace Map.Generation
 
             GenerateObstructionDoors(ref genParam);
 
-            ClearRooms();
+            InitRooms();
         }
 
         private bool GenerateRooms(ref GenerationParameters genParam)
@@ -356,8 +363,8 @@ namespace Map.Generation
 
             // Add room to exitDoor room neighbours
             Room exitRoom = exitDoor.parentSkeleton.transform.parent.GetComponent<Room>();
-            room.neighbor.Add(exitRoom);
-            exitRoom.neighbor.Add(room);
+            room.neighbors.Add(exitRoom);
+            exitRoom.neighbors.Add(room);
 
             // Removed used door
             room.DoorsGenerator.RemoveDoor(entranceDoor);

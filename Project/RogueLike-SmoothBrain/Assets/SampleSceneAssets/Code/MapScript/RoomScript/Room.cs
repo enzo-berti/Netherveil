@@ -9,13 +9,14 @@ namespace Map
     {
         [SerializeField] public RoomType type = RoomType.Normal;
 
-        [field: SerializeField] public Skeleton Skeleton { get; private set; } = null;
-        [field: SerializeField] public DoorsGenerator DoorsGenerator { get; private set; } = null;
-        [field: SerializeField] public StaticProps StaticProps { get; private set; } = null;
-        [field: SerializeField] public Lights Lights { get; private set; } = null;
-        [field: SerializeField] public RoomUI RoomUI { get; private set; }
+        [field: SerializeField, HideInInspector] public Skeleton Skeleton { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public DoorsGenerator DoorsGenerator { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public StaticProps StaticProps { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public Lights Lights { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public RoomUI RoomUI { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public RoomEvents RoomEvents { get; private set; } = null;
 
-        [field: SerializeField] public RoomPresets RoomPresets { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public RoomPresets RoomPresets { get; private set; } = null;
         public RoomEnemies RoomEnemies // Need to be updated when roomPresets destroyed other rooms (work for now but not optimised)
         {
             get
@@ -24,7 +25,7 @@ namespace Map
             }
         }
 
-        readonly public List<Room> neighbor = new List<Room>();
+        readonly public List<Room> neighbors = new List<Room>();
 
         private void OnValidate()
         {
@@ -34,6 +35,22 @@ namespace Map
             Lights = transform.GetComponentInChildren<Lights>(true);
             RoomUI = transform.GetComponentInChildren<RoomUI>(true);
             RoomPresets = transform.GetComponentInChildren<RoomPresets>(true);
+            RoomEvents = transform.GetComponentInChildren<RoomEvents>(true);
+        }
+
+        public void Unclear()
+        {
+            RoomEnemies.gameObject.SetActive(false);
+            foreach (var c in GetComponentsInChildren<MapLayer>(true))
+            {
+                c.Unset();
+            }
+
+            var roomUI = GetComponentInChildren<RoomUI>(true);
+            if (roomUI)
+            {
+                roomUI.gameObject.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -42,7 +59,7 @@ namespace Map
         public void ClearPreset()
         {
             RoomEnemies.Clear();
-            Skeleton.GetComponent<RoomEvents>().Clear();
+            RoomEvents.Clear();
         }
     }
 }
