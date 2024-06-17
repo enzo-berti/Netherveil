@@ -1,10 +1,9 @@
-using Map.Component;
 using Map.Generation;
 using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-namespace Map
+namespace Map.Component
 {
     public class RoomEvents : MonoBehaviour
     {
@@ -213,7 +212,7 @@ namespace Map
             }
         }
 
-        public void Init()
+        public void Unclear()
         {
             enemies.SetActive(false);
             foreach (var c in room.GetComponentsInChildren<MapLayer>(true))

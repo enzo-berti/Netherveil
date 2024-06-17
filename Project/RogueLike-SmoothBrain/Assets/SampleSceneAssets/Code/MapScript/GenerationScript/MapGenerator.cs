@@ -91,7 +91,7 @@ namespace Map.Generation
                 }
                 else
                 {
-                    room.RoomEvents.Init();
+                    room.RoomEvents.Unclear();
                 }
             }
         }
