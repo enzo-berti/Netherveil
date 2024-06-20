@@ -167,7 +167,7 @@ public class GraftedTripleThrustAttack : BaseState<GraftedStateMachine>
             vfxTransform.position = Vector3.MoveTowards(vfxTransform.position, endPos, THRUST_SPEED * Time.deltaTime);
 
             if (!Context.PlayerHit)
-                Context.AttackCollide(Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data, debugMode: true);
+                Context.AttackCollide(Context.AttackColliders[(int)GraftedStateMachine.Attacks.THRUST].data, debugMode: false);
 
             yield return null;
         }
