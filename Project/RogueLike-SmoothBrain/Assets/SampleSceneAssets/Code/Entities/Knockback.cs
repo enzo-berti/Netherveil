@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -88,9 +89,11 @@ public class Knockback : MonoBehaviour
         if (controller == null)
         {
             knockbackRoutine = null;
-            yield return null;
+            yield break;
         }
 
+
+        Bounds bounds = controller.bounds;
         controller.enabled = false;
 
         float elapsed = 0f;
@@ -113,13 +116,15 @@ public class Knockback : MonoBehaviour
             Vector3 lastPos = transform.position;
             Vector3 nextPos = Vector3.Lerp(startKnockback, endKnockback, factor);
 
-            Collider[] collide = Physics.OverlapSphere(transform.position + direction * Vector3.Distance(lastPos, nextPos) + Vector3.up, 0.9f, ~LayerMask.GetMask("Entity"))
-                                        .Where(x => x.GetComponent<Collider>().isTrigger == false)
+            Collider[] collide = Physics.OverlapSphere(lastPos + Vector3.up, 0.1f, ~LayerMask.GetMask("Entity"), QueryTriggerInteraction.Ignore)
                                         .ToArray();
+
             hitObstacle = collide.Any();
+
             if (hitObstacle)
             {
                 onObstacleCollide?.Invoke(damageTakeOnObstacleCollide, attacker, true);
+                transform.position = nextPos - (bounds.size.x * direction);
             }
             else
             {

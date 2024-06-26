@@ -97,10 +97,10 @@ public class EnemyLifeBar : MonoBehaviour
     {
         if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
 
+        damageBarSlider.gameObject.SetActive(true);
+        damageBarSlider.enabled = true;
         alpha = 1f;
         UpdateAlpha();
-
-        damageBarSlider.enabled = true;
     }
 
     private void UpdateAlpha()
@@ -108,6 +108,10 @@ public class EnemyLifeBar : MonoBehaviour
         Color lifebarColor = lifeBarSlider.color;
         lifebarColor.a = alpha;
         lifeBarSlider.color = lifebarColor;
+
+        Color damageBarColor = damageBarSlider.color;
+        damageBarColor.a = alpha;
+        damageBarSlider.color = lifebarColor;
 
         Color backgroundColor = background.color;
         backgroundColor.a = alpha;

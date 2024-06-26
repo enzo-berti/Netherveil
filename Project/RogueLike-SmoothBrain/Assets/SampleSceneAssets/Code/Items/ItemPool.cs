@@ -58,7 +58,7 @@ public class ItemPool
             itemsPerTier.Add(itemDatabase.datas.Where(x => (Convert.ToInt32(x.RarityTier) == i && x.isInGame)).Select(x => x.idName).ToList());
         }
         UpdateRarityWeight();
-        Init(MustHaveItem);
+        Init();
     }
 
     public ItemPool(List<string> itemsId)

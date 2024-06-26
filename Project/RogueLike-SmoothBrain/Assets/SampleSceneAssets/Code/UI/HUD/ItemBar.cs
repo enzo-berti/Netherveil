@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Samples.RebindUI;
+using UnityEngine.UI;
 
 public class ItemBar : MonoBehaviour
 {
@@ -19,6 +21,7 @@ public class ItemBar : MonoBehaviour
     [SerializeField] private ItemFrame framePf;
     [SerializeField] private GameObject panelToToggle;
     [SerializeField] private GameObject textNoItems;
+    [SerializeField] GameObject gameObjectItem;
 
     [Header("Backgrounds")]
     [SerializeField] private Sprite backDamnation;
@@ -248,6 +251,20 @@ public class ItemBar : MonoBehaviour
             toMove.anchoredPosition = Vector3.Lerp(from, to, factor);
 
             yield return null;
+        }
+    }
+
+    public void SelectPassiveItemInUI()
+    {
+        Selectable items = gameObjectItem.GetComponentInChildren<Selectable>();
+
+        if (items != null)
+        {
+            if (EventSystem.current.currentSelectedGameObject == items.gameObject)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+            EventSystem.current.SetSelectedGameObject(items.gameObject);
         }
     }
 }

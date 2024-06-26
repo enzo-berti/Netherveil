@@ -21,6 +21,12 @@ public class LevelLoader : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        Debug.unityLogger.logEnabled = true;
+#else
+        Debug.unityLogger.logEnabled = false;
+#endif
     }
 
     public void LoadScene(string sceneName)

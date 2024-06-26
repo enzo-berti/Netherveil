@@ -4,10 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-using UnityEngine.UI;
 using UnityEngine.VFX;
 
 [RequireComponent(typeof(PlayerController))]
@@ -61,8 +59,6 @@ public class PlayerInput : MonoBehaviour
     //used to cancel queued attacks when pressing another button during attack sequence
     bool ForceReturnToMove = false;
     public bool IsSpawning { get; private set; } = false;
-
-    [SerializeField] GameObject gameObjectItem;
 
     [Header("Easing")]
     [SerializeField] EasingFunctions.EaseName easeUnzoom;
@@ -364,17 +360,7 @@ public class PlayerInput : MonoBehaviour
     private void ToggleItemDescription(InputAction.CallbackContext ctx)
     {
         HudHandler.current.ItemBar.Toggle();
-
-        Selectable items = gameObjectItem.GetComponentInChildren<Selectable>();
-
-        if (items != null)
-        {
-            if (EventSystem.current.currentSelectedGameObject == items.gameObject)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-            }
-            EventSystem.current.SetSelectedGameObject(items.gameObject);
-        }
+        HudHandler.current.ItemBar.SelectPassiveItemInUI();
     }
 
     private void ResetComboWhenMoving(InputAction.CallbackContext ctx)
