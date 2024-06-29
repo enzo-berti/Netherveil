@@ -1,6 +1,7 @@
 using Map.Component;
 using Map.Generation;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 namespace Map
@@ -13,15 +14,29 @@ namespace Map
         [field: SerializeField, HideInInspector] public DoorsGenerator DoorsGenerator { get; private set; } = null;
         [field: SerializeField, HideInInspector] public StaticProps StaticProps { get; private set; } = null;
         [field: SerializeField, HideInInspector] public Lights Lights { get; private set; } = null;
-        [field: SerializeField, HideInInspector] public RoomUI RoomUI { get; private set; } = null;
-        [field: SerializeField, HideInInspector] public RoomEvents RoomEvents { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public RoomUI UI { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public RoomEvents Events { get; private set; } = null;
+        [field: SerializeField, HideInInspector] public RoomPresets Presets { get; private set; } = null;
 
-        [field: SerializeField, HideInInspector] public RoomPresets RoomPresets { get; private set; } = null;
-        public RoomEnemies RoomEnemies // Need to be updated when roomPresets destroyed other rooms (work for now but not optimised)
+        private RoomEnemies roomEnemies = null; // can't be initialized in editor
+        public RoomEnemies Enemies
         {
             get
             {
-                return RoomPresets.GetComponentInChildren<RoomEnemies>(true);
+                if (roomEnemies == null)
+                {
+                    roomEnemies = Presets.GetComponentInChildren<RoomEnemies>(true);
+                }
+
+                return roomEnemies;
+            }
+        }
+
+        public NavMeshSurface NavMesh
+        {
+            get
+            {
+                return GetComponentInChildren<NavMeshSurface>(true);
             }
         }
 
@@ -33,14 +48,69 @@ namespace Map
             DoorsGenerator = transform.GetComponentInChildren<DoorsGenerator>(true);
             StaticProps = transform.GetComponentInChildren<StaticProps>(true);
             Lights = transform.GetComponentInChildren<Lights>(true);
-            RoomUI = transform.GetComponentInChildren<RoomUI>(true);
-            RoomPresets = transform.GetComponentInChildren<RoomPresets>(true);
-            RoomEvents = transform.GetComponentInChildren<RoomEvents>(true);
+            UI = transform.GetComponentInChildren<RoomUI>(true);
+            Presets = transform.GetComponentInChildren<RoomPresets>(true);
+            Events = transform.GetComponentInChildren<RoomEvents>(true);
+        }
+
+        public void Enter()
+        {
+            // set all elements to the map layer now that we can see them
+            foreach (var c in GetComponentsInChildren<MapLayer>(true))
+            {
+                c.Set();
+            }
+
+            // set all neighbor elements has undiscovered
+            foreach (Room neighbor in neighbors)
+            {
+                foreach (var c in neighbor.GetComponentsInChildren<MapLayer>(true))
+                {
+                    c.MarkUndiscovered();
+                }
+
+                // activate ui
+                if (neighbor.UI)
+                {
+                    neighbor.UI.gameObject.SetActive(true);
+                }
+            }
+
+            // activate ui
+            if (UI)
+            {
+                UI.gameObject.SetActive(true);
+            }
+
+            NavMesh.enabled = true;
+            Enemies.gameObject.SetActive(true);
+
+            // Call Events
+            MapUtilities.onEarlyFirstEnter?.Invoke();
+            MapUtilities.onFirstEnter?.Invoke();
+        }
+
+        public void Exit()
+        {
+            NavMesh.enabled = false;
+            Enemies.gameObject.SetActive(false);
+        }
+
+        public void AllEnemiesDead()
+        {
+            MapUtilities.onEarlyAllEnemiesDead?.Invoke();
+            MapUtilities.onAllEnemiesDead?.Invoke();
+        }
+
+        public void AllChestsOpen()
+        {
+            MapUtilities.onEarlyAllChestOpen?.Invoke();
+            MapUtilities.onAllChestOpen?.Invoke();
         }
 
         public void Unclear()
         {
-            RoomEnemies.gameObject.SetActive(false);
+            Enemies.gameObject.SetActive(false);
             foreach (var c in GetComponentsInChildren<MapLayer>(true))
             {
                 c.Unset();
@@ -58,8 +128,8 @@ namespace Map
         /// </summary>
         public void ClearPreset()
         {
-            RoomEnemies.Clear();
-            RoomEvents.Clear();
+            Enemies.Clear();
+            Events.Clear();
         }
     }
 }

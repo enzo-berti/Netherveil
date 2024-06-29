@@ -10,8 +10,6 @@ namespace Map.Component
         private RoomData roomData;
 
         private Room room;
-        private GameObject roomPreset;
-        private GameObject enemies;
         private GameObject treasures;
         private NavMeshSurface navMeshSurface;
 
@@ -37,14 +35,12 @@ namespace Map.Component
 
             // find room go's
             room = transform.parent.gameObject.GetComponent<Room>();
-            room.GetComponentInChildren<RoomPresets>(true).GenerateRandomPreset(); // je détruis tout ici pour me simplifier la vie..
-            roomPreset = room.GetComponentInChildren<RoomPresets>(true).transform.GetChild(0).gameObject;
-            enemies = roomPreset.transform.Find("Enemies").gameObject;
-            treasures = roomPreset.transform.Find("Treasures").gameObject;
+            room.Presets.GenerateRandomPreset(); // TODO : Generate preset else where
+            treasures = room.Presets.transform.GetChild(0).Find("Treasures").gameObject;
             navMeshSurface = room.GetComponentInChildren<NavMeshSurface>(true);
 
             // create data of the map
-            roomData = new RoomData(room, enemies);
+            roomData = new RoomData(room);
         }
 
         private void Start()
@@ -65,80 +61,25 @@ namespace Map.Component
             }
 
             // set bool to true to not call the events in the room if there is no enemy
-            allEnemiesDeadCalled = (enemies.transform.childCount == 0);
+            allEnemiesDeadCalled = (room.Enemies.transform.childCount == 0);
             // set bool to true to not call the events in the room if there is no chest
             allChestsOpenCalled = (treasures.GetComponentsInChildren<Item>().Count() == 0);
         }
 
-        private void OpenAllChestsEvent()
-        {
-            allChestsOpenCalled = true;
-
-            // global events
-            MapUtilities.onEarlyAllChestOpen?.Invoke();
-            MapUtilities.onAllChestOpen?.Invoke();
-        }
-
-        private void LocalEnterEvents()
+        private void EnterEvents()
         {
             enterRoomCalled = true;
             RoomEvents.hasLeaved = false;
-
-            // set all elements to the map layer now that we can see them
-            foreach (var c in room.GetComponentsInChildren<MapLayer>(true))
-            {
-                c.Set();
-            }
-
-            // set all neighbor elements has undiscovered
-            foreach (Room neighbor in room.neighbors)
-            {
-                foreach (var c in neighbor.GetComponentsInChildren<MapLayer>(true))
-                {
-                    c.MarkUndiscovered();
-                }
-
-                // activate ui
-                if (neighbor.RoomUI)
-                {
-                    neighbor.RoomUI.gameObject.SetActive(true);
-                }
-            }
-
-            // activate ui
-            if (room.RoomUI)
-            {
-                room.RoomUI.gameObject.SetActive(true);
-            }
-
             MapUtilities.currentRoomData = roomData;
             MapUtilities.nbEnterRoomByType[MapUtilities.currentRoomData.Type] += 1;
-
-            navMeshSurface.enabled = true;
-            enemies.SetActive(true);
-        }
-
-        private void EnterEvents()
-        {
-            LocalEnterEvents();
-
-            // global events
-            MapUtilities.onEarlyFirstEnter?.Invoke();
-            MapUtilities.onFirstEnter?.Invoke();
-        }
-
-        private void LocalExitEvents()
-        {
-            exitRoomCalled = true;
-            RoomEvents.hasLeaved = true;
-
-            navMeshSurface.enabled = false;
-            enemies.SetActive(false);
+            room.Enter();
         }
 
         private void FirstExitEvents()
         {
-            LocalExitEvents();
+            exitRoomCalled = true;
+            RoomEvents.hasLeaved = true;
+            room.Exit();
 
             for (int i = 0; i < transform.parent.parent.childCount; i++)
             {
@@ -155,26 +96,18 @@ namespace Map.Component
             SaveManager.Save();
         }
 
-        private void AllEnemiesDeadEvents()
-        {
-            // local events
-            allEnemiesDeadCalled = true;
-
-            // global events
-            MapUtilities.onEarlyAllEnemiesDead?.Invoke();
-            MapUtilities.onAllEnemiesDead?.Invoke();
-        }
-
         private void LateUpdate()
         {
-            if (!allEnemiesDeadCalled && enemies.transform.childCount == 0)
+            if (!allEnemiesDeadCalled && room.Enemies.transform.childCount == 0)
             {
-                AllEnemiesDeadEvents();
+                allEnemiesDeadCalled = true;
+                room.AllEnemiesDead();
             }
 
-            if (!allChestsOpenCalled && treasures.GetComponentsInChildren<Item>().Count() == 0)
+            if (!allChestsOpenCalled && treasures.GetComponentsInChildren<Item>().Count() == 0) // <- extremement lourd
             {
-                OpenAllChestsEvent();
+                allChestsOpenCalled = true;
+                room.AllChestsOpen();
             }
         }
 
@@ -212,26 +145,17 @@ namespace Map.Component
             }
         }
 
-        public void Unclear()
-        {
-            enemies.SetActive(false);
-            foreach (var c in room.GetComponentsInChildren<MapLayer>(true))
-            {
-                c.Unset();
-            }
-
-            var roomUI = room.GetComponentInChildren<RoomUI>(true);
-            if (roomUI)
-            {
-                roomUI.gameObject.SetActive(false);
-            }
-        }
-
         public void Clear()
         {
-            LocalEnterEvents();
-            LocalExitEvents();
-            RoomEvents.hasLeaved = true; // to ensure not being blocked
+            enterRoomCalled = true;
+            RoomEvents.hasLeaved = false;
+            MapUtilities.currentRoomData = roomData;
+            MapUtilities.nbEnterRoomByType[MapUtilities.currentRoomData.Type] += 1;
+            room.Enter();
+
+            exitRoomCalled = true;
+            RoomEvents.hasLeaved = true;
+            room.Exit();
 
             if (roomData.Type == RoomType.Boss)
             {
