@@ -18,12 +18,24 @@ namespace Tool
             EditorWindow.GetWindow(typeof(RoomGeneratorWindow));
         }
 
+        Editor gameObjectEditor;
         private void OnGUI()
         {
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
+            EditorGUI.BeginChangeCheck();
             houdiniRoom = EditorGUILayout.ObjectField("Houdini Room", houdiniRoom, typeof(GameObject), true) as GameObject;
+            if (EditorGUI.EndChangeCheck())
+            {
+                DestroyImmediate(gameObjectEditor);
+                if (houdiniRoom != null)
+                {
+                    if (gameObjectEditor == null)
+                        gameObjectEditor = Editor.CreateEditor(houdiniRoom);
+                }
+            }
+
             bakedRoom = EditorGUILayout.ObjectField("Baked Room", bakedRoom, typeof(GameObject), true) as GameObject;
             roomName = EditorGUILayout.TextField("Prefab Name", roomName);
             roomType = (RoomType)EditorGUILayout.EnumPopup("Type of room", roomType);
@@ -31,6 +43,11 @@ namespace Tool
             if (GUILayout.Button("Generate Room"))
             {
                 GenerateRoomPrefab();
+            }
+
+            if (gameObjectEditor != null)
+            {
+                gameObjectEditor.OnInteractivePreviewGUI(GUILayoutUtility.GetAspectRect(2), GUIStyle.none);
             }
 
             EditorGUILayout.EndVertical();

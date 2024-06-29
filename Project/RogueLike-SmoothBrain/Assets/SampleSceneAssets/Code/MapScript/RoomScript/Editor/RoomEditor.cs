@@ -29,7 +29,7 @@ namespace Map
 
         private void BakeAllRooms()
         {
-            foreach (Transform t in roomScript.RoomPresets.transform)
+            foreach (Transform t in roomScript.Presets.transform)
             {
                 t.gameObject.SetActive(true);
                 BakeRoom(roomScript, t);
