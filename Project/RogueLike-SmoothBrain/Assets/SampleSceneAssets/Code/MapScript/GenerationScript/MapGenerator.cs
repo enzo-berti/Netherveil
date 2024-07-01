@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
@@ -91,7 +90,7 @@ namespace Map.Generation
                 }
                 else
                 {
-                    room.RoomEvents.Unclear();
+                    room.Unclear();
                 }
             }
         }
@@ -382,10 +381,10 @@ namespace Map.Generation
             genParam.AddDoors(room.DoorsGenerator);
 
             // Generate one of the seed room and delete the other's
-            room.RoomPresets.GenerateRandomPreset();
+            room.Presets.GenerateRandomPreset();
 
             // SetActive object's of room
-            room.RoomEnemies.gameObject.SetActive(false);
+            room.Enemies.gameObject.SetActive(false);
             room.GetComponentInChildren<NavMeshSurface>().enabled = false;
         }
 

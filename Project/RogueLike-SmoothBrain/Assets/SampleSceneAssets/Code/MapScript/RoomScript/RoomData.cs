@@ -20,10 +20,10 @@ namespace Map
 
     public struct RoomData
     {
-        public RoomData(Room roomPrefab, GameObject enemiesContainer)
+        public RoomData(Room room)
         {
-            this.enemiesContainer = enemiesContainer;
-            Type = roomPrefab.type;
+            enemiesContainer = room.Enemies.gameObject;
+            Type = room.type;
         }
 
         public readonly int NumEnemies
