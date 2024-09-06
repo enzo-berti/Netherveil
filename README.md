@@ -1,2 +1,2 @@
-# old private repositories for Netherveil 1.0
-# 🔗 [new public repositories here](https://github.com/SmoothBrainStudio/Netherveil)
+# old private repo for Netherveil 1.0
+# 🔗 [new public repo here](https://github.com/SmoothBrainStudio/Netherveil)
