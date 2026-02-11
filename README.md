@@ -1,5 +1,3 @@
-<h1 align="center"> This is the old repository of Netherveil, you can find the new one right here → https://github.com/SmoothBrainStudio/Netherveil </h1>
-
 <p align="center"> 
   <img src="https://img.itch.zone/aW1nLzE2NTkzMzkzLnBuZw==/original/dbwTZQ.png" alt="Netherveil game banner" height="300px">
 </p>
