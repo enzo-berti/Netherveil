@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center"> Netherveil </h1>
-<h3 align="center"> Smooth Brain Studio -2024 Student project </h3>
+<h3 align="center"> Smooth Brain Studio - 2024 Student project </h3>
 <h5 align="center"> Rogue like - 30 minutes average session </h5>
 
 <p align="center"> 
